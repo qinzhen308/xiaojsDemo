@@ -217,7 +217,7 @@ public class ClassroomController {
     public void enterPhotoDoodle(ArrayList<String> imgUrlList, OnPhotoDoodleShareListener listener) {
         PhotoDoodleFragment photoDoodleFragment = new PhotoDoodleFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_MULTI_IMG);
+        bundle.putInt(Constants.KEY_IMG_DISPLAY_TYPE, PhotoDoodleFragment.TYPE_MULTI_IMG);
         bundle.putStringArrayList(Constants.KEY_IMG_LIST, imgUrlList);
         photoDoodleFragment.setArguments(bundle);
         photoDoodleFragment.setPhotoDoodleShareListener(listener);
@@ -230,7 +230,7 @@ public class ClassroomController {
     public void enterPhotoDoodleByBitmap(Bitmap bitmap, OnPhotoDoodleShareListener listener) {
         PhotoDoodleFragment photoDoodleFragment = new PhotoDoodleFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.KEY_IMG_DISPLAY_MODE, PhotoDoodleFragment.MODE_SINGLE_IMG);
+        bundle.putInt(Constants.KEY_IMG_DISPLAY_TYPE, PhotoDoodleFragment.TYPE_SINGLE_IMG);
         float ratio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
         if (bitmap != null && bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
             ratio = bitmap.getWidth() / (float) bitmap.getHeight();
@@ -412,6 +412,10 @@ public class ClassroomController {
         }
     }
 
+    /**
+     * 是否是竖屏
+     * @return
+     */
     public boolean isPortrait() {
         if (mContext instanceof ClassroomActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
@@ -480,6 +484,9 @@ public class ClassroomController {
         }
     }
 
+    /**
+     * 退出栈中的fragment
+     */
     public void exitStackFragment() {
         if (mCurrStackFragment != null) {
             ((ClassroomActivity) mContext).getSupportFragmentManager()

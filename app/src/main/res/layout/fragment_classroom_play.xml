@@ -25,7 +25,7 @@
 
         <include
                 android:id="@+id/top_panel"
-                layout="@layout/layout_classroom_panel_top_new"/>
+                layout="@layout/layout_classroom_panel_top"/>
 
         <ImageView
                 android:id="@+id/enter_full_screen"

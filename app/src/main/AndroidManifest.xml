@@ -164,10 +164,6 @@
         <activity
                 android:name=".ui.mine.MyEnrollActivity"
                 android:screenOrientation="portrait"/>
-        <activity
-                android:name=".ui.classroom.ClassroomActivity"
-                android:screenOrientation="landscape"
-                android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity android:name=".ui.classroom.main.ClassroomActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="screenSize|orientation"

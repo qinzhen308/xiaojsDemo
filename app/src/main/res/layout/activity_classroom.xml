@@ -1,140 +1,56 @@
-<cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawer_layout"
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/classroom_white_bg">
 
+    <!--播放模式-->
     <FrameLayout
-            android:id="@+id/drawer_content_layout"
+            android:id="@+id/play_mode_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/classroom_white_bg">
+            android:layout_height="match_parent">
 
-        <FrameLayout
-                android:id="@+id/stream_content_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical">
+    </FrameLayout>
 
-            <!--直播视频view(全屏)-->
-            <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
-                    android:id="@+id/play_video"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:background="#000000"/>
+    <!--直播模式-->
+    <FrameLayout
+            android:id="@+id/publish_mode_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <!--推流视频view(全屏)-->
-            <cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView
-                    android:id="@+id/publish_video"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:background="#000000"/>
-        </FrameLayout>
+    </FrameLayout>
 
-        <!--提示view-->
-        <FrameLayout
-                android:id="@+id/tip_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:visibility="gone">
+    <!--图片涂鸦-->
+    <FrameLayout
+            android:id="@+id/photo_doodle_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+    </FrameLayout>
 
-                <TextView
-                        android:id="@+id/tip_title_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/font_black"
-                        android:textSize="@dimen/font_32px"/>
+    <!--文档管理-->
+    <FrameLayout
+            android:id="@+id/document_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-                <TextView
-                        android:id="@+id/tip_txt_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/font_dark_gray"
-                        android:textSize="@dimen/font_28px"/>
-            </LinearLayout>
+    </FrameLayout>
 
-        </FrameLayout>
-
-        <!--控制面板-->
-        <include
-                android:id="@+id/main_panel"
-                layout="@layout/layout_classroom_panel"/>
-
-        <!--图片涂鸦-->
-        <FrameLayout
-                android:id="@+id/photo_doodle_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </FrameLayout>
-
-        <!--文档管理-->
-        <FrameLayout
-                android:id="@+id/document_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </FrameLayout>
-
-        <!--本地视频播放-->
-        <FrameLayout
-                android:id="@+id/video_play_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </FrameLayout>
-
-        <!--消息入口-->
-        <LinearLayout
-                android:id="@+id/right_panel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|bottom"
-                android:orientation="horizontal">
-
-            <cn.xiaojs.xma.ui.widget.MessageImageView
-                    android:id="@+id/enter_talk_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/px20"
-                    android:layout_centerInParent="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/cr_msg"/>
-
-        </LinearLayout>
+    <!--本地视频播放-->
+    <FrameLayout
+            android:id="@+id/video_play_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     </FrameLayout>
 
     <FrameLayout
-            android:id="@+id/drawer_left_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left">
-
-        <include
-                android:id="@+id/course_ware"
-                layout="@layout/layout_classroom_course_ware"/>
-    </FrameLayout>
-
-    <FrameLayout
-            android:id="@+id/drawer_right_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right">
+            android:id="@+id/msg_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     </FrameLayout>
 
-</cn.xiaojs.xma.ui.classroom.drawer.DrawerLayout>
+</FrameLayout>
+

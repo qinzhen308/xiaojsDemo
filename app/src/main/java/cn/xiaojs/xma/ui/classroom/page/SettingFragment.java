@@ -152,9 +152,6 @@ public class SettingFragment extends SheetFragment implements Constants, Compoun
                     mOnSettingChangedListener.onSwitcherChanged(Constants.SWITCHER_AUDIO, isChecked);
                 }
                 break;
-            case R.id.class_room_talk:
-                editor.putBoolean(KEY_MULTI_TALK_OPEN, isChecked);
-                break;
         }
         editor.commit();
     }

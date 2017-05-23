@@ -27,7 +27,7 @@ public interface Constants {
     public final static String KEY_TICKET = "key_ticket";
     public final static String KEY_LESSON_ID = "key_lesson_id";
     public final static String KEY_LIB_DOC = "key_lib_doc";
-    public final static String KEY_IMG_DISPLAY_MODE = "key_img_display_mode";
+    public final static String KEY_IMG_DISPLAY_TYPE = "key_img_display_mode";
     public final static String KEY_IMG_LIST = "key_img_list";
     public final static String KEY_DOODLE_RATIO = "key_doodle_ratio";
     public final static String KEY_CTL_SESSION = "key_ctl_session";

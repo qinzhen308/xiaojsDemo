@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -22,6 +24,7 @@ import android.view.MotionEvent;
 
 public class WhiteboardScrollerView extends ViewPager {
     private Context mContext;
+    private int mMode = PhotoDoodleFragment.MODE_PREVIEW;
 
     public WhiteboardScrollerView(Context context) {
         super(context);
@@ -37,10 +40,15 @@ public class WhiteboardScrollerView extends ViewPager {
         mContext = context;
     }
 
+    public void setMode(int mode) {
+        mMode = mode;
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        //TODO
-        //return false;
+        if (mMode == PhotoDoodleFragment.MODE_EDIT) {
+            return false;
+        }
 
         return super.onInterceptTouchEvent(ev);
     }

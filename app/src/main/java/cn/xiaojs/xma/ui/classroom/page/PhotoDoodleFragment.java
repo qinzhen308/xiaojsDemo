@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -19,13 +23,17 @@ import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.classroom.main.AnimData;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.FadeAnimListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.ShareDoodlePopWindow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardAdapter;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.CacheUtil;
 
 /*  =======================================================================================
@@ -44,46 +52,59 @@ import cn.xiaojs.xma.util.CacheUtil;
  * ======================================================================================== */
 
 public class PhotoDoodleFragment extends BaseFragment {
-    private final static int ANIM_SHOW = 1 << 1;
-    private final static int ANIM_HIDE = 1 << 2;
+    public final static int TYPE_SINGLE_IMG = 1;
+    public final static int TYPE_MULTI_IMG = 2;
 
-    public final static int MODE_SINGLE_IMG = 1;
-    public final static int MODE_MULTI_IMG = 2;
+    public final static int MODE_PREVIEW = 1; //预览模式
+    public final static int MODE_EDIT = 2; //编辑模式
+
 
     @BindView(R.id.white_board_panel)
     View mWhiteBoardPanel;
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mBoardScrollerView;
+    @BindView(R.id.back_btn)
+    ImageView mBackBtn;
+    @BindView(R.id.share_doodle)
+    TextView mShareBtn;
+    @BindView(R.id.save_doodle)
+    TextView mSaveBtn;
+    @BindView(R.id.edit_done_btn)
+    TextView mEditDodeBtn;
 
     private WhiteboardController mBoardController;
     private Bitmap mBitmap;
     private ShareDoodlePopWindow mSharePopWindow;
     private Constants.User mUser = Constants.User.TEACHER;
     private OnPhotoDoodleShareListener mPhotoDoodleShareListener;
+    private CommonDialog mSaveDoodleDialog;
 
-    private int mDisplayMode = MODE_SINGLE_IMG;
+    private int mDisplayType = TYPE_SINGLE_IMG;
+    private int mMode = MODE_PREVIEW;
     private float mDoodleRatio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
     private List<String> mImgList;
+    private FadeAnimListener mFadeAnimListener;
 
     @Override
     protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_video_editing, null);
+        return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_img_edit, null);
     }
 
     @Override
     protected void init() {
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
+        mFadeAnimListener = new FadeAnimListener();
 
         Bundle data = getArguments();
         if (data != null) {
-            mDisplayMode = data.getInt(Constants.KEY_IMG_DISPLAY_MODE, MODE_SINGLE_IMG);
+            mDisplayType = data.getInt(Constants.KEY_IMG_DISPLAY_TYPE, TYPE_SINGLE_IMG);
             mImgList = data.getStringArrayList(Constants.KEY_IMG_LIST);
             mDoodleRatio = data.getFloat(Constants.KEY_DOODLE_RATIO, WhiteboardLayer.DOODLE_CANVAS_RATIO);
         }
 
-        if (mDisplayMode == MODE_SINGLE_IMG) {
+        if (mDisplayType == TYPE_SINGLE_IMG) {
             mBoardController.showWhiteboardLayout(mBitmap, mDoodleRatio);
-        } else if (mDisplayMode == MODE_MULTI_IMG){
+        } else if (mDisplayType == TYPE_MULTI_IMG) {
             WhiteboardAdapter adapter = new WhiteboardAdapter(mContext);
             WhiteboardCollection wbColl = new WhiteboardCollection();
             List<WhiteboardLayer> whiteboardLayers = new ArrayList<WhiteboardLayer>();
@@ -98,10 +119,12 @@ public class PhotoDoodleFragment extends BaseFragment {
             adapter.setData(wbColl, 0);
             mBoardController.showWhiteboardLayout(adapter);
         }
+
+        mWhiteBoardPanel.setVisibility(View.GONE);
     }
 
-    @OnClick({R.id.back_in_doodle, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
-            R.id.color_picker_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo})
+    @OnClick({R.id.back_btn, R.id.share_doodle, R.id.save_doodle, R.id.select_btn, R.id.handwriting_btn,
+            R.id.color_picker_btn, R.id.shape_btn, R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo, R.id.edit_done_btn})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.select_btn:
@@ -114,7 +137,7 @@ public class PhotoDoodleFragment extends BaseFragment {
             case R.id.redo:
                 mBoardController.handlePanelItemClick(v);
                 break;
-            case R.id.back_in_doodle:
+            case R.id.back_btn:
                 getFragmentManager().popBackStackImmediate();
                 break;
             case R.id.share_doodle:
@@ -122,6 +145,13 @@ public class PhotoDoodleFragment extends BaseFragment {
                 break;
             case R.id.save_doodle:
                 saveEditedBmpToLibrary(mBoardController.getWhiteboardBitmap());
+                break;
+            case R.id.edit_done_btn:
+                if (mMode == MODE_PREVIEW) {
+                    enterEditMode();
+                } else {
+                    exitEditMode();
+                }
                 break;
             default:
                 break;
@@ -145,15 +175,18 @@ public class PhotoDoodleFragment extends BaseFragment {
             mSharePopWindow = new ShareDoodlePopWindow(mContext, mBoardController, mPhotoDoodleShareListener);
         }
 
-        int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
-        int offsetY = -mContext.getResources().getDimensionPixelSize(R.dimen.px58);
-        mSharePopWindow.showAsDropDown(anchor, offsetX, offsetY);
+        //int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px370);
+        int offsetY = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
+        mSharePopWindow.showAsDropDown(anchor, 0, offsetY);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBoardController.hideWhiteboardLayout();
+        if (mWhiteBoardPanel != null) {
+            mWhiteBoardPanel.animate().cancel();
+        }
     }
 
     private void saveEditedBmpToLibrary(final Bitmap bitmap) {
@@ -204,4 +237,113 @@ public class PhotoDoodleFragment extends BaseFragment {
         }.execute(0);
     }
 
+    private void hideAnim(View view) {
+        startAnimation(view,
+                FadeAnimListener.MODE_ANIM_HIDE,
+                FadeAnimListener.ANIM_ALPHA,
+                new AnimData(0));
+    }
+
+    private void showAnim(View view) {
+        startAnimation(view,
+                FadeAnimListener.MODE_ANIM_SHOW,
+                FadeAnimListener.ANIM_ALPHA,
+                new AnimData(1));
+    }
+
+    protected void startAnimation(View view, int animMode, int animSets, AnimData data) {
+        FadeAnimListener listener = mFadeAnimListener;
+        ViewPropertyAnimator viewPropertyAnimator = view.animate();
+
+        //alpha anim
+        if ((FadeAnimListener.ANIM_ALPHA & animSets) != 0) {
+            viewPropertyAnimator.alpha(data.alpha);
+        }
+        //translate anim
+        if ((FadeAnimListener.ANIM_TRANSLATE & animSets) != 0) {
+            viewPropertyAnimator.translationX(data.translateX);
+            viewPropertyAnimator.translationY(data.translateY);
+        }
+        //scale anim
+        if ((FadeAnimListener.ANIM_SCALE & animSets) != 0) {
+            viewPropertyAnimator.scaleX(data.scaleX);
+            viewPropertyAnimator.scaleY(data.scaleY);
+        }
+
+        viewPropertyAnimator.setListener(listener.with(view).play(animMode)).start();
+    }
+
+
+    private void enterEditMode() {
+        mMode = MODE_EDIT;
+        mEditDodeBtn.setText(R.string.finish);
+        mSaveBtn.setVisibility(View.GONE);
+        mShareBtn.setVisibility(View.GONE);
+        mBackBtn.setVisibility(View.GONE);
+        showAnim(mWhiteBoardPanel);
+        mBoardController.setWhiteboardScrollMode(MODE_EDIT);
+    }
+
+    private void exitEditMode() {
+        mMode = MODE_PREVIEW;
+        mEditDodeBtn.setText(R.string.edit);
+        mSaveBtn.setVisibility(View.VISIBLE);
+        mShareBtn.setVisibility(View.VISIBLE);
+        mBackBtn.setVisibility(View.VISIBLE);
+        hideAnim(mWhiteBoardPanel);
+        mBoardController.setWhiteboardScrollMode(MODE_PREVIEW);
+        mBoardController.saveEdit();
+    }
+
+    public void exitEdiModeWhitTips() {
+        if (mBoardController.hasEdit()) {
+            isSave();
+        } else {
+            exitEditMode();
+        }
+    }
+
+    /**
+     * 检测是否需要保存编辑
+     */
+    private void isSave() {
+        if (mSaveDoodleDialog == null) {
+            mSaveDoodleDialog = new CommonDialog(mContext);
+            int width;
+            int height;
+            mSaveDoodleDialog.setTitle(R.string.cr_save_edit);
+            mSaveDoodleDialog.setDesc(R.string.cr_save_edit_desc);
+            mSaveDoodleDialog.setLefBtnText(R.string.cancel);
+            mSaveDoodleDialog.setRightBtnText(R.string.ok);
+            if (ClassroomController.getInstance().isPortrait()) {
+                width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            } else {
+                width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+            mSaveDoodleDialog.setDialogLayout(width, height);
+            mSaveDoodleDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mSaveDoodleDialog.dismiss();
+                    exitEditMode();
+                }
+            });
+
+            mSaveDoodleDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mBoardController.abandonEdit();
+                    exitEditMode();
+                }
+            });
+        }
+
+        mSaveDoodleDialog.show();
+    }
+
+    public boolean isEditMode() {
+        return mMode == MODE_EDIT;
+    }
 }

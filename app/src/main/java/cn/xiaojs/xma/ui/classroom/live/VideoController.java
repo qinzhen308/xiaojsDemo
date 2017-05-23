@@ -76,7 +76,6 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected int mPeerStreamViewHeight = 90;
     protected int mPeerStreamViewTopMargin = 10;
     protected int mPeerStreamViewMargin = 10;
-    protected ViewGroup mContainer;
 
     protected Object mExtraData;
 
@@ -93,7 +92,6 @@ public abstract class VideoController implements StreamConfirmCallback {
         mPeerStreamViewHeight = context.getResources().getDimensionPixelOffset(R.dimen.px90);
         mPeerStreamViewMargin = context.getResources().getDimensionPixelOffset(R.dimen.px10);
         mPeerStreamViewTopMargin = context.getResources().getDimensionPixelOffset(R.dimen.px110);
-        mContainer = (ViewGroup) root.findViewById(R.id.stream_content_layout);
 
         init(root);
         //一个activity不能多个LiveRecordView同时存在

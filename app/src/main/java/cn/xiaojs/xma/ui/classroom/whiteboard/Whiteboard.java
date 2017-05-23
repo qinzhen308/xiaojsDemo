@@ -1300,6 +1300,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         onSend(Packer.getClearCmd());
     }
 
+    public void saveWhiteboard() {
+        drawAllDoodlesCanvas();
+        mDoodle = null;
+        invalidate();
+    }
+
     private void clearWhiteboard() {
         if (mAllDoodles != null) {
             mAllDoodles.clear();

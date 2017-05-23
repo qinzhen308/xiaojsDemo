@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -19,6 +20,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
@@ -31,6 +34,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
+import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
@@ -87,7 +91,7 @@ public class ClassroomActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_classroom_new);
+        setContentView(R.layout.activity_classroom);
 
         //init params
         initParams();
@@ -127,6 +131,17 @@ public class ClassroomActivity extends FragmentActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             FragmentManager fragmentManager = getSupportFragmentManager();
+            List<Fragment> fragmentList = fragmentManager.getFragments();
+            Fragment topFragment = null;
+            if (fragmentList != null && fragmentList.size() > 0) {
+                topFragment = fragmentList.get(fragmentList.size() -1);
+            }
+            if (topFragment instanceof PhotoDoodleFragment) {
+                if (((PhotoDoodleFragment)topFragment).isEditMode()) {
+                    ((PhotoDoodleFragment)topFragment).exitEdiModeWhitTips();
+                    return false;
+                }
+            }
             int backStackEntryCount = fragmentManager.getBackStackEntryCount();
             if (backStackEntryCount < 1) {
                 if (ClassroomController.getInstance().getStackFragment() != null) {
@@ -440,9 +455,9 @@ public class ClassroomActivity extends FragmentActivity {
                     finish();
                 }
             });
-
-            mKickOutDialog.show();
         }
+
+        mKickOutDialog.show();
     }
 
     /**

@@ -141,12 +141,13 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
 
     @Override
     public void onImageClick(final int type, final String key) {
-        //聊天点击大图回调到视频图片编辑页面
+        //聊天点击大图回调到图片编辑页面
         if (!TextUtils.isEmpty(key)) {
             new AsyncTask<String, Integer, Bitmap>() {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
+                    showProgress(true);
                 }
 
                 @Override
@@ -181,6 +182,7 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
                 @Override
                 protected void onPostExecute(Bitmap bmp) {
                     //enter video edit fragment
+                    cancelProgress();
                     ClassroomController.getInstance().enterPhotoDoodleByBitmap(bmp, TalkPresenter.this);
                 }
             }.execute(key);
