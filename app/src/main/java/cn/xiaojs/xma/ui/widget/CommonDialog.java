@@ -14,12 +14,15 @@ package cn.xiaojs.xma.ui.widget;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -44,23 +47,25 @@ public class CommonDialog extends Dialog {
     private String titleStr;
     private String descStr;
     private String okStr;
+    private Context mContext;
 
     public CommonDialog(Context context) {
         super(context, R.style.CommonDialog);
-        init();
+        init(context);
     }
 
     public CommonDialog(Context context, int themeResId) {
         super(context, R.style.CommonDialog);
-        init();
+        init(context);
     }
 
     protected CommonDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
+        mContext = context;
         setCanceledOnTouchOutside(true);
         Window dialogWindow = getWindow();
         setContentView(R.layout.layout_common_dialog);
@@ -161,6 +166,16 @@ public class CommonDialog extends Dialog {
         if (!TextUtils.isEmpty(okStr)) {
             mRightButton.setText(okStr);
         }
+
+        int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        if (mContext instanceof Activity) {
+            if (((Activity) mContext).getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                width = DeviceUtil.getScreenWidth(mContext) / 2;
+                height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+        }
+        setDialogLayout(width, height);
 
         super.show();
     }

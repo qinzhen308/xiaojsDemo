@@ -37,11 +37,9 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
-import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class PublishVideoController extends VideoController {
-    private CommonDialog mAgreeOpenCamera;
 
     private int loadingSize = 36;
     private int loadingDesc = 20;

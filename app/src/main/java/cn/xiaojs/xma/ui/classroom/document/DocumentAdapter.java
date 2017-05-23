@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +25,6 @@ import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
-import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -284,9 +282,6 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
             mDelDocDialog = new CommonDialog(mContext);
             mDelDocDialog.setTitle(R.string.tips);
             mDelDocDialog.setDesc(R.string.cls_doc_del_desc);
-            int width = DeviceUtil.getScreenWidth(mContext) / 2;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mDelDocDialog.setDialogLayout(width, height);
             mDelDocDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {

@@ -41,7 +41,6 @@ import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
-import cn.xiaojs.xma.util.DeviceUtil;
 import io.socket.client.Socket;
 
 /*  =======================================================================================
@@ -70,7 +69,6 @@ public class ClassroomActivity extends FragmentActivity {
     private ProgressHUD mProgress;
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
 
-    private CommonDialog mMobileNetworkDialog;
     private CommonDialog mKickOutDialog;
     private CommonDialog mContinueConnectDialog;
 
@@ -401,13 +399,10 @@ public class ClassroomActivity extends FragmentActivity {
     private void showContinueConnectClassroom() {
         if (mContinueConnectDialog == null) {
             mContinueConnectDialog = new CommonDialog(this);
-            int width = DeviceUtil.getScreenWidth(this) / 2;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             mContinueConnectDialog.setTitle(R.string.cr_live_connect_fail_title);
             mContinueConnectDialog.setDesc(R.string.cr_live_connect_fail_desc);
             mContinueConnectDialog.setLefBtnText(R.string.cr_live_connect_fail_exit);
             mContinueConnectDialog.setRightBtnText(R.string.cr_live_connect_fail_continue);
-            //mContinueConnectDialog.setDialogLayout(width, height);
             mContinueConnectDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {
@@ -434,12 +429,9 @@ public class ClassroomActivity extends FragmentActivity {
     private void checkForceKickOut(final CtlSession ctlSession, final boolean netWorkChanged) {
         if (mKickOutDialog == null) {
             mKickOutDialog = new CommonDialog(this);
-            int width = DeviceUtil.getScreenWidth(this) / 2;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             mKickOutDialog.setDesc(R.string.mobile_kick_out_desc);
             mKickOutDialog.setLefBtnText(R.string.cancel);
             mKickOutDialog.setRightBtnText(R.string.ok);
-            //mKickOutDialog.setDialogLayout(width, height);
             mKickOutDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {

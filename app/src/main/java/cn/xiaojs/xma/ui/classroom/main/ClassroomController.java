@@ -460,9 +460,6 @@ public class ClassroomController {
             mExitDialog = new CommonDialog(mContext);
             mExitDialog.setTitle(R.string.exit_classroom);
             mExitDialog.setDesc(R.string.exit_classroom_tips);
-            //int width = DeviceUtil.getScreenWidth(this) / 2;
-            //int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            //mExitDialog.setDialogLayout(width, height);
             mExitDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {
