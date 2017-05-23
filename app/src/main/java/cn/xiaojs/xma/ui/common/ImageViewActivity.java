@@ -32,6 +32,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.ui.widget.banner.PageNumView;
 import cn.xiaojs.xma.ui.widget.banner.PointIndicateView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoViewAttacher;
@@ -53,7 +54,8 @@ public class ImageViewActivity extends BaseActivity {
     public static final String CHAT_MESSAGE_ID = "chat_message_id";//点击的message的id
 
     private ScaleViewPager mPager;
-    private PointIndicateView pointContent;
+    //private PointIndicateView pointContent;
+    private PageNumView pageNumView;
 
     private List<String> mPathList;
 
@@ -76,7 +78,8 @@ public class ImageViewActivity extends BaseActivity {
     }
 
     private void init() {
-        pointContent = (PointIndicateView) findViewById(R.id.image_pager_points);
+        //pointContent = (PointIndicateView) findViewById(R.id.image_pager_points);
+        pageNumView = (PageNumView) findViewById(R.id.text_pager_points);
         mPager = (ScaleViewPager) findViewById(R.id.image_view_pager);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -183,8 +186,9 @@ public class ImageViewActivity extends BaseActivity {
         ImagePagerAdapter adapter = new ImagePagerAdapter(this,
                 mPathList);
         mPager.setAdapter(adapter);
-        pointContent.setViewPager(mPager, mPathList.size(), position,
-                true, null);
+//        pointContent.setViewPager(mPager, mPathList.size(), position,
+//                true, null);
+        pageNumView.setViewPager(mPager,mPathList.size(),position);
     }
 
     /**
