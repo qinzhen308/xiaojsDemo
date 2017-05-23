@@ -73,6 +73,7 @@ public class LiveRecordView extends BaseMediaView implements
     private static final int MSG_HIDE_LOADING = 7;
     private static final int MSG_SWITCH_ORIENTATION = 8;
     private static final int MSG_SWITCH_RESOLUTION = 9;
+    private static final int MSG_SWITCH_ORIENTATION_DELAY = 10;
 
     private AspectFrameLayout mAspect;
     private CameraPreviewFrameView mPreviewFrameView;
@@ -140,6 +141,16 @@ public class LiveRecordView extends BaseMediaView implements
                 Object obj = msg.obj;
                 if (obj instanceof OnStreamOrientationListener) {
                     ((OnStreamOrientationListener)obj).onStreamOrientationChanged(msg.arg1);
+                }
+                /*Message m = mHandler.obtainMessage(MSG_SWITCH_ORIENTATION);
+                m.obj = msg.obj;
+                m.what = MSG_SWITCH_ORIENTATION_DELAY;
+                mHandler.sendMessageDelayed(m, 2000);*/
+                break;
+            case MSG_SWITCH_ORIENTATION_DELAY:
+                Object o = msg.obj;
+                if (o instanceof OnStreamOrientationListener) {
+                    ((OnStreamOrientationListener)o).onStreamOrientationChanged(msg.arg1);
                 }
                 break;
             case MSG_SWITCH_RESOLUTION:

@@ -302,16 +302,29 @@ public class ClassroomController {
     /**
      * 进入视频播放页面
      */
-    public void enterVideoPlayer(LibDoc doc) {
+    public void enterVideoPlayPage(LibDoc doc) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.KEY_LIB_DOC, doc);
         VideoPlayFragment videoPlayFragment = new VideoPlayFragment();
         videoPlayFragment.setArguments(bundle);
         ((ClassroomActivity) mContext).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.document_layout, videoPlayFragment)
+                .add(R.id.video_play_layout, videoPlayFragment)
                 .addToBackStack("video_player")
                 .commit();
+    }
+
+    public void exitVideoPlayPage() {
+        if (mContext instanceof FragmentActivity) {
+            FragmentActivity activity = (FragmentActivity) mContext;
+            Fragment fragment = activity.getSupportFragmentManager()
+                    .findFragmentById(R.id.video_play_layout);
+            if (fragment instanceof VideoPlayFragment) {
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .remove(fragment);
+            }
+        }
     }
 
     /**
@@ -326,7 +339,7 @@ public class ClassroomController {
         if (mimeType.startsWith(Collaboration.PictureMimeTypes.ALL)) {
             enterPhotoDoodle(url, listener);
         } else if (mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
-            enterVideoPlayer(doc);
+            enterVideoPlayPage(doc);
         } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
                 || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
             ArrayList<LibDoc.ExportImg> images = MaterialUtil.getSortImgs(doc.exported != null ? doc.exported.images : null);
