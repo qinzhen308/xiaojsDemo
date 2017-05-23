@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -529,6 +528,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
 
         mTipsHelper.hideTips();
+
+        //exit video play
+        ClassroomController.getInstance().exitVideoPlayPage();
     }
 
     @Override

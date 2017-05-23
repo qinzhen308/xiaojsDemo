@@ -114,6 +114,11 @@ public class PlayerTextureView extends BaseMediaView {
 
         mPlayer.setBufferingIndicator(mLoadingLayout);
         //showLoading(true);
+        setConfigs(ratio);
+        //setBackgroundResource(R.drawable.common_white_bg_corner);
+    }
+
+    public void setConfigs(int ratio) {
         AVOptions options = new AVOptions();
 
         // the unit of timeout is ms
@@ -142,7 +147,6 @@ public class PlayerTextureView extends BaseMediaView {
         mPlayer.setDisplayAspectRatio(ratio);
         mPlayer.setOnInfoListener(mOnInfoListener);
         mPlayer.setDisplayOrientation(0);
-        //setBackgroundResource(R.drawable.common_white_bg_corner);
     }
 
     @Override
@@ -221,7 +225,7 @@ public class PlayerTextureView extends BaseMediaView {
                     mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
                     break;
                 case PLMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
-                    Log.i("aaa", "=========video rotation changed=================");
+                    //Log.i("aaa", "=========video rotation changed=================");
                     break;
             }
 
