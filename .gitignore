@@ -48,3 +48,6 @@ _sandbox
 
 #qrcode
 /qrcode/build
+
+#calendar
+/calendar/build

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <RadioGroup
+        android:id="@+id/tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px100"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:checkedButton="@+id/tab1"
+        >
+
+        <RadioButton
+            android:id="@+id/tab1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="全部 0"
+            android:gravity="center"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/font_black"
+            android:layout_marginLeft="10dp"
+            android:button="@null"
+            />
+        <RadioButton
+            android:id="@+id/tab2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="待上课 0"
+            android:gravity="center"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:drawableBottom="@color/main_orange"
+            android:layout_marginLeft="10dp"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/font_black"
+            android:button="@null"
+
+            />
+
+        <RadioButton
+            android:id="@+id/tab3"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="上课中 0"
+            android:gravity="center"
+            android:drawableBottom="@color/main_orange"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/font_black"
+            android:button="@null"
+
+            />
+
+        <RadioButton
+            android:id="@+id/tab4"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="已完课 0"
+            android:gravity="center"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/font_black"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:drawableBottom="@color/main_orange"
+            android:layout_marginLeft="10dp"
+            android:button="@null"
+
+            />
+
+    </RadioGroup>
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/px25"
+        android:layout_height="match_parent"/>
+
+
+
+</LinearLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@color/gray_item_bg"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/chocolate_light"
+        android:layout_marginTop="@dimen/px46"
+        android:textSize="@dimen/font_34px"
+        android:paddingBottom="@dimen/px5"
+        android:paddingRight="@dimen/px35"
+        android:paddingLeft="@dimen/px35"
+        android:paddingTop="@dimen/px5"
+        android:gravity="center"
+        android:text="09:00"
+        android:textStyle="bold"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tv_total_lessons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60分钟"
+        android:textSize="@dimen/font_22px"
+        android:textColor="@color/gray"
+        android:layout_alignLeft="@+id/tv_date"
+        android:layout_alignRight="@+id/tv_date"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/px46"
+        android:layout_below="@+id/tv_date"
+        android:maxLines="1"
+        />
+
+
+
+    <TextView
+        android:id="@+id/tv_lesson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/font_black"
+        android:layout_marginTop="@dimen/px46"
+        android:textSize="@dimen/font_32px"
+        android:paddingTop="@dimen/px5"
+        android:paddingBottom="@dimen/px5"
+        android:layout_marginLeft="@dimen/px56"
+        android:layout_toRightOf="@id/tv_date"
+        android:text="什么什么课"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/btn_review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/font_dark_gray"
+        android:textSize="@dimen/font_24px"
+        android:layout_marginLeft="@dimen/px12"
+        android:layout_below="@+id/tv_lesson"
+        android:paddingTop="@dimen/px10"
+        android:paddingBottom="@dimen/px10"
+        android:layout_alignLeft="@+id/tv_lesson"
+        android:text="可回放"
+        android:drawablePadding="@dimen/px9"
+        android:drawableLeft="@drawable/ic_review"
+        android:maxLines="1"
+        />
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px2"
+        android:background="@color/gray_line"
+        android:layout_below="@+id/tv_total_lessons"
+        />
+
+    <View
+        android:layout_width="@dimen/px2"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/bottom_line"
+        android:layout_alignParentTop="true"
+        android:background="@color/gray_line"
+        android:layout_toRightOf="@+id/tv_date"
+        />
+
+    <View
+        android:layout_width="@dimen/px12"
+        android:layout_height="@dimen/px12"
+        android:background="@drawable/shape_orange_point"
+        android:layout_toRightOf="@+id/tv_date"
+        android:layout_alignTop="@+id/tv_date"
+        android:layout_marginLeft="@dimen/px_6"
+        android:layout_marginTop="@dimen/px20"
+        />
+
+
+
+</RelativeLayout>

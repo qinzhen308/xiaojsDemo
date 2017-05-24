@@ -16,7 +16,7 @@
     <ImageView
             android:id="@+id/login_logo"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/px144"
+            android:layout_marginBottom="@dimen/px130"
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
             android:src="@drawable/login_logo"
@@ -72,7 +72,7 @@
             android:paddingLeft="@dimen/px57"
             android:paddingRight="@dimen/px57"
             android:layout_marginTop="@dimen/px18"
-            android:layout_above="@+id/forget_pwd">
+            android:layout_above="@+id/login_btn">
 
         <ImageView
                 android:id="@+id/login_pwd_icon"
@@ -128,10 +128,9 @@
             android:textColor="@color/font_white"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/px57"
-            android:paddingTop="@dimen/px26"
-            android:paddingBottom="@dimen/px26"
-            android:layout_marginBottom="@dimen/px60"
-            android:layout_above="@+id/login_btn"
+            android:layout_below="@+id/login_btn"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
             android:textSize="@dimen/font_26px"/>
 
     <Button
@@ -140,15 +139,86 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/px57"
             android:layout_marginRight="@dimen/px57"
-            android:layout_marginBottom="@dimen/px86"
+            android:layout_marginTop="@dimen/px70"
             android:text="@string/login"
             style="@style/BigSubmitBtn"
             android:textStyle="bold"
-            android:layout_above="@+id/reg_guide"/>
+            android:layout_above="@+id/layout_third_tip"/>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/layout_third_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/layout_third"
+        android:layout_marginBottom="@dimen/px20"
+        android:layout_marginTop="@dimen/px70"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="@dimen/px100"
+            android:layout_height="@dimen/px1"
+            android:background="@color/white"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_28px"
+            android:text="@string/third_login_tip"
+            android:layout_marginLeft="@dimen/px31"
+            android:layout_marginRight="@dimen/px31"
+            android:textColor="@color/white"
+            />
+
+
+        <View
+            android:layout_width="@dimen/px100"
+            android:layout_height="@dimen/px1"
+            android:background="@color/white"
+            />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_third"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/reg_guide"
+        android:layout_alignLeft="@+id/reg_guide"
+        android:layout_alignStart="@+id/reg_guide">
+
+        <ImageView
+            android:id="@+id/login_wx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/px70"
+            android:src="@drawable/btn_wechat"
+            />
+
+        <ImageView
+            android:id="@+id/login_qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_qq"
+            />
+
+
+
+
+    </LinearLayout>
+
+
 
     <TextView
             android:id="@+id/reg_guide"
-            android:layout_marginBottom="@dimen/px68"
+            android:layout_marginBottom="@dimen/px30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_guide"

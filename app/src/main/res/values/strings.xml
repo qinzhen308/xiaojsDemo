@@ -123,10 +123,24 @@
     <string name="verify_error">请输入正确的验证码</string>
     <string name="set_new_pwd_succ">密码设置成功，请重新登录</string>
     <string name="set_new_pwd_error">密码设置失败，请重新设置</string>
+    <string name="third_login_tip">社交账号直接登录</string>
+    <string name="bind_phone">绑定手机号</string>
     <!--home-->
     <string name="block_cls_time_mark">距上课还有%1$d分钟</string>
     <string name="block_cls_course_num">第&#160;%1$d&#160;课</string>
     <string name="block_cls_course_total">共%1$d节</string>
+    <!--home class-->
+    <string name="i_wanna_lean">我要学</string>
+    <string name="i_wanna_teach">我要教</string>
+    <string name="creative_class">开班</string>
+    <string name="creative_class_tip">可以开设多节课，并且你能对该班级进行管理（排课，增减学生，资料上传、分享等）</string>
+    <string name="creative_lesson">开课</string>
+    <string name="creative_lesson_tip">只能开设单节课，学生能够通过搜索报名，进入教室上课</string>
+    <string name="search_global_tip">班课/个人/机构</string>
+    <string name="search_tip1">输入你要找的班课名称，老师或者机构\n报名你要学的班课，开始学习</string>
+
+
+
     <!--mine-->
     <string name="fans">粉丝</string>
     <string name="follows">关注</string>

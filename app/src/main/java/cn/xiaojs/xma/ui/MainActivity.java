@@ -34,6 +34,7 @@ import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassFragment;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 
@@ -66,7 +67,7 @@ public class MainActivity extends BaseTabActivity {
         //setMiddleTitle(R.string.app_name);
         needHeader(false);
         List<Fragment> fs = new ArrayList<>();
-        fs.add(new LiveFragment());
+        fs.add(new ClassFragment());
         fs.add(new HomeFragment());
         fs.add(new MineFragment());
 

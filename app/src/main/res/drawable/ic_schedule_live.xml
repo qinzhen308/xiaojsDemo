@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive1"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive2"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive3"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive4"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive5"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive6"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive5"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive4"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive3"></item>
+    <item android:duration="80" android:drawable="@drawable/ic_schedulelive2"></item>
+</animation-list>

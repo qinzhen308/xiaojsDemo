@@ -76,6 +76,9 @@ dependencies {
     compile project(':3d_wheelpicker')
     compile project(':qrcode')
     compile files('libs/android-support-v7-recyclerview.jar')
+
+    compile project(':calendar')
+
     //flex layout
     //qiniu
     //crash report
@@ -85,6 +88,11 @@ dependencies {
     compile files('libs/open_sdk_r5781_lite.jar')
     //
     compile files('libs/AMap_Location_V3.3.0_20170118.jar')
+    compile files('libs/SocialSDK_WeChat_Simplify.jar')
+    compile files('libs/umeng_social_api.jar')
+    compile files('libs/umeng_social_net.jar')
+    compile files('libs/umeng_social_tool.jar')
+    compile files('libs/SocialSDK_QQ_Full.jar')
     //pay
     //build apk
     //gaode

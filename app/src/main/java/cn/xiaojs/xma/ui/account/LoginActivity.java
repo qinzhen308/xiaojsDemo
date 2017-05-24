@@ -22,6 +22,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -39,6 +48,7 @@ import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.util.QQUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 
 /*  =======================================================================================
@@ -71,6 +81,8 @@ public class LoginActivity extends BaseActivity {
 
     private Context mContext;
     private boolean mPwdHidden = true;
+
+    public final static int REQUEST_CODE_THIRD_LOGIN=123;
 
     @Override
     protected void addViewContent() {
@@ -170,7 +182,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.left_view, R.id.login_btn, R.id.hide_show_pwd, R.id.forget_pwd})
+    @OnClick({R.id.left_view, R.id.login_btn, R.id.hide_show_pwd, R.id.forget_pwd,R.id.login_wx,R.id.login_qq})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_view:
@@ -185,10 +197,34 @@ public class LoginActivity extends BaseActivity {
             case R.id.forget_pwd:
                 startActivity(new Intent(this, ForgetPasswordStepOneActivity.class));
                 break;
+            case R.id.login_wx:
+                thirdLogin(SHARE_MEDIA.WEIXIN);
+                break;
+            case R.id.login_qq:
+                thirdLogin(SHARE_MEDIA.QQ);
+//                QQUtil.getTencent(this).login(this, "get_simple_userinfo", new IUiListener() {
+//                    @Override
+//                    public void onComplete(Object o) {
+//                        Toast.makeText( getApplicationContext(), "qq onComplete", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onError(UiError uiError) {
+//                        Toast.makeText( getApplicationContext(), "qq "+uiError.toString(), Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                        Toast.makeText( getApplicationContext(), "qq cancel", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+                break;
             default:
                 break;
         }
     }
+
 
     private void initRegGuideStyle() {
         SpannableString spanString = new SpannableString(getString(R.string.register_guide));
@@ -317,4 +353,37 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    //----------------三方登录------------
+    private void thirdLogin(final SHARE_MEDIA platform){
+        UMShareAPI.get(this).getPlatformInfo(this, platform ,umAuthListener);
+    }
+
+    private UMAuthListener umAuthListener = new UMAuthListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+            //授权开始的回调
+        }
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            Toast.makeText(getApplicationContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(LoginActivity.this,BindThirdAccountActivity.class),REQUEST_CODE_THIRD_LOGIN);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            Toast.makeText( getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+        }
+    };
 }

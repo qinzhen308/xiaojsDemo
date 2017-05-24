@@ -92,7 +92,7 @@
 
     <color name="light_grey">#fcfcfc</color>
     <color name="moment_comment_bg">#eaecef</color>
-    
+
     <color name="light_blue">#ecf6fa</color>
     <color name="light_blue1">#ebf6fa</color>
     <color name="light_blue2">#95cee3</color>
@@ -143,5 +143,13 @@
 
     <color name="blue">#0000FF</color>
     <color name="subject_selected_blue">#7598c1</color>
+
+    <color name="chocolate_light">#b49e89</color>
+    <color name="gray_line">#e7e8ea</color>
+    <color name="gray_item_bg">#f7f9fa</color>
+    <color name="orange_point">#ff4343</color>
+
+    <color name="week_header_text_color">#d3bda7</color>
+    <color name="date_picked_color">#198CFF</color>
 
 </resources>

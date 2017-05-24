@@ -48,6 +48,11 @@ public class CommonPopupMenu {
         //mPopupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.bg_popup_menu));
     }
 
+    public void setWidth(int px){
+        mPopupWindow.setWidth(px);
+//        mListView.getLayoutParams().width=px;
+    }
+
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;

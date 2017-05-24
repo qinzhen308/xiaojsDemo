@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="mcvCalendar" type="id"/>
+    <item name="wcvCalendar" type="id"/>
+    <item name="rlMonthCalendar" type="id"/>
+    <item name="over_layout_wraper" type="id"/>
+    <item name="over_layout" type="id"/>
+
+</resources>

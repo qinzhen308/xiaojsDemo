@@ -48,6 +48,7 @@ import cn.xiaojs.xma.model.social.Dynamic;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.lesson.xclass.LessonScheduleActivity;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
