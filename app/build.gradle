@@ -28,6 +28,7 @@ android {
             keyPassword ksPro['keyPwd']
 
         }
+
     }
 
     buildTypes {
@@ -41,6 +42,9 @@ android {
             shrinkResources true
             signingConfig signingConfigs.release_config
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.release_config
         }
     }
 
@@ -57,14 +61,10 @@ android {
 }
 
 dependencies {
-
     compile 'com.android.support:multidex:1.0.1'
-
     //compile 'com.google.zxing:core:3.3.0'
-
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.orhanobut:logger:1.15'
-
     //compile 'com.squareup.picasso:picasso:2.5.2'
     //network & Rest api
     //image
@@ -76,9 +76,7 @@ dependencies {
     compile project(':3d_wheelpicker')
     compile project(':qrcode')
     compile files('libs/android-support-v7-recyclerview.jar')
-
     compile project(':calendar')
-
     //flex layout
     //qiniu
     //crash report
