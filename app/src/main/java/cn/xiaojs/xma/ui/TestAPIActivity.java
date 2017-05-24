@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.grade.MaterialDownloadActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.view.ClassLessonView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.QQUtil;
@@ -84,16 +86,21 @@ public class TestAPIActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_api);
 
+//        ClassLessonView view = new ClassLessonView(this);
+//        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//
+//        setContentView(view);
+
         imageView = (ImageView) findViewById(R.id.loading);
-
-
+//
+//
         Glide.with(this).load(R.drawable.login_logo).into(imageView);
         //InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
         //ExternalCacheDiskCacheFactory
 
-
-        iwxapi = WechatUtil.registerToWechat(this);
-        tencent = QQUtil.getTencent(this.getApplicationContext());
+//
+//        iwxapi = WechatUtil.registerToWechat(this);
+//        tencent = QQUtil.getTencent(this.getApplicationContext());
 
 
 

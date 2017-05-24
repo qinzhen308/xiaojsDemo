@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cn.xiaojs.xma.ui.lesson.xclass.view.ClassLessonView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-        android:background="@color/white"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
         >
+
     <ImageView
             android:id="@+id/flag_view"
             android:layout_width="wrap_content"
@@ -13,6 +11,7 @@
             android:layout_alignParentLeft="true"
             android:src="@drawable/ic_flag_teach"
             />
+
     <TextView
             android:id="@+id/title_view"
             android:layout_width="match_parent"
@@ -24,6 +23,7 @@
             android:layout_marginRight="@dimen/px30"
             android:text="我的标题"
             />
+
     <TextView
             android:id="@+id/pay_tips_view"
             android:layout_width="wrap_content"
@@ -35,6 +35,7 @@
             android:layout_alignLeft="@id/title_view"
             android:text="@string/free"
             />
+
     <TextView
             android:id="@+id/member_view"
             android:layout_width="wrap_content"
@@ -153,4 +154,4 @@
                 />
     </RelativeLayout>
 
-</cn.xiaojs.xma.ui.lesson.xclass.view.ClassLessonView>
+</merge>
