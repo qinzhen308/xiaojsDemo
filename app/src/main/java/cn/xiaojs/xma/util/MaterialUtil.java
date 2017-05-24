@@ -13,6 +13,7 @@ import java.util.Comparator;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.common.PlayStreamingActivity;
 
 /**
  * Created by maxiaobao on 2017/4/12.
@@ -52,6 +53,21 @@ public class MaterialUtil {
                 }
                 UIUtils.toImageViewActivity(activity, urls);
             }
+
+        }else if (Collaboration.isStreaming(mimeType)) {
+//
+//            Intent intent = new Intent(activity, PlayStreamingActivity.class);
+//            intent.putExtra(PlayStreamingActivity.EXTRA_KEY, bean.key);
+//
+//            activity.startActivity(intent);
+
+            String url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).append(".m3u8").toString();
+
+            Uri data = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(data, mimeType);
+            activity.startActivity(intent);
+
 
         } else {
 

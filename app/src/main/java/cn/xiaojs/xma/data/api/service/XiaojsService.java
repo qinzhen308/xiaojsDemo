@@ -8,6 +8,7 @@ import cn.xiaojs.xma.model.AccessLesson;
 
 import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
@@ -42,6 +43,7 @@ import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.material.LibOverview;
@@ -285,6 +287,12 @@ public interface XiaojsService {
     //Hide Lesson
     @PATCH("/v1/ctl/lessons/{lesson}/hidden")
     Call<ResponseBody> hideLesson(@Path("lesson") String lesson);
+
+    //Join Lesson
+    @POST("/v1/ctl/lessons/{lesson}/join")
+    Call<JoinResponse> joinLesson(@Path("lesson") String lesson, @Body Registrant registrant);
+
+
 
 
 

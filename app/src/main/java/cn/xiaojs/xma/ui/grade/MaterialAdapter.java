@@ -100,7 +100,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             thumbnail(bean.key, R.drawable.ic_picture, holder);
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
             thumbnail(bean.key, R.drawable.ic_pdf, holder);
-        } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)){
+        } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)
+                || FileUtil.STEAMIMG == FileUtil.getFileType(bean.mimeType)){
             thumbnail(bean.key, R.drawable.ic_video_mine, holder);
         } else {
             thumbnail(bean.key, R.drawable.ic_unknown, holder);

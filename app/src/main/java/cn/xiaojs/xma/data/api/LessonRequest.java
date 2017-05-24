@@ -26,11 +26,13 @@ import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
+import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
 import cn.xiaojs.xma.model.ctl.EnrollPage;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
@@ -242,6 +244,11 @@ public class LessonRequest extends ServiceRequest {
     public void hideLesson(String lesson) {
         Call<ResponseBody> call = getService().hideLesson(lesson);
         enqueueRequest(APIType.HIDE_LESSON, call);
+    }
+
+    public void joinLesson(String lesson, Registrant registrant) {
+        Call<JoinResponse> call = getService().joinLesson(lesson,registrant);
+        enqueueRequest(APIType.JOIN_LESSON, call);
     }
 
 }
