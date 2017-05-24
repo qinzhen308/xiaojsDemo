@@ -166,4 +166,6 @@ public class APIType {
     public static final int GET_ORG_TEACHERS = 95;
     public static final int JOIN_LESSON = 96;
 
+    public static final int SOCIAL_LOGIN = 97;
+
 }

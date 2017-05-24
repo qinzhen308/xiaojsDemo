@@ -13,6 +13,7 @@ import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 
+import cn.xiaojs.xma.model.security.SocialLoginParams;
 import cn.xiaojs.xma.util.JpushUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -51,6 +52,19 @@ public class LoginRequest extends ServiceRequest {
 
     }
 
+    public void socialLogin(String ea, String openid) {
+
+        SocialLoginParams socialLoginParams = new SocialLoginParams();
+
+        Location location = AccountDataManager.getLocation(getContext());
+        if (location !=null) {
+            socialLoginParams.geo = location;
+        }
+
+        Call<LoginInfo> call = getService().socialLogin(ea, openid, socialLoginParams);
+        enqueueRequest(APIType.SOCIAL_LOGIN, call);
+    }
+
     public void logout() {
 
         Call<ResponseBody> call = getService().logout();
@@ -85,7 +99,7 @@ public class LoginRequest extends ServiceRequest {
 
     @Override
     public void doTask(int apiType, Object responseBody) {
-        if (apiType == APIType.LOGIN) {
+        if (apiType == APIType.LOGIN || apiType == APIType.SOCIAL_LOGIN) {
             LoginInfo info = (LoginInfo) responseBody;
             AccountDataManager.saveUserInfo(getApiManager().getAppContext(), info.getUser());
             UpgradeManager.setUpgrade(getContext(),info.getUpgrade());

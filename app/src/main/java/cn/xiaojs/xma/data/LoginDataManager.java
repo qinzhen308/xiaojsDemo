@@ -28,6 +28,63 @@ import com.orhanobut.logger.Logger;
 public class LoginDataManager {
 
     /**
+     * 社交登陆
+     * @param context
+     * @param ea
+     * @param openid
+     * @param callback
+     */
+    public static void socialLogin(final Context context,
+                                   final String ea,
+                                   final String openid,
+                                   final APIServiceCallback<LoginInfo> callback) {
+
+        if (SecurityManager.needCheckSession(context)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the token or session is null, so check session first");
+            }
+
+            SecurityManager.checkSession(context, new APIServiceCallback<AuthenticateStatus>() {
+                @Override
+                public void onSuccess(AuthenticateStatus status) {
+                    String csrf;
+
+                    if (status == null || TextUtils.isEmpty(csrf = status.csrf)) {
+                        callback.onFailure(Errors.NO_ERROR, "获取Token为NULL");
+                        return;
+                    }
+
+                    //save token and session
+                    SecurityManager.saveCSRFToken(context, csrf);
+                    AccountDataManager.saveSessionID(context, status.sessionID);
+
+                    //now to login
+                    LoginRequest loginRequest = new LoginRequest(context, callback);
+                    loginRequest.setFromRegister(false);
+                    loginRequest.socialLogin(ea, openid);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("reuest token failed,so login failed");
+                    }
+
+                    callback.onFailure(errorCode, errorMessage);
+                }
+            });
+
+        } else {
+            LoginRequest loginRequest = new LoginRequest(context, callback);
+            loginRequest.setFromRegister(false);
+            loginRequest.socialLogin(ea, openid);
+        }
+
+    }
+
+    /**
      * 调用登陆API，进行登陆
      *
      * @param params 登陆API中需要上传的参数

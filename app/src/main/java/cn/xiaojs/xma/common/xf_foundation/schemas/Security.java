@@ -23,6 +23,12 @@ public class Security {
         public static final int SMS_4_REGISTRATION = 1;
         public static final int SMS_4_PASSWORD_RESET = 2;
         public static final int SMS_4_MOBILE_RESET = 3;
+
+        public static final int SMS4OrganizationRegistration = 4;
+        public static final int SMS4OrganizationPasswordReset = 5;
+
+        public static final int SMS4WeChatAssociation = 6;
+        public static final int SMS4QQAssociation = 7;
     }
 
 
