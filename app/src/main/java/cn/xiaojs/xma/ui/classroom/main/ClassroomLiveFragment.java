@@ -46,7 +46,7 @@ import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
-import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
+import cn.xiaojs.xma.ui.classroom.live.OnStreamChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
 import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
@@ -61,7 +61,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener {
+        OnStreamChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener {
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
 
     protected CtlSession mCtlSession;

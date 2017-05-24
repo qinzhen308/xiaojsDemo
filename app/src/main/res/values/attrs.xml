@@ -286,6 +286,7 @@
     <!-- 播放器 -->
     <declare-styleable name="PlayerTextureView">
         <attr name="play_mode"/>
+        <attr name="recycle_player" format="boolean"/>
     </declare-styleable>
     <!--直播和点播-->
     <attr name="play_mode">

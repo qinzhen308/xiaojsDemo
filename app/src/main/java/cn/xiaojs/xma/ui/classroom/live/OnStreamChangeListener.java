@@ -16,7 +16,7 @@ package cn.xiaojs.xma.ui.classroom.live;
 
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 
-public interface OnStreamStateChangeListener {
+public interface OnStreamChangeListener {
     /**
      * 当流已经开始
      */

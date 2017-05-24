@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
@@ -44,7 +45,7 @@ public class PublishVideoController extends VideoController {
     private int loadingSize = 36;
     private int loadingDesc = 20;
 
-    public PublishVideoController(Context context, View root, OnStreamStateChangeListener listener) {
+    public PublishVideoController(Context context, View root, OnStreamChangeListener listener) {
         super(context, root, listener);
         listenerSocket();
         loadingSize = context.getResources().getDimensionPixelSize(R.dimen.px36);
@@ -86,8 +87,8 @@ public class PublishVideoController extends VideoController {
         mPlayView.showLoading(true);
 
 
-        if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mPlayType, mExtraData);
+        if (mStreamChangeListener != null) {
+            mStreamChangeListener.onStreamStarted(mPlayType, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -106,8 +107,8 @@ public class PublishVideoController extends VideoController {
         if (mPublishView != null) {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
-                if (mStreamListener != null) {
-                    mStreamListener.onStreamStopped(type, null);
+                if (mStreamChangeListener != null) {
+                    mStreamChangeListener.onStreamStopped(type, null);
                 }
             } else {
                 //send stopped stream
@@ -119,8 +120,8 @@ public class PublishVideoController extends VideoController {
                                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                                     if (response.result) {
                                         mNeedStreamRePublishing = true;
-                                        if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(type, null);
+                                        if (mStreamChangeListener != null) {
+                                            mStreamChangeListener.onStreamStopped(type, null);
                                         }
                                     }
                                 }
@@ -146,8 +147,8 @@ public class PublishVideoController extends VideoController {
             mPlayView.showLoading(false);
             mPlayView.setVisibility(View.GONE);
         }
-        if (mStreamListener != null) {
-            mStreamListener.onStreamStopped(type, null);
+        if (mStreamChangeListener != null) {
+            mStreamChangeListener.onStreamStopped(type, null);
         }
     }
 
@@ -156,7 +157,11 @@ public class PublishVideoController extends VideoController {
         if (mPublishView.getVisibility() == View.VISIBLE && mStreamPublishing) {
             mPublishView.captureOriginalFrame(callback);
         } else if (mPlayView.getVisibility() == View.VISIBLE && mStreamPlaying) {
-            Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
+            PLVideoTextureView plVideoTextureView = mPlayView.getPlayer();
+            Bitmap bmp = null;
+            if (plVideoTextureView != null) {
+                bmp = plVideoTextureView.getTextureView().getBitmap();
+            }
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }
@@ -186,8 +191,8 @@ public class PublishVideoController extends VideoController {
                         if (args != null && args.length > 0) {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
-                                if (mStreamListener != null) {
-                                    mStreamListener.onStreamStarted(mPublishType, null);
+                                if (mStreamChangeListener != null) {
+                                    mStreamChangeListener.onStreamStarted(mPublishType, null);
                                     muteOrUnmute();
                                 }
                                 mStreamPublishing = true;

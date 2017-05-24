@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:videoplayer="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/publish_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -24,7 +25,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="@dimen/px10"
             android:layout_marginBottom="@dimen/px10"
-            android:layout_above="@+id/discussion_list_view"/>
+            android:layout_above="@+id/discussion_list_view"
+            videoplayer:recycle_player="true"/>
 
     <ImageView
             android:id="@+id/close_play_full_screen"

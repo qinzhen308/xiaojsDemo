@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
@@ -37,7 +38,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
 public class PlayVideoController extends VideoController {
 
-    public PlayVideoController(Context context, View root, OnStreamStateChangeListener listener) {
+    public PlayVideoController(Context context, View root, OnStreamChangeListener listener) {
         super(context, root, listener);
         listenerSocket();
     }
@@ -68,8 +69,8 @@ public class PlayVideoController extends VideoController {
         mPlayView.setPath(mPlayStreamUrl);
         mPlayView.resume();
         mPlayView.showLoading(true);
-        if (mStreamListener != null) {
-            mStreamListener.onStreamStarted(mPlayType, mExtraData);
+        if (mStreamChangeListener != null) {
+            mStreamChangeListener.onStreamStarted(mPlayType, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -86,8 +87,8 @@ public class PlayVideoController extends VideoController {
         if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
             if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
                 mNeedStreamRePublishing = true;
-                if (mStreamListener != null) {
-                    mStreamListener.onStreamStopped(type, null);
+                if (mStreamChangeListener != null) {
+                    mStreamChangeListener.onStreamStopped(type, null);
                 }
             } else {
                 //send stopped stream
@@ -99,8 +100,8 @@ public class PlayVideoController extends VideoController {
                                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                                     if (response.result) {
                                         mNeedStreamRePublishing = true;
-                                        if (mStreamListener != null) {
-                                            mStreamListener.onStreamStopped(type, null);
+                                        if (mStreamChangeListener != null) {
+                                            mStreamChangeListener.onStreamStopped(type, null);
                                         }
                                     }
                                 }
@@ -122,8 +123,8 @@ public class PlayVideoController extends VideoController {
             mPlayView.showLoading(false);
             mPlayView.setVisibility(View.GONE);
 
-            if (mStreamListener != null) {
-                mStreamListener.onStreamStopped(type, null);
+            if (mStreamChangeListener != null) {
+                mStreamChangeListener.onStreamStopped(type, null);
             }
         }
     }
@@ -131,7 +132,11 @@ public class PlayVideoController extends VideoController {
     @Override
     public void takeVideoFrame(FrameCapturedCallback callback) {
         if (mPlayView.getVisibility() == View.VISIBLE && mStreamPlaying) {
-            Bitmap bmp = mPlayView.getPlayer().getTextureView().getBitmap();
+            PLVideoTextureView plVideoTextureView = mPlayView.getPlayer();
+            Bitmap bmp = null;
+            if (plVideoTextureView != null) {
+                bmp = plVideoTextureView.getTextureView().getBitmap();
+            }
             if (callback != null) {
                 callback.onFrameCaptured(bmp);
             }
@@ -157,8 +162,8 @@ public class PlayVideoController extends VideoController {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
                                 mStreamPublishing = true;
-                                if (mStreamListener != null) {
-                                    mStreamListener.onStreamStarted(mPublishType, null);
+                                if (mStreamChangeListener != null) {
+                                    mStreamChangeListener.onStreamStarted(mPublishType, null);
                                     muteOrUnmute();
                                 }
 

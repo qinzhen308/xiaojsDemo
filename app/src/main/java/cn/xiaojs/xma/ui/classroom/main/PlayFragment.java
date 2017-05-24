@@ -328,11 +328,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mVideoHeight = dm.heightPixels;
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayLayout.getLayoutParams();
         if (params != null) {
+            params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
             params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         } else {
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            mPlayLayout.setLayoutParams(params);
         }
+        mPlayLayout.setLayoutParams(params);
     }
 
     private void updatePortraitPlayViewStyle() {
@@ -351,11 +352,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mVideoHeight = (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayLayout.getLayoutParams();
         if (params != null) {
+            params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
             params.height = mVideoHeight;
         } else {
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, mVideoHeight);
-            mPlayLayout.setLayoutParams(params);
         }
+        mPlayLayout.setLayoutParams(params);
     }
 
     @Override

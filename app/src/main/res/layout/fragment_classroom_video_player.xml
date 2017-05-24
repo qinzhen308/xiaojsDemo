@@ -14,7 +14,8 @@
             android:layout_centerInParent="true"
             android:visibility="gone"
             android:background="@color/black"
-            videoplayer:play_mode="video" />
+            videoplayer:play_mode="video"
+            videoplayer:recycle_player="false"/>
 
     <ImageView
             android:id="@+id/back"

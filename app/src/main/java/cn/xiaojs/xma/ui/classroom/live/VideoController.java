@@ -17,12 +17,8 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
-import com.pili.pldroid.player.PLMediaPlayer;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
@@ -36,7 +32,6 @@ import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
-import cn.xiaojs.xma.util.DeviceUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public abstract class VideoController implements StreamConfirmCallback {
@@ -62,7 +57,7 @@ public abstract class VideoController implements StreamConfirmCallback {
      * 是否需要重新播放流
      */
     protected boolean mNeedStreamRePlaying = false;
-    protected OnStreamStateChangeListener mStreamListener;
+    protected OnStreamChangeListener mStreamChangeListener;
 
     protected int mPlayType;
     protected int mPublishType;
@@ -78,13 +73,10 @@ public abstract class VideoController implements StreamConfirmCallback {
 
     protected Object mExtraData;
 
-    protected int mPlayVideoWidth;
-    protected int mPlayVideoHeight;
-
-    public VideoController(Context context, View root, OnStreamStateChangeListener listener) {
+    public VideoController(Context context, View root, OnStreamChangeListener listener) {
         mContext = context;
         mRoot = root;
-        mStreamListener = listener;
+        mStreamChangeListener = listener;
         mHandler = new Handler();
 
         mPeerStreamViewWidth = context.getResources().getDimensionPixelOffset(R.dimen.px160);
@@ -95,30 +87,11 @@ public abstract class VideoController implements StreamConfirmCallback {
         init(root);
         //一个activity不能多个LiveRecordView同时存在
         if (mPublishView != null) {
-            mPublishView.setOnStreamingStateListener(mStreamingStateChangedListener);
+            mPublishView.setOnStreamingStateListener(mStreamingStateListener);
         }
 
         if (mPlayView != null) {
-            mPlayView.setPLMediaPlayerInfoListener(new PLMediaPlayer.OnInfoListener() {
-                @Override
-                public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
-                    if (what == PLMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                        mPlayVideoWidth = plMediaPlayer.getVideoWidth();
-                        mPlayVideoHeight = plMediaPlayer.getVideoHeight();
-                    }
-                    return false;
-                }
-            });
-
-            mPlayView.getPlayer().setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
-                @Override
-                public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int i2, int i3) {
-                    Log.i("aaa", "width==" + width + "   height=" + height + "  i2=" + i2 + "  i3=" + i3);
-                    if (mStreamListener != null) {
-                        mStreamListener.onStreamSizeChanged(mPlayView, width, height);
-                    }
-                }
-            });
+            mPlayView.setOnStreamStateChangeListener(mStreamChangeListener);
         }
 
         onResume();
@@ -312,7 +285,7 @@ public abstract class VideoController implements StreamConfirmCallback {
     /**
      * 推流的监听器（个人推流或直播推流）
      */
-    protected StreamingStateChangedListener mStreamingStateChangedListener = new StreamingStateChangedListener() {
+    protected StreamingStateChangedListener mStreamingStateListener = new StreamingStateChangedListener() {
         @Override
         public void onStateChanged(StreamingState streamingState, Object o) {
             switch (streamingState) {
