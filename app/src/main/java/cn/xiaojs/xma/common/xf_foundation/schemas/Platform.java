@@ -88,4 +88,14 @@ public class Platform {
         public static final String DELETED = "Deleted";
     }
 
+
+    //
+    // Defines the external 3rd-party app types.
+    //
+
+    public static class ExternalApp {
+        public static final int WECHAT = 1;
+        public static final int QQ = 2;
+    }
+
 }

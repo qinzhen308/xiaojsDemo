@@ -10,6 +10,7 @@ import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.Upgrade;
+import cn.xiaojs.xma.model.account.AssociationStaus;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.Location;
@@ -39,6 +40,7 @@ import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.model.account.RegisterInfo;
 
+import cn.xiaojs.xma.model.account.SocialRegisterInfo;
 import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
@@ -183,6 +185,16 @@ public interface XiaojsService {
                                                     @Path("pagination") String pagination);
 
 
+    //Check Association
+    @GET("/v1/accounts/association/{ea}/{openid}")
+    Call<AssociationStaus> checkAssociation(@Path("ea") String ea, @Path("openid") String openid);
+
+    //Social Associate
+    @POST("/v1/accounts/association/{ea}/{openid}")
+    Call<ResponseBody> socialAssociate(@Path("ea") String ea,
+                                       @Path("openid") String openid,
+                                       @Body SocialRegisterInfo registerInfo);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //CTL
@@ -264,7 +276,6 @@ public interface XiaojsService {
                                           @Body AccessLesson accessLesson);
 
 
-
     //Get Classes
     @GET("/v1/ctl/classes/{criteria}/{pagination}")
     Call<GetLessonsResponse> getClasses(@Path("criteria") String criteria,
@@ -295,10 +306,6 @@ public interface XiaojsService {
     Call<JoinResponse> joinLesson(@Path("lesson") String lesson, @Body Registrant registrant);
 
 
-
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories
@@ -311,9 +318,9 @@ public interface XiaojsService {
 
     //Get Subjects
     @GET("/v1/categories/subjects/{parent}")
-    Call<List<CSubject>>getSubjects(@Path("parent") String parent,
-                                    @Query("page") int page,
-                                    @Query("limit") int limit);
+    Call<List<CSubject>> getSubjects(@Path("parent") String parent,
+                                     @Query("page") int page,
+                                     @Query("limit") int limit);
 
     //Add Open Subject
     @POST("/v1/categories/subjects")
@@ -322,8 +329,7 @@ public interface XiaojsService {
     //Search Subjects
     @GET("/v1/categories/subjects/{name}/search/{pagination}")
     Call<CollectionPage<CSubject>> searchSubjects(@Path("name") String name,
-                                        @Path("pagination") String pagination);
-
+                                                  @Path("pagination") String pagination);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,13 +344,11 @@ public interface XiaojsService {
     //CreatePaymentCharge
     @GET("/v1/order/{order}/charge/{channel}")
     Call<ResponseBody> createPaymentCharge(@Path("order") String order,
-                                            @Path("channel") String channel);
+                                           @Path("channel") String channel);
 
     //Get Orders
     @GET("/v1/orders")
     Call<List<EnrollOrder>> getOrders(@Query("page") int page, @Query("limit") int limit);
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,25 +363,24 @@ public interface XiaojsService {
     //Get Notifications Overview
     @GET("/v1/platform/notifications/overview/{pagination}")
     Call<GNOResponse> getNotificationsOverview(
-                                               @Path("pagination") String pagination);
+            @Path("pagination") String pagination);
 
     //Get Notifications
     @GET("/v1/platform/notifications/{criteria}/{pagination}")
     Call<GENotificationsResponse> getNotifications(
-                                                   @Path("criteria") String criteria,
-                                                   @Path("pagination") String pagination);
+            @Path("criteria") String criteria,
+            @Path("pagination") String pagination);
 
     //Delete Notification
     @DELETE("/v1/platform/notifications/{notification}")
     Call<ResponseBody> deleteNotification(
-                                   @Path("notification") String notification);
+            @Path("notification") String notification);
 
 
     //Ignore Notifications
     @PATCH("/v1/platform/notifications/{criteria}")
     Call<IgnoreNResponse> ignoreNotifications(
-                                              @Path("criteria") String criteria);
-
+            @Path("criteria") String criteria);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -410,7 +413,6 @@ public interface XiaojsService {
     Call<SearchResponse> searchAccountsOrLessons(@Query("key") String key, @Query("size") String size);
 
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Security
@@ -429,7 +431,7 @@ public interface XiaojsService {
     //Social Login
     @POST("/v1/security/sociallogin/{ea}/{openid}")
     Call<LoginInfo> socialLogin(@Path("ea") String ea,
-                                @Path("openid") String openid ,
+                                @Path("openid") String openid,
                                 @Body SocialLoginParams params);
 
     //Logout
@@ -449,14 +451,12 @@ public interface XiaojsService {
 
     //Does User Have Privileges
     @GET("/v1/security/privileges/{privileges}")
-    Call<Privilege[]>havePrivileges(@Path("privileges") String privileges);
+    Call<Privilege[]> havePrivileges(@Path("privileges") String privileges);
 
 
     //Reset Password
     @PATCH("/v1/security/forgot")
     Call<ResponseBody> resetPassword(@Body ResetPwdParam resetPwdParam);
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -489,13 +489,10 @@ public interface XiaojsService {
     Call<DynamicDetail> getActivityDetails(@Path("activity") String activity);
 
 
-
     //Get Comments
     @GET("/v1/social/comments/{criteria}/{pagination}")
     Call<CollectionPage<Comment>> getComments(@Path("criteria") String criteria,
                                               @Path("pagination") String pagination);
-
-
 
 
     // Get Updates
@@ -561,7 +558,7 @@ public interface XiaojsService {
 
     //Get Upload Tokens
     @GET("/v1/collaboration/uploadtokens/{type}/{quantity}")
-    Call<TokenPair[]>getUploadTokens(@Path("type") int type, @Path("quantity") int quantity);
+    Call<TokenPair[]> getUploadTokens(@Path("type") int type, @Path("quantity") int quantity);
 
     //Add To Library
     @POST("/v1/collaboration/documents")

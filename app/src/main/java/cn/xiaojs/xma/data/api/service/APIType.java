@@ -167,5 +167,7 @@ public class APIType {
     public static final int JOIN_LESSON = 96;
 
     public static final int SOCIAL_LOGIN = 97;
+    public static final int SOCIAL_ASSOCIATE = 98;
+    public static final int CHECK_ASSOCIATION = 99;
 
 }
