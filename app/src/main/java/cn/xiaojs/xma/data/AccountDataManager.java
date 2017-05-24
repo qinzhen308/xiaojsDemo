@@ -640,7 +640,7 @@ public class AccountDataManager {
      * @param openid
      * @param callback
      */
-    public void checkAssociation(Context context,
+    public static void checkAssociation(Context context,
                                  String ea,
                                  String openid,
                                  APIServiceCallback<AssociationStaus> callback) {
@@ -656,7 +656,7 @@ public class AccountDataManager {
      * @param info
      * @param callback
      */
-    public void socialAssociate(Context context,
+    public static void socialAssociate(Context context,
                                 String ea,
                                 String openid,
                                 SocialRegisterInfo info,

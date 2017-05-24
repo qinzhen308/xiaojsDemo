@@ -13,12 +13,16 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
+import cn.xiaojs.xma.data.api.SocialRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.VerifyCode;
+import cn.xiaojs.xma.model.account.SocialRegisterInfo;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.ThirdLoginUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -78,7 +82,7 @@ public class BindThirdAccountActivity extends BaseActivity {
             mGetVerifyCodeTv.setEnabled(false);
             showProgress(true);
             long phone = Long.parseLong(phoneTxt);
-            RegisterDataManager.requestSendVerifyCode(this, phone, Security.VerifyMethod.SMS_4_PASSWORD_RESET, new APIServiceCallback<VerifyCode>() {
+            RegisterDataManager.requestSendVerifyCode(this, phone, ThirdLoginUtil.getCaptchaTypeInApi(getIntent().getStringExtra(LoginActivity.INTENT_KEY_EA)), new APIServiceCallback<VerifyCode>() {
 
                 @Override
                 public void onSuccess(VerifyCode object) {
@@ -128,11 +132,7 @@ public class BindThirdAccountActivity extends BaseActivity {
         if (!checkSubmitInfo()) {
             return;
         }
-
-        if(true){
-            Toast.makeText(this,"接口调试中....",Toast.LENGTH_LONG).show();
-            return;
-        }
+        showProgress(true);
 
         String phone = mPhoneNumEdt.getEditableText().toString();
         String verifyCode = mVerifyCodeEdt.getEditableText().toString();
@@ -140,20 +140,24 @@ public class BindThirdAccountActivity extends BaseActivity {
         try {
             final long phoneNum = Long.parseLong(phone);
             final int code = Integer.parseInt(verifyCode);
-
-            RegisterDataManager.requestValidateCode(this, phoneNum, code, Security.VerifyMethod.SMS_4_PASSWORD_RESET, new APIServiceCallback() {
+            SocialRegisterInfo info=new SocialRegisterInfo();
+            info.mobile=phoneNum;
+            info.code=code;
+            info.avatar=getIntent().getStringExtra(LoginActivity.INTENT_KEY_AVATAR);
+            info.nickname=getIntent().getStringExtra(LoginActivity.INTENT_KEY_NAME);
+            info.sex=getIntent().getStringExtra(LoginActivity.INTENT_KEY_SEX);
+            AccountDataManager.socialAssociate(this, getIntent().getStringExtra(LoginActivity.INTENT_KEY_EA), getIntent().getStringExtra(LoginActivity.INTENT_KEY_UID), info, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
-                    Intent intent = new Intent(BindThirdAccountActivity.this, ForgetPasswordStepTwoActivity.class);
-                    intent.putExtra(ForgetPasswordStepTwoActivity.KEY_MOBILE, phoneNum);
-                    intent.putExtra(ForgetPasswordStepTwoActivity.KEY_CODE, code);
-
-                    startActivity(intent);
+                    cancelProgress();
+                    setResult(RESULT_OK,getIntent());
+                    finish();
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-                    Toast.makeText(BindThirdAccountActivity.this, R.string.verify_error , Toast.LENGTH_SHORT).show();
+                    cancelProgress();
+                    Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e) {

@@ -42,13 +42,21 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.DataPref;
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.account.AssociationStaus;
+import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
+import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.QQUtil;
+import cn.xiaojs.xma.util.ThirdLoginUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 
 /*  =======================================================================================
@@ -69,6 +77,11 @@ import cn.xiaojs.xma.util.VerifyUtils;
 public class LoginActivity extends BaseActivity {
 
     private final int PERMISSION_CODE = 0x1;
+    public static final String INTENT_KEY_UID= "intent_key_uid";
+    public static final String INTENT_KEY_EA= "intent_key_ea";
+    public static final String INTENT_KEY_NAME= "intent_key_name";
+    public static final String INTENT_KEY_SEX= "intent_key_sex";
+    public static final String INTENT_KEY_AVATAR= "intent_key_avatar";
 
     @BindView(R.id.reg_guide)
     TextView mRegGuide;
@@ -358,10 +371,16 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK&&requestCode==REQUEST_CODE_THIRD_LOGIN){
+            doThirdLogin(data.getStringExtra(INTENT_KEY_EA),data.getStringExtra(INTENT_KEY_UID));
+        }
     }
 
     //----------------三方登录------------
     private void thirdLogin(final SHARE_MEDIA platform){
+        if(!UMShareAPI.get(this).isInstall(this,platform)){
+            return;
+        }
         UMShareAPI.get(this).getPlatformInfo(this, platform ,umAuthListener);
     }
 
@@ -372,18 +391,78 @@ public class LoginActivity extends BaseActivity {
         }
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-            Toast.makeText(getApplicationContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
-            startActivityForResult(new Intent(LoginActivity.this,BindThirdAccountActivity.class),REQUEST_CODE_THIRD_LOGIN);
+            thirdVerification(ThirdLoginUtil.getLoginTypeInApi(platform) , ThirdLoginUtil.getUId(data,platform),ThirdLoginUtil.getName(data,platform),ThirdLoginUtil.getAvatar(data,platform),ThirdLoginUtil.getSex(data,platform));
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            Toast.makeText( getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+            Toast.makeText( getApplicationContext(), "授权失败", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            Toast.makeText( getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+
         }
     };
+
+    private void thirdVerification(final String ea,final String uid,final String name,final String avatar,final String sex){
+        showProgress(true);
+        AccountDataManager.checkAssociation(this, ea,uid, new APIServiceCallback<AssociationStaus>() {
+            @Override
+            public void onSuccess(AssociationStaus object) {
+                if(object!=null&&object.associated){//授权成功登录
+                    doThirdLogin(ea,uid);
+                }else {
+                    cancelProgress();
+                    startActivityForResult(new Intent(LoginActivity.this,BindThirdAccountActivity.class)
+                                    .putExtra(INTENT_KEY_UID,uid)
+                                    .putExtra(INTENT_KEY_EA,ea)
+                                    .putExtra(INTENT_KEY_NAME,name)
+                                    .putExtra(INTENT_KEY_AVATAR,avatar)
+                                    .putExtra(INTENT_KEY_SEX,sex)
+                            ,REQUEST_CODE_THIRD_LOGIN);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText( getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void doThirdLogin(String ea,String uid){
+        LoginDataManager.socialLogin(this, ea,uid, new APIServiceCallback<LoginInfo>() {
+            @Override
+            public void onSuccess(LoginInfo loginInfo) {
+                cancelProgress();
+                if (loginInfo != null) {
+                    User user = loginInfo.getUser();
+                    if (user != null
+                            && user.getName() != null
+                            && user.getAccount() != null
+                            && user.getAccount().getBasic() != null) {
+
+                        user.getAccount().name = user.getName();
+                        user.getAccount().getBasic().setName(user.getName());
+                    }
+                    XiaojsConfig.mLoginUser = user;
+                    XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    Toast.makeText(getApplicationContext(),"登录失败...",Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
