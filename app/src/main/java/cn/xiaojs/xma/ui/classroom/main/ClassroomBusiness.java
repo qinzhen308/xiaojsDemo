@@ -39,21 +39,21 @@ public class ClassroomBusiness {
     public static final int NETWORK_OTHER = 3;
     private static final String BASE64_JPEG_HEADER = "data:image/jpeg;base64,";
 
-    public static Constants.User getUser(String session) {
+    public static Constants.User getUser(String psType) {
         Constants.User user = Constants.User.STUDENT;
-        if ("LeadSession".equals(session)) {
+        if ("LeadSession".equals(psType)) {
             user = Constants.User.TEACHER;
-        } else if ("AssistantSession".equals(session)) {
+        } else if ("AssistantSession".equals(psType)) {
             user = Constants.User.ASSISTANT;
-        } else if ("RemoteAssistantSession".equals(session)) {
+        } else if ("RemoteAssistantSession".equals(psType)) {
             user = Constants.User.REMOTE_ASSISTANT;
-        } else if ("StudentSession".equals(session)) {
+        } else if ("StudentSession".equals(psType)) {
             user = Constants.User.STUDENT;
-        } else if ("ManagerSession".equals(session)) {
+        } else if ("ManagerSession".equals(psType)) {
             user = Constants.User.MANAGER;
-        } else if ("AuditorSession".equals(session)) {
+        } else if ("AuditorSession".equals(psType)) {
             user = Constants.User.AUDITOR;
-        } else if ("AuditorSession".equals(session)) {
+        } else if ("AuditorSession".equals(psType)) {
             user = Constants.User.ADMINISTRATOR;
         }
 
