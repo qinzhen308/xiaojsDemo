@@ -26,9 +26,11 @@ import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 
+import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
@@ -410,6 +412,25 @@ public class LessonDataManager {
     public static void hideLesson(Context context, String lesson, APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.hideLesson(lesson);
+    }
+
+    /**
+     * 加入无需报名的课
+     * @param context
+     * @param lesson
+     * @param registrant 可选项，此处可传null
+     * @param callback
+     */
+    public static void joinLesson(Context context,
+                                  String lesson,
+                                  Registrant registrant,
+                                  APIServiceCallback<JoinResponse> callback) {
+        if (registrant == null) {
+            registrant = new Registrant();
+        }
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.joinLesson(lesson,registrant);
     }
 
 }

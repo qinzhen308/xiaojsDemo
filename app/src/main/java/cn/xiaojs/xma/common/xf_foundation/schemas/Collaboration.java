@@ -55,6 +55,10 @@ public class Collaboration {
         public static final String OGG = "video/ogg";
     }
 
+    public class StreamingTypes {
+        public static final String HLS = "application/x-mpegurl";
+    }
+
     public class ApplicationMimeTypes {
         public static final String PDF = "application/pdf";
     }
@@ -117,6 +121,16 @@ public class Collaboration {
 
         return false;
 
+    }
+
+    public static boolean isStreaming(String mimeType) {
+        if (TextUtils.isEmpty(mimeType)) return false;
+
+        if (mimeType.equals(StreamingTypes.HLS)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

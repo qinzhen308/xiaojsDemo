@@ -282,6 +282,7 @@
                   android:screenOrientation="portrait"/>
         <activity android:name="com.kaola.qrcodescanner.qrcode.QrCodeActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".ui.common.PlayStreamingActivity"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

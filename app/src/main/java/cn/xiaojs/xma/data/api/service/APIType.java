@@ -164,5 +164,6 @@ public class APIType {
 
     public static final int HIDE_LESSON = 94;
     public static final int GET_ORG_TEACHERS = 95;
+    public static final int JOIN_LESSON = 96;
 
 }
