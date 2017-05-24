@@ -22,12 +22,14 @@ import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CenterData;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
+import cn.xiaojs.xma.model.account.AssociationStaus;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
+import cn.xiaojs.xma.model.account.SocialRegisterInfo;
 import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.account.PwdParam;
 import cn.xiaojs.xma.model.account.VerifyParam;
@@ -628,6 +630,39 @@ public class AccountDataManager {
         AccountRequest accountRequest = new AccountRequest(context,callback);
         accountRequest.getOrgTeachers(account,criteria, pagination);
 
+    }
+
+    /**
+     *Determines whether the specified external application OpenId is associated with an Xiaojs account.
+     *This API can be used to determine whether a 3rd-party account is registered or not.
+     * @param context
+     * @param ea
+     * @param openid
+     * @param callback
+     */
+    public void checkAssociation(Context context,
+                                 String ea,
+                                 String openid,
+                                 APIServiceCallback<AssociationStaus> callback) {
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.checkAssociation(ea, openid);
+    }
+
+    /**
+     * Associates an account on the Xiaojs platform with the specified external application OpenId.
+     * @param context
+     * @param ea
+     * @param openid
+     * @param info
+     * @param callback
+     */
+    public void socialAssociate(Context context,
+                                String ea,
+                                String openid,
+                                SocialRegisterInfo info,
+                                APIServiceCallback callback) {
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.socialAssociate(ea, openid,info);
     }
 
 }

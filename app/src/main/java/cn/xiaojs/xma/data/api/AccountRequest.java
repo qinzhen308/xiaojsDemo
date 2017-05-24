@@ -20,12 +20,14 @@ import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.CompetencyParams;
 
 
+import cn.xiaojs.xma.model.account.AssociationStaus;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
 import cn.xiaojs.xma.model.account.PwdParam;
+import cn.xiaojs.xma.model.account.SocialRegisterInfo;
 import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import okhttp3.ResponseBody;
@@ -173,6 +175,16 @@ public class AccountRequest extends ServiceRequest {
         Call<CollectionPage<OrgTeacher>> call = getService().getOrgTeachers(account,
                 criteriaJsonstr, paginationJsonstr);
         enqueueRequest(APIType.GET_ORG_TEACHERS,call);
+    }
+
+    public void checkAssociation(String ea, String openid) {
+        Call<AssociationStaus> call = getService().checkAssociation(ea, openid);
+        enqueueRequest(APIType.CHECK_ASSOCIATION,call);
+    }
+
+    public void socialAssociate(String ea, String openid, SocialRegisterInfo info) {
+        Call<ResponseBody> call = getService().socialAssociate(ea, openid, info);
+        enqueueRequest(APIType.SOCIAL_ASSOCIATE,call);
     }
 
 }
