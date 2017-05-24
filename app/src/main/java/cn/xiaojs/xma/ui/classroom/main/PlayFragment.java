@@ -372,13 +372,16 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 hideAnim(mContactBtn, "mContactBtn");
                 hideAnim(mOpenTalkBtn, "mOpenTalkBtn");
                 hideAnim(mLandPortraitBtn, "mLandPortraitBtn");
+                hideAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
             } else if (mTopPanel.getVisibility() == View.INVISIBLE) {
                 showAnim(mTopPanel, "mTopPanel");
                 showAnim(mContactBtn, "mContactBtn");
                 showAnim(mOpenTalkBtn, "mOpenTalkBtn");
                 showAnim(mLandPortraitBtn, "mLandPortraitBtn");
+                showAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
             }
 
+            //show/hide take pic btn
             if (isPortrait()) {
                 if (mScreenshotPortraitBtn.getVisibility() == View.VISIBLE) {
                     hideAnim(mScreenshotPortraitBtn, "mScreenshotPortraitBtn");

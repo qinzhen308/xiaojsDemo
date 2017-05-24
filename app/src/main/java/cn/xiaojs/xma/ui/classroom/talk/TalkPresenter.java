@@ -165,7 +165,7 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
                     } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
                         try {
                             return Glide.with(mContext)
-                                    .load(ClassroomBusiness.getMediaUrl(key))
+                                    .load(ClassroomBusiness.getFileUrl(key))
                                     .asBitmap()
                                     .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                                     .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)

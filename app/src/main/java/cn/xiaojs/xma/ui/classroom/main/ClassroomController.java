@@ -335,10 +335,11 @@ public class ClassroomController {
             return;
         }
         String mimeType = doc.mimeType != null ? doc.mimeType.toLowerCase() : "";
-        String url = ClassroomBusiness.getMediaUrl(doc.key);
+        String url = ClassroomBusiness.getFileUrl(doc.key);
         if (mimeType.startsWith(Collaboration.PictureMimeTypes.ALL)) {
             enterPhotoDoodle(url, listener);
-        } else if (mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
+        } else if (Collaboration.isStreaming(mimeType)
+                || mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
             enterVideoPlayPage(doc);
         } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
                 || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
@@ -346,7 +347,7 @@ public class ClassroomController {
             if (images != null) {
                 ArrayList<String> imgUrls = new ArrayList<String>();
                 for (LibDoc.ExportImg img : images) {
-                    imgUrls.add(ClassroomBusiness.getMediaUrl(img.name));
+                    imgUrls.add(ClassroomBusiness.getFileUrl(img.name));
                 }
                 enterPhotoDoodle(imgUrls, listener);
             } else {

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -132,9 +133,22 @@ public class ClassroomBusiness {
     }
 
     /**
-     * 得到多媒体对应在七牛服务器的url
+     * 得到文件对应在七牛服务器的url
      */
-    public static String getMediaUrl(String name) {
+    public static String getFileUrl(String name) {
+        return ApiManager.getFileBucket() + "/" + name;
+    }
+
+    /**
+     * 获得视频在七牛服务器的url
+     * @param name
+     * @return
+     */
+    public static String getVideoUrl(String name, String mimeType) {
+        if (Collaboration.isStreaming(mimeType)) {
+            return ApiManager.getLiveBucket() + "/" + name + ".m3u8";
+        }
+
         return ApiManager.getFileBucket() + "/" + name;
     }
 

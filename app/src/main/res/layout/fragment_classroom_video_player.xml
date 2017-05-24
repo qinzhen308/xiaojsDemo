@@ -4,7 +4,7 @@
         xmlns:videoplayer="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/main_bg"
+        android:background="@color/black"
         android:clickable="true">
 
     <cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView
@@ -13,7 +13,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone"
-            android:background="@color/black"
             videoplayer:play_mode="video"
             videoplayer:recycle_player="false"/>
 

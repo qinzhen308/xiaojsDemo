@@ -311,11 +311,13 @@ public class PublishFragment extends ClassroomLiveFragment {
             hideAnim(mContactBtn, "mContactBtn");
             hideAnim(mOpenTalkBtn, "mOpenTalkBtn");
             hideAnim(mLandPortraitBtn, "mLandPortraitBtn");
+            hideAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
         } else if (mTopPanel.getVisibility() == View.INVISIBLE) {
             showAnim(mTopPanel, "mTopPanel");
             showAnim(mContactBtn, "mContactBtn");
             showAnim(mOpenTalkBtn, "mOpenTalkBtn");
             showAnim(mLandPortraitBtn, "mLandPortraitBtn");
+            showAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
         }
 
         if (isPortrait()) {
