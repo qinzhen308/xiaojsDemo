@@ -2,7 +2,7 @@
 <cn.xiaojs.xma.ui.view.CommonPopupMenuList
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listView"
-        android:layout_width="@dimen/px244"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:cacheColorHint="@null"
         android:listSelector="@android:color/transparent"

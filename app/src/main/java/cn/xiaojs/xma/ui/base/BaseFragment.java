@@ -46,6 +46,7 @@ public abstract class BaseFragment extends Fragment {
     private View mFailReloadBtn;
     private SimpleDataChangeListener mDataChangeListener;
     private boolean mDataChanged = false;
+    private boolean rejectButterKnife=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,9 +54,17 @@ public abstract class BaseFragment extends Fragment {
         mContent = (ViewGroup) inflater.inflate(R.layout.fragment_base, null);
         View content = getContentView();
         addContainerView(content);
+        if(!rejectButterKnife)
         mBinder = ButterKnife.bind(this, content);
         init();
         return mContent;
+    }
+
+    /**
+     * 不想用butterknife
+     */
+    protected final void rejectButterKnife(){
+        rejectButterKnife=true;
     }
 
     protected abstract View getContentView();

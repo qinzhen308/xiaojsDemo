@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_alignWithParentIfMissing="true"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignWithParentIfMissing="true"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <com.jeek.calendar.widget.calendar.WeekBarView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/week_bar_height"
+        android:layout_height="@dimen/px40"
+        android:layout_marginTop="@dimen/px10"
         android:background="@color/calendar_bg_color"
-        app:week_text_size="@integer/calendar_text_size"/>
+        app:week_text_color="@color/week_header_text_color"
+        app:week_text_size="11" />
 
     <com.jeek.calendar.widget.calendar.schedule.ScheduleLayout
         android:id="@+id/slSchedule"
@@ -41,10 +44,15 @@
                         android:overScrollMode="never"
                         app:month_day_text_size="@integer/calendar_text_size"
                         app:month_holiday_color="@color/holiday_text_color"
-                        app:month_selected_circle_color="@color/select_circle_color"
-                        app:month_show_holiday_hint="true"
-                        app:month_show_lunar="true"
-                        app:month_show_task_hint="true"/>
+                        app:month_selected_circle_color="@color/date_picked_color"
+                        app:month_today_text_color="@color/main_orange"
+                        app:month_selected_text_color="@color/white"
+                        app:month_normal_text_color="@color/font_black"
+                        app:month_selected_circle_today_color="@color/main_orange"
+                        app:week_hint_circle_color="@color/orange_point"
+                        app:month_show_holiday_hint="false"
+                        app:month_show_lunar="false"
+                        app:month_show_task_hint="true" />
                 </RelativeLayout>
 
                 <com.jeek.calendar.widget.calendar.week.WeekCalendarView
@@ -56,18 +64,22 @@
                     android:visibility="gone"
                     app:week_day_text_size="@integer/calendar_text_size"
                     app:week_holiday_color="@color/holiday_text_color"
-                    app:week_selected_circle_color="@color/select_circle_color"
-                    app:week_show_holiday_hint="true"
-                    app:week_show_lunar="true"
-                    app:week_show_task_hint="true"/>
+                    app:week_selected_circle_color="@color/date_picked_color"
+                    app:week_today_text_color="@color/main_orange"
+                    app:week_selected_text_color="@color/white"
+                    app:week_normal_text_color="@color/font_black"
+                    app:week_selected_circle_today_color="@color/main_orange"
+                    app:week_hint_circle_color="@color/orange_point"
+                    app:week_show_holiday_hint="false"
+                    app:week_show_lunar="false"
+                    app:week_show_task_hint="true" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@id/over_layout_wraper"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                >
+                android:background="@color/main_bg">
 
                 <com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView
                     android:id="@id/over_layout"
@@ -76,9 +88,10 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/px30"
                     android:orientation="vertical"
                     android:overScrollMode="never"
-                    android:paddingTop="6dp"/>
+                    android:paddingTop="6dp" />
 
             </RelativeLayout>
 

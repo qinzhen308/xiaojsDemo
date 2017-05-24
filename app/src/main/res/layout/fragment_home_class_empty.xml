@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/px10"
-        android:src="@drawable/ic_scan"
+        android:src="@drawable/ic_home_first_scan"
         android:layout_margin="@dimen/px32"
         />
     
@@ -55,8 +55,9 @@
         android:id="@+id/layout_creative_lesson"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_wanna"
-        android:layout_margin="@dimen/px70"
+        android:layout_marginLeft="@dimen/px70"
+        android:layout_marginRight="@dimen/px70"
+        android:layout_marginTop="@dimen/px380"
         android:visibility="gone"
         >
         <ImageView
@@ -84,7 +85,7 @@
             android:layout_toRightOf="@+id/iv_creative_lesson"
             android:layout_height="wrap_content"
             android:text="@string/creative_lesson_tip"
-            android:textColor="@color/white"
+            android:textColor="@color/font_light_gray"
             android:textSize="@dimen/font_28px"
             android:layout_below="@+id/tv_creative_lesson"
             android:layout_marginTop="@dimen/px10"
@@ -97,7 +98,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_creative_lesson"
-        android:layout_margin="@dimen/px70"
+        android:layout_marginLeft="@dimen/px70"
+        android:layout_marginRight="@dimen/px70"
+        android:layout_marginTop="@dimen/px70"
         android:visibility="gone"
         >
         <ImageView
@@ -125,7 +128,7 @@
             android:layout_toRightOf="@+id/iv_creative_class"
             android:layout_height="wrap_content"
             android:text="@string/creative_class_tip"
-            android:textColor="@color/white"
+            android:textColor="@color/font_light_gray"
             android:textSize="@dimen/font_28px"
             android:layout_below="@+id/tv_creative_class"
             android:layout_marginTop="@dimen/px10"
@@ -141,8 +144,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/px70"
         android:layout_marginRight="@dimen/px70"
-        android:layout_marginTop="@dimen/px100"
-        android:layout_below="@+id/layout_wanna"
+        android:layout_marginTop="@dimen/px400"
         android:orientation="vertical">
 
         <TextView

@@ -1,36 +1,32 @@
-package cn.xiaojs.xma.ui.view;
+package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
+import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
 
 /**
  * Created by Paul Z on 2017/5/22.
  */
 
-public class HomeClassContentBuz {
+public class ClassScheduleBuz {
     Activity mContext;
     View mRoot;
-    @BindView(R.id.btn_scan2)
-    ImageButton btnScan2;
-    @BindView(R.id.my_course_search)
-    TextView myCourseSearch;
-    @BindView(R.id.btn_add)
-    ImageButton btnAdd;
-    @BindView(R.id.title)
-    LinearLayout title;
     @BindView(R.id.over_layout)
     ScheduleRecyclerView overLayout;
+    @BindView(R.id.slSchedule)
+    ScheduleLayout calendarView;
 
     HomeClassAdapter mAdapter;
 
@@ -52,11 +48,32 @@ public class HomeClassContentBuz {
         mAdapter=new HomeClassAdapter();
         overLayout.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         overLayout.setAdapter(mAdapter);
+        test();
     }
 
 
     private void test(){
+        calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
+            @Override
+            public void onClickDate(int year, int month, int day) {
 
+            }
+
+            @Override
+            public void onPageChange(int year, int month, int day) {
+
+            }
+        });
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                calendarView.addTaskHint(5);
+                calendarView.addTaskHint(10);
+                calendarView.addTaskHint(15);
+            }
+        }, 2000);
     }
 
 

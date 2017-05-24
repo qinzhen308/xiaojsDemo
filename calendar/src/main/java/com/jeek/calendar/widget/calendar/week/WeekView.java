@@ -20,6 +20,7 @@ import com.jeek.calendar.widget.calendar.LunarCalendarUtils;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -81,16 +82,17 @@ public class WeekView extends View {
         if (mIsShowHint) {
 //            ScheduleDao dao = ScheduleDao.getInstance(getContext());
 //            mTaskHintList = dao.getTaskHintByWeek(startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth(), endDate.getYear(), endDate.getMonthOfYear() - 1, endDate.getDayOfMonth());
+            mTaskHintList = new ArrayList<>();
         }
     }
 
     private void initAttrs(TypedArray array, DateTime dateTime) {
         if (array != null) {
             mSelectDayColor = array.getColor(R.styleable.WeekCalendarView_week_selected_text_color, Color.parseColor("#FFFFFF"));
-            mSelectBGColor = array.getColor(R.styleable.WeekCalendarView_week_selected_circle_color, Color.parseColor("#E8E8E8"));
-            mSelectBGTodayColor = array.getColor(R.styleable.WeekCalendarView_week_selected_circle_today_color, Color.parseColor("#FF8594"));
-            mNormalDayColor = array.getColor(R.styleable.WeekCalendarView_week_normal_text_color, Color.parseColor("#575471"));
-            mCurrentDayColor = array.getColor(R.styleable.WeekCalendarView_week_today_text_color, Color.parseColor("#FF8594"));
+            mSelectBGColor = array.getColor(R.styleable.WeekCalendarView_week_selected_circle_color, Color.parseColor("#7598c1"));
+            mSelectBGTodayColor = array.getColor(R.styleable.WeekCalendarView_week_selected_circle_today_color, Color.parseColor("#7598c1"));
+            mNormalDayColor = array.getColor(R.styleable.WeekCalendarView_week_normal_text_color, Color.parseColor("#333333"));
+            mCurrentDayColor = array.getColor(R.styleable.WeekCalendarView_week_today_text_color, Color.parseColor("#ff9833"));
             mHintCircleColor = array.getColor(R.styleable.WeekCalendarView_week_hint_circle_color, Color.parseColor("#FE8595"));
             mLunarTextColor = array.getColor(R.styleable.WeekCalendarView_week_lunar_text_color, Color.parseColor("#ACA9BC"));
             mHolidayTextColor = array.getColor(R.styleable.WeekCalendarView_week_holiday_color, Color.parseColor("#A68BFF"));
@@ -222,6 +224,9 @@ public class WeekView extends View {
             DateTime date = mStartDate.plusDays(i);
             int day = date.getDayOfMonth();
             String dayString = String.valueOf(day);
+            if (date.getYear() == mCurrYear && date.getMonthOfYear() - 1 == mCurrMonth && day == mCurrDay) {
+                dayString = "今";
+            }
             int startX = (int) (mColumnSize * i + (mColumnSize - mPaint.measureText(dayString)) / 2);
             int startY = (int) (mRowSize / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
             if (day == mSelDay) {
@@ -321,6 +326,7 @@ public class WeekView extends View {
      */
     private void drawHintCircle(int column, int day, Canvas canvas) {
         if (mIsShowHint && mTaskHintList != null && mTaskHintList.size() > 0) {
+            if(day==mSelDay)return;
             if (!mTaskHintList.contains(day)) return;
             mPaint.setColor(mHintCircleColor);
             float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);

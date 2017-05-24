@@ -18,6 +18,7 @@ import com.jeek.calendar.library.R;
 import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.LunarCalendarUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -84,6 +85,7 @@ public class MonthView extends View {
             // 从数据库中获取圆点提示数据
 //            ScheduleDao dao = ScheduleDao.getInstance(getContext());
 //            mTaskHintList = dao.getTaskHintByMonth(mSelYear, mSelMonth);
+            mTaskHintList = new ArrayList<>();
         }
     }
 
@@ -257,10 +259,14 @@ public class MonthView extends View {
                 selectedPoint[0] = row;
                 selectedPoint[1] = col;
                 mPaint.setColor(mSelectDayColor);
-            } else if (dayString.equals(String.valueOf(mCurrDay)) && mCurrDay != mSelDay && mCurrMonth == mSelMonth && mCurrYear == mSelYear) {
+            } else if ((dayString.equals(String.valueOf(mCurrDay))||dayString.equals("今")) && mCurrDay != mSelDay && mCurrMonth == mSelMonth && mCurrYear == mSelYear) {
                 mPaint.setColor(mCurrentDayColor);
             } else {
                 mPaint.setColor(mNormalDayColor);
+            }
+            if (mSelYear == mCurrYear && mCurrMonth == mSelMonth && day + 1 == mCurrDay) {
+                dayString="今";
+                startX = (int) (mColumnSize * col + (mColumnSize - mPaint.measureText(dayString)) / 2);
             }
             canvas.drawText(dayString, startX, startY, mPaint);
             mHolidayOrLunarText[row][col] = CalendarUtils.getHolidayFromSolar(mSelYear, mSelMonth, mDaysText[row][col]);
@@ -396,6 +402,7 @@ public class MonthView extends View {
      */
     private void drawHintCircle(int row, int column, int day, Canvas canvas) {
         if (mIsShowHint && mTaskHintList != null && mTaskHintList.size() > 0) {
+            if(day==mSelDay)return;
             if (!mTaskHintList.contains(day)) return;
             mPaint.setColor(mHintCircleColor);
             float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);

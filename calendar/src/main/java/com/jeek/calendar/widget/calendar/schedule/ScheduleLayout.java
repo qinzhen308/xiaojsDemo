@@ -227,11 +227,12 @@ public class ScheduleLayout extends FrameLayout {
         resetCalendarPosition();
     }
 
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
         resetViewHeight(rlScheduleList, height - mRowSize);
-        resetViewHeight(this, height + 100);
+//        resetViewHeight(this, height + 100);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 

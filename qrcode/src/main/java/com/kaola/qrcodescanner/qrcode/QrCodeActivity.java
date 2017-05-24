@@ -213,6 +213,8 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
         if (null != mInactivityTimer) {
             mInactivityTimer.shutdown();
         }
+        if(null!=mMediaPlayer)
+        mMediaPlayer.release();
         super.onDestroy();
     }
 

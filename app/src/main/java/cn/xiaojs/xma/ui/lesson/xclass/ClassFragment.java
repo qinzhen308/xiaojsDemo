@@ -1,9 +1,12 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.TypedValue;
 import android.view.View;
@@ -18,12 +21,14 @@ import android.widget.TextView;
 
 import butterknife.BindColor;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.ui.MainActivity;
+import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
-import cn.xiaojs.xma.ui.view.HomeClassContentBuz;
 
 /**
  * Created by Paul Z on 2017/5/19.
@@ -48,7 +53,6 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
     RelativeLayout layoutCreativeLesson;
     RelativeLayout layoutCreativeClass;
     LinearLayout layoutSearch;
-    Unbinder unbinder;
 
     @BindColor(R.color.white) int textColorWhite;
     @BindColor(R.color.font_light_gray) int textColorGray;
@@ -80,6 +84,9 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
             layoutEmpty.findViewById(R.id.tv_search).setOnClickListener(this);
             tabWannaLean.setOnClickListener(this);
             tabWannaTeach.setOnClickListener(this);
+            layoutCreativeLesson.setOnClickListener(this);
+            layoutCreativeClass.setOnClickListener(this);
+            btnScan.setOnClickListener(this);
             drawable=(TransitionDrawable) getResources().getDrawable(R.drawable.bg_home_class_trans);
             layoutEmpty.setBackground(drawable);
         } else {
@@ -102,8 +109,14 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
 //    @Optional @OnClick ({R.id.layout_search,R.id.tab_wanna_lean,R.id.tab_wanna_teach})
     public void onClick(View v){
         switch (v.getId()){
-            case R.id.layout_search:
+            case R.id.btn_scan:
+                if (PermissionUtil.isOverMarshmallow()
+                        && ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
 
+                } else {
+                    startActivity(new Intent(mContext, ScanQrcodeActivity.class));
+                }
                 break;
             case R.id.tab_wanna_lean:
                 changeTab(TAB_WANNA_LEARN);
@@ -114,6 +127,13 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
             case R.id.tv_search:
                 startActivityForResult(new Intent(getActivity(),SearchActivity.class),100);
                 isEmpty=false;
+                break;
+            case R.id.layout_creative_lesson:
+                Intent open = new Intent(mContext, LessonCreationActivity.class);
+                mContext.startActivity(open);
+                break;
+            case R.id.layout_creative_class:
+
                 break;
             default:
                 break;
@@ -289,4 +309,5 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
             drawable.startTransition(ANIM_DURATION);
         }
     }
+
 }

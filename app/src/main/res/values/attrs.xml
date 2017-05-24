@@ -311,4 +311,18 @@
         <!-- BubbleImageView-->
         <attr name="siTriangleHeight" format="dimension"/>
     </declare-styleable>
+
+
+    <declare-styleable name="LabelImageView">
+        <attr name="label_position">
+            <enum name="LABEL_POSITION_LEFT_TOP" value="0"/>
+            <enum name="LABEL_POSITION_RIGHT_TOP" value="1"/>
+            <enum name="LABEL_POSITION_RIGHT_BOTTOM" value="2"/>
+            <enum name="LABEL_POSITION_LEFT_BOTTOM" value="3"/>
+        </attr>
+        <attr name="label_width" format="dimension"></attr>
+        <attr name="label_height" format="dimension"></attr>
+        <attr name="labelSrc" format="reference|color">
+        </attr>
+    </declare-styleable>
 </resources>
