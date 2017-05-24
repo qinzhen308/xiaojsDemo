@@ -12,6 +12,7 @@ import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
+import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
@@ -65,6 +66,7 @@ import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.account.PwdParam;
 import cn.xiaojs.xma.model.security.ResetPwdParam;
+import cn.xiaojs.xma.model.security.SocialLoginParams;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
@@ -424,6 +426,12 @@ public interface XiaojsService {
     @POST("/v1/security/login")
     Call<LoginInfo> login(@Body LoginParams params);
 
+    //Social Login
+    @POST("/v1/security/sociallogin/{ea}/{openid}")
+    Call<LoginInfo> socialLogin(@Path("ea") String ea,
+                                @Path("openid") String openid ,
+                                @Body SocialLoginParams params);
+
     //Logout
     @Headers("Content-Type: application/json")
     @DELETE("/v1/security/logout")
@@ -447,6 +455,7 @@ public interface XiaojsService {
     //Reset Password
     @PATCH("/v1/security/forgot")
     Call<ResponseBody> resetPassword(@Body ResetPwdParam resetPwdParam);
+
 
 
 
