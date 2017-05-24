@@ -53,6 +53,7 @@ public class FileUtil {
     public static final int PICTURE = 5;
     public static final int AUDIO = 6;
     public static final int VIDEO = 7;
+    public static final int STEAMIMG = 8;
 
 
     public static int getFileType(String type){
@@ -86,6 +87,8 @@ public class FileUtil {
                 type.equalsIgnoreCase(Collaboration.VideoMimeTypes.QT)||
                 type.equalsIgnoreCase(Collaboration.VideoMimeTypes.THREE_GPP)){
             return VIDEO;
+        } else if (Collaboration.isStreaming(type)) {
+            return STEAMIMG;
         }
         return UNKNOWN;
     }
