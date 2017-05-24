@@ -176,6 +176,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 showHideTalk();
                 break;
             case R.id.fc_open_talk_btn:
+                mPeerTalkAttendee = null;
                 mClassroomController.openInputText(this, 0);
                 break;
             case R.id.play_video:

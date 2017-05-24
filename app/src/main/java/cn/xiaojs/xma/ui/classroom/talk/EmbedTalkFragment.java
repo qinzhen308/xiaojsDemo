@@ -47,6 +47,7 @@ public class EmbedTalkFragment extends BaseFragment{
     private String mTicket;
 
     private TalkPresenter mTalkPresenter;
+    private ExitPeerTalkListener mExitPeerTalkListener;
 
     @Override
     protected View getContentView() {
@@ -76,6 +77,10 @@ public class EmbedTalkFragment extends BaseFragment{
         mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv);
     }
 
+    public void setExitPeerTalkListener(ExitPeerTalkListener listener) {
+        mExitPeerTalkListener = listener;
+    }
+
     private void initView() {
         mTalkMsgLv.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
         mTalkMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_INSIDE_INSET);
@@ -89,6 +94,9 @@ public class EmbedTalkFragment extends BaseFragment{
                     mTalkNameTv.setText(R.string.cr_talk_discussion);
                     mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     mTalkPresenter.switchMsgMultiTalk();
+                    if (mExitPeerTalkListener != null) {
+                        mExitPeerTalkListener.onExitTalk(TalkManager.TYPE_PEER_TALK);
+                    }
                 }
             }
         });

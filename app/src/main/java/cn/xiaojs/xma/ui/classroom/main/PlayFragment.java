@@ -37,6 +37,7 @@ import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.talk.EmbedTalkFragment;
+import cn.xiaojs.xma.ui.classroom.talk.ExitPeerTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
@@ -237,6 +238,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         //add talk
         mEmbedTalkFragment = new EmbedTalkFragment();
         mEmbedTalkFragment.setArguments(getArguments());
+        mEmbedTalkFragment.setExitPeerTalkListener(this);
         getChildFragmentManager().beginTransaction().add(R.id.talk_layout, mEmbedTalkFragment).commit();
     }
 

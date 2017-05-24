@@ -55,13 +55,14 @@ import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
+import cn.xiaojs.xma.ui.classroom.talk.ExitPeerTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener {
+        OnStreamChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener, ExitPeerTalkListener {
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
 
     protected CtlSession mCtlSession;
@@ -426,6 +427,13 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         } else {
             //send to peer talk
             TalkManager.getInstance().sendImg(attendee.accountId, bitmap);
+        }
+    }
+
+    @Override
+    public void onExitTalk(int criteria) {
+        if (criteria == TalkManager.TYPE_PEER_TALK) {
+            mPeerTalkAttendee = null;
         }
     }
 

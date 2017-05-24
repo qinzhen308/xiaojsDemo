@@ -199,4 +199,22 @@ public class XjsUtils {
         }
         return false;
     }
+
+    // Circular shift the array range from a[i] to a[j] (inclusive). That is,
+    // a[i] -> a[i+1] -> a[i+2] -> ... -> a[j], and a[j] -> a[i]
+    public static <T> void circularShiftRight(List<T> list, int rightOffset, int index) {
+        T temp = list.get(index);
+        for (int k = index; k < rightOffset; k++) {
+            list.set(k, list.get(k + 1));
+        }
+        list.set(rightOffset, temp);
+    }
+
+    public static <T> void circularShiftLeft(List<T> list, int leftOffset, int index) {
+        T temp = list.get(index);
+        for (int k = index; k > leftOffset; k--) {
+            list.set(k, list.get(k - 1));
+        }
+        list.set(leftOffset, temp);
+    }
 }
