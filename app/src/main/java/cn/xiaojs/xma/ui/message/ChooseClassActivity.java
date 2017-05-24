@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +28,15 @@ import static cn.xiaojs.xma.ui.message.PostDynamicActivity.EXTRA_CLASS_POS;
 
 public class ChooseClassActivity extends BaseActivity {
 
+    public static final int ENTER_TYPE_CHOOSE_CLASS = 0;
+    public static final int ENTER_TYPE_ADD_STUDENT = 1;
+    public static final String EXTRA_ENTER_TYPE = "enter_type";
+
+    @BindView(R.id.tips_content)
+    TextView tipsContentView;
+    @BindView(R.id.lay_tips)
+    LinearLayout tipsRootView;
+
     @BindView(R.id.lv)
     ListView listView;
 
@@ -38,7 +48,16 @@ public class ChooseClassActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_share_scope);
-        setMiddleTitle(R.string.choose_class);
+
+        int enterType = getIntent().getIntExtra(EXTRA_ENTER_TYPE, ENTER_TYPE_CHOOSE_CLASS);
+        if (enterType == ENTER_TYPE_ADD_STUDENT) {
+            setMiddleTitle(R.string.student_add_from_exist_class);
+            tipsContentView.setText(R.string.add_student_tips);
+            tipsRootView.setVisibility(View.VISIBLE);
+        }else {
+            setMiddleTitle(R.string.choose_class);
+        }
+
         setRightText(R.string.finish);
         setRightTextColor(getResources().getColor(R.color.font_orange));
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -46,7 +65,7 @@ public class ChooseClassActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_image, R.id.right_image2})
+    @OnClick({R.id.left_image, R.id.right_image2, R.id.lesson_creation_tips_close})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -56,8 +75,15 @@ public class ChooseClassActivity extends BaseActivity {
                 //TODO finifsh
                 choiceComplete();
                 break;
+            case R.id.lesson_creation_tips_close://关闭提醒
+                closeCourCreateTips();
+                break;
         }
 
+    }
+
+    private void closeCourCreateTips() {
+        tipsRootView.setVisibility(View.GONE);
     }
 
     private void updateAdapter(ArrayList<Contact> contacts) {

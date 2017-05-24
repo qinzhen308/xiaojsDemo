@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px90"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+        <ImageView
+                android:id="@+id/left_image"
+                android:layout_gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px26"
+                android:paddingRight="@dimen/px26"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/back_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        
+        <RadioGroup
+                android:id="@+id/lay_tab_group"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+            <RadioButton
+                    android:id="@+id/tab_class"
+                    android:layout_width="@dimen/px180"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gradle"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:textSize="@dimen/font_26px"
+                    android:textColor="@drawable/class_lesson_check_text_selector"
+                    android:paddingBottom="@dimen/px11"
+                    android:paddingTop="@dimen/px11"
+                    android:background="@drawable/bg_class_lesson_left_selector"
+                    />
+            <RadioButton
+                    android:id="@+id/tab_lesson"
+                    android:layout_width="@dimen/px180"
+                    android:layout_height="wrap_content"
+                    android:text="@string/teach_form_lecture"
+                    android:textColor="@drawable/class_lesson_check_text_selector"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:textSize="@dimen/font_26px"
+                    android:paddingBottom="@dimen/px11"
+                    android:paddingTop="@dimen/px11"
+                    android:background="@drawable/bg_class_lesson_right_selector"/>
+            
+        </RadioGroup>
+        
+
+        <ImageView
+                android:id="@+id/add_btn"
+                android:paddingLeft="@dimen/px26"
+                android:paddingRight="@dimen/px26"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_add"
+                />
+
+
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+            android:id="@+id/tab_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical" >
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

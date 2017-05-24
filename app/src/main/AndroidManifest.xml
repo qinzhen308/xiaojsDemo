@@ -293,6 +293,24 @@
         <activity android:name="com.kaola.qrcodescanner.qrcode.QrCodeActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.common.PlayStreamingActivity"/>
+        <activity android:name=".ui.lesson.xclass.CreateClassActivity"
+                  android:windowSoftInputMode="stateAlwaysHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.CreateTimetableActivity"
+                  android:windowSoftInputMode="stateAlwaysHidden"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ManualAddStudentActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.AddLessonNameActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ShareQrcodeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ClassInfoActivity"
+                android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.StudentsListActivity"
+                android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ClassesListActivity"
+                android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

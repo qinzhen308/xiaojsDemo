@@ -27,10 +27,14 @@
         <TextView
                 android:id="@+id/middle_txt"
                 android:layout_width="0dip"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:singleLine="true"/>
+                android:paddingTop="@dimen/px26"
+                android:paddingLeft="@dimen/px36"
+                android:paddingRight="@dimen/px36"
+                android:paddingBottom="@dimen/px26"
+                />
 
         <Button
                 android:id="@+id/right_btn"

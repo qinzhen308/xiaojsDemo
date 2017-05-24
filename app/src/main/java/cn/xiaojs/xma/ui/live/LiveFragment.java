@@ -61,6 +61,7 @@ import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.CreateClassActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.AdapterListView;
@@ -415,7 +416,7 @@ public class LiveFragment extends BaseFragment {
         CommonPopupMenu menu = new CommonPopupMenu(mContext);
         String[] items = getResources().getStringArray(R.array.add_menu);
         menu.addTextItems(items);
-        menu.addImgItems(new Integer[]{R.drawable.ic_scan, R.drawable.ic_menu_create_lesson});
+        menu.addImgItems(new Integer[]{R.drawable.ic_scan, R.drawable.ic_menu_create_lesson, R.drawable.ic_menu_create_lesson});
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -456,6 +457,9 @@ public class LiveFragment extends BaseFragment {
                             });
                             dialog.show();
                         }
+                        break;
+                    case 2:
+                        startActivity(new Intent(mContext, CreateClassActivity.class));
                         break;
                 }
 

@@ -143,6 +143,11 @@
 
     <color name="blue">#0000FF</color>
     <color name="subject_selected_blue">#7598c1</color>
+    <color name="radio_tips">#b49e89</color>
+
+    <color name="class_grey">#9b9b9b</color>
+    <color name="class_orange">#f6972e</color>
+    <color name="class_bar_bg">#f6f8fa</color>
 
     <color name="chocolate_light">#b49e89</color>
     <color name="gray_line">#e7e8ea</color>

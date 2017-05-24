@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lesson_creation_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/px28"
+        android:background="#ebf0f7"
+        >
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px16"
+            android:src="@drawable/ic_tips"/>
+
+    <TextView
+            android:id="@+id/tips_content"
+            android:layout_weight="1"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/px20"
+            android:paddingTop="@dimen/px16"
+            android:paddingBottom="@dimen/px16"
+            android:text="@string/lesson_creation_tips"
+            android:textSize="@dimen/font_26px"
+            android:textColor="@color/font_dark_gray"/>
+
+    <ImageView
+            android:id="@+id/lesson_creation_tips_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px26"
+            android:paddingRight="@dimen/px26"
+            android:paddingTop="@dimen/px16"
+            android:paddingBottom="@dimen/px16"
+            android:src="@drawable/ic_edit_text_del"/>
+</LinearLayout>

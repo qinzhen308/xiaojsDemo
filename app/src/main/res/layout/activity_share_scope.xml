@@ -6,17 +6,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-        <TextView
-                android:id="@+id/tips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/closed_tips"
-                android:textSize="@dimen/px32"
-                android:textColor="@color/common_text"
-                android:padding="10dp"
-                android:drawableLeft="@drawable/ic_tips"
-                android:visibility="gone"/>
+
+        <include
+                layout="@layout/layout_create_tips"
+                android:id="@+id/lay_tips"
+                android:visibility="gone"
+                />
+
+        <!--<TextView-->
+                <!--android:id="@+id/tips"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/closed_tips"-->
+                <!--android:textSize="@dimen/px32"-->
+                <!--android:textColor="@color/common_text"-->
+                <!--android:padding="10dp"-->
+                <!--android:drawableLeft="@drawable/ic_tips"-->
+                <!--android:visibility="gone"/>-->
         <ListView
+                android:layout_marginTop="@dimen/px30"
                 android:id="@+id/lv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

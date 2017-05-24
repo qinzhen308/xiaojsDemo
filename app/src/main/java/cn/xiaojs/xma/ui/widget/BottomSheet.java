@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.ColorRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -106,16 +107,30 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         }
     }
 
+    public void setTitleBackground(@ColorRes int color) {
+        if (mTitleLayout != null) {
+            mTitleLayout.setBackgroundColor(getContext().getResources().getColor(color));
+        }
+    }
+
     public void setMiddleText(String text) {
         ((TextView) getWindow().findViewById(R.id.middle_txt)).setText(text);
     }
 
+    public void setLeftBtnVisibility(int visibility) {
+        mLeftBtn.setVisibility(visibility);
+    }
+
+    public void setRightBtnVisibility(int visibility) {
+        mRightBtn.setVisibility(visibility);
+    }
+
     public void setLeftBtnText(String text) {
-        ((Button) getWindow().findViewById(R.id.left_btn)).setText(text);
+        mLeftBtn.setText(text);
     }
 
     public void setRightBtnText(String text) {
-        ((Button) getWindow().findViewById(R.id.right_btn)).setText(text);
+        mRightBtn.setText(text);
     }
 
     @Override

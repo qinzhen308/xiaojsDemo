@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,8 +35,10 @@ public class CloseFriendActivity extends BaseActivity {
     @BindView(R.id.v_empty)
     View emptyView;
 
-    @BindView(R.id.tips)
-    TextView tipView;
+    @BindView(R.id.tips_content)
+    TextView tipsContentView;
+    @BindView(R.id.lay_tips)
+    LinearLayout tipsRootView;
 
     private ChoiceAdapter adapter;
 
@@ -103,7 +106,8 @@ public class CloseFriendActivity extends BaseActivity {
 
         if (adapter == null) {
 
-            tipView.setVisibility(View.VISIBLE);
+            tipsContentView.setText(R.string.closed_tips);
+            tipsRootView.setVisibility(View.VISIBLE);
 
             adapter = new ChoiceAdapter(this,
                     R.layout.layout_contact_choice_child,

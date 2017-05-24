@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:paddingBottom="@dimen/px32"
+                android:paddingTop="@dimen/px32">
+
+    <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_dark_gray"
+            android:text="2017-04-20 14:21"
+            android:layout_alignParentTop="true"
+            />
+
+    <TextView
+            android:id="@+id/name_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_30px"
+            android:textColor="@color/radio_tips"
+            android:text="李海波 1234567"
+            android:layout_marginTop="@dimen/px12"
+            android:layout_below="@id/time"
+            />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/font_dark_gray"
+            android:text="@string/request_join_class"
+            android:layout_below="@id/name_num"
+            android:layout_alignLeft="@id/name_num"
+            android:layout_marginTop="@dimen/px15"
+            />
+
+    <Button
+            android:id="@+id/refuse_btn"
+            android:layout_width="@dimen/px100"
+            android:layout_height="@dimen/px50"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/refuse"
+            android:textColor="@color/subject_selected_blue"
+            android:textSize="@dimen/font_26px"
+            android:layout_marginLeft="@dimen/px20"
+            android:background="@drawable/bg_refuse_rect"
+            />
+
+    <Button
+            android:id="@+id/agree_btn"
+            android:layout_width="@dimen/px100"
+            android:layout_height="@dimen/px50"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/refuse_btn"
+            android:text="@string/agree"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_26px"
+            android:layout_below="@id/name_num"
+            android:background="@drawable/bg_agree_rect"/>
+
+    <TextView
+            android:id="@+id/status_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/subject_selected_blue"
+            android:textSize="@dimen/font_24px"
+            android:text="已同意"/>
+
+    <TextView
+            android:id="@+id/opera_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/status_view"
+            android:textColor="@color/font_gray"
+            android:textSize="@dimen/font_24px"
+            android:layout_marginTop="@dimen/px13"
+            android:text="处理人"/>
+
+
+
+
+
+
+</RelativeLayout>

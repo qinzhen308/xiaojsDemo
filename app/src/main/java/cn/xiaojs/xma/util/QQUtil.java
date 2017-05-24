@@ -42,6 +42,7 @@ public class QQUtil {
                              String title,
                              String summary,
                              String url,
+                             String imgUrl,
                              IUiListener listener) {
         Bundle bundle = new Bundle();
         //这条分享消息被好友点击后的跳转URL。
@@ -55,7 +56,7 @@ public class QQUtil {
         //分享的消息摘要，最长50个字
         bundle.putString(SocialConstants.PARAM_SUMMARY, summary);
 
-        bundle.putString(SocialConstants.PARAM_IMG_URL, "");
+        bundle.putString(SocialConstants.PARAM_IMG_URL, imgUrl);
         String appname = activity.getString(R.string.app_name);
 
         //标识该消息的来源应用，值为应用名称+AppId。
