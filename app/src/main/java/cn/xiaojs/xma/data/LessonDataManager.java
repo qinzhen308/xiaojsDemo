@@ -418,19 +418,15 @@ public class LessonDataManager {
      * 加入无需报名的课
      * @param context
      * @param lesson
-     * @param registrant 可选项，此处可传null
      * @param callback
      */
     public static void joinLesson(Context context,
                                   String lesson,
-                                  Registrant registrant,
                                   APIServiceCallback<JoinResponse> callback) {
-        if (registrant == null) {
-            registrant = new Registrant();
-        }
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.joinLesson(lesson,registrant);
+        lessonRequest.joinLesson(lesson);
     }
+
 
 }

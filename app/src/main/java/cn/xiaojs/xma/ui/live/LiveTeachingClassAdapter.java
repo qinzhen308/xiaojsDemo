@@ -111,8 +111,15 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
         //TODO 目前是免费
         holder.price.setText(R.string.free);
         //holder.price.setText(NumberUtil.getPrice(bean.getFee().charge));
-        if (bean.enroll != null) {
+//        if (bean.enroll != null) {
+//            holder.enrollDesc.setText(mContext.getString(R.string.course_stu, bean.enroll.current, bean.enroll.max));
+//        }
+
+        if (bean.enroll!=null && bean.enroll.mandatory) {
             holder.enrollDesc.setText(mContext.getString(R.string.course_stu, bean.enroll.current, bean.enroll.max));
+        }else{
+            holder.enrollDesc.setText(mContext.getString(R.string.want_to_learn_num,
+                    bean.enroll ==null? 0: bean.enroll.current));
         }
 
         holder.time.setText(TimeUtil.getTimeByNow(bean.schedule.getStart(), true) + " " + TimeUtil.getTimeFormat(bean.schedule.getStart(), bean.schedule.getDuration()));
@@ -574,39 +581,74 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
         if (bean.state.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)) {
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             if (createMe) {
-                String[] items = new String[]{
-                        mContext.getString(R.string.registration),
-                        mContext.getString(R.string.share),
-                        mContext.getString(R.string.look_detail),
+
+                if (!bean.enroll.mandatory) {
+                    String[] items = new String[]{
+                            mContext.getString(R.string.share),
+                            mContext.getString(R.string.look_detail),
                     /*mContext.getString(publishId),*/
                     /*mContext.getString(R.string.modify_lesson_time),*/
-                        mContext.getString(R.string.cancel_lesson)};
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position) {
-                            case 0://报名注册
-                                registration(bean);
-                                break;
-                            case 1://分享
-                                share(bean);
-                                break;
-                            case 2://查看详情
-                                detail(bean);
-                                break;
+                            mContext.getString(R.string.cancel_lesson)};
+                    dialog.setItems(items);
+                    dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                        @Override
+                        public void onItemClick(int position) {
+                            switch (position) {
+                                case 0://分享
+                                    share(bean);
+                                    break;
+                                case 1://查看详情
+                                    detail(bean);
+                                    break;
 //                        case 3://发布到主页
 //                            publish(bean);
 //                            break;
 //                        case 4://修改上课时间
 //                            modifyLesson(bean);
 //                            break;
-                            case 3://取消上课
-                                cancelLesson(bean);
-                                break;
+                                case 3://取消上课
+                                    cancelLesson(bean);
+                                    break;
+                            }
                         }
-                    }
-                });
+                    });
+                }else {
+                    String[] items = new String[]{
+                            mContext.getString(R.string.registration),
+                            mContext.getString(R.string.share),
+                            mContext.getString(R.string.look_detail),
+                    /*mContext.getString(publishId),*/
+                    /*mContext.getString(R.string.modify_lesson_time),*/
+                            mContext.getString(R.string.cancel_lesson)};
+                    dialog.setItems(items);
+                    dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                        @Override
+                        public void onItemClick(int position) {
+                            switch (position) {
+                                case 0://报名注册
+                                    registration(bean);
+                                    break;
+                                case 1://分享
+                                    share(bean);
+                                    break;
+                                case 2://查看详情
+                                    detail(bean);
+                                    break;
+//                        case 3://发布到主页
+//                            publish(bean);
+//                            break;
+//                        case 4://修改上课时间
+//                            modifyLesson(bean);
+//                            break;
+                                case 3://取消上课
+                                    cancelLesson(bean);
+                                    break;
+                            }
+                        }
+                    });
+                }
+
+
             } else {
                 String[] items = new String[]{mContext.getString(R.string.share)};
                 dialog.setItems(items);
@@ -627,31 +669,58 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
 
             ListBottomDialog dialog = new ListBottomDialog(mContext);
             if (createMe) {
-                String[] items = new String[]{
-                        mContext.getString(R.string.registration),
-                        mContext.getString(R.string.share),
-                        mContext.getString(R.string.look_detail)
+
+                if (!bean.enroll.mandatory) {
+                    String[] items = new String[]{
+                            mContext.getString(R.string.share),
+                            mContext.getString(R.string.look_detail)
                         /*mContext.getString(publishId)*/};
-                dialog.setItems(items);
-                dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
-                        switch (position) {
-                            case 0://分享
-                                share(bean);
-                                break;
-                            case 1://分享
-                                share(bean);
-                                break;
-                            case 2://查看详情
-                                detail(bean);
-                                break;
+                    dialog.setItems(items);
+                    dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                        @Override
+                        public void onItemClick(int position) {
+                            switch (position) {
+                                case 0://分享
+                                    share(bean);
+                                    break;
+                                case 1://查看详情
+                                    detail(bean);
+                                    break;
 //                            case 3://发布到主页
 //                                publish(bean);
 //                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    String[] items = new String[]{
+                            mContext.getString(R.string.registration),
+                            mContext.getString(R.string.share),
+                            mContext.getString(R.string.look_detail)
+                        /*mContext.getString(publishId)*/};
+                    dialog.setItems(items);
+                    dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+                        @Override
+                        public void onItemClick(int position) {
+                            switch (position) {
+                                case 0:
+                                    registration(bean);
+                                    break;
+                                case 1://分享
+                                    share(bean);
+                                    break;
+                                case 2://查看详情
+                                    detail(bean);
+                                    break;
+//                            case 3://发布到主页
+//                                publish(bean);
+//                                break;
+                            }
+                        }
+                    });
+                }
+
+
             } else {
                 String[] items = new String[]{mContext.getString(R.string.share)};
                 dialog.setItems(items);

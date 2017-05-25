@@ -47,6 +47,8 @@ public class LessonDetail implements Serializable {
     public String currentRoles;
     public boolean autoOnShelves;
 
+    public boolean recordable;
+
 
     public Statistic getStats() {
         return stats;
