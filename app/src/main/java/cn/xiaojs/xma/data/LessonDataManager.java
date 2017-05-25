@@ -29,6 +29,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
@@ -431,6 +432,20 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.joinLesson(lesson,registrant);
+    }
+
+    /**
+     * Creates a class by a teacher or an organization, and entering into the following lifecycle.
+     * @param context
+     * @param params
+     * @param callback
+     */
+    public void createClass(Context context,
+                            ClassParams params,
+                            APIServiceCallback<CLEResponse> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.createClass(params);
     }
 
 }

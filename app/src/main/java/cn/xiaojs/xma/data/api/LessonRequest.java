@@ -31,6 +31,7 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
@@ -249,6 +250,11 @@ public class LessonRequest extends ServiceRequest {
     public void joinLesson(String lesson, Registrant registrant) {
         Call<JoinResponse> call = getService().joinLesson(lesson,registrant);
         enqueueRequest(APIType.JOIN_LESSON, call);
+    }
+
+    public void createClass(ClassParams params) {
+        Call<CLResponse> call = getService().createClass(params);
+        enqueueRequest(APIType.CREATE_CLASS, call);
     }
 
 }

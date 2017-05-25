@@ -52,7 +52,8 @@ public class CreateClassActivity extends BaseActivity {
                 closeCourCreateTips();
                 break;
             case R.id.sub_btn://完成
-                startActivity(new Intent(this, ShareQrcodeActivity.class));
+                createClass();
+                //startActivity(new Intent(this, ShareQrcodeActivity.class));
                 break;
             case R.id.lay_time_table://课表
                 startActivity(new Intent(this, CreateTimetableActivity.class));
@@ -111,6 +112,15 @@ public class CreateClassActivity extends BaseActivity {
 
         });
         dialog.show();
+    }
+
+
+    private void createClass() {
+        //TODO 创建班
+
+
+
+
     }
 
 

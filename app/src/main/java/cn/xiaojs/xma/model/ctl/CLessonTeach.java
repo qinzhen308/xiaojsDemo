@@ -8,12 +8,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClassParams {
+public class CLessonTeach {
 
-    public String title;
-    public String[] advisers;
-    public int join;
-    public ClassEnroll enroll;
-    public ClassLesson[] lessons;
+    public String lead;
+    public String[] assistants;
 
 }

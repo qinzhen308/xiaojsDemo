@@ -15,5 +15,6 @@ public class ClassLesson {
     public String title;
     public boolean recordable;
     public Schedule schedule;
+    public CLessonTeach teaching;
 
 }

@@ -170,4 +170,6 @@ public class APIType {
     public static final int SOCIAL_ASSOCIATE = 98;
     public static final int CHECK_ASSOCIATION = 99;
 
+    public static final int CREATE_CLASS = 100;
+
 }
