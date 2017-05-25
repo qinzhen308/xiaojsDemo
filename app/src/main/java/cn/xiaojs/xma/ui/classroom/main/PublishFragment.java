@@ -230,14 +230,23 @@ public class PublishFragment extends ClassroomLiveFragment {
     @Override
     protected void toggleLandPortrait() {
         if (mVideoController.hasStreamPublishing()) {
-            mVideoController.pausePublishStream(mPublishType);
-            int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            mVideoController.togglePublishOrientation(targetOrientation, new LiveRecordView.OnStreamOrientationListener() {
-                @Override
-                public void onStreamOrientationChanged(int orientation) {
-                    mVideoController.publishStream(mPublishType, mPublishUrl);
-                }
-            });
+            //TODO to be optimized
+            //int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            //mVideoController.togglePublishOrientation(targetOrientation, null);
+
+            if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
+                int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                mVideoController.togglePublishOrientation(targetOrientation, null);
+            } else {
+                mVideoController.pausePublishStream(mPublishType);
+                int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                mVideoController.togglePublishOrientation(targetOrientation, new LiveRecordView.OnStreamOrientationListener() {
+                    @Override
+                    public void onStreamOrientationChanged(int orientation) {
+                        mVideoController.publishStream(mPublishType, mPublishUrl);
+                    }
+                });
+            }
         }
 
         super.toggleLandPortrait();
@@ -308,7 +317,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         }
 
         if (mTopPanel.getVisibility() == View.VISIBLE) {
-            hideAnim(mTopPanel ,"mTopPanel");
+            hideAnim(mTopPanel, "mTopPanel");
             hideAnim(mContactBtn, "mContactBtn");
             hideAnim(mOpenTalkBtn, "mOpenTalkBtn");
             hideAnim(mLandPortraitBtn, "mLandPortraitBtn");
@@ -710,8 +719,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             default:
                 break;
         }
-        ClassroomController.getInstance().exitStackFragment();
-        ClassroomController.getInstance().enterPlayFragment(data);
+        ClassroomController.getInstance().enterPlayFragment(data, true);
     }
 
     private void onPlayVideoViewClick() {

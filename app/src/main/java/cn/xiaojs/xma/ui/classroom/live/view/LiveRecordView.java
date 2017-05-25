@@ -142,10 +142,13 @@ public class LiveRecordView extends BaseMediaView implements
                 if (obj instanceof OnStreamOrientationListener) {
                     ((OnStreamOrientationListener)obj).onStreamOrientationChanged(msg.arg1);
                 }*/
-                Message m = mHandler.obtainMessage(MSG_SWITCH_ORIENTATION);
-                m.obj = msg.obj;
-                m.what = MSG_SWITCH_ORIENTATION_DELAY;
-                mHandler.sendMessageDelayed(m, 500);
+                if (msg.obj != null) {
+                    Message m = mHandler.obtainMessage(MSG_SWITCH_ORIENTATION);
+                    m.obj = msg.obj;
+                    m.arg1 = msg.arg1;
+                    m.what = MSG_SWITCH_ORIENTATION_DELAY;
+                    mHandler.sendMessageDelayed(m, 500);
+                }
                 break;
             case MSG_SWITCH_ORIENTATION_DELAY:
                 Object o = msg.obj;

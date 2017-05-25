@@ -361,11 +361,22 @@ public class ClassroomController {
     /**
      * 进入播放fragment
      */
-    public void enterPlayFragment(Bundle data) {
+    public void enterPlayFragment(Bundle data, boolean needExitCurr) {
+        if (mCurrStackFragment instanceof PlayFragment) {
+            return;
+        }
+
         if (mContext instanceof FragmentActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
             if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+            if (needExitCurr && mCurrStackFragment instanceof PublishFragment) {
+                ((ClassroomActivity) mContext).getSupportFragmentManager()
+                        .beginTransaction()
+                        .remove(mCurrStackFragment)
+                        .commit();
             }
 
             PlayFragment fragment = new PlayFragment();
@@ -382,6 +393,10 @@ public class ClassroomController {
      * 进入推流fragment
      */
     public void enterPublishFragment(Bundle data, boolean needExitCurr) {
+        if (mCurrStackFragment instanceof PublishFragment) {
+            return;
+        }
+
         if (mContext instanceof ClassroomActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
             if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {

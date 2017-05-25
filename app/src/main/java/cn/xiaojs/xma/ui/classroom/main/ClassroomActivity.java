@@ -249,7 +249,7 @@ public class ClassroomActivity extends FragmentActivity {
             data.putString(Constants.KEY_PUBLISH_URL, ctlSession.publishUrl);
             ClassroomController.getInstance().enterPublishFragment(data, false);
         } else {
-            ClassroomController.getInstance().enterPlayFragment(null);
+            ClassroomController.getInstance().enterPlayFragment(null, false);
         }
 
         ContactManager.getInstance().getAttendees(this, null);
