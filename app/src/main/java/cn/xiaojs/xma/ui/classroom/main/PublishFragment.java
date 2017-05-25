@@ -732,7 +732,6 @@ public class PublishFragment extends ClassroomLiveFragment {
                 //scale();
                 mScaled = !mScaled;
                 setPlayVideoParams(mNormalVideoWidth, mNormalVideoHeight);
-                Toast.makeText(mContext, "onScale==", Toast.LENGTH_SHORT).show();
             }
 
             @Override
