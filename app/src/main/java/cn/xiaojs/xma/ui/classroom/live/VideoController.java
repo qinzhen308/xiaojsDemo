@@ -35,6 +35,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public abstract class VideoController implements StreamConfirmCallback {
+    public final static String STREAM_EXPIRED = "expired";
     protected Context mContext;
     protected View mRoot;
 

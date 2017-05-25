@@ -18,7 +18,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
@@ -36,11 +34,9 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.orhanobut.logger.Logger;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
@@ -234,9 +230,6 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
             @Override
             public void onSuccess(CollectionPage<TalkItem> object) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "获取消息成功", Toast.LENGTH_SHORT).show();
-                }
                 if (object.objectsOfPage != null) {
                     Collections.sort(object.objectsOfPage, mTalkComparator);
                 }
@@ -245,9 +238,6 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "获取消息失败", Toast.LENGTH_SHORT).show();
-                }
                 TalkMsgAdapter.this.onFailure(errorCode, errorMessage);
             }
         });

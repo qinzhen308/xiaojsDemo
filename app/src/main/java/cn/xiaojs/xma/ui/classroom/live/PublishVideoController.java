@@ -255,7 +255,13 @@ public class PublishVideoController extends VideoController {
         if (args != null && args.length > 0) {
             StreamingExpirationNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingExpirationNotify.class);
             if (notify != null) {
-                pausePublishStream(mPublishType);
+                //pausePublishStream(mPublishType);
+                if (mStreamChangeListener != null) {
+                    mStreamChangeListener.onStreamStopped(mPublishType, STREAM_EXPIRED);
+                }
+                mStreamPublishing = false;
+                mPublishView.pause();
+                mPublishView.setVisibility(View.GONE);
             }
         }
     }

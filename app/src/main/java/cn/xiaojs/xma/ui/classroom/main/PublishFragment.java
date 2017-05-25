@@ -31,6 +31,7 @@ import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
+import cn.xiaojs.xma.ui.classroom.live.VideoController;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveMenu;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -490,8 +491,16 @@ public class PublishFragment extends ClassroomLiveFragment {
                 case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                     //mIndividualStreamDuration = mTimeProgressHelper.getIndividualStreamDuration();
                     //mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
-                    LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
-                    exitCurrentFragment();
+                    if (extra instanceof String && VideoController.STREAM_EXPIRED.equals((String)extra)) {
+                        Toast.makeText(mContext, R.string.cr_individual_end, Toast.LENGTH_SHORT).show();
+                        LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
+                        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+                        mPlayPauseBtn.setVisibility(View.VISIBLE);
+                    } else {
+                        LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
+                        exitCurrentFragment();
+                    }
+
                     break;
             }
         }
