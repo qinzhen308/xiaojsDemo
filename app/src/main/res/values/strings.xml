@@ -776,6 +776,15 @@
     <string name="query_go_on_share_when_confilc">以下资料在该班级中已存在，是否继续分享？</string>
     <string name="Invalid_calss_qrcode_tips">无效的教室二维码，请扫描正确的教室二维码</string>
     <string name="create_class">开班</string>
-
+    <string name="no_need_enroll">无需报名</string>
+    <string name="student_need_enroll_or_not">学生是否需要报名</string>
+    <string name="living_paly_back">直播回放</string>
+    <string name="living_paly_back_tips">自动被录像，视频将保存到您的个人资料库，并且可以回放</string>
+    <string name="enroll_result">报名结果</string>
+    <string name="enroll_result_ok">您已报名成功！</string>
+    <string name="join_result_ok">您添加到我的班课！</string>
+    <string name="enroll_result_ok_tips">现在你可以进入教室体验，与老师、同学们进行互动，也可以进行直播哦～</string>
+    <string name="look_class_lesson">查看我的班课</string>
+    <string name="want_to_learn_num">%1$d人学</string>
 
 </resources>

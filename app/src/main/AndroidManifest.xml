@@ -283,6 +283,7 @@
         <activity android:name="com.kaola.qrcodescanner.qrcode.QrCodeActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.common.PlayStreamingActivity"/>
+        <activity android:name=".ui.lesson.EnrollSuccessActivity"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

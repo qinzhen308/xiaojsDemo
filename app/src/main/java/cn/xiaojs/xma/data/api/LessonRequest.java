@@ -251,4 +251,9 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.JOIN_LESSON, call);
     }
 
+    public void joinLesson(String lesson) {
+        Call<JoinResponse> call = getService().joinLesson(lesson);
+        enqueueRequest(APIType.JOIN_LESSON, call);
+    }
+
 }

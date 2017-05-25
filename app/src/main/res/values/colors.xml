@@ -143,5 +143,6 @@
 
     <color name="blue">#0000FF</color>
     <color name="subject_selected_blue">#7598c1</color>
+    <color name="result_ok">#7dd096</color>
 
 </resources>

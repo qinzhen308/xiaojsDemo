@@ -292,6 +292,9 @@ public interface XiaojsService {
     @POST("/v1/ctl/lessons/{lesson}/join")
     Call<JoinResponse> joinLesson(@Path("lesson") String lesson, @Body Registrant registrant);
 
+    @POST("/v1/ctl/lessons/{lesson}/join")
+    Call<JoinResponse> joinLesson(@Path("lesson") String lesson);
+
 
 
 
