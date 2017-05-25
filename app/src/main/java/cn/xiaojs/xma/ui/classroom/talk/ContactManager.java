@@ -98,7 +98,7 @@ public class ContactManager {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
                     if (liveCollection != null && liveCollection.attendees != null) {
-                        Collections.sort(liveCollection.attendees, mAttendsComparator);
+                        sort(liveCollection.attendees);
                     }
                     mLiveCollection = liveCollection;
 
@@ -171,7 +171,7 @@ public class ContactManager {
                 }
 
                 if (mLiveCollection.attendees != null) {
-                    Collections.sort(mLiveCollection.attendees, mAttendsComparator);
+                    sort(mLiveCollection.attendees);
                 }
 
                 notifyAttendChanged(mLiveCollection.attendees, join);
@@ -245,12 +245,11 @@ public class ContactManager {
     private void sort(ArrayList<Attendee> attendees) {
         if (attendees != null) {
             Collections.sort(attendees, mAttendsComparator);
-        }
-
-        int rightOffset = attendees.size() - 1;
-        for (int i = attendees.size() - 1; i >= 0; i--) {
-            if (attendees.get(i).xa == 0) {
-                XjsUtils.circularShiftRight(attendees, rightOffset--, i);
+            int rightOffset = attendees.size() - 1;
+            for (int i = attendees.size() - 1; i >= 0; i--) {
+                if (attendees.get(i).xa == 0) {
+                    XjsUtils.circularShiftRight(attendees, rightOffset--, i);
+                }
             }
         }
     }

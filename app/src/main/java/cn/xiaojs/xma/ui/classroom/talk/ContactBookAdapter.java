@@ -127,7 +127,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.name = (TextView) v.findViewById(R.id.name);
         holder.label = (TextView) v.findViewById(R.id.label);
         holder.video = (ImageView) v.findViewById(R.id.video);
-        holder.talk = (ImageView) v.findViewById(R.id.talk);
+        holder.talk = (MessageImageView) v.findViewById(R.id.talk);
 
         v.setOnClickListener(this);
         holder.talk.setOnClickListener(this);
@@ -155,7 +155,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(holder.portrait);
-        holder.portrait.setCount(attendee.unReadMsgCount);
+        //holder.portrait.setCount(attendee.unReadMsgCount);
 
         holder.name.setText(attendee.name);
 
@@ -164,7 +164,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
         } else {
-            holder.checkbox.setVisibility(View.INVISIBLE);
+            holder.checkbox.setVisibility(View.GONE);
         }
 
         boolean isMyself = ClassroomBusiness.isMyself(mContext, attendee.accountId);
@@ -180,6 +180,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.video.setVisibility(View.INVISIBLE);
         }
         holder.talk.setVisibility(isMyself ? View.INVISIBLE : View.VISIBLE);
+        holder.talk.setCount(attendee.unReadMsgCount);
 
         Constants.User user = ClassroomBusiness.getUser(attendee.psType);
         switch (user) {
@@ -266,7 +267,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         TextView name;
         TextView label;
         ImageView video;
-        ImageView talk;
+        MessageImageView talk;
         int position = -1;
     }
 
