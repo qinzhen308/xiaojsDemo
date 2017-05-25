@@ -15,8 +15,6 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
-import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
-import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -91,6 +89,7 @@ public class EmbedTalkFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 if (mTalkPresenter.getTalkCriteria() == TalkManager.TYPE_PEER_TALK) {
+                    TalkManager.getInstance().setPeekTalkingAccount(null);
                     mTalkNameTv.setText(R.string.cr_talk_discussion);
                     mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     mTalkPresenter.switchMsgMultiTalk();
@@ -102,10 +101,22 @@ public class EmbedTalkFragment extends BaseFragment{
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mTalkPresenter != null) {
+            mTalkPresenter.release();
+        }
+
+        TalkManager.getInstance().setPeekTalkingAccount(null);
+    }
+
     /**
      * 切换到一对一聊天
      */
     public void switchPeerTalk(Attendee attendee) {
+        TalkManager.getInstance().setPeekTalkingAccount(attendee.accountId);
         mTalkNameTv.setText(attendee.name);
         mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_back_pressed, 0, 0, 0);
         mTalkPresenter.switchTalkTab(TalkManager.TYPE_PEER_TALK, attendee.accountId);

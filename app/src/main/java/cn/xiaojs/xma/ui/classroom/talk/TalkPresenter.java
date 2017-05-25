@@ -238,7 +238,14 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
     }
 
     @Override
-    public void onMsgChanged(int criteria, TalkItem talkItem) {
-        switchTalkTab(mTalkCriteria, talkItem.to);
+    public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
+        //switchTalkTab(mTalkCriteria, receive ? talkItem.from.accountId : talkItem.to);
+        if (!receive) {
+            switchTalkTab(mTalkCriteria, talkItem.to);
+        }
+    }
+
+    public void release() {
+        TalkManager.getInstance().unregisterMsgReceiveListener(this);
     }
 }

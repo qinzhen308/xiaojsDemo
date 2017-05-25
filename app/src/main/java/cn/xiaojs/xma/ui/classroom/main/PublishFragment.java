@@ -26,6 +26,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
@@ -38,6 +39,7 @@ import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import okhttp3.ResponseBody;
 
@@ -97,11 +99,11 @@ public class PublishFragment extends ClassroomLiveFragment {
     @BindView(R.id.fc_land_portrait_btn)
     ImageView mLandPortraitBtn;
     @BindView(R.id.fc_open_contact_btn)
-    ImageView mContactBtn;
+    MessageImageView mContactBtn;
     @BindView(R.id.fc_screenshot_portrait_btn)
     ImageView mScreenshotPortraitBtn;
     @BindView(R.id.fc_hide_show_talk_btn)
-    ImageView mHideShowTalkBtn;
+    MessageImageView mHideShowTalkBtn;
     @BindView(R.id.fc_open_talk_btn)
     ImageView mOpenTalkBtn;
 
@@ -176,7 +178,6 @@ public class PublishFragment extends ClassroomLiveFragment {
                 showHideTalk();
                 break;
             case R.id.fc_open_talk_btn:
-                mPeerTalkAttendee = null;
                 mClassroomController.openInputText(this, 0);
                 break;
             case R.id.play_video:
@@ -307,6 +308,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, mOriginSteamState, false);
         setControllerBtnStyle(liveState);
 
+        mContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
         postHideAnim();
     }
 
@@ -318,13 +320,13 @@ public class PublishFragment extends ClassroomLiveFragment {
 
         if (mTopPanel.getVisibility() == View.VISIBLE) {
             hideAnim(mTopPanel, "mTopPanel");
-            hideAnim(mContactBtn, "mContactBtn");
+            hideAnim(mContactBtn, "mFullscreenContactBtn");
             hideAnim(mOpenTalkBtn, "mOpenTalkBtn");
             hideAnim(mLandPortraitBtn, "mLandPortraitBtn");
             hideAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
         } else if (mTopPanel.getVisibility() == View.INVISIBLE) {
             showAnim(mTopPanel, "mTopPanel");
-            showAnim(mContactBtn, "mContactBtn");
+            showAnim(mContactBtn, "mFullscreenContactBtn");
             showAnim(mOpenTalkBtn, "mOpenTalkBtn");
             showAnim(mLandPortraitBtn, "mLandPortraitBtn");
             showAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
@@ -348,9 +350,13 @@ public class PublishFragment extends ClassroomLiveFragment {
     @Override
     protected void showHideTalk() {
         if (mDiscussionListView.getVisibility() == View.VISIBLE) {
+            TalkManager.getInstance().setFullscreenMultiTalkVisible(false);
             mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_show_talk);
             mDiscussionListView.setVisibility(View.GONE);
         } else {
+            TalkManager.getInstance().setFullscreenMultiTalkVisible(true);
+            TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
+            mHideShowTalkBtn.setCount(0);
             mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
             mDiscussionListView.setVisibility(View.VISIBLE);
         }
@@ -371,10 +377,11 @@ public class PublishFragment extends ClassroomLiveFragment {
                     if (mFullScreenTalkPresenter != null && !TextUtils.isEmpty(content)) {
                         mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
                         mDiscussionListView.setVisibility(View.VISIBLE);
-                        if (mPeerTalkAttendee == null || TextUtils.isEmpty(mPeerTalkAttendee.accountId)) {
+                        String peekAccount = TalkManager.getInstance().getPeekTalkingAccount();
+                        if (TextUtils.isEmpty(peekAccount)) {
                             TalkManager.getInstance().sendText(content);
                         } else {
-                            TalkManager.getInstance().sendText(mPeerTalkAttendee.accountId, content);
+                            TalkManager.getInstance().sendText(peekAccount, content);
                         }
                     }
                     break;
@@ -386,7 +393,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                         break;
                     }
 
-                    mPeerTalkAttendee = attendee;
+                    mContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
                     switch (action) {
                         case OnAttendItemClick.ACTION_OPEN_TALK:
                             int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
@@ -796,5 +803,27 @@ public class PublishFragment extends ClassroomLiveFragment {
         size[0] = w;
         size[1] = h;
         return size;
+    }
+
+    @Override
+    public void onExitTalk(int type) {
+        if (type == TalkManager.TYPE_PEER_TALK) {
+            TalkManager.getInstance().setPeekTalkingAccount(null);
+        }
+    }
+
+    @Override
+    public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
+        //fullscreen mode
+        if (mDiscussionListView.getVisibility() == View.VISIBLE) {
+            TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
+        } else {
+            mHideShowTalkBtn.setCount(TalkManager.getInstance().getMultiTalkUnreadMsgCount());
+        }
+
+        mContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
+        if (mHideShowTalkBtn.getVisibility() != View.VISIBLE) {
+            startAnim();
+        }
     }
 }

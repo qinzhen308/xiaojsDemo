@@ -84,6 +84,13 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
     }
 
     @Override
+    public void add(TalkItem talkItem) {
+        if (!contains(talkItem)) {
+            super.add(talkItem);
+        }
+    }
+
+    @Override
     protected void setViewContent(final Holder holder, TalkItem bean, int position) {
         boolean isText = false;
         String imgKey = null;
@@ -150,6 +157,7 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
         holder.msgImg.setOnClickListener(this);
         return holder;
     }
+
 
     @Override
     protected void doRequest() {

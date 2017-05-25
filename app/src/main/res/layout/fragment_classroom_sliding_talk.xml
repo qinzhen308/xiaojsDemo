@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/talk_name"
                 android:listSelector="@android:color/transparent"
-                android:layout_above="@+id/send_layout"
+                android:layout_above="@+id/msg_input_layout"
                 android:background="@color/main_bg">
 
         </cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView>

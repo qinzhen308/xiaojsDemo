@@ -15,5 +15,5 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 public interface ExitPeerTalkListener {
-    public void onExitTalk(int criteria);
+    public void onExitTalk(int type);
 }

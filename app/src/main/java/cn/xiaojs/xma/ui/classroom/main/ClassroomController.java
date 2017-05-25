@@ -420,7 +420,7 @@ public class ClassroomController {
     }
 
     /**
-     * 退出横屏状态下的全屏
+     * 进入横屏状态下的全屏
      */
     public void enterLandFullScreen(boolean isPortrait, Activity activity) {
         if (isPortrait) {

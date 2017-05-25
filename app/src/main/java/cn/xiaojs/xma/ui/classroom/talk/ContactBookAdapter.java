@@ -155,6 +155,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(holder.portrait);
+        holder.portrait.setCount(attendee.unReadMsgCount);
 
         holder.name.setText(attendee.name);
 
@@ -243,6 +244,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                         switch (v.getId()) {
                             case R.id.talk:
                                 //enter chat
+                                attendee.unReadMsgCount = 0;
                                 mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
                                 break;
                             case R.id.video:

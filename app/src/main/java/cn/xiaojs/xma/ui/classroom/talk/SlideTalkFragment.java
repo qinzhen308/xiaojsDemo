@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -64,6 +65,11 @@ public class SlideTalkFragment extends BaseFragment {
     private int mFragmentHeight;
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
     protected View getContentView() {
         mClosableSlidingLayout = (ClosableSlidingLayout) LayoutInflater.from(mContext)
                 .inflate(R.layout.fragment_classroom_sliding_talk, null);
@@ -105,8 +111,10 @@ public class SlideTalkFragment extends BaseFragment {
 
         if (mAttendee != null) {
             mTalkPresenter.switchPeerTalk(mAttendee, false);
+            TalkManager.getInstance().setPeekTalkingAccount(mAttendee.accountId);
         } else {
             mTalkPresenter.switchMsgMultiTalk();
+            TalkManager.getInstance().setPeekTalkingAccount(null);
         }
     }
 
@@ -168,6 +176,13 @@ public class SlideTalkFragment extends BaseFragment {
                     break;
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        TalkManager.getInstance().setPeekTalkingAccount(null);
     }
 
     private void sendMsg (String content) {

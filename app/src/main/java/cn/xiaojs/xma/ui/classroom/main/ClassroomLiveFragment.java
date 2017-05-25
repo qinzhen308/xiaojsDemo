@@ -61,8 +61,15 @@ import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 
-public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener, ExitPeerTalkListener {
+public abstract class ClassroomLiveFragment extends BaseFragment implements
+        OnSettingChangedListener,
+        OnStreamChangeListener,
+        BackPressListener,
+        FrameCapturedCallback,
+        OnPhotoDoodleShareListener,
+        ExitPeerTalkListener,
+        TalkManager.OnTalkMsgReceived {
+
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
 
     protected CtlSession mCtlSession;
@@ -91,8 +98,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected int mSlideViewWidth;
     protected int mSlideViewHeight;
 
-    protected Attendee mPeerTalkAttendee;
-
     protected Handler mHandler;
 
     @Override
@@ -116,6 +121,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
 
+        TalkManager.getInstance().registerMsgReceiveListener(this);
         //DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         //mSlideViewWidth = (int) (0.4F * displayMetrics.heightPixels);
         //mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
@@ -431,10 +437,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     }
 
     @Override
-    public void onExitTalk(int criteria) {
-        if (criteria == TalkManager.TYPE_PEER_TALK) {
-            mPeerTalkAttendee = null;
-        }
+    public void onExitTalk(int type) {
+
     }
 
     protected void setControllerBtnStyle(String liveState) {
@@ -490,6 +494,12 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         if (mTimeProgressHelper != null) {
             mTimeProgressHelper.release();
         }
+
+        if (mFullScreenTalkPresenter != null) {
+            mFullScreenTalkPresenter.release();
+        }
+
+        TalkManager.getInstance().unregisterMsgReceiveListener(this);
 
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
