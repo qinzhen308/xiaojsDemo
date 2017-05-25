@@ -306,6 +306,11 @@ public interface XiaojsService {
     Call<JoinResponse> joinLesson(@Path("lesson") String lesson, @Body Registrant registrant);
 
 
+    //Create Class
+    @POST("/v1/ctl/classes")
+    createClass();
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories
