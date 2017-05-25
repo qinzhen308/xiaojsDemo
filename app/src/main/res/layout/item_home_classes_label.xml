@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:paddingLeft="@dimen/px22"
-    android:paddingTop="@dimen/px27"
-    android:paddingBottom="@dimen/px42"
-    android:paddingRight="@dimen/px24"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:text="我的班"
-        android:textSize="@dimen/font_28px"
-        android:textColor="@color/chocolate_light"
-        />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/px22"
+        android:paddingTop="@dimen/px27"
+        android:paddingBottom="@dimen/px42"
+        android:paddingRight="@dimen/px24"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_all"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="全部"
-        android:textSize="@dimen/font_28px"
-        android:padding="5dp"
-        android:textColor="@color/subject_selected_blue"
-        />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="我的班"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/chocolate_light"
+            />
+
+        <TextView
+            android:id="@+id/tv_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="全部"
+            android:textSize="@dimen/font_28px"
+            android:padding="5dp"
+            android:textColor="@color/subject_selected_blue"
+            />
 
 
-</LinearLayout>
+    </LinearLayout>
+
+    <include
+        android:id="@+id/no_data"
+        layout="@layout/item_home_no_class"/>
+
+
+</merge>

@@ -1,6 +1,11 @@
 package cn.xiaojs.xma.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.widget.Toast;
+
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.Map;
@@ -73,6 +78,21 @@ public class ThirdLoginUtil {
             code_type=Security.VerifyMethod.SMS4QQAssociation;
         }
         return code_type;
+    }
+
+
+    public static boolean checkInstalled(Activity context, SHARE_MEDIA platform){
+        boolean isInstalled=UMShareAPI.get(context).isInstall(context,platform);
+        if(!isInstalled){
+            String platformSrt="";
+            if(platform==SHARE_MEDIA.QQ){
+                platformSrt="QQ";
+            }else if(platform==SHARE_MEDIA.WEIXIN){
+                platformSrt="微信";
+            }
+            Toast.makeText(context,"您还没有安装"+platformSrt,Toast.LENGTH_LONG).show();
+        }
+        return isInstalled;
     }
 
 }

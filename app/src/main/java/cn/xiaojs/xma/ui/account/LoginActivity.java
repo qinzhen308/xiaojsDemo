@@ -378,7 +378,7 @@ public class LoginActivity extends BaseActivity {
 
     //----------------三方登录------------
     private void thirdLogin(final SHARE_MEDIA platform){
-        if(!UMShareAPI.get(this).isInstall(this,platform)){
+        if(!ThirdLoginUtil.checkInstalled(this,platform)){
             return;
         }
         UMShareAPI.get(this).getPlatformInfo(this, platform ,umAuthListener);

@@ -10,31 +10,38 @@ import com.orhanobut.logger.Logger;
 
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 
 /**
  * Created by Paul Z on 2017/5/22.
  */
 
 public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    public static final int VIEW_TYPE_HOME_LESSON_LABEL =1;
+    public static final int VIEW_TYPE_HOME_LESSON=2;
+    public static final int VIEW_TYPE_HOME_CLASS_LABEL=3;
+    public static final int VIEW_TYPE_HOME_CLASS =4;
+//    public static final int VIEW_TYPE_HOME_NO_LESSON=5;
+//    public static final int VIEW_TYPE_HOME_NO_CLASS=6;
+    public static final int VIEW_TYPE_LAST_EMPTY=100;
 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder=null;
-        if(viewType==1){
-            holder=new LessonLabelHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lesson_schedule_date,parent,false));
-        }else if(viewType==2){
-            holder=new LessonHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_lesson,parent,false));
+        if(viewType== VIEW_TYPE_HOME_LESSON_LABEL){
+            holder=new CommonHolder(new HomeLessonLabelView(parent.getContext()));
+        }else if(viewType==VIEW_TYPE_HOME_LESSON){
+            holder=new CommonHolder(new HomeLessonView(parent.getContext()));
 
-        }else if(viewType==3){
-            holder=new ClassLabelHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_classes_label,parent,false));
-
-        }else if(viewType==4){
-            holder=new ClassHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lesson_schedule_lesson,parent,false));
-        }else if(viewType==10){
-            holder=new NoLessonHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_no_lesson,parent,false));
-        }else if(viewType==11){
-            holder=new NoClassHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_no_class,parent,false));
+        }else if(viewType==VIEW_TYPE_HOME_CLASS_LABEL){
+            holder=new CommonHolder(new HomeClassLabelView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_HOME_CLASS){
+            holder=new CommonHolder(new ClassView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -47,30 +54,29 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         Logger.d("----qz---- "+position);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(),ClassScheduleActivity.class));
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(),ClassScheduleActivity.class));
+//            }
+//        });
+        if(holder.itemView instanceof IViewModel){
+            ((IViewModel) holder.itemView).bindData(null);
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
         if(position==0){
-            return 1;
-        }else if(position==1){
-            return 10;
+            return VIEW_TYPE_HOME_LESSON_LABEL;
         }else if(position<5){
-            return 2;
+            return VIEW_TYPE_HOME_LESSON;
         }else if(position==5){
-            return 3;
-        }else if(position==6){
-            return 11;
+            return VIEW_TYPE_HOME_CLASS_LABEL;
         }else if(position==(getItemCount()-1)){
-            return 100;
+            return VIEW_TYPE_LAST_EMPTY;
         }
-        return 4;
+        return VIEW_TYPE_HOME_CLASS;
     }
 
     @Override
@@ -78,56 +84,18 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return 12;
     }
 
-    public static class LessonHolder extends RecyclerView.ViewHolder{
-
-        public LessonHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
-    }
-
-    public static class NoLessonHolder extends RecyclerView.ViewHolder{
-
-        public NoLessonHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
-    }
-
-    public static class ClassHolder extends RecyclerView.ViewHolder{
-
-        public ClassHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
-    }
- public static class NoClassHolder extends RecyclerView.ViewHolder{
-
-        public NoClassHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
-    }
-
-    public static class ClassLabelHolder extends RecyclerView.ViewHolder{
-
-        public ClassLabelHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
-    }
-    public static class LessonLabelHolder extends RecyclerView.ViewHolder{
-
-        public LessonLabelHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
-    }
-
     public static class LastEmpterHolder extends RecyclerView.ViewHolder{
 
         public LastEmpterHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    public static class CommonHolder extends RecyclerView.ViewHolder{
+
+        public CommonHolder(View itemView) {
+            super(itemView);
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
         }
     }
 

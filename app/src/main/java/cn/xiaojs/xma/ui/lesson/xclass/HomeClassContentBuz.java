@@ -31,6 +31,7 @@ import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -101,6 +102,8 @@ public class HomeClassContentBuz {
                 calendarView.addTaskHint(15);
             }
         }, 2000);
+
+        overLayout.addOnScrollListener(new PageChangeListener());
     }
 
 
@@ -136,7 +139,7 @@ public class HomeClassContentBuz {
 
                 switch (i) {
                     case 1:
-                        Toast.makeText(mContext,"开班功能还没接入...",Toast.LENGTH_LONG).show();
+                        mContext.startActivity(new Intent(mContext,CreateClassActivity.class));
                         break;
                     case 0:
                         if (AccountDataManager.isTeacher(mContext)) {

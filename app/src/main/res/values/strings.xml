@@ -828,4 +828,25 @@
     <string name="empty_class_tips">你还没开过班哦～</string>
     <string name="want_to_create_class">我要开班</string>
     <string name="into_cls_flag">进入教室 ></string>
+
+    <!--lesson operate name-->
+    <string name="lesson_op_delete">删除</string>
+    <string name="lesson_op_cancel_submit">撤销确认</string>
+    <string name="lesson_op_cancel_check">撤销审核</string>
+    <string name="lesson_op_signup">报名注册</string>
+    <string name="lesson_op_modify_time">修改上课事件</string>
+    <string name="lesson_op_public">设为公开</string>
+    <string name="lesson_op_private">取消公开</string>
+    <string name="lesson_op_recreate_lesson">再次开课</string>
+    <string name="lesson_op_share">分享</string>
+    <string name="lesson_op_cancel_lesson">取消开课</string>
+    <string name="lesson_op_submit">提交确认</string>
+    <string name="lesson_op_publish">上架</string>
+    <string name="lesson_op_edit">边记</string>
+    <string name="lesson_op_look">查看详情</string>
+    <string name="lesson_op_database">资料库</string>
+    <string name="lesson_op_enter">进入教室</string>
+    <string name="lesson_op_look_apply">查看报名页</string>
+    <string name="lesson_op_schedule">课表</string>
+    <string name="lesson_op_class_info">班级信息</string>
 </resources>

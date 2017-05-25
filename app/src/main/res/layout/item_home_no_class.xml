@@ -6,6 +6,7 @@
     android:layout_height="@dimen/px550">
 
     <TextView
+        android:id="@+id/no_class_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/font_light_gray"

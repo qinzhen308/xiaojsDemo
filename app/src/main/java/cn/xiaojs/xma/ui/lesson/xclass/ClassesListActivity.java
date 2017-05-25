@@ -29,6 +29,7 @@ public class ClassesListActivity extends FragmentActivity {
     RadioGroup tabGroupLayout;
     @BindView(R.id.tab_viewpager)
     ViewPager tabPager;
+    private int curCheckedTabId;
 
 
     private ArrayList<Fragment> fragmentList;
@@ -42,7 +43,7 @@ public class ClassesListActivity extends FragmentActivity {
         initView();
     }
 
-    @OnClick({R.id.left_image, R.id.add_btn})
+    @OnClick({R.id.left_image, R.id.add_btn,R.id.tab_class,R.id.tab_lesson})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -50,6 +51,18 @@ public class ClassesListActivity extends FragmentActivity {
                 break;
             case R.id.add_btn:
                 //TODO 添加
+                break;
+            case R.id.tab_class:
+                if(curCheckedTabId!=R.id.tab_class){
+                    tabPager.setCurrentItem(0);
+                    curCheckedTabId=R.id.tab_class;
+                }
+                break;
+            case R.id.tab_lesson:
+                if(curCheckedTabId!=R.id.tab_lesson){
+                    tabPager.setCurrentItem(1);
+                    curCheckedTabId=R.id.tab_lesson;
+                }
                 break;
         }
     }
@@ -65,33 +78,23 @@ public class ClassesListActivity extends FragmentActivity {
         adapter.setList(fragmentList);
         tabPager.setAdapter(adapter);
 
-        tabGroupLayout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-
-                if (checkedId == R.id.tab_class) {
-                    tabPager.setCurrentItem(1);
-                }else if(checkedId == R.id.tab_lesson) {
-                    tabPager.setCurrentItem(2);
-                }
-
-            }
-        });
 
         tabPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                if (position == 0) {
-                    tabGroupLayout.check(R.id.tab_class);
-                }else{
-                    tabGroupLayout.check(R.id.tab_lesson);
-                }
+
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                if (position == 0) {
+                    curCheckedTabId=R.id.tab_class;
+                    tabGroupLayout.check(R.id.tab_class);
+                }else{
+                    curCheckedTabId=R.id.tab_lesson;
+                    tabGroupLayout.check(R.id.tab_lesson);
+                }
             }
 
             @Override
