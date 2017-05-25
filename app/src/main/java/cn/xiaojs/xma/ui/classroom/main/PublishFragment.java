@@ -399,7 +399,11 @@ public class PublishFragment extends ClassroomLiveFragment {
                         case OnAttendItemClick.ACTION_OPEN_TALK:
                             int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
                             int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
-                            ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                            if (isPortrait()) {
+                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, size);
+                            } else {
+                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                            }
                             break;
                         case OnAttendItemClick.ACTION_OPEN_CAMERA:
                             //open publish: peer to peer
