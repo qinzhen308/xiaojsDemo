@@ -29,12 +29,14 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
+import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
 
@@ -422,4 +424,69 @@ public class LessonDataManager {
         lessonRequest.createClass(params);
     }
 
+
+    /**
+     *
+     * @param context
+     * @param cycle
+     * @param next
+     * @param pre
+     * @param callback
+     */
+    public static void getClassesSchedule(Context context,
+                                          String cycle,
+                                          int next,
+                                          int pre,
+                                          APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule(cycle, next, pre);
+    }
+
+    /**
+     *
+     * @param context
+     * @param start
+     * @param end
+     * @param callback
+     */
+    public static void getClassesSchedule(Context context,
+                                          long start,
+                                          long end,
+                                          APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule(start, end);
+    }
+
+
+    /**
+     * Schedule Class Lesson .
+     * @param context
+     * @param classes
+     * @param lesson
+     * @param callback
+     */
+    public static void scheduleClassLesson(Context context,
+                                           String classes,
+                                           ClassLesson lesson,
+                                           APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.scheduleClassLesson(classes, lesson);
+    }
+
+    /**
+     * 可用于排课前的检查，包括检查老师的状态、上课日程是否冲突 .
+     * @param context
+     * @param classes
+     * @param lesson
+     * @param callback
+     */
+    public static void checkOverlap(Context context,
+                                    String classes,
+                                    ClassLesson lesson,
+                                    APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.checkOverlap(classes, lesson);
+    }
 }

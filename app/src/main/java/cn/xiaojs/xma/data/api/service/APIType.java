@@ -171,5 +171,8 @@ public class APIType {
     public static final int CHECK_ASSOCIATION = 99;
 
     public static final int CREATE_CLASS = 100;
+    public static final int GET_CLASSES_SCHEDULE = 101;
+    public static final int SCHEDULE_CLASS_LESSON = 102;
+    public static final int CHECK_OVERLAP = 103;
 
 }

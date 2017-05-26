@@ -169,21 +169,51 @@ public class TestAPIActivity extends Activity {
 
     public void testCache() {
 
-        Pagination pagination = new Pagination();
-        pagination.setMaxNumOfObjectsPerPage(100);
-        pagination.setPage(1);
+//        long start = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+//
+//        long end = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
+//
+//
+//        LessonDataManager.getClassesSchedule(this, start, end, new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
-        AccountDataManager.getOrgTeachers(this, "592258e34dd12305d0146cdb", false, pagination, new APIServiceCallback<CollectionPage<OrgTeacher>>() {
-            @Override
-            public void onSuccess(CollectionPage<OrgTeacher> object) {
 
-            }
+//        LessonDataManager.getClassesSchedule(this, "daily", 1,1, new APIServiceCallback() {
+//            @Override
+//            public void onSuccess(Object object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        Pagination pagination = new Pagination();
+//        pagination.setMaxNumOfObjectsPerPage(100);
+//        pagination.setPage(1);
+//
+//        AccountDataManager.getOrgTeachers(this, "592258e34dd12305d0146cdb", false, pagination, new APIServiceCallback<CollectionPage<OrgTeacher>>() {
+//            @Override
+//            public void onSuccess(CollectionPage<OrgTeacher> object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        Intent i = new Intent(this, UpgradeActivity.class);
 //        startActivity(i);
