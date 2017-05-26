@@ -85,9 +85,6 @@ public class CreateTimetableActivity extends BaseActivity {
                     public void onDatePicked(int year, int month, int day,
                                              int hour, int minute, int second) {
 
-
-                        //TODO 此处要判断时间是否有冲突
-
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, month, day, hour, minute, second);
 
@@ -137,6 +134,9 @@ public class CreateTimetableActivity extends BaseActivity {
             Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
             return;
         }
+
+
+        //TODO 此处要判断时间是否有冲突
 
 
         ClassLesson classLesson = new ClassLesson();

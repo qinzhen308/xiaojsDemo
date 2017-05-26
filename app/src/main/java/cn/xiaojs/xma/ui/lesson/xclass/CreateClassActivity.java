@@ -16,11 +16,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
@@ -39,6 +37,7 @@ public class CreateClassActivity extends BaseActivity {
     public static final int MAX_CLASS_CHAR = 50;
 
     private final int REQUEST_CLASS_LESSON_CODE = 0x1;
+    private final int REQUEST_CLASS_SCHEDULE_CODE = 0x2;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -54,7 +53,34 @@ public class CreateClassActivity extends BaseActivity {
     @BindView(R.id.not_verify)
     RadioButton notVerifyBtn;
 
-    private ArrayList<ClassLesson> classLessons;
+    public static ArrayList<ClassLesson> classLessons;
+
+    public static void addClassLesson(ClassLesson lesson) {
+
+        if (lesson == null) return;
+
+        if (classLessons == null) {
+            classLessons = new ArrayList<>();
+        }
+
+        classLessons.add(lesson);
+
+    }
+
+    public static void clearClassLessons(){
+        if (classLessons !=null) {
+            classLessons.clear();
+            classLessons = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        clearClassLessons();
+
+        super.onDestroy();
+    }
 
 
     @Override
@@ -81,8 +107,14 @@ public class CreateClassActivity extends BaseActivity {
                 //startActivity(new Intent(this, ShareQrcodeActivity.class));
                 break;
             case R.id.lay_time_table://课表
-                startActivityForResult(new Intent(this, CreateTimetableActivity.class),
-                        REQUEST_CLASS_LESSON_CODE);
+                if (classLessons != null && classLessons.size() > 0) {
+                    startActivityForResult(new Intent(this, LessonScheduleActivity.class),
+                            REQUEST_CLASS_SCHEDULE_CODE);
+                }else {
+                    startActivityForResult(new Intent(this, CreateTimetableActivity.class),
+                            REQUEST_CLASS_LESSON_CODE);
+                }
+
                 break;
             case R.id.lay_class_student://学生
                 addStudents();
@@ -187,7 +219,7 @@ public class CreateClassActivity extends BaseActivity {
                         R.string.create_class_success,
                         Toast.LENGTH_SHORT)
                         .show();
-
+                clearClassLessons();
                 finish();
             }
 
@@ -200,6 +232,8 @@ public class CreateClassActivity extends BaseActivity {
     }
 
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -209,16 +243,13 @@ public class CreateClassActivity extends BaseActivity {
 
                         ClassLesson clesson = (ClassLesson) data.getSerializableExtra(
                                 CreateTimetableActivity.EXTRA_CLASS_LESSON);
-                        if (clesson !=null) {
-                            if(classLessons == null) {
-                                classLessons = new ArrayList<>();
-                            }
-                            classLessons.add(clesson);
-                        }
+                        addClassLesson(clesson);
                     }
                     break;
             }
         }
     }
+
+
 }
 
