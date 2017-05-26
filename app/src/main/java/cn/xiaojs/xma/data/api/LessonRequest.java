@@ -31,12 +31,14 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
@@ -278,6 +280,16 @@ public class LessonRequest extends ServiceRequest {
     public void checkOverlap(String classes, ClassLesson lesson) {
         Call<ResponseBody> call = getService().checkOverlap(classes, lesson);
         enqueueRequest(APIType.CHECK_OVERLAP, call);
+    }
+
+    public void getClass(String classid) {
+        Call<ClassInfoData> call = getService().getClass(classid);
+        enqueueRequest(APIType.GET_CLASS, call);
+    }
+
+    public void modifyClass(String classid, ModifyClassParams params) {
+        Call<CLResponse> call = getService().modifyClass(classid,params);
+        enqueueRequest(APIType.MODIFY_CLASS, call);
     }
 
 }

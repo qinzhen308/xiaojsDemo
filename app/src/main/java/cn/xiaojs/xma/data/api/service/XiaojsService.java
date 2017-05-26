@@ -45,12 +45,14 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
+import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
@@ -331,6 +333,14 @@ public interface XiaojsService {
     //Check Overlap
     @POST("/v1/ctl/classes/{classes}/schedule/check")
     Call<ResponseBody> checkOverlap(@Path("classes") String classes, @Body ClassLesson classLesson);
+
+    //Get Class
+    @GET("/v1/ctl/classes/{class}")
+    Call<ClassInfoData> getClass(@Path("class") String classid);
+
+    //Modify Class
+    @PATCH("/v1/ctl/classes/{class}/modify")
+    Call<CLResponse> modifyClass(@Path("class") String classid, @Body ModifyClassParams params);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -29,12 +29,14 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
@@ -489,5 +491,36 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.checkOverlap(classes, lesson);
+    }
+
+    /**
+     * get the info of privateclass.
+     * 获取班信息
+     * @param context
+     * @param classid
+     * @param callback
+     */
+    public static void getClassInfo(Context context,
+                                    String classid,
+                                    APIServiceCallback<ClassInfoData> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClass(classid);
+    }
+
+    /**
+     * modify the specific private class.
+     * 编辑班课内容（班名称、班主任）;
+     * @param context
+     * @param classid
+     * @param params
+     * @param callback
+     */
+    public static void modifyClass(Context context,
+                                   String classid,
+                                   ModifyClassParams params,
+                                   APIServiceCallback<CLResponse> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.modifyClass(classid, params);
     }
 }
