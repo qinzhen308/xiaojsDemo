@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
+import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.util.ScheduleFilter;
@@ -51,8 +54,12 @@ public class LessonScheduleActivity extends BaseActivity{
         calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
-                String s=year+"-"+month+"-"+day;
-//                TimeUtil.getTimeMils()
+                curDayIndex=ScheduleFilter.getDayIndex(year+"-"+month+"-"+day);
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("-----qz--------"+(year+"-"+month+"-"+day)+"---curDayIndex="+curDayIndex);
+                }
+                mAdapter.setList(datas.get(curDayIndex));
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -88,6 +95,7 @@ public class LessonScheduleActivity extends BaseActivity{
                     CreateClassActivity.addClassLesson(classLesson);
                     //TODO 更新显示
                     datas=ScheduleFilter.buildScheduleByDay(CreateClassActivity.classLessons);
+                    mAdapter.setList(datas.get(curDayIndex));
                     mAdapter.notifyDataSetChanged();
                     break;
             }

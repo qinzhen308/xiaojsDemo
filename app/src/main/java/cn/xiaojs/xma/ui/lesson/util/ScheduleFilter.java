@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +17,9 @@ import cn.xiaojs.xma.model.ctl.ClassLesson;
  */
 
 public class ScheduleFilter {
+
+    public static final String simpleYMDFormatStr="yyyy-MM-dd GMT-8:00";
+    public static final SimpleDateFormat simpleYMDFormat=new SimpleDateFormat(simpleYMDFormatStr);
 
     public final static long DAY=3600*24;
 
@@ -61,5 +66,16 @@ public class ScheduleFilter {
         boolean isSameMonth = isSameYear && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
         boolean isSameDate = isSameMonth && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
         return isSameDate;
+    }
+
+
+    public static long getDayIndex(String date){
+        try {
+            Date d=simpleYMDFormat.parse(date);
+            return d.getTime()/DAY;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

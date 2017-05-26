@@ -12,11 +12,13 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/22.
@@ -31,10 +33,10 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //    public static final int VIEW_TYPE_HOME_NO_CLASS=6;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
-    private List<Object> mList;
+    private List<?> mList;
 
 
-    public void setList(List<Object> list){
+    public void setList(List<?> list){
         mList=list;
     }
 
@@ -76,7 +78,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if(position==0){
+        /*if(position==0){
             return VIEW_TYPE_HOME_LESSON_LABEL;
         }else if(position<5){
             return VIEW_TYPE_HOME_LESSON;
@@ -84,13 +86,23 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_HOME_CLASS_LABEL;
         }else if(position==(getItemCount()-1)){
             return VIEW_TYPE_LAST_EMPTY;
+        }*/
+        Object o=getItem(position);
+        if(position==(getItemCount()-1)){
+            return VIEW_TYPE_LAST_EMPTY;
+        }else if(o instanceof ClassLesson){
+            return VIEW_TYPE_HOME_LESSON;
         }
         return VIEW_TYPE_HOME_CLASS;
     }
 
+    private Object getItem(int position){
+        return ArrayUtil.isEmpty(mList)?null:mList.get(position);
+    }
+
     @Override
     public int getItemCount() {
-        return 12;
+        return mList==null?0:(mList.size()+1);
     }
 
     public static class LastEmpterHolder extends RecyclerView.ViewHolder{
