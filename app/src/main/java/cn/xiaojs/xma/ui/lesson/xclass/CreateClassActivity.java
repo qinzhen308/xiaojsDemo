@@ -2,14 +2,26 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Intent;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CLEResponse;
+import cn.xiaojs.xma.model.CLResponse;
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -21,15 +33,21 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 
 public class CreateClassActivity extends BaseActivity {
 
-    private final int MAX_LESSON_CHAR = 50;
+    private final int MAX_CLASS_CHAR = 50;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
     @BindView(R.id.lay_tips)
     LinearLayout tipsRootView;
 
-    @BindView(R.id.live_lesson_name)
+    @BindView(R.id.class_name)
     EditTextDel classNameEdt;
+    @BindView(R.id.teacher_name)
+    TextView teacherNameView;
+    @BindView(R.id.verify_group)
+    RadioGroup verifyGroupView;
+    @BindView(R.id.not_verify)
+    RadioButton notVerifyBtn;
 
 
     @Override
@@ -69,9 +87,21 @@ public class CreateClassActivity extends BaseActivity {
 
         tipsContentView.setText(R.string.class_create_tips);
 
-        classNameEdt.setHint(getString(R.string.live_lesson_name_hint, MAX_LESSON_CHAR));
+        classNameEdt.setHint(getString(R.string.live_lesson_name_hint, MAX_CLASS_CHAR));
         classNameEdt.setForbidEnterChar(true);
-        classNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
+        classNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_CLASS_CHAR)});
+
+
+        Account account = AccountDataManager.getAccont(this);
+        if (account != null && account.getBasic() != null) {
+            String name = account.getBasic().getName();
+            teacherNameView.setText(name);
+        }
+
+        notVerifyBtn.setChecked(true);
+
+
+
     }
 
     private void closeCourCreateTips() {
@@ -116,14 +146,50 @@ public class CreateClassActivity extends BaseActivity {
 
 
     private void createClass() {
-        //TODO 创建班
+        //创建班
+
+        String name = classNameEdt.getText().toString().trim();
+
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this,R.string.class_name_not_null,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (name.length() > MAX_CLASS_CHAR) {
+            String nameEr = getString(R.string.class_name_char_error, MAX_CLASS_CHAR);
+            Toast.makeText(this, nameEr, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ClassParams params = new ClassParams();
+
+        params.title = name;
+        params.join = verifyGroupView.getCheckedRadioButtonId() == R.id.need_verify?
+                Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
 
 
 
+        showProgress(true);
+        LessonDataManager.createClass(this, params, new APIServiceCallback<CLResponse>() {
+            @Override
+            public void onSuccess(CLResponse object) {
+                cancelProgress();
+                Toast.makeText(CreateClassActivity.this,
+                        R.string.create_class_success,
+                        Toast.LENGTH_SHORT)
+                        .show();
 
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(CreateClassActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
-
-
 }
+

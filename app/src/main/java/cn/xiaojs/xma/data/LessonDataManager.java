@@ -89,15 +89,11 @@ public class LessonDataManager {
 
     /**
      * 通过用户ID获取用户授的课
-     * @param context
-     * @param account
-     * @param pagination
-     * @param callback
      */
     public static void getLessonsByUser(Context context,
-                                      String account,
-                                      Pagination pagination,
-                                      APIServiceCallback<CollectionPageData<PersonHomeUserLesson>> callback){
+                                        String account,
+                                        Pagination pagination,
+                                        APIServiceCallback<CollectionPageData<PersonHomeUserLesson>> callback) {
 
         int page = 1;
         int limit = 10;
@@ -195,9 +191,6 @@ public class LessonDataManager {
 
     /**
      * 上传课程封面图片
-     * @param context
-     * @param filePath
-     * @param qiniuService
      */
     public static void requestUploadCover(Context context,
                                           @NonNull final String filePath,
@@ -224,7 +217,7 @@ public class LessonDataManager {
 //        }
 
         QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
-        qiniuRequest.getToken(Collaboration.UploadTokenType.COVER_OF_CTL,1);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.COVER_OF_CTL, 1);
 
     }
 
@@ -265,15 +258,11 @@ public class LessonDataManager {
 
     /**
      * 修改上课时间
-     * @param context
-     * @param lesson
-     * @param lessonSchedule
-     * @param callback
      */
-     public static void editLessonSchedule(Context context,
-                                         @NonNull String lesson,
-                                         @NonNull LessonSchedule lessonSchedule,
-                                         @NonNull APIServiceCallback callback) {
+    public static void editLessonSchedule(Context context,
+                                          @NonNull String lesson,
+                                          @NonNull LessonSchedule lessonSchedule,
+                                          @NonNull APIServiceCallback callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.editLessonSchedule(lesson, lessonSchedule);
@@ -372,26 +361,19 @@ public class LessonDataManager {
 
     /**
      * 直播课接口
-     * @param context
-     * @param callback
      */
     public static void getLiveClasses(Context context, @NonNull APIServiceCallback<LiveClass> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLiveClasses();
     }
 
-    public static void acknowledgeLesson(Context context, String lesson, DealAck ack,APIServiceCallback callback) {
+    public static void acknowledgeLesson(Context context, String lesson, DealAck ack, APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.acknowledgeLesson(lesson, ack);
     }
 
     /**
      * 查询指定课程的报名的学生
-     * @param context
-     * @param lesson
-     * @param page
-     * @param limit
-     * @param callback
      */
     public static void getEnrolledStudents(Context context,
                                            String lesson,
@@ -400,15 +382,12 @@ public class LessonDataManager {
                                            APIServiceCallback<EnrollPage> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getEnrolledStudents(lesson,page,limit,"Enrolled");
+        lessonRequest.getEnrolledStudents(lesson, page, limit, "Enrolled");
 
     }
 
     /**
      * Hidden the specific standalone lesson.
-     * @param context
-     * @param lesson
-     * @param callback
      */
     public static void hideLesson(Context context, String lesson, APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
@@ -417,10 +396,8 @@ public class LessonDataManager {
 
     /**
      * 加入无需报名的课
-     * @param context
-     * @param lesson
+     *
      * @param registrant 可选项，此处可传null
-     * @param callback
      */
     public static void joinLesson(Context context,
                                   String lesson,
@@ -431,18 +408,15 @@ public class LessonDataManager {
         }
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.joinLesson(lesson,registrant);
+        lessonRequest.joinLesson(lesson, registrant);
     }
 
     /**
      * Creates a class by a teacher or an organization, and entering into the following lifecycle.
-     * @param context
-     * @param params
-     * @param callback
      */
-    public void createClass(Context context,
-                            ClassParams params,
-                            APIServiceCallback<CLEResponse> callback) {
+    public static void createClass(Context context,
+                                   ClassParams params,
+                                   APIServiceCallback<CLResponse> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.createClass(params);
