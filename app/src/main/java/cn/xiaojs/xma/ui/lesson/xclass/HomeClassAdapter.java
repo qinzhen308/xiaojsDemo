@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
@@ -28,6 +30,13 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //    public static final int VIEW_TYPE_HOME_NO_LESSON=5;
 //    public static final int VIEW_TYPE_HOME_NO_CLASS=6;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
+
+    private List<Object> mList;
+
+
+    public void setList(List<Object> list){
+        mList=list;
+    }
 
 
     @Override
