@@ -35,6 +35,7 @@ import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
 
@@ -452,7 +453,7 @@ public class LessonDataManager {
     public static void getClassesSchedule(Context context,
                                           long start,
                                           long end,
-                                          APIServiceCallback callback) {
+                                          APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule(start, end);
     }
@@ -468,7 +469,7 @@ public class LessonDataManager {
     public static void scheduleClassLesson(Context context,
                                            String classes,
                                            ClassLesson lesson,
-                                           APIServiceCallback callback) {
+                                           APIServiceCallback<ScheduleData> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.scheduleClassLesson(classes, lesson);
