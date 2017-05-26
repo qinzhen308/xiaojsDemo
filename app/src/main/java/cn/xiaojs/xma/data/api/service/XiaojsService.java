@@ -51,6 +51,7 @@ import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
+import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -319,7 +320,7 @@ public interface XiaojsService {
                                           @Query("pre") int pre);
 
     @GET("/v1/ctl/schedule")
-    Call<ResponseBody> getClassesSchedule(@Query("start") long start,
+    Call<ScheduleData> getClassesSchedule(@Query("start") long start,
                                           @Query("end") long end);
 
     //Schedule Class Lesson

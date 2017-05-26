@@ -1,12 +1,14 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -43,7 +45,7 @@ public class CreateTimetableActivity extends BaseActivity {
     CheckBox recordView;
 
     private long lessonStartTime;
-
+    
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_create_timetable);
@@ -137,8 +139,77 @@ public class CreateTimetableActivity extends BaseActivity {
 
 
         //TODO 此处要判断时间是否有冲突
+        new CheckConflictTask().execute(lessonStartTime, 
+                Long.parseLong(durationView.getText().toString()));
 
 
+        
+
+    }
+
+
+    private boolean checkLocalConflict(long startTime,long duration) {
+
+        long endTime = startTime + duration * 60 * 1000;
+
+        ArrayList<ClassLesson> classLessons = CreateClassActivity.classLessons;
+        if (classLessons != null && classLessons.size() > 0) {
+
+            for (ClassLesson clesson: classLessons) {
+                Schedule schedule = clesson.schedule;
+                long start = schedule.getStart().getTime();
+                long end = start + duration * 60 * 1000;
+
+                if (startTime >= start || startTime <= end) {
+                    return true;
+                }
+
+                if (endTime >= start || endTime <= end) {
+                    return true;
+                }
+            }
+
+
+        }
+
+        return false;
+    }
+
+
+    private class CheckConflictTask extends AsyncTask<Long,Void,Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            showProgress(false);
+        }
+
+        @Override
+        protected Boolean doInBackground(Long... params) {
+
+            boolean result = checkLocalConflict(params[0],params[1]);
+            if (!result) {
+                //TODO 去服务器检测
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean conflict) {
+            cancelProgress();
+            if (conflict) {
+                Toast.makeText(CreateTimetableActivity.this,
+                        R.string.clesson_time_has_conflict,
+                        Toast.LENGTH_SHORT).show();
+            }else {
+                submit();
+            }
+        }
+    }
+    
+    
+    private void submit() {
+        
         ClassLesson classLesson = new ClassLesson();
         classLesson.title = nameView.getText().toString().trim();
         classLesson.recordable = recordView.isChecked();
@@ -154,7 +225,7 @@ public class CreateTimetableActivity extends BaseActivity {
         setResult(RESULT_OK,i);
 
         finish();
-
+        
     }
 
     @Override
