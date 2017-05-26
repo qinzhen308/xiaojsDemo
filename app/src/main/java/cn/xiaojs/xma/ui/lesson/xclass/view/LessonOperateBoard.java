@@ -3,6 +3,11 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.MatrixCursor;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
@@ -13,6 +18,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
+import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +61,40 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     Button cancel;
     private View mContentView;// dialog content view
 
+    private List<Integer> ids=new ArrayList<>();
+
+    private List<Integer> group2=new ArrayList<>();
+
+    ItemAdapter mAdapter;
+
+
+    private final static int[] icons={
+            R.drawable.ic_op_apply,R.drawable.ic_op_cancel_lesson,
+            R.drawable.ic_op_cancel_submit,R.drawable.ic_op_class_info,
+            R.drawable.ic_op_database,R.drawable.ic_op_delete,
+            R.drawable.ic_op_edit,R.drawable.ic_op_enter,
+            R.drawable.ic_op_enter_2,R.drawable.ic_op_look,
+            R.drawable.ic_op_modify_time,R.drawable.ic_op_private,
+            R.drawable.ic_op_public,R.drawable.ic_op_publish,
+            R.drawable.ic_op_recreate_lesson,R.drawable.ic_op_schedule,
+            R.drawable.ic_op_share,R.drawable.ic_op_signup,
+            R.drawable.ic_op_submit
+    };
+
+
+    private final static int[] names={
+            R.string.lesson_op_look_apply,R.string.lesson_op_cancel_lesson,
+            R.string.lesson_op_cancel_submit,R.string.lesson_op_class_info,
+            R.string.lesson_op_database,R.string.lesson_op_delete,
+            R.string.lesson_op_edit,R.string.lesson_op_enter,
+            R.string.lesson_op_enter,R.string.lesson_op_look,
+            R.string.lesson_op_modify_time,R.string.lesson_op_private,
+            R.string.lesson_op_public,R.string.lesson_op_publish,
+            R.string.lesson_op_recreate_lesson,R.string.lesson_op_schedule,
+            R.string.lesson_op_share,R.string.lesson_op_signup,
+            R.string.lesson_op_submit
+    };
+
     private OnDialogCloseListener mOnDismissListener;
 
     public LessonOperateBoard(Context context) {
@@ -83,6 +128,21 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         dialogWindow.setGravity(Gravity.BOTTOM);
         setOnCancelListener(this);
         setOnDismissListener(this);
+        mAdapter=new ItemAdapter();
+        recyclerview.setLayoutManager(new GridLayoutManager(getContext(),1,RecyclerView.HORIZONTAL,false));
+
+        for(int i=0;i<icons.length;i++){
+            if(i==0||i==4||i==8){
+                continue;
+            }
+            ids.add(i);
+        }
+        recyclerview.setAdapter(mAdapter);
+
+        group2.add(0);
+        group2.add(4);
+        group2.add(8);
+        setGroup2(group2);
     }
 
 
@@ -100,8 +160,14 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
-    public void setList(){
-
+    public void setGroup2(List<Integer> group2) {
+        this.group2=group2;
+        icon1.setImageResource(icons[group2.get(0)]);
+        name1.setText(names[group2.get(0)]);
+        icon2.setImageResource(icons[group2.get(1)]);
+        name2.setText(names[group2.get(1)]);
+        icon3.setImageResource(icons[group2.get(2)]);
+        name3.setText(names[group2.get(2)]);
     }
 
 
@@ -109,7 +175,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         mOnDismissListener = listener;
     }
 
-    @OnClick({R.id.group1_item1, R.id.group1_item2, R.id.group1_item3,R.id.cancel})
+    @OnClick({R.id.group1_item1, R.id.group1_item2, R.id.group1_item3, R.id.cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.group1_item1:
@@ -119,6 +185,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             case R.id.group1_item3:
                 break;
             case R.id.cancel:
+                if(isShowing())dismiss();
                 break;
         }
     }
@@ -132,4 +199,49 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     public interface OnItemClick {
         void onItemClick(Object item);
     }
+
+    class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
+
+        @Override
+        public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            ItemHolder holder=new ItemHolder(View.inflate(parent.getContext(), R.layout.item_lesson_operate, null));
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(ItemHolder holder, int position) {
+            holder.name.setText(names[ids.get(position)]);
+            holder.icon.setImageResource(icons[ids.get(position)]);
+        }
+
+        @Override
+        public int getItemCount() {
+            return ids==null?0:ids.size();
+        }
+    }
+
+
+    public static class ItemHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.icon)
+        ImageView icon;
+        @BindView(R.id.name)
+        TextView name;
+
+        public ItemHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(ItemHolder.this,itemView);
+        }
+    }
+
+    public void show(List<Integer> ids){
+        this.ids=ids;
+        mAdapter.notifyDataSetChanged();
+        if(isShowing()){
+
+        }else {
+            show();
+        }
+    }
+
+
 }

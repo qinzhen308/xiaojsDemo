@@ -2,25 +2,17 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.view.AnimationView;
 
 /**
  * Created by Paul Z on 2017/5/23.
  */
 
-public class HomeLessonView extends RelativeLayout implements IViewModel<Object>{
-
+public class HomeLessonView extends RelativeLayout implements IViewModel<Object> {
 
 
     public HomeLessonView(Context context) {
@@ -57,5 +49,13 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<Object>
     @Override
     public void bindData(Object data) {
 
+
     }
+
+    @OnClick(R.id.btn_more)
+    public void onViewClicked() {
+        new LessonOperateBoard(getContext()).show();
+    }
+
+
 }

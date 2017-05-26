@@ -99,7 +99,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
 //            holder.operation.setItems(items);
 //            holder.operation.enableMore(false);
 //            holder.operation.enableEnter(false);
-//            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+//            holder.operation.setOnItemClickListener(new LOpModel.OnItemClick() {
 //                @Override
 //                public void onClick(int position) {
 //                    switch (position) {
@@ -200,7 +200,7 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
 //            holder.operation.setItems(items);
 //            holder.operation.enableMore(false);
 //            holder.operation.enableEnter(false);
-//            holder.operation.setOnItemClickListener(new LessonOperationView.OnItemClick() {
+//            holder.operation.setOnItemClickListener(new LOpModel.OnItemClick() {
 //                @Override
 //                public void onClick(int position) {
 //                    switch (position) {
