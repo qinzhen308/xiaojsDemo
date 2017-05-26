@@ -29,11 +29,14 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
+import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
 
@@ -88,15 +91,11 @@ public class LessonDataManager {
 
     /**
      * 通过用户ID获取用户授的课
-     * @param context
-     * @param account
-     * @param pagination
-     * @param callback
      */
     public static void getLessonsByUser(Context context,
-                                      String account,
-                                      Pagination pagination,
-                                      APIServiceCallback<CollectionPageData<PersonHomeUserLesson>> callback){
+                                        String account,
+                                        Pagination pagination,
+                                        APIServiceCallback<CollectionPageData<PersonHomeUserLesson>> callback) {
 
         int page = 1;
         int limit = 10;
@@ -194,9 +193,6 @@ public class LessonDataManager {
 
     /**
      * 上传课程封面图片
-     * @param context
-     * @param filePath
-     * @param qiniuService
      */
     public static void requestUploadCover(Context context,
                                           @NonNull final String filePath,
@@ -223,7 +219,7 @@ public class LessonDataManager {
 //        }
 
         QiniuRequest qiniuRequest = new QiniuRequest(context, filePath, qiniuService);
-        qiniuRequest.getToken(Collaboration.UploadTokenType.COVER_OF_CTL,1);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.COVER_OF_CTL, 1);
 
     }
 
@@ -264,15 +260,11 @@ public class LessonDataManager {
 
     /**
      * 修改上课时间
-     * @param context
-     * @param lesson
-     * @param lessonSchedule
-     * @param callback
      */
-     public static void editLessonSchedule(Context context,
-                                         @NonNull String lesson,
-                                         @NonNull LessonSchedule lessonSchedule,
-                                         @NonNull APIServiceCallback callback) {
+    public static void editLessonSchedule(Context context,
+                                          @NonNull String lesson,
+                                          @NonNull LessonSchedule lessonSchedule,
+                                          @NonNull APIServiceCallback callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.editLessonSchedule(lesson, lessonSchedule);
@@ -371,26 +363,19 @@ public class LessonDataManager {
 
     /**
      * 直播课接口
-     * @param context
-     * @param callback
      */
     public static void getLiveClasses(Context context, @NonNull APIServiceCallback<LiveClass> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLiveClasses();
     }
 
-    public static void acknowledgeLesson(Context context, String lesson, DealAck ack,APIServiceCallback callback) {
+    public static void acknowledgeLesson(Context context, String lesson, DealAck ack, APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.acknowledgeLesson(lesson, ack);
     }
 
     /**
      * 查询指定课程的报名的学生
-     * @param context
-     * @param lesson
-     * @param page
-     * @param limit
-     * @param callback
      */
     public static void getEnrolledStudents(Context context,
                                            String lesson,
@@ -399,15 +384,12 @@ public class LessonDataManager {
                                            APIServiceCallback<EnrollPage> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getEnrolledStudents(lesson,page,limit,"Enrolled");
+        lessonRequest.getEnrolledStudents(lesson, page, limit, "Enrolled");
 
     }
 
     /**
      * Hidden the specific standalone lesson.
-     * @param context
-     * @param lesson
-     * @param callback
      */
     public static void hideLesson(Context context, String lesson, APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
@@ -416,10 +398,8 @@ public class LessonDataManager {
 
     /**
      * 加入无需报名的课
-     * @param context
-     * @param lesson
+     *
      * @param registrant 可选项，此处可传null
-     * @param callback
      */
     public static void joinLesson(Context context,
                                   String lesson,
@@ -430,7 +410,83 @@ public class LessonDataManager {
         }
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.joinLesson(lesson,registrant);
+        lessonRequest.joinLesson(lesson, registrant);
     }
 
+    /**
+     * Creates a class by a teacher or an organization, and entering into the following lifecycle.
+     */
+    public static void createClass(Context context,
+                                   ClassParams params,
+                                   APIServiceCallback<CLResponse> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.createClass(params);
+    }
+
+
+    /**
+     *
+     * @param context
+     * @param cycle
+     * @param next
+     * @param pre
+     * @param callback
+     */
+    public static void getClassesSchedule(Context context,
+                                          String cycle,
+                                          int next,
+                                          int pre,
+                                          APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule(cycle, next, pre);
+    }
+
+    /**
+     *
+     * @param context
+     * @param start
+     * @param end
+     * @param callback
+     */
+    public static void getClassesSchedule(Context context,
+                                          long start,
+                                          long end,
+                                          APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule(start, end);
+    }
+
+
+    /**
+     * Schedule Class Lesson .
+     * @param context
+     * @param classes
+     * @param lesson
+     * @param callback
+     */
+    public static void scheduleClassLesson(Context context,
+                                           String classes,
+                                           ClassLesson lesson,
+                                           APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.scheduleClassLesson(classes, lesson);
+    }
+
+    /**
+     * 可用于排课前的检查，包括检查老师的状态、上课日程是否冲突 .
+     * @param context
+     * @param classes
+     * @param lesson
+     * @param callback
+     */
+    public static void checkOverlap(Context context,
+                                    String classes,
+                                    ClassLesson lesson,
+                                    APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.checkOverlap(classes, lesson);
+    }
 }

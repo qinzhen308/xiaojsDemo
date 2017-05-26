@@ -31,6 +31,8 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
@@ -249,6 +251,32 @@ public class LessonRequest extends ServiceRequest {
     public void joinLesson(String lesson, Registrant registrant) {
         Call<JoinResponse> call = getService().joinLesson(lesson,registrant);
         enqueueRequest(APIType.JOIN_LESSON, call);
+    }
+
+    public void createClass(ClassParams params) {
+        Call<CLResponse> call = getService().createClass(params);
+        enqueueRequest(APIType.CREATE_CLASS, call);
+    }
+
+    public void getClassesSchedule(String cycle, int next, int pre) {
+        Call<ResponseBody> call = getService().getClassesSchedule(cycle, next, pre);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
+    public void getClassesSchedule(long start, long end) {
+        Call<ResponseBody> call = getService().getClassesSchedule(start, end);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
+
+    public void scheduleClassLesson(String classes, ClassLesson lesson) {
+        Call<ResponseBody> call = getService().scheduleClassLesson(classes, lesson);
+        enqueueRequest(APIType.SCHEDULE_CLASS_LESSON, call);
+    }
+
+    public void checkOverlap(String classes, ClassLesson lesson) {
+        Call<ResponseBody> call = getService().checkOverlap(classes, lesson);
+        enqueueRequest(APIType.CHECK_OVERLAP, call);
     }
 
 }

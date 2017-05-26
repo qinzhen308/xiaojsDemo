@@ -9,6 +9,16 @@ import cn.xiaojs.xma.model.social.Dimension;
  */
 
 public class Ctl {
+
+    //
+    // Defines the class join modes.
+    //
+    public static class JoinMode {
+        public static final int VERIFICATION = 1;
+        public static final int OPEN = 2;
+    }
+
+
     //
     // Defines acknowledgement decisions from the invited lead teacher.
     //

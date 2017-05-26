@@ -45,6 +45,8 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
@@ -304,6 +306,30 @@ public interface XiaojsService {
     //Join Lesson
     @POST("/v1/ctl/lessons/{lesson}/join")
     Call<JoinResponse> joinLesson(@Path("lesson") String lesson, @Body Registrant registrant);
+
+
+    //Create Class
+    @POST("/v1/ctl/classes")
+    Call<CLResponse> createClass(@Body ClassParams params);
+
+    //Get Classes Schedule
+    @GET("/v1/ctl/schedule")
+    Call<ResponseBody> getClassesSchedule(@Query("cycle") String cycle,
+                                          @Query("next") int next,
+                                          @Query("pre") int pre);
+
+    @GET("/v1/ctl/schedule")
+    Call<ResponseBody> getClassesSchedule(@Query("start") long start,
+                                          @Query("end") long end);
+
+    //Schedule Class Lesson
+    @POST("/v1/ctl/classes/{classes}/schedule/lessons")
+    Call<ResponseBody> scheduleClassLesson(@Path("classes") String classes,
+                                           @Body ClassLesson classLesson);
+
+    //Check Overlap
+    @POST("/v1/ctl/classes/{classes}/schedule/check")
+    Call<ResponseBody> checkOverlap(@Path("classes") String classes, @Body ClassLesson classLesson);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

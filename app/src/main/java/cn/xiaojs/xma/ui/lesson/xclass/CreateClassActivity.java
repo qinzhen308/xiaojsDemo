@@ -2,14 +2,29 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Intent;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CLEResponse;
+import cn.xiaojs.xma.model.CLResponse;
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -21,15 +36,25 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 
 public class CreateClassActivity extends BaseActivity {
 
-    private final int MAX_LESSON_CHAR = 50;
+    public static final int MAX_CLASS_CHAR = 50;
+
+    private final int REQUEST_CLASS_LESSON_CODE = 0x1;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
     @BindView(R.id.lay_tips)
     LinearLayout tipsRootView;
 
-    @BindView(R.id.live_lesson_name)
+    @BindView(R.id.class_name)
     EditTextDel classNameEdt;
+    @BindView(R.id.teacher_name)
+    TextView teacherNameView;
+    @BindView(R.id.verify_group)
+    RadioGroup verifyGroupView;
+    @BindView(R.id.not_verify)
+    RadioButton notVerifyBtn;
+
+    private ArrayList<ClassLesson> classLessons;
 
 
     @Override
@@ -52,10 +77,12 @@ public class CreateClassActivity extends BaseActivity {
                 closeCourCreateTips();
                 break;
             case R.id.sub_btn://完成
-                startActivity(new Intent(this, ShareQrcodeActivity.class));
+                createClass();
+                //startActivity(new Intent(this, ShareQrcodeActivity.class));
                 break;
             case R.id.lay_time_table://课表
-                startActivity(new Intent(this, CreateTimetableActivity.class));
+                startActivityForResult(new Intent(this, CreateTimetableActivity.class),
+                        REQUEST_CLASS_LESSON_CODE);
                 break;
             case R.id.lay_class_student://学生
                 addStudents();
@@ -68,9 +95,21 @@ public class CreateClassActivity extends BaseActivity {
 
         tipsContentView.setText(R.string.class_create_tips);
 
-        classNameEdt.setHint(getString(R.string.live_lesson_name_hint, MAX_LESSON_CHAR));
+        classNameEdt.setHint(getString(R.string.live_lesson_name_hint, MAX_CLASS_CHAR));
         classNameEdt.setForbidEnterChar(true);
-        classNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
+        classNameEdt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_CLASS_CHAR)});
+
+
+        Account account = AccountDataManager.getAccont(this);
+        if (account != null && account.getBasic() != null) {
+            String name = account.getBasic().getName();
+            teacherNameView.setText(name);
+        }
+
+        notVerifyBtn.setChecked(true);
+
+
+
     }
 
     private void closeCourCreateTips() {
@@ -114,6 +153,72 @@ public class CreateClassActivity extends BaseActivity {
     }
 
 
+    private void createClass() {
+        //创建班
+
+        String name = classNameEdt.getText().toString().trim();
+
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this,R.string.class_name_not_null,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (name.length() > MAX_CLASS_CHAR) {
+            String nameEr = getString(R.string.class_name_char_error, MAX_CLASS_CHAR);
+            Toast.makeText(this, nameEr, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ClassParams params = new ClassParams();
+
+        params.title = name;
+        params.join = verifyGroupView.getCheckedRadioButtonId() == R.id.need_verify?
+                Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
+        params.lessons = classLessons;
 
 
+
+        showProgress(true);
+        LessonDataManager.createClass(this, params, new APIServiceCallback<CLResponse>() {
+            @Override
+            public void onSuccess(CLResponse object) {
+                cancelProgress();
+                Toast.makeText(CreateClassActivity.this,
+                        R.string.create_class_success,
+                        Toast.LENGTH_SHORT)
+                        .show();
+
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(CreateClassActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch(requestCode) {
+                case REQUEST_CLASS_LESSON_CODE:
+                    if (data != null) {
+
+                        ClassLesson clesson = (ClassLesson) data.getSerializableExtra(
+                                CreateTimetableActivity.EXTRA_CLASS_LESSON);
+                        if (clesson !=null) {
+                            if(classLessons == null) {
+                                classLessons = new ArrayList<>();
+                            }
+                            classLessons.add(clesson);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 }
+

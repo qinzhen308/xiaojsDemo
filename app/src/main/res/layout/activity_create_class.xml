@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-            <!--课名称-->
+            <!--班名称-->
             <LinearLayout
                     style="@style/LiveLessonItem">
 
@@ -35,7 +35,7 @@
                         android:text="@string/live_class_name"/>
 
                 <cn.xiaojs.xma.ui.widget.EditTextDel
-                        android:id="@+id/live_lesson_name"
+                        android:id="@+id/class_name"
                         style="@style/LiveLessonCreateEdt"
                         android:layout_marginLeft="@dimen/px40"
                         android:layout_weight="1"
@@ -54,7 +54,7 @@
                         android:text="@string/head_teacher"/>
 
                 <TextView
-                        android:id="@+id/lesson_subject"
+                        android:id="@+id/teacher_name"
                         style="@style/LiveLessonRightEntrance"
                         android:drawableRight="@null"
                         />
@@ -82,14 +82,18 @@
                         android:background="@color/white"/>
 
                 <RadioGroup
+                        android:id="@+id/verify_group"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/px22"
                         android:paddingBottom="@dimen/px28"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
                         >
 
                     <RadioButton
-                            android:layout_width="match_parent"
+                            android:id="@+id/need_verify"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/px22"
                             android:paddingTop="@dimen/px16"
@@ -100,7 +104,8 @@
                             android:button="@drawable/single_check_selector"/>
 
                     <RadioButton
-                            android:layout_width="match_parent"
+                            android:id="@+id/not_verify"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/px22"
                             android:paddingTop="@dimen/px16"
@@ -108,6 +113,7 @@
                             android:textSize="@dimen/font_28px"
                             android:textColor="@color/font_dark_gray"
                             android:text="@string/no_verification_required"
+                            android:layout_marginLeft="@dimen/px219"
                             android:button="@drawable/single_check_selector"/>
                 </RadioGroup>
 
