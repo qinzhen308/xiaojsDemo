@@ -160,11 +160,11 @@ public class CreateTimetableActivity extends BaseActivity {
                 long start = schedule.getStart().getTime();
                 long end = start + duration * 60 * 1000;
 
-                if (startTime >= start || startTime <= end) {
+                if (startTime >= start && startTime <= end) {
                     return true;
                 }
 
-                if (endTime >= start || endTime <= end) {
+                if (endTime >= start && endTime <= end) {
                     return true;
                 }
             }
