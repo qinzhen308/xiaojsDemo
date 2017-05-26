@@ -532,9 +532,13 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void stopStreamingInternal() {
-        if (mMediaStreamingManager != null) {
-            mMediaStreamingManager.destroy();
-            mMediaStreamingManager = null;
+        try {
+            if (mMediaStreamingManager != null) {
+                mMediaStreamingManager.destroy();
+                mMediaStreamingManager = null;
+            }
+        } catch (Exception e) {
+
         }
     }
 

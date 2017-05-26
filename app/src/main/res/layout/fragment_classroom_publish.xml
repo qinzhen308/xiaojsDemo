@@ -36,7 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/px20"
             android:layout_marginTop="@dimen/px20"
-            android:src="@drawable/ic_delete"/>
+            android:src="@drawable/ic_delete"
+            android:visibility="gone"/>
 
     <!--视频推流顶部面板-->
     <include

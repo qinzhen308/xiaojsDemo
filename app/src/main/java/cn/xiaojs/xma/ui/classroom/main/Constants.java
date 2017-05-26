@@ -44,6 +44,7 @@ public interface Constants {
     public final static String KEY_PLAY_URL = "key_play_url";
     public final static String KEY_PUBLISH_URL = "key_publish_url";
     public final static String KEY_BEFORE_LIVE_STATE = "key_before_live_state";
+    public final static String KEY_INDIVIDUAL_RESPONSE = "key_individual_response";
     public final static String KEY_INDIVIDUAL_DURATION = "key_individual_duration";
     public final static String KEY_INDIVIDUAL_NAME = "key_individual_name";
     public final static String KEY_COUNT_TIME = "key_count_time";

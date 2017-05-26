@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -494,6 +495,7 @@ public class ClassroomController {
      * 注册back键回调监听器
      */
     public void registerBackPressListener(BackPressListener listener) {
+        Log.i("aaa", "======register=========="+listener);
         if (listener != null) {
             mBackPressListeners.add(listener);
         }
@@ -503,6 +505,7 @@ public class ClassroomController {
      * 解注back键回调监听器
      */
     public void unregisterBackPressListener(BackPressListener listener) {
+        Log.i("aaa", "======unregister=========="+listener);
         if (listener != null) {
             mBackPressListeners.remove(listener);
         }

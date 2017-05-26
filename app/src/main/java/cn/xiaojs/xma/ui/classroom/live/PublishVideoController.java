@@ -111,22 +111,28 @@ public class PublishVideoController extends VideoController {
                     mStreamChangeListener.onStreamStopped(type, null);
                 }
             } else {
-                //send stopped stream
-                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                        new SocketManager.AckListener() {
-                            @Override
-                            public void call(Object... args) {
-                                if (args != null && args.length > 0) {
-                                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                    if (response.result) {
-                                        mNeedStreamRePublishing = true;
-                                        if (mStreamChangeListener != null) {
-                                            mStreamChangeListener.onStreamStopped(type, null);
+                if (mStreamPublishing) {
+                    //send stopped stream
+                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                            new SocketManager.AckListener() {
+                                @Override
+                                public void call(Object... args) {
+                                    if (args != null && args.length > 0) {
+                                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                        if (response.result) {
+                                            mNeedStreamRePublishing = true;
+                                            if (mStreamChangeListener != null) {
+                                                mStreamChangeListener.onStreamStopped(type, null);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        });
+                            });
+                } else {
+                    if (mStreamChangeListener != null) {
+                        mStreamChangeListener.onStreamStopped(type, null);
+                    }
+                }
             }
             mStreamPublishing = false;
             mPublishView.pause();
@@ -177,7 +183,7 @@ public class PublishVideoController extends VideoController {
         switch (streamingState) {
             case STREAMING:
                 mNeedStreamRePublishing = false;
-                if (mStreamPublishing) {
+                if (mStreamPublishing || mOnDestroy || mCancelPublish) {
                     break;
                 }
 

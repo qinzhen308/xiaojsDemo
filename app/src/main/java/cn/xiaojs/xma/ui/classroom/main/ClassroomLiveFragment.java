@@ -36,6 +36,7 @@ import java.util.Map;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -87,6 +88,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected long mIndividualStreamDuration;
     protected String mOriginSteamState;
     protected String mIndividualName;
+    protected StreamingResponse mIndividualResponseBody;
 
     private Map<String, FadeAnimListener> mFadeAnimListeners;
     private List<ViewPropertyAnimator> mViewPropertyAnimators;
@@ -99,6 +101,24 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected int mSlideViewHeight;
 
     protected Handler mHandler;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        TalkManager.getInstance().registerMsgReceiveListener(this);
+        ClassroomController.getInstance().setStackFragment(this);
+        ClassroomController.getInstance().registerBackPressListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        ClassroomController.getInstance().setStackFragment(null);
+        ClassroomController.getInstance().unregisterBackPressListener(this);
+        TalkManager.getInstance().unregisterMsgReceiveListener(this);
+    }
 
     @Override
     protected void init() {
@@ -120,11 +140,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         mClassroomController = ClassroomController.getInstance();
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
-
-        TalkManager.getInstance().registerMsgReceiveListener(this);
-        //DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        //mSlideViewWidth = (int) (0.4F * displayMetrics.heightPixels);
-        //mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
@@ -255,19 +270,20 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 if (args != null && args.length > 0) {
                     String oldLiveSate = LiveCtlSessionManager.getInstance().getLiveState();
                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                    boolean needPublish = false;
                     if (response.result) {
-                        mOriginSteamState = oldLiveSate;
-                        mIndividualStreamDuration = response.finishOn;
-                        LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.INDIVIDUAL);
-                        setControllerBtnStyle(Live.LiveSessionState.INDIVIDUAL);
-                        if (XiaojsConfig.DEBUG) {
-                            Toast.makeText(mContext, "claim streaming succ", Toast.LENGTH_SHORT).show();
-                        }
-                        onIndividualPublishCallback(response);
+                        mIndividualResponseBody = response;
+                        needPublish = true;
                     } else {
-                        if (XiaojsConfig.DEBUG) {
-                            Toast.makeText(mContext, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
+                        if (Errors.STREAM_ALREADY_CLAIMED.equals(response.ec)) {
+                            needPublish = true;
                         }
+                    }
+
+                    if (needPublish) {
+                        mOriginSteamState = oldLiveSate;
+                        mIndividualStreamDuration = mIndividualResponseBody != null ? mIndividualResponseBody.finishOn : 0;
+                        onIndividualPublishCallback(mIndividualResponseBody);
                     }
                 } else {
                     if (XiaojsConfig.DEBUG) {
@@ -499,26 +515,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             mFullScreenTalkPresenter.release();
         }
 
-        TalkManager.getInstance().unregisterMsgReceiveListener(this);
-
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        ClassroomController.getInstance().setStackFragment(this);
-        ClassroomController.getInstance().registerBackPressListener(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        ClassroomController.getInstance().setStackFragment(this);
-        ClassroomController.getInstance().unregisterBackPressListener(this);
     }
 
     /**

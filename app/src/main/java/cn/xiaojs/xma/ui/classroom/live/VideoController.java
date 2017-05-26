@@ -73,6 +73,8 @@ public abstract class VideoController implements StreamConfirmCallback {
     protected int mPeerStreamViewMargin = 10;
 
     protected Object mExtraData;
+    protected boolean mOnDestroy = false;
+    protected boolean mCancelPublish = false;
 
     public VideoController(Context context, View root, OnStreamChangeListener listener) {
         mContext = context;
@@ -147,6 +149,8 @@ public abstract class VideoController implements StreamConfirmCallback {
      * destroy视频
      */
     public void onDestroy() {
+        mOnDestroy = true;
+
         if (mPlayView != null) {
             mPlayView.destroy();
         }
@@ -438,6 +442,10 @@ public abstract class VideoController implements StreamConfirmCallback {
 
     public void setPublishStreamByToggleResolution(boolean isToggleResolution) {
         mPausePublishByToggleResolution = isToggleResolution;
+    }
+
+    public void setCancelPublish(boolean cancel) {
+        mCancelPublish = cancel;
     }
 
     public int getPlayType() {

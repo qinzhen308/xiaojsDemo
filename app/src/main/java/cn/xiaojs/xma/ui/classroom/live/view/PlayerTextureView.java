@@ -80,7 +80,7 @@ public class PlayerTextureView extends BaseMediaView {
         mOnInfoWrapperListener = infoListener;
     }
 
-    public void setRecycleOnPause (boolean recycle) {
+    public void setRecycleOnPause(boolean recycle) {
         mRecycleOnPauseOrStop = recycle;
     }
 
@@ -207,7 +207,7 @@ public class PlayerTextureView extends BaseMediaView {
 
     @Override
     protected View initMediaView() {
-        mPlayer = (PLVideoTextureView)LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
+        mPlayer = (PLVideoTextureView) LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
         mPlayer.setBufferingIndicator(mLoadingLayout);
         mPlayer.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
             @Override
@@ -415,8 +415,12 @@ public class PlayerTextureView extends BaseMediaView {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mPlayer != null) {
-                        mPlayer.stopPlayback();
+                    try {
+                        if (mPlayer != null) {
+                            mPlayer.stopPlayback();
+                        }
+                    } catch (Exception e) {
+
                     }
                     if (mHandler != null) {
                         mHandler.sendEmptyMessage(MESSAGE_STOP);
@@ -424,6 +428,7 @@ public class PlayerTextureView extends BaseMediaView {
                 }
             }).start();
         }
+
     }
 
     @Override

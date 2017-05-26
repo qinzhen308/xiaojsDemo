@@ -3,6 +3,8 @@ package cn.xiaojs.xma.ui.classroom.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -19,7 +21,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * ======================================================================================== */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StreamingResponse {
+public class StreamingResponse implements Serializable{
     public boolean result;
     public String ec;
     public String to;
