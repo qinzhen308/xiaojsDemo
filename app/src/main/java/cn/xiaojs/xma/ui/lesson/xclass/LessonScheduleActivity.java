@@ -9,7 +9,7 @@ import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.orhanobut.logger.Logger;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +17,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.lesson.util.ScheduleFilter;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleFilter;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
@@ -51,15 +53,16 @@ public class LessonScheduleActivity extends BaseActivity{
         mListView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
         mAdapter=new HomeClassAdapter();
         mListView.setAdapter(mAdapter);
+        datas=ScheduleFilter.buildScheduleByDay(CreateClassActivity.classLessons);
+        bindData();
         calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
-                curDayIndex=ScheduleFilter.getDayIndex(year+"-"+month+"-"+day);
                 if(XiaojsConfig.DEBUG){
-                    Logger.d("-----qz--------"+(year+"-"+month+"-"+day)+"---curDayIndex="+curDayIndex);
+                    Logger.d("-----qz--------"+(year+"-"+(month+1)+"-"+day)+"---curDayIndex="+curDayIndex);
                 }
-                mAdapter.setList(datas.get(curDayIndex));
-                mAdapter.notifyDataSetChanged();
+                curDayIndex=ScheduleFilter.getDayIndex(year+"-"+(month+1)+"-"+day);
+                bindData();
             }
 
             @Override
@@ -67,6 +70,25 @@ public class LessonScheduleActivity extends BaseActivity{
             }
         });
 
+    }
+
+
+    private void bindData(){
+        ArrayList list2=new ArrayList();
+        if(datas!=null){
+            List list=datas.get(curDayIndex);
+            if(ArrayUtil.isEmpty(list)){
+                list2.add(new LessonLabelModel(TimeUtil.getWeak(curDayIndex*3600*24*1000),0,false));
+            }else {
+                list2.add(new LessonLabelModel(TimeUtil.getWeak(curDayIndex*3600*24*1000),list.size(),true));
+                list2.addAll(list);
+                list2.add(new LastEmptyModel());
+            }
+        }else {
+            list2.add(new LessonLabelModel(TimeUtil.getWeak(curDayIndex*3600*24*1000),0,false));
+        }
+        mAdapter.setList(list2);
+        mAdapter.notifyDataSetChanged();
     }
 
     @OnClick({R.id.right_view})
@@ -95,8 +117,7 @@ public class LessonScheduleActivity extends BaseActivity{
                     CreateClassActivity.addClassLesson(classLesson);
                     //TODO 更新显示
                     datas=ScheduleFilter.buildScheduleByDay(CreateClassActivity.classLessons);
-                    mAdapter.setList(datas.get(curDayIndex));
-                    mAdapter.notifyDataSetChanged();
+                    bindData();
                     break;
             }
         }

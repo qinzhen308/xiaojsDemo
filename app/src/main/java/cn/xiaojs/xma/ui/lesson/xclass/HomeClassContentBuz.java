@@ -4,9 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
@@ -14,23 +12,33 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleFilter;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
@@ -58,6 +66,8 @@ public class HomeClassContentBuz {
 
     HomeClassAdapter mAdapter;
 
+    int year, month,day;
+
 
     /**
      * @param context
@@ -69,29 +79,38 @@ public class HomeClassContentBuz {
         mRoot = root;
 //        R.layout.fragment_home_class_normal
         ButterKnife.bind(this, root);
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT-8:00"));
+        day=calendar.get(Calendar.DAY_OF_MONTH);
+        month =calendar.get(Calendar.MONTH);
+        year=calendar.get(Calendar.YEAR);
         initListView();
+        doRequest();
     }
 
     private void initListView() {
         mAdapter = new HomeClassAdapter();
         overLayout.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         overLayout.setAdapter(mAdapter);
-        test();
-    }
 
-
-    private void test() {
         calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
-
+                doRequest();
             }
 
             @Override
             public void onPageChange(int year, int month, int day) {
-
+                getMonthData();
             }
         });
+        overLayout.addOnScrollListener(new PageChangeListener());
+
+    }
+
+
+    private void test() {
+
 
 
         new Handler().postDelayed(new Runnable() {
@@ -103,7 +122,6 @@ public class HomeClassContentBuz {
             }
         }, 2000);
 
-        overLayout.addOnScrollListener(new PageChangeListener());
     }
 
 
@@ -174,5 +192,57 @@ public class HomeClassContentBuz {
         });
         int offset = mContext.getResources().getDimensionPixelSize(R.dimen.px68);
         menu.show(targetView, offset);
+    }
+
+
+    private void doRequest(){
+        final int y=year;
+        final int m=month;
+        final int d=day;
+        long date=ScheduleFilter.ymdToTimeMill(y,m,d);
+        LessonDataManager.getClassesSchedule(mContext, date, date, new APIServiceCallback<ScheduleData>() {
+            @Override
+            public void onSuccess(ScheduleData object) {
+                LessonLabelModel label=new LessonLabelModel(ScheduleFilter.getDateYMD(y,m,d)+" "+ScheduleFilter.getWeek(y,m,d),0,false);
+                ArrayList list=new ArrayList();
+                list.add(label);
+                if(object!=null&&!object.calendar.isEmpty()){
+                    ClassSchedule schedule=object.calendar.get(0);
+                    label.hasData=true;
+                    label.lessonCount=schedule.lessons.size();
+                    list.addAll(schedule.lessons);
+                }
+                mAdapter.setList(list);
+                mAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                LessonLabelModel label=new LessonLabelModel(ScheduleFilter.getDateYMD(y,m,d)+" "+ScheduleFilter.getWeek(y,m,d),0,false);
+                ArrayList list=new ArrayList();
+                list.add(label);
+                mAdapter.setList(list);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+
+    private void getMonthData(){
+        final int y=year;
+        final int m=month;
+        final int d=day;
+        long date=ScheduleFilter.ymdToTimeMill(y,m,d);
+        LessonDataManager.getClassesSchedule(mContext, "monthly", 0, 0, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+
     }
 }
