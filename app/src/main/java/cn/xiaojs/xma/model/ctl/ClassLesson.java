@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model.ctl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
+
 import cn.xiaojs.xma.model.Schedule;
 
 /**
@@ -10,7 +12,7 @@ import cn.xiaojs.xma.model.Schedule;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClassLesson {
+public class ClassLesson implements Serializable{
 
     public String title;
     public boolean recordable;

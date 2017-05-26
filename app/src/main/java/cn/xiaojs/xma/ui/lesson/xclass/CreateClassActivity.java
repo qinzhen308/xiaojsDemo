@@ -10,6 +10,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -21,6 +23,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
@@ -33,7 +36,9 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 
 public class CreateClassActivity extends BaseActivity {
 
-    private final int MAX_CLASS_CHAR = 50;
+    public static final int MAX_CLASS_CHAR = 50;
+
+    private final int REQUEST_CLASS_LESSON_CODE = 0x1;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -48,6 +53,8 @@ public class CreateClassActivity extends BaseActivity {
     RadioGroup verifyGroupView;
     @BindView(R.id.not_verify)
     RadioButton notVerifyBtn;
+
+    private ArrayList<ClassLesson> classLessons;
 
 
     @Override
@@ -74,7 +81,8 @@ public class CreateClassActivity extends BaseActivity {
                 //startActivity(new Intent(this, ShareQrcodeActivity.class));
                 break;
             case R.id.lay_time_table://课表
-                startActivity(new Intent(this, CreateTimetableActivity.class));
+                startActivityForResult(new Intent(this, CreateTimetableActivity.class),
+                        REQUEST_CLASS_LESSON_CODE);
                 break;
             case R.id.lay_class_student://学生
                 addStudents();
@@ -166,6 +174,7 @@ public class CreateClassActivity extends BaseActivity {
         params.title = name;
         params.join = verifyGroupView.getCheckedRadioButtonId() == R.id.need_verify?
                 Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
+        params.lessons = classLessons;
 
 
 
@@ -191,5 +200,25 @@ public class CreateClassActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch(requestCode) {
+                case REQUEST_CLASS_LESSON_CODE:
+                    if (data != null) {
+
+                        ClassLesson clesson = (ClassLesson) data.getSerializableExtra(
+                                CreateTimetableActivity.EXTRA_CLASS_LESSON);
+                        if (clesson !=null) {
+                            if(classLessons == null) {
+                                classLessons = new ArrayList<>();
+                            }
+                            classLessons.add(clesson);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 }
 
