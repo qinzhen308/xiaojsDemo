@@ -127,6 +127,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     private boolean mHandKeyPressing = false;
     private boolean mAlreadyExitFragment = false;
+    private long mPlayOrPausePressTime = 0;
 
     @Override
     protected View getContentView() {
@@ -577,6 +578,12 @@ public class PublishFragment extends ClassroomLiveFragment {
      * @see #mSyncStateListener
      */
     private void playOrPauseLesson() {
+        //Prevent frequent clicks
+        if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
+            return;
+        }
+        mPlayOrPausePressTime = System.currentTimeMillis();
+
         mTipsHelper.hideTips();
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState)) {

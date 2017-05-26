@@ -44,6 +44,7 @@ import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
+import cn.xiaojs.xma.util.XjsUtils;
 import okhttp3.ResponseBody;
 
 /*  =======================================================================================
@@ -139,6 +140,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     private int mVideoWidth;
     private int mVideoHeight;
     private String mBeforePeekAccountId;
+    private long mPlayOrPausePressTime = 0;
 
     @Override
     protected void initParams() {
@@ -475,6 +477,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putLong(Constants.KEY_INDIVIDUAL_DURATION, response.finishOn);
         data.putString(Constants.KEY_INDIVIDUAL_NAME, "");
         data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, response);
+        XjsUtils.hideIMM(mContext, mContent.getWindowToken());
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 
@@ -743,6 +746,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     private void playOrPauseLesson() {
+        //Prevent frequent clicks
+        if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
+            return;
+        }
+        mPlayOrPausePressTime = System.currentTimeMillis();
+
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState)) {
@@ -797,6 +806,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putString(Constants.KEY_PLAY_URL, playUrl);
         data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
         data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
+        XjsUtils.hideIMM(mContext, mContent.getWindowToken());
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 

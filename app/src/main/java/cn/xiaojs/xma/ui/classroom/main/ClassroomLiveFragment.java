@@ -72,6 +72,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         TalkManager.OnTalkMsgReceived {
 
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
+    protected final static int BTN_PRESS_INTERVAL = 1000; //ms
 
     protected CtlSession mCtlSession;
     protected String mTicket;

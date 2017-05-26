@@ -149,8 +149,7 @@ public class XjsUtils {
      * 根据view显示输入法
      */
     public static void showIMM(Context ctx, View view) {
-        InputMethodManager imm = (InputMethodManager) ctx
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(view, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
@@ -158,11 +157,21 @@ public class XjsUtils {
      * 隐藏输入法
      */
     public static void hideIMM(Context ctx, IBinder token) {
-        InputMethodManager imm = (InputMethodManager) ctx
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(token,
-                InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(token, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
+
+    /**
+     * 如果当前键盘已经显示，则隐藏
+     * 如果当前键盘未显示，则显示
+     *
+     * @param context
+     */
+    public static void toggleSoftInput(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
 
     /**
      * 隐藏输入法
