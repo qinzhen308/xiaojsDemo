@@ -44,6 +44,10 @@ public class LOpModel {
         this.id=id;
     }
 
+    public int getId(){
+        return id;
+    }
+
     public void onClick(Activity context,Object data){
         switch (id){
             case OP_APPLY:

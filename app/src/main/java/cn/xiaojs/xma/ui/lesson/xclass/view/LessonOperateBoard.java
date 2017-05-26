@@ -3,11 +3,7 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.MatrixCursor;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
@@ -19,9 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
-import com.orhanobut.logger.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/25.
@@ -61,9 +55,9 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     Button cancel;
     private View mContentView;// dialog content view
 
-    private List<Integer> ids=new ArrayList<>();
+    private List<LOpModel> opGroup1 =new ArrayList<>();
 
-    private List<Integer> group2=new ArrayList<>();
+    private List<LOpModel> opGroup2 =new ArrayList<>();
 
     ItemAdapter mAdapter;
 
@@ -135,14 +129,14 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             if(i==0||i==4||i==8){
                 continue;
             }
-            ids.add(i);
+            opGroup2.add(new LOpModel(i));
         }
         recyclerview.setAdapter(mAdapter);
 
-        group2.add(0);
-        group2.add(4);
-        group2.add(8);
-        setGroup2(group2);
+        opGroup1.add(new LOpModel(0));
+        opGroup1.add(new LOpModel(4));
+        opGroup1.add(new LOpModel(8));
+        setOpGroup1(opGroup1);
     }
 
 
@@ -160,14 +154,26 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
-    public void setGroup2(List<Integer> group2) {
-        this.group2=group2;
-        icon1.setImageResource(icons[group2.get(0)]);
-        name1.setText(names[group2.get(0)]);
-        icon2.setImageResource(icons[group2.get(1)]);
-        name2.setText(names[group2.get(1)]);
-        icon3.setImageResource(icons[group2.get(2)]);
-        name3.setText(names[group2.get(2)]);
+    public LessonOperateBoard setOpGroup1(List<LOpModel> ops) {
+        this.opGroup1 = ops;
+        if(ArrayUtil.isEmpty(opGroup2)){
+            group1.setVisibility(View.GONE);
+        }else {
+            group1.setVisibility(View.VISIBLE);
+        }
+        icon1.setImageResource(icons[opGroup2.get(0).getId()]);
+        name1.setText(names[opGroup2.get(0).getId()]);
+        icon2.setImageResource(icons[opGroup2.get(1).getId()]);
+        name2.setText(names[opGroup2.get(1).getId()]);
+        icon3.setImageResource(icons[opGroup2.get(2).getId()]);
+        name3.setText(names[opGroup2.get(2).getId()]);
+        return this;
+    }
+
+    public LessonOperateBoard setOpGroup2(List<LOpModel> ops) {
+        this.opGroup2 = ops;
+        mAdapter.notifyDataSetChanged();
+        return this;
     }
 
 
@@ -210,13 +216,19 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
 
         @Override
         public void onBindViewHolder(ItemHolder holder, int position) {
-            holder.name.setText(names[ids.get(position)]);
-            holder.icon.setImageResource(icons[ids.get(position)]);
+            holder.name.setText(names[opGroup2.get(position).getId()]);
+            holder.icon.setImageResource(icons[opGroup2.get(position).getId()]);
+            holder.btnItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            return ids==null?0:ids.size();
+            return opGroup2 ==null?0: opGroup2.size();
         }
     }
 
@@ -226,6 +238,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         ImageView icon;
         @BindView(R.id.name)
         TextView name;
+        @BindView(R.id.btn_item)
+        View btnItem;
 
         public ItemHolder(View itemView) {
             super(itemView);
@@ -233,8 +247,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
-    public void show(List<Integer> ids){
-        this.ids=ids;
+    public void show(List<LOpModel> ops){
+        this.opGroup2 =ops;
         mAdapter.notifyDataSetChanged();
         if(isShowing()){
 

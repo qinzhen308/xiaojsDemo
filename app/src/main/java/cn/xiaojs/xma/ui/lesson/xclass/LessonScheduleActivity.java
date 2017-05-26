@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import butterknife.BindView;
@@ -14,9 +15,9 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 
 public class LessonScheduleActivity extends BaseActivity{
 
-    @BindView(R.id.listview)
-    PullToRefreshSwipeListView mListView;
-    LessonScheduleAdapter mAdapter;
+    @BindView(R.id.over_layout)
+    RecyclerView mListView;
+    HomeClassAdapter mAdapter;
 
 
     @Override
@@ -24,8 +25,8 @@ public class LessonScheduleActivity extends BaseActivity{
         needHeader(true);
         setRightText(R.string.add);
         setMiddleTitle(R.string.schedule);
-        addView(R.layout.activity_lesson_schedule);
-        mAdapter=new LessonScheduleAdapter(this,mListView);
+        addView(R.layout.layout_home_schedule);
+        mAdapter=new HomeClassAdapter();
         mListView.setAdapter(mAdapter);
     }
 
