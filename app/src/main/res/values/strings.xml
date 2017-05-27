@@ -852,7 +852,9 @@
     <string name="create_class_success">创建班成功</string>
     <string name="class_name_not_null">班级名称不能为空</string>
     <string name="class_name_char_error">课名称不能超过%1$d个字</string>
-    <string name="clesson_time_has_conflict">时间有冲突，请修改上课时间！</string>
-    <string name="need_ver">需要验证</string>
+    <string name="clesson_time_has_conflict">您已经在该时间有课，建议调整本次课的上课时间</string>
+    <string name="empty_tips">空空如也～</string>
+    <string name="number_lesson">%1$d节课</string>
+    <string name="number_student">%1$d人</string>
 
 </resources>

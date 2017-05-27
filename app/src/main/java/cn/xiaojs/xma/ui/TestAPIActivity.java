@@ -44,6 +44,7 @@ import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.ui.grade.MaterialDownloadActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassLessonView;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.APPUtils;
@@ -168,6 +169,13 @@ public class TestAPIActivity extends Activity {
 
 
     public void testCache() {
+
+        String classId = "5927f85a9b2ba6cf531f1e75";
+
+        Intent i = new Intent(this, ClassInfoActivity.class);
+        i.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
+
+        startActivity(i);
 
 //        long start = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
 //
