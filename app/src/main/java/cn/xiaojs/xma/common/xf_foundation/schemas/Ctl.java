@@ -183,6 +183,9 @@ public class Ctl {
         public static final String CANCELLED = "Cancelled";
 
         public static final String STOPPED = "Stopped";
+        public static final String PENDING_FOR_ACK = "PendingForACK";
+        public static final String ACKNOWLEDGED = "Acknowledged";
+
 
     }
 
