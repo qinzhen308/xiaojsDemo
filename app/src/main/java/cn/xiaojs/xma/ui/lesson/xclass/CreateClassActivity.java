@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.ClassEnroll;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
+import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
@@ -41,6 +42,7 @@ public class CreateClassActivity extends BaseActivity {
     private final int REQUEST_CLASS_LESSON_CODE = 0x1;
     private final int REQUEST_CLASS_SCHEDULE_CODE = 0x2;
     private final int REQUEST_MANUAL_STUDENTS_CODE = 0x3;
+    private final int REQUEST_IMPORT_STUDENTS_CODE = 0x4;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -63,7 +65,8 @@ public class CreateClassActivity extends BaseActivity {
 
 
     public static ArrayList<ClassLesson> classLessons;
-    public static ArrayList<StudentEnroll> enrollStudents;
+    private ArrayList<StudentEnroll> enrollStudents;
+    private ArrayList<EnrollImport> enrollImports;
 
 
     public static void addClassLesson(ClassLesson lesson) {
@@ -78,8 +81,8 @@ public class CreateClassActivity extends BaseActivity {
 
     }
 
-    public static void clearClassLessons(){
-        if (classLessons !=null) {
+    public static void clearClassLessons() {
+        if (classLessons != null) {
             classLessons.clear();
             classLessons = null;
         }
@@ -93,6 +96,12 @@ public class CreateClassActivity extends BaseActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        updateCountView();
+    }
 
     @Override
     protected void addViewContent() {
@@ -121,7 +130,7 @@ public class CreateClassActivity extends BaseActivity {
                 if (classLessons != null && classLessons.size() > 0) {
                     startActivityForResult(new Intent(this, LessonScheduleActivity.class),
                             REQUEST_CLASS_SCHEDULE_CODE);
-                }else {
+                } else {
                     startActivityForResult(new Intent(this, CreateTimetableActivity.class),
                             REQUEST_CLASS_LESSON_CODE);
                 }
@@ -152,7 +161,6 @@ public class CreateClassActivity extends BaseActivity {
         notVerifyBtn.setChecked(true);
 
 
-
     }
 
     private void closeCourCreateTips() {
@@ -178,7 +186,7 @@ public class CreateClassActivity extends BaseActivity {
 
                         Intent ic = new Intent(CreateClassActivity.this,
                                 ManualAddStudentActivity.class);
-                        if (enrollStudents !=null && enrollStudents.size()>0) {
+                        if (enrollStudents != null && enrollStudents.size() > 0) {
                             ic.putExtra(ManualAddStudentActivity.EXTRA_STUDENTS, enrollStudents);
                         }
                         startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
@@ -186,10 +194,8 @@ public class CreateClassActivity extends BaseActivity {
                     case 1://从已有班级中添加
 
                         Intent i = new Intent(CreateClassActivity.this,
-                                ChooseClassActivity.class);
-                        i.putExtra(ChooseClassActivity.EXTRA_ENTER_TYPE,
-                                ChooseClassActivity.ENTER_TYPE_ADD_STUDENT);
-                        startActivity(i);
+                                ImportStudentFormClassActivity.class);
+                        startActivityForResult(i, REQUEST_IMPORT_STUDENTS_CODE);
                         break;
                 }
 
@@ -199,6 +205,24 @@ public class CreateClassActivity extends BaseActivity {
         dialog.show();
     }
 
+    private void updateCountView() {
+
+        if (classLessons != null && classLessons.size() > 0) {
+            timetableTipsView.setText(getString(R.string.number_lesson, classLessons.size()));
+
+        } else {
+            timetableTipsView.setText("");
+            //timetableTipsView.setHint(R.string.arrange_class);
+        }
+
+        if (enrollStudents != null && enrollStudents.size() > 0) {
+            studentTipsView.setText(getString(R.string.number_student, enrollStudents.size()));
+        } else {
+            studentTipsView.setText("");
+            //studentTipsView.setHint(R.string.please_select);
+        }
+    }
+
 
     private void createClass() {
         //创建班
@@ -206,7 +230,7 @@ public class CreateClassActivity extends BaseActivity {
         String name = classNameEdt.getText().toString().trim();
 
         if (TextUtils.isEmpty(name)) {
-            Toast.makeText(this,R.string.class_name_not_null,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.class_name_not_null, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -219,15 +243,16 @@ public class CreateClassActivity extends BaseActivity {
         ClassParams params = new ClassParams();
 
         params.title = name;
-        params.join = verifyGroupView.getCheckedRadioButtonId() == R.id.need_verify?
+        params.join = verifyGroupView.getCheckedRadioButtonId() == R.id.need_verify ?
                 Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         params.lessons = classLessons;
 
         //TODO 此处要加入从班级中导入的情况
-        if (enrollStudents !=null && enrollStudents.size()>0) {
+        if ((enrollStudents != null && enrollStudents.size() > 0) || (enrollImports != null && enrollImports.size() > 0)) {
 
             ClassEnroll classEnroll = new ClassEnroll();
             classEnroll.students = enrollStudents;
+            classEnroll.importe = enrollImports;
             params.enroll = classEnroll;
         }
 
@@ -253,12 +278,10 @@ public class CreateClassActivity extends BaseActivity {
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            switch(requestCode) {
+            switch (requestCode) {
                 case REQUEST_CLASS_LESSON_CODE:
                     if (data != null) {
 
@@ -266,25 +289,16 @@ public class CreateClassActivity extends BaseActivity {
                                 CreateTimetableActivity.EXTRA_CLASS_LESSON);
                         addClassLesson(clesson);
 
-                        if (classLessons != null && classLessons.size()>0) {
-                            timetableTipsView.setText(getString(R.string.number_lesson, classLessons.size()));
-
-                        }else {
-                            timetableTipsView.setText("");
-                            //timetableTipsView.setHint(R.string.arrange_class);
-                        }
-
                     }
                     break;
                 case REQUEST_MANUAL_STUDENTS_CODE:
-                    if (data!=null) {
+                    if (data != null) {
                         enrollStudents = data.getParcelableArrayListExtra(ManualAddStudentActivity.EXTRA_STUDENTS);
-                        if (enrollStudents!=null && enrollStudents.size()>0) {
-                            studentTipsView.setText(getString(R.string.number_student, enrollStudents.size()));
-                        }else{
-                            studentTipsView.setText("");
-                            //studentTipsView.setHint(R.string.please_select);
-                        }
+                    }
+                    break;
+                case REQUEST_IMPORT_STUDENTS_CODE:
+                    if (data != null) {
+                        enrollImports = data.getParcelableArrayListExtra(ImportStudentFormClassActivity.EXTRA_IMPORTS);
                     }
                     break;
             }

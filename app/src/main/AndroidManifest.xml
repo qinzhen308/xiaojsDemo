@@ -311,6 +311,8 @@
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.ClassesListActivity"
                 android:screenOrientation="portrait"/>
+        <activity android:name=".ui.lesson.xclass.ImportStudentFormClassActivity"
+                android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
