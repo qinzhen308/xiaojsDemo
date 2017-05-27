@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.ui.view.AnimationView;
 
 /**
@@ -93,6 +94,5 @@ public class ClassView extends RelativeLayout implements IViewModel<Object>{
 
     @Override
     public void bindData(Object data) {
-
     }
 }

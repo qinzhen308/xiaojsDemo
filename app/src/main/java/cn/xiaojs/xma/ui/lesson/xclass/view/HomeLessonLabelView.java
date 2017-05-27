@@ -16,12 +16,13 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 
 /**
  * Created by Paul Z on 2017/5/23.
  */
 
-public class HomeLessonLabelView extends LinearLayout implements IViewModel<Object> {
+public class HomeLessonLabelView extends LinearLayout implements IViewModel<LessonLabelModel> {
 
 
     @BindView(R.id.tv_date)
@@ -52,13 +53,13 @@ public class HomeLessonLabelView extends LinearLayout implements IViewModel<Obje
 
 
     @Override
-    public void bindData(Object data) {
-        SpannableString ss=new SpannableString("共"+12+"节课");
+    public void bindData(LessonLabelModel data) {
+        SpannableString ss=new SpannableString("共"+data.lessonCount+"节课");
 //        ss.setSpan(new RelativeSizeSpan(0.5f),1,ss.length()-2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss.setSpan(new ForegroundColorSpan(c_main_orange),1,ss.length()-2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvTotalLessons.setText(ss);
-        //test
-        showNoLesson(new Random().nextInt(2)==0);
+        tvDate.setText(data.date);
+        showNoLesson(!data.hasData);
     }
 
 

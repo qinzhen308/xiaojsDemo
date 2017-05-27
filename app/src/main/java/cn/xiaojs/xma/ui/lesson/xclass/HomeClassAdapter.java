@@ -1,8 +1,6 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,13 +8,17 @@ import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/22.
@@ -31,10 +33,10 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //    public static final int VIEW_TYPE_HOME_NO_CLASS=6;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
-    private List<Object> mList;
+    private List<?> mList;
 
 
-    public void setList(List<Object> list){
+    public void setList(List<?> list){
         mList=list;
     }
 
@@ -70,13 +72,13 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //            }
 //        });
         if(holder.itemView instanceof IViewModel){
-            ((IViewModel) holder.itemView).bindData(null);
+            ((IViewModel) holder.itemView).bindData(getItem(position));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position==0){
+        /*if(position==0){
             return VIEW_TYPE_HOME_LESSON_LABEL;
         }else if(position<5){
             return VIEW_TYPE_HOME_LESSON;
@@ -84,13 +86,30 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_HOME_CLASS_LABEL;
         }else if(position==(getItemCount()-1)){
             return VIEW_TYPE_LAST_EMPTY;
+        }*/
+        Object o=getItem(position);
+        Logger.d("-----qz-----o="+o);
+        if(o instanceof ClassLesson){
+            return VIEW_TYPE_HOME_LESSON;
+        }else if(o instanceof LastEmptyModel){
+            return VIEW_TYPE_LAST_EMPTY;
+        }else if(o instanceof ClassLabelModel){
+            return VIEW_TYPE_HOME_CLASS_LABEL;
+        }else if(o instanceof LessonLabelModel){
+            return VIEW_TYPE_HOME_LESSON_LABEL;
+        }else if(o instanceof CLesson){
+            return VIEW_TYPE_HOME_LESSON;
         }
         return VIEW_TYPE_HOME_CLASS;
     }
 
+    private Object getItem(int position){
+        return ArrayUtil.isEmpty(mList)?null:mList.get(position);
+    }
+
     @Override
     public int getItemCount() {
-        return 12;
+        return mList==null?0:mList.size();
     }
 
     public static class LastEmpterHolder extends RecyclerView.ViewHolder{

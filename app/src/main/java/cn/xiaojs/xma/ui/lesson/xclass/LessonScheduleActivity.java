@@ -7,21 +7,27 @@ import android.view.View;
 
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
+import com.orhanobut.logger.Logger;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.lesson.util.ScheduleFilter;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
  * Created by Paul Z on 2017/5/18.
+ * 创建班时的课表
  */
 
 public class LessonScheduleActivity extends BaseActivity{
@@ -48,11 +54,16 @@ public class LessonScheduleActivity extends BaseActivity{
         mListView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
         mAdapter=new HomeClassAdapter();
         mListView.setAdapter(mAdapter);
+        datas= ScheduleUtil.buildScheduleByDay(CreateClassActivity.classLessons);
+        bindData();
         calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
-                String s=year+"-"+month+"-"+day;
-//                TimeUtil.getTimeMils()
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("-----qz--------"+(year+"-"+(month+1)+"-"+day)+"---curDayIndex="+curDayIndex);
+                }
+                curDayIndex= ScheduleUtil.getDayIndex(year+"-"+(month+1)+"-"+day);
+                bindData();
             }
 
             @Override
@@ -60,6 +71,25 @@ public class LessonScheduleActivity extends BaseActivity{
             }
         });
 
+    }
+
+
+    private void bindData(){
+        ArrayList list2=new ArrayList();
+        if(datas!=null){
+            List list=datas.get(curDayIndex);
+            if(ArrayUtil.isEmpty(list)){
+                list2.add(new LessonLabelModel(TimeUtil.getWeak(curDayIndex*3600*24*1000),0,false));
+            }else {
+                list2.add(new LessonLabelModel(TimeUtil.getWeak(curDayIndex*3600*24*1000),list.size(),true));
+                list2.addAll(list);
+                list2.add(new LastEmptyModel());
+            }
+        }else {
+            list2.add(new LessonLabelModel(TimeUtil.getWeak(curDayIndex*3600*24*1000),0,false));
+        }
+        mAdapter.setList(list2);
+        mAdapter.notifyDataSetChanged();
     }
 
     @OnClick({R.id.right_view})
@@ -87,8 +117,8 @@ public class LessonScheduleActivity extends BaseActivity{
                             (ClassLesson) data.getSerializableExtra(CreateTimetableActivity.EXTRA_CLASS_LESSON);
                     CreateClassActivity.addClassLesson(classLesson);
                     //TODO 更新显示
-                    datas=ScheduleFilter.buildScheduleByDay(CreateClassActivity.classLessons);
-                    mAdapter.notifyDataSetChanged();
+                    datas= ScheduleUtil.buildScheduleByDay(CreateClassActivity.classLessons);
+                    bindData();
                     break;
             }
         }

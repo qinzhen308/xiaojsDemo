@@ -272,31 +272,15 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule(Date start, Date end) {
+    public void getClassesSchedule(String start, String end) {
 
-        String startJsonstr = objectToJsonString(start);
-        String endJsonstr = objectToJsonString(end);
-
-        if (XiaojsConfig.DEBUG) {
-            Logger.json(startJsonstr);
-            Logger.json(endJsonstr);
-        }
-
-        Call<ScheduleData> call = getService().getClassesSchedule(startJsonstr, endJsonstr);
+        Call<ScheduleData> call = getService().getClassesSchedule(start,end);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule(Date start, Date end, String unformat, String type, String state) {
+    public void getClassesSchedule(String start, String end, String unformat, String type, String state) {
 
-        String startJsonstr = objectToJsonString(start);
-        String endJsonstr = objectToJsonString(end);
-
-        if (XiaojsConfig.DEBUG) {
-            Logger.json(startJsonstr);
-            Logger.json(endJsonstr);
-        }
-
-        Call<ScheduleData> call = getService().getClassesSchedule(startJsonstr, endJsonstr, unformat, type, state);
+        Call<ScheduleData> call = getService().getClassesSchedule(start, end, unformat, type, state);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 

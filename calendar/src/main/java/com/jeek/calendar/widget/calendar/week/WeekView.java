@@ -22,6 +22,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public class WeekView extends View {
     private DisplayMetrics mDisplayMetrics;
     private OnWeekClickListener mOnWeekClickListener;
     private GestureDetector mGestureDetector;
-    private List<Integer> mTaskHintList;
+    private HashSet<Integer> mTaskHintList;
     private Bitmap mRestBitmap, mWorkBitmap;
 
     public WeekView(Context context, DateTime dateTime) {
@@ -82,7 +83,7 @@ public class WeekView extends View {
         if (mIsShowHint) {
 //            ScheduleDao dao = ScheduleDao.getInstance(getContext());
 //            mTaskHintList = dao.getTaskHintByWeek(startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth(), endDate.getYear(), endDate.getMonthOfYear() - 1, endDate.getDayOfMonth());
-            mTaskHintList = new ArrayList<>();
+            mTaskHintList = new HashSet<>();
         }
     }
 
@@ -226,6 +227,9 @@ public class WeekView extends View {
             String dayString = String.valueOf(day);
             if (date.getYear() == mCurrYear && date.getMonthOfYear() - 1 == mCurrMonth && day == mCurrDay) {
                 dayString = "今";
+            }
+            if(day==1){
+                dayString=CalendarUtils.getMonth(date.getMonthOfYear() - 1);
             }
             int startX = (int) (mColumnSize * i + (mColumnSize - mPaint.measureText(dayString)) / 2);
             int startY = (int) (mRowSize / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
@@ -406,7 +410,7 @@ public class WeekView extends View {
      *
      * @param taskHintList
      */
-    public void setTaskHintList(List<Integer> taskHintList) {
+    public void setTaskHintList(HashSet<Integer> taskHintList) {
         mTaskHintList = taskHintList;
         invalidate();
     }

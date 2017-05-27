@@ -189,7 +189,6 @@ public class CreateClassActivity extends BaseActivity {
                                 ChooseClassActivity.class);
                         i.putExtra(ChooseClassActivity.EXTRA_ENTER_TYPE,
                                 ChooseClassActivity.ENTER_TYPE_ADD_STUDENT);
-
                         startActivity(i);
                         break;
                 }

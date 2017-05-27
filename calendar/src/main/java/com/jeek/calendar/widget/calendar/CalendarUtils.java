@@ -19,12 +19,19 @@ public class CalendarUtils {
     private static CalendarUtils sUtils;
     private static Map<String, int[]> sAllHolidays;
 
+    private static final String[] monthStrs={"一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"};
+
     public static synchronized CalendarUtils getInstance(Context context) {
         if (sUtils == null) {
             sUtils = new CalendarUtils();
             initAllHolidays(context);
         }
         return sUtils;
+    }
+
+
+    public static String getMonth(int month){
+        return monthStrs[month];
     }
 
     private static void initAllHolidays(Context context) {
