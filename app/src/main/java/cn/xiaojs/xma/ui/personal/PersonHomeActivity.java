@@ -250,7 +250,10 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                 labelSummary.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
             }
             mSummary.setText(TextUtils.isEmpty(home.profile.title)?"暂无简介":home.profile.title.trim());
-            mProfileTv.setVisibility(View.GONE);
+            if (mProfileTv !=null) {
+                mProfileTv.setVisibility(View.GONE);
+            }
+
             PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
 
             Bundle b1 = new Bundle();
@@ -270,7 +273,10 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             PersonHomeMomentFragment f1 = new PersonHomeMomentFragment();
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
             fragments.add(f1);
-            mIndicator.setVisibility(View.GONE);
+            if (mIndicator != null) {
+                mIndicator.setVisibility(View.GONE);
+            }
+
             addContent(fragments, null);
         }
 
@@ -306,7 +312,9 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         } else {
             if (!mIsMyself) {
                 if (home.isTeacher) {
-                    mFooterMultiple.setVisibility(View.VISIBLE);
+                    if (mFooterMultiple != null) {
+                        mFooterMultiple.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     //mFooterSingle.setVisibility(View.VISIBLE);
                 }

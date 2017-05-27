@@ -387,7 +387,7 @@ public class LessonHomeActivity extends BaseActivity {
                     applyBtn.setText("停止报名");
                     applyBtn.setEnabled(false);
                 } else {
-                    applyBtn.setText("我要学");
+                    applyBtn.setText("添加到我的班课");
                     applyBtn.setEnabled(true);
                 }
 
@@ -402,7 +402,7 @@ public class LessonHomeActivity extends BaseActivity {
                         applyBtn.setEnabled(true);
                     }
                 } else {
-                    applyBtn.setText("我要学");
+                    applyBtn.setText("添加到我的班课");
                     applyBtn.setEnabled(true);
                 }
 
