@@ -262,7 +262,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getClassesSchedule(String cycle, int next, int pre) {
-        Call<ResponseBody> call = getService().getClassesSchedule(cycle, next, pre);
+        Call<ScheduleData> call = getService().getClassesSchedule(cycle, next, pre);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 

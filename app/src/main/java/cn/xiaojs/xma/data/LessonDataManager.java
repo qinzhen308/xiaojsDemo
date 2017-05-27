@@ -440,7 +440,7 @@ public class LessonDataManager {
                                           String cycle,
                                           int next,
                                           int pre,
-                                          APIServiceCallback callback) {
+                                          APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule(cycle, next, pre);
     }

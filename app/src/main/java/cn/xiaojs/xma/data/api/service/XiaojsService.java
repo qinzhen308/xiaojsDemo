@@ -317,7 +317,7 @@ public interface XiaojsService {
 
     //Get Classes Schedule
     @GET("/v1/ctl/schedule")
-    Call<ResponseBody> getClassesSchedule(@Query("cycle") String cycle,
+    Call<ScheduleData> getClassesSchedule(@Query("cycle") String cycle,
                                           @Query("next") int next,
                                           @Query("pre") int pre);
 
