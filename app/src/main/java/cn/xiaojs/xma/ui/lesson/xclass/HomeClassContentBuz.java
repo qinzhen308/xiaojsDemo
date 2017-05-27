@@ -80,7 +80,7 @@ public class HomeClassContentBuz {
 //        R.layout.fragment_home_class_normal
         ButterKnife.bind(this, root);
         Calendar calendar=Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT-8:00"));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         day=calendar.get(Calendar.DAY_OF_MONTH);
         month =calendar.get(Calendar.MONTH);
         year=calendar.get(Calendar.YEAR);
@@ -96,6 +96,9 @@ public class HomeClassContentBuz {
         calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
+                HomeClassContentBuz.this.year=year;
+                HomeClassContentBuz.this.month=month;
+                HomeClassContentBuz.this.day=day;
                 doRequest();
             }
 
