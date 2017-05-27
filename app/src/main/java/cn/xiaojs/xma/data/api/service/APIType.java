@@ -174,5 +174,7 @@ public class APIType {
     public static final int GET_CLASSES_SCHEDULE = 101;
     public static final int SCHEDULE_CLASS_LESSON = 102;
     public static final int CHECK_OVERLAP = 103;
+    public static final int GET_CLASS = 104;
+    public static final int MODIFY_CLASS = 105;
 
 }

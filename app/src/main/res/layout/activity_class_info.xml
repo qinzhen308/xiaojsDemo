@@ -11,6 +11,7 @@
 
         <!--班级名称-->
         <LinearLayout
+                android:id="@+id/name_lay"
                 style="@style/LiveLessonItem">
 
             <TextView
@@ -20,7 +21,6 @@
             <TextView
                     android:id="@+id/name"
                     style="@style/LiveLessonRightEntrance"
-                    android:drawableRight="@null"
                     />
         </LinearLayout>
 
