@@ -466,8 +466,8 @@ public class LessonDataManager {
      * @param callback
      */
     public static void getClassesSchedule(Context context,
-                                          Date start,
-                                          Date end,
+                                          String start,
+                                          String end,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule(start, end);
@@ -475,8 +475,8 @@ public class LessonDataManager {
 
 
     public static void getClassesSchedule(Context context,
-                                          Date start,
-                                          Date end,
+                                          String start,
+                                          String end,
                                           String unformat,
                                           String type,
                                           String state,

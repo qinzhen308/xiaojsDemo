@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
@@ -28,7 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -40,7 +38,7 @@ import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleFilter;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
@@ -91,6 +89,7 @@ public class HomeClassContentBuz {
         todayYear=year=calendar.get(Calendar.YEAR);
         initListView();
         doRequest(todayYear,todayMonth,todayDay);
+        getMonthData();
     }
 
     private void initListView() {
@@ -219,12 +218,12 @@ public class HomeClassContentBuz {
 
 
     private void doRequest(final int y,final int m,final int d){
-        long start=ScheduleFilter.ymdToTimeMill(y,m,d);
-        long end=start+ScheduleFilter.DAY;
-        LessonDataManager.getClassesSchedule(mContext, start, end, new APIServiceCallback<ScheduleData>() {
+        long start= ScheduleUtil.ymdToTimeMill(y,m,d);
+        long end=start+ ScheduleUtil.DAY-1000;
+        LessonDataManager.getClassesSchedule(mContext, ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
-                LessonLabelModel label=new LessonLabelModel(ScheduleFilter.getDateYMD(y,m,d)+" "+ScheduleFilter.getWeek(y,m,d),0,false);
+                LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
                 ArrayList list=new ArrayList();
                 list.add(label);
                 if(object!=null&&!object.calendar.isEmpty()){
@@ -238,7 +237,7 @@ public class HomeClassContentBuz {
             }
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                LessonLabelModel label=new LessonLabelModel(ScheduleFilter.getDateYMD(y,m,d)+" "+ScheduleFilter.getWeek(y,m,d),0,false);
+                LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
                 ArrayList list=new ArrayList();
                 list.add(label);
                 mAdapter.setList(list);

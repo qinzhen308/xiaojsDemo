@@ -21,12 +21,13 @@ import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleFilter;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
  * Created by Paul Z on 2017/5/18.
+ * 创建班时的课表
  */
 
 public class LessonScheduleActivity extends BaseActivity{
@@ -53,7 +54,7 @@ public class LessonScheduleActivity extends BaseActivity{
         mListView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
         mAdapter=new HomeClassAdapter();
         mListView.setAdapter(mAdapter);
-        datas=ScheduleFilter.buildScheduleByDay(CreateClassActivity.classLessons);
+        datas= ScheduleUtil.buildScheduleByDay(CreateClassActivity.classLessons);
         bindData();
         calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
             @Override
@@ -61,7 +62,7 @@ public class LessonScheduleActivity extends BaseActivity{
                 if(XiaojsConfig.DEBUG){
                     Logger.d("-----qz--------"+(year+"-"+(month+1)+"-"+day)+"---curDayIndex="+curDayIndex);
                 }
-                curDayIndex=ScheduleFilter.getDayIndex(year+"-"+(month+1)+"-"+day);
+                curDayIndex= ScheduleUtil.getDayIndex(year+"-"+(month+1)+"-"+day);
                 bindData();
             }
 
@@ -116,7 +117,7 @@ public class LessonScheduleActivity extends BaseActivity{
                             (ClassLesson) data.getSerializableExtra(CreateTimetableActivity.EXTRA_CLASS_LESSON);
                     CreateClassActivity.addClassLesson(classLesson);
                     //TODO 更新显示
-                    datas=ScheduleFilter.buildScheduleByDay(CreateClassActivity.classLessons);
+                    datas= ScheduleUtil.buildScheduleByDay(CreateClassActivity.classLessons);
                     bindData();
                     break;
             }

@@ -16,12 +16,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.CLesson;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleFilter;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
-import cn.xiaojs.xma.util.TimeUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -104,10 +102,17 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     @Override
     public void bindData(CLesson data) {
         mData=data;
-        tvDate.setText(ScheduleFilter.getDateYMDW(data.schedule.getStart()));
+        tvDate.setText(ScheduleUtil.getHMDate(data.schedule.getStart()));
         tvTotalTime.setText(data.schedule.getDuration()+"分钟");
         tvLesson.setText(data.title);
-        tvClassName.setText(data.owner.name);
+        if(data.owner!=null){
+            tvClassName.setText(data.owner.name);
+            tvClassName.setVisibility(VISIBLE);
+
+        }else {
+            tvClassName.setVisibility(INVISIBLE);
+        }
+
         tvSpeaker.setText(data.teacher.name);
         Glide.with(getContext())
                 .load(Account.getAvatar(data.teacher.getId(), 300))
@@ -116,7 +121,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
                 .error(R.drawable.default_avatar_grey)
                 .into(ivAvatar);
         if(data.assistants!=null&&data.assistants.length>0){
-            ivAvatarMore.setVisibility(GONE);
+            ivAvatarMore.setVisibility(INVISIBLE);
             layoutTeachers.setVisibility(VISIBLE);
             Glide.with(getContext())
                     .load(Account.getAvatar(data.assistants[0].getId(), 300))
@@ -127,7 +132,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             if(data.assistants.length==1){
                 tvAssistant.setVisibility(VISIBLE);
                 tvAssistant.setText(data.assistants[0].name);
-                ivAvatar2.setVisibility(GONE);
+                ivAvatar2.setVisibility(INVISIBLE);
 
             }else if(data.assistants.length==2){
                 tvAssistant.setVisibility(GONE);
@@ -150,7 +155,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
                 ivAvatarMore.setVisibility(VISIBLE);
             }
         }else {
-            layoutTeachers.setVisibility(GONE);
+            layoutTeachers.setVisibility(INVISIBLE);
         }
     }
 

@@ -18,10 +18,16 @@ import cn.xiaojs.xma.util.TimeUtil;
  * Created by Paul Z on 2017/5/26.
  */
 
-public class ScheduleFilter {
+public class ScheduleUtil {
 
     public static final String simpleYMDFormatStr="yyyy-MM-dd";
+    public static final String simpleUTCFormatStr="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public static final String simpleMDFormatStr="MM-dd";
+    public static final String simpleHMFormatStr="HH:mm";
     public static final SimpleDateFormat simpleYMDFormat=new SimpleDateFormat(simpleYMDFormatStr, Locale.CHINA);
+    public static final SimpleDateFormat simpleUTCFormat=new SimpleDateFormat(simpleUTCFormatStr);
+    public static final SimpleDateFormat simpleMDFormat=new SimpleDateFormat(simpleMDFormatStr);
+    public static final SimpleDateFormat simpleHMFormat=new SimpleDateFormat(simpleHMFormatStr);
 
     public final static long DAY=3600*24*1000;
 
@@ -94,7 +100,9 @@ public class ScheduleFilter {
     public static long ymdToTimeMill(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-
+        calendar.set(Calendar.DAY_OF_MONTH,day);
+        calendar.set(Calendar.MONTH,month);
+        calendar.set(Calendar.YEAR,year);
         return calendar.getTimeInMillis();
     }
 
@@ -139,5 +147,17 @@ public class ScheduleFilter {
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.setTime(date);
         return simpleYMDFormat.format(date)+" "+TimeUtil.getWeak(date.getTime());
+    }
+
+    public static String getMMDDDate(Date date){
+        return simpleMDFormat.format(date);
+    }
+
+    public static String getHMDate(Date date){
+        return simpleHMFormat.format(date);
+    }
+
+    public static String getUTCDate(long date){
+        return simpleUTCFormat.format(new Date(date));
     }
 }

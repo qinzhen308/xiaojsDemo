@@ -59,7 +59,7 @@ public class HomeLessonLabelView extends LinearLayout implements IViewModel<Less
         ss.setSpan(new ForegroundColorSpan(c_main_orange),1,ss.length()-2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvTotalLessons.setText(ss);
         tvDate.setText(data.date);
-        showNoLesson(data.hasData);
+        showNoLesson(!data.hasData);
     }
 
 
