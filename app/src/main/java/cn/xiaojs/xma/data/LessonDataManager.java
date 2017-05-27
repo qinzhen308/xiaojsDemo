@@ -43,6 +43,7 @@ import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -465,8 +466,8 @@ public class LessonDataManager {
      * @param callback
      */
     public static void getClassesSchedule(Context context,
-                                          long start,
-                                          long end,
+                                          Date start,
+                                          Date end,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule(start, end);
@@ -474,8 +475,8 @@ public class LessonDataManager {
 
 
     public static void getClassesSchedule(Context context,
-                                          long start,
-                                          long end,
+                                          Date start,
+                                          Date end,
                                           String unformat,
                                           String type,
                                           String state,

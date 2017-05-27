@@ -21,8 +21,10 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.ClassEnroll;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
+import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -54,6 +56,26 @@ public class CreateClassActivity extends BaseActivity {
     RadioButton notVerifyBtn;
 
     public static ArrayList<ClassLesson> classLessons;
+    public static ArrayList<StudentEnroll> enrollStudents;
+
+    public static void addStudent(StudentEnroll studentEnroll) {
+
+        if (studentEnroll == null) return;
+
+        if (enrollStudents == null) {
+            enrollStudents = new ArrayList<>();
+        }
+
+        enrollStudents.add(studentEnroll);
+
+    }
+
+    public static void clearEnrollStudents(){
+        if (enrollStudents !=null) {
+            enrollStudents.clear();
+            enrollStudents = null;
+        }
+    }
 
     public static void addClassLesson(ClassLesson lesson) {
 
@@ -78,6 +100,7 @@ public class CreateClassActivity extends BaseActivity {
     protected void onDestroy() {
 
         clearClassLessons();
+        clearEnrollStudents();
 
         super.onDestroy();
     }
@@ -208,7 +231,13 @@ public class CreateClassActivity extends BaseActivity {
                 Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         params.lessons = classLessons;
 
+        //TODO 此处要加入从班级中导入的情况
+        if (enrollStudents !=null && enrollStudents.size()>0) {
 
+            ClassEnroll classEnroll = new ClassEnroll();
+            classEnroll.students = enrollStudents;
+            params.enroll = classEnroll;
+        }
 
         showProgress(true);
         LessonDataManager.createClass(this, params, new APIServiceCallback<CLResponse>() {
@@ -220,6 +249,7 @@ public class CreateClassActivity extends BaseActivity {
                         Toast.LENGTH_SHORT)
                         .show();
                 clearClassLessons();
+                clearEnrollStudents();
                 finish();
             }
 

@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.data.api.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.xiaojs.xma.model.APIEntity;
@@ -333,12 +334,12 @@ public interface XiaojsService {
 
 
     @GET("/v1/ctl/schedule")
-    Call<ScheduleData> getClassesSchedule(@Query("start") long start,
-                                          @Query("end") long end);
+    Call<ScheduleData> getClassesSchedule(@Query("start") String start,
+                                          @Query("end") String end);
 
     @GET("/v1/ctl/schedule")
-    Call<ScheduleData> getClassesSchedule(@Query("start") long start,
-                                          @Query("end") long end,
+    Call<ScheduleData> getClassesSchedule(@Query("start") String start,
+                                          @Query("end") String end,
                                           @Query("unformat") String unformat,
                                           @Query("type") String type,
                                           @Query("state") String state);

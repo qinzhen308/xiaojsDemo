@@ -66,10 +66,12 @@
 
     </LinearLayout>
 
-    <ListView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
             android:id="@+id/student_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px30"
-            />
+            android:scrollbars="none"
+            android:dividerHeight="@dimen/px20"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/px30"/>
 </LinearLayout>
