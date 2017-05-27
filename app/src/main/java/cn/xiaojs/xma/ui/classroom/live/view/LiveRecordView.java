@@ -103,8 +103,10 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void onHandleMessage(Message msg) {
-        if (mMediaStreamingManager == null)
+        if (mMediaStreamingManager == null) {
             return;
+        }
+
         switch (msg.what) {
             case MSG_START_STREAMING:
                 new Thread(new Runnable() {

@@ -164,6 +164,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     }
 
     protected FadeAnimListener getAnimListener(String name) {
+        if (mFadeAnimListeners == null) {
+            return null;
+        }
+
         if (mFadeAnimListeners.containsKey(name)) {
             return mFadeAnimListeners.get(name);
         }
@@ -220,6 +224,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     };
 
     protected void startAnimation(View view, String name, int animMode, int animSets, AnimData data) {
+        if (view == null) {
+            return;
+        }
+
         FadeAnimListener listener = getAnimListener(name);
         ViewPropertyAnimator viewPropertyAnimator = view.animate();
 
@@ -238,7 +246,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             viewPropertyAnimator.scaleY(data.scaleY);
         }
 
-        viewPropertyAnimator.setListener(listener.with(view).play(animMode)).start();
+        if (listener != null) {
+            viewPropertyAnimator.setListener(listener.with(view).play(animMode)).start();
+        }
     }
 
     protected void hideAnim(View view, String key) {
