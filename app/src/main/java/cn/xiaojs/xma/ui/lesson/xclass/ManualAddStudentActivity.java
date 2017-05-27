@@ -19,6 +19,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -81,6 +82,7 @@ public class ManualAddStudentActivity extends BaseActivity {
 
     private void initView() {
 
+        studentsListView.setMode(PullToRefreshBase.Mode.DISABLED);
         tipsContentView.setText(R.string.add_student_tips);
 
         ArrayList<StudentEnroll> students = CreateClassActivity.enrollStudents;
