@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.ArrayList;
+
 /**
  * Created by maxiaobao on 2017/5/25.
  */
@@ -12,7 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class ClassEnroll {
 
 
-    public StudentEnroll[] students;
+    public ArrayList<StudentEnroll> students;
 
     @JsonProperty("import")
     public EnrollImport[] importe;

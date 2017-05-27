@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 import com.orhanobut.logger.Logger;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.xiaojs.xma.model.Registrant;
@@ -271,13 +272,31 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule(long start, long end) {
-        Call<ScheduleData> call = getService().getClassesSchedule(start, end);
+    public void getClassesSchedule(Date start, Date end) {
+
+        String startJsonstr = objectToJsonString(start);
+        String endJsonstr = objectToJsonString(end);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(startJsonstr);
+            Logger.json(endJsonstr);
+        }
+
+        Call<ScheduleData> call = getService().getClassesSchedule(startJsonstr, endJsonstr);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule(long start, long end, String unformat, String type, String state) {
-        Call<ScheduleData> call = getService().getClassesSchedule(start, end, unformat, type, state);
+    public void getClassesSchedule(Date start, Date end, String unformat, String type, String state) {
+
+        String startJsonstr = objectToJsonString(start);
+        String endJsonstr = objectToJsonString(end);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(startJsonstr);
+            Logger.json(endJsonstr);
+        }
+
+        Call<ScheduleData> call = getService().getClassesSchedule(startJsonstr, endJsonstr, unformat, type, state);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
