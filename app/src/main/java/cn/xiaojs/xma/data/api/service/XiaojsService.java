@@ -321,9 +321,27 @@ public interface XiaojsService {
                                           @Query("next") int next,
                                           @Query("pre") int pre);
 
+
+    //Get Classes Schedule
+    @GET("/v1/ctl/schedule")
+    Call<ScheduleData> getClassesSchedule(@Query("cycle") String cycle,
+                                          @Query("next") int next,
+                                          @Query("pre") int pre,
+                                          @Query("unformat") String unformat,
+                                          @Query("type") String type,
+                                          @Query("state") String state);
+
+
     @GET("/v1/ctl/schedule")
     Call<ScheduleData> getClassesSchedule(@Query("start") long start,
                                           @Query("end") long end);
+
+    @GET("/v1/ctl/schedule")
+    Call<ScheduleData> getClassesSchedule(@Query("start") long start,
+                                          @Query("end") long end,
+                                          @Query("unformat") String unformat,
+                                          @Query("type") String type,
+                                          @Query("state") String state);
 
     //Schedule Class Lesson
     @POST("/v1/ctl/classes/{classes}/schedule/lessons")

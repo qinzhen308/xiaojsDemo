@@ -429,7 +429,7 @@ public class LessonDataManager {
 
 
     /**
-     *
+     * Get Classes Schedule
      * @param context
      * @param cycle
      * @param next
@@ -445,8 +445,20 @@ public class LessonDataManager {
         lessonRequest.getClassesSchedule(cycle, next, pre);
     }
 
+    public static void getClassesSchedule(Context context,
+                                          String cycle,
+                                          int next,
+                                          int pre,
+                                          String unformat,
+                                          String type,
+                                          String state,
+                                          APIServiceCallback<ScheduleData> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule(cycle, next, pre, unformat, type, state);
+    }
+
     /**
-     *
+     * Get Classes Schedule
      * @param context
      * @param start
      * @param end
@@ -460,6 +472,17 @@ public class LessonDataManager {
         lessonRequest.getClassesSchedule(start, end);
     }
 
+
+    public static void getClassesSchedule(Context context,
+                                          long start,
+                                          long end,
+                                          String unformat,
+                                          String type,
+                                          String state,
+                                          APIServiceCallback<ScheduleData> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule(start, end, unformat, type, state);
+    }
 
     /**
      * Schedule Class Lesson .

@@ -266,8 +266,18 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
+    public void getClassesSchedule(String cycle, int next, int pre, String unformat, String type, String state) {
+        Call<ScheduleData> call = getService().getClassesSchedule(cycle, next, pre, unformat, type, state);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
     public void getClassesSchedule(long start, long end) {
         Call<ScheduleData> call = getService().getClassesSchedule(start, end);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
+    public void getClassesSchedule(long start, long end, String unformat, String type, String state) {
+        Call<ScheduleData> call = getService().getClassesSchedule(start, end, unformat, type, state);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
