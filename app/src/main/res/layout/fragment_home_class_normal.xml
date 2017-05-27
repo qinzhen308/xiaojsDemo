@@ -46,6 +46,14 @@
         </RelativeLayout>
 
         <ImageButton
+            android:id="@+id/btn_today"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:src="@drawable/btn_today"
+            android:visibility="gone"
+            android:layout_marginRight="@dimen/px25"/>
+        <ImageButton
             android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

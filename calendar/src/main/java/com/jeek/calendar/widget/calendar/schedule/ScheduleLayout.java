@@ -21,7 +21,10 @@ import com.jeek.calendar.widget.calendar.week.WeekView;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by Jimmy on 2016/10/7 0007.
@@ -217,6 +220,8 @@ public class ScheduleLayout extends FrameLayout {
             }
             if(mOnCalendarClickListener!=null){
                 mOnCalendarClickListener.onPageChange(year, month, day);
+                if (wcvCalendar.getCurrentWeekView() != null)
+                    wcvCalendar.getCurrentWeekView().setTaskHintList(mHintList);
             }
         }
     };
@@ -532,6 +537,7 @@ public class ScheduleLayout extends FrameLayout {
             mcvCalendar.getCurrentMonthView().addTaskHint(day);
         if (wcvCalendar.getCurrentWeekView() != null)
             wcvCalendar.getCurrentWeekView().addTaskHint(day);
+
     }
 
     /**
@@ -544,6 +550,24 @@ public class ScheduleLayout extends FrameLayout {
             mcvCalendar.getCurrentMonthView().removeTaskHint(day);
         if (wcvCalendar.getCurrentWeekView() != null)
             wcvCalendar.getCurrentWeekView().removeTaskHint(day);
+    }
+
+    private HashSet<Integer> mHintList=new HashSet<>();
+
+    public void setTaskHintList(HashSet<Integer> hintList) {
+        mHintList=hintList;
+        if (mcvCalendar.getCurrentMonthView() != null)
+            mcvCalendar.getCurrentMonthView().setTaskHintList(hintList);
+        if (wcvCalendar.getCurrentWeekView() != null)
+            wcvCalendar.getCurrentWeekView().setTaskHintList(hintList);
+    }
+
+    public void removeAllTaskHint() {
+        mHintList.clear();
+        if (mcvCalendar.getCurrentMonthView() != null)
+            mcvCalendar.getCurrentMonthView().setTaskHintList(new HashSet<Integer>());
+        if (wcvCalendar.getCurrentWeekView() != null)
+            wcvCalendar.getCurrentWeekView().setTaskHintList(new HashSet<Integer>());
     }
 
     public ScrollConflictResolver getConflictView() {

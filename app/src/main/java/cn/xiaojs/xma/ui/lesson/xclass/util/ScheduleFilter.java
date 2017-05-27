@@ -23,7 +23,7 @@ public class ScheduleFilter {
     public static final String simpleYMDFormatStr="yyyy-MM-dd";
     public static final SimpleDateFormat simpleYMDFormat=new SimpleDateFormat(simpleYMDFormatStr, Locale.CHINA);
 
-    public final static long DAY=3600*24;
+    public final static long DAY=3600*24*1000;
 
     public static List<ClassLesson> sort(List<ClassLesson> src) {
         for (int i=1;i<src.size();i++) {
@@ -84,7 +84,7 @@ public class ScheduleFilter {
 
     public static String getDateYMD(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT-8:00"));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.set(Calendar.DAY_OF_MONTH,day);
         calendar.set(Calendar.MONTH,month);
         calendar.set(Calendar.YEAR,year);
@@ -93,14 +93,14 @@ public class ScheduleFilter {
 
     public static long ymdToTimeMill(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT-8:00"));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 
         return calendar.getTimeInMillis();
     }
 
     public static String getWeek(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT-8:00"));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.set(Calendar.DAY_OF_MONTH,day);
         calendar.set(Calendar.MONTH,month);
         calendar.set(Calendar.YEAR,year);
@@ -136,7 +136,7 @@ public class ScheduleFilter {
 
     public static String getDateYMDW(Date date){
         Calendar calendar=Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT-8:00"));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.setTime(date);
         return simpleYMDFormat.format(date)+" "+TimeUtil.getWeak(date.getTime());
     }

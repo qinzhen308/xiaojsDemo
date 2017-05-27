@@ -20,6 +20,7 @@ import com.jeek.calendar.widget.calendar.LunarCalendarUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -56,7 +57,7 @@ public class MonthView extends View {
     private DisplayMetrics mDisplayMetrics;
     private OnMonthClickListener mDateClickListener;
     private GestureDetector mGestureDetector;
-    private List<Integer> mTaskHintList;
+    private HashSet<Integer> mTaskHintList;
     private Bitmap mRestBitmap, mWorkBitmap;
 
     public MonthView(Context context, int year, int month) {
@@ -85,7 +86,7 @@ public class MonthView extends View {
             // 从数据库中获取圆点提示数据
 //            ScheduleDao dao = ScheduleDao.getInstance(getContext());
 //            mTaskHintList = dao.getTaskHintByMonth(mSelYear, mSelMonth);
-            mTaskHintList = new ArrayList<>();
+            mTaskHintList = new HashSet<>();
         }
     }
 
@@ -266,6 +267,10 @@ public class MonthView extends View {
             }
             if (mSelYear == mCurrYear && mCurrMonth == mSelMonth && day + 1 == mCurrDay) {
                 dayString="今";
+                startX = (int) (mColumnSize * col + (mColumnSize - mPaint.measureText(dayString)) / 2);
+            }
+            if(day==0){
+                dayString=CalendarUtils.getMonth( mSelMonth);
                 startX = (int) (mColumnSize * col + (mColumnSize - mPaint.measureText(dayString)) / 2);
             }
             canvas.drawText(dayString, startX, startY, mPaint);
@@ -525,7 +530,7 @@ public class MonthView extends View {
      *
      * @param taskHintList
      */
-    public void setTaskHintList(List<Integer> taskHintList) {
+    public void setTaskHintList(HashSet<Integer> taskHintList) {
         mTaskHintList = taskHintList;
         invalidate();
     }

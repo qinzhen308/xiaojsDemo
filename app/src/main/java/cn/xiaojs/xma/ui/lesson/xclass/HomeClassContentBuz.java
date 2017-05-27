@@ -13,12 +13,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -57,6 +59,8 @@ public class HomeClassContentBuz {
     TextView myCourseSearch;
     @BindView(R.id.btn_add)
     ImageButton btnAdd;
+    @BindView(R.id.btn_today)
+    ImageButton btnToday;
     @BindView(R.id.title)
     LinearLayout title;
     @BindView(R.id.over_layout)
@@ -67,6 +71,7 @@ public class HomeClassContentBuz {
     HomeClassAdapter mAdapter;
 
     int year, month,day;
+    int todayYear, todayMonth,todayDay;
 
 
     /**
@@ -81,11 +86,11 @@ public class HomeClassContentBuz {
         ButterKnife.bind(this, root);
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        day=calendar.get(Calendar.DAY_OF_MONTH);
-        month =calendar.get(Calendar.MONTH);
-        year=calendar.get(Calendar.YEAR);
+        todayDay=day=calendar.get(Calendar.DAY_OF_MONTH);
+        todayMonth=month =calendar.get(Calendar.MONTH);
+        todayYear=year=calendar.get(Calendar.YEAR);
         initListView();
-        doRequest();
+        doRequest(todayYear,todayMonth,todayDay);
     }
 
     private void initListView() {
@@ -96,15 +101,27 @@ public class HomeClassContentBuz {
         calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
-                HomeClassContentBuz.this.year=year;
-                HomeClassContentBuz.this.month=month;
-                HomeClassContentBuz.this.day=day;
-                doRequest();
+//                HomeClassContentBuz.this.year=year;
+//                HomeClassContentBuz.this.month=month;
+                if(HomeClassContentBuz.this.month!=month||HomeClassContentBuz.this.year!=year||HomeClassContentBuz.this.day!=day){
+                    HomeClassContentBuz.this.day=day;
+                    doRequest(year,month,day);
+                }
             }
 
             @Override
             public void onPageChange(int year, int month, int day) {
-                getMonthData();
+                if(HomeClassContentBuz.this.month!=month||HomeClassContentBuz.this.year!=year){//切换月
+                     HomeClassContentBuz.this.year=year;
+                    HomeClassContentBuz.this.month=month;
+                    getMonthData();
+                }
+                if(todayYear==year&&todayMonth==month){
+                    btnToday.setVisibility(View.GONE);
+                }else {
+                    btnToday.setVisibility(View.VISIBLE);
+                }
+
             }
         });
         overLayout.addOnScrollListener(new PageChangeListener());
@@ -128,7 +145,7 @@ public class HomeClassContentBuz {
     }
 
 
-    @OnClick({R.id.btn_scan2, R.id.s_root, R.id.btn_add})
+    @OnClick({R.id.btn_scan2, R.id.s_root, R.id.btn_add,R.id.btn_today})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_scan2:
@@ -143,6 +160,9 @@ public class HomeClassContentBuz {
                 break;
             case R.id.btn_add:
                 showMenu(btnAdd);
+                break;
+            case R.id.btn_today:
+                calendarView.initData(todayYear,todayMonth,todayDay);
                 break;
         }
     }
@@ -198,12 +218,10 @@ public class HomeClassContentBuz {
     }
 
 
-    private void doRequest(){
-        final int y=year;
-        final int m=month;
-        final int d=day;
-        long date=ScheduleFilter.ymdToTimeMill(y,m,d);
-        LessonDataManager.getClassesSchedule(mContext, date, date, new APIServiceCallback<ScheduleData>() {
+    private void doRequest(final int y,final int m,final int d){
+        long start=ScheduleFilter.ymdToTimeMill(y,m,d);
+        long end=start+ScheduleFilter.DAY;
+        LessonDataManager.getClassesSchedule(mContext, start, end, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
                 LessonLabelModel label=new LessonLabelModel(ScheduleFilter.getDateYMD(y,m,d)+" "+ScheduleFilter.getWeek(y,m,d),0,false);
@@ -234,16 +252,18 @@ public class HomeClassContentBuz {
         final int y=year;
         final int m=month;
         final int d=day;
-        long date=ScheduleFilter.ymdToTimeMill(y,m,d);
-        LessonDataManager.getClassesSchedule(mContext, "monthly", 0, 0, new APIServiceCallback<ScheduleData>() {
+        int next=(y-todayYear)*12+(m-todayMonth);
+        LessonDataManager.getClassesSchedule(mContext, "monthly", next, 0, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
+                HashSet hashSet=new HashSet<Integer>();
                 if(object!=null&&object.calendar!=null){
                     for(int i=0;i<object.calendar.size();i++){
                         String[] strings=object.calendar.get(i).date.split("/");
-                        calendarView.addTaskHint(Integer.valueOf(strings[1]));
+                        hashSet.add(Integer.valueOf(strings[1]));
                     }
                 }
+                calendarView.setTaskHintList(hashSet);
 
             }
 
