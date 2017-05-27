@@ -783,7 +783,7 @@
     <string name="living_paly_back_tips">自动被录像，视频将保存到您的个人资料库，并且可以回放</string>
     <string name="enroll_result">报名结果</string>
     <string name="enroll_result_ok">您已报名成功！</string>
-    <string name="join_result_ok">您添加到我的班课！</string>
+    <string name="join_result_ok">您已添加到我的班课！</string>
     <string name="enroll_result_ok_tips">现在你可以进入教室体验，与老师、同学们进行互动，也可以进行直播哦～</string>
     <string name="look_class_lesson">查看我的班课</string>
     <string name="want_to_learn_num">%1$d人学</string>
