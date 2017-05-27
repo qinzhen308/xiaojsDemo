@@ -235,9 +235,15 @@ public class HomeClassContentBuz {
         final int m=month;
         final int d=day;
         long date=ScheduleFilter.ymdToTimeMill(y,m,d);
-        LessonDataManager.getClassesSchedule(mContext, "monthly", 0, 0, new APIServiceCallback() {
+        LessonDataManager.getClassesSchedule(mContext, "monthly", 0, 0, new APIServiceCallback<ScheduleData>() {
             @Override
-            public void onSuccess(Object object) {
+            public void onSuccess(ScheduleData object) {
+                if(object!=null&&object.calendar!=null){
+                    for(int i=0;i<object.calendar.size();i++){
+                        String[] strings=object.calendar.get(i).date.split("/");
+                        calendarView.addTaskHint(Integer.valueOf(strings[1]));
+                    }
+                }
 
             }
 
