@@ -40,6 +40,7 @@ public class CreateClassActivity extends BaseActivity {
 
     private final int REQUEST_CLASS_LESSON_CODE = 0x1;
     private final int REQUEST_CLASS_SCHEDULE_CODE = 0x2;
+    private final int REQUEST_MANUAL_STUDENTS_CODE = 0x3;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -55,27 +56,15 @@ public class CreateClassActivity extends BaseActivity {
     @BindView(R.id.not_verify)
     RadioButton notVerifyBtn;
 
+    @BindView(R.id.student_num_tips)
+    TextView studentTipsView;
+    @BindView(R.id.time_table_tips)
+    TextView timetableTipsView;
+
+
     public static ArrayList<ClassLesson> classLessons;
     public static ArrayList<StudentEnroll> enrollStudents;
 
-    public static void addStudent(StudentEnroll studentEnroll) {
-
-        if (studentEnroll == null) return;
-
-        if (enrollStudents == null) {
-            enrollStudents = new ArrayList<>();
-        }
-
-        enrollStudents.add(studentEnroll);
-
-    }
-
-    public static void clearEnrollStudents(){
-        if (enrollStudents !=null) {
-            enrollStudents.clear();
-            enrollStudents = null;
-        }
-    }
 
     public static void addClassLesson(ClassLesson lesson) {
 
@@ -100,7 +89,6 @@ public class CreateClassActivity extends BaseActivity {
     protected void onDestroy() {
 
         clearClassLessons();
-        clearEnrollStudents();
 
         super.onDestroy();
     }
@@ -187,8 +175,13 @@ public class CreateClassActivity extends BaseActivity {
             public void onItemClick(int position) {
                 switch (position) {
                     case 0://手动添加
-                        startActivity(new Intent(CreateClassActivity.this,
-                                ManualAddStudentActivity.class));
+
+                        Intent ic = new Intent(CreateClassActivity.this,
+                                ManualAddStudentActivity.class);
+                        if (enrollStudents !=null && enrollStudents.size()>0) {
+                            ic.putExtra(ManualAddStudentActivity.EXTRA_STUDENTS, enrollStudents);
+                        }
+                        startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
                         break;
                     case 1://从已有班级中添加
 
@@ -249,7 +242,6 @@ public class CreateClassActivity extends BaseActivity {
                         Toast.LENGTH_SHORT)
                         .show();
                 clearClassLessons();
-                clearEnrollStudents();
                 finish();
             }
 
@@ -274,6 +266,26 @@ public class CreateClassActivity extends BaseActivity {
                         ClassLesson clesson = (ClassLesson) data.getSerializableExtra(
                                 CreateTimetableActivity.EXTRA_CLASS_LESSON);
                         addClassLesson(clesson);
+
+                        if (classLessons != null && classLessons.size()>0) {
+                            timetableTipsView.setText(getString(R.string.number_lesson, classLessons.size()));
+
+                        }else {
+                            timetableTipsView.setText("");
+                            //timetableTipsView.setHint(R.string.arrange_class);
+                        }
+
+                    }
+                    break;
+                case REQUEST_MANUAL_STUDENTS_CODE:
+                    if (data!=null) {
+                        enrollStudents = data.getParcelableArrayListExtra(ManualAddStudentActivity.EXTRA_STUDENTS);
+                        if (enrollStudents!=null && enrollStudents.size()>0) {
+                            studentTipsView.setText(getString(R.string.number_student, enrollStudents.size()));
+                        }else{
+                            studentTipsView.setText("");
+                            //studentTipsView.setHint(R.string.please_select);
+                        }
                     }
                     break;
             }
