@@ -13,14 +13,31 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.jeek.calendar.widget.calendar.CalendarUtils;
+import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -74,9 +91,10 @@ public class LessonFragment extends Fragment {
 //        lessonAdapter.setButtonDesc(getString(R.string.lesson_creation));
 
 //        listView.setAdapter(lessonAdapter);
-        mAdapter = new HomeClassAdapter();
+        mAdapter = new HomeClassAdapter(mRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
+        getMonthData();
     }
 
     @OnClick({R.id.course_filter})
@@ -114,4 +132,46 @@ public class LessonFragment extends Fragment {
             }
         });
     }
+
+
+    private void bindData(List<ClassSchedule> list){
+        ArrayList monthLists=new ArrayList();
+        LessonLabelModel tempLabel=null;
+        for(int j=0;j<list.size();j++){
+            ClassSchedule cs=list.get(j);
+            tempLabel=new LessonLabelModel(cs.date,0,false);
+            monthLists.add(tempLabel);
+            monthLists.addAll(cs.lessons);
+            tempLabel.lessonCount=cs.lessons.size();
+            if(cs.lessons.size()>0){
+                tempLabel.hasData=true;
+            }
+        }
+        monthLists.add(new LastEmptyModel());
+        mAdapter.setList(monthLists);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void getMonthData(){
+        long start=ScheduleUtil.ymdToTimeMill(2017,6,3);
+        long end=ScheduleUtil.ymdToTimeMill(2017,6,16);
+
+        LessonDataManager.getClassesSchedule(getActivity(), ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
+            @Override
+            public void onSuccess(ScheduleData object) {
+
+                if(object!=null&&!object.calendar.isEmpty()){
+                    bindData(object.calendar);
+                }else {
+                    bindData(new ArrayList<ClassSchedule>());
+                }
+            }
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                bindData(new ArrayList<ClassSchedule>());
+            }
+        });
+    }
+
+
 }

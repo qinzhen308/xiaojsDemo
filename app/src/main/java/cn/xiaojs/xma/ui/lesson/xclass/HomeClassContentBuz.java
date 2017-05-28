@@ -93,7 +93,7 @@ public class HomeClassContentBuz {
     }
 
     private void initListView() {
-        mAdapter = new HomeClassAdapter();
+        mAdapter = new HomeClassAdapter(overLayout);
         overLayout.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         overLayout.setAdapter(mAdapter);
 
@@ -258,8 +258,8 @@ public class HomeClassContentBuz {
                 HashSet hashSet=new HashSet<Integer>();
                 if(object!=null&&object.calendar!=null){
                     for(int i=0;i<object.calendar.size();i++){
-                        String[] strings=object.calendar.get(i).date.split("/");
-                        hashSet.add(Integer.valueOf(strings[1]));
+                        String[] strings=object.calendar.get(i).date.split("-");
+                        hashSet.add(Integer.valueOf(strings[2]));
                     }
                 }
                 calendarView.setTaskHintList(hashSet);

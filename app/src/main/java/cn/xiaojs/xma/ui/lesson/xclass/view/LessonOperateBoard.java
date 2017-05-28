@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson.xclass.view;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,7 +73,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_public,R.drawable.ic_op_publish,
             R.drawable.ic_op_recreate_lesson,R.drawable.ic_op_schedule,
             R.drawable.ic_op_share,R.drawable.ic_op_signup,
-            R.drawable.ic_op_submit
+            R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check
     };
 
 
@@ -86,7 +87,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.string.lesson_op_public,R.string.lesson_op_publish,
             R.string.lesson_op_recreate_lesson,R.string.lesson_op_schedule,
             R.string.lesson_op_share,R.string.lesson_op_signup,
-            R.string.lesson_op_submit
+            R.string.lesson_op_submit,R.string.lesson_op_cancel_check
     };
 
     private OnDialogCloseListener mOnDismissListener;
@@ -215,13 +216,14 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
 
         @Override
-        public void onBindViewHolder(ItemHolder holder, int position) {
+        public void onBindViewHolder(ItemHolder holder, final int position) {
             holder.name.setText(names[opGroup2.get(position).getId()]);
             holder.icon.setImageResource(icons[opGroup2.get(position).getId()]);
             holder.btnItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    opGroup2.get(position).onClick(activity,data);
+                    dismiss();
                 }
             });
         }
@@ -257,5 +259,25 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
+    Object data;
+    public LessonOperateBoard setData(Object data){
+        this.data=data;
+        return this;
+    }
+    Activity activity;
+    public LessonOperateBoard setActivity(Activity activity){
+        this.activity=activity;
+        return this;
+    }
 
+    public LessonOperateBoard maybe(Activity activity,Object data){
+        return setActivity(activity).setData(data);
+    }
+
+    @Override
+    public void dismiss() {
+        this.activity=null;
+        this.data=null;
+        super.dismiss();
+    }
 }

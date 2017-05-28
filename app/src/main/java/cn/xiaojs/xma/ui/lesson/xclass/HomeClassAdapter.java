@@ -18,6 +18,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.ui.lesson.xclass.view.NativeLessonView;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -29,11 +30,16 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int VIEW_TYPE_HOME_LESSON=2;
     public static final int VIEW_TYPE_HOME_CLASS_LABEL=3;
     public static final int VIEW_TYPE_HOME_CLASS =4;
-//    public static final int VIEW_TYPE_HOME_NO_LESSON=5;
+    public static final int VIEW_TYPE_NATIVE_LESSON=5;
 //    public static final int VIEW_TYPE_HOME_NO_CLASS=6;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
     private List<?> mList;
+    private RecyclerView mRecyclerView;
+
+    public HomeClassAdapter(RecyclerView recyclerView){
+        mRecyclerView=recyclerView;
+    }
 
 
     public void setList(List<?> list){
@@ -53,6 +59,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder=new CommonHolder(new HomeClassLabelView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_HOME_CLASS){
             holder=new CommonHolder(new ClassView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_NATIVE_LESSON){
+            holder=new CommonHolder(new NativeLessonView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -90,7 +98,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Object o=getItem(position);
         Logger.d("-----qz-----o="+o);
         if(o instanceof ClassLesson){
-            return VIEW_TYPE_HOME_LESSON;
+            return VIEW_TYPE_NATIVE_LESSON;
         }else if(o instanceof LastEmptyModel){
             return VIEW_TYPE_LAST_EMPTY;
         }else if(o instanceof ClassLabelModel){
@@ -105,6 +113,27 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private Object getItem(int position){
         return ArrayUtil.isEmpty(mList)?null:mList.get(position);
+    }
+
+
+    /**
+     * 跳转到 指定日期所在位置
+     * @param date eg. 2017-04-01
+     */
+    public void scrollToLabel(String date){
+        int size=getItemCount();
+        int index=-1;
+        for(int i=0;i<size;i++){
+            Object o=getItem(i);
+            if(o instanceof LessonLabelModel){
+                if(((LessonLabelModel) o).date.contains(date)){
+                    index=i;
+                }
+            }
+        }
+        if(index>=0){
+            mRecyclerView.smoothScrollToPosition(index);
+        }
     }
 
     @Override

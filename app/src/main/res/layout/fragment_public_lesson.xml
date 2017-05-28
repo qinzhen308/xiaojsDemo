@@ -10,5 +10,9 @@
             android:id="@+id/filter_line"
             style="@style/DividerHorizontal"/>
 
-    <include layout="@layout/layout_home_schedule"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/over_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>

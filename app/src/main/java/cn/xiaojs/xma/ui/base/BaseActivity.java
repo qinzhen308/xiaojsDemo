@@ -31,13 +31,14 @@ import android.widget.TextView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity implements IDialogMethod{
 
     protected View mBaseHeader;
     protected FrameLayout mContent;
@@ -223,6 +224,7 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
+    @Override
     public void showProgress(boolean cancellable) {
         mFailedView.setVisibility(View.GONE);
         mContent.setVisibility(View.VISIBLE);
@@ -233,6 +235,7 @@ public abstract class BaseActivity extends FragmentActivity {
         progress.show();
     }
 
+    @Override
     public void cancelProgress() {
         if (progress != null && progress.isShowing()) {
             progress.dismiss();

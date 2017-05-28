@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@color/gray_item_bg"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="@dimen/px165"
+        android:layout_height="wrap_content"
+        android:textColor="@color/chocolate_light"
+        android:layout_marginTop="@dimen/px46"
+        android:textSize="@dimen/font_34px"
+        android:paddingBottom="@dimen/px5"
+        android:paddingTop="@dimen/px5"
+        android:gravity="center"
+        android:text="09:00"
+        android:textStyle="bold"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tv_total_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60分钟"
+        android:textSize="@dimen/font_22px"
+        android:textColor="@color/gray"
+        android:layout_alignLeft="@+id/tv_date"
+        android:layout_alignRight="@+id/tv_date"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/px46"
+        android:layout_below="@+id/tv_date"
+        android:maxLines="1"
+        />
+
+
+
+    <TextView
+        android:id="@+id/tv_lesson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/font_black"
+        android:layout_marginTop="@dimen/px46"
+        android:textSize="@dimen/font_32px"
+        android:paddingTop="@dimen/px5"
+        android:paddingBottom="@dimen/px5"
+        android:layout_marginLeft="@dimen/px56"
+        android:layout_toRightOf="@id/tv_date"
+        android:text="什么什么课"
+        android:maxLines="1"
+        />
+
+
+
+    <cn.xiaojs.xma.ui.widget.LabelImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/px74"
+        android:layout_height="@dimen/px70"
+        android:scaleType="fitXY"
+        android:layout_alignLeft="@+id/tv_lesson"
+        android:layout_below="@+id/tv_lesson"
+        app:label_height="@dimen/px30"
+        app:label_width="@dimen/px30"
+        android:paddingRight="@dimen/px4"
+        android:src="@drawable/ic_share_wechat"
+        app:labelSrc="@drawable/ic_speaker"
+        app:label_position="LABEL_POSITION_RIGHT_BOTTOM"
+        />
+
+    <TextView
+        android:id="@+id/tv_speaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/font_dark_gray"
+        android:textSize="@dimen/font_24px"
+        android:layout_marginLeft="@dimen/px12"
+        android:paddingTop="@dimen/px10"
+        android:paddingBottom="@dimen/px10"
+        android:text="名字asdasdd"
+        android:layout_alignBottom="@+id/iv_avatar"
+        android:layout_alignTop="@+id/iv_avatar"
+        android:layout_toRightOf="@+id/iv_avatar"
+        android:gravity="center_vertical"
+        android:ems="4"
+        android:maxLines="1"
+        />
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/layout_teachers"-->
+        <!--android:layout_width="@dimen/px242"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignTop="@+id/iv_avatar"-->
+        <!--android:layout_alignBottom="@+id/iv_avatar"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginRight="@dimen/px35"-->
+        <!--&gt;-->
+
+        <!--<cn.xiaojs.xma.ui.widget.LabelImageView-->
+            <!--android:id="@+id/iv_avatar1"-->
+            <!--android:layout_width="@dimen/px74"-->
+            <!--android:layout_height="@dimen/px70"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:layout_alignLeft="@+id/tv_lesson"-->
+            <!--android:layout_below="@+id/tv_lesson"-->
+            <!--app:label_height="@dimen/px30"-->
+            <!--app:label_width="@dimen/px30"-->
+            <!--android:src="@drawable/ic_share_wechat"-->
+            <!--app:labelSrc="@drawable/ic_assistant"-->
+            <!--android:paddingRight="@dimen/px4"-->
+            <!--app:label_position="LABEL_POSITION_RIGHT_BOTTOM"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_assistant"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@color/font_dark_gray"-->
+            <!--android:textSize="@dimen/font_24px"-->
+            <!--android:layout_marginLeft="@dimen/px12"-->
+            <!--android:paddingTop="@dimen/px10"-->
+            <!--android:paddingBottom="@dimen/px10"-->
+            <!--android:text="名字asdasdd"-->
+            <!--android:layout_alignBottom="@+id/iv_avatar"-->
+            <!--android:layout_alignTop="@+id/iv_avatar"-->
+            <!--android:layout_toRightOf="@+id/iv_avatar"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:ems="4"-->
+            <!--android:maxLines="1"-->
+            <!--android:visibility="visible"-->
+            <!--/>-->
+
+        <!--<cn.xiaojs.xma.ui.widget.LabelImageView-->
+            <!--android:id="@+id/iv_avatar2"-->
+            <!--android:layout_width="@dimen/px74"-->
+            <!--android:layout_height="@dimen/px70"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:layout_alignLeft="@+id/tv_lesson"-->
+            <!--android:layout_below="@+id/tv_lesson"-->
+            <!--app:label_height="@dimen/px30"-->
+            <!--app:label_width="@dimen/px30"-->
+            <!--android:src="@drawable/ic_share_wechat"-->
+            <!--app:labelSrc="@drawable/ic_assistant"-->
+            <!--android:paddingRight="@dimen/px4"-->
+            <!--android:layout_marginLeft="@dimen/px12"-->
+            <!--app:label_position="LABEL_POSITION_RIGHT_BOTTOM"-->
+            <!--android:visibility="gone"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/iv_avatar_more"-->
+            <!--android:layout_width="@dimen/px70"-->
+            <!--android:layout_height="@dimen/px70"-->
+            <!--android:background="@drawable/ic_share_wechat"-->
+            <!--android:visibility="gone"-->
+            <!--android:text="3人"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_marginLeft="@dimen/px12"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="@dimen/font_34px"-->
+            <!--/>-->
+
+    <!--</LinearLayout>-->
+
+
+    <ImageView
+        android:id="@+id/btn_more"
+        android:layout_width="@dimen/px50"
+        android:layout_height="@dimen/px50"
+        android:scaleType="center"
+        android:src="@drawable/ic_list_more"
+        android:layout_below="@+id/iv_avatar"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/px37"
+        android:layout_marginRight="@dimen/px39"
+        />
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_class_name"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/font_dark_gray"-->
+        <!--android:textSize="@dimen/font_24px"-->
+        <!--android:paddingTop="@dimen/px10"-->
+        <!--android:paddingBottom="@dimen/px10"-->
+        <!--android:text="班级名字"-->
+        <!--android:drawableLeft="@drawable/ic_home_class"-->
+        <!--android:layout_alignBottom="@+id/btn_more"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:drawablePadding="@dimen/px16"-->
+        <!--android:layout_alignLeft="@+id/tv_lesson"-->
+        <!--android:layout_toLeftOf="@+id/btn_more"-->
+        <!--android:maxLines="1"-->
+        <!--/>-->
+
+
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px2"
+        android:background="@color/gray_line"
+        android:layout_marginTop="@dimen/px37"
+        android:layout_below="@+id/btn_more"
+        />
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="@dimen/px2"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/bottom_line"
+        android:layout_alignParentTop="true"
+        android:background="@color/gray_line"
+        android:layout_marginLeft="@dimen/px166"
+        />
+
+    <View
+        android:id="@+id/state_point"
+        android:layout_width="@dimen/px12"
+        android:layout_height="@dimen/px12"
+        android:background="@drawable/shape_grey_point"
+        android:layout_toRightOf="@+id/v_line"
+        android:layout_alignTop="@+id/tv_date"
+        android:layout_marginLeft="@dimen/px_7"
+        android:layout_marginTop="@dimen/px20"
+        />
+
+
+
+</RelativeLayout>

@@ -156,5 +156,6 @@
 
     <color name="week_header_text_color">#d3bda7</color>
     <color name="date_picked_color">#198CFF</color>
+    <color name="grey_point">#dbdbdb</color>
 
 </resources>

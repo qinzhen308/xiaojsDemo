@@ -23,8 +23,7 @@
             android:gravity="center"
             android:background="@drawable/selector_line_bottom_orange"
             android:textSize="@dimen/font_32px"
-            android:textColor="@color/font_black"
-            android:layout_marginLeft="10dp"
+            android:textColor="@color/selector_btn_orange_black"
             android:button="@null"
             />
         <RadioButton
@@ -38,7 +37,7 @@
             android:drawableBottom="@color/main_orange"
             android:layout_marginLeft="10dp"
             android:textSize="@dimen/font_32px"
-            android:textColor="@color/font_black"
+            android:textColor="@color/selector_btn_orange_black"
             android:button="@null"
 
             />
@@ -54,7 +53,7 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/selector_line_bottom_orange"
             android:textSize="@dimen/font_32px"
-            android:textColor="@color/font_black"
+            android:textColor="@color/selector_btn_orange_black"
             android:button="@null"
 
             />
@@ -67,7 +66,7 @@
             android:text="已完课 0"
             android:gravity="center"
             android:textSize="@dimen/font_32px"
-            android:textColor="@color/font_black"
+            android:textColor="@color/selector_btn_orange_black"
             android:background="@drawable/selector_line_bottom_orange"
             android:drawableBottom="@color/main_orange"
             android:layout_marginLeft="10dp"
@@ -76,7 +75,6 @@
             />
 
     </RadioGroup>
-
 
 
     <android.support.v7.widget.RecyclerView

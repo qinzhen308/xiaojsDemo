@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson.xclass.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,11 +12,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -161,9 +167,204 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     @OnClick(R.id.btn_more)
     public void onViewClicked() {
-        new LessonOperateBoard(getContext()).show();
+
+        new LessonOperateBoard(getContext()).maybe((Activity) getContext(),createMode()).show();
     }
 
+    public List<LOpModel> createMode(){
+        List<LOpModel> ops;
+        if(mData.owner!=null&&mData.owner.getId().equals(AccountPref.getAccountID(getContext())) ){//我是所有者，无论我是不是讲师
+            ops=imOnwer();
+        }else if (mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))){//我虽然不是所有者，但我是讲师
+            ops=imSpeaker();
+        }else {//我就是个学生
+            ops=imStudent();
+        }
+        return ops;
+    }
+
+    public List<LOpModel> imOnwer(){
+        List<LOpModel> list=new ArrayList<>();
+
+        if(Ctl.StandaloneLessonState.DRAFT.equals(mData.state)){//草稿
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+        }else if(Ctl.StandaloneLessonState.PENDING_FOR_ACK.equals(mData.state)){//待确认
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_CANCEL_SUBMIT));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.ACKNOWLEDGED.equals(mData.state)){//已确认
+
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.PENDING_FOR_APPROVAL.equals(mData.state)){//待审核
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+            list.add(new LOpModel(LOpModel.OP_CANCEL_CHECK));
+
+        }else if(Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)){//待开课
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_SIGNUP));
+            list.add(new LOpModel(LOpModel.OP_MODIFY_TIME));
+            list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
+            list.add(new LOpModel(LOpModel.OP_PUBLIC));
+            list.add(new LOpModel(LOpModel.OP_PRIVATE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+            //报名学生名单没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+
+        }else if(Ctl.StandaloneLessonState.LIVE.equals(mData.state)){//已开课
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_SIGNUP));
+            list.add(new LOpModel(LOpModel.OP_PUBLIC));
+            list.add(new LOpModel(LOpModel.OP_PRIVATE));
+            //强行停止 没有
+//            list.add(new LOpModel(LOpModel.OP_));
+
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+            //报名学生名单没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+
+        }else if(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)){//已完课
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_PUBLIC));
+            list.add(new LOpModel(LOpModel.OP_PRIVATE));
+            list.add(new LOpModel(LOpModel.OP_RECREATE_LESSON));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+            //报名学生名单没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+
+        }else if(Ctl.StandaloneLessonState.REJECTED.equals(mData.state)){//审核失败
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+            list.add(new LOpModel(LOpModel.OP_RECREATE_LESSON));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)){//已取消
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+        }else if(Ctl.StandaloneLessonState.STOPPED.equals(mData.state)){//强制停止
+            list.add(new LOpModel(LOpModel.OP_LOOK));
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+        }else{//失效
+
+        }
+        return list;
+    }
+
+
+    public List<LOpModel> imSpeaker(){
+        List<LOpModel> list=new ArrayList<>();
+
+        if(Ctl.StandaloneLessonState.DRAFT.equals(mData.state)){//草稿
+
+        }else if(Ctl.StandaloneLessonState.PENDING_FOR_ACK.equals(mData.state)){//待确认
+            //同意邀请 没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            //  拒绝邀请 没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.ACKNOWLEDGED.equals(mData.state)){//已确认
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.PENDING_FOR_APPROVAL.equals(mData.state)){//待审核
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)){//待开课
+            //备课  还没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.LIVE.equals(mData.state)){//已开课
+            //备课  还没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+        }else if(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)){//已完课
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+        }else if(Ctl.StandaloneLessonState.REJECTED.equals(mData.state)){//审核失败
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        }else if(Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)){//已取消
+            //查看原因  没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+
+        }else if(Ctl.StandaloneLessonState.STOPPED.equals(mData.state)){//强制停止
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+        }else{//失效
+
+        }
+        return list;
+
+    }
+
+    public List<LOpModel> imStudent() {
+        List<LOpModel> list = new ArrayList<>();
+        if (Ctl.StandaloneLessonState.DRAFT.equals(mData.state)) {//草稿
+
+        } else if (Ctl.StandaloneLessonState.PENDING_FOR_ACK.equals(mData.state)) {//待确认
+
+        } else if (Ctl.StandaloneLessonState.ACKNOWLEDGED.equals(mData.state)) {//已确认
+
+        } else if (Ctl.StandaloneLessonState.PENDING_FOR_APPROVAL.equals(mData.state)) {//待审核
+
+        } else if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
+            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
+            list.add(new LOpModel(LOpModel.OP_DATABASE));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+        } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//已开课
+            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
+            list.add(new LOpModel(LOpModel.OP_DATABASE));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+
+        } else if (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)) {//已完课
+            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
+            list.add(new LOpModel(LOpModel.OP_DATABASE));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_APPLY));
+        } else if (Ctl.StandaloneLessonState.REJECTED.equals(mData.state)) {//审核失败
+
+        } else if (Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)) {//已取消
+            //查看原因 没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+
+        } else if (Ctl.StandaloneLessonState.STOPPED.equals(mData.state)) {//强制停止
+            //查看原因 没有
+//            list.add(new LOpModel(LOpModel.OP_));
+            list.add(new LOpModel(LOpModel.OP_DELETE));
+
+        } else {//失效
+
+        }
+        return list;
+
+    }
 
 
 }
