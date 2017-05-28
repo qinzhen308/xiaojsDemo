@@ -130,7 +130,7 @@
                         android:text="@string/time_table"/>
 
                 <TextView
-                        android:id="@+id/lesson_start_time"
+                        android:id="@+id/time_table_tips"
                         style="@style/LiveLessonRightEntrance"
                         android:hint="@string/arrange_class"/>
 
@@ -149,6 +149,7 @@
                         android:text="@string/class_student"/>
 
                 <TextView
+                        android:id="@+id/student_num_tips"
                         style="@style/LiveLessonRightEntrance"
                         android:hint="@string/please_select"/>
 
