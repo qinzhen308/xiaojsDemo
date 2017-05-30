@@ -20,7 +20,7 @@
             <TextView
                     android:id="@+id/lesson_name_text"
                     style="@style/LiveLessonRightEntrance"
-                    android:text="@string/please_input"
+                    android:hint="@string/please_input"
                     />
         </LinearLayout>
 
@@ -37,7 +37,7 @@
             <TextView
                     android:id="@+id/lesson_time"
                     style="@style/LiveLessonRightEntrance"
-                    android:text="@string/please_select"
+                    android:hint="@string/please_select"
                     />
         </LinearLayout>
 
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/please_set"
                     android:textColor="@color/font_create_lesson_content"
-                    android:textColorHint="@color/font_light_gray"
+                    android:textColorHint="@color/subject_selected_blue"
                     style="@style/LessonText"
                     android:inputType="number"
                     android:maxLength="3"

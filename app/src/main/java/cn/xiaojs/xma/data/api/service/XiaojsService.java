@@ -46,6 +46,7 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
+import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
@@ -55,6 +56,7 @@ import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -360,6 +362,20 @@ public interface XiaojsService {
     //Modify Class
     @PATCH("/v1/ctl/classes/{class}/modify")
     Call<CLResponse> modifyClass(@Path("class") String classid, @Body ModifyClassParams params);
+
+    //Get Class Students
+    @GET("/v1/ctl/classes/{classes}/students/{pagination}")
+    Call<CollectionPage<StudentEnroll>> getClassStudents(@Path("classes") String classes,
+                                                         @Path("pagination") String pagination);
+
+    //Add Class Student
+    @PATCH("/v1/ctl/classes/{classes}/students")
+    Call<ResponseBody> addClassStudent(@Path("classes") String classes,
+                                       @Body ClassEnrollParams enrollParams);
+
+    //Remove Class Student
+    @DELETE("/v1/ctl/classes/{classes}/students")
+    Call<ResponseBody> removeClassStudent(@Path("classes") String classes, @Body String[] students);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

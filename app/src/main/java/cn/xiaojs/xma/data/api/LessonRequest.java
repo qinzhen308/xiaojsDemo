@@ -12,6 +12,7 @@ import cn.xiaojs.xma.model.AccessLesson;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CancelReason;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
@@ -32,6 +33,7 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
@@ -41,6 +43,7 @@ import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -303,6 +306,31 @@ public class LessonRequest extends ServiceRequest {
     public void modifyClass(String classid, ModifyClassParams params) {
         Call<CLResponse> call = getService().modifyClass(classid,params);
         enqueueRequest(APIType.MODIFY_CLASS, call);
+    }
+
+    public void getClassStudents(String classes, Pagination pagination) {
+
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(paginationJsonstr);
+        }
+
+
+        Call<CollectionPage<StudentEnroll>> call = getService().getClassStudents(classes,
+                paginationJsonstr);
+        enqueueRequest(APIType.GET_CLASS_STUDENTS, call);
+    }
+
+    public void addClassStudent(String classId, ClassEnrollParams enrollParams) {
+        Call<ResponseBody> call = getService().addClassStudent(classId, enrollParams);
+        enqueueRequest(APIType.ADD_CLASS_STUDENTS,call);
+
+    }
+
+    public void removeClassStudent(String classid, String[] students) {
+        Call<ResponseBody> call = getService().removeClassStudent(classid, students);
+        enqueueRequest(APIType.REMOVE_CLASS_STUDENT,call);
     }
 
 }

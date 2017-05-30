@@ -15,10 +15,12 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLResponse;
+import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
@@ -76,9 +78,13 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.lay_material:
                 //TODO 资料库
+                //databank();
                 break;
             case R.id.lay_student:
-                //TODO 学生
+                //学生
+                Intent i = new Intent(this,StudentsListActivity.class);
+                i.putExtra(StudentsListActivity.EXTRA_CLASS,classId);
+                startActivity(i);
                 break;
             case R.id.lay_qrcode:
                 //TODO 二维码
@@ -86,6 +92,15 @@ public class ClassInfoActivity extends BaseActivity {
         }
 
 
+    }
+
+    //资料库
+    private void databank() {
+//        Intent intent = new Intent(this, ClassMaterialActivity.class);
+//        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
+//        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.getId());
+//        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.getTitle());
+//        mContext.startActivity(intent);
     }
 
     private void bingView(ClassInfo info) {

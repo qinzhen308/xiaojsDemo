@@ -22,9 +22,15 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.ClassEnroll;
+import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.home.MomentDetailActivity;
 import cn.xiaojs.xma.util.VerifyUtils;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/5/18.
@@ -32,7 +38,12 @@ import cn.xiaojs.xma.util.VerifyUtils;
 
 public class ManualAddStudentActivity extends BaseActivity {
 
+    public static final String MANUAL_STUDENT_TYPE = "type";
     public static final String EXTRA_STUDENTS = "students";
+    public static final String EXTRA_CLASS_ID = "classid";
+
+
+    public static final int TYPE_ADD_ONE_ONLY = 0x1;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -52,6 +63,10 @@ public class ManualAddStudentActivity extends BaseActivity {
     @BindView(R.id.student_list)
     PullToRefreshSwipeListView studentsListView;
 
+
+    private int currentType;
+    private String classId;
+
     private boolean isEdit;
     private StudentsAdapter adapter;
 
@@ -63,7 +78,7 @@ public class ManualAddStudentActivity extends BaseActivity {
         initView();
     }
 
-    @OnClick({R.id.left_image, R.id.right_image2,R.id.add_btn, R.id.lesson_creation_tips_close})
+    @OnClick({R.id.left_image, R.id.right_image2, R.id.add_btn, R.id.lesson_creation_tips_close})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -75,15 +90,11 @@ public class ManualAddStudentActivity extends BaseActivity {
             case R.id.right_image2://确定 or 完成
                 if (isEdit) {
                     addNewStudent();
-                }else{
+                } else {
 
-                    if (adapter !=null) {
+                    if (adapter != null) {
                         ArrayList<StudentEnroll> studentEnrolls = (ArrayList<StudentEnroll>) adapter.getList();
-
-                        Intent i = new Intent();
-                        i.putParcelableArrayListExtra(EXTRA_STUDENTS,studentEnrolls);
-
-                        setResult(RESULT_OK, i);
+                        addCompleted(studentEnrolls);
                     }
 
 
@@ -106,20 +117,29 @@ public class ManualAddStudentActivity extends BaseActivity {
 
         tipsContentView.setText(R.string.add_student_tips);
 
-        ArrayList<StudentEnroll> students = getIntent().getParcelableArrayListExtra(EXTRA_STUDENTS);
 
-        if (students !=null && students.size() > 0) {
-            initAdapter(students);
-            showAddStatus();
-        }else {
+        currentType = getIntent().getIntExtra(MANUAL_STUDENT_TYPE, -1);
+
+        if (currentType == TYPE_ADD_ONE_ONLY) {
+            classId = getIntent().getStringExtra(EXTRA_CLASS_ID);
             showEditStatus();
+            setRightText(R.string.finish);
+        } else {
+            ArrayList<StudentEnroll> students = getIntent().getParcelableArrayListExtra(EXTRA_STUDENTS);
+
+            if (students != null && students.size() > 0) {
+                initAdapter(students);
+                showAddStatus();
+            } else {
+                showEditStatus();
+            }
         }
 
     }
 
     private void initAdapter(ArrayList<StudentEnroll> students) {
         if (adapter == null) {
-            adapter = new StudentsAdapter(this,studentsListView);
+            adapter = new StudentsAdapter(this, studentsListView);
             adapter.setList(students);
             studentsListView.setAdapter(adapter);
             studentsListView.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -171,7 +191,7 @@ public class ManualAddStudentActivity extends BaseActivity {
 
 
         String name = nameEdit.getText().toString().trim();
-        if(TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(name)) {
             Toast.makeText(this, "学生姓名必须输入", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -180,23 +200,67 @@ public class ManualAddStudentActivity extends BaseActivity {
         studentEnroll.mobile = Long.parseLong(phone);
         studentEnroll.name = name;
 
-        if (adapter == null) {
-            ArrayList<StudentEnroll> studentEnrolls = new ArrayList<>();
-            studentEnrolls.add(studentEnroll);
-            initAdapter(studentEnrolls);
-        }else{
-            adapter.getList().add(studentEnroll);
-            adapter.notifyDataSetChanged();
+
+        if (currentType == TYPE_ADD_ONE_ONLY) {
+            submitAdd(studentEnroll);
+
+        } else {
+            if (adapter == null) {
+                ArrayList<StudentEnroll> studentEnrolls = new ArrayList<>();
+                studentEnrolls.add(studentEnroll);
+                initAdapter(studentEnrolls);
+            } else {
+                adapter.getList().add(studentEnroll);
+                adapter.notifyDataSetChanged();
+            }
+
+            showAddStatus();
         }
 
-        showAddStatus();
+    }
+
+    private void submitAdd(StudentEnroll studentEnroll) {
+
+        final ArrayList<StudentEnroll> studentEnrolls = new ArrayList<>(1);
+
+        ClassEnrollParams enrollParams = new ClassEnrollParams();
+
+        ClassEnroll classEnroll = new ClassEnroll();
+
+        studentEnrolls.add(studentEnroll);
+        classEnroll.students = studentEnrolls;
+        enrollParams.enroll = classEnroll;
+
+        showProgress(true);
+        LessonDataManager.addClassStudent(this, classId, enrollParams, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+                cancelProgress();
+
+                addCompleted(studentEnrolls);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(ManualAddStudentActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addCompleted(ArrayList<StudentEnroll> studentEnrolls) {
+        Intent i = new Intent();
+        i.putParcelableArrayListExtra(EXTRA_STUDENTS, studentEnrolls);
+        setResult(RESULT_OK, i);
+        finish();
     }
 
 
-    public class StudentsAdapter extends AbsSwipeAdapter<StudentEnroll,StudentsAdapter.Holder> {
+    public class StudentsAdapter extends AbsSwipeAdapter<StudentEnroll, StudentsAdapter.Holder> {
 
         public StudentsAdapter(Context context, PullToRefreshSwipeListView listView) {
-            super(context,listView);
+            super(context, listView);
         }
 
         @Override
@@ -207,7 +271,7 @@ public class ManualAddStudentActivity extends BaseActivity {
 
         @Override
         protected View createContentView(int position) {
-            return LayoutInflater.from(mContext).inflate(R.layout.layout_student_name_num_item,null);
+            return LayoutInflater.from(mContext).inflate(R.layout.layout_student_name_num_item, null);
         }
 
         @Override
@@ -227,7 +291,7 @@ public class ManualAddStudentActivity extends BaseActivity {
 
         @Override
         protected void onSwipeDelete(int position) {
-           super.onSwipeDelete(position);
+            super.onSwipeDelete(position);
         }
 
         class Holder extends BaseHolder {

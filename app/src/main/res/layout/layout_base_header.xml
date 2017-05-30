@@ -52,7 +52,7 @@
             android:layout_centerInParent="true"
             android:paddingBottom="@dimen/px16"
             android:textSize="@dimen/font_30px"
-            android:textColor="@color/font_black"/>
+            android:textColor="@color/main_blue"/>
 
     <ImageView
             android:id="@+id/right_image"

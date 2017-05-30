@@ -15,6 +15,7 @@ import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CancelReason;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
@@ -29,6 +30,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
@@ -38,6 +40,7 @@ import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
 
@@ -547,4 +550,59 @@ public class LessonDataManager {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClass(classid, params);
     }
+
+
+    /**Returns the students taught by an classes .
+     *
+     * @param context
+     * @param classes
+     * @param pagination
+     * @param callback
+     */
+    public static void getClassStudents(Context context,
+                                 String classes,
+                                 Pagination pagination,
+                                 APIServiceCallback<CollectionPage<StudentEnroll>> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassStudents(classes, pagination);
+
+    }
+
+    /**
+     * Import students from a standaloneLesson or class, or enrolled students to the class.
+     * @param context
+     * @param classId
+     * @param enrollParams
+     * @param callback
+     */
+    public static void addClassStudent(Context context,
+                                       String classId,
+                                       ClassEnrollParams enrollParams,
+                                       APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.addClassStudent(classId, enrollParams);
+
+    }
+
+
+    /**
+     * Remove enrolled students from the Class.
+     * @param context
+     * @param classid
+     * @param students
+     * @param callback
+     */
+    public static void removeClassStudent(Context context,
+                                          String classid,
+                                          String[] students,
+                                          APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.removeClassStudent(classid, students);
+
+    }
+
+
 }

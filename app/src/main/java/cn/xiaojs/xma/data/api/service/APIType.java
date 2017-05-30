@@ -176,5 +176,8 @@ public class APIType {
     public static final int CHECK_OVERLAP = 103;
     public static final int GET_CLASS = 104;
     public static final int MODIFY_CLASS = 105;
+    public static final int GET_CLASS_STUDENTS = 106;
+    public static final int ADD_CLASS_STUDENTS = 107;
+    public static final int REMOVE_CLASS_STUDENT = 108;
 
 }

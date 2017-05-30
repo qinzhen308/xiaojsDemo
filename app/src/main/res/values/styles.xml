@@ -134,7 +134,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/font_26px</item>
         <item name="android:textColor">@color/font_create_lesson_content</item>
-        <item name="android:textColorHint">@color/font_light_gray</item>
+        <item name="android:textColorHint">@color/subject_selected_blue</item>
         <item name="android:background">@null</item>
         <item name="android:lines">1</item>
     </style>
@@ -144,7 +144,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/font_create_lesson_content</item>
-        <item name="android:textColorHint">@color/font_light_gray</item>
+        <item name="android:textColorHint">@color/subject_selected_blue</item>
         <item name="android:drawableRight">@drawable/ic_entrance</item>
         <item name="android:drawablePadding">@dimen/px22</item>
         <item name="android:gravity">right</item>
