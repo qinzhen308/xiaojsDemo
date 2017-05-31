@@ -225,6 +225,12 @@ public class Errors {
     // Action not found.
     public static final String ACTION_NOT_FOUND = "0xA1000005";
 
+    // Live streaming already claimed.
+    public static final String STREAM_ALREADY_CLAIMED = "0x30000007";
+
+    // Somebody already claimed to on live.
+    public static final String SOMEBODY_ALREADY_CLAIMED = "0x30000011";
+
     //endregion
 
 

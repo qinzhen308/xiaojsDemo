@@ -495,6 +495,7 @@
     <string name="cr_talk_discussion">教室交流</string>
     <string name="cr_save_edit">保存图片编辑</string>
     <string name="cr_save_edit_desc">是否保存对当前图片的编辑?</string>
+    <string name="cr_individual_end">直播秀已结束，点击播放按钮可再次直播秀</string>
 
     <!-- 社交-->
     <string name="contact">联系人</string>
@@ -856,5 +857,16 @@
     <string name="empty_tips">空空如也～</string>
     <string name="number_lesson">%1$d节课</string>
     <string name="number_student">%1$d人</string>
+
+    <string name="no_need_enroll">无需报名</string>
+    <string name="student_need_enroll_or_not">学生是否需要报名</string>
+    <string name="living_paly_back">直播回放</string>
+    <string name="living_paly_back_tips">自动被录像，视频将保存到您的个人资料库，并且可以回放</string>
+    <string name="enroll_result">报名结果</string>
+    <string name="enroll_result_ok">您已报名成功！</string>
+    <string name="join_result_ok">您已添加到我的班课！</string>
+    <string name="enroll_result_ok_tips">现在你可以进入教室体验，与老师、同学们进行互动，也可以进行直播哦～</string>
+    <string name="look_class_lesson">查看我的班课</string>
+    <string name="want_to_learn_num">%1$d人学</string>
 
 </resources>

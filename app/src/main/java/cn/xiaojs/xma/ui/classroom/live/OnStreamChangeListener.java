@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.talk;
+package cn.xiaojs.xma.ui.classroom.live;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,13 +9,27 @@ package cn.xiaojs.xma.ui.classroom.talk;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/3/14
+ * Date:2017/3/20
  * Desc:
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 
-public interface OnTalkMsgListener {
-    public void onTalkMsgReceived(TalkItem talkItem);
+public interface OnStreamChangeListener {
+    /**
+     * 当流已经开始
+     */
+    public void onStreamStarted(int type, Object extra);
+
+    /**
+     * 当前流已经暂停
+     */
+    public void onStreamStopped(int type, Object extra);
+
+    /**
+     * 当流的尺寸发生变化
+     */
+    public void onStreamSizeChanged(BaseMediaView v, int w, int h);
+
 }

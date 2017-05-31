@@ -25,6 +25,7 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.OnImeBackListener;
+import cn.xiaojs.xma.ui.widget.ClosableEditDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -77,11 +78,11 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new Dialog(mContext, R.style.CommonDialog);
-        dialog.setCanceledOnTouchOutside(true);
-
         mMsgInputLayout = createView();
+        Dialog dialog = new ClosableEditDialog(mContext, R.style.CommonDialog, mMsgInputEdt);
+        dialog.setCanceledOnTouchOutside(true);
         Window dialogWindow = dialog.getWindow();
+        dialogWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         //set attributes
         dialogWindow.setWindowAnimations(R.style.BottomSheetAnim);
@@ -102,19 +103,10 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
             }
         });
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
-            }
-        });
-
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    mMsgInputLayout.setVisibility(View.GONE);
-                    XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
                     MsgInputFragment.this.dismiss();
                 }
                 return false;
@@ -124,21 +116,7 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
         mMsgInputEdt.setOnImeBackListener(new OnImeBackListener() {
             @Override
             public void onImeBackPressed() {
-                mMsgInputLayout.setVisibility(View.GONE);
-                XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
                 MsgInputFragment.this.dismiss();
-            }
-        });
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (mMsgInputLayout != null) {
-                    mMsgInputLayout.setVisibility(View.GONE);
-                    XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
-                } else {
-                    XjsUtils.hideIMM(mContext);
-                }
             }
         });
 
@@ -151,12 +129,6 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
         mMsgSendBtn = (TextView) view.findViewById(R.id.msg_send);
         mMsgSendBtn.setOnClickListener(this);
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
     }
 
     @Override

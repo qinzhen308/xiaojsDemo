@@ -37,6 +37,9 @@ public class SocketManager {
 
     private final static int MSG_ON_CALLBACK = 100;
     private final static int MSG_EMIT_CALLBACK = 101;
+    private final static int MSG_TIME_OUT = 102;
+
+    private final static int TIME_OUT = 10000; //ms
 
     private static Socket mSocket;
     private static Handler mHandler;
@@ -50,7 +53,7 @@ public class SocketManager {
                 IO.Options opts = new IO.Options();
                 opts.query = "secret=" + secret + "&" + "avc={\"video\":" + videoSupported + ",\"audio\":" + audioSupported + "}"
                 + "&" + "forcibly="+forceStr;
-                opts.timeout = 10000; //ms
+                opts.timeout = TIME_OUT; //ms
                 opts.transports = new String[]{"websocket"};
                 mSocket = IO.socket(getClassroomSocketUrl(context, ticket), opts);
             } catch (URISyntaxException e) {

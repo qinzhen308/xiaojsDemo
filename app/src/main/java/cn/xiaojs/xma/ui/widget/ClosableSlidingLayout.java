@@ -429,6 +429,43 @@ public class ClosableSlidingLayout extends FrameLayout {
         mSlideOrientation = slideOrientation;
     }
 
+    /**
+     * 手动开启关闭动画
+     */
+    public void startCloseAnim(MotionEvent event, int slideOrientation) {
+        View view = getChildAt(0);
+        if (view != null && mDragHelper != null) {
+            mDragHelper.captureChildView(view, 0);
+            mDragHelper.processTouchEvent(event);
+
+            height = view.getHeight();
+            top = view.getTop();
+            width = view.getWidth();
+            left = view.getLeft();
+
+            int finalTop = 0;
+            int finalLeft = 0;
+            switch (slideOrientation) {
+                case SLIDE_FROM_TOP_TO_BOTTOM:
+                    finalTop = top + height;
+                    mDragHelper.smoothSlideViewTo(view, 0, finalTop);
+                    break;
+                case SLIDE_FROM_BOTTOM_TO_TOP:
+                    finalTop = -(top + height);
+                    mDragHelper.smoothSlideViewTo(view, 0, finalTop);
+                    break;
+                case SLIDE_FROM_LEFT_TO_RIGHT:
+                    finalLeft = left + width;
+                    mDragHelper.smoothSlideViewTo(view, finalLeft, 0);
+                    break;
+                case SLIDE_FROM_RIGHT_TO_LEFT:
+                    finalLeft = -(left + width);
+                    mDragHelper.smoothSlideViewTo(view, -finalLeft, 0);
+                    break;
+            }
+        }
+    }
+
     protected boolean isHorizontalScroll() {
         return mSlideOrientation == SLIDE_FROM_LEFT_TO_RIGHT || mSlideOrientation == SLIDE_FROM_RIGHT_TO_LEFT;
     }

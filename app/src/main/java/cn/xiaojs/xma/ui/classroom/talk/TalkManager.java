@@ -62,9 +62,18 @@ public class TalkManager {
     private String mTicket;
     private String mMyAccountId;
 
+    private final Object MSG_COUNT_LOCK = new Object();
+    private List<TalkItem> mReceivedTalkMsg;
+    private Map<String, Integer> mPeerTalkUnreadMsgCountMap; //个人未读消息
+    private int mMultiTalkUnreadMsgCount; //教室交流未读消息
+    private String mPeekTalkingAccount; //当account不为null时，是一对一聊天, 当为null时，就是教室交流
+    private boolean mFullscreenMultiTalkVisible = true; //全屏模式时教室交流是否显示
+
     private TalkManager() {
         mPeerTalkMsgAdapterMap = new HashMap<String, TalkMsgAdapter>();
         mOnTalkMsgReceiveListeners = new ArrayList<OnTalkMsgReceived>();
+        mPeerTalkUnreadMsgCountMap = new HashMap<String, Integer>();
+        mReceivedTalkMsg = new ArrayList<TalkItem>();
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
     }
 
@@ -186,6 +195,18 @@ public class TalkManager {
             mOnTalkMsgReceiveListeners = null;
         }
 
+        if (mPeerTalkUnreadMsgCountMap != null) {
+            mPeerTalkUnreadMsgCountMap.clear();
+            mPeerTalkUnreadMsgCountMap = null;
+        }
+
+        if (mReceivedTalkMsg != null) {
+            mReceivedTalkMsg.clear();
+            mReceivedTalkMsg = null;
+        }
+
+        resetMultiTalkUnreadMsgCount();
+
         mInstance = null;
     }
 
@@ -214,10 +235,10 @@ public class TalkManager {
         }
     }
 
-    public void notifyMsgChanged(int criteria, TalkItem talkItem) {
+    public void notifyMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
         if (mOnTalkMsgReceiveListeners != null) {
             for (OnTalkMsgReceived listener : mOnTalkMsgReceiveListeners) {
-                listener.onMsgChanged(criteria, talkItem);
+                listener.onMsgChanged(receive, criteria, talkItem);
             }
         }
     }
@@ -245,26 +266,19 @@ public class TalkManager {
             talkItem.from.accountId = receiveBean.from;
             talkItem.from.name = getNameByAccountId(receiveBean.from);
 
-            int type = addTalkItemToAdapter(talkItem, receiveBean.to);
-            notifyMsgChanged(type, talkItem);
-            //TODO update unread message
-            /*if (mOnTalkMsgListener != null) {
-                mOnTalkMsgListener.onTalkMsgReceived(talkItem);
-                if (mDrawerOpened) {
-                    if ((mPeerTalkAccountId == null && talkItem.from.accountId != null) || (mPeerTalkAccountId != null &&
-                            !mPeerTalkAccountId.equals(talkItem.from.accountId))) {
-                        updateUnreadMsgCount(criteria, talkItem);
-                    }
-                } else {
-                    updateUnreadMsgCount(criteria, talkItem);
-                }
-            }*/
+            String account = receiveBean.to != null ? receiveBean.to : receiveBean.from;
+            int type = addTalkItemToAdapter(talkItem, account);
+            //update unread msg count
+            updateUnreadCount(type, talkItem);
+            //notify msg change
+            notifyMsgChanged(true, type, talkItem);
         } catch (Exception e) {
 
         }
     }
 
     //==============================send img====================================
+
     /**
      * 发送图片(教室交流:消息模式和全屏模式)
      */
@@ -288,8 +302,8 @@ public class TalkManager {
     //==============================send img====================================
 
 
-
     //==============================send text====================================
+
     /**
      * 发送文本(教室交流:消息模式和全屏模式)
      */
@@ -326,6 +340,27 @@ public class TalkManager {
             return;
         }
 
+        String to = accountId;
+        if (accountId == null) {
+            switch (criteria) {
+                case Communications.TalkType.OPEN:
+                    to = String.valueOf(Communications.TalkType.OPEN);
+                    break;
+                case Communications.TalkType.FACULTY:
+                    to = String.valueOf(Communications.TalkType.FACULTY);
+                    break;
+                default:
+                    to = String.valueOf(Communications.TalkType.OPEN);
+                    break;
+            }
+        } else {
+            try {
+                to = accountId;
+            } catch (Exception e) {
+
+            }
+        }
+
         final TalkItem talkItem = new TalkItem();
         //file myself info
         fillMyselfInfo(talkItem);
@@ -333,7 +368,7 @@ public class TalkManager {
         talkItem.body = new TalkItem.TalkContent();
         talkItem.body.text = text;
         talkItem.body.contentType = contentType;
-        talkItem.to = accountId;
+        talkItem.to = to;
 
         long sendTime = System.currentTimeMillis();
         talkItem.time = sendTime;
@@ -345,25 +380,7 @@ public class TalkManager {
         talkBean.body.text = text;
         talkBean.body.contentType = contentType;
         talkBean.time = sendTime;
-        if (accountId == null) {
-            switch (criteria) {
-                case Communications.TalkType.OPEN:
-                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
-                    break;
-                case Communications.TalkType.FACULTY:
-                    talkBean.to = String.valueOf(Communications.TalkType.FACULTY);
-                    break;
-                default:
-                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
-                    break;
-            }
-        } else {
-            try {
-                talkBean.to = accountId;
-            } catch (Exception e) {
-
-            }
-        }
+        talkBean.to = to;
 
         if (talkBean != null) {
             String event = Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK);
@@ -380,9 +397,9 @@ public class TalkManager {
                         if (talkResponse != null && talkResponse.result) {
                             int type = addTalkItemToAdapter(talkItem, talkBean.to);
                             if (type == TYPE_MSG_MUlTI_TAlk || type == TYPE_FULL_SCREEN_MUlTI_TAlk) {
-                                notifyMsgChanged(talkType, talkItem);
+                                notifyMsgChanged(false, talkType, talkItem);
                             } else {
-                                notifyMsgChanged(type, talkItem);
+                                notifyMsgChanged(false, type, talkItem);
                             }
                         } else {
                             //TODO send failure
@@ -396,10 +413,10 @@ public class TalkManager {
         }
     }
 
-    private int addTalkItemToAdapter(TalkItem talkItem, String to) {
+    private int addTalkItemToAdapter(TalkItem talkItem, String accountId) {
         int type = TYPE_PEER_TALK;
         try {
-            int criteria = Integer.parseInt(to);
+            int criteria = Integer.parseInt(accountId);
             type = getTalkType(criteria);
         } catch (NumberFormatException e) {
             type = TYPE_PEER_TALK;
@@ -408,18 +425,18 @@ public class TalkManager {
         //update all adapters
         if (type == TYPE_MSG_MUlTI_TAlk || type == TYPE_FULL_SCREEN_MUlTI_TAlk) {
             //multi talk
-            AbsChatAdapter adapter = getAdapter(TYPE_MSG_MUlTI_TAlk, to);
+            AbsChatAdapter adapter = getAdapter(TYPE_MSG_MUlTI_TAlk, accountId);
             if (adapter != null) {
                 adapter.add(talkItem);
             }
 
             //fullscreen multi talk
-            AbsChatAdapter fcAdapter = getAdapter(TYPE_FULL_SCREEN_MUlTI_TAlk, to);
+            AbsChatAdapter fcAdapter = getAdapter(TYPE_FULL_SCREEN_MUlTI_TAlk, accountId);
             if (fcAdapter != null) {
                 fcAdapter.add(talkItem);
             }
         } else {
-            AbsChatAdapter adapter = getAdapter(type, to);
+            AbsChatAdapter adapter = getAdapter(type, accountId);
             if (adapter != null) {
                 adapter.add(talkItem);
             }
@@ -467,7 +484,127 @@ public class TalkManager {
         return accountId;
     }
 
+    /**
+     * 更新未读消息统计数量
+     */
+    private void updateUnreadCount(int type, TalkItem talkItem) {
+        synchronized (MSG_COUNT_LOCK) {
+            if (!mReceivedTalkMsg.contains(talkItem)) {
+                mReceivedTalkMsg.add(talkItem);
+
+                if (type == TYPE_PEER_TALK) {
+                    setUnreadMsgCount2Adapter(talkItem);
+                } else if (type == TYPE_FULL_SCREEN_MUlTI_TAlk || type == TYPE_MSG_MUlTI_TAlk) {
+                    if (!TextUtils.isEmpty(mPeekTalkingAccount) || !mFullscreenMultiTalkVisible) {
+                        mMultiTalkUnreadMsgCount = mMultiTalkUnreadMsgCount + 1;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置未读消息到适配器
+     */
+    private void setUnreadMsgCount2Adapter(TalkItem talkItem) {
+        //个人聊天的时候
+        String accountId = talkItem.from.accountId;
+        if (mPeekTalkingAccount != null && mPeekTalkingAccount.equals(accountId)) {
+            return;
+        }
+        if (mPeerTalkUnreadMsgCountMap.containsKey(accountId)) {
+            int msgCount = mPeerTalkUnreadMsgCountMap.get(accountId);
+            mPeerTalkUnreadMsgCountMap.put(accountId, msgCount + 1);
+        } else {
+            mPeerTalkUnreadMsgCountMap.put(accountId, 1);
+        }
+
+        ArrayList<Attendee> attendees = ContactManager.getInstance().getAttendees().attendees;
+        if (attendees != null && !attendees.isEmpty()) {
+            for (Attendee attendee : attendees) {
+                if (mPeerTalkUnreadMsgCountMap.containsKey(attendee.accountId)) {
+                    int count = mPeerTalkUnreadMsgCountMap.get(attendee.accountId);
+                    attendee.unReadMsgCount = attendee.unReadMsgCount + count;
+                }
+            }
+
+            mPeerTalkUnreadMsgCountMap.clear();
+        }
+    }
+
+    public void resetMultiTalkUnreadMsgCount() {
+        mMultiTalkUnreadMsgCount = 0;
+    }
+
+    public int getMultiTalkUnreadMsgCount() {
+        return mMultiTalkUnreadMsgCount;
+    }
+
+    /**
+     * 如果消息过多，不建议考虑遍历集合中所有元素，建议维护一个变量值，考虑使用增量变化
+     * @return
+     */
+    public int getPeerTalkUnreadMsgCount() {
+        LiveCollection<Attendee> collection = ContactManager.getInstance().getAttendees();
+        if (collection == null) {
+            return 0;
+        }
+
+        ArrayList<Attendee> attendees = collection.attendees;
+        int peerCount = 0;
+        if (attendees != null && !attendees.isEmpty()) {
+            for (Attendee attendee : attendees) {
+                peerCount += attendee.unReadMsgCount;
+            }
+        }
+
+        return peerCount;
+    }
+
+    public int clearPeerTalkUnreadMsgCount(String accountId) {
+        if (TextUtils.isEmpty(accountId)) {
+            return getPeerTalkUnreadMsgCount();
+        }
+
+        LiveCollection<Attendee> collection = ContactManager.getInstance().getAttendees();
+        if (collection == null) {
+            return 0;
+        }
+
+        ArrayList<Attendee> attendees = collection.attendees;
+        int peerCount = 0;
+        if (attendees != null && !attendees.isEmpty()) {
+            for (Attendee attendee : attendees) {
+                if (accountId.equals(attendee.accountId)) {
+                    attendee.unReadMsgCount = 0;
+                }
+                peerCount += attendee.unReadMsgCount;
+            }
+        }
+
+        return peerCount;
+    }
+
+    public int getAllUnreadMsgCount() {
+        return mMultiTalkUnreadMsgCount + getPeerTalkUnreadMsgCount();
+    }
+
+    public void setPeekTalkingAccount(String account) {
+        mPeekTalkingAccount = account;
+    }
+
+    public String getPeekTalkingAccount() {
+        return mPeekTalkingAccount;
+    }
+
+    public void setFullscreenMultiTalkVisible(boolean visible) {
+        mFullscreenMultiTalkVisible = visible;
+    }
+
     public static interface OnTalkMsgReceived {
-        public void onMsgChanged(int criteria, TalkItem talkItem);
+        /**
+         * @param receive 是接收的消息，还是发送的消息
+         */
+        public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem);
     }
 }

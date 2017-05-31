@@ -74,7 +74,15 @@ public class PersonHomeLessonAdapter extends AbsSwipeAdapter<PersonHomeUserLesso
                     bean.schedule.getDuration() + "分钟";
             holder.time.setText(time);
         }
-        holder.enroll.setText((bean.enroll != null ? bean.enroll.current : 0) + "人报名");
+
+        if (bean.enroll !=null && bean.enroll.mandatory) {
+            holder.enroll.setText((bean.enroll != null ? bean.enroll.current : 0) + "人报名");
+        }else{
+            holder.enroll.setText(mContext.getString(R.string.want_to_learn_num,
+                    bean.enroll ==null? 0: bean.enroll.current));
+        }
+
+
         if (bean.fee != null && bean.fee.free) {
             holder.price.setText(R.string.free);
         } else if (bean.fee != null) {

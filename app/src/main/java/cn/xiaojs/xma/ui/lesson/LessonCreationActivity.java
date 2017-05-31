@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -89,8 +92,6 @@ public class LessonCreationActivity extends BaseActivity {
     TextView mLessonSubjectTv;
     @BindView(R.id.lesson_stu_count)
     EditTextDel mLessonStuCount;
-    @BindView(R.id.enroll_switcher)
-    ToggleButton mEnrollSwitcher;
     @BindView(R.id.teach_form)
     TextView mTeachFormTv;
     @BindView(R.id.charge_layout)
@@ -122,6 +123,18 @@ public class LessonCreationActivity extends BaseActivity {
     @BindView(R.id.publish_to_circle)
     TextView mPublishToCircleTv;
 
+    @BindView(R.id.mandatory_layout)
+    RadioGroup mandatoryGroupView;
+
+    @BindView(R.id.playback_btn)
+    TextView playbackBtn;
+
+    @BindView(R.id.mandatory_btn)
+    RadioButton mandatoryBtn;
+    @BindView(R.id.no_mandatory_btn)
+    RadioButton noMandatoryBtn;
+
+
     private boolean mEnrollWayOpen = false;
     private long mLessonStartTime;
     private Date mLessonsDate;
@@ -147,9 +160,9 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_image, R.id.lesson_creation_tips_close, R.id.lesson_subject, R.id.teach_form,
-            R.id.enroll_switcher, R.id.charge_way_switcher, R.id.by_total_price_title,
+            R.id.charge_way_switcher, R.id.by_total_price_title,
             R.id.by_duration_title, R.id.lesson_start_time, R.id.optional_info, R.id.sub_btn,
-            R.id.on_shelves, R.id.publish_personal_page, R.id.publish_to_circle})
+            R.id.on_shelves, R.id.publish_personal_page, R.id.publish_to_circle,R.id.playback_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -164,24 +177,24 @@ public class LessonCreationActivity extends BaseActivity {
             case R.id.teach_form:
                 selectTeachForm();
                 break;
-            case R.id.enroll_switcher:
-                boolean checked = ((ToggleButton) v).isChecked();
-                int visibility = checked ? View.VISIBLE : View.GONE;
-                mChargeLayout.setVisibility(visibility);
-                mStuCountLayout.setVisibility(visibility);
-                mStuCountDivide.setVisibility(visibility);
-                if (!checked) {
-                    mTeachFormTv.setEnabled(false);
-                    mTeachFormTv.setTextColor(mContentFont);
-                    mTeachFormTv.setText(getString(R.string.teach_form_lecture));
-                    mTeachFormTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                } else {
-                    mTeachFormTv.setEnabled(true);
-                    String s = mLessonStuCount.getText().toString();
-                    mLessonStuCount.setText(s);
-                    mTeachFormTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_entrance, 0);
-                }
-                break;
+//            case R.id.enroll_switcher:
+//                boolean checked = ((ToggleButton) v).isChecked();
+//                int visibility = checked ? View.VISIBLE : View.GONE;
+//                mChargeLayout.setVisibility(visibility);
+//                mStuCountLayout.setVisibility(visibility);
+//                mStuCountDivide.setVisibility(visibility);
+//                if (!checked) {
+//                    mTeachFormTv.setEnabled(false);
+//                    mTeachFormTv.setTextColor(mContentFont);
+//                    mTeachFormTv.setText(getString(R.string.teach_form_lecture));
+//                    mTeachFormTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//                } else {
+//                    mTeachFormTv.setEnabled(true);
+//                    String s = mLessonStuCount.getText().toString();
+//                    mLessonStuCount.setText(s);
+//                    mTeachFormTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_entrance, 0);
+//                }
+//                break;
             case R.id.charge_way_switcher:
                 openOrCloseChargeWay(v);
                 break;
@@ -198,22 +211,23 @@ public class LessonCreationActivity extends BaseActivity {
             case R.id.on_shelves:
 
                 if (mType == CourseConstant.TYPE_LESSON_EDIT) {
-                    Toast.makeText(mContext,"您不能编辑此项",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "您不能编辑此项", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (mOnShelvesTv.isSelected()) {
                     mOnShelvesTv.setSelected(false);
-                }else {
+                } else {
 
                     if (AccountDataManager.isVerified(this)) {
                         mOnShelvesTv.setSelected(true);
-                    }else{
-                        Toast.makeText(this,"您需要实名认证后，才能自动上架",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "您需要实名认证后，才能自动上架", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 break;
+            case R.id.playback_btn:
             case R.id.publish_personal_page:
             case R.id.publish_to_circle:
                 v.setSelected(!v.isSelected() ? true : false);
@@ -249,6 +263,24 @@ public class LessonCreationActivity extends BaseActivity {
         //TODO test
         mChargeWaySwitcher.setEnabled(false);
         mLessonNameEdt.setForbidEnterChar(true);
+
+
+        mandatoryGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+
+                if (checkedId == R.id.mandatory_btn) {
+                    //mChargeLayout.setVisibility(View.VISIBLE);
+                    mStuCountLayout.setVisibility(View.VISIBLE);
+                    mStuCountDivide.setVisibility(View.VISIBLE);
+                } else if (checkedId == R.id.no_mandatory_btn) {
+                    //mChargeLayout.setVisibility(View.GONE);
+                    mStuCountLayout.setVisibility(View.GONE);
+                    mStuCountDivide.setVisibility(View.GONE);
+                }
+            }
+        });
+
     }
 
     private void closeCourCreateTips() {
@@ -330,7 +362,13 @@ public class LessonCreationActivity extends BaseActivity {
         Enroll enroll = lessonDetail.getEnroll();
         if (enroll != null) {
             mLessonStuCount.setText(String.valueOf(enroll.max));
-            mEnrollSwitcher.setChecked(enroll.mandatory);
+            //mEnrollSwitcher.setChecked(enroll.mandatory);
+            if (enroll.mandatory) {
+                mandatoryBtn.setChecked(true);
+            }else {
+                noMandatoryBtn.setChecked(true);
+            }
+
         }
 
         mTeachFormTv.setText(BaseBusiness.getTeachingMode(mContext, lessonDetail.getMode()));
@@ -378,6 +416,9 @@ public class LessonCreationActivity extends BaseActivity {
 
         boolean shelves = lessonDetail.autoOnShelves;
         mOnShelvesTv.setSelected(shelves);
+
+        playbackBtn.setSelected(lessonDetail.recordable);
+
     }
 
     private void initOptionalInfo(LessonDetail lessonDetail) {
@@ -398,7 +439,8 @@ public class LessonCreationActivity extends BaseActivity {
     }
 
     private void initView() {
-        mEnrollSwitcher.setChecked(true);
+        //mEnrollSwitcher.setChecked(true);
+        mandatoryBtn.setChecked(true);
 
         mChargeWaySwitcher.setChecked(false);
         mChargeWayLayout.setVisibility(View.GONE);
@@ -408,11 +450,12 @@ public class LessonCreationActivity extends BaseActivity {
 
         if (AccountDataManager.isVerified(this)) {
             mOnShelvesTv.setSelected(true);
-        }else {
+        } else {
             mOnShelvesTv.setSelected(false);
         }
 
         mPublicTv.setSelected(true);
+        playbackBtn.setSelected(false);
 
         //get color
         mContentFont = getResources().getColor(R.color.font_create_lesson_content);
@@ -632,7 +675,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         Enroll enroll = new Enroll();
         enroll.max = limit;
-        enroll.mandatory = mEnrollSwitcher.isChecked();
+        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn? true: false;//mEnrollSwitcher.isChecked();
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
         Fee fee = new Fee();
@@ -683,20 +726,22 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }*/
 
-            String limitPeople = mLessonStuCount.getText().toString().trim();
-            if (TextUtils.isEmpty(limitPeople)) {
-                Toast.makeText(mContext, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            int limit = TextUtils.isEmpty(limitPeople) ? 0 : Integer.parseInt(limitPeople);
+            if (mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn) {
+                String limitPeople = mLessonStuCount.getText().toString().trim();
+                if (TextUtils.isEmpty(limitPeople)) {
+                    Toast.makeText(mContext, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                int limit = TextUtils.isEmpty(limitPeople) ? 0 : Integer.parseInt(limitPeople);
             /*if (limit > MAX_STUDENT_COUNT) {
                 String tips = String.format(getString(R.string.enroll_people_must_be_less_than), MAX_STUDENT_COUNT);
                 Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
                 return false;
             }*/
-            if (limit <= 0) {
-                Toast.makeText(mContext, R.string.lesson_people_must_be_positive, Toast.LENGTH_SHORT).show();
-                return false;
+                if (limit <= 0) {
+                    Toast.makeText(mContext, R.string.lesson_people_must_be_positive, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
 
             if (mChargeWaySwitcher.isChecked()) {
@@ -762,9 +807,12 @@ public class LessonCreationActivity extends BaseActivity {
 
         String studentNum = mLessonStuCount.getText().toString();
 
-        int limitPeople = TextUtils.isEmpty(studentNum) ? 0: Integer.parseInt(studentNum);
+        int limitPeople = TextUtils.isEmpty(studentNum) ? 0 : Integer.parseInt(studentNum);
         enroll.max = limitPeople;
-        enroll.mandatory = mEnrollSwitcher.isChecked();
+        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn? true: false;//mEnrollSwitcher.isChecked();
+        if (!enroll.mandatory) {
+            enroll.max = 9999999;
+        }
 
         Fee fee = new Fee();
         boolean isFree = !mChargeWaySwitcher.isChecked();
@@ -791,7 +839,6 @@ public class LessonCreationActivity extends BaseActivity {
         sch.setDuration(Integer.parseInt(mLessonDurationEdt.getText().toString()));
 
 
-
         LiveLesson ll = new LiveLesson();
         //String subject = mLessonSubjectTv.getText().toString();
         ll.setTitle(mLessonNameEdt.getText().toString());
@@ -806,6 +853,7 @@ public class LessonCreationActivity extends BaseActivity {
         ll.setSchedule(sch);
         ll.setAccessible(mPublicTv.isSelected());
         ll.setAutoOnShelves(mOnShelvesTv.isSelected());
+        ll.recordable = playbackBtn.isSelected();
         //mPublishToCircleTv.isSelected();
 
         //add optional 6
@@ -889,7 +937,7 @@ public class LessonCreationActivity extends BaseActivity {
             }
         } else if (requestCode == REQUEST_SELECT_SUBJECT) {
             if (data != null) {
-                mCompetency = (Competency)data.getSerializableExtra(KEY_COMPETENCY);
+                mCompetency = (Competency) data.getSerializableExtra(KEY_COMPETENCY);
                 CSubject subject = null;
                 if (mCompetency != null && (subject = mCompetency.getSubject()) != null) {
                     mLessonSubjectTv.setTextColor(mContentFont);

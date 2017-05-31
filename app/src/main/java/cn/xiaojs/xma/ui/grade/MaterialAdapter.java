@@ -108,8 +108,15 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         }
         holder.name.setText(bean.name);
         StringBuilder sb = new StringBuilder();
-        sb.append(XjsUtils.getSizeFormatText(bean.used));
-        sb.append("  ");
+
+        if (bean.used <= 0) {
+            sb.append("");
+        }else{
+            sb.append(XjsUtils.getSizeFormatText(bean.used));
+            sb.append("  ");
+        }
+
+
         sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
 
         holder.desc.setText(sb);

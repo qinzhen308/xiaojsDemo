@@ -36,6 +36,7 @@ import java.util.Map;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -46,7 +47,7 @@ import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
-import cn.xiaojs.xma.ui.classroom.live.OnStreamStateChangeListener;
+import cn.xiaojs.xma.ui.classroom.live.OnStreamChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
 import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
@@ -55,14 +56,23 @@ import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
+import cn.xiaojs.xma.ui.classroom.talk.ExitPeerTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 
-public abstract class ClassroomLiveFragment extends BaseFragment implements OnSettingChangedListener,
-        OnStreamStateChangeListener, BackPressListener, FrameCapturedCallback, OnPhotoDoodleShareListener {
+public abstract class ClassroomLiveFragment extends BaseFragment implements
+        OnSettingChangedListener,
+        OnStreamChangeListener,
+        BackPressListener,
+        FrameCapturedCallback,
+        OnPhotoDoodleShareListener,
+        ExitPeerTalkListener,
+        TalkManager.OnTalkMsgReceived {
+
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
+    protected final static int BTN_PRESS_INTERVAL = 1000; //ms
 
     protected CtlSession mCtlSession;
     protected String mTicket;
@@ -79,6 +89,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected long mIndividualStreamDuration;
     protected String mOriginSteamState;
     protected String mIndividualName;
+    protected StreamingResponse mIndividualResponseBody;
 
     private Map<String, FadeAnimListener> mFadeAnimListeners;
     private List<ViewPropertyAnimator> mViewPropertyAnimators;
@@ -90,9 +101,25 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     protected int mSlideViewWidth;
     protected int mSlideViewHeight;
 
-    protected Attendee mPeerTalkAttendee;
-
     protected Handler mHandler;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        TalkManager.getInstance().registerMsgReceiveListener(this);
+        ClassroomController.getInstance().setStackFragment(this);
+        ClassroomController.getInstance().registerBackPressListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        ClassroomController.getInstance().setStackFragment(null);
+        ClassroomController.getInstance().unregisterBackPressListener(this);
+        TalkManager.getInstance().unregisterMsgReceiveListener(this);
+    }
 
     @Override
     protected void init() {
@@ -114,10 +141,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         mClassroomController = ClassroomController.getInstance();
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
-
-        //DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        //mSlideViewWidth = (int) (0.4F * displayMetrics.heightPixels);
-        //mSlideViewHeight = displayMetrics.heightPixels - (int) (displayMetrics.widthPixels / Constants.VIDEO_VIEW_RATIO);
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
@@ -141,6 +164,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     }
 
     protected FadeAnimListener getAnimListener(String name) {
+        if (mFadeAnimListeners == null) {
+            return null;
+        }
+
         if (mFadeAnimListeners.containsKey(name)) {
             return mFadeAnimListeners.get(name);
         }
@@ -197,6 +224,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
     };
 
     protected void startAnimation(View view, String name, int animMode, int animSets, AnimData data) {
+        if (view == null) {
+            return;
+        }
+
         FadeAnimListener listener = getAnimListener(name);
         ViewPropertyAnimator viewPropertyAnimator = view.animate();
 
@@ -215,7 +246,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
             viewPropertyAnimator.scaleY(data.scaleY);
         }
 
-        viewPropertyAnimator.setListener(listener.with(view).play(animMode)).start();
+        if (listener != null) {
+            viewPropertyAnimator.setListener(listener.with(view).play(animMode)).start();
+        }
     }
 
     protected void hideAnim(View view, String key) {
@@ -248,19 +281,20 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
                 if (args != null && args.length > 0) {
                     String oldLiveSate = LiveCtlSessionManager.getInstance().getLiveState();
                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                    boolean needPublish = false;
                     if (response.result) {
-                        mOriginSteamState = oldLiveSate;
-                        mIndividualStreamDuration = response.finishOn;
-                        LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.INDIVIDUAL);
-                        setControllerBtnStyle(Live.LiveSessionState.INDIVIDUAL);
-                        if (XiaojsConfig.DEBUG) {
-                            Toast.makeText(mContext, "claim streaming succ", Toast.LENGTH_SHORT).show();
-                        }
-                        onIndividualPublishCallback(response);
+                        mIndividualResponseBody = response;
+                        needPublish = true;
                     } else {
-                        if (XiaojsConfig.DEBUG) {
-                            Toast.makeText(mContext, "claim streaming fail:" + response.details, Toast.LENGTH_SHORT).show();
+                        if (Errors.STREAM_ALREADY_CLAIMED.equals(response.ec)) {
+                            needPublish = true;
                         }
+                    }
+
+                    if (needPublish) {
+                        mOriginSteamState = oldLiveSate;
+                        mIndividualStreamDuration = mIndividualResponseBody != null ? mIndividualResponseBody.finishOn : 0;
+                        onIndividualPublishCallback(mIndividualResponseBody);
                     }
                 } else {
                     if (XiaojsConfig.DEBUG) {
@@ -429,6 +463,11 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
         }
     }
 
+    @Override
+    public void onExitTalk(int type) {
+
+    }
+
     protected void setControllerBtnStyle(String liveState) {
 
     }
@@ -483,24 +522,14 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements OnSe
             mTimeProgressHelper.release();
         }
 
+        if (mFullScreenTalkPresenter != null) {
+            mFullScreenTalkPresenter.release();
+        }
+
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        ClassroomController.getInstance().setStackFragment(this);
-        ClassroomController.getInstance().registerBackPressListener(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        ClassroomController.getInstance().setStackFragment(this);
-        ClassroomController.getInstance().unregisterBackPressListener(this);
     }
 
     /**

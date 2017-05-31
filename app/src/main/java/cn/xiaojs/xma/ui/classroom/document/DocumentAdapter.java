@@ -131,12 +131,14 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
             drawId = R.drawable.ic_picture;
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
             drawId = R.drawable.ic_pdf;
+        } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)) {
+            drawId = R.drawable.ic_video_mine;
         } else {
             drawId = R.drawable.ic_unknown;
         }
 
         Drawable myImage = mContext.getResources().getDrawable(drawId);
-        myImage.setBounds(0, 0 , drawSize, drawSize);
+        myImage.setBounds(0, 0, drawSize, drawSize);
         holder.fileName.setCompoundDrawables(myImage, null, null, null);
         //holder.fileName.setCompoundDrawablesWithIntrinsicBounds(drawId, 0, 0, 0);
         holder.action.setVisibility(bean.showAction ? View.VISIBLE : View.GONE);
@@ -274,8 +276,6 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
     /**
      * 删除文档，弹出选择确认
-     * @param data
-     * @param pos
      */
     private void showDelDocDialog(final List<LibDoc> data, final int pos) {
         if (mDelDocDialog == null) {

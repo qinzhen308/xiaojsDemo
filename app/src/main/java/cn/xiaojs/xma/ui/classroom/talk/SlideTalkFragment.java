@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -64,10 +65,15 @@ public class SlideTalkFragment extends BaseFragment {
     private int mFragmentHeight;
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
     protected View getContentView() {
-        mClosableSlidingLayout = (ClosableSlidingLayout) LayoutInflater.from(mContext)
-                .inflate(R.layout.fragment_classroom_sliding_talk, null);
-        return mClosableSlidingLayout;
+        View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_sliding_talk2, null);
+        mClosableSlidingLayout = (ClosableSlidingLayout) view.findViewById(R.id.sliding_layout);
+        return view;
     }
 
     @Override
@@ -92,8 +98,14 @@ public class SlideTalkFragment extends BaseFragment {
         mContent.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                SlideTalkFragment.this.getFragmentManager().popBackStack();
-                return false;
+                if (mClosableSlidingLayout != null) {
+                    mClosableSlidingLayout.startCloseAnim(event, ClosableSlidingLayout.SLIDE_FROM_TOP_TO_BOTTOM);
+                } else {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        SlideTalkFragment.this.getFragmentManager().popBackStack();
+                    }
+                }
+                return true;
             }
         });
     }
@@ -105,8 +117,10 @@ public class SlideTalkFragment extends BaseFragment {
 
         if (mAttendee != null) {
             mTalkPresenter.switchPeerTalk(mAttendee, false);
+            TalkManager.getInstance().setPeekTalkingAccount(mAttendee.accountId);
         } else {
             mTalkPresenter.switchMsgMultiTalk();
+            TalkManager.getInstance().setPeekTalkingAccount(null);
         }
     }
 
@@ -170,7 +184,14 @@ public class SlideTalkFragment extends BaseFragment {
         }
     }
 
-    private void sendMsg (String content) {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        TalkManager.getInstance().setPeekTalkingAccount(null);
+    }
+
+    private void sendMsg(String content) {
         if (TextUtils.isEmpty(content)) {
             return;
         }

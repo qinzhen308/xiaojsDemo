@@ -31,6 +31,7 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.util.XjsUtils;
 
 public class ContactManager {
     private static ContactManager mInstance;
@@ -97,7 +98,7 @@ public class ContactManager {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
                     if (liveCollection != null && liveCollection.attendees != null) {
-                        Collections.sort(liveCollection.attendees, mAttendsComparator);
+                        sort(liveCollection.attendees);
                     }
                     mLiveCollection = liveCollection;
 
@@ -169,6 +170,10 @@ public class ContactManager {
                     oldAttend.xa = join ? attendee.xa : 0;
                 }
 
+                if (mLiveCollection.attendees != null) {
+                    sort(mLiveCollection.attendees);
+                }
+
                 notifyAttendChanged(mLiveCollection.attendees, join);
             }
         }
@@ -235,6 +240,18 @@ public class ContactManager {
         }
 
        return mPeer2PeerSteamSet.contains(accountId);
+    }
+
+    private void sort(ArrayList<Attendee> attendees) {
+        if (attendees != null) {
+            Collections.sort(attendees, mAttendsComparator);
+            int rightOffset = attendees.size() - 1;
+            for (int i = attendees.size() - 1; i >= 0; i--) {
+                if (attendees.get(i).xa == 0) {
+                    XjsUtils.circularShiftRight(attendees, rightOffset--, i);
+                }
+            }
+        }
     }
 
 }

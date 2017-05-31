@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.live;
+package cn.xiaojs.xma.ui.classroom.talk;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -9,27 +9,11 @@ package cn.xiaojs.xma.ui.classroom.live;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/3/20
+ * Date:2017/5/24
  * Desc:
  *
  * ======================================================================================== */
 
-import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
-
-public interface OnStreamStateChangeListener {
-    /**
-     * 当流已经开始
-     */
-    public void onStreamStarted(int type, Object extra);
-
-    /**
-     * 当前流已经暂停
-     */
-    public void onStreamStopped(int type, Object extra);
-
-    /**
-     * 当流的尺寸发生变化
-     */
-    public void onStreamSizeChanged(BaseMediaView v, int w, int h);
-
+public interface ExitPeerTalkListener {
+    public void onExitTalk(int type);
 }

@@ -19,6 +19,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
@@ -40,7 +41,7 @@ import cn.xiaojs.xma.ui.widget.SheetFragment;
  *
  * ======================================================================================== */
 
-public class ContactFragment extends SheetFragment implements OnAttendItemClick, ContactManager.OnAttendsChangeListener {
+public class ContactFragment extends SheetFragment implements OnAttendItemClick, ContactManager.OnAttendsChangeListener, TalkManager.OnTalkMsgReceived {
     //contact
     @BindView(R.id.contact_view)
     View mContactView;
@@ -58,6 +59,7 @@ public class ContactFragment extends SheetFragment implements OnAttendItemClick,
         initParams();
 
         ContactManager.getInstance().registerAttendsChangeListener(this);
+        TalkManager.getInstance().registerMsgReceiveListener(this);
     }
 
     private void initParams() {
@@ -174,6 +176,7 @@ public class ContactFragment extends SheetFragment implements OnAttendItemClick,
     public void onDetach() {
         super.onDetach();
         ContactManager.getInstance().unregisterAttendsChangeListener(this);
+        TalkManager.getInstance().unregisterMsgReceiveListener(this);
     }
 
     @Override
@@ -189,6 +192,13 @@ public class ContactFragment extends SheetFragment implements OnAttendItemClick,
             }
         }
         mContactTitleTv.setText(Html.fromHtml(mContext.getString(R.string.cr_room_numbers, current, total)));
+        if (mContactBookAdapter != null) {
+            mContactBookAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
         if (mContactBookAdapter != null) {
             mContactBookAdapter.notifyDataSetChanged();
         }

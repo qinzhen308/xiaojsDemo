@@ -21,10 +21,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
 import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.AVOptions;
@@ -33,11 +33,14 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.pili.pldroid.player.widget.PLVideoView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.live.OnStreamChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
 
 public class PlayerTextureView extends BaseMediaView {
     private static final int MESSAGE_ID_RECONNECTING = 0x01;
     private static final int MESSAGE_MEDIA_INFO_RENDERING_START = 0x02;
+    private static final int MESSAGE_STOP = 0X3;
+    private static final boolean RECYCLE_DEFAULT = false;
 
     private PLVideoTextureView mPlayer;
     private static final String TAG = "PlayerTextureView";
@@ -48,29 +51,41 @@ public class PlayerTextureView extends BaseMediaView {
     private long mRetryTime = 0;
     private PLMediaPlayer.OnInfoListener mOnInfoWrapperListener;
     private int mIsLiveStreaming = 1; // 1:live  0:video
+    private boolean mRecycleOnPauseOrStop = RECYCLE_DEFAULT; //在暂停/停止时是否回收mPlayer
+    private int mRatio;
+    protected OnStreamChangeListener mStreamListener;
 
     public PlayerTextureView(Context context) {
         super(context);
-        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, null);
+        intiParams(null);
     }
 
     public PlayerTextureView(Context context, int ratio) {
         super(context);
-        init(ratio, null);
+        mRatio = ratio;
+        intiParams(null);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, attrs);
+        intiParams(attrs);
     }
 
     public PlayerTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(PLVideoView.ASPECT_RATIO_FIT_PARENT, attrs);
+        intiParams(attrs);
     }
 
     public void setPLMediaPlayerInfoListener(PLMediaPlayer.OnInfoListener infoListener) {
         mOnInfoWrapperListener = infoListener;
+    }
+
+    public void setRecycleOnPause(boolean recycle) {
+        mRecycleOnPauseOrStop = recycle;
+    }
+
+    public void setOnStreamStateChangeListener(OnStreamChangeListener listener) {
+        mStreamListener = listener;
     }
 
     @Override
@@ -102,23 +117,40 @@ public class PlayerTextureView extends BaseMediaView {
             case MESSAGE_MEDIA_INFO_RENDERING_START:
                 showLoading(false);
                 break;
+            case MESSAGE_STOP:
+                resetPlayer();
+                removeViewAt(0);
+                mPlayer = null;
+                if (mHandler != null) {
+                    mHandler.removeCallbacksAndMessages(null);
+                }
+                break;
         }
     }
 
-    private void init(int ratio, AttributeSet attrs) {
+
+    private void intiParams(AttributeSet attrs) {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PlayerTextureView);
         if (a != null) {
             mIsLiveStreaming = a.getInteger(R.styleable.PlayerTextureView_play_mode, 1);
+            mRecycleOnPauseOrStop = a.getBoolean(R.styleable.PlayerTextureView_recycle_player, RECYCLE_DEFAULT);
             a.recycle();
         }
 
-        mPlayer.setBufferingIndicator(mLoadingLayout);
-        //showLoading(true);
-        setConfigs(ratio);
-        //setBackgroundResource(R.drawable.common_white_bg_corner);
+        setConfigs();
     }
 
-    public void setConfigs(int ratio) {
+    private void checkPlayerValid() {
+        if (mPlayer == null) {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            params.gravity = Gravity.CENTER;
+            addView(initMediaView(), 0, params);
+            setConfigs();
+        }
+    }
+
+
+    public void setConfigs() {
         AVOptions options = new AVOptions();
 
         // the unit of timeout is ms
@@ -144,24 +176,48 @@ public class PlayerTextureView extends BaseMediaView {
         mPlayer.setOnCompletionListener(mOnCompletionListener);
         mPlayer.setOnErrorListener(mOnErrorListener);
         mPlayer.setOnPreparedListener(mPrepared);
-        mPlayer.setDisplayAspectRatio(ratio);
+        mPlayer.setDisplayAspectRatio(PLVideoView.ASPECT_RATIO_FIT_PARENT);
         mPlayer.setOnInfoListener(mOnInfoListener);
         mPlayer.setDisplayOrientation(0);
+    }
+
+    private void resetPlayer() {
+        if (mPlayer == null) {
+            return;
+        }
+
+        mPlayer.setAVOptions(null);
+        mPlayer.setOnCompletionListener(null);
+        mPlayer.setOnErrorListener(null);
+        mPlayer.setOnPreparedListener(null);
+        mPlayer.setOnInfoListener(null);
+
+        mPlayer.releaseSurfactexture();
+        mPlayer.removeAllViews();
+        mPlayer.destroyDrawingCache();
     }
 
     @Override
     public void setPath(String path) {
         super.setPath(path);
+        checkPlayerValid();
         mPlayer.setVideoPath(getPath());
         mPlayer.start();
     }
 
     @Override
     protected View initMediaView() {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
-        mPlayer = (PLVideoTextureView) v.findViewById(R.id.texture_player);
-        mPlayer.setDisplayOrientation(90);
-        return v;
+        mPlayer = (PLVideoTextureView) LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
+        mPlayer.setBufferingIndicator(mLoadingLayout);
+        mPlayer.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
+            @Override
+            public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int i2, int i3) {
+                if (mStreamListener != null) {
+                    mStreamListener.onStreamSizeChanged(PlayerTextureView.this, width, height);
+                }
+            }
+        });
+        return mPlayer;
     }
 
     @Override
@@ -171,6 +227,7 @@ public class PlayerTextureView extends BaseMediaView {
 
     @Override
     public void resume() {
+        checkPlayerValid();
         if (mPlayer != null && !mPlayer.isPlaying()) {
             mPlayer.start();
         }
@@ -186,6 +243,10 @@ public class PlayerTextureView extends BaseMediaView {
         }
         mResume = false;
         mIsPause = true;
+
+        if (mRecycleOnPauseOrStop) {
+            destroy();
+        }
     }
 
     @Override
@@ -195,25 +256,27 @@ public class PlayerTextureView extends BaseMediaView {
         }
         mResume = false;
         mIsPause = true;
+
+        if (mRecycleOnPauseOrStop) {
+            destroy();
+        }
     }
 
     @Override
     public void destroy() {
         stopInternal();
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        mHandler = null;
     }
 
     @Override
     public void mute() {
-        if (mIsMute) {
-            mPlayer.setVolume(1f, 1f);
-        } else {
-            mPlayer.setVolume(0f, 0f);
+        if (mPlayer != null) {
+            if (mIsMute) {
+                mPlayer.setVolume(1f, 1f);
+            } else {
+                mPlayer.setVolume(0f, 0f);
+            }
+            mIsMute = !mIsMute;
         }
-        mIsMute = !mIsMute;
     }
 
     private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
@@ -352,11 +415,20 @@ public class PlayerTextureView extends BaseMediaView {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    mPlayer.stopPlayback();
-                    mPlayer = null;
+                    try {
+                        if (mPlayer != null) {
+                            mPlayer.stopPlayback();
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    if (mHandler != null) {
+                        mHandler.sendEmptyMessage(MESSAGE_STOP);
+                    }
                 }
             }).start();
         }
+
     }
 
     @Override

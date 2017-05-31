@@ -75,10 +75,16 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
         switchTalkTab(TalkManager.TYPE_PEER_TALK, attendee.accountId);
     }
 
+    /**
+     * 切换到消息模式下的教室交流
+     */
     public void switchMsgMultiTalk() {
         switchTalkTab(TalkManager.TYPE_MSG_MUlTI_TAlk, null);
     }
 
+    /**
+     * 切换到全屏模式下的教室交流
+     */
     public void switchFullMultiTalk() {
         switchTalkTab(TalkManager.TYPE_FULL_SCREEN_MUlTI_TAlk, null);
     }
@@ -86,27 +92,27 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
     /**
      * 切换不同的talk tab
      */
-    public void switchTalkTab(int criteria, String accountId) {
-        switchTalkTab(criteria, accountId, null);
+    public void switchTalkTab(int type, String accountId) {
+        switchTalkTab(type, accountId, null);
     }
 
     /**
      * 切换不同的talk tab
      */
-    public void switchTalkTab(int criteria, String accountId, TalkItem talkItem) {
+    public void switchTalkTab(int type, String accountId, TalkItem talkItem) {
         AbsChatAdapter adapter = null;
-        mTalkCriteria = criteria;
-        switch (criteria) {
+        mTalkCriteria = type;
+        switch (type) {
             case TalkManager.TYPE_MSG_MUlTI_TAlk:
             case TalkManager.TYPE_FULL_SCREEN_MUlTI_TAlk:
             case TalkManager.TYPE_TEACHING_TALK:
-                adapter = TalkManager.getInstance().getChatAdapter(mContext, criteria, mTalkMsgLv);
+                adapter = TalkManager.getInstance().getChatAdapter(mContext, type, mTalkMsgLv);
                 if (adapter != null) {
                     mTalkMsgLv.setAdapter(adapter);
                 }
                 break;
             case TalkManager.TYPE_PEER_TALK:
-                adapter = TalkManager.getInstance().getChatAdapter(mContext, criteria, accountId, mTalkMsgLv);
+                adapter = TalkManager.getInstance().getChatAdapter(mContext, type, accountId, mTalkMsgLv);
                 if (adapter != null) {
                     mTalkMsgLv.setAdapter(adapter);
                 }
@@ -165,7 +171,7 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
                     } else if (type == OnImageClickListener.IMG_FROM_QINIU) {
                         try {
                             return Glide.with(mContext)
-                                    .load(ClassroomBusiness.getMediaUrl(key))
+                                    .load(ClassroomBusiness.getFileUrl(key))
                                     .asBitmap()
                                     .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                                     .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -238,7 +244,14 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
     }
 
     @Override
-    public void onMsgChanged(int criteria, TalkItem talkItem) {
-        switchTalkTab(mTalkCriteria, talkItem.to);
+    public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
+        //switchTalkTab(mTalkCriteria, receive ? talkItem.from.accountId : talkItem.to);
+        if (!receive) {
+            switchTalkTab(mTalkCriteria, talkItem.to);
+        }
+    }
+
+    public void release() {
+        TalkManager.getInstance().unregisterMsgReceiveListener(this);
     }
 }

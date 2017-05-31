@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -335,10 +336,11 @@ public class ClassroomController {
             return;
         }
         String mimeType = doc.mimeType != null ? doc.mimeType.toLowerCase() : "";
-        String url = ClassroomBusiness.getMediaUrl(doc.key);
+        String url = ClassroomBusiness.getFileUrl(doc.key);
         if (mimeType.startsWith(Collaboration.PictureMimeTypes.ALL)) {
             enterPhotoDoodle(url, listener);
-        } else if (mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
+        } else if (Collaboration.isStreaming(mimeType)
+                || mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
             enterVideoPlayPage(doc);
         } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
                 || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
@@ -346,7 +348,7 @@ public class ClassroomController {
             if (images != null) {
                 ArrayList<String> imgUrls = new ArrayList<String>();
                 for (LibDoc.ExportImg img : images) {
-                    imgUrls.add(ClassroomBusiness.getMediaUrl(img.name));
+                    imgUrls.add(ClassroomBusiness.getFileUrl(img.name));
                 }
                 enterPhotoDoodle(imgUrls, listener);
             } else {
@@ -360,11 +362,22 @@ public class ClassroomController {
     /**
      * 进入播放fragment
      */
-    public void enterPlayFragment(Bundle data) {
+    public void enterPlayFragment(Bundle data, boolean needExitCurr) {
+        if (mCurrStackFragment instanceof PlayFragment) {
+            return;
+        }
+
         if (mContext instanceof FragmentActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
             if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+            if (needExitCurr && mCurrStackFragment instanceof PublishFragment) {
+                ((ClassroomActivity) mContext).getSupportFragmentManager()
+                        .beginTransaction()
+                        .remove(mCurrStackFragment)
+                        .commit();
             }
 
             PlayFragment fragment = new PlayFragment();
@@ -381,6 +394,10 @@ public class ClassroomController {
      * 进入推流fragment
      */
     public void enterPublishFragment(Bundle data, boolean needExitCurr) {
+        if (mCurrStackFragment instanceof PublishFragment) {
+            return;
+        }
+
         if (mContext instanceof ClassroomActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
             if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -404,7 +421,7 @@ public class ClassroomController {
     }
 
     /**
-     * 退出横屏状态下的全屏
+     * 进入横屏状态下的全屏
      */
     public void enterLandFullScreen(boolean isPortrait, Activity activity) {
         if (isPortrait) {
@@ -478,6 +495,7 @@ public class ClassroomController {
      * 注册back键回调监听器
      */
     public void registerBackPressListener(BackPressListener listener) {
+        Log.i("aaa", "======register=========="+listener);
         if (listener != null) {
             mBackPressListeners.add(listener);
         }
@@ -487,6 +505,7 @@ public class ClassroomController {
      * 解注back键回调监听器
      */
     public void unregisterBackPressListener(BackPressListener listener) {
+        Log.i("aaa", "======unregister=========="+listener);
         if (listener != null) {
             mBackPressListeners.remove(listener);
         }
