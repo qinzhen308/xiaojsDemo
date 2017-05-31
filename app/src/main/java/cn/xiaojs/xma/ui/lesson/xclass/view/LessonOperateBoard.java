@@ -13,8 +13,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -50,7 +48,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     private final static int[] icons={
             R.drawable.ic_op_apply,R.drawable.ic_op_cancel_lesson,
             R.drawable.ic_op_cancel_submit,R.drawable.ic_op_class_info,
-            R.drawable.ic_op_database,R.drawable.ic_op_delete,
+            R.drawable.ic_op_database2,R.drawable.ic_op_delete,
             R.drawable.ic_op_edit,R.drawable.ic_op_enter,
             R.drawable.ic_op_enter_2,R.drawable.ic_op_look,
             R.drawable.ic_op_modify_time,R.drawable.ic_op_private,
@@ -58,7 +56,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_recreate_lesson,R.drawable.ic_op_schedule,
             R.drawable.ic_op_share,R.drawable.ic_op_signup,
             R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check,
-            R.drawable.ic_op_share2
+            R.drawable.ic_op_share2,R.drawable.ic_op_database2
     };
 
 
@@ -73,16 +71,16 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.string.lesson_op_recreate_lesson,R.string.lesson_op_schedule,
             R.string.lesson_op_share,R.string.lesson_op_signup,
             R.string.lesson_op_submit,R.string.lesson_op_cancel_check,
-            R.string.lesson_op_share
+            R.string.lesson_op_share,R.string.lesson_op_database
     };
 
     private OnDialogCloseListener mOnDismissListener;
 
     public final static List<LOpModel> commonOps=new ArrayList<>(4);
     static {
-        commonOps.add(new LOpModel(0));
-        commonOps.add(new LOpModel(4));
-        commonOps.add(new LOpModel(8));
+        commonOps.add(new LOpModel(LOpModel.OP_APPLY));
+        commonOps.add(new LOpModel(LOpModel.OP_DATABASE2));
+        commonOps.add(new LOpModel(LOpModel.OP_ENTER_2));
         commonOps.add(new LOpModel(LOpModel.OP_SHARE2));
     }
 
@@ -133,8 +131,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         mAdapter2.setList(opGroup2);
         recyclerview1.setAdapter(mAdapter1);
         recyclerview2.setAdapter(mAdapter2);
-
-
+        recyclerview1.setVisibility(View.GONE);
     }
 
 
@@ -156,6 +153,11 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         this.opGroup1 = ops;
         mAdapter1.setList(ops);
         mAdapter1.notifyDataSetChanged();
+        if(ArrayUtil.isEmpty(ops)){
+            recyclerview1.setVisibility(View.GONE);
+        }else {
+            recyclerview1.setVisibility(View.VISIBLE);
+        }
         return this;
     }
 
@@ -163,6 +165,11 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         this.opGroup2 = ops;
         mAdapter2.setList(ops);
         mAdapter2.notifyDataSetChanged();
+        if(ArrayUtil.isEmpty(ops)){
+            recyclerview2.setVisibility(View.GONE);
+        }else {
+            recyclerview2.setVisibility(View.VISIBLE);
+        }
         return this;
     }
 

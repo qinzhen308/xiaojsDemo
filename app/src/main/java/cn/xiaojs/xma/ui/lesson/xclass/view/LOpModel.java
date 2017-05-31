@@ -17,7 +17,6 @@ import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.ctl.CLesson;
-import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -32,7 +31,6 @@ import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.LessonScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -52,7 +50,7 @@ public class LOpModel {
     //撤销确认
     public static final int OP_CANCEL_SUBMIT=2;
     public static final int OP_CLASS_INFO=3;
-    public static final int OP_DATABASE=4;
+    public static final int OP_DATABASE2 =4;
     public static final int OP_DELETE=5;
     public static final int OP_EDIT=6;
     public static final int OP_ENTER=7;
@@ -71,6 +69,8 @@ public class LOpModel {
     public static final int OP_CANCEL_CHECK=19;
     //橘黄色的分享按钮
     public static final int OP_SHARE2=20;
+    //蓝色图标的资料库按钮
+    public static final int OP_DATABASE1=21;
 
     
     
@@ -100,7 +100,7 @@ public class LOpModel {
                     classInfo(context, ((CLesson) data).classInfo.id);
                 }
                 break;
-            case OP_DATABASE:
+            case OP_DATABASE2:
 //                enterDatabase(context);
                 if(data instanceof CLesson) {
                     databank(context,((CLesson) data).title ,((CLesson) data).id);
@@ -116,7 +116,8 @@ public class LOpModel {
                 }
                 break;
             case OP_ENTER:
-                enterSchedule(context);
+                if(data instanceof CLesson)
+                enterClass(context,((CLesson) data).classInfo.id);
                 break;
             case OP_ENTER_2:
                 enterSchedule(context);
@@ -137,6 +138,7 @@ public class LOpModel {
             case OP_RECREATE_LESSON:
                 break;
             case OP_SCHEDULE:
+                enterSchedule(context);
                 break;
             case OP_SHARE:
                 share(context);
@@ -153,6 +155,11 @@ public class LOpModel {
                 break;
             case OP_SHARE2:
                 share(context);
+                break;
+            case OP_DATABASE1:
+                if(data instanceof CLesson) {
+                    databank(context,((CLesson) data).title ,((CLesson) data).id);
+                }
                 break;
 
         }
@@ -354,9 +361,9 @@ public class LOpModel {
     }
 
     //进入教室
-    private void enterClass(Activity context,TeachLesson bean) {
+    private void enterClass(Activity context,String ticket) {
         Intent i = new Intent();
-        i.putExtra(Constants.KEY_TICKET, bean.getTicket());
+        i.putExtra(Constants.KEY_TICKET, ticket);
         i.setClass(context, ClassroomActivity.class);
         context.startActivity(i);
     }

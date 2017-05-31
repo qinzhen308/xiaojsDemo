@@ -190,20 +190,17 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     @OnClick(R.id.btn_more)
     public void onViewClicked() {
-        if(mData.classInfo==null){
+        if(Account.TypeName.STAND_ALONE_LESSON.equals(mData.type)){//公开课
             List<LOpModel> group1=new ArrayList<>();
             group1.addAll(LessonOperateBoard.getCommonOps());
-            new LessonOperateBoard(getContext()).setOpGroup1(group1).setOpGroup2(createMode()).maybe((Activity) getContext(),mData).show();
+            new LessonOperateBoard(getContext()).setOpGroup1(group1).setOpGroup2(createPublicLessonMode()).maybe((Activity) getContext(),mData).show();
         }else {
-            new LessonOperateBoard(getContext()).setOpGroup2(createMode()).maybe((Activity) getContext(),mData).show();
+            new LessonOperateBoard(getContext()).setOpGroup2(classLesson()).maybe((Activity) getContext(),mData).show();
         }
     }
 
-    public List<LOpModel> createMode(){
+    public List<LOpModel> createPublicLessonMode(){
         List<LOpModel> ops;
-        if(mData.classInfo!=null){
-            return classLesson();
-        }
         if(mData.owner!=null&&mData.owner.getId().equals(AccountPref.getAccountID(getContext())) ){//我是所有者，无论我是不是讲师
             ops=imOnwer();
         }else if (mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))){//我虽然不是所有者，但我是讲师
@@ -219,7 +216,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     public List<LOpModel> classLesson(){
         List<LOpModel> list=new ArrayList<>();
         list.add(new LOpModel(LOpModel.OP_SCHEDULE));
-        list.add(new LOpModel(LOpModel.OP_DATABASE));
+        list.add(new LOpModel(LOpModel.OP_DATABASE1));
         list.add(new LOpModel(LOpModel.OP_ENTER));
         list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
         return list;
@@ -372,20 +369,20 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
             list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
-            list.add(new LOpModel(LOpModel.OP_DATABASE));
+            list.add(new LOpModel(LOpModel.OP_DATABASE2));
             list.add(new LOpModel(LOpModel.OP_ENTER));
             list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_APPLY));
         } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//已开课
             list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
-            list.add(new LOpModel(LOpModel.OP_DATABASE));
+            list.add(new LOpModel(LOpModel.OP_DATABASE2));
             list.add(new LOpModel(LOpModel.OP_ENTER));
             list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_APPLY));
 
         } else if (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)) {//已完课
             list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
-            list.add(new LOpModel(LOpModel.OP_DATABASE));
+            list.add(new LOpModel(LOpModel.OP_DATABASE2));
             list.add(new LOpModel(LOpModel.OP_ENTER));
             list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_APPLY));
