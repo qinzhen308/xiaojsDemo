@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -746,6 +747,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     private void playOrPauseLesson() {
+        if (!ClassroomController.getInstance().isSocketConnected()) {
+            Toast.makeText(mContext, R.string.cr_connecting, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         //Prevent frequent clicks
         if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
             return;
@@ -851,5 +857,21 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             }
         }
 
+    }
+
+    @Override
+    public void onSocketConnectChanged(boolean connected) {
+        if (connected) {
+            String peekAccount = TalkManager.getInstance().getPeekTalkingAccount();
+            if (TextUtils.isEmpty(peekAccount)) {
+                mEmbedTalkFragment.updateMultiTalk();
+            } else {
+                mEmbedTalkFragment.updatePeerTalk(peekAccount);
+            }
+
+            if (mFullScreenTalkPresenter != null) {
+                mFullScreenTalkPresenter.switchFullMultiTalk();
+            }
+        }
     }
 }

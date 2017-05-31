@@ -18,7 +18,6 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
@@ -180,7 +179,7 @@ public class ClassroomActivity extends FragmentActivity {
                     if (XiaojsConfig.DEBUG) {
                         Log.i("aaa", "session: state=" + ctlSession.state + "   mode=" + ctlSession.mode + "   accessible="
                                 + ctlSession.accessible + "   psType=" + ctlSession.psType);
-                        Log.i("aaa", "session: entry=" + ctlSession.toString());
+                        //Log.i("aaa", "session: entry=" + ctlSession.toString());
                     }
 
                     if (!ctlSession.accessible) {
@@ -208,7 +207,7 @@ public class ClassroomActivity extends FragmentActivity {
      * @param forceConnect 是否强制链接
      * @param ctlSession   课程session
      */
-    private void onBootSessionSucc(boolean forceConnect, CtlSession ctlSession, boolean networkChanged) {
+    private void onBootSessionSucc(final boolean forceConnect, final CtlSession ctlSession, final boolean networkChanged) {
         if (Live.LiveSessionState.CANCELLED.equals(ctlSession.state)) {
             Toast.makeText(this, R.string.forbidden_enter_class_for_cancel, Toast.LENGTH_SHORT).show();
             //TODO
@@ -223,6 +222,9 @@ public class ClassroomActivity extends FragmentActivity {
         }
         //init global data
         LiveCtlSessionManager.getInstance().init(ctlSession, mTicket);
+        ContactManager.getInstance().init();
+        TalkManager.getInstance().init(ClassroomActivity.this, mTicket);
+
         //init socket
         if (!networkChanged) {
             initSocketIO(mTicket, ctlSession.secret, forceConnect);
@@ -233,6 +235,11 @@ public class ClassroomActivity extends FragmentActivity {
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
             SocketManager.reListener();
+        }
+
+        //init fragment
+        if (ClassroomController.getInstance().getStackFragment() == null) {
+            initFragment(mCtlSession);
         }
     }
 
@@ -296,9 +303,7 @@ public class ClassroomActivity extends FragmentActivity {
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mSktConnected = true;
 
-            ContactManager.getInstance().init();
-            TalkManager.getInstance().init(ClassroomActivity.this, mTicket);
-            initFragment(mCtlSession);
+            ClassroomController.getInstance().notifySocketConnectChanged(true);
         }
     };
 
@@ -473,6 +478,7 @@ public class ClassroomActivity extends FragmentActivity {
                 // have no active network
                 mSktConnected = false;
                 mNetworkState = ClassroomBusiness.NETWORK_NONE;
+                ClassroomController.getInstance().notifySocketConnectChanged(false);
 
                 //disconnect all socket
                 mNetworkDisconnected = true;

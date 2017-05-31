@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -48,6 +47,7 @@ import cn.xiaojs.xma.ui.classroom.page.OnSettingChangedListener;
 import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.page.SettingFragment;
 import cn.xiaojs.xma.ui.classroom.page.VideoPlayFragment;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactFragment;
 import cn.xiaojs.xma.ui.classroom.talk.SlideTalkFragment;
 import cn.xiaojs.xma.ui.classroom.talk.SlidingTalkDialogFragment;
@@ -73,6 +73,9 @@ public class ClassroomController {
     public static int MODE_FRAGMENT_PLAY_FULL_SCREEN = 1; //播放全屏模式
 
     private List<BackPressListener> mBackPressListeners;
+    private List<SocketManager.OnSocketListener> mOnSocketListeners;
+    private boolean mSocketConnected = false;
+
     private static ClassroomController mInstance;
 
     private CommonDialog mExitDialog;
@@ -85,6 +88,7 @@ public class ClassroomController {
     private ClassroomController(Context context) {
         mContext = context;
         mBackPressListeners = new ArrayList<BackPressListener>();
+        mOnSocketListeners = new ArrayList<SocketManager.OnSocketListener>();
     }
 
     public synchronized static void init(Context context) {
@@ -95,6 +99,9 @@ public class ClassroomController {
         mInstance = null;
         mBackPressListeners.clear();
         mBackPressListeners = null;
+
+        mOnSocketListeners.clear();
+        mOnSocketListeners = null;
     }
 
     public static synchronized ClassroomController getInstance() {
@@ -442,7 +449,6 @@ public class ClassroomController {
 
     /**
      * 是否是竖屏
-     * @return
      */
     public boolean isPortrait() {
         if (mContext instanceof ClassroomActivity) {
@@ -495,7 +501,6 @@ public class ClassroomController {
      * 注册back键回调监听器
      */
     public void registerBackPressListener(BackPressListener listener) {
-        Log.i("aaa", "======register=========="+listener);
         if (listener != null) {
             mBackPressListeners.add(listener);
         }
@@ -505,10 +510,46 @@ public class ClassroomController {
      * 解注back键回调监听器
      */
     public void unregisterBackPressListener(BackPressListener listener) {
-        Log.i("aaa", "======unregister=========="+listener);
         if (listener != null) {
             mBackPressListeners.remove(listener);
         }
+    }
+
+    /**
+     * 注册socket的连接监听器
+     */
+    public void registerSocketConnectListener(SocketManager.OnSocketListener listener) {
+        if (listener != null) {
+            mOnSocketListeners.add(listener);
+        }
+    }
+
+    /**
+     * 解注socket的连接监听器
+     */
+    public void unregisterSocketConnectListener(SocketManager.OnSocketListener listener) {
+        if (listener != null) {
+            mOnSocketListeners.remove(listener);
+        }
+    }
+
+    /**
+     * 通知socket连接变换
+     */
+    public void notifySocketConnectChanged(boolean connected) {
+        mSocketConnected = connected;
+        if (mOnSocketListeners != null) {
+            for (SocketManager.OnSocketListener listener : mOnSocketListeners) {
+                listener.onSocketConnectChanged(connected);
+            }
+        }
+    }
+
+    /**
+     * socket是否连接上了
+     */
+    public boolean isSocketConnected() {
+        return mSocketConnected;
     }
 
     /**
