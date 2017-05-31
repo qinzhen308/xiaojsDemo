@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -97,11 +98,14 @@ public class LessonFragment extends Fragment {
         getMonthData();
     }
 
-    @OnClick({R.id.course_filter})
+    @OnClick({R.id.course_filter,R.id.my_course_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.course_filter:
                 filter();
+                break;
+            case R.id.my_course_search:
+                startActivity(new Intent(getActivity(),SearchLessonActivity.class));
                 break;
         }
     }
