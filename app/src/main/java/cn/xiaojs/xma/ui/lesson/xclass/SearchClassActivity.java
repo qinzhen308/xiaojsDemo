@@ -1,8 +1,5 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -14,27 +11,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/5/31.
- * 搜索公开课
+ * 搜索与我相关的班
  */
 
-public class SearchLessonActivity extends BaseActivity {
+public class SearchClassActivity extends BaseActivity {
 
 
     @BindView(R.id.back)

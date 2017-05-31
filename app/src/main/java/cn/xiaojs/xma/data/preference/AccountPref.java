@@ -48,6 +48,8 @@ public class AccountPref {
 
     private static final String PRFE_AVATOR_TIMESP = "avator_time";
 
+    private static final String PRFE_IS_3RD_PART_LOGIN = "is_third_part_login";
+
 
 //    private static String makeAccountSpecificKey(String phone, String prefix) {
 //        return prefix + phone;
@@ -295,6 +297,17 @@ public class AccountPref {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static void setThirdPartFlag(final Context context, boolean isThirdPartLogin) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putBoolean(PRFE_IS_3RD_PART_LOGIN, isThirdPartLogin).apply();
+
+    }
+
+    public static boolean getThirdPartFlag(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getBoolean(PRFE_IS_3RD_PART_LOGIN, false);
     }
 
 }

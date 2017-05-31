@@ -13,6 +13,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.ui.account.LoginActivity;
 import cn.xiaojs.xma.ui.account.ModifyPasswordActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.APPUtils;
@@ -41,6 +43,8 @@ public class SettingsActivity extends BaseActivity {
 
     @BindView(R.id.xjs_info)
     TextView infoView;
+    @BindView(R.id.account_safe)
+    TextView accountSafe;
 
     private Context mContext;
 
@@ -60,6 +64,9 @@ public class SettingsActivity extends BaseActivity {
         infoView.setText(infoStr);
 
         mDataCacheTv.setText(DataManager.getLocalDataCache(this));
+        if(AccountPref.getThirdPartFlag(this)){//三方登录进来，隐藏掉
+            accountSafe.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.left_view, R.id.exit_login, R.id.message_notify_set,

@@ -24,11 +24,15 @@ import butterknife.BindView;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 /**
  * Created by Paul Z on 2017/5/19.
@@ -129,14 +133,44 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
                 isEmpty=false;
                 break;
             case R.id.layout_creative_lesson:
-                Intent open = new Intent(mContext, LessonCreationActivity.class);
-                mContext.startActivity(open);
+                if(checkTeachingAbility()){
+                    Intent open = new Intent(mContext, LessonCreationActivity.class);
+                    mContext.startActivity(open);
+                }
                 break;
             case R.id.layout_creative_class:
-
+                if(checkTeachingAbility()){
+                    mContext.startActivity(new Intent(mContext,CreateClassActivity.class));
+                }
                 break;
             default:
                 break;
+        }
+    }
+
+    public boolean checkTeachingAbility(){
+        if (AccountDataManager.isTeacher(mContext)) {
+            return true;
+        } else {
+            //提示申明教学能力
+            final CommonDialog dialog = new CommonDialog(mContext);
+            dialog.setTitle(R.string.declare_teaching_ability);
+            dialog.setDesc(R.string.declare_teaching_ability_tip);
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+            return false;
         }
     }
 
