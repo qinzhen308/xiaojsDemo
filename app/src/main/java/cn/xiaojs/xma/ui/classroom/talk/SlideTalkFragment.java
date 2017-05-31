@@ -117,10 +117,8 @@ public class SlideTalkFragment extends BaseFragment {
 
         if (mAttendee != null) {
             mTalkPresenter.switchPeerTalk(mAttendee, false);
-            TalkManager.getInstance().setPeekTalkingAccount(mAttendee.accountId);
         } else {
             mTalkPresenter.switchMsgMultiTalk();
-            TalkManager.getInstance().setPeekTalkingAccount(null);
         }
     }
 

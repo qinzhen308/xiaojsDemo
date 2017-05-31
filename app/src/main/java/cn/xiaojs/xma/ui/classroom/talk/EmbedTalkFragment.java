@@ -89,7 +89,6 @@ public class EmbedTalkFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 if (mTalkPresenter.getTalkCriteria() == TalkManager.TYPE_PEER_TALK) {
-                    TalkManager.getInstance().setPeekTalkingAccount(null);
                     mTalkNameTv.setText(R.string.cr_talk_discussion);
                     mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     mTalkPresenter.switchMsgMultiTalk();
@@ -116,10 +115,7 @@ public class EmbedTalkFragment extends BaseFragment{
      * 切换到一对一聊天
      */
     public void switchPeerTalk(Attendee attendee) {
-        TalkManager.getInstance().setPeekTalkingAccount(attendee.accountId);
-        mTalkNameTv.setText(attendee.name);
-        mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_back_pressed, 0, 0, 0);
-        mTalkPresenter.switchTalkTab(TalkManager.TYPE_PEER_TALK, attendee.accountId);
+        mTalkPresenter.switchPeerTalk(attendee, true);
     }
 
     public void updateMultiTalk() {

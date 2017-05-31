@@ -43,7 +43,11 @@ import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.BitmapUtils;
 
-public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareListener, TalkManager.OnTalkMsgReceived {
+public class TalkPresenter implements
+        OnImageClickListener,
+        OnPhotoDoodleShareListener,
+        TalkManager.OnTalkMsgReceived,
+        OnPortraitClickListener{
     private Context mContext;
 
     private PullToRefreshListView mTalkMsgLv;
@@ -64,8 +68,10 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
 
     /**
      * 切换到一对一聊天
+     * @see  #switchMsgMultiTalk()
      */
     public void switchPeerTalk(Attendee attendee, boolean needBack) {
+        TalkManager.getInstance().setPeekTalkingAccount(attendee.accountId);
         if (mTalkNameTv != null) {
             mTalkNameTv.setText(attendee.name);
             if (needBack) {
@@ -77,8 +83,10 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
 
     /**
      * 切换到消息模式下的教室交流
+     * @see #switchPeerTalk(Attendee, boolean)
      */
     public void switchMsgMultiTalk() {
+        TalkManager.getInstance().setPeekTalkingAccount(null);
         switchTalkTab(TalkManager.TYPE_MSG_MUlTI_TAlk, null);
     }
 
@@ -121,6 +129,7 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
 
         if (adapter instanceof TalkMsgAdapter) {
             ((TalkMsgAdapter)adapter).setOnImageClickListener(this);
+            ((TalkMsgAdapter)adapter).setOnPortraitClickListener(this);
         } else if (adapter instanceof FullScreenTalkMsgAdapter) {
             ((FullScreenTalkMsgAdapter)adapter).setOnImageClickListener(this);
         }
@@ -228,6 +237,21 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
         }
     }
 
+    @Override
+    public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
+        //switchTalkTab(mTalkCriteria, receive ? talkItem.from.accountId : talkItem.to);
+        if (!receive) {
+            switchTalkTab(mTalkCriteria, talkItem.to);
+        }
+    }
+
+    @Override
+    public void onPortraitClick(Attendee attendee) {
+        if (attendee != null) {
+            switchPeerTalk(attendee, true);
+        }
+    }
+
     public void showProgress(boolean cancelable) {
         if (mProgress == null) {
             mProgress = ProgressHUD.create(mContext);
@@ -240,14 +264,6 @@ public class TalkPresenter implements OnImageClickListener, OnPhotoDoodleShareLi
     public void cancelProgress() {
         if (mProgress != null && mProgress.isShowing()) {
             mProgress.dismiss();
-        }
-    }
-
-    @Override
-    public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
-        //switchTalkTab(mTalkCriteria, receive ? talkItem.from.accountId : talkItem.to);
-        if (!receive) {
-            switchTalkTab(mTalkCriteria, talkItem.to);
         }
     }
 
