@@ -171,20 +171,20 @@ public class TestAPIActivity extends Activity {
 
     public void testCache() {
 
-        String start = "2014-05-25T16:00:00.000Z";
-        String end = "2080-05-25T16:00:00.000Z";
-
-        LessonDataManager.getClassesSchedule(this, start, end, "StandaloneLesson", "All", 100, 1, new APIServiceCallback<ScheduleData>() {
-            @Override
-            public void onSuccess(ScheduleData object) {
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        String start = "2014-05-25T16:00:00.000Z";
+//        String end = "2080-05-25T16:00:00.000Z";
+//
+//        LessonDataManager.getClassesSchedule4Class(this, start, end, "StandaloneLesson", "All", 100, 1, new APIServiceCallback<ScheduleData>() {
+//            @Override
+//            public void onSuccess(ScheduleData object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        String classId = "5927f85a9b2ba6cf531f1e75";
 //
