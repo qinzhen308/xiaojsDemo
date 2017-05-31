@@ -487,9 +487,12 @@ public class LessonDataManager {
                                           String end,
                                           String type,
                                           String state,
-                                          int limit,
-                                          int page,
+                                          Pagination pagination,
                                           APIServiceCallback<CollectionResult<PrivateClass>> callback) {
+
+        int limit = pagination.getMaxNumOfObjectsPerPage();
+        int page = pagination.getPage();
+
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule4Class(start, end, type, state, limit, page);
     }
@@ -499,9 +502,12 @@ public class LessonDataManager {
                                                 String end,
                                                 String type,
                                                 String state,
-                                                int limit,
-                                                int page,
+                                                Pagination pagination,
                                                 APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
+
+        int limit = pagination.getMaxNumOfObjectsPerPage();
+        int page = pagination.getPage();
+
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule4Lesson(start, end, type, state, limit, page);
     }
