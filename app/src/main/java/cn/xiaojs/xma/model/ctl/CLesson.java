@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.model.ctl;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cn.xiaojs.xma.model.Schedule;
@@ -19,4 +20,6 @@ public class CLesson {
     public Account owner;
     public Account teacher;
     public Account[] assistants;
+    @JsonProperty("class")
+    public ClassInfo classInfo;
 }
