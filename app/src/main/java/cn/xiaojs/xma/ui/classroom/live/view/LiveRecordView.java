@@ -103,8 +103,10 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void onHandleMessage(Message msg) {
-        if (mMediaStreamingManager == null)
+        if (mMediaStreamingManager == null) {
             return;
+        }
+
         switch (msg.what) {
             case MSG_START_STREAMING:
                 new Thread(new Runnable() {
@@ -138,14 +140,17 @@ public class LiveRecordView extends BaseMediaView implements
                         ? StreamingProfile.ENCODING_ORIENTATION.PORT : StreamingProfile.ENCODING_ORIENTATION.LAND);
                 mMediaStreamingManager.setStreamingProfile(mProfile);
                 mMediaStreamingManager.notifyActivityOrientationChanged();
-                Object obj = msg.obj;
+                /*Object obj = msg.obj;
                 if (obj instanceof OnStreamOrientationListener) {
                     ((OnStreamOrientationListener)obj).onStreamOrientationChanged(msg.arg1);
+                }*/
+                if (msg.obj != null) {
+                    Message m = mHandler.obtainMessage(MSG_SWITCH_ORIENTATION);
+                    m.obj = msg.obj;
+                    m.arg1 = msg.arg1;
+                    m.what = MSG_SWITCH_ORIENTATION_DELAY;
+                    mHandler.sendMessageDelayed(m, 500);
                 }
-                /*Message m = mHandler.obtainMessage(MSG_SWITCH_ORIENTATION);
-                m.obj = msg.obj;
-                m.what = MSG_SWITCH_ORIENTATION_DELAY;
-                mHandler.sendMessageDelayed(m, 2000);*/
                 break;
             case MSG_SWITCH_ORIENTATION_DELAY:
                 Object o = msg.obj;
@@ -529,9 +534,13 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void stopStreamingInternal() {
-        if (mMediaStreamingManager != null) {
-            mMediaStreamingManager.destroy();
-            mMediaStreamingManager = null;
+        try {
+            if (mMediaStreamingManager != null) {
+                mMediaStreamingManager.destroy();
+                mMediaStreamingManager = null;
+            }
+        } catch (Exception e) {
+
         }
     }
 

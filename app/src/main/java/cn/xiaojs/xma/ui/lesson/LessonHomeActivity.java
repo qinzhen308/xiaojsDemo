@@ -43,6 +43,7 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.Teacher;
 import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.model.social.Relation;
@@ -60,7 +61,7 @@ import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
-public class  LessonHomeActivity extends BaseActivity{
+public class LessonHomeActivity extends BaseActivity {
     public final static int ENTRANCE_FROM_TEACH_LESSON = 0;
     public final static int ENTRANCE_FROM_ENROLL_LESSON = 1;
 
@@ -119,7 +120,6 @@ public class  LessonHomeActivity extends BaseActivity{
     TextView introView;
 
 
-
     private ArrayList<TextView> textViews;
     private LessonDetail mLessonDetail;
 
@@ -137,7 +137,8 @@ public class  LessonHomeActivity extends BaseActivity{
         loadData();
     }
 
-    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.lay_teacher})//R.id.consulting
+    @OnClick({R.id.back_btn, R.id.share_wb_btn, R.id.report, R.id.apply_btn, R.id.lay_teacher})
+//R.id.consulting
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.lay_teacher:
@@ -243,7 +244,7 @@ public class  LessonHomeActivity extends BaseActivity{
         });
     }
 
-    private void setData (LessonDetail lesson) {
+    private void setData(LessonDetail lesson) {
         if (lesson != null) {
             mLessonDetail = lesson;
             //set cover
@@ -287,7 +288,14 @@ public class  LessonHomeActivity extends BaseActivity{
                 mEnrollmentCountTv.setText(getString(R.string.enrolled_count,
                         enroll.current, enroll.max));
             } else {
-                mEnrollmentCountTv.setVisibility(View.GONE);
+                if (enroll != null) {
+                    mEnrollmentCountTv.setText(getString(R.string.want_to_learn_num,
+                            enroll.current));
+                    mEnrollmentCountTv.setVisibility(View.VISIBLE);
+                } else {
+                    mEnrollmentCountTv.setVisibility(View.GONE);
+                }
+
             }
 
             //fee
@@ -351,7 +359,11 @@ public class  LessonHomeActivity extends BaseActivity{
         if (lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
             applyBtn.setText("课已取消");
             applyBtn.setEnabled(false);
-        }else {
+        } else {
+
+
+            Enroll enroll = mLessonDetail.getEnroll();
+            boolean mandatory = enroll != null ? enroll.mandatory : false;
 
             if (mLessonDetail.isEnrolled) {
 
@@ -369,19 +381,31 @@ public class  LessonHomeActivity extends BaseActivity{
                     //nothing to do
                 }
 
-            }else if (lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
-                applyBtn.setText("停止报名");
-                applyBtn.setEnabled(false);
-            }else {
+            } else if (lessonState.equals(Ctl.LiveLessonState.FINISHED)) {
 
-                Enroll enroll = mLessonDetail.getEnroll();
-                if (enroll != null && enroll.max == enroll.current) {
-                    applyBtn.setText("名额已满");
+                if (mandatory) {
+                    applyBtn.setText("停止报名");
                     applyBtn.setEnabled(false);
-                }else {
-                    applyBtn.setText("立即报名");
+                } else {
+                    applyBtn.setText("添加到我的班课");
                     applyBtn.setEnabled(true);
                 }
+
+            } else {
+
+                if (mandatory) {
+                    if (enroll != null && enroll.max == enroll.current) {
+                        applyBtn.setText("报名已满");
+                        applyBtn.setEnabled(false);
+                    } else {
+                        applyBtn.setText("立即报名");
+                        applyBtn.setEnabled(true);
+                    }
+                } else {
+                    applyBtn.setText("添加到我的班课");
+                    applyBtn.setEnabled(true);
+                }
+
             }
         }
 
@@ -389,7 +413,7 @@ public class  LessonHomeActivity extends BaseActivity{
         String createBy = mLessonDetail.getCreatedBy();
         if ((!TextUtils.isEmpty(createBy) && createBy.equals(accId))
                 || isLessonRole(mLessonDetail.currentRoles)
-                || (mLessonDetail.getTeacher() !=null && mLessonDetail.getTeacher()._id.equals(accId)) ){
+                || (mLessonDetail.getTeacher() != null && mLessonDetail.getTeacher()._id.equals(accId))) {
 
             if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                     || lessonState.equalsIgnoreCase(LessonState.LIVE)
@@ -398,12 +422,12 @@ public class  LessonHomeActivity extends BaseActivity{
                 //mConsultingBtn.setVisibility(View.GONE);
                 applyBtn.setText("进入教室");
                 applyBtn.setEnabled(true);
-            }else{
+            } else {
                 mLessonEnrollLayout.setVisibility(View.GONE);
                 //mConsultingBtn.setVisibility(View.VISIBLE);
             }
 
-        }else{
+        } else {
             mLessonEnrollLayout.setVisibility(View.VISIBLE);
             //mConsultingBtn.setVisibility(View.VISIBLE);
         }
@@ -470,9 +494,9 @@ public class  LessonHomeActivity extends BaseActivity{
                     mTeaTitleTv.setText(title);
                 } else {
                     mTeaTitleTv.setVisibility(View.GONE);
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mTeaNameTv.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mTeaNameTv.getLayoutParams();
                     params.addRule(RelativeLayout.CENTER_IN_PARENT);
-                    params = (RelativeLayout.LayoutParams)mTeaEvalStar.getLayoutParams();
+                    params = (RelativeLayout.LayoutParams) mTeaEvalStar.getLayoutParams();
                     params.addRule(RelativeLayout.CENTER_IN_PARENT);
                 }
 
@@ -499,9 +523,9 @@ public class  LessonHomeActivity extends BaseActivity{
 
 
     private void initTabBar() {
-        String[] titles =getResources().getStringArray(R.array.lesson_home_tab_titles);
+        String[] titles = getResources().getStringArray(R.array.lesson_home_tab_titles);
         initShowTextView();
-        mBlockTabView.setViews("",titles,textViews,"");
+        mBlockTabView.setViews("", titles, textViews, "");
     }
 
     private void initShowTextView() {
@@ -521,11 +545,11 @@ public class  LessonHomeActivity extends BaseActivity{
                 FlexboxLayout.LayoutParams.MATCH_PARENT,
                 FlexboxLayout.LayoutParams.MATCH_PARENT);
         textView.setLayoutParams(p);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimensionPixelSize(R.dimen.font_32px));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.font_32px));
 
         int pad = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
 
-        textView.setPadding(pad,pad,pad,pad);
+        textView.setPadding(pad, pad, pad, pad);
         textView.setTextColor(getResources().getColor(R.color.font_black));
 
         textView.setLineSpacing(2f, 1.5f);
@@ -545,8 +569,8 @@ public class  LessonHomeActivity extends BaseActivity{
         String accId = AccountDataManager.getAccountID(this);
         String createBy = mLessonDetail.getCreatedBy();
         if ((createBy != null && createBy.equals(accId))
-                ||isLessonRole(mLessonDetail.currentRoles)
-                || (mLessonDetail.getTeacher()!= null && mLessonDetail.getTeacher()._id.equals(accId)) ){
+                || isLessonRole(mLessonDetail.currentRoles)
+                || (mLessonDetail.getTeacher() != null && mLessonDetail.getTeacher()._id.equals(accId))) {
 
             if (lessonState.equalsIgnoreCase(LessonState.PENDING_FOR_LIVE)
                     || lessonState.equalsIgnoreCase(LessonState.LIVE)
@@ -559,9 +583,9 @@ public class  LessonHomeActivity extends BaseActivity{
 
             if (!lessonState.equals(Ctl.LiveLessonState.CANCELLED)) {
 
-                if(mLessonDetail.isEnrolled) {
+                if (mLessonDetail.isEnrolled) {
                     dealEnrolled();
-                }else{
+                } else {
                     enterConfirmPayPage();
                 }
             }
@@ -584,38 +608,69 @@ public class  LessonHomeActivity extends BaseActivity{
     }
 
     private void enterConfirmPayPage() {
-        if (mLessonDetail.getFee().free){
+        if (mLessonDetail.getFee().free) {
             //免费课不用付款
             showProgress(true);
-            LessonDataManager.requestEnrollLesson(this, mLessonDetail.getId(),new OfflineRegistrant(), new APIServiceCallback<ELResponse>() {
-                @Override
-                public void onSuccess(ELResponse object) {
-                    cancelProgress();
-                    mLessonDetail.isEnrolled = true;
-                    mLessonDetail.enrollState = Ctl.EnrollmentState.ENROLLED;
-                    setLayBottom();
-                    ToastUtil.showToast(getApplicationContext(),"报名成功!");
-                    DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
-                }
+            if (mLessonDetail.getEnroll().mandatory) {
+                LessonDataManager.requestEnrollLesson(this, mLessonDetail.getId(), new OfflineRegistrant(), new APIServiceCallback<ELResponse>() {
+                    @Override
+                    public void onSuccess(ELResponse object) {
+                        cancelProgress();
+                        mLessonDetail.isEnrolled = true;
+                        mLessonDetail.enrollState = Ctl.EnrollmentState.ENROLLED;
+                        setLayBottom();
+                        //ToastUtil.showToast(getApplicationContext(),"报名成功!");
+                        DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress();
-                    ToastUtil.showToast(getApplicationContext(),errorMessage);
-                }
-            });
-        }else {
+                        enterEnrollSuccess(EnrollSuccessActivity.FROM_ENROLL, mLessonDetail.ticket);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                        ToastUtil.showToast(getApplicationContext(), errorMessage);
+                    }
+                });
+            } else {
+                LessonDataManager.joinLesson(this, mLessonDetail.getId(), new APIServiceCallback<JoinResponse>() {
+                    @Override
+                    public void onSuccess(JoinResponse object) {
+                        cancelProgress();
+                        mLessonDetail.isEnrolled = true;
+                        mLessonDetail.enrollState = Ctl.EnrollmentState.ENROLLED;
+                        setLayBottom();
+                        //ToastUtil.showToast(getApplicationContext(),"加入成功!");
+                        DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
+                        enterEnrollSuccess(EnrollSuccessActivity.FROM_JION, mLessonDetail.ticket);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                        ToastUtil.showToast(getApplicationContext(), errorMessage);
+                    }
+                });
+            }
+
+        } else {
             enterPay();
         }
         //ConfirmEnrollmentActivity
 
     }
 
+    private void enterEnrollSuccess(int from, String ticket) {
+        Intent i = new Intent(this, EnrollSuccessActivity.class);
+        i.putExtra(EnrollSuccessActivity.EXTRA_TICKET, ticket);
+        i.putExtra(EnrollSuccessActivity.EXTRA_FROM, from);
+        startActivity(i);
+    }
+
     //进入教室
     private void enterClass(String ticket) {
 
         if (TextUtils.isEmpty(ticket)) {
-            Toast.makeText(this,"进入教室失败",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "进入教室失败", Toast.LENGTH_SHORT).show();
         }
 
         Intent i = new Intent();
@@ -635,30 +690,30 @@ public class  LessonHomeActivity extends BaseActivity{
         showProgress(true);
         LessonDataManager.requestEnrollLesson(this,
                 lesson, null, new APIServiceCallback<ELResponse>() {
-            @Override
-            public void onSuccess(ELResponse object) {
+                    @Override
+                    public void onSuccess(ELResponse object) {
 
-                applyBtn.setText(R.string.lesson_enrolled);
-                applyBtn.setEnabled(false);
+                        applyBtn.setText(R.string.lesson_enrolled);
+                        applyBtn.setEnabled(false);
 
-                cancelProgress();
+                        cancelProgress();
 
-                Toast.makeText(LessonHomeActivity.this,
-                        R.string.enroll_lesson_success, Toast.LENGTH_SHORT).show();
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
+                        Toast.makeText(LessonHomeActivity.this,
+                                R.string.enroll_lesson_success, Toast.LENGTH_SHORT).show();
+                        DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_ENROLL_CHANGED);
 
-            }
+                    }
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
 
-                cancelProgress();
+                        cancelProgress();
 
-                Toast.makeText(LessonHomeActivity.this,
-                        R.string.enroll_lesson_failed, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LessonHomeActivity.this,
+                                R.string.enroll_lesson_failed, Toast.LENGTH_SHORT).show();
 
-            }
-        });
+                    }
+                });
     }
 
 
@@ -680,7 +735,6 @@ public class  LessonHomeActivity extends BaseActivity{
 //            return v;
 //        }
 //    }
-
 
 
 }

@@ -28,6 +28,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
@@ -37,12 +38,13 @@ import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.talk.EmbedTalkFragment;
-import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
+import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
+import cn.xiaojs.xma.util.XjsUtils;
 import okhttp3.ResponseBody;
 
 /*  =======================================================================================
@@ -109,7 +111,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @BindView(R.id.open_docs_btn)
     ImageView mOpenDocsBtn;
     @BindView(R.id.talk_open_contact_btn)
-    MessageImageView mOpenContactBtn;
+    MessageImageView mTalkOpenContactBtn;
     @BindView(R.id.talk_send_txt_btn)
     ImageView mSendTxtBtn;
     @BindView(R.id.talk_send_other_btn)
@@ -123,13 +125,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @BindView(R.id.fc_land_portrait_btn)
     ImageView mLandPortraitBtn; //land/portrait toggle
     @BindView(R.id.fc_open_contact_btn)
-    ImageView mContactBtn;
+    MessageImageView mFullscreenContactBtn;
     @BindView(R.id.fc_screenshot_portrait_btn)
     ImageView mScreenshotPortraitBtn;
     @BindView(R.id.fc_screenshot_land_btn)
     ImageView mScreenshotLandBtn;
     @BindView(R.id.fc_hide_show_talk_btn)
-    ImageView mHideShowTalkBtn;
+    MessageImageView mHideShowTalkBtn;
     @BindView(R.id.fc_open_talk_btn)
     ImageView mOpenTalkBtn;
 
@@ -137,6 +139,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     private EmbedTalkFragment mEmbedTalkFragment;
     private int mVideoWidth;
     private int mVideoHeight;
+    private String mBeforePeekAccountId;
+    private long mPlayOrPausePressTime = 0;
 
     @Override
     protected void initParams() {
@@ -237,6 +241,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         //add talk
         mEmbedTalkFragment = new EmbedTalkFragment();
         mEmbedTalkFragment.setArguments(getArguments());
+        mEmbedTalkFragment.setExitPeerTalkListener(this);
         getChildFragmentManager().beginTransaction().add(R.id.talk_layout, mEmbedTalkFragment).commit();
     }
 
@@ -248,6 +253,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         updateViewStyleByLiveState(liveState);
 
+        mTalkOpenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
         postHideAnim();
     }
 
@@ -292,7 +298,17 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         postHideAnim();
     }
 
+    /**
+     * 进入全屏
+     */
     private void enterFullScreen() {
+        mHideShowTalkBtn.setCount(0);
+        TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
+        mBeforePeekAccountId = TalkManager.getInstance().getPeekTalkingAccount();
+        TalkManager.getInstance().setPeekTalkingAccount(null);
+        TalkManager.getInstance().setFullscreenMultiTalkVisible(true);
+        mFullscreenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
+
         ClassroomController.getInstance().enterLandFullScreen(isPortrait(), mContext);
         if (mFullScreenTalkPresenter == null) {
             mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
@@ -301,16 +317,38 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
     }
 
+    /**
+     * 处理back键
+     */
     private void handOnBackPressed() {
         if (isPortrait()) {
             if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
                 updatePortraitPlayViewStyle();
+                setUnreadMsgCountOnExitFullscreen();
                 ClassroomController.getInstance().exitFullScreen(mContext, false);
             } else {
                 ClassroomController.getInstance().showExitClassroomDialog();
             }
         } else {
+            setUnreadMsgCountOnExitFullscreen();
             ClassroomController.getInstance().exitFullScreen(mContext, true);
+        }
+    }
+
+    /**
+     * 退出全屏是，设置未读消息
+     */
+    private void setUnreadMsgCountOnExitFullscreen() {
+        if (TextUtils.isEmpty(mBeforePeekAccountId)) {
+            //multi talk
+            TalkManager.getInstance().setPeekTalkingAccount(null);
+            mTalkOpenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
+        } else {
+            //peek talk
+            TalkManager.getInstance().setPeekTalkingAccount(mBeforePeekAccountId);
+            int count = TalkManager.getInstance().getMultiTalkUnreadMsgCount();
+            count = count + TalkManager.getInstance().clearPeerTalkUnreadMsgCount(mBeforePeekAccountId);
+            mTalkOpenContactBtn.setCount(count);
         }
     }
 
@@ -328,11 +366,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mVideoHeight = dm.heightPixels;
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayLayout.getLayoutParams();
         if (params != null) {
+            params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
             params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         } else {
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            mPlayLayout.setLayoutParams(params);
         }
+        mPlayLayout.setLayoutParams(params);
     }
 
     private void updatePortraitPlayViewStyle() {
@@ -351,11 +390,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mVideoHeight = (int) (dm.widthPixels / Constants.VIDEO_VIEW_RATIO);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPlayLayout.getLayoutParams();
         if (params != null) {
+            params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
             params.height = mVideoHeight;
         } else {
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, mVideoHeight);
-            mPlayLayout.setLayoutParams(params);
         }
+        mPlayLayout.setLayoutParams(params);
     }
 
     @Override
@@ -367,16 +407,19 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
             if (mTopPanel.getVisibility() == View.VISIBLE) {
                 hideAnim(mTopPanel, "mTopPanel");
-                hideAnim(mContactBtn, "mContactBtn");
+                hideAnim(mFullscreenContactBtn, "mFullscreenContactBtn");
                 hideAnim(mOpenTalkBtn, "mOpenTalkBtn");
                 hideAnim(mLandPortraitBtn, "mLandPortraitBtn");
+                hideAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
             } else if (mTopPanel.getVisibility() == View.INVISIBLE) {
                 showAnim(mTopPanel, "mTopPanel");
-                showAnim(mContactBtn, "mContactBtn");
+                showAnim(mFullscreenContactBtn, "mFullscreenContactBtn");
                 showAnim(mOpenTalkBtn, "mOpenTalkBtn");
                 showAnim(mLandPortraitBtn, "mLandPortraitBtn");
+                showAnim(mHideShowTalkBtn, "mHideShowTalkBtn");
             }
 
+            //show/hide take pic btn
             if (isPortrait()) {
                 if (mScreenshotPortraitBtn.getVisibility() == View.VISIBLE) {
                     hideAnim(mScreenshotPortraitBtn, "mScreenshotPortraitBtn");
@@ -404,9 +447,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     protected void showHideTalk() {
         if (mDiscussionListView.getVisibility() == View.VISIBLE) {
+            TalkManager.getInstance().setFullscreenMultiTalkVisible(false);
             mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_show_talk);
             mDiscussionListView.setVisibility(View.GONE);
         } else {
+            TalkManager.getInstance().setFullscreenMultiTalkVisible(true);
+            TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
+            mHideShowTalkBtn.setCount(0);
             mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
             mDiscussionListView.setVisibility(View.VISIBLE);
         }
@@ -414,7 +461,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void onIndividualPublishCallback(StreamingResponse response) {
+        if (response == null) {
+            return;
+        }
+
         Bundle data = new Bundle();
+
+        LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.INDIVIDUAL);
+        setControllerBtnStyle(Live.LiveSessionState.INDIVIDUAL);
         data.putInt(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
         data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
         data.putString(Constants.KEY_PUBLISH_URL, response.publishUrl);
@@ -422,6 +476,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putString(Constants.KEY_BEFORE_LIVE_STATE, mOriginSteamState);
         data.putLong(Constants.KEY_INDIVIDUAL_DURATION, response.finishOn);
         data.putString(Constants.KEY_INDIVIDUAL_NAME, "");
+        data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, response);
+        XjsUtils.hideIMM(mContext, mContent.getWindowToken());
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 
@@ -451,10 +507,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
                     int from = data.getIntExtra(Constants.KEY_MSG_INPUT_FROM, MSG_MODE_INPUT);
                     if (from == MSG_MODE_INPUT) {
-                        if (mPeerTalkAttendee == null || TextUtils.isEmpty(mPeerTalkAttendee.accountId)) {
+                        String peekAccount = TalkManager.getInstance().getPeekTalkingAccount();
+                        if (TextUtils.isEmpty(peekAccount)) {
                             TalkManager.getInstance().sendText(content);
                         } else {
-                            TalkManager.getInstance().sendText(mPeerTalkAttendee.accountId, content);
+                            TalkManager.getInstance().sendText(peekAccount, content);
                         }
                     } else if (from == FULL_SCREEN_MODE_INPUT) {
                         TalkManager.getInstance().sendText(content);
@@ -468,13 +525,23 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                         break;
                     }
 
-                    mPeerTalkAttendee = attendee;
+                    int peerCount = TalkManager.getInstance().getPeerTalkUnreadMsgCount();
+                    if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+                        mFullscreenContactBtn.setCount(peerCount);
+                    } else {
+                        mTalkOpenContactBtn.setCount(peerCount);
+                    }
+
                     switch (action) {
                         case OnAttendItemClick.ACTION_OPEN_TALK:
                             if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
                                 int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
                                 int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
-                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                                if (isPortrait()) {
+                                    ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, size);
+                                } else {
+                                    ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                                }
                             } else {
                                 mEmbedTalkFragment.switchPeerTalk(attendee);
                             }
@@ -632,6 +699,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             if (from == Constants.FROM_PUBLISH_FRAGMENT) {
                 mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
             }
+
+            mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
         }
         mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
 
@@ -677,6 +746,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     private void playOrPauseLesson() {
+        //Prevent frequent clicks
+        if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
+            return;
+        }
+        mPlayOrPausePressTime = System.currentTimeMillis();
+
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState)) {
@@ -731,7 +806,50 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putString(Constants.KEY_PLAY_URL, playUrl);
         data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
         data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
+        XjsUtils.hideIMM(mContext, mContent.getWindowToken());
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 
+    @Override
+    public void onExitTalk(int type) {
+        if (type == TalkManager.TYPE_PEER_TALK) {
+            if (!ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+                //exit peer talk and enter multi talk (msg mode)
+                TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
+                mTalkOpenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
+            }
+        }
+    }
+
+    @Override
+    public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
+        if (mTalkOpenContactBtn == null || !receive) {
+            return;
+        }
+
+        if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+            //fullscreen mode
+            if (mDiscussionListView.getVisibility() == View.VISIBLE) {
+                TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
+            } else {
+                mHideShowTalkBtn.setCount(TalkManager.getInstance().getMultiTalkUnreadMsgCount());
+            }
+
+            mFullscreenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
+            if (mHideShowTalkBtn.getVisibility() != View.VISIBLE) {
+                startAnim();
+            }
+        } else {
+            //msg mode
+            String peekAccount = TalkManager.getInstance().getPeekTalkingAccount();
+            if (peekAccount == null) {
+                //multi talk
+                mTalkOpenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
+            } else {
+                //peer talk
+                mTalkOpenContactBtn.setCount(TalkManager.getInstance().getAllUnreadMsgCount());
+            }
+        }
+
+    }
 }

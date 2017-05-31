@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
@@ -24,7 +23,6 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import java.util.Collections;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
@@ -81,6 +79,13 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
         mTalkNameColor = mContext.getResources().getColor(R.color.classroom_talk_name);
         mScreenW = mContext.getResources().getDisplayMetrics().widthPixels;
         MAX_SIZE = mContext.getResources().getDimensionPixelSize(R.dimen.px130);
+    }
+
+    @Override
+    public void add(TalkItem talkItem) {
+        if (!contains(talkItem)) {
+            super.add(talkItem);
+        }
     }
 
     @Override
@@ -151,14 +156,12 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
         return holder;
     }
 
+
     @Override
     protected void doRequest() {
         LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
             @Override
             public void onSuccess(CollectionPage<TalkItem> object) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "获取消息成功", Toast.LENGTH_SHORT).show();
-                }
                 if (object.objectsOfPage != null) {
                     Collections.sort(object.objectsOfPage, mTalkComparator);
                 }
@@ -170,9 +173,6 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(mContext, "获取消息失败", Toast.LENGTH_SHORT).show();
-                }
                 FullScreenTalkMsgAdapter.this.onFailure(errorCode, errorMessage);
                 if (mOnGetTalkListener != null) {
                     mOnGetTalkListener.onGetTalkFinished(false);

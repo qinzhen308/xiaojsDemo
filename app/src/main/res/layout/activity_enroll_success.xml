@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal">
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px205"
+            android:src="@drawable/ic_enroll_successful"
+            />
+
+    <TextView
+            android:id="@+id/success_tips_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px31"
+            android:text="@string/enroll_result_ok"
+            android:textColor="@color/result_ok"
+            android:textSize="@dimen/font_36px"
+            />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px31"
+            android:text="@string/enroll_result_ok_tips"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:layout_marginRight="@dimen/px93"
+            android:layout_marginLeft="@dimen/px93"
+            />
+
+    <Button
+            android:id="@+id/enter_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/big_submit_btn_selector"
+            android:paddingBottom="@dimen/px25"
+            android:paddingTop="@dimen/px25"
+            android:text="@string/into_cls"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/white"
+            android:layout_marginRight="@dimen/px60"
+            android:layout_marginLeft="@dimen/px60"
+            android:layout_marginTop="@dimen/px99"
+            android:layout_marginBottom="@dimen/px40"/>
+
+    <Button
+            android:id="@+id/look_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/orange_stoke_bg"
+            android:paddingBottom="@dimen/px25"
+            android:paddingTop="@dimen/px25"
+            android:text="@string/look_class_lesson"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/font_orange"
+            android:layout_marginRight="@dimen/px60"
+            android:layout_marginLeft="@dimen/px60"
+            />
+
+</LinearLayout>

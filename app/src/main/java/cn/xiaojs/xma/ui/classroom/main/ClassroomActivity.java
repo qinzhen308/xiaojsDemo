@@ -64,7 +64,7 @@ public class ClassroomActivity extends FragmentActivity {
     private final static int MSG_SOCKET_TIME_OUT = 0;
 
     //socket time out
-    private final static int SOCKET_TIME_OUT = 1500; //1.5s
+    private final static int SOCKET_TIME_OUT = 10 * 1000; //10s
 
     private ProgressHUD mProgress;
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
@@ -249,7 +249,7 @@ public class ClassroomActivity extends FragmentActivity {
             data.putString(Constants.KEY_PUBLISH_URL, ctlSession.publishUrl);
             ClassroomController.getInstance().enterPublishFragment(data, false);
         } else {
-            ClassroomController.getInstance().enterPlayFragment(null);
+            ClassroomController.getInstance().enterPlayFragment(null, false);
         }
 
         ContactManager.getInstance().getAttendees(this, null);

@@ -18,28 +18,27 @@
                 android:id="@+id/open_docs_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:padding="@dimen/px20"
                 android:layout_weight="1"
                 android:src="@drawable/ic_cr_open_doc"/>
 
-        <cn.xiaojs.xma.ui.widget.MessageImageView
-                android:id="@+id/talk_open_contact_btn"
+        <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:padding="@dimen/px20"
-                android:layout_weight="1"
-                android:src="@drawable/ic_cr_contact"/>
+                android:layout_weight="1">
+            <cn.xiaojs.xma.ui.widget.MessageImageView
+                    android:id="@+id/talk_open_contact_btn"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/px20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cr_contact"/>
+        </FrameLayout>
 
         <ImageView
                 android:id="@+id/talk_send_txt_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:padding="@dimen/px20"
                 android:layout_weight="1"
                 android:src="@drawable/ic_cr_open_talk"/>
@@ -48,8 +47,6 @@
                 android:id="@+id/talk_send_other_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:padding="@dimen/px20"
                 android:layout_weight="1"
                 android:visibility="gone"
@@ -59,8 +56,6 @@
                 android:id="@+id/talk_share_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:padding="@dimen/px20"
                 android:layout_weight="1"
                 android:src="@drawable/ic_cr_send_add"/>

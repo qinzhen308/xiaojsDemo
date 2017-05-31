@@ -178,6 +178,9 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         }
     }
 
+    /**
+     * 切换不同类型的文档
+     */
     private void switchDocumentType(View v) {
         mAllTv.setSelected(false);
         mPptTv.setSelected(false);
@@ -230,6 +233,10 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
                 if (Collaboration.OfficeMimeTypes.PPT.equals(filterMineType)) {
                     if (doc.mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
                             || doc.mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
+                        mTempData.add(doc);
+                    }
+                } else if (Collaboration.VideoMimeTypes.ALL.equals(filterMineType)) {
+                    if (Collaboration.isStreaming(doc.mimeType) || doc.mimeType.startsWith(filterMineType)) {
                         mTempData.add(doc);
                     }
                 } else {

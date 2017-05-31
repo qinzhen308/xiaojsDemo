@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -30,6 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
@@ -123,7 +127,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.name = (TextView) v.findViewById(R.id.name);
         holder.label = (TextView) v.findViewById(R.id.label);
         holder.video = (ImageView) v.findViewById(R.id.video);
-        holder.talk = (ImageView) v.findViewById(R.id.talk);
+        holder.talk = (MessageImageView) v.findViewById(R.id.talk);
 
         v.setOnClickListener(this);
         holder.talk.setOnClickListener(this);
@@ -151,6 +155,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(holder.portrait);
+        //holder.portrait.setCount(attendee.unReadMsgCount);
 
         holder.name.setText(attendee.name);
 
@@ -159,7 +164,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
         } else {
-            holder.checkbox.setVisibility(View.INVISIBLE);
+            holder.checkbox.setVisibility(View.GONE);
         }
 
         boolean isMyself = ClassroomBusiness.isMyself(mContext, attendee.accountId);
@@ -175,6 +180,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.video.setVisibility(View.INVISIBLE);
         }
         holder.talk.setVisibility(isMyself ? View.INVISIBLE : View.VISIBLE);
+        holder.talk.setCount(attendee.unReadMsgCount);
 
         Constants.User user = ClassroomBusiness.getUser(attendee.psType);
         switch (user) {
@@ -218,16 +224,38 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             } else {
                 switch (v.getId()) {
                     case R.id.talk:
-                        //enter chat
-                        if (mOnAttendItemClick != null) {
-                            mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, mAttendeeList.get(pos));
-                        }
                         break;
                     case R.id.video:
                         if (mOnAttendItemClick != null) {
                             mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, mAttendeeList.get(pos));
                         }
                         break;
+                }
+
+                String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+                Attendee attendee = mAttendeeList.get(pos);
+                if (mOnAttendItemClick != null) {
+                    Constants.User user = ClassroomBusiness.getUser(attendee.psType);
+                    if (Live.LiveSessionState.LIVE.equals(liveState)
+                            && user == Constants.User.STUDENT
+                            && !AccountDataManager.isTeacher(mContext)) {
+                        //Toast
+                        Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
+                    } else {
+                        switch (v.getId()) {
+                            case R.id.talk:
+                                //enter chat
+                                attendee.unReadMsgCount = 0;
+                                mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+                                break;
+                            case R.id.video:
+                                if (mOnAttendItemClick != null) {
+                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);
+                                }
+                                break;
+                        }
+
+                    }
                 }
             }
         }
@@ -239,7 +267,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         TextView name;
         TextView label;
         ImageView video;
-        ImageView talk;
+        MessageImageView talk;
         int position = -1;
     }
 

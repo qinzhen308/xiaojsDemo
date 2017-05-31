@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -38,21 +39,21 @@ public class ClassroomBusiness {
     public static final int NETWORK_OTHER = 3;
     private static final String BASE64_JPEG_HEADER = "data:image/jpeg;base64,";
 
-    public static Constants.User getUser(String session) {
+    public static Constants.User getUser(String psType) {
         Constants.User user = Constants.User.STUDENT;
-        if ("LeadSession".equals(session)) {
+        if ("LeadSession".equals(psType)) {
             user = Constants.User.TEACHER;
-        } else if ("AssistantSession".equals(session)) {
+        } else if ("AssistantSession".equals(psType)) {
             user = Constants.User.ASSISTANT;
-        } else if ("RemoteAssistantSession".equals(session)) {
+        } else if ("RemoteAssistantSession".equals(psType)) {
             user = Constants.User.REMOTE_ASSISTANT;
-        } else if ("StudentSession".equals(session)) {
+        } else if ("StudentSession".equals(psType)) {
             user = Constants.User.STUDENT;
-        } else if ("ManagerSession".equals(session)) {
+        } else if ("ManagerSession".equals(psType)) {
             user = Constants.User.MANAGER;
-        } else if ("AuditorSession".equals(session)) {
+        } else if ("AuditorSession".equals(psType)) {
             user = Constants.User.AUDITOR;
-        } else if ("AuditorSession".equals(session)) {
+        } else if ("AuditorSession".equals(psType)) {
             user = Constants.User.ADMINISTRATOR;
         }
 
@@ -132,9 +133,22 @@ public class ClassroomBusiness {
     }
 
     /**
-     * 得到多媒体对应在七牛服务器的url
+     * 得到文件对应在七牛服务器的url
      */
-    public static String getMediaUrl(String name) {
+    public static String getFileUrl(String name) {
+        return ApiManager.getFileBucket() + "/" + name;
+    }
+
+    /**
+     * 获得视频在七牛服务器的url
+     * @param name
+     * @return
+     */
+    public static String getVideoUrl(String name, String mimeType) {
+        if (Collaboration.isStreaming(mimeType)) {
+            return ApiManager.getLiveBucket() + "/" + name + ".m3u8";
+        }
+
         return ApiManager.getFileBucket() + "/" + name;
     }
 

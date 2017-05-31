@@ -330,7 +330,12 @@ public class LessonRequest extends ServiceRequest {
 
     public void removeClassStudent(String classid, String[] students) {
         Call<ResponseBody> call = getService().removeClassStudent(classid, students);
-        enqueueRequest(APIType.REMOVE_CLASS_STUDENT,call);
+        enqueueRequest(APIType.REMOVE_CLASS_STUDENT, call);
+    }
+
+    public void joinLesson(String lesson) {
+        Call<JoinResponse> call = getService().joinLesson(lesson);
+        enqueueRequest(APIType.JOIN_LESSON, call);
     }
 
 }

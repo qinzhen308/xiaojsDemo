@@ -21,8 +21,6 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
-import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
-import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 
@@ -92,8 +90,10 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
     protected void onFragmentShow(DialogInterface dialogInterface) {
         if (mAttendee != null) {
             mTalkPresenter.switchPeerTalk(mAttendee, false);
+            TalkManager.getInstance().setPeekTalkingAccount(mAttendee.accountId);
         } else {
             mTalkPresenter.switchMsgMultiTalk();
+            TalkManager.getInstance().setPeekTalkingAccount(null);
         }
     }
 
@@ -147,6 +147,13 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
                     break;
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        TalkManager.getInstance().setPeekTalkingAccount(null);
     }
 
     private void sendMsg (String content) {
