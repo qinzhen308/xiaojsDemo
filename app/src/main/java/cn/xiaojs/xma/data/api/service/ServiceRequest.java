@@ -59,13 +59,13 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     private Context context;
 
-    public ServiceRequest(Context context, APIServiceCallback<T> callback) {
+    public ServiceRequest(Context acontext, APIServiceCallback<T> callback) {
 
-        this.context = context.getApplicationContext();
+        this.context = acontext.getApplicationContext();
 
         this.serviceCallback = callback;
         apiManager = ApiManager.getAPIManager(context);
-        configContext(context);
+        configContext(acontext);
 
     }
 
