@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
+import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.orhanobut.logger.Logger;
 
@@ -72,7 +73,7 @@ public class LessonScheduleActivity extends BaseActivity{
         selectyear=calendar.get(Calendar.YEAR);
         selectDate=ScheduleUtil.getDateYM(selectyear,selectMonth,selectDay);
         bindData();
-        calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
+        calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
                 if(XiaojsConfig.DEBUG){
@@ -85,21 +86,18 @@ public class LessonScheduleActivity extends BaseActivity{
 
                 selectDate=ScheduleUtil.getDateYM(year,month,day);
                 selectDay=day;
-
-//                curDayIndex= ScheduleUtil.getDayIndex(year+"-"+(month+1)+"-"+day);
+                selectMonth=month;
+                selectyear=year;
             }
 
             @Override
-            public void onPageChange(int year, int month, int day) {
-                int lastSelectDay=selectDay;
-                int lastSelectMonth=selectMonth;
-                int lastSelectyear=selectyear;
-                selectDay=day;
-                selectMonth=month;
-                selectyear=year;
-                if(lastSelectMonth!=month||lastSelectyear!=year){//切换月
-                    bindData();
-                }
+            public void onWeekChange(int year, int month, int day) {
+
+            }
+
+            @Override
+            public void onMonthChange(int year, int month, int day) {
+                bindData();
             }
         });
 

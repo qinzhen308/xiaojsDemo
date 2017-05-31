@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.jeek.calendar.library.R;
 import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
+import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.month.MonthCalendarView;
 import com.jeek.calendar.widget.calendar.month.MonthView;
 import com.jeek.calendar.widget.calendar.week.WeekCalendarView;
@@ -53,7 +54,8 @@ public class ScheduleLayout extends FrameLayout {
     private boolean mCurrentRowsIsSix = true;
 
     private ScheduleState mState;
-    private OnCalendarClickListener mOnCalendarClickListener;
+//    private OnCalendarClickListener mOnCalendarClickListener;
+    private OnScheduleChangeListener mOnScheduleChangeListener;
     private GestureDetector mGestureDetector;
 
     public ScheduleLayout(Context context) {
@@ -141,6 +143,7 @@ public class ScheduleLayout extends FrameLayout {
     }
 
     private OnCalendarClickListener mMonthCalendarClickListener = new OnCalendarClickListener() {
+        int y,m,d=0;
         @Override
         public void onClickDate(int year, int month, int day) {
             wcvCalendar.setOnCalendarClickListener(null);
@@ -157,8 +160,9 @@ public class ScheduleLayout extends FrameLayout {
         @Override
         public void onPageChange(int year, int month, int day) {
             computeCurrentRowsIsSix(year, month);
-            if(mOnCalendarClickListener!=null){
-                mOnCalendarClickListener.onPageChange(year, month, day);
+            if(mOnScheduleChangeListener!=null){
+                mOnScheduleChangeListener.onMonthChange(year, month, day);
+
             }
         }
     };
@@ -192,8 +196,8 @@ public class ScheduleLayout extends FrameLayout {
             newWeekView.invalidate();
             wcvCalendar.setCurrentItem(position);
         }
-        if (mOnCalendarClickListener != null) {
-            mOnCalendarClickListener.onClickDate(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
+        if (mOnScheduleChangeListener != null) {
+            mOnScheduleChangeListener.onClickDate(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
         }
     }
 
@@ -218,10 +222,14 @@ public class ScheduleLayout extends FrameLayout {
                     mCurrentRowsIsSix = CalendarUtils.getMonthRows(year, month) == 6;
                 }
             }
-            if(mOnCalendarClickListener!=null){
-                mOnCalendarClickListener.onPageChange(year, month, day);
+            if(mOnScheduleChangeListener!=null){
+                mOnScheduleChangeListener.onWeekChange(year, month, day);
                 if (wcvCalendar.getCurrentWeekView() != null)
                     wcvCalendar.getCurrentWeekView().setTaskHintList(mHintList);
+
+                if (mCurrentSelectMonth != month) {
+                    mOnScheduleChangeListener.onMonthChange(year,month,day);
+                }
             }
         }
     };
@@ -232,8 +240,8 @@ public class ScheduleLayout extends FrameLayout {
             monthView.setSelectYearMonth(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
             monthView.invalidate();
         }
-        if (mOnCalendarClickListener != null) {
-            mOnCalendarClickListener.onClickDate(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
+        if (mOnScheduleChangeListener != null) {
+            mOnScheduleChangeListener.onClickDate(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
         }
         resetCalendarPosition();
     }
@@ -496,8 +504,8 @@ public class ScheduleLayout extends FrameLayout {
         rlScheduleList.setY(scheduleY);
     }
 
-    public void setOnCalendarClickListener(OnCalendarClickListener onCalendarClickListener) {
-        mOnCalendarClickListener = onCalendarClickListener;
+    public void setOnScheduleChangeListener(OnScheduleChangeListener onScheduleChangeListener) {
+        mOnScheduleChangeListener = onScheduleChangeListener;
     }
 
     private void resetMonthViewDate(final int year, final int month, final int day, final int position) {

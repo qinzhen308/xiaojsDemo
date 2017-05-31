@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
+import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
 import com.orhanobut.logger.Logger;
@@ -79,20 +80,26 @@ public class ClassScheduleBuz {
 
 
     private void setListener(){
-        calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
+        calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
                 if(year!=selectyear||month!=selectMonth||day!=selectDay){
                     mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(year,month,day));
                 }
+                selectyear=year;
+                selectMonth=year;
+                selectDay=year;
             }
 
             @Override
-            public void onPageChange(int year, int month, int day) {
+            public void onWeekChange(int year, int month, int day) {
+                
+            }
+
+            @Override
+            public void onMonthChange(int year, int month, int day) {
                 if(year!=selectyear||month!=selectMonth){
                     getMonthData(year,month,day);
-                    selectyear=year;
-                    selectMonth=month;
                 }
             }
         });

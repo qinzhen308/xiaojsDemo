@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindColor;
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -70,10 +72,6 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     CLesson mData;
 
-    @BindColor(R.color.grey_point)
-    int color_gray_point;
-    @BindColor(R.color.orange_point)
-    int color_orange_point;
 
 
     private CircleTransform circleTransform;
@@ -128,7 +126,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
         if(Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)){
             statePoint.setVisibility(VISIBLE);
-            statePoint.setBackgroundColor(color_gray_point);
+            statePoint.setBackgroundResource(R.drawable.shape_orange_point);
             iconLive.setVisibility(GONE);
 
         }else if(Ctl.LiveLessonState.LIVE.equals(data.state)){
@@ -137,7 +135,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
         }else {
             statePoint.setVisibility(VISIBLE);
-            statePoint.setBackgroundColor(color_gray_point);
+            statePoint.setBackgroundResource(R.drawable.shape_grey_point);
             iconLive.setVisibility(GONE);
 
         }

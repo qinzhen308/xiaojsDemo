@@ -33,6 +33,7 @@ import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.JudgementUtil;
 
 /**
  * Created by Paul Z on 2017/5/19.
@@ -133,13 +134,13 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
                 isEmpty=false;
                 break;
             case R.id.layout_creative_lesson:
-                if(checkTeachingAbility()){
+                if(JudgementUtil.checkTeachingAbility(mContext)){
                     Intent open = new Intent(mContext, LessonCreationActivity.class);
                     mContext.startActivity(open);
                 }
                 break;
             case R.id.layout_creative_class:
-                if(checkTeachingAbility()){
+                if(JudgementUtil.checkTeachingAbility(mContext)){
                     mContext.startActivity(new Intent(mContext,CreateClassActivity.class));
                 }
                 break;
@@ -148,31 +149,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
         }
     }
 
-    public boolean checkTeachingAbility(){
-        if (AccountDataManager.isTeacher(mContext)) {
-            return true;
-        } else {
-            //提示申明教学能力
-            final CommonDialog dialog = new CommonDialog(mContext);
-            dialog.setTitle(R.string.declare_teaching_ability);
-            dialog.setDesc(R.string.declare_teaching_ability_tip);
-            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    dialog.dismiss();
-                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
-            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    dialog.dismiss();
-                }
-            });
-            return false;
-        }
-    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

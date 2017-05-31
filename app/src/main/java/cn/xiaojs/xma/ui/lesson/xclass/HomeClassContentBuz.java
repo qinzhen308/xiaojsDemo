@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
+import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
 import com.orhanobut.logger.Logger;
@@ -46,6 +47,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.JudgementUtil;
 
 /**
  * Created by Paul Z on 2017/5/22.
@@ -100,32 +102,33 @@ public class HomeClassContentBuz {
         overLayout.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         overLayout.setAdapter(mAdapter);
 
-        calendarView.setOnCalendarClickListener(new OnCalendarClickListener() {
+        calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
-//                HomeClassContentBuz.this.year=year;
-//                HomeClassContentBuz.this.month=month;
                 if(HomeClassContentBuz.this.month!=month||HomeClassContentBuz.this.year!=year||HomeClassContentBuz.this.day!=day){
                     HomeClassContentBuz.this.day=day;
+                    HomeClassContentBuz.this.year=year;
+                    HomeClassContentBuz.this.month=month;
                     doRequest(year,month,day);
                 }
             }
 
             @Override
-            public void onPageChange(int year, int month, int day) {
-                if(HomeClassContentBuz.this.month!=month||HomeClassContentBuz.this.year!=year){//切换月
-                     HomeClassContentBuz.this.year=year;
-                    HomeClassContentBuz.this.month=month;
-                    getMonthData();
-                }
+            public void onWeekChange(int year, int month, int day) {
+
+            }
+
+            @Override
+            public void onMonthChange(int year, int month, int day) {
+                getMonthData();
                 if(todayYear==year&&todayMonth==month){
                     btnToday.setVisibility(View.GONE);
                 }else {
                     btnToday.setVisibility(View.VISIBLE);
                 }
-
             }
         });
+
         overLayout.addOnScrollListener(new PageChangeListener());
 
     }
@@ -182,33 +185,15 @@ public class HomeClassContentBuz {
 
                 switch (i) {
                     case 1:
-                        mContext.startActivity(new Intent(mContext,CreateClassActivity.class));
+                        if (JudgementUtil.checkTeachingAbility(mContext)) {
+                            mContext.startActivity(new Intent(mContext, CreateClassActivity.class));
+                        }
                         break;
                     case 0:
-                        if (AccountDataManager.isTeacher(mContext)) {
+                        if (JudgementUtil.checkTeachingAbility(mContext)) {
                             //老师可以开课
                             Intent intent = new Intent(mContext, LessonCreationActivity.class);
                             mContext.startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
-                        } else {
-                            //提示申明教学能力
-                            final CommonDialog dialog = new CommonDialog(mContext);
-                            dialog.setTitle(R.string.declare_teaching_ability);
-                            dialog.setDesc(R.string.declare_teaching_ability_tip);
-                            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                                @Override
-                                public void onClick() {
-                                    dialog.dismiss();
-                                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
-                                    mContext.startActivity(intent);
-                                }
-                            });
-                            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                                @Override
-                                public void onClick() {
-                                    dialog.dismiss();
-                                }
-                            });
-                            dialog.show();
                         }
                         break;
                 }

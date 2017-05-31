@@ -15,13 +15,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.ui.view.AnimationView;
 
 /**
  * Created by Paul Z on 2017/5/23.
  */
 
-public class ClassView extends RelativeLayout implements IViewModel<Object>{
+public class ClassView extends RelativeLayout implements IViewModel<PrivateClass>{
 
 
     @BindView(R.id.flag_view)
@@ -46,6 +47,8 @@ public class ClassView extends RelativeLayout implements IViewModel<Object>{
     Button opRoomView;
     @BindView(R.id.entrance_count)
     TextView entranceCount;
+
+    PrivateClass mData;
 
     public ClassView(Context context) {
         super(context);
@@ -93,6 +96,8 @@ public class ClassView extends RelativeLayout implements IViewModel<Object>{
     }
 
     @Override
-    public void bindData(Object data) {
+    public void bindData(PrivateClass data) {
+        mData=data;
+
     }
 }
