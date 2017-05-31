@@ -168,7 +168,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     @OnClick(R.id.btn_more)
     public void onViewClicked() {
 
-        new LessonOperateBoard(getContext()).maybe((Activity) getContext(),createMode()).show();
+        new LessonOperateBoard(getContext()).setOpGroup2(createMode()).maybe((Activity) getContext(),mData).show();
     }
 
     public List<LOpModel> createMode(){

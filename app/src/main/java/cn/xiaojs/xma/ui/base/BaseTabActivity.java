@@ -231,6 +231,10 @@ public abstract class BaseTabActivity extends BaseActivity {
         }
     }
 
+    protected void doubleClick(){
+
+    }
+
     @Override
     protected void onDestroy() {
         if (mRotateRight != null){

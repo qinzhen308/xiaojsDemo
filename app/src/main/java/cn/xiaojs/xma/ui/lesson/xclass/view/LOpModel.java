@@ -95,8 +95,7 @@ public class LOpModel {
                 break;
             case OP_CLASS_INFO:
                 if(data instanceof CLesson) {
-
-//                    classInfo(context, ((CLesson) data).);
+                    classInfo(context, ((CLesson) data).classInfo.id);
                 }
                 break;
             case OP_DATABASE:

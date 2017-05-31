@@ -162,12 +162,12 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }else {
             group1.setVisibility(View.VISIBLE);
         }
-        icon1.setImageResource(icons[opGroup2.get(0).getId()]);
-        name1.setText(names[opGroup2.get(0).getId()]);
-        icon2.setImageResource(icons[opGroup2.get(1).getId()]);
-        name2.setText(names[opGroup2.get(1).getId()]);
-        icon3.setImageResource(icons[opGroup2.get(2).getId()]);
-        name3.setText(names[opGroup2.get(2).getId()]);
+        icon1.setImageResource(icons[opGroup1.get(0).getId()]);
+        name1.setText(names[opGroup1.get(0).getId()]);
+        icon2.setImageResource(icons[opGroup1.get(1).getId()]);
+        name2.setText(names[opGroup1.get(1).getId()]);
+        icon3.setImageResource(icons[opGroup1.get(2).getId()]);
+        name3.setText(names[opGroup1.get(2).getId()]);
         return this;
     }
 
@@ -186,15 +186,19 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.group1_item1:
+                opGroup1.get(0).onClick(activity,data);
                 break;
             case R.id.group1_item2:
+                opGroup1.get(1).onClick(activity,data);
                 break;
             case R.id.group1_item3:
+                opGroup1.get(2).onClick(activity,data);
                 break;
             case R.id.cancel:
                 if(isShowing())dismiss();
                 break;
         }
+        if(isShowing())dismiss();
     }
 
     public interface OnDialogCloseListener {
