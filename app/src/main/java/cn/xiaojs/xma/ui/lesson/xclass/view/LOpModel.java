@@ -30,6 +30,7 @@ import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.LessonScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
@@ -93,7 +94,10 @@ public class LOpModel {
 
                 break;
             case OP_CLASS_INFO:
+                if(data instanceof CLesson) {
 
+//                    classInfo(context, ((CLesson) data).);
+                }
                 break;
             case OP_DATABASE:
 //                enterDatabase(context);
@@ -187,6 +191,12 @@ public class LOpModel {
     public void enterDatabase(Activity context){
         Intent intent=new Intent(context,MaterialActivity.class);
         intent.putExtra(MaterialActivity.KEY_IS_MINE,false);
+        context.startActivity(intent);
+    }
+
+    public void classInfo(Activity context,String classId){
+        Intent intent=new Intent(context,ClassInfoActivity.class);
+        intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,classId);
         context.startActivity(intent);
     }
 
