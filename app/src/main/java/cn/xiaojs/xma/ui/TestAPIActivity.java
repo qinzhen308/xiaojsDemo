@@ -30,6 +30,7 @@ import cn.xiaojs.xma.data.download.DConstants;
 import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.account.OrgTeacher;
+import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.CLEResponse;
@@ -170,12 +171,27 @@ public class TestAPIActivity extends Activity {
 
     public void testCache() {
 
-        String classId = "5927f85a9b2ba6cf531f1e75";
+//        String start = "2014-05-25T16:00:00.000Z";
+//        String end = "2080-05-25T16:00:00.000Z";
+//
+//        LessonDataManager.getClassesSchedule4Class(this, start, end, "StandaloneLesson", "All", 100, 1, new APIServiceCallback<ScheduleData>() {
+//            @Override
+//            public void onSuccess(ScheduleData object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
-        Intent i = new Intent(this, ClassInfoActivity.class);
-        i.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
-
-        startActivity(i);
+//        String classId = "5927f85a9b2ba6cf531f1e75";
+//
+//        Intent i = new Intent(this, ClassInfoActivity.class);
+//        i.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
+//
+//        startActivity(i);
 
 //        long start = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
 //

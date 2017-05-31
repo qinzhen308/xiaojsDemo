@@ -1,20 +1,20 @@
 package cn.xiaojs.xma.data.api.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
 
+import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.CollectionPageData;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.account.AssociationStaus;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
-import cn.xiaojs.xma.model.account.Location;
 import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.account.PrivateHome;
 import cn.xiaojs.xma.model.account.PublicHome;
@@ -47,6 +47,8 @@ import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
@@ -348,6 +350,22 @@ public interface XiaojsService {
                                           @Query("unformat") String unformat,
                                           @Query("type") String type,
                                           @Query("state") String state);
+
+    @GET("/v1/ctl/schedule")
+    Call<CollectionResult<PrivateClass>> getClassesSchedule4Class(@Query("start") String start,
+                                                                  @Query("end") String end,
+                                                                  @Query("type") String type,
+                                                                  @Query("state") String state,
+                                                                  @Query("limit") int limit,
+                                                                  @Query("page") int page);
+
+    @GET("/v1/ctl/schedule")
+    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Query("start") String start,
+                                                                      @Query("end") String end,
+                                                                      @Query("type") String type,
+                                                                      @Query("state") String state,
+                                                                      @Query("limit") int limit,
+                                                                      @Query("page") int page);
 
     //Schedule Class Lesson
     @POST("/v1/ctl/classes/{classes}/schedule/lessons")

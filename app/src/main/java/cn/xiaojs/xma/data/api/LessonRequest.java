@@ -12,8 +12,10 @@ import cn.xiaojs.xma.model.AccessLesson;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CancelReason;
+import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CollectionPageData;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.CreateLesson;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.ELResponse;
@@ -25,15 +27,14 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 import com.orhanobut.logger.Logger;
 
-import java.util.Date;
-import java.util.List;
-
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
@@ -44,7 +45,6 @@ import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
-import cn.xiaojs.xma.model.ctl.StudentInfo;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -284,6 +284,28 @@ public class LessonRequest extends ServiceRequest {
     public void getClassesSchedule(String start, String end, String unformat, String type, String state) {
 
         Call<ScheduleData> call = getService().getClassesSchedule(start, end, unformat, type, state);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
+    public void getClassesSchedule4Class(String start,
+                                         String end,
+                                         String type,
+                                         String state,
+                                         int limit,
+                                         int page) {
+        Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule4Class(start,
+                end, type, state, limit, page);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
+    public void getClassesSchedule4Lesson(String start,
+                                          String end,
+                                          String type,
+                                          String state,
+                                          int limit,
+                                          int page) {
+        Call<CollectionCalendar<ClassSchedule>> call = getService().getClassesSchedule4Lesson(start,
+                end, type, state, limit, page);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 

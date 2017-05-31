@@ -19,6 +19,7 @@ public class Account {
         public static final String PERSION = "Person";
         public static final String ORGANIZATION = "Organization";
         public static final String STAND_ALONE_LESSON="StandaloneLesson";
+        public static final String CLASS_LESSON="ClassLesson";
     }
 
     public class Sex{
