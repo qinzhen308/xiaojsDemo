@@ -53,7 +53,7 @@ public abstract class BaseTabActivity extends BaseActivity {
     @BindView(R.id.home_center_image)
     ImageView mCenter;
 
-    FragmentPagerAdapter mAdapter;
+    protected TabFragmentPagerAdapter mAdapter;
     private int[] mTitles;
     private int[] mDrawables;
     private List<RedTipTextView> mTabs;
@@ -229,10 +229,6 @@ public abstract class BaseTabActivity extends BaseActivity {
             setTabSelected(index);
 
         }
-    }
-
-    protected void doubleClick(){
-
     }
 
     @Override

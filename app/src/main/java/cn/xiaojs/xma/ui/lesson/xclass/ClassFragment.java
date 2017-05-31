@@ -204,6 +204,12 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
         }
     }
 
+    public void updateData(){
+        if(layoutNormal!=null){
+            contentBuz.update();
+        }
+    }
+
 
     //-------------------------动画----------------
 

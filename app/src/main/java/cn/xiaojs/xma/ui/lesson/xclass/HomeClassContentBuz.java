@@ -281,4 +281,9 @@ public class HomeClassContentBuz {
         });
 
     }
+
+    public void update(){
+        getMonthData();
+        doRequest(year,month,day);
+    }
 }

@@ -69,6 +69,8 @@ public class LOpModel {
     public static final int OP_SUBMIT=18;
     //撤销审核
     public static final int OP_CANCEL_CHECK=19;
+    //橘黄色的分享按钮
+    public static final int OP_SHARE2=20;
 
     
     
@@ -148,6 +150,9 @@ public class LOpModel {
                 if(data instanceof CLesson){
                     offShelves(context,((CLesson) data).id);
                 }
+                break;
+            case OP_SHARE2:
+                share(context);
                 break;
 
         }

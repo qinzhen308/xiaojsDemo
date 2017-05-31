@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +44,7 @@ import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.SwipeLayout;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -129,6 +132,30 @@ public class MainActivity extends BaseTabActivity {
 //            ((NotificationFragment) fragment).notifyConversation();
 //        }
     }
+
+    @Override
+    protected void onTabClick(int position) {
+        judgeDoubleClick(position);
+        super.onTabClick(position);
+    }
+
+    private final void judgeDoubleClick(int position){
+        if(position!=0)return;
+        if(System.currentTimeMillis()-clickInvalid<DOUBLE_CLICK_INTERVAL){
+            onTabDoubleClick(position);
+            clickInvalid=0;
+        }else {
+            clickInvalid=System.currentTimeMillis();
+        }
+    }
+
+    private void onTabDoubleClick(int position){
+        ClassFragment fragment=(ClassFragment)mAdapter.getFragment(0);
+        fragment.updateData();
+    }
+
+    private final static int DOUBLE_CLICK_INTERVAL=500;
+    private long clickInvalid=0;
 
 
     private boolean dealFromNotify(Intent intent) {

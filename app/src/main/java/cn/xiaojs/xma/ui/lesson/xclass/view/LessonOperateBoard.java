@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,28 +31,10 @@ import cn.xiaojs.xma.util.ArrayUtil;
  */
 public class LessonOperateBoard extends Dialog implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
-    @BindView(R.id.icon1)
-    ImageView icon1;
-    @BindView(R.id.name1)
-    TextView name1;
-    @BindView(R.id.group1_item1)
-    LinearLayout group1Item1;
-    @BindView(R.id.icon2)
-    ImageView icon2;
-    @BindView(R.id.name2)
-    TextView name2;
-    @BindView(R.id.group1_item2)
-    LinearLayout group1Item2;
-    @BindView(R.id.icon3)
-    ImageView icon3;
-    @BindView(R.id.name3)
-    TextView name3;
-    @BindView(R.id.group1_item3)
-    LinearLayout group1Item3;
-    @BindView(R.id.group1)
-    LinearLayout group1;
-    @BindView(R.id.recyclerview)
-    RecyclerView recyclerview;
+    @BindView(R.id.recyclerview1)
+    RecyclerView recyclerview1;
+    @BindView(R.id.recyclerview2)
+    RecyclerView recyclerview2;
     @BindView(R.id.cancel)
     Button cancel;
     private View mContentView;// dialog content view
@@ -60,7 +43,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
 
     private List<LOpModel> opGroup2 =new ArrayList<>();
 
-    ItemAdapter mAdapter;
+    ItemAdapter mAdapter1;
+    ItemAdapter mAdapter2;
 
 
     private final static int[] icons={
@@ -73,7 +57,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_public,R.drawable.ic_op_publish,
             R.drawable.ic_op_recreate_lesson,R.drawable.ic_op_schedule,
             R.drawable.ic_op_share,R.drawable.ic_op_signup,
-            R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check
+            R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check,
+            R.drawable.ic_op_share2
     };
 
 
@@ -87,10 +72,19 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.string.lesson_op_public,R.string.lesson_op_publish,
             R.string.lesson_op_recreate_lesson,R.string.lesson_op_schedule,
             R.string.lesson_op_share,R.string.lesson_op_signup,
-            R.string.lesson_op_submit,R.string.lesson_op_cancel_check
+            R.string.lesson_op_submit,R.string.lesson_op_cancel_check,
+            R.string.lesson_op_share
     };
 
     private OnDialogCloseListener mOnDismissListener;
+
+    public final static List<LOpModel> commonOps=new ArrayList<>(4);
+    static {
+        commonOps.add(new LOpModel(0));
+        commonOps.add(new LOpModel(4));
+        commonOps.add(new LOpModel(8));
+        commonOps.add(new LOpModel(LOpModel.OP_SHARE2));
+    }
 
     public LessonOperateBoard(Context context) {
         super(context, R.style.CommonDialog);
@@ -105,6 +99,12 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     protected LessonOperateBoard(Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
         init();
+    }
+
+
+
+    public static List<LOpModel> getCommonOps(){
+        return commonOps;
     }
 
     private void init() {
@@ -123,21 +123,18 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         dialogWindow.setGravity(Gravity.BOTTOM);
         setOnCancelListener(this);
         setOnDismissListener(this);
-        mAdapter=new ItemAdapter();
-        recyclerview.setLayoutManager(new GridLayoutManager(getContext(),1,RecyclerView.HORIZONTAL,false));
+        mAdapter1=new ItemAdapter();
+        mAdapter2=new ItemAdapter();
+        recyclerview1.setLayoutManager(new GridLayoutManager(getContext(),1,RecyclerView.HORIZONTAL,false));
+        recyclerview2.setLayoutManager(new GridLayoutManager(getContext(),1,RecyclerView.HORIZONTAL,false));
 
-        for(int i=0;i<icons.length;i++){
-            if(i==0||i==4||i==8){
-                continue;
-            }
-            opGroup2.add(new LOpModel(i));
-        }
-        recyclerview.setAdapter(mAdapter);
 
-        opGroup1.add(new LOpModel(0));
-        opGroup1.add(new LOpModel(4));
-        opGroup1.add(new LOpModel(8));
-        setOpGroup1(opGroup1);
+        mAdapter1.setList(opGroup1);
+        mAdapter2.setList(opGroup2);
+        recyclerview1.setAdapter(mAdapter1);
+        recyclerview2.setAdapter(mAdapter2);
+
+
     }
 
 
@@ -157,23 +154,15 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
 
     public LessonOperateBoard setOpGroup1(List<LOpModel> ops) {
         this.opGroup1 = ops;
-        if(ArrayUtil.isEmpty(opGroup2)){
-            group1.setVisibility(View.GONE);
-        }else {
-            group1.setVisibility(View.VISIBLE);
-        }
-        icon1.setImageResource(icons[opGroup1.get(0).getId()]);
-        name1.setText(names[opGroup1.get(0).getId()]);
-        icon2.setImageResource(icons[opGroup1.get(1).getId()]);
-        name2.setText(names[opGroup1.get(1).getId()]);
-        icon3.setImageResource(icons[opGroup1.get(2).getId()]);
-        name3.setText(names[opGroup1.get(2).getId()]);
+        mAdapter1.setList(ops);
+        mAdapter1.notifyDataSetChanged();
         return this;
     }
 
     public LessonOperateBoard setOpGroup2(List<LOpModel> ops) {
         this.opGroup2 = ops;
-        mAdapter.notifyDataSetChanged();
+        mAdapter2.setList(ops);
+        mAdapter2.notifyDataSetChanged();
         return this;
     }
 
@@ -182,23 +171,13 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         mOnDismissListener = listener;
     }
 
-    @OnClick({R.id.group1_item1, R.id.group1_item2, R.id.group1_item3, R.id.cancel})
+    @OnClick({R.id.cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.group1_item1:
-                opGroup1.get(0).onClick(activity,data);
-                break;
-            case R.id.group1_item2:
-                opGroup1.get(1).onClick(activity,data);
-                break;
-            case R.id.group1_item3:
-                opGroup1.get(2).onClick(activity,data);
-                break;
             case R.id.cancel:
                 if(isShowing())dismiss();
                 break;
         }
-        if(isShowing())dismiss();
     }
 
     public interface OnDialogCloseListener {
@@ -212,6 +191,11 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     }
 
     class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
+        private List<LOpModel> list;
+
+        private void setList(List<LOpModel> list){
+            this.list=list;
+        }
 
         @Override
         public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -221,12 +205,12 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
 
         @Override
         public void onBindViewHolder(ItemHolder holder, final int position) {
-            holder.name.setText(names[opGroup2.get(position).getId()]);
-            holder.icon.setImageResource(icons[opGroup2.get(position).getId()]);
+            holder.name.setText(names[list.get(position).getId()]);
+            holder.icon.setImageResource(icons[list.get(position).getId()]);
             holder.btnItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    opGroup2.get(position).onClick(activity,data);
+                    list.get(position).onClick(activity,data);
                     dismiss();
                 }
             });
@@ -234,7 +218,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
 
         @Override
         public int getItemCount() {
-            return opGroup2 ==null?0: opGroup2.size();
+            return list ==null?0: list.size();
         }
     }
 
@@ -255,7 +239,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
 
     public void show(List<LOpModel> ops){
         this.opGroup2 =ops;
-        mAdapter.notifyDataSetChanged();
+        mAdapter2.setList(ops);
+        mAdapter2.notifyDataSetChanged();
         if(isShowing()){
 
         }else {
@@ -284,4 +269,5 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         this.data=null;
         super.dismiss();
     }
+
 }

@@ -5,109 +5,20 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/group1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingTop="@dimen/px60"
-        android:paddingBottom="@dimen/px60"
-        android:orientation="horizontal">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px320"
+        android:paddingLeft="@dimen/px30"
+        android:paddingRight="@dimen/px30"
+        android:background="@color/white" />
 
-        <LinearLayout
-            android:id="@+id/group1_item1"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/icon1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_op_apply"
-                />
-
-            <TextView
-                android:id="@+id/name1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textSize="@dimen/font_30px"
-                android:text=""
-                android:minEms="5"
-                android:textColor="@color/common_text"
-                android:layout_marginTop="@dimen/px30"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/group1_item2"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/icon2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_op_apply"
-                />
-
-            <TextView
-                android:id="@+id/name2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textSize="@dimen/font_30px"
-                android:text=""
-                android:minEms="5"
-                android:textColor="@color/common_text"
-                android:layout_marginTop="@dimen/px30"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/group1_item3"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/icon3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_op_apply"
-                />
-
-            <TextView
-                android:id="@+id/name3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textSize="@dimen/font_30px"
-                android:text=""
-                android:minEms="5"
-                android:textColor="@color/common_text"
-                android:layout_marginTop="@dimen/px30"
-                />
-
-        </LinearLayout>
-    </LinearLayout>
 
     <View style="@style/DividerHorizontal" />
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
+        android:id="@+id/recyclerview2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px320"
         android:paddingLeft="@dimen/px30"

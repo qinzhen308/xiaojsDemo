@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -69,6 +70,11 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     CLesson mData;
 
+    @BindColor(R.color.grey_point)
+    int color_gray_point;
+    @BindColor(R.color.orange_point)
+    int color_orange_point;
+
 
     private CircleTransform circleTransform;
 
@@ -110,13 +116,30 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         mData=data;
         tvDate.setText(ScheduleUtil.getHMDate(data.schedule.getStart()));
         tvTotalTime.setText(data.schedule.getDuration()+"分钟");
+
         tvLesson.setText(data.title);
-        if(data.owner!=null){
-            tvClassName.setText(data.owner.name);
+        if(data.classInfo!=null){
+            tvClassName.setText(data.classInfo.title);
             tvClassName.setVisibility(VISIBLE);
 
         }else {
             tvClassName.setVisibility(INVISIBLE);
+        }
+
+        if(Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)){
+            statePoint.setVisibility(VISIBLE);
+            statePoint.setBackgroundColor(color_gray_point);
+            iconLive.setVisibility(GONE);
+
+        }else if(Ctl.LiveLessonState.LIVE.equals(data.state)){
+            statePoint.setVisibility(INVISIBLE);
+            iconLive.setVisibility(VISIBLE);
+
+        }else {
+            statePoint.setVisibility(VISIBLE);
+            statePoint.setBackgroundColor(color_gray_point);
+            iconLive.setVisibility(GONE);
+
         }
 
         tvSpeaker.setText(data.teacher.name);
@@ -167,12 +190,20 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     @OnClick(R.id.btn_more)
     public void onViewClicked() {
-
-        new LessonOperateBoard(getContext()).setOpGroup2(createMode()).maybe((Activity) getContext(),mData).show();
+        if(mData.classInfo==null){
+            List<LOpModel> group1=new ArrayList<>();
+            group1.addAll(LessonOperateBoard.getCommonOps());
+            new LessonOperateBoard(getContext()).setOpGroup1(group1).setOpGroup2(createMode()).maybe((Activity) getContext(),mData).show();
+        }else {
+            new LessonOperateBoard(getContext()).setOpGroup2(createMode()).maybe((Activity) getContext(),mData).show();
+        }
     }
 
     public List<LOpModel> createMode(){
         List<LOpModel> ops;
+        if(mData.classInfo!=null){
+            return classLesson();
+        }
         if(mData.owner!=null&&mData.owner.getId().equals(AccountPref.getAccountID(getContext())) ){//我是所有者，无论我是不是讲师
             ops=imOnwer();
         }else if (mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))){//我虽然不是所有者，但我是讲师
@@ -181,6 +212,17 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             ops=imStudent();
         }
         return ops;
+    }
+
+
+    //首页班课的操作，对班的操作
+    public List<LOpModel> classLesson(){
+        List<LOpModel> list=new ArrayList<>();
+        list.add(new LOpModel(LOpModel.OP_SCHEDULE));
+        list.add(new LOpModel(LOpModel.OP_DATABASE));
+        list.add(new LOpModel(LOpModel.OP_ENTER));
+        list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
+        return list;
     }
 
     public List<LOpModel> imOnwer(){

@@ -38,4 +38,8 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return mFragments == null ? 0 : mFragments.size();
     }
+
+    public Fragment getFragment(int position){
+        return mFragments.get(position);
+    }
 }
