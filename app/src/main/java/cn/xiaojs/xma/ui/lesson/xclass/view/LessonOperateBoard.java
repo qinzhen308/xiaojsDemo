@@ -56,7 +56,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_recreate_lesson,R.drawable.ic_op_schedule,
             R.drawable.ic_op_share,R.drawable.ic_op_signup,
             R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check,
-            R.drawable.ic_op_share2,R.drawable.ic_op_database2
+            R.drawable.ic_op_share2,R.drawable.ic_op_database1
     };
 
 
