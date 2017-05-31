@@ -192,7 +192,7 @@ public class PlayerTextureView extends BaseMediaView {
         mPlayer.setOnPreparedListener(null);
         mPlayer.setOnInfoListener(null);
 
-        mPlayer.releaseSurfactexture();
+        //mPlayer.releaseSurfactexture();
         mPlayer.removeAllViews();
         mPlayer.destroyDrawingCache();
     }

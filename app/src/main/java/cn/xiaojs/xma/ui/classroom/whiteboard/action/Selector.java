@@ -9,7 +9,8 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
+
+import java.util.ArrayList;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
@@ -17,8 +18,6 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
-
-import java.util.ArrayList;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -431,9 +430,6 @@ public class Selector extends Doodle {
                 mDoodleRect.set(mDoodleRect.left, mDoodleRect.top, mDoodleRect.right, rect.bottom);
             }
         }
-
-        Log.i("aaa", "updateRect mDoodleRect=" + mDoodleRect);
-
     }
 
     @Override

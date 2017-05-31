@@ -121,4 +121,12 @@ public class EmbedTalkFragment extends BaseFragment{
         mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_back_pressed, 0, 0, 0);
         mTalkPresenter.switchTalkTab(TalkManager.TYPE_PEER_TALK, attendee.accountId);
     }
+
+    public void updateMultiTalk() {
+        mTalkPresenter.switchTalkTab(TalkManager.TYPE_MSG_MUlTI_TAlk, null);
+    }
+
+    public void updatePeerTalk(String accountId) {
+        mTalkPresenter.switchTalkTab(TalkManager.TYPE_PEER_TALK, accountId);
+    }
 }
