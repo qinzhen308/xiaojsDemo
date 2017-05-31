@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,10 +18,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
+import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -78,6 +82,37 @@ public class MyClassFragment extends Fragment {
             case R.id.course_filter:
                 filter();
                 break;
+            case R.id.my_course_search:
+                startActivity(new Intent(getActivity(),SearchClassActivity.class));
+                break;
+
+        }
+    }
+
+
+    public boolean checkTeachingAbility(){
+        if (AccountDataManager.isTeacher(getActivity())) {
+            return true;
+        } else {
+            //提示申明教学能力
+            final CommonDialog dialog = new CommonDialog(getActivity());
+            dialog.setTitle(R.string.declare_teaching_ability);
+            dialog.setDesc(R.string.declare_teaching_ability_tip);
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    Intent intent = new Intent(getActivity(),TeachingSubjectActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            });
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+            return false;
         }
     }
 

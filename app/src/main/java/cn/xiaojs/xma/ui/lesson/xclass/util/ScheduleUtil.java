@@ -137,10 +137,9 @@ public class ScheduleUtil {
 
     public static String getDateYMD(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        calendar.set(Calendar.DAY_OF_MONTH,day);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.YEAR,year);
+        calendar.set(year,month,day,0,0,0);
         return simpleYMDFormat.format(new Date(calendar.getTimeInMillis()));
     }
 
@@ -159,10 +158,9 @@ public class ScheduleUtil {
 
     public static String getDateYM(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        calendar.set(Calendar.DAY_OF_MONTH,day);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.YEAR,year);
+        calendar.set(year,month,day,0,0,0);
         return simpleYMFormat.format(new Date(calendar.getTimeInMillis()));
     }
 
@@ -180,19 +178,18 @@ public class ScheduleUtil {
 
     public static long ymdToTimeMill(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        calendar.set(Calendar.DAY_OF_MONTH,day);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.YEAR,year);
+        calendar.set(year,month,day,0,0,0);
         return calendar.getTimeInMillis();
     }
 
     public static String getWeek(int year,int month,int day){
         Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        calendar.set(Calendar.DAY_OF_MONTH,day);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.YEAR,year);
+        calendar.set(year,month,day,0,0,0);
+
         String week = "星期日";
         switch (calendar.get(Calendar.DAY_OF_WEEK)) {
             case 1:
@@ -225,6 +222,7 @@ public class ScheduleUtil {
 
     public static String getDateYMDW(Date date){
         Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.setTime(date);
         return simpleYMDFormat.format(date)+" "+TimeUtil.getWeak(date.getTime());
@@ -232,8 +230,10 @@ public class ScheduleUtil {
 
     public static boolean isSameDay(Date date,Calendar c){
         Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.setTime(date);
+        c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         return calendar.get(Calendar.DAY_OF_MONTH)==c.get(Calendar.DAY_OF_MONTH)&&calendar.get(Calendar.MONTH)==c.get(Calendar.MONTH)&&calendar.get(Calendar.YEAR)==c.get(Calendar.YEAR);
     }
 

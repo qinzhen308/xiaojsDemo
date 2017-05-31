@@ -449,6 +449,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     XiaojsConfig.mLoginUser = user;
                     XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
+                    AccountPref.setThirdPartFlag(LoginActivity.this,true);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

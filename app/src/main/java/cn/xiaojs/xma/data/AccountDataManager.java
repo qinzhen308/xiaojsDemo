@@ -257,6 +257,7 @@ public class AccountDataManager {
         AccountPref.setAuthToken(context,"");
         AccountPref.setAccountID(context,"");
         AccountPref.setLoginStatus(context,false);
+        AccountPref.setThirdPartFlag(context,false);
         AccountPref.setUser(context,null);
         AccountPref.setLocation(context,null);
         AccountDataManager.clearAbilities(context);

@@ -130,6 +130,9 @@
         <activity
                 android:name=".ui.lesson.xclass.SearchLessonActivity"
                 android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.lesson.xclass.SearchClassActivity"
+                android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.LessonCreationActivity"/>
         <activity
                 android:name=".ui.lesson.TeachingSubjectActivity"
