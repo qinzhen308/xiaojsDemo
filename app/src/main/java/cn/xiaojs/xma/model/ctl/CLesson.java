@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.account.Account;
 public class CLesson {
     public String id;
     public String title;
+    public String type;
     public Schedule schedule;
     public String state;
     public Account owner;

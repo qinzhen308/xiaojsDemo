@@ -3,10 +3,8 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.Xu;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.LessonRequest;
 import cn.xiaojs.xma.data.api.QiniuRequest;
@@ -29,14 +27,13 @@ import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 
-import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
-import cn.xiaojs.xma.model.ctl.CalendarLesson;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
@@ -45,13 +42,8 @@ import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
-import cn.xiaojs.xma.model.ctl.StudentInfo;
-import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -509,7 +501,7 @@ public class LessonDataManager {
                                                 String state,
                                                 int limit,
                                                 int page,
-                                                APIServiceCallback<CollectionCalendar<CalendarLesson>> callback) {
+                                                APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule4Lesson(start, end, type, state, limit, page);
     }

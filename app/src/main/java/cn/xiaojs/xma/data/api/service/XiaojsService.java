@@ -46,8 +46,8 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
-import cn.xiaojs.xma.model.ctl.CalendarLesson;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
@@ -360,12 +360,12 @@ public interface XiaojsService {
                                                                   @Query("page") int page);
 
     @GET("/v1/ctl/schedule")
-    Call<CollectionCalendar<CalendarLesson>> getClassesSchedule4Lesson(@Query("start") String start,
-                                                                       @Query("end") String end,
-                                                                       @Query("type") String type,
-                                                                       @Query("state") String state,
-                                                                       @Query("limit") int limit,
-                                                                       @Query("page") int page);
+    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Query("start") String start,
+                                                                      @Query("end") String end,
+                                                                      @Query("type") String type,
+                                                                      @Query("state") String state,
+                                                                      @Query("limit") int limit,
+                                                                      @Query("page") int page);
 
     //Schedule Class Lesson
     @POST("/v1/ctl/classes/{classes}/schedule/lessons")

@@ -32,8 +32,8 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
-import cn.xiaojs.xma.model.ctl.CalendarLesson;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
@@ -304,7 +304,7 @@ public class LessonRequest extends ServiceRequest {
                                           String state,
                                           int limit,
                                           int page) {
-        Call<CollectionCalendar<CalendarLesson>> call = getService().getClassesSchedule4Lesson(start,
+        Call<CollectionCalendar<ClassSchedule>> call = getService().getClassesSchedule4Lesson(start,
                 end, type, state, limit, page);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
