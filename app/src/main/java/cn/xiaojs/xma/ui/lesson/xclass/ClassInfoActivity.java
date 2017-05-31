@@ -105,10 +105,13 @@ public class ClassInfoActivity extends BaseActivity {
 
     private void bingView(ClassInfo info) {
         nameView.setText(info.title);
-        teacherNameView.setText(info.adviserName);
+        //FIXME 老师名字是这个属性么？
+        teacherNameView.setText(info.ownerName);
 
         numLessonView.setText(getString(R.string.number_lesson,info.lessons));
-        studentNumView.setText(getString(R.string.number_student,info.students));
+
+        int studentCount = info.join!=null? info.join.current : 0;
+        studentNumView.setText(getString(R.string.number_student,studentCount));
         opentimeView.setText(TimeUtil.format(info.createdOn,TimeUtil.TIME_YYYY_MM_DD));
         creatorView.setText(info.ownerName);
 
