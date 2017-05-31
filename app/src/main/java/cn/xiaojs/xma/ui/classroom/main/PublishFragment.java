@@ -578,6 +578,11 @@ public class PublishFragment extends ClassroomLiveFragment {
      * @see #mSyncStateListener
      */
     private void playOrPauseLesson() {
+        if (!ClassroomController.getInstance().isSocketConnected()) {
+            Toast.makeText(mContext, R.string.cr_connecting, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         //Prevent frequent clicks
         if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
             return;
@@ -863,6 +868,15 @@ public class PublishFragment extends ClassroomLiveFragment {
         mContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
         if (mHideShowTalkBtn.getVisibility() != View.VISIBLE) {
             startAnim();
+        }
+    }
+
+    @Override
+    public void onSocketConnectChanged(boolean connected) {
+        if (connected) {
+            if (mFullScreenTalkPresenter != null) {
+                mFullScreenTalkPresenter.switchFullMultiTalk();
+            }
         }
     }
 }

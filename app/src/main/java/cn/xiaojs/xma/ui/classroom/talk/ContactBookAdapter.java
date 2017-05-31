@@ -222,16 +222,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                     mChoiceList.add(choice);
                 }
             } else {
-                switch (v.getId()) {
-                    case R.id.talk:
-                        break;
-                    case R.id.video:
-                        if (mOnAttendItemClick != null) {
-                            mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, mAttendeeList.get(pos));
-                        }
-                        break;
-                }
-
                 String liveState = LiveCtlSessionManager.getInstance().getLiveState();
                 Attendee attendee = mAttendeeList.get(pos);
                 if (mOnAttendItemClick != null) {
@@ -252,6 +242,11 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                                 if (mOnAttendItemClick != null) {
                                     mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);
                                 }
+                                break;
+                            default:
+                                //enter chat
+                                attendee.unReadMsgCount = 0;
+                                mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
                                 break;
                         }
 

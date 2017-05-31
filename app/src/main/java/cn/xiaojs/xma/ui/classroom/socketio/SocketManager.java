@@ -109,7 +109,6 @@ public class SocketManager {
 
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
         }
 
         if (clearListener) {
@@ -150,7 +149,9 @@ public class SocketManager {
                                 callback.ackListener = listener;
                                 callback.data = response;
                                 msg.obj = callback;
-                                mHandler.sendMessage(msg);
+                                if (mHandler != null) {
+                                    mHandler.sendMessage(msg);
+                                }
                             }
                         });
                     } else {
@@ -163,7 +164,9 @@ public class SocketManager {
                                 callback.ackListener = listener;
                                 callback.data = response;
                                 msg.obj = callback;
-                                mHandler.sendMessage(msg);
+                                if (mHandler != null) {
+                                    mHandler.sendMessage(msg);
+                                }
                             }
                         });
                     }
@@ -190,7 +193,9 @@ public class SocketManager {
                     callback.eventListener = listener;
                     callback.data = args;
                     msg.obj = callback;
-                    mHandler.sendMessage(msg);
+                    if (mHandler != null) {
+                        mHandler.sendMessage(msg);
+                    }
                 }
             });
 
@@ -237,6 +242,10 @@ public class SocketManager {
 
     public interface AckListener {
         void call(Object... args);
+    }
+
+    public interface OnSocketListener {
+        void onSocketConnectChanged(boolean connected);
     }
 
 }

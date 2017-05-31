@@ -58,14 +58,15 @@ public class ServiceRequest<T> implements ContextLifecycle {
     protected boolean createFrg = false;
 
     private Context context;
+    private boolean contextDestoryException = false;
 
-    public ServiceRequest(Context context, APIServiceCallback<T> callback) {
+    public ServiceRequest(Context acontext, APIServiceCallback<T> callback) {
 
-        this.context = context.getApplicationContext();
+        this.context = acontext.getApplicationContext();
 
         this.serviceCallback = callback;
         apiManager = ApiManager.getAPIManager(context);
-        configContext(context);
+        configContext(acontext);
 
     }
 
@@ -204,9 +205,13 @@ public class ServiceRequest<T> implements ContextLifecycle {
         if (APPUtils.isBackgroundThread()) {
             configContext(activity.getApplicationContext());
         } else {
-            assertNotDestroyed(activity);
-            android.support.v4.app.FragmentManager fm = activity.getSupportFragmentManager();
-            getSupportRequestFragment(fm);
+            if (assertNotDestroyed(activity)) {
+                contextDestoryException = true;
+            }else{
+                android.support.v4.app.FragmentManager fm = activity.getSupportFragmentManager();
+                getSupportRequestFragment(fm);
+            }
+
         }
     }
 
@@ -215,17 +220,29 @@ public class ServiceRequest<T> implements ContextLifecycle {
         if (APPUtils.isMainThread() || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             configContext(activity.getApplicationContext());
         } else {
-            assertNotDestroyed(activity);
-            android.app.FragmentManager fm = activity.getFragmentManager();
-            getRequestFragment(fm);
+            if (assertNotDestroyed(activity)) {
+                contextDestoryException = true;
+            }else{
+                android.app.FragmentManager fm = activity.getFragmentManager();
+                getRequestFragment(fm);
+            }
+
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static void assertNotDestroyed(Activity activity) {
+    private static boolean assertNotDestroyed(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed()) {
-            throw new IllegalArgumentException("You cannot start a load for a destroyed activity: " + activity);
+            if (XiaojsConfig.DEBUG) {
+                //throw new IllegalArgumentException("You cannot start a load for a destroyed activity: " + activity);
+                Logger.e("You cannot start a load for a destroyed activity: " + activity);
+            }
+
+            return true;
+
         }
+
+        return false;
     }
 
 
@@ -329,6 +346,11 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     public final void enqueueRequestFromDb(final int apiType, final Call<T> call, BaseDao dao, Object... params) {
 
+        if (contextDestoryException) {
+            return;
+        }
+
+
         DataLoder dataLoder = new DataLoder(getContext(), dao);
         dataLoder.load(new DataLoder.DataLoaderCallback() {
             @Override
@@ -357,6 +379,10 @@ public class ServiceRequest<T> implements ContextLifecycle {
                                      int page,
                                      Class<T> pClass,
                                      Class... _class) {
+
+        if (contextDestoryException) {
+            return;
+        }
 
         if (page == 1 && createFrg) {
 
@@ -394,6 +420,10 @@ public class ServiceRequest<T> implements ContextLifecycle {
             return;
         }
 
+        if (contextDestoryException) {
+            return;
+        }
+
         serviceCall = call;
 
         serviceCall.enqueue(new Callback<T>() {
@@ -415,6 +445,10 @@ public class ServiceRequest<T> implements ContextLifecycle {
     private void enqueueRequest(final int apiType, Call<T> call, final boolean cache) {
 
         if (call == null) {
+            return;
+        }
+
+        if (contextDestoryException) {
             return;
         }
 

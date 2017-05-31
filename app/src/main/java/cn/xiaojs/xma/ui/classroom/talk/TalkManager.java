@@ -35,6 +35,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.bean.TalkBean;
 import cn.xiaojs.xma.ui.classroom.bean.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
@@ -102,6 +103,10 @@ public class TalkManager {
     }
 
     public AbsChatAdapter getChatAdapter(Context context, int type, String accountId, PullToRefreshListView listView) {
+        if (!ClassroomController.getInstance().isSocketConnected()) {
+            return null;
+        }
+
         AbsChatAdapter adapter = getAdapter(type, accountId);
         LiveCriteria lveCriteria = new LiveCriteria();
         String ticket = LiveCtlSessionManager.getInstance().getTicket();

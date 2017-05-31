@@ -496,6 +496,7 @@
     <string name="cr_save_edit">保存图片编辑</string>
     <string name="cr_save_edit_desc">是否保存对当前图片的编辑?</string>
     <string name="cr_individual_end">直播秀已结束，点击播放按钮可再次直播秀</string>
+    <string name="cr_connecting">教室正在连接中，请稍后...</string>
 
     <!-- 社交-->
     <string name="contact">联系人</string>

@@ -22,7 +22,7 @@ public class LiveCtlSessionManager {
     private CtlSession mCtlSession;
     private Constants.User mUser;
     private Constants.UserMode mUserMode;
-    private String mTicket;
+    private String mTicket = "";
 
     private static LiveCtlSessionManager mInstance;
 

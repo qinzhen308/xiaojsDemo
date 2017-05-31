@@ -69,7 +69,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         FrameCapturedCallback,
         OnPhotoDoodleShareListener,
         ExitPeerTalkListener,
-        TalkManager.OnTalkMsgReceived {
+        TalkManager.OnTalkMsgReceived,
+        SocketManager.OnSocketListener {
 
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
     protected final static int BTN_PRESS_INTERVAL = 1000; //ms
@@ -110,6 +111,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         TalkManager.getInstance().registerMsgReceiveListener(this);
         ClassroomController.getInstance().setStackFragment(this);
         ClassroomController.getInstance().registerBackPressListener(this);
+        ClassroomController.getInstance().registerSocketConnectListener(this);
     }
 
     @Override
@@ -119,6 +121,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         ClassroomController.getInstance().setStackFragment(null);
         ClassroomController.getInstance().unregisterBackPressListener(this);
         TalkManager.getInstance().unregisterMsgReceiveListener(this);
+        ClassroomController.getInstance().unregisterSocketConnectListener(this);
     }
 
     @Override
