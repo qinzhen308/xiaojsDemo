@@ -29,7 +29,10 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
 
@@ -228,5 +231,18 @@ public class ClassroomBusiness {
         }
 
         return countTime;
+    }
+
+    public static String getNameByAccountId(String accountId) {
+        LiveCollection<Attendee> liveCollection = ContactManager.getInstance().getAttendees();
+        if (accountId != null && liveCollection != null && liveCollection.attendees != null) {
+            for (Attendee attendee : liveCollection.attendees) {
+                if (accountId != null && accountId.equals(attendee.accountId)) {
+                    return attendee.name;
+                }
+            }
+        }
+
+        return accountId;
     }
 }

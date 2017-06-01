@@ -34,7 +34,6 @@ public class WhiteboardProcessor {
         Canvas canvas = new Canvas(bmp);
         //draw bg
         canvas.drawColor(Color.WHITE);
-        //TODO courseBg must center
         if (courseBg != null) {
             Rect src = new Rect(0, 0, courseBg.getWidth(), courseBg.getHeight());
             Rect des = new Rect(0, 0, width, height);

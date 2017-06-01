@@ -31,7 +31,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import cn.xiaojs.xma.R;
 
@@ -519,10 +521,14 @@ public class BitmapUtils {
 
     //saves the lossless compression jpg image to the file
     public static String saveImage(Bitmap bitmap, String destPath, int quality) {
-        return saveImage(bitmap, destPath, quality, true);
+        return saveImage(bitmap, destPath, quality, true, false);
     }
 
     public static String saveImage(Bitmap bitmap, String destPath, int quality, boolean recycle) {
+        return saveImage(bitmap, destPath, quality, recycle, false);
+    }
+
+    public static String saveImage(Bitmap bitmap, String destPath, int quality, boolean recycle, boolean updateTime) {
         if (bitmap == null) {
             return null;
         }
@@ -535,6 +541,14 @@ public class BitmapUtils {
                     out.flush();
                     out.close();
                     out = null;
+                }
+
+                if (updateTime) {
+                    setExifDateTime(destPath);
+                }
+
+                if (out != null) {
+                    out.close();
                 }
             }
             if (recycle) {
@@ -549,7 +563,7 @@ public class BitmapUtils {
         return destPath;
     }
 
-    public static boolean saveImageToGallery(Context context, Bitmap bmp, File fileDir,String fileName, int quality) {
+    public static boolean saveImageToGallery(Context context, Bitmap bmp, File fileDir,String fileName, int quality, boolean updateTime) {
         // 首先保存图片
         File file = new File(fileDir, fileName);
         try {
@@ -557,6 +571,11 @@ public class BitmapUtils {
             bmp.compress(CompressFormat.JPEG, quality, fos);
             fos.flush();
             fos.close();
+
+            if (updateTime) {
+                setExifDateTime(file.getPath());
+            }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
@@ -905,6 +924,16 @@ public class BitmapUtils {
     }
 
 
+    private static void setExifDateTime (String filePath) {
+        try {
+            ExifInterface exifInterface = new ExifInterface(filePath);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String time = TimeUtil.formatDate(System.currentTimeMillis(), formatter);
+            exifInterface.setAttribute(ExifInterface.TAG_DATETIME, time);
+            exifInterface.saveAttributes();
+        } catch (IOException e) {
 
-
+        }
+    }
 }

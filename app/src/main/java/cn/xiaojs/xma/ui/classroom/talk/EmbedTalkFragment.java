@@ -1,20 +1,21 @@
 package cn.xiaojs.xma.ui.classroom.talk;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.model.live.CtlSession;
-import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -31,7 +32,7 @@ import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
  *
  * ======================================================================================== */
 
-public class EmbedTalkFragment extends BaseFragment{
+public class EmbedTalkFragment extends Fragment {
     //talk
     @BindView(R.id.talk_view)
     View mTalkView;
@@ -40,19 +41,30 @@ public class EmbedTalkFragment extends BaseFragment{
     @BindView(R.id.talk_list_view)
     PullToRefreshListView mTalkMsgLv;
 
-    private CtlSession mCtlSession;
-    private Constants.UserMode mUserMode;
-    private String mTicket;
-
     private TalkPresenter mTalkPresenter;
     private ExitPeerTalkListener mExitPeerTalkListener;
+    private Context mContext;
+    private Unbinder mBinder;
 
     @Override
-    protected View getContentView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_embed_talk, null);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_embed_talk, null);
+        mBinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        init();
+    }
+
     protected void init() {
         initParams();
         initView();
@@ -62,16 +74,6 @@ public class EmbedTalkFragment extends BaseFragment{
     }
 
     private void initParams() {
-        Bundle data = getArguments();
-        if (data != null) {
-            mCtlSession = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
-            if (mCtlSession != null) {
-                mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
-            }
-        }
-
-
-        mTicket = LiveCtlSessionManager.getInstance().getTicket();
         mTalkPresenter = new TalkPresenter(mContext, mTalkMsgLv, mTalkNameTv);
     }
 
@@ -81,15 +83,14 @@ public class EmbedTalkFragment extends BaseFragment{
 
     private void initView() {
         mTalkMsgLv.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
-        mTalkMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_INSIDE_INSET);
-        mTalkMsgLv.getRefreshableView().setFastScrollEnabled(true);
+        //mTalkMsgLv.getRefreshableView().setScrollBarStyle(AbsListView.SCROLLBARS_OUTSIDE_OVERLAY);
+        //mTalkMsgLv.getRefreshableView().setFastScrollEnabled(true); //set true, fast scroll block will be shown
         mTalkMsgLv.getRefreshableView().setDividerHeight(0);
 
         mTalkNameTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mTalkPresenter.getTalkCriteria() == TalkManager.TYPE_PEER_TALK) {
-                    TalkManager.getInstance().setPeekTalkingAccount(null);
                     mTalkNameTv.setText(R.string.cr_talk_discussion);
                     mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     mTalkPresenter.switchMsgMultiTalk();
@@ -99,6 +100,15 @@ public class EmbedTalkFragment extends BaseFragment{
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (mBinder != null) {
+            mBinder.unbind();
+        }
     }
 
     @Override
@@ -116,10 +126,7 @@ public class EmbedTalkFragment extends BaseFragment{
      * 切换到一对一聊天
      */
     public void switchPeerTalk(Attendee attendee) {
-        TalkManager.getInstance().setPeekTalkingAccount(attendee.accountId);
-        mTalkNameTv.setText(attendee.name);
-        mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_back_pressed, 0, 0, 0);
-        mTalkPresenter.switchTalkTab(TalkManager.TYPE_PEER_TALK, attendee.accountId);
+        mTalkPresenter.switchPeerTalk(attendee, true);
     }
 
     public void updateMultiTalk() {

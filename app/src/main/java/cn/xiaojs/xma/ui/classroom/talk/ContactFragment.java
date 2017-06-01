@@ -137,7 +137,6 @@ public class ContactFragment extends SheetFragment implements OnAttendItemClick,
         Attendee mySelf = new Attendee();
         mySelf.accountId = AccountDataManager.getAccountID(mContext);
         mySelf.name = XiaojsConfig.mLoginUser != null ? XiaojsConfig.mLoginUser.getName() : null;
-        //TODO 怎么判断是自己是否老师
         if (!liveCollection.attendees.contains(mySelf)) {
             liveCollection.attendees.add(0, mySelf);
         }

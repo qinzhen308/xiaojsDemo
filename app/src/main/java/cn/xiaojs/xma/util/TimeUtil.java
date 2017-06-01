@@ -81,6 +81,17 @@ public class TimeUtil {
         }
     }
 
+    public static String formatDate(long date, SimpleDateFormat format) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(date);
+            return format.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     public static String formatDate(String date, String format) {
         if (TextUtils.isEmpty(date)) {
             return "";

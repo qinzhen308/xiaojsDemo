@@ -46,6 +46,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
@@ -62,6 +63,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     private String mTicket;
     private LiveCriteria mLiveCriteria;
     private OnImageClickListener mOnImageClickListener;
+    private OnPortraitClickListener mPortraitClickListener;
     private TalkComparator mTalkComparator;
 
     public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView) {
@@ -75,6 +77,10 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
 
     public void setOnImageClickListener(OnImageClickListener listener) {
         mOnImageClickListener = listener;
+    }
+
+    public void setOnPortraitClickListener(OnPortraitClickListener listener) {
+        mPortraitClickListener = listener;
     }
 
     @Override
@@ -151,6 +157,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             }
         }
 
+        holder.position = position;
         holder.msgContent.setTag(position);
         if (isText) {
             holder.msgImg.setVisibility(View.GONE);
@@ -192,7 +199,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             return TYPE_MY_SPEAKER;
         }
 
-        boolean isMyself = isMyself(item.from.accountId);
+        boolean isMyself = ClassroomBusiness.isMyself(mContext, item.from.accountId);
         return isMyself ? TYPE_MY_SPEAKER : TYPE_OTHER_SPEAKER;
     }
 
@@ -221,6 +228,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         holder.msgImg = (ImageView) v.findViewById(R.id.msg_img);
         holder.msgContent = v.findViewById(R.id.msg_content);
         holder.msgImg.setOnClickListener(this);
+        holder.portrait.setOnClickListener(this);
         return holder;
     }
 
@@ -253,37 +261,54 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         View parent = (View) v.getParent();
         Object obj = parent.getTag();
         try {
-            Integer position = (Integer) obj;
-            TalkItem talkItem = getItem(position);
+            TalkItem talkItem = null;
+            switch (v.getId()) {
+                case R.id.msg_img:
+                    boolean isText = false;
+                    String drawingKey = null;
+                    String base64Txt = null;
+                    Integer position = (Integer) obj;
+                    talkItem = getItem(position);
 
-            boolean isText = false;
-            String drawingKey = null;
-            String base64Txt = null;
+                    if (talkItem.body != null) {
+                        if (!TextUtils.isEmpty(talkItem.body.text)) {
+                            base64Txt = talkItem.body.text;
+                            if (talkItem.body.contentType == Communications.ContentType.TEXT) {
+                                isText = true;
+                            }
+                        } else {
+                            if (talkItem.body.drawing != null) {
+                                drawingKey = talkItem.body.drawing.name;
+                            }
+                        }
+                    }
 
-            if (talkItem.body != null) {
-                if (!TextUtils.isEmpty(talkItem.body.text)) {
-                    base64Txt = talkItem.body.text;
-                    if (talkItem.body.contentType == Communications.ContentType.TEXT) {
-                        isText = true;
+                    if (!isText && (!TextUtils.isEmpty(base64Txt) || !TextUtils.isEmpty(drawingKey))) {
+                        if (!TextUtils.isEmpty(base64Txt)) {
+                            if (mOnImageClickListener != null) {
+                                mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_BASE64, base64Txt);
+                            }
+                        } else {
+                            if (mOnImageClickListener != null) {
+                                mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_QINIU, drawingKey);
+                            }
+                        }
                     }
-                } else {
-                    if (talkItem.body.drawing != null) {
-                        drawingKey = talkItem.body.drawing.name;
+                    break;
+                case R.id.portrait:
+                    if (mPortraitClickListener != null && obj instanceof Holder) {
+                        talkItem = getItem(((Holder)obj).position);
+                        if (!ClassroomBusiness.isMyself(mContext, talkItem.from.accountId)) {
+                            Attendee attendee = new Attendee();
+                            attendee.accountId = talkItem.from.accountId;
+                            attendee.name = ClassroomBusiness.getNameByAccountId(attendee.accountId);
+                            mPortraitClickListener.onPortraitClick(attendee);
+                        }
                     }
-                }
+                    break;
             }
 
-            if (!isText && (!TextUtils.isEmpty(base64Txt) || !TextUtils.isEmpty(drawingKey))) {
-                if (!TextUtils.isEmpty(base64Txt)) {
-                    if (mOnImageClickListener != null) {
-                        mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_BASE64, base64Txt);
-                    }
-                } else {
-                    if (mOnImageClickListener != null) {
-                        mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_QINIU, drawingKey);
-                    }
-                }
-            }
+
         } catch (Exception e) {
 
         }
@@ -296,6 +321,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         TextView msgTxt;
         ImageView msgImg;
         View msgContent;
+        int position;
 
         public Holder(View view) {
             super(view);
@@ -335,8 +361,4 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         };
     }
 
-    private boolean isMyself(String currAccountId) {
-        String accountId = AccountDataManager.getAccountID(mContext);
-        return accountId != null && accountId.equals(currAccountId);
-    }
 }
