@@ -434,15 +434,17 @@ public class LessonDataManager {
      * @param callback
      */
     public static void getClassesSchedule(Context context,
+                                          String classId,
                                           String cycle,
                                           int next,
                                           int pre,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(cycle, next, pre);
+        lessonRequest.getClassesSchedule(classId, cycle, next, pre);
     }
 
     public static void getClassesSchedule(Context context,
+                                          String classId,
                                           String cycle,
                                           int next,
                                           int pre,
@@ -451,7 +453,7 @@ public class LessonDataManager {
                                           String state,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(cycle, next, pre, unformat, type, state);
+        lessonRequest.getClassesSchedule(classId, cycle, next, pre, unformat, type, state);
     }
 
     /**
@@ -462,15 +464,17 @@ public class LessonDataManager {
      * @param callback
      */
     public static void getClassesSchedule(Context context,
+                                          String classId,
                                           String start,
                                           String end,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(start, end);
+        lessonRequest.getClassesSchedule(classId, start, end);
     }
 
 
     public static void getClassesSchedule(Context context,
+                                          String classId,
                                           String start,
                                           String end,
                                           String unformat,
@@ -478,7 +482,7 @@ public class LessonDataManager {
                                           String state,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(start, end, unformat, type, state);
+        lessonRequest.getClassesSchedule(classId, start, end, unformat, type, state);
     }
 
 
@@ -488,13 +492,14 @@ public class LessonDataManager {
                                           String type,
                                           String state,
                                           Pagination pagination,
-                                          APIServiceCallback<CollectionResult<PrivateClass>> callback) {
+                                          APIServiceCallback<CollectionResult<PrivateClass>> callback,
+                                                String... querys) {
 
         int limit = pagination.getMaxNumOfObjectsPerPage();
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Class(start, end, type, state, limit, page);
+        lessonRequest.getClassesSchedule4Class(start, end, type, state, limit, page, querys);
     }
 
     public static void getClassesSchedule4Lesson(Context context,
@@ -503,13 +508,14 @@ public class LessonDataManager {
                                                 String type,
                                                 String state,
                                                 Pagination pagination,
-                                                APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
+                                                APIServiceCallback<CollectionCalendar<ClassSchedule>> callback,
+                                                 String... querys) {
 
         int limit = pagination.getMaxNumOfObjectsPerPage();
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Lesson(start, end, type, state, limit, page);
+        lessonRequest.getClassesSchedule4Lesson(start, end, type, state, limit, page, querys);
     }
 
     /**
