@@ -46,6 +46,7 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
+import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
@@ -425,8 +426,8 @@ public interface XiaojsService {
                                            @Body ClassLesson classLesson);
 
     //Check Overlap
-    @POST("/v1/ctl/classes/{classes}/schedule/check")
-    Call<ResponseBody> checkOverlap(@Path("classes") String classes, @Body ClassLesson classLesson);
+    @POST("/v1/ctl/classes/schedule/check")
+    Call<ResponseBody> checkOverlap(@Body CheckOverlapParams params);
 
     //Get Class
     @GET("/v1/ctl/classes/{class}")

@@ -17,6 +17,8 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.Schedule;
+import cn.xiaojs.xma.model.ctl.CheckLesson;
+import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -188,7 +190,27 @@ public class CreateTimetableActivity extends BaseActivity {
 
             boolean result = checkLocalConflict(params[0],params[1]);
             if (!result) {
-                //TODO 去服务器检测
+
+                try {
+                    Schedule schedule = new Schedule();
+                    schedule.setStart(new Date(params[0]));
+                    schedule.setDuration(params[1]);
+
+                    CheckLesson checkLesson = new CheckLesson();
+                    checkLesson.schedule = schedule;
+
+                    CheckOverlapParams overlapParams = new CheckOverlapParams();
+                    overlapParams.lessons = new ArrayList<>(1);
+                    overlapParams.lessons.add(checkLesson);
+
+                    // 去服务器检测
+                    if(!LessonDataManager.checkOverlap(getApplicationContext(),overlapParams)) {
+                        result = true;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
 
             return result;

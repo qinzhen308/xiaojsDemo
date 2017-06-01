@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.Pagination;
 
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
@@ -536,13 +537,11 @@ public class LessonDataManager {
     /**
      * 可用于排课前的检查，包括检查老师的状态、上课日程是否冲突 .
      */
-    public static void checkOverlap(Context context,
-                                    String classes,
-                                    ClassLesson lesson,
-                                    APIServiceCallback callback) {
+    public static boolean checkOverlap(Context context,
+                                    CheckOverlapParams params) throws Exception {
 
-        LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.checkOverlap(classes, lesson);
+        LessonRequest lessonRequest = new LessonRequest(context, null);
+        return lessonRequest.checkOverlapSync(params);
     }
 
     /**
