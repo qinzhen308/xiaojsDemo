@@ -120,7 +120,7 @@ public class LOpModel {
                 enterClass(context,((CLesson) data).classInfo.id);
                 break;
             case OP_ENTER_2:
-                enterSchedule(context);
+                enterClass(context,((CLesson) data).classInfo.id);
                 break;
             case OP_LOOK:
                 if(data instanceof CLesson){
@@ -138,7 +138,9 @@ public class LOpModel {
             case OP_RECREATE_LESSON:
                 break;
             case OP_SCHEDULE:
-                enterSchedule(context);
+                if(data instanceof CLesson) {
+                    enterSchedule(context, ((CLesson) data).classInfo.id, ((CLesson) data).classInfo.title);
+                }
                 break;
             case OP_SHARE:
                 share(context);
@@ -194,9 +196,8 @@ public class LOpModel {
         ShareUtil.show(context,"标题test","test内容","https//baidu.com");
     }
 
-    public static void enterSchedule(Activity context){
-        Intent intent=new Intent(context,ClassScheduleActivity.class);
-        context.startActivity(intent);
+    public static void enterSchedule(Activity context,String classId,String title){
+        ClassScheduleActivity.invoke(context,classId,title);
     }
 
     public void enterDatabase(Activity context){

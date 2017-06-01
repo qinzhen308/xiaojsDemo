@@ -329,10 +329,25 @@ public interface XiaojsService {
                                           @Query("next") int next,
                                           @Query("pre") int pre);
 
+    @GET("/v1/ctl/schedule/{classId}")
+    Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
+                                          @Query("cycle") String cycle,
+                                          @Query("next") int next,
+                                          @Query("pre") int pre);
+
 
     //Get Classes Schedule
     @GET("/v1/ctl/schedule")
     Call<ScheduleData> getClassesSchedule(@Query("cycle") String cycle,
+                                          @Query("next") int next,
+                                          @Query("pre") int pre,
+                                          @Query("unformat") String unformat,
+                                          @Query("type") String type,
+                                          @Query("state") String state);
+
+    @GET("/v1/ctl/schedule/{classId}")
+    Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
+                                          @Query("cycle") String cycle,
                                           @Query("next") int next,
                                           @Query("pre") int pre,
                                           @Query("unformat") String unformat,
@@ -344,12 +359,27 @@ public interface XiaojsService {
     Call<ScheduleData> getClassesSchedule(@Query("start") String start,
                                           @Query("end") String end);
 
+    @GET("/v1/ctl/schedule/{classId}")
+    Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
+                                          @Query("start") String start,
+                                          @Query("end") String end);
+
     @GET("/v1/ctl/schedule")
     Call<ScheduleData> getClassesSchedule(@Query("start") String start,
                                           @Query("end") String end,
                                           @Query("unformat") String unformat,
                                           @Query("type") String type,
                                           @Query("state") String state);
+
+
+    @GET("/v1/ctl/schedule/{classId}")
+    Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
+                                          @Query("start") String start,
+                                          @Query("end") String end,
+                                          @Query("unformat") String unformat,
+                                          @Query("type") String type,
+                                          @Query("state") String state);
+
 
     @GET("/v1/ctl/schedule")
     Call<CollectionResult<PrivateClass>> getClassesSchedule4Class(@Query("start") String start,
@@ -360,12 +390,34 @@ public interface XiaojsService {
                                                                   @Query("page") int page);
 
     @GET("/v1/ctl/schedule")
+    Call<CollectionResult<PrivateClass>> getClassesSchedule4Class(@Query("start") String start,
+                                                                  @Query("end") String end,
+                                                                  @Query("type") String type,
+                                                                  @Query("state") String state,
+                                                                  @Query("limit") int limit,
+                                                                  @Query("page") int page,
+                                                                  @Query("q") String q);
+
+    @GET("/v1/ctl/schedule")
     Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Query("start") String start,
                                                                       @Query("end") String end,
                                                                       @Query("type") String type,
                                                                       @Query("state") String state,
                                                                       @Query("limit") int limit,
                                                                       @Query("page") int page);
+
+    @GET("/v1/ctl/schedule")
+    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Query("start") String start,
+                                                                      @Query("end") String end,
+                                                                      @Query("type") String type,
+                                                                      @Query("state") String state,
+                                                                      @Query("limit") int limit,
+                                                                      @Query("page") int page,
+                                                                      @Query("q") String q);
+
+    @GET("/v1/ctl/schedule")
+    Call<CollectionResult<PrivateClass>> getClassesSchedule(@Query("type") String type,
+                                                            @Query("limit") int limit);
 
     //Schedule Class Lesson
     @POST("/v1/ctl/classes/{classes}/schedule/lessons")

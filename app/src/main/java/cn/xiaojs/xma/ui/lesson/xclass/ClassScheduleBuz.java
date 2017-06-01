@@ -48,6 +48,8 @@ public class ClassScheduleBuz {
     int selectyear;
     int selectMonth;
 
+    String classId;
+
     /**
      * @param context
      * @param root
@@ -57,6 +59,7 @@ public class ClassScheduleBuz {
         mContext = context;
         mRoot = root;
 //        R.layout.fragment_home_class_normal
+        classId=context.getIntent().getStringExtra(ClassScheduleActivity.EXTRA_ID);
         ButterKnife.bind(this, root);
         initListView();
         setListener();
@@ -113,7 +116,7 @@ public class ClassScheduleBuz {
             Logger.d("----qz----monthData--UTC--("+ScheduleUtil.getUTCDate(start)+")----("+ScheduleUtil.getUTCDate(end)+")");
             Logger.d("----qz----monthData--GMT8:00--("+ScheduleUtil.getDateYMDHMS(start)+")----("+ScheduleUtil.getDateYMDHMS(end)+")");
         }
-        LessonDataManager.getClassesSchedule(mContext, ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
+        LessonDataManager.getClassesSchedule(mContext,classId, ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
 

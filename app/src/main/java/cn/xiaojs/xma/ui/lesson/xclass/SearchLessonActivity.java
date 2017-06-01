@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,12 +30,15 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -70,6 +74,7 @@ public class SearchLessonActivity extends BaseActivity {
     private final static int BEGIN_SEARCH=0xff;
     DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
     Pagination mPagination;
+    String key;
 
     @Override
     protected void addViewContent() {
@@ -124,11 +129,14 @@ public class SearchLessonActivity extends BaseActivity {
     }
 
     private void search(){
+        key=searchInput.getText().toString();
         dataPageLoader.refresh();
     }
 
     private void request(){
-        
+
+        LessonDataManager.getClassesSchedule4Lesson(this, ScheduleUtil.getUTCDate(new Date(0).getTime()),ScheduleUtil.getUTCDate(ScheduleUtil.ymdToTimeMill(2100,12,30)), Account.TypeName.STAND_ALONE_LESSON,"All",mPagination,dataPageLoader,key);
+
 
     }
 
@@ -170,7 +178,7 @@ public class SearchLessonActivity extends BaseActivity {
             @Override
             public void onRequst(int page) {
                 mPagination.setPage(page);
-                search();
+                request();
             }
 
             @Override

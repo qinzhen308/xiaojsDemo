@@ -213,7 +213,7 @@ public class HomeClassContentBuz {
             Logger.d("----qz----start GMT+8:00 Time="+ScheduleUtil.getDateYMDHMS(start)+"---end GMT+8:00 Time="+ScheduleUtil.getDateYMDHMS(end));
             Logger.d("----qz----start UTC Time="+ScheduleUtil.getUTCDate(start)+"---end UTC Time="+ScheduleUtil.getUTCDate(end));
         }
-        LessonDataManager.getClassesSchedule(mContext, ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
+        LessonDataManager.getClassesSchedule(mContext,"", ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
                 LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
@@ -245,7 +245,7 @@ public class HomeClassContentBuz {
         final int m=month;
         final int d=day;
         int next=(y-todayYear)*12+(m-todayMonth);
-        LessonDataManager.getClassesSchedule(mContext, "monthly", next, 0, new APIServiceCallback<ScheduleData>() {
+        LessonDataManager.getClassesSchedule(mContext,"", "monthly", next, 0, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
                 HashSet hashSet=new HashSet<Integer>();

@@ -32,6 +32,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
     RadioButton tab2;
     RadioButton tab3;
     RadioButton tab4;
+    String classId="";
 
     @Override
     protected View getContentView() {
@@ -47,6 +48,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
 
     @Override
     protected void init() {
+        classId=getActivity().getIntent().getStringExtra(ClassScheduleActivity.EXTRA_ID);
         mAdapter=new HomeClassAdapter(recyclerview);
         recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         recyclerview.setAdapter(mAdapter);

@@ -250,9 +250,9 @@ public class ScheduleUtil {
         return simpleUTCFormat.format(new Date(date));
     }
 
-    public static Date getUTCDate(String date){
+    public static Date getUTCDate(String date,String format){
         try {
-            Date d=simpleHMFormat.parse(date);
+            Date d=new SimpleDateFormat(format).parse(date);
             return d;
         } catch (ParseException e) {
             e.printStackTrace();

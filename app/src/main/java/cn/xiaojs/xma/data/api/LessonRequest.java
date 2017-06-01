@@ -3,6 +3,7 @@ package cn.xiaojs.xma.data.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.service.APIType;
@@ -265,25 +266,60 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.CREATE_CLASS, call);
     }
 
-    public void getClassesSchedule(String cycle, int next, int pre) {
-        Call<ScheduleData> call = getService().getClassesSchedule(cycle, next, pre);
+    public void getClassesSchedule(String classId, String cycle, int next, int pre) {
+        Call<ScheduleData> call;
+        if (TextUtils.isEmpty(classId)) {
+            call = getService().getClassesSchedule(cycle, next, pre);
+        }else {
+            call = getService().getClassesSchedule(classId,cycle, next, pre);
+        }
+
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule(String cycle, int next, int pre, String unformat, String type, String state) {
-        Call<ScheduleData> call = getService().getClassesSchedule(cycle, next, pre, unformat, type, state);
+    public void getClassesSchedule(String classId,
+                                   String cycle,
+                                   int next,
+                                   int pre,
+                                   String unformat,
+                                   String type,
+                                   String state) {
+
+        Call<ScheduleData> call;
+        if (TextUtils.isEmpty(classId)) {
+            call = getService().getClassesSchedule(cycle, next, pre, unformat, type, state);
+        }else {
+            call = getService().getClassesSchedule(classId, cycle, next, pre, unformat, type, state);
+        }
+
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule(String start, String end) {
+    public void getClassesSchedule(String classId, String start, String end) {
 
-        Call<ScheduleData> call = getService().getClassesSchedule(start,end);
+        Call<ScheduleData> call;
+
+        if (TextUtils.isEmpty(classId)) {
+            call = getService().getClassesSchedule(start, end);
+        }else {
+            call = getService().getClassesSchedule(classId, start, end);
+        }
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule(String start, String end, String unformat, String type, String state) {
+    public void getClassesSchedule(String classId,
+                                   String start,
+                                   String end,
+                                   String unformat,
+                                   String type,
+                                   String state) {
 
-        Call<ScheduleData> call = getService().getClassesSchedule(start, end, unformat, type, state);
+        Call<ScheduleData> call;
+        if (TextUtils.isEmpty(classId)) {
+            call = getService().getClassesSchedule(start, end, unformat, type, state);
+        }else {
+            call = getService().getClassesSchedule(classId, start, end, unformat, type, state);
+        }
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
@@ -292,9 +328,25 @@ public class LessonRequest extends ServiceRequest {
                                          String type,
                                          String state,
                                          int limit,
-                                         int page) {
-        Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule4Class(start,
-                end, type, state, limit, page);
+                                         int page,
+                                         String... querys) {
+
+        Call<CollectionResult<PrivateClass>> call;
+        if (querys !=null && querys.length > 0) {
+            int count = querys.length;
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< count; i++) {
+                sb.append(querys[i]);
+
+                if (i< count-1) {
+                    sb.append(",");
+                }
+            }
+            call = getService().getClassesSchedule4Class(start, end, type, state, limit, page, sb.toString());
+        }else {
+            call = getService().getClassesSchedule4Class(start, end, type, state, limit, page);
+        }
+
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
@@ -303,9 +355,30 @@ public class LessonRequest extends ServiceRequest {
                                           String type,
                                           String state,
                                           int limit,
-                                          int page) {
-        Call<CollectionCalendar<ClassSchedule>> call = getService().getClassesSchedule4Lesson(start,
-                end, type, state, limit, page);
+                                          int page,
+                                          String... querys) {
+
+        Call<CollectionCalendar<ClassSchedule>> call;
+        if (querys !=null && querys.length > 0) {
+            int count = querys.length;
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< count; i++) {
+                sb.append(querys[i]);
+
+                if (i< count-1) {
+                    sb.append(",");
+                }
+            }
+            call = getService().getClassesSchedule4Lesson(start, end, type, state, limit, page, sb.toString());
+        }else {
+            call = getService().getClassesSchedule4Lesson(start, end, type, state, limit, page);
+        }
+
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
+    public void getClassesSchedule(String type, int limit) {
+        Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule(type, limit);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
