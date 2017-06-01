@@ -28,11 +28,14 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
+
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
@@ -46,8 +49,10 @@ import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.social.ContactGroup;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -388,9 +393,13 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.SCHEDULE_CLASS_LESSON, call);
     }
 
-    public void checkOverlap(String classes, ClassLesson lesson) {
-        Call<ResponseBody> call = getService().checkOverlap(classes, lesson);
-        enqueueRequest(APIType.CHECK_OVERLAP, call);
+    public boolean checkOverlapSync(CheckOverlapParams params) throws Exception{
+
+        Response<ResponseBody> response = getService().checkOverlap(params).execute();
+        if (response != null && response.code() == SUCCESS_CODE) {
+            return true;
+        }
+        return false;
     }
 
     public void getClass(String classid) {
