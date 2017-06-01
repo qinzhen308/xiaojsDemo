@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +27,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.pageload.DataPageLoader;
+import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
+import cn.xiaojs.xma.model.CollectionCalendar;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -59,7 +68,8 @@ public class SearchLessonActivity extends BaseActivity {
     HomeClassAdapter mAdapter;
 
     private final static int BEGIN_SEARCH=0xff;
-
+    DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
+    Pagination mPagination;
 
     @Override
     protected void addViewContent() {
@@ -89,6 +99,7 @@ public class SearchLessonActivity extends BaseActivity {
                 }
             }
         });
+        initPageLoad();
     }
 
 
@@ -113,12 +124,13 @@ public class SearchLessonActivity extends BaseActivity {
     }
 
     private void search(){
-        ToastUtil.showToast(getApplicationContext(),"搜索--关键字："+searchInput.getText().toString());
+        dataPageLoader.refresh();
     }
 
-//    private void request(){
-//        ToastUtil.showToast(getApplicationContext(),"搜索--关键字："+searchInput.getText().toString());
-//    }
+    private void request(){
+        
+
+    }
 
     private boolean verifyInput(String content){
         if(content.length()<2){
@@ -146,6 +158,61 @@ public class SearchLessonActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+
+    private void initPageLoad(){
+        mPagination=new Pagination();
+        mPagination.setPage(1);
+        mPagination.setMaxNumOfObjectsPerPage(10);
+        dataPageLoader=new DataPageLoader<ClassSchedule, CollectionCalendar<ClassSchedule>>() {
+            PageChangeInRecyclerView pageChangeInRecyclerView;
+            @Override
+            public void onRequst(int page) {
+                mPagination.setPage(page);
+                search();
+            }
+
+            @Override
+            public List<ClassSchedule> adaptData(CollectionCalendar<ClassSchedule> object) {
+                if(object==null)return new ArrayList<>();
+                return object.calendar;
+            }
+
+            @Override
+            public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
+                bindData(all);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                bindData(new ArrayList<ClassSchedule>());
+            }
+
+            @Override
+            public void prepare() {
+                pageChangeInRecyclerView=new PageChangeInRecyclerView(recyclerview,this);
+
+            }
+        };
+    }
+
+    private void bindData(List<ClassSchedule> list){
+        ArrayList monthLists=new ArrayList();
+        LessonLabelModel tempLabel=null;
+        for(int j=0;j<list.size();j++){
+            ClassSchedule cs=list.get(j);
+            tempLabel=new LessonLabelModel(cs.date,0,false);
+            monthLists.add(tempLabel);
+            monthLists.addAll(cs.lessons);
+            tempLabel.lessonCount=cs.lessons.size();
+            if(cs.lessons.size()>0){
+                tempLabel.hasData=true;
+            }
+        }
+        monthLists.add(new LastEmptyModel());
+        mAdapter.setList(monthLists);
+        mAdapter.notifyDataSetChanged();
     }
 
 

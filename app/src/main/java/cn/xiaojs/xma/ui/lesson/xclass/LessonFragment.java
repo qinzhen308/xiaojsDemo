@@ -28,10 +28,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.pageload.DataPageLoader;
+import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
@@ -67,6 +73,8 @@ public class LessonFragment extends Fragment {
 
 //    private LessonAdapter lessonAdapter;
     HomeClassAdapter mAdapter;
+    DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
+    Pagination mPagination;
 
 
     @Nullable
@@ -95,6 +103,7 @@ public class LessonFragment extends Fragment {
         mAdapter = new HomeClassAdapter(mRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
+        initPageLoad();
         getMonthData();
     }
 
@@ -138,6 +147,45 @@ public class LessonFragment extends Fragment {
     }
 
 
+    private void initPageLoad(){
+        mPagination=new Pagination();
+        mPagination.setPage(1);
+        mPagination.setMaxNumOfObjectsPerPage(10);
+        dataPageLoader=new DataPageLoader<ClassSchedule, CollectionCalendar<ClassSchedule>>() {
+            PageChangeInRecyclerView pageChangeInRecyclerView;
+            @Override
+            public void onRequst(int page) {
+                mPagination.setPage(page);
+                getMonthData();
+            }
+
+            @Override
+            public List<ClassSchedule> adaptData(CollectionCalendar<ClassSchedule> object) {
+                if(object==null)return new ArrayList<>();
+                return object.calendar;
+            }
+
+            @Override
+            public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
+                pageChangeInRecyclerView.completeLoading();
+                bindData(all);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                pageChangeInRecyclerView.completeLoading();
+                bindData(new ArrayList<ClassSchedule>());
+            }
+
+            @Override
+            public void prepare() {
+                pageChangeInRecyclerView=new PageChangeInRecyclerView(mRecyclerView,this);
+
+            }
+        };
+    }
+
+
     private void bindData(List<ClassSchedule> list){
         ArrayList monthLists=new ArrayList();
         LessonLabelModel tempLabel=null;
@@ -157,24 +205,9 @@ public class LessonFragment extends Fragment {
     }
 
     private void getMonthData(){
-        long start=ScheduleUtil.ymdToTimeMill(2017,6,3);
-        long end=ScheduleUtil.ymdToTimeMill(2017,6,16);
-
-        LessonDataManager.getClassesSchedule(getActivity(), ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
-            @Override
-            public void onSuccess(ScheduleData object) {
-
-                if(object!=null&&!object.calendar.isEmpty()){
-                    bindData(object.calendar);
-                }else {
-                    bindData(new ArrayList<ClassSchedule>());
-                }
-            }
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                bindData(new ArrayList<ClassSchedule>());
-            }
-        });
+        long start=new Date(0).getTime();
+        long end=ScheduleUtil.ymdToTimeMill(2019,12,30);
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(), ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), Account.TypeName.STAND_ALONE_LESSON, "All",mPagination , dataPageLoader);
     }
 
 

@@ -4,16 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
 
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
-import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
-import cn.xiaojs.xma.ui.lesson.TeachLessonAdapter;
-import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.util.JudgementUtil;
@@ -23,9 +26,14 @@ import cn.xiaojs.xma.util.JudgementUtil;
  */
 
 public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Holder> {
+    String state="All";
+    String startTime;
+    String endTime;
 
     public ClassAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
+        startTime=ScheduleUtil.getUTCDate(new Date(0).getTime());
+        endTime=ScheduleUtil.getUTCDate((new Date().getTime()+365*24*60*60*1000));
     }
 
     @Override
@@ -45,10 +53,33 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
         return new Holder(view);
     }
 
+
+    public void setTime(String start,String end){
+        this.startTime=start;
+        this.endTime=end;
+    }
+
+    public void setState(String state){
+        this.state=state;
+    }
+
     @Override
     protected void doRequest() {
-//        LessonDataManager.getClassesSchedule4Class();
-        onSuccess(null);
+        LessonDataManager.getClassesSchedule4Class(mContext, startTime, endTime, Account.TypeName.CLASS, state, mPagination, new APIServiceCallback<CollectionResult<PrivateClass>>() {
+            @Override
+            public void onSuccess(CollectionResult<PrivateClass> object) {
+                if(object!=null){
+                    ClassAdapter.this.onSuccess(object.results);
+                }else {
+                    ClassAdapter.this.onSuccess(null);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ClassAdapter.this.onFailure(errorCode,errorMessage);
+            }
+        });
     }
 
     static class Holder extends BaseHolder {

@@ -70,7 +70,7 @@
 
 
     <TextView
-            android:id="@+id/duration_view"
+            android:id="@+id/teachers_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_24px"
@@ -122,6 +122,7 @@
                 android:src="@drawable/ic_class_more"
                 android:layout_marginRight="@dimen/px40"
                 android:layout_toRightOf="@id/op_data_view"
+            android:visibility="gone"
                 />
 
         <Button

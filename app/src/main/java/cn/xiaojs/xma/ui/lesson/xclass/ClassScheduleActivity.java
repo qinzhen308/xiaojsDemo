@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +29,9 @@ public class ClassScheduleActivity extends BaseActivity{
     ClassSheduleTabModeFragment tabFragment;
 
     boolean isTabMode=false;
+
+    public static final String EXTRA_ID="extra_id";
+    public static final String EXTRA_TITLE="extra_id";
 
     @Override
     protected void addViewContent() {
@@ -68,5 +73,13 @@ public class ClassScheduleActivity extends BaseActivity{
             isProtected=false;
         }
     };
+
+
+    public static void invoke(Context context,String id,String title){
+        Intent intent=new Intent(context,ClassScheduleActivity.class);
+        intent.putExtra(EXTRA_ID,id);
+        intent.putExtra(EXTRA_TITLE,title);
+        context.startActivity(intent);
+    }
 
 }

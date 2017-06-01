@@ -25,6 +25,7 @@ import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.TimeUtil;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -76,7 +77,7 @@ public class MyClassFragment extends Fragment {
         listView.setAdapter(classAdapter);
     }
 
-    @OnClick({R.id.course_filter})
+    @OnClick({R.id.course_filter,R.id.my_course_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.course_filter:
@@ -89,32 +90,6 @@ public class MyClassFragment extends Fragment {
         }
     }
 
-
-    public boolean checkTeachingAbility(){
-        if (AccountDataManager.isTeacher(getActivity())) {
-            return true;
-        } else {
-            //提示申明教学能力
-            final CommonDialog dialog = new CommonDialog(getActivity());
-            dialog.setTitle(R.string.declare_teaching_ability);
-            dialog.setDesc(R.string.declare_teaching_ability_tip);
-            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    dialog.dismiss();
-                    Intent intent = new Intent(getActivity(),TeachingSubjectActivity.class);
-                    getActivity().startActivity(intent);
-                }
-            });
-            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    dialog.dismiss();
-                }
-            });
-            return false;
-        }
-    }
 
     private void filter() {
         CourseFilterDialog dialog = new CourseFilterDialog(context, false);
@@ -136,9 +111,9 @@ public class MyClassFragment extends Fragment {
                 MyClassFragment.this.sourcePosition = sourcePosition;
                 Criteria criteria = LessonBusiness.getFilter(timePosition, statePosition, sourcePosition, false);
                 //TODO 重新查询
-//                if (mAdapter != null) {
-//                    mAdapter.request(criteria);
-//                }
+                if (classAdapter != null) {
+//                    classAdapter.setState();
+                }
             }
         });
     }

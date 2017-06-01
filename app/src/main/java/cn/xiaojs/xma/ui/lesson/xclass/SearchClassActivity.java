@@ -18,6 +18,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -40,8 +41,11 @@ public class SearchClassActivity extends BaseActivity {
     LinearLayout title;
     @BindView(R.id.search_empty)
     FrameLayout searchEmpty;
-    @BindView(R.id.recyclerview)
-    RecyclerView recyclerview;
+//    @BindView(R.id.recyclerview)
+//    RecyclerView recyclerview;
+    @BindView(R.id.listview)
+    PullToRefreshSwipeListView
+    listview;
 
     @BindString(R.string.cancel)
     String btn_text_cancel;
@@ -49,18 +53,20 @@ public class SearchClassActivity extends BaseActivity {
     @BindString(R.string.search)
     String btn_text_search;
 
-    HomeClassAdapter mAdapter;
-
+//    HomeClassAdapter mAdapter;
+    ClassAdapter mAdapter;
     private final static int BEGIN_SEARCH=0xff;
 
 
     @Override
     protected void addViewContent() {
-        addView(R.layout.activity_search_lesson);
+        addView(R.layout.activity_search_class);
         needHeader(false);
-        mAdapter=new HomeClassAdapter(recyclerview);
-        recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        recyclerview.setAdapter(mAdapter);
+//        mAdapter=new HomeClassAdapter(recyclerview);
+//        recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+//        recyclerview.setAdapter(mAdapter);
+        mAdapter=new ClassAdapter(this,listview);
+        listview.setAdapter(mAdapter);
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,7 +112,7 @@ public class SearchClassActivity extends BaseActivity {
     }
 
     private void search(){
-        ToastUtil.showToast(getApplicationContext(),"搜索--关键字："+searchInput.getText().toString());
+
     }
 
 //    private void request(){
