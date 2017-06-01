@@ -347,7 +347,7 @@
 
         <View
                 style="@style/DividerHorizontal"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
         <!--小教室下载二维码-->
         <RelativeLayout
@@ -355,7 +355,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem"
-                android:visibility="gone">
+                android:visibility="visible">
 
             <TextView
                     android:layout_alignParentLeft="true"
@@ -363,7 +363,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:drawableLeft="@drawable/ic_setting"
+                    android:drawableLeft="@drawable/ic_share_my"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/client_download_qrcode"/>
 

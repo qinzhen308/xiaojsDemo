@@ -2,6 +2,7 @@ package cn.xiaojs.xma.util;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -32,6 +34,8 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import cn.xiaojs.xma.R;
+
+import static android.R.attr.path;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -545,6 +549,36 @@ public class BitmapUtils {
         return destPath;
     }
 
+    public static boolean saveImageToGallery(Context context, Bitmap bmp, File fileDir,String fileName, int quality) {
+        // 首先保存图片
+        File file = new File(fileDir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(CompressFormat.JPEG, quality, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    file.getAbsolutePath(), fileName, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+
+        return true;
+    }
+
     //saves the lossless compression bmp image to the file
     public static File saveBMPImage(Context context, Bitmap bitmap, File oldFile) {
         File tempFile = null;
@@ -869,5 +903,8 @@ public class BitmapUtils {
 
         return result;
     }
+
+
+
 
 }

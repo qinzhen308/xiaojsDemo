@@ -12,6 +12,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 
 /**
  * Created by maxiaobao on 2017/5/25.
@@ -80,6 +81,6 @@ public class EnrollSuccessActivity extends BaseActivity {
     }
 
     private void enterMyLesson() {
-        startActivity(new Intent(this,EnrollLessonActivity.class));
+        startActivity(new Intent(this,ClassesListActivity.class));
     }
 }
