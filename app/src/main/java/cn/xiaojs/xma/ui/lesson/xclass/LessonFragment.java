@@ -198,7 +198,7 @@ public class LessonFragment extends Fragment {
     private void getMonthData(){
         long start=new Date(0).getTime();
         long end=ScheduleUtil.ymdToTimeMill(2019,12,30);
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(), ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), Account.TypeName.STAND_ALONE_LESSON, LessonFilterHelper.getState(group2Position),mPagination , dataPageLoader);
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),"", ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), Account.TypeName.STAND_ALONE_LESSON, LessonFilterHelper.getState(group2Position),mPagination , dataPageLoader);
     }
 
 

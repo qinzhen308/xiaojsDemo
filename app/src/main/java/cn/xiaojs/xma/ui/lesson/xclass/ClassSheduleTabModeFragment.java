@@ -101,7 +101,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
 
 
     private void request(){
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(), ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),classId, ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),
                 Account.TypeName.CLASS_LESSON, state,mPagination , dataPageLoader);
 
     }

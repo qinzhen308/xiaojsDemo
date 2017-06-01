@@ -81,6 +81,7 @@ public class HomeClassContentBuz {
     int year, month,day;
     int todayYear, todayMonth,todayDay;
 
+    private List<PrivateClass> hotClass;
 
     /**
      * @param context
@@ -100,6 +101,7 @@ public class HomeClassContentBuz {
         initListView();
         doRequest(todayYear,todayMonth,todayDay);
         getMonthData();
+        loadHotClasses();
     }
 
     private void initListView() {
@@ -231,8 +233,10 @@ public class HomeClassContentBuz {
                     list.addAll(schedule.lessons);
                 }
                 mAdapter.setList(list);
+                if(hotClass!=null){
+                    bindHotClasses(hotClass);
+                }
                 mAdapter.notifyDataSetChanged();
-                loadHotClasses();
             }
             @Override
             public void onFailure(String errorCode, String errorMessage) {
@@ -241,7 +245,6 @@ public class HomeClassContentBuz {
                 list.add(label);
                 mAdapter.setList(list);
                 mAdapter.notifyDataSetChanged();
-                loadHotClasses();
             }
         });
     }
@@ -277,13 +280,22 @@ public class HomeClassContentBuz {
             @Override
             public void onSuccess(CollectionResult<PrivateClass> object) {
                 if(object!=null){
-                    bindHotClasses(object.results);
+                    hotClass=object.results;
+                    if(ArrayUtil.isEmpty(mAdapter.getList())){//
+
+                    }else {//课先回来，绑定班
+                        bindHotClasses(object.results);
+                        mAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                bindHotClasses(null);
+                if(!ArrayUtil.isEmpty(mAdapter.getList())){//课先回来，绑定班
+                    bindHotClasses(null);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         });
     }
@@ -294,11 +306,11 @@ public class HomeClassContentBuz {
             classLabel.hasData=true;
             mAdapter.getList().addAll(list);
         }
-        mAdapter.notifyDataSetChanged();
     }
 
     public void update(){
         getMonthData();
         doRequest(year,month,day);
+        loadHotClasses();
     }
 }
