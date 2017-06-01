@@ -3,6 +3,7 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
@@ -506,7 +507,11 @@ public class LessonDataManager {
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Lesson(start, end, type, state, limit, page, querys);
+        if (TextUtils.isEmpty(classId)) {
+            lessonRequest.getClassesSchedule4Lesson(start, end, type, state, limit, page, querys);
+        }else{
+            lessonRequest.getClassesSchedule4Lesson(classId, start, end, type, state, limit, page, querys);
+        }
     }
 
     /**
