@@ -269,7 +269,7 @@ public class TalkManager {
             talkItem.body.text = receiveBean.body.text;
             talkItem.body.contentType = receiveBean.body.contentType;
             talkItem.from.accountId = receiveBean.from;
-            talkItem.from.name = getNameByAccountId(receiveBean.from);
+            talkItem.from.name = ClassroomBusiness.getNameByAccountId(receiveBean.from);
 
             String account = receiveBean.to != null ? receiveBean.to : receiveBean.from;
             int type = addTalkItemToAdapter(talkItem, account);
@@ -474,19 +474,6 @@ public class TalkManager {
                 talkItem.from.avatar = mLoginUser.getAccount().getBasic().getAvatar();
             }
         }
-    }
-
-    private String getNameByAccountId(String accountId) {
-        LiveCollection<Attendee> liveCollection = ContactManager.getInstance().getAttendees();
-        if (accountId != null && liveCollection != null && liveCollection.attendees != null) {
-            for (Attendee attendee : liveCollection.attendees) {
-                if (accountId != null && accountId.equals(attendee.accountId)) {
-                    return attendee.name;
-                }
-            }
-        }
-
-        return accountId;
     }
 
     /**

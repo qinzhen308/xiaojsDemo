@@ -3,8 +3,6 @@
                 xmlns:roundimg="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/px5"
-                android:paddingRight="@dimen/px5"
                 android:gravity="center_vertical">
 
     <ImageView
@@ -12,15 +10,18 @@
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/px10"
+            android:layout_marginLeft="@dimen/px15"
             android:layout_marginRight="@dimen/px5"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:src="@drawable/multi_check_selector"/>
 
     <cn.xiaojs.xma.ui.widget.MessageImageView
             android:id="@+id/portrait"
             android:layout_width="@dimen/px86"
             android:layout_height="@dimen/px86"
+            android:layout_marginTop="@dimen/px5"
+            android:layout_marginBottom="@dimen/px5"
             roundimg:oval="true"
             roundimg:isCircle="true"
             roundimg:border_color="@color/white"
@@ -56,7 +57,7 @@
             android:id="@+id/talk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/px15"
+            android:padding="@dimen/px20"
             android:src="@drawable/ic_cr_open_talk"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/video"/>
@@ -65,7 +66,7 @@
             android:id="@+id/video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/px15"
+            android:padding="@dimen/px20"
             android:src="@drawable/cr_video"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"/>

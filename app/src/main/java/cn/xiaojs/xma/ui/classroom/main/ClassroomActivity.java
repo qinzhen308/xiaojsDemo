@@ -18,6 +18,8 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -81,6 +83,7 @@ public class ClassroomActivity extends FragmentActivity {
     //socket retry count
     private int mSocketRetryCount = 0;
 
+    private TextView mEmptyTips;
     private int mNetworkState = ClassroomBusiness.NETWORK_NONE;
     //private boolean mNeedInitStream; //init stream after socket connected
     private boolean mNetworkDisconnected = false;
@@ -165,6 +168,7 @@ public class ClassroomActivity extends FragmentActivity {
     private void initData(boolean showProgress, final boolean netWorkChanged) {
         if (ClassroomBusiness.getCurrentNetwork(this) == ClassroomBusiness.NETWORK_NONE) {
             //TODO, show tips view
+            setNoNetworkTips(true);
             return;
         }
 
@@ -199,6 +203,14 @@ public class ClassroomActivity extends FragmentActivity {
                 showContinueConnectClassroom();
             }
         });
+    }
+
+    private void setNoNetworkTips(boolean showEmptyTips) {
+        if (mEmptyTips == null) {
+            mEmptyTips = (TextView) findViewById(R.id.no_net_work_tips);
+        }
+
+        mEmptyTips.setVisibility(showEmptyTips ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -488,6 +500,7 @@ public class ClassroomActivity extends FragmentActivity {
                 mNetworkState = ClassroomBusiness.NETWORK_WIFI;
                 if (mNetworkDisconnected) {
                     mNetworkDisconnected = false;
+                    setNoNetworkTips(false);
                     initData(true, true);
                 }
             } else if (mobileNet) {
@@ -495,6 +508,7 @@ public class ClassroomActivity extends FragmentActivity {
                 mNetworkState = ClassroomBusiness.NETWORK_OTHER;
                 if (mNetworkDisconnected) {
                     mNetworkDisconnected = false;
+                    setNoNetworkTips(false);
                     initData(true, true);
                 }
             }

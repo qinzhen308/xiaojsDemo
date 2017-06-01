@@ -46,7 +46,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private Context mContext;
     private boolean mContactManagementMode = false;
     private List<String> mChoiceList;
-    private OnPortraitClickListener mListener;
     private OnAttendItemClick mOnAttendItemClick;
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
@@ -62,10 +61,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         mUser = LiveCtlSessionManager.getInstance().getUserMode();
 
         initColorFilter();
-    }
-
-    public void setOnPortraitClickListener(OnPortraitClickListener listener) {
-        mListener = listener;
     }
 
     public void setOnPanelItemClick(OnAttendItemClick panelItemClick) {
@@ -245,8 +240,10 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                                 break;
                             default:
                                 //enter chat
-                                attendee.unReadMsgCount = 0;
-                                mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+                                if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+                                    attendee.unReadMsgCount = 0;
+                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+                                }
                                 break;
                         }
 

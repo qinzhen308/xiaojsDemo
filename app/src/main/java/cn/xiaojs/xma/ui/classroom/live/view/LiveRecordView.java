@@ -169,7 +169,7 @@ public class LiveRecordView extends BaseMediaView implements
         }
 
         Object obj = msg.obj;
-        if (obj != null) {
+        if (obj != null && XiaojsConfig.DEBUG) {
             ToastUtil.showToast(getContext(), obj.toString());
         }
     }
