@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.LessonRequest;
 import cn.xiaojs.xma.data.api.QiniuRequest;
@@ -401,9 +402,6 @@ public class LessonDataManager {
 
     /**
      * 加入无需报名的课
-     * @param context
-     * @param lesson
-     * @param callback
      */
     public static void joinLesson(Context context,
                                   String lesson,
@@ -427,11 +425,6 @@ public class LessonDataManager {
 
     /**
      * Get Classes Schedule
-     * @param context
-     * @param cycle
-     * @param next
-     * @param pre
-     * @param callback
      */
     public static void getClassesSchedule(Context context,
                                           String classId,
@@ -458,10 +451,6 @@ public class LessonDataManager {
 
     /**
      * Get Classes Schedule
-     * @param context
-     * @param start
-     * @param end
-     * @param callback
      */
     public static void getClassesSchedule(Context context,
                                           String classId,
@@ -487,12 +476,12 @@ public class LessonDataManager {
 
 
     public static void getClassesSchedule4Class(Context context,
-                                          String start,
-                                          String end,
-                                          String type,
-                                          String state,
-                                          Pagination pagination,
-                                          APIServiceCallback<CollectionResult<PrivateClass>> callback,
+                                                String start,
+                                                String end,
+                                                String type,
+                                                String state,
+                                                Pagination pagination,
+                                                APIServiceCallback<CollectionResult<PrivateClass>> callback,
                                                 String... querys) {
 
         int limit = pagination.getMaxNumOfObjectsPerPage();
@@ -503,12 +492,12 @@ public class LessonDataManager {
     }
 
     public static void getClassesSchedule4Lesson(Context context,
-                                                String start,
-                                                String end,
-                                                String type,
-                                                String state,
-                                                Pagination pagination,
-                                                APIServiceCallback<CollectionCalendar<ClassSchedule>> callback,
+                                                 String start,
+                                                 String end,
+                                                 String type,
+                                                 String state,
+                                                 Pagination pagination,
+                                                 APIServiceCallback<CollectionCalendar<ClassSchedule>> callback,
                                                  String... querys) {
 
         int limit = pagination.getMaxNumOfObjectsPerPage();
@@ -519,11 +508,21 @@ public class LessonDataManager {
     }
 
     /**
-     * Schedule Class Lesson .
+     * 获取热门班
      * @param context
-     * @param classes
-     * @param lesson
+     * @param limit
      * @param callback
+     */
+    public static void getHotClasses(Context context,
+                                     int limit,
+                                     APIServiceCallback<CollectionResult<PrivateClass>> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule(Account.TypeName.CLASS, limit);
+    }
+
+    /**
+     * Schedule Class Lesson .
      */
     public static void scheduleClassLesson(Context context,
                                            String classes,
@@ -536,10 +535,6 @@ public class LessonDataManager {
 
     /**
      * 可用于排课前的检查，包括检查老师的状态、上课日程是否冲突 .
-     * @param context
-     * @param classes
-     * @param lesson
-     * @param callback
      */
     public static void checkOverlap(Context context,
                                     String classes,
@@ -553,9 +548,6 @@ public class LessonDataManager {
     /**
      * get the info of privateclass.
      * 获取班信息
-     * @param context
-     * @param classid
-     * @param callback
      */
     public static void getClassInfo(Context context,
                                     String classid,
@@ -568,10 +560,6 @@ public class LessonDataManager {
     /**
      * modify the specific private class.
      * 编辑班课内容（班名称、班主任）;
-     * @param context
-     * @param classid
-     * @param params
-     * @param callback
      */
     public static void modifyClass(Context context,
                                    String classid,
@@ -582,17 +570,13 @@ public class LessonDataManager {
     }
 
 
-    /**Returns the students taught by an classes .
-     *
-     * @param context
-     * @param classes
-     * @param pagination
-     * @param callback
+    /**
+     * Returns the students taught by an classes .
      */
     public static void getClassStudents(Context context,
-                                 String classes,
-                                 Pagination pagination,
-                                 APIServiceCallback<CollectionPage<StudentEnroll>> callback) {
+                                        String classes,
+                                        Pagination pagination,
+                                        APIServiceCallback<CollectionPage<StudentEnroll>> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassStudents(classes, pagination);
@@ -601,10 +585,6 @@ public class LessonDataManager {
 
     /**
      * Import students from a standaloneLesson or class, or enrolled students to the class.
-     * @param context
-     * @param classId
-     * @param enrollParams
-     * @param callback
      */
     public static void addClassStudent(Context context,
                                        String classId,
@@ -619,10 +599,6 @@ public class LessonDataManager {
 
     /**
      * Remove enrolled students from the Class.
-     * @param context
-     * @param classid
-     * @param students
-     * @param callback
      */
     public static void removeClassStudent(Context context,
                                           String classid,

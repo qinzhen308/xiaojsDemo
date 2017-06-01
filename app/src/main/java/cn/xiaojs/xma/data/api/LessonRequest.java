@@ -377,6 +377,11 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
+    public void getClassesSchedule(String type, int limit) {
+        Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule(type, limit);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
 
     public void scheduleClassLesson(String classes, ClassLesson lesson) {
         Call<ResponseBody> call = getService().scheduleClassLesson(classes, lesson);
