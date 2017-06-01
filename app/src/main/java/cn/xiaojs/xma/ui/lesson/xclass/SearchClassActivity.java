@@ -112,7 +112,8 @@ public class SearchClassActivity extends BaseActivity {
     }
 
     private void search(){
-
+        mAdapter.setKeyword(searchInput.getText().toString());
+        mAdapter.refresh();
     }
 
 //    private void request(){

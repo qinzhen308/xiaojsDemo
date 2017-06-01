@@ -142,4 +142,45 @@
         <item>公开开课</item>
         <item>开班</item>
     </string-array>
+    
+    
+    <string-array name="class_filter_time">
+        <item>全部</item>
+        <item>今天</item>
+        <item>本周</item>
+        <item>上周</item>
+        <item>下周</item>
+        <item>本月</item>
+        <item>上个月</item>
+        <item>下个月</item>
+        <item>今年</item>
+        <item>去年</item>
+    </string-array>
+
+    <string-array name="class_filter_type">
+        <item>全部</item>
+        <item>我教的班</item>
+        <item>我学的班</item>
+    </string-array>
+
+    <string-array name="lesson_filter_type">
+        <item>全部</item>
+        <item>我开的课</item>
+        <item>我受邀的课</item>
+        <item>我学的课</item>
+    </string-array>
+    <string-array name="lesson_filter_state">
+        <item>全部</item>
+        <item>上课中</item>
+        <item>待上课</item>
+        <item>已完课</item>
+        <item>草稿</item>
+        <item>待上架</item>
+        <item>待审核</item>
+        <item>审核失败</item>
+        <item>待确认</item>
+        <item>已确认</item>
+        <item>强行停止</item>
+        <item>已取消</item>
+    </string-array>
 </resources>

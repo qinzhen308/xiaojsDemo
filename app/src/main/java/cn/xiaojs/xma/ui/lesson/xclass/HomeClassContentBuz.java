@@ -23,6 +23,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -34,19 +35,23 @@ import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.JudgementUtil;
 
 /**
@@ -227,6 +232,7 @@ public class HomeClassContentBuz {
                 }
                 mAdapter.setList(list);
                 mAdapter.notifyDataSetChanged();
+                loadHotClasses();
             }
             @Override
             public void onFailure(String errorCode, String errorMessage) {
@@ -235,6 +241,7 @@ public class HomeClassContentBuz {
                 list.add(label);
                 mAdapter.setList(list);
                 mAdapter.notifyDataSetChanged();
+                loadHotClasses();
             }
         });
     }
@@ -256,7 +263,6 @@ public class HomeClassContentBuz {
                     }
                 }
                 calendarView.setTaskHintList(hashSet);
-
             }
 
             @Override
@@ -264,7 +270,31 @@ public class HomeClassContentBuz {
 
             }
         });
+    }
 
+    private void loadHotClasses(){
+        LessonDataManager.getHotClasses(mContext, 4, new APIServiceCallback<CollectionResult<PrivateClass>>() {
+            @Override
+            public void onSuccess(CollectionResult<PrivateClass> object) {
+                if(object!=null){
+                    bindHotClasses(object.results);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                bindHotClasses(null);
+            }
+        });
+    }
+    private void bindHotClasses(List<PrivateClass> list){
+        ClassLabelModel classLabel=new ClassLabelModel(false);
+        mAdapter.getList().add(classLabel);
+        if(!ArrayUtil.isEmpty(list)){
+            classLabel.hasData=true;
+            mAdapter.getList().addAll(list);
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     public void update(){

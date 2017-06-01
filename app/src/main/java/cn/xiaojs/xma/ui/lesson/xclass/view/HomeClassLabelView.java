@@ -1,22 +1,24 @@
 package cn.xiaojs.xma.ui.lesson.xclass.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Random;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 
 /**
  * Created by Paul Z on 2017/5/23.
  */
 
-public class HomeClassLabelView extends LinearLayout implements IViewModel<Object> {
+public class HomeClassLabelView extends LinearLayout implements IViewModel<ClassLabelModel> {
 
     View noData;
     @BindView(R.id.tv_all)
@@ -38,14 +40,14 @@ public class HomeClassLabelView extends LinearLayout implements IViewModel<Objec
     private void init() {
         setOrientation(VERTICAL);
         inflate(getContext(), R.layout.item_home_classes_label, this);
-        noData=findViewById(R.id.no_data);
+        noData = findViewById(R.id.no_data);
         ButterKnife.bind(this);
     }
 
 
     @Override
-    public void bindData(Object data) {
-        showNoClass(new Random().nextInt(2) == 0);
+    public void bindData(ClassLabelModel data) {
+        showNoClass(!data.hasData);
     }
 
     public void showNoClass(boolean isShow) {
@@ -54,5 +56,10 @@ public class HomeClassLabelView extends LinearLayout implements IViewModel<Objec
         } else {
             noData.setVisibility(View.GONE);
         }
+    }
+
+    @OnClick(R.id.tv_all)
+    public void onViewClicked() {
+        getContext().startActivity(new Intent(getContext(),ClassesListActivity.class));
     }
 }

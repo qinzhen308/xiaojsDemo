@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 
 import butterknife.ButterKnife;
@@ -35,7 +36,16 @@ public class ClassScheduleActivity extends BaseActivity{
 
     @Override
     protected void addViewContent() {
-        setMiddleTitle(R.string.schedule);
+        String title=getIntent().getStringExtra(EXTRA_TITLE);
+        if(TextUtils.isEmpty(title)){
+            setMiddleTitle(R.string.schedule);
+        }else {
+            if(title.length()>8){
+                title=title.substring(0,8)+"...";
+            }
+            setMiddleTitle(title);
+
+        }
         setRightImage(R.drawable.selector_mode_tab);
         calenerFragment=new ClassSheduleCalenerFragment();
         tabFragment=new ClassSheduleTabModeFragment();
