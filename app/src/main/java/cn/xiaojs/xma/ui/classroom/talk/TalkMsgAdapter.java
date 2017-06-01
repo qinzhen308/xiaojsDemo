@@ -199,7 +199,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             return TYPE_MY_SPEAKER;
         }
 
-        boolean isMyself = isMyself(item.from.accountId);
+        boolean isMyself = ClassroomBusiness.isMyself(mContext, item.from.accountId);
         return isMyself ? TYPE_MY_SPEAKER : TYPE_OTHER_SPEAKER;
     }
 
@@ -298,7 +298,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
                 case R.id.portrait:
                     if (mPortraitClickListener != null && obj instanceof Holder) {
                         talkItem = getItem(((Holder)obj).position);
-                        if (!isMyself(talkItem.from.accountId)) {
+                        if (!ClassroomBusiness.isMyself(mContext, talkItem.from.accountId)) {
                             Attendee attendee = new Attendee();
                             attendee.accountId = talkItem.from.accountId;
                             attendee.name = ClassroomBusiness.getNameByAccountId(attendee.accountId);
@@ -361,8 +361,4 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         };
     }
 
-    private boolean isMyself(String currAccountId) {
-        String accountId = AccountDataManager.getAccountID(mContext);
-        return accountId != null && accountId.equals(currAccountId);
-    }
 }
