@@ -109,7 +109,7 @@ public class ShareQrcodeActivity extends BaseActivity {
 
         File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-        if (BitmapUtils.saveImageToGallery(this, bitmap, fileDir, fileName, 100)) {
+        if (BitmapUtils.saveImageToGallery(this, bitmap, fileDir, fileName, 100,true)) {
 
             String tips = getString(R.string.save_picture_ok_tips,
                     fileDir.getAbsolutePath(),

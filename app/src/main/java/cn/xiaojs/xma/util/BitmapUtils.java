@@ -24,6 +24,8 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -573,7 +575,8 @@ public class BitmapUtils {
             fos.close();
 
             if (updateTime) {
-                setExifDateTime(file.getPath());
+                //Logger.d("=======" + file.getAbsolutePath());
+                setExifDateTime(file.getAbsolutePath());
             }
 
         } catch (FileNotFoundException e) {

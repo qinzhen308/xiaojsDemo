@@ -51,7 +51,7 @@ public class ShareUtil {
                         break;
                     case R.id.tv_fcircle:
                         IWXAPI iwxapiq = WechatUtil.registerToWechat(activity.getApplicationContext());
-                        boolean send = WechatUtil.sharePicture(iwxapiq,bitmap,true);
+                        boolean send = WechatUtil.sharePicture(iwxapiq,bitmap,false);
                         break;
                     case R.id.tv_qq:
                         //QQ
