@@ -80,6 +80,11 @@ public class ShareQrcodeActivity extends BaseActivity {
         if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
             Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.xjs_app_qrcode);
+
+            //getResources().getDrawable(R.drawable.xjs_app_qrcode)
+
+            //TODO QQ分享图片，需要地址
+
             ShareUtil.shareImage(this,shareBitmap,"");
         }
 
