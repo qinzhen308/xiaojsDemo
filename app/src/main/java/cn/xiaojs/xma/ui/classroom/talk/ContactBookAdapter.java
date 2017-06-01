@@ -240,8 +240,10 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                                 break;
                             default:
                                 //enter chat
-                                attendee.unReadMsgCount = 0;
-                                mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+                                if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+                                    attendee.unReadMsgCount = 0;
+                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+                                }
                                 break;
                         }
 
