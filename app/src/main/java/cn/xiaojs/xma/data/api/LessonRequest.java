@@ -382,6 +382,36 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
+
+    public void getClassesSchedule4Lesson(String classId,
+                                          String start,
+                                          String end,
+                                          String type,
+                                          String state,
+                                          int limit,
+                                          int page,
+                                          String... querys) {
+
+        Call<CollectionCalendar<ClassSchedule>> call;
+        if (querys !=null && querys.length > 0) {
+            int count = querys.length;
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< count; i++) {
+                sb.append(querys[i]);
+
+                if (i< count-1) {
+                    sb.append(",");
+                }
+            }
+            call = getService().getClassesSchedule4Lesson(classId,start, end, type, state, limit, page, sb.toString());
+        }else {
+            call = getService().getClassesSchedule4Lesson(classId,start, end, type, state, limit, page);
+        }
+
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
+
     public void getClassesSchedule(String type, int limit) {
         Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule(type, limit);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);

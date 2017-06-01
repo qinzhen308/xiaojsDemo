@@ -59,17 +59,17 @@
         <activity
                 android:name=".ui.SplashActivity"
                 android:theme="@style/SplashTheme"
-                >
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-                <!--<category android:name="android.intent.category.DEFAULT"/>-->
-                <!--<data android:scheme="luanchapp" android:host="cn.xiaojs.xma" android:pathPrefix="/android"/>-->
+            <!--<action android:name="android.intent.action.VIEW" />-->
+            <!--<category android:name="android.intent.category.BROWSABLE" />-->
+            <!--<category android:name="android.intent.category.DEFAULT"/>-->
+            <!--<data android:scheme="luanchapp" android:host="cn.xiaojs.xma" android:pathPrefix="/android"/>-->
             <!--</intent-filter>-->
         </activity>
         <activity android:name=".ui.TestAPIActivity">
@@ -95,7 +95,7 @@
                 android:name=".ui.MainActivity"
                 android:launchMode="singleTask"
                 android:screenOrientation="portrait"
-                >
+        >
             <intent-filter>
                 <action android:name="cn.xiaojs.xma.chatkit.chat_notification_action"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -137,7 +137,7 @@
         <activity
                 android:name=".ui.lesson.TeachingSubjectActivity"
                 android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+                android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.lesson.xclass.ClassScheduleActivity"
             android:screenOrientation="portrait"/>
@@ -145,6 +145,7 @@
             android:name=".ui.lesson.TeachingSubjectSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible|adjustPan"/>
+
         <activity
                 android:name=".ui.lesson.SubjectSelectorActivity"
                 android:screenOrientation="portrait"/>
@@ -183,7 +184,8 @@
         <activity android:name=".ui.classroom.main.ClassroomActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="screenSize|orientation"
-                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                  android:process=":classroom"/>
         <activity
                 android:name=".ui.search.SearchActivity"
                 android:screenOrientation="portrait"
@@ -253,8 +255,8 @@
         <activity android:name=".ui.message.CloseFriendActivity"/>
 
         <activity
-            android:name=".ui.message.MessageCenterActivity"
-            android:screenOrientation="portrait">
+                android:name=".ui.message.MessageCenterActivity"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.xiaojs.xma.action_push_enter_msg_center"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -282,8 +284,8 @@
                 android:name=".ui.mine.MyOrderActivity"
                 android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.mine.MySignatureDetailActivity"
-            android:screenOrientation="portrait"/>
+                android:name=".ui.mine.MySignatureDetailActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.UpgradeActivity"
                 android:theme="@style/dlg_upgrade">

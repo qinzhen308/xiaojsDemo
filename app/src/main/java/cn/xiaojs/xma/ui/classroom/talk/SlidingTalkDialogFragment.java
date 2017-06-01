@@ -90,10 +90,8 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
     protected void onFragmentShow(DialogInterface dialogInterface) {
         if (mAttendee != null) {
             mTalkPresenter.switchPeerTalk(mAttendee, false);
-            TalkManager.getInstance().setPeekTalkingAccount(mAttendee.accountId);
         } else {
             mTalkPresenter.switchMsgMultiTalk();
-            TalkManager.getInstance().setPeekTalkingAccount(null);
         }
     }
 
