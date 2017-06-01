@@ -24,6 +24,8 @@ import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
+import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.TimeUtil;
 
@@ -92,9 +94,10 @@ public class MyClassFragment extends Fragment {
 
 
     private void filter() {
-        CourseFilterDialog dialog = new CourseFilterDialog(context, false);
+        MyClassFilterDialog dialog = new MyClassFilterDialog(context, false);
         dialog.setTimeSelection(timePosition);
         dialog.setStateSelection(statePosition);
+        dialog.setGroup1(getResources().getStringArray(R.array.class_filter_type)).setGroup2(getResources().getStringArray(R.array.class_filter_time));
         dialog.showAsDropDown(mFilterLine);
         mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_up, 0);
         dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -103,16 +106,16 @@ public class MyClassFragment extends Fragment {
                 mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_down, 0);
             }
         });
-        dialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
+        dialog.setOnOkListener(new MyClassFilterDialog.OnOkListener() {
             @Override
-            public void onOk(int timePosition, int statePosition, int sourcePosition) {
-                MyClassFragment.this.timePosition = timePosition;
-                MyClassFragment.this.statePosition = statePosition;
-                MyClassFragment.this.sourcePosition = sourcePosition;
-                Criteria criteria = LessonBusiness.getFilter(timePosition, statePosition, sourcePosition, false);
+            public void onOk(int group1Position, int group2Position) {
+                MyClassFragment.this.timePosition = group1Position;
+                MyClassFragment.this.statePosition = group2Position;
                 //TODO 重新查询
                 if (classAdapter != null) {
-//                    classAdapter.setState();
+                    classAdapter.setState(ClassFilterHelper.getType(group1Position));
+                    classAdapter.setTime(ClassFilterHelper.getStartTime(group2Position),ClassFilterHelper.getEndTime(group2Position));
+                    classAdapter.refresh();
                 }
             }
         });

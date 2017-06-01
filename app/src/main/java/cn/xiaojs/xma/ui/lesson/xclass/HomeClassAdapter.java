@@ -46,6 +46,10 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mList=list;
     }
 
+    public List<Object> getList(){
+        return (List<Object>) mList;
+    }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

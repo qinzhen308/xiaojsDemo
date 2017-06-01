@@ -14,37 +14,29 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.jeek.calendar.widget.calendar.CalendarUtils;
-import com.orhanobut.logger.Logger;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
-import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -67,9 +59,8 @@ public class LessonFragment extends Fragment {
 
     private Context context;
 
-    protected int timePosition;
-    protected int statePosition;
-    protected int sourcePosition;
+    protected int group1Position;
+    protected int group2Position;
 
 //    private LessonAdapter lessonAdapter;
     HomeClassAdapter mAdapter;
@@ -120,9 +111,10 @@ public class LessonFragment extends Fragment {
     }
 
     private void filter() {
-        CourseFilterDialog dialog = new CourseFilterDialog(context, false);
-        dialog.setTimeSelection(timePosition);
-        dialog.setStateSelection(statePosition);
+        MyClassFilterDialog dialog = new MyClassFilterDialog(context, false);
+        dialog.setTimeSelection(group1Position);
+        dialog.setStateSelection(group2Position);
+        dialog.setGroup1(getResources().getStringArray(R.array.lesson_filter_type)).setGroup2(getResources().getStringArray(R.array.lesson_filter_state));
         dialog.showAsDropDown(mFilterLine);
         mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_up, 0);
         dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -131,17 +123,16 @@ public class LessonFragment extends Fragment {
                 mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_down, 0);
             }
         });
-        dialog.setOnOkListener(new CourseFilterDialog.OnOkListener() {
+        dialog.setOnOkListener(new MyClassFilterDialog.OnOkListener() {
             @Override
-            public void onOk(int timePosition, int statePosition, int sourcePosition) {
-                LessonFragment.this.timePosition = timePosition;
-                LessonFragment.this.statePosition = statePosition;
-                LessonFragment.this.sourcePosition = sourcePosition;
-                Criteria criteria = LessonBusiness.getFilter(timePosition, statePosition, sourcePosition, false);
+            public void onOk(int group1Position, int group2Position) {
+                LessonFragment.this.group1Position = group1Position;
+                LessonFragment.this.group2Position = group2Position;
+                LessonFilterHelper.getType(group1Position);
+                LessonFilterHelper.getState(group2Position);
                 //TODO 重新查询
-//                if (lessonAdapter != null) {
-//                    lessonAdapter.request(criteria);
-//                }
+                dataPageLoader.refresh();
+
             }
         });
     }
@@ -207,7 +198,7 @@ public class LessonFragment extends Fragment {
     private void getMonthData(){
         long start=new Date(0).getTime();
         long end=ScheduleUtil.ymdToTimeMill(2019,12,30);
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(), ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), Account.TypeName.STAND_ALONE_LESSON, "All",mPagination , dataPageLoader);
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),"", ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), Account.TypeName.STAND_ALONE_LESSON, LessonFilterHelper.getState(group2Position),mPagination , dataPageLoader);
     }
 
 

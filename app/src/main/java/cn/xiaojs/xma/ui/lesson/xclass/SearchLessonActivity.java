@@ -135,7 +135,7 @@ public class SearchLessonActivity extends BaseActivity {
 
     private void request(){
 
-        LessonDataManager.getClassesSchedule4Lesson(this, ScheduleUtil.getUTCDate(new Date(0).getTime()),ScheduleUtil.getUTCDate(ScheduleUtil.ymdToTimeMill(2100,12,30)), Account.TypeName.STAND_ALONE_LESSON,"All",mPagination,dataPageLoader,key);
+        LessonDataManager.getClassesSchedule4Lesson(this,"", ScheduleUtil.getUTCDate(new Date(0).getTime()),ScheduleUtil.getUTCDate(ScheduleUtil.ymdToTimeMill(2100,12,30)), Account.TypeName.STAND_ALONE_LESSON,"All",mPagination,dataPageLoader,key);
 
 
     }

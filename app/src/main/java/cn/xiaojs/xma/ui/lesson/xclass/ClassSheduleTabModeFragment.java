@@ -14,10 +14,26 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.DataPageLoader;
+import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.model.CollectionCalendar;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
+import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -34,6 +50,11 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
     RadioButton tab4;
     String classId="";
 
+    DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
+    Pagination mPagination;
+    String state;
+
+
     @Override
     protected View getContentView() {
         View v=View.inflate(getActivity(), R.layout.fragment_class_schedule_tab_mode, null);
@@ -49,6 +70,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
     @Override
     protected void init() {
         classId=getActivity().getIntent().getStringExtra(ClassScheduleActivity.EXTRA_ID);
+        state=LessonFilterHelper.getState(0);
         mAdapter=new HomeClassAdapter(recyclerview);
         recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         recyclerview.setAdapter(mAdapter);
@@ -57,22 +79,30 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId){
                     case R.id.tab1:
+                        state=LessonFilterHelper.getState(0);
                         break;
                     case R.id.tab2:
+                        state=LessonFilterHelper.getState(2);
                         break;
                     case R.id.tab3:
+                        state=LessonFilterHelper.getState(1);
                         break;
                     case R.id.tab4:
+                        state=LessonFilterHelper.getState(4);
                         break;
                 }
+                dataPageLoader.refresh();
             }
         });
 
+        initPageLoad();
         getCountPerTab();
     }
 
 
     private void request(){
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),classId, ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),
+                Account.TypeName.CLASS_LESSON, state,mPagination , dataPageLoader);
 
     }
 
@@ -108,6 +138,63 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
         }
         return str;
     }
+
+    private void initPageLoad(){
+        mPagination=new Pagination();
+        mPagination.setPage(1);
+        mPagination.setMaxNumOfObjectsPerPage(10);
+        dataPageLoader=new DataPageLoader<ClassSchedule, CollectionCalendar<ClassSchedule>>() {
+            PageChangeInRecyclerView pageChangeInRecyclerView;
+            @Override
+            public void onRequst(int page) {
+                mPagination.setPage(page);
+                request();
+            }
+
+            @Override
+            public List<ClassSchedule> adaptData(CollectionCalendar<ClassSchedule> object) {
+                if(object==null)return new ArrayList<>();
+                return object.calendar;
+            }
+
+            @Override
+            public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
+                pageChangeInRecyclerView.completeLoading();
+                bindData(all);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                pageChangeInRecyclerView.completeLoading();
+                bindData(new ArrayList<ClassSchedule>());
+            }
+
+            @Override
+            public void prepare() {
+                pageChangeInRecyclerView=new PageChangeInRecyclerView(recyclerview,this);
+
+            }
+        };
+    }
+
+    private void bindData(List<ClassSchedule> list){
+        ArrayList monthLists=new ArrayList();
+        LessonLabelModel tempLabel=null;
+        for(int j=0;j<list.size();j++){
+            ClassSchedule cs=list.get(j);
+            tempLabel=new LessonLabelModel(cs.date,0,false);
+            monthLists.add(tempLabel);
+            monthLists.addAll(cs.lessons);
+            tempLabel.lessonCount=cs.lessons.size();
+            if(cs.lessons.size()>0){
+                tempLabel.hasData=true;
+            }
+        }
+        monthLists.add(new LastEmptyModel());
+        mAdapter.setList(monthLists);
+        mAdapter.notifyDataSetChanged();
+    }
+
 
 
 

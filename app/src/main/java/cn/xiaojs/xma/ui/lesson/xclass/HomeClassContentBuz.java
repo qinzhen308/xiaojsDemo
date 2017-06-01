@@ -23,6 +23,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -34,19 +35,23 @@ import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.JudgementUtil;
 
 /**
@@ -76,6 +81,7 @@ public class HomeClassContentBuz {
     int year, month,day;
     int todayYear, todayMonth,todayDay;
 
+    private List<PrivateClass> hotClass;
 
     /**
      * @param context
@@ -95,6 +101,7 @@ public class HomeClassContentBuz {
         initListView();
         doRequest(todayYear,todayMonth,todayDay);
         getMonthData();
+        loadHotClasses();
     }
 
     private void initListView() {
@@ -226,6 +233,9 @@ public class HomeClassContentBuz {
                     list.addAll(schedule.lessons);
                 }
                 mAdapter.setList(list);
+                if(hotClass!=null){
+                    bindHotClasses(hotClass);
+                }
                 mAdapter.notifyDataSetChanged();
             }
             @Override
@@ -256,7 +266,6 @@ public class HomeClassContentBuz {
                     }
                 }
                 calendarView.setTaskHintList(hashSet);
-
             }
 
             @Override
@@ -264,11 +273,44 @@ public class HomeClassContentBuz {
 
             }
         });
+    }
 
+    private void loadHotClasses(){
+        LessonDataManager.getHotClasses(mContext, 4, new APIServiceCallback<CollectionResult<PrivateClass>>() {
+            @Override
+            public void onSuccess(CollectionResult<PrivateClass> object) {
+                if(object!=null){
+                    hotClass=object.results;
+                    if(ArrayUtil.isEmpty(mAdapter.getList())){//
+
+                    }else {//课先回来，绑定班
+                        bindHotClasses(object.results);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                if(!ArrayUtil.isEmpty(mAdapter.getList())){//课先回来，绑定班
+                    bindHotClasses(null);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+    private void bindHotClasses(List<PrivateClass> list){
+        ClassLabelModel classLabel=new ClassLabelModel(false);
+        mAdapter.getList().add(classLabel);
+        if(!ArrayUtil.isEmpty(list)){
+            classLabel.hasData=true;
+            mAdapter.getList().addAll(list);
+        }
     }
 
     public void update(){
         getMonthData();
         doRequest(year,month,day);
+        loadHotClasses();
     }
 }
