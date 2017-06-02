@@ -44,6 +44,7 @@ public class NativeLessonView extends RelativeLayout implements IViewModel<Class
     @BindView(R.id.state_point)
     View statePoint;
 
+    int position=-1;
 
     private CircleTransform circleTransform;
 
@@ -81,8 +82,9 @@ public class NativeLessonView extends RelativeLayout implements IViewModel<Class
 
 
     @Override
-    public void bindData(ClassLesson data) {
+    public void bindData(int position,ClassLesson data) {
         mData = data;
+        this.position = position;
         tvDate.setText(ScheduleUtil.getHMDate(data.schedule.getStart()));
         tvTotalTime.setText(data.schedule.getDuration() + "分钟");
         tvLesson.setText(data.title);

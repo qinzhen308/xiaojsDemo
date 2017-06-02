@@ -43,7 +43,7 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
     @Override
     protected void setViewContent(Holder holder, PrivateClass bean, int position) {
         if(holder.root instanceof IViewModel){
-            ((IViewModel) holder.root).bindData(bean);
+            ((IViewModel) holder.root).bindData(position,bean);
         }
     }
 

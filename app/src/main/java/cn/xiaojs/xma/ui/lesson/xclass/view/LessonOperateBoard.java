@@ -57,7 +57,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_recreate_lesson,R.drawable.ic_op_schedule,
             R.drawable.ic_op_share,R.drawable.ic_op_signup,
             R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check,
-            R.drawable.ic_op_share2,R.drawable.ic_op_database1
+            R.drawable.ic_op_share2,R.drawable.ic_op_database1,
+            R.drawable.ic_op_agree_invite,R.drawable.ic_op_disagree_invite
     };
 
 
@@ -72,7 +73,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.string.lesson_op_recreate_lesson,R.string.lesson_op_schedule,
             R.string.lesson_op_share,R.string.lesson_op_signup,
             R.string.lesson_op_submit,R.string.lesson_op_cancel_check,
-            R.string.lesson_op_share,R.string.lesson_op_database
+            R.string.lesson_op_share,R.string.lesson_op_database,
+            R.string.lesson_op_agree_invite,R.string.lesson_op_disagree_invite
     };
 
     private OnDialogCloseListener mOnDismissListener;
@@ -218,7 +220,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             holder.btnItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    list.get(position).onClick(activity,data);
+                    list.get(position).onClick(activity,data,LessonOperateBoard.this.position);
                     dismiss();
                 }
             });
@@ -267,8 +269,14 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         return this;
     }
 
-    public LessonOperateBoard maybe(Activity activity,CLesson data){
-        return setActivity(activity).setData(data);
+    int position=-1;
+    public LessonOperateBoard setPosition(int position){
+        this.position=position;
+        return this;
+    }
+
+    public LessonOperateBoard maybe(Activity activity,CLesson data,int position){
+        return setActivity(activity).setData(data).setPosition(position);
     }
 
     @Override

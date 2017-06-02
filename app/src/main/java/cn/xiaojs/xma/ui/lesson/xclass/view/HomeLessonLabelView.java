@@ -53,7 +53,7 @@ public class HomeLessonLabelView extends LinearLayout implements IViewModel<Less
 
 
     @Override
-    public void bindData(LessonLabelModel data) {
+    public void bindData(int position,LessonLabelModel data) {
         SpannableString ss=new SpannableString("共"+data.lessonCount+"节课");
 //        ss.setSpan(new RelativeSizeSpan(0.5f),1,ss.length()-2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss.setSpan(new ForegroundColorSpan(c_main_orange),1,ss.length()-2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

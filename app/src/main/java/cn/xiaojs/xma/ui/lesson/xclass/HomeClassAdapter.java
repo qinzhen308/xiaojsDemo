@@ -84,7 +84,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //            }
 //        });
         if(holder.itemView instanceof IViewModel){
-            ((IViewModel) holder.itemView).bindData(getItem(position));
+            ((IViewModel) holder.itemView).bindData(position,getItem(position));
         }
     }
 

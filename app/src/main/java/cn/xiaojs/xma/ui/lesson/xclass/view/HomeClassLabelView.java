@@ -46,7 +46,7 @@ public class HomeClassLabelView extends LinearLayout implements IViewModel<Class
 
 
     @Override
-    public void bindData(ClassLabelModel data) {
+    public void bindData(int position,ClassLabelModel data) {
         showNoClass(!data.hasData);
     }
 

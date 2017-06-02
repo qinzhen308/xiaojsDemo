@@ -110,7 +110,7 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
     }
 
     @Override
-    public void bindData(PrivateClass data) {
+    public void bindData(int position,PrivateClass data) {
         mData=data;
         titleView.setText(mData.title);
 //        if(mData.learning){
