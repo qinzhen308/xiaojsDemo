@@ -27,7 +27,6 @@ public class AppLoadState2 implements LoadStateListener{
     private TextView mEmptyDesc1;
     private Button mEmptyButton;
 
-    private PullToRefreshRecyclerView mListView;
 
     private int mCurrentState=STATE_NORMAL;
 
@@ -71,13 +70,12 @@ public class AppLoadState2 implements LoadStateListener{
 
     @Override
     public void onFailed(String msg) {
-        mListView.onRefreshComplete();
         setTexts(failedDesc,failedDesc1,failedBtnDesc);
         mEmptyImage.setImageResource(R.drawable.ic_data_failed);
         mEmptyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListView.setRefreshing();
+
             }
         });
         attach();
@@ -85,8 +83,6 @@ public class AppLoadState2 implements LoadStateListener{
 
     @Override
     public void onNoData(String msg) {
-        mListView.onRefreshComplete();
-        mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         setTexts(emptyDesc,emptyDesc1,emptyBtnDesc);
         mCurrentState = STATE_NORMAL;
         mEmptyButton.setOnClickListener(new View.OnClickListener() {
@@ -108,13 +104,7 @@ public class AppLoadState2 implements LoadStateListener{
     @Override
     public void onLoading(String msg) {
         detach();
-        if (PullToRefreshBase.Mode.PULL_FROM_START == mListView.getMode() || PullToRefreshBase.Mode.BOTH == mListView.getMode()) {
-            mListView.setFirstLoading(true);
-            mListView.setRefreshing();
-        } else {
-            mListView.setFirstLoading(true);
-            mListView.setRefreshing(true);
-        }
+
     }
 
     //text=null,不显示tagview

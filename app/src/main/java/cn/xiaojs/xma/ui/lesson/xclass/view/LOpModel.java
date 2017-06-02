@@ -130,10 +130,10 @@ public class LOpModel {
                 edit(context, data.id);
                 break;
             case OP_ENTER:
-                enterClass(context, data.classInfo.id);
+                enterClass(context, data.ticket);
                 break;
             case OP_ENTER_2:
-                enterClass(context, data.classInfo.id);
+                enterClass(context, data.ticket);
                 break;
             case OP_LOOK:
                 detail(context, data.id);
@@ -155,7 +155,7 @@ public class LOpModel {
                 lessonAgain(context,data);
                 break;
             case OP_SCHEDULE:
-                enterSchedule(context, ((CLesson) data).classInfo.id, ((CLesson) data).classInfo.title);
+                enterSchedule(context, data.classInfo.id, data.classInfo.title);
                 break;
             case OP_SHARE:
                 share(context,data);
@@ -166,13 +166,13 @@ public class LOpModel {
             case OP_SUBMIT:
                 break;
             case OP_CANCEL_CHECK:
-                offShelves(context,((CLesson) data).id);
+                offShelves(context, data);
                 break;
             case OP_SHARE2:
                 share(context,data);
                 break;
             case OP_DATABASE1:
-                databank(context,((CLesson) data).title ,((CLesson) data).id);
+                databank(context,data.title ,data.id);
                 break;
             case OP_AGREE_INVITE:
                 dealAck(context,position,data,Ctl.ACKDecision.ACKNOWLEDGE);
@@ -249,8 +249,7 @@ public class LOpModel {
                 //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
                 if (AccountDataManager.isVerified(context)) {
 
-//                    if (TextUtils.isEmpty(bean.getTicket())) {
-                    if (TextUtils.isEmpty("")) {
+                    if (TextUtils.isEmpty(bean.ticket)) {
                         //如果没有ticket，需要重新调用接口，刷新课的信息。
                         updateData(context,false);
 
@@ -286,7 +285,7 @@ public class LOpModel {
     }
 
     //撤销审核，取消上架
-    private void offShelves(final Activity context, final String id) {
+    private void offShelves(final Activity context, final CLesson bean) {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.cancel_examine);
         dialog.setDesc(R.string.cancel_examine_tip);
@@ -302,13 +301,11 @@ public class LOpModel {
             public void onClick() {
                 dialog.cancel();
                 showProgress(context);
-                LessonDataManager.requestCancelLessonOnShelves(context, id, new APIServiceCallback() {
+                LessonDataManager.requestCancelLessonOnShelves(context, bean.id, new APIServiceCallback() {
                     @Override
                     public void onSuccess(Object object) {
                         cancelProgress(context);
-//                        bean.setState(LessonState.DRAFT);
-//                        notifyData(bean);
-
+                        bean.state=LessonState.DRAFT;
                         updateData(context,true);
                         ToastUtil.showToast(context, R.string.off_shelves_success);
                     }

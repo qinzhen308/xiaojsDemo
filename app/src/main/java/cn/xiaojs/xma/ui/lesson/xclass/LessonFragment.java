@@ -43,6 +43,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -85,7 +86,8 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
         View v = LayoutInflater.from(context).inflate(R.layout.fragment_public_lesson, null);
         ButterKnife.bind(this,v);
         searchView.setHint(R.string.hint_input_lesson_name);
-        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v));
+//        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v));
+        stateView=new LoadStatusViewDecoratee(null);
         return v;
     }
 
@@ -168,8 +170,12 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             @Override
             public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
                 pageChangeInRecyclerView.completeLoading();
+                if(ArrayUtil.isEmpty(all)){
+                    stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
+                }else {
+                    stateView.change(LoadStateListener.STATE_NORMAL,"");
+                }
                 bindData(all);
-                stateView.change(LoadStateListener.STATE_NORMAL,"");
             }
 
             @Override

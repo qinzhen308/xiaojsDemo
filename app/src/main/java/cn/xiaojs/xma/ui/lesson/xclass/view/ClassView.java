@@ -113,6 +113,7 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
     public void bindData(int position,PrivateClass data) {
         mData=data;
         titleView.setText(mData.title);
+        flagView.setVisibility(INVISIBLE);
 //        if(mData.learning){
 ////            flagView.setImageResource(R.drawable.ic_flag_learn);
 //            statusView.setVisibility(VISIBLE);
