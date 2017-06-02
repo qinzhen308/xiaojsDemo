@@ -355,7 +355,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:layout_marginBottom="@dimen/px20">
 
             <TextView
                     android:layout_alignParentLeft="true"
