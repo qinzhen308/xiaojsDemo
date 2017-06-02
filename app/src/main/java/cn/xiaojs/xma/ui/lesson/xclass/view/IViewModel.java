@@ -6,5 +6,5 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 
 public interface IViewModel<T> {
 
-    public void bindData(T data);
+    public void bindData(int position,T data);
 }

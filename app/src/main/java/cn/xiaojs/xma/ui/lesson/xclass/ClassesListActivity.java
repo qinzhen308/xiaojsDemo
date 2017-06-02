@@ -18,12 +18,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 
 /**
  * Created by maxiaobao on 2017/5/22.
  */
 
-public class ClassesListActivity extends FragmentActivity {
+public class ClassesListActivity extends FragmentActivity implements IUpdateMethod{
 
     @BindView(R.id.lay_tab_group)
     RadioGroup tabGroupLayout;
@@ -102,6 +103,16 @@ public class ClassesListActivity extends FragmentActivity {
 
             }
         });
+    }
+
+    @Override
+    public void updateData(boolean justNative) {
+        ((IUpdateMethod)fragmentList.get(1)).updateData(justNative);
+    }
+
+    @Override
+    public void updateItem(int position, Object obj,Object... others) {
+        ((IUpdateMethod)fragmentList.get(1)).updateItem(position,obj,others);
     }
 
 

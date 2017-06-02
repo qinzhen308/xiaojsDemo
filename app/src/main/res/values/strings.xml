@@ -851,6 +851,9 @@
     <string name="lesson_op_look_apply">查看报名页</string>
     <string name="lesson_op_schedule">课表</string>
     <string name="lesson_op_class_info">班级信息</string>
+    <string name="lesson_op_agree_invite">同意邀请</string>
+    <string name="lesson_op_disagree_invite">拒绝邀请</string>
+
     <string name="create_class_success">创建班成功</string>
     <string name="class_name_not_null">班级名称不能为空</string>
     <string name="class_name_char_error">课名称不能超过%1$d个字</string>

@@ -29,11 +29,13 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
@@ -42,7 +44,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
  * Created by maxiaobao on 2017/5/22.
  */
 
-public class LessonFragment extends Fragment {
+public class LessonFragment extends Fragment implements IUpdateMethod{
 
 //    @BindView(R.id.class_lesson_list)
 //    PullToRefreshSwipeListView listView;
@@ -202,4 +204,25 @@ public class LessonFragment extends Fragment {
     }
 
 
+    @Override
+    public void updateData(boolean justNative) {
+        dataPageLoader.refresh();
+    }
+
+    @Override
+    public void updateItem(int position, Object obj,Object... others) {
+        if(position<mAdapter.getItemCount()){
+            Object item=mAdapter.getList().get(position);
+            //由于有些操作是异步的，为了防止在本方法调用前，列表已经刷新过，作如下判断
+            if(item instanceof CLesson&&((CLesson)item).id.equals(((CLesson)obj).id)){
+                if(others.length>0&&others[0].equals("remove")){
+                    mAdapter.getList().remove(position);
+                }else {
+                    mAdapter.getList().set(position,obj);
+
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 }

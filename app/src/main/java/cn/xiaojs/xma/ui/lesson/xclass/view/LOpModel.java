@@ -48,8 +48,9 @@ public class LOpModel {
     public static final int OP_APPLY =0;
     //取消开课
     public static final int OP_CANCEL_LESSON=1;
-    //撤销确认
+    //撤销确认（机构端对老师）
     public static final int OP_CANCEL_SUBMIT=2;
+    //班级信息
     public static final int OP_CLASS_INFO=3;
     public static final int OP_DATABASE2 =4;
     public static final int OP_DELETE=5;
@@ -65,6 +66,7 @@ public class LOpModel {
     public static final int OP_SCHEDULE=15;
     public static final int OP_SHARE=16;
     public static final int OP_SIGNUP=17;
+    //提交确认（机构端对老师）
     public static final int OP_SUBMIT=18;
     //撤销审核
     public static final int OP_CANCEL_CHECK=19;
@@ -72,6 +74,10 @@ public class LOpModel {
     public static final int OP_SHARE2=20;
     //蓝色图标的资料库按钮
     public static final int OP_DATABASE1=21;
+    //同意邀请 （对于老师）
+    public static final int OP_AGREE_INVITE=22;
+    //拒绝邀请 （对于老师）
+    public static final int OP_DISAGREE_INVITE=23;
 
     
     
@@ -85,7 +91,7 @@ public class LOpModel {
         return id;
     }
 
-    public void onClick(Activity context,CLesson data){
+    public void onClick(Activity context,CLesson data,int position){
         switch (id){
             case OP_APPLY:
                 //报名页
@@ -165,6 +171,12 @@ public class LOpModel {
                     databank(context,((CLesson) data).title ,((CLesson) data).id);
                 }
                 break;
+            case OP_AGREE_INVITE:
+                dealAck(context,position,data,Ctl.ACKDecision.ACKNOWLEDGE);
+                break;
+            case OP_DISAGREE_INVITE:
+                dealAck(context,position,data,Ctl.ACKDecision.REFUSED);
+                break;
 
         }
     }
@@ -186,6 +198,14 @@ public class LOpModel {
     //后续优化
     private void updateData(Activity context,boolean justNative){
         ((IUpdateMethod)context).updateData(justNative);
+    }
+
+    private void updateJustItem(Activity context,int position,CLesson cLesson){
+        ((IUpdateMethod)context).updateItem(position,cLesson);
+    }
+
+    private void removeJustItem(Activity context,int position,CLesson cLesson){
+        ((IUpdateMethod)context).updateItem(position,cLesson,"remove");
     }
 
 
@@ -308,28 +328,24 @@ public class LOpModel {
     }
 
     //同意或者拒绝
-    private void dealAck(final Activity context, final int position, final TeachLesson bean, final int descion) {
+    private void dealAck(final Activity context, final int position, final CLesson bean, final int descion) {
 
         DealAck ack = new DealAck();
         ack.decision = descion;
 
         showProgress(context);
-        LessonDataManager.acknowledgeLesson(context, bean.getId(), ack, new APIServiceCallback() {
+        LessonDataManager.acknowledgeLesson(context, bean.id, ack, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress(context);
                 if (descion == Ctl.ACKDecision.ACKNOWLEDGE) {
-                    bean.setState(LessonState.ACKNOWLEDGED);
+                    bean.state=LessonState.ACKNOWLEDGED;
                     Toast.makeText(context, "您已同意", Toast.LENGTH_SHORT).show();
-//                    notifyData(bean);
-                    updateData(context,true);
+                    updateJustItem(context,position,bean);
 
                 } else {
                     Toast.makeText(context, "您已拒绝", Toast.LENGTH_SHORT).show();
-//                    getList().remove(position);
-//                    notifyDataSetChanged();
-                    updateData(context,true);
-
+                    removeJustItem(context,position,bean);
                 }
 
             }
