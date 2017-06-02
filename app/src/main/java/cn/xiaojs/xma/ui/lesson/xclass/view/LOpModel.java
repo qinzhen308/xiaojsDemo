@@ -27,6 +27,7 @@ import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
@@ -84,10 +85,11 @@ public class LOpModel {
         return id;
     }
 
-    public void onClick(Activity context,Object data){
+    public void onClick(Activity context,CLesson data){
         switch (id){
             case OP_APPLY:
-
+                //报名页
+                enterClass(context,data.id);
                 break;
             case OP_CANCEL_LESSON:
 
@@ -200,16 +202,16 @@ public class LOpModel {
         ClassScheduleActivity.invoke(context,classId,title);
     }
 
-    public void enterDatabase(Activity context){
-        Intent intent=new Intent(context,MaterialActivity.class);
-        intent.putExtra(MaterialActivity.KEY_IS_MINE,false);
-        context.startActivity(intent);
-    }
 
     public void classInfo(Activity context,String classId){
         Intent intent=new Intent(context,ClassInfoActivity.class);
         intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,classId);
         context.startActivity(intent);
+    }
+
+    //进入报名页
+    public void enterApplyPage(Activity context,String lessonId){
+        context.startActivity(new Intent(context,LessonHomeActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,lessonId));
     }
 
 

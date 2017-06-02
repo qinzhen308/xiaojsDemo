@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:background="@color/gray_item_bg"
@@ -30,9 +30,24 @@
         android:layout_alignLeft="@+id/tv_date"
         android:layout_alignRight="@+id/tv_date"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/px46"
         android:layout_below="@+id/tv_date"
         android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="草稿"
+        android:textSize="@dimen/font_22px"
+        android:textColor="@color/red"
+        android:layout_alignLeft="@+id/tv_date"
+        android:layout_alignRight="@+id/tv_date"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/px15"
+        android:layout_below="@+id/tv_total_time"
+        android:maxLines="1"
+        android:visibility="gone"
         />
 
 
@@ -241,4 +256,4 @@
         android:visibility="gone"
         />
 
-</merge>
+</RelativeLayout>

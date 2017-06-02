@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -255,8 +256,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
-    Object data;
-    public LessonOperateBoard setData(Object data){
+    CLesson data;
+    public LessonOperateBoard setData(CLesson data){
         this.data=data;
         return this;
     }
@@ -266,7 +267,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         return this;
     }
 
-    public LessonOperateBoard maybe(Activity activity,Object data){
+    public LessonOperateBoard maybe(Activity activity,CLesson data){
         return setActivity(activity).setData(data);
     }
 
