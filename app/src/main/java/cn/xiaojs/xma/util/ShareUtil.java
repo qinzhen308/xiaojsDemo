@@ -35,7 +35,7 @@ public class ShareUtil {
      * @param bitmap
      * @param imgUrl
      */
-    public static void shareImage(final Activity activity, final Bitmap bitmap, final String imgUrl) {
+    public static void shareImage(final Activity activity, final Bitmap bitmap, final String imgUrl, final String title) {
         if (XiaojsConfig.DEBUG) {
             Logger.d("the share url" + imgUrl);
         }
@@ -56,7 +56,7 @@ public class ShareUtil {
                     case R.id.tv_qq:
                         //QQ
                         Tencent tencent = QQUtil.getTencent(activity.getApplicationContext());
-                        QQUtil.share(activity, tencent, "", "", "", imgUrl, new IUiListener() {
+                        QQUtil.share(activity, tencent, title, "", "", imgUrl, new IUiListener() {
                             @Override
                             public void onComplete(Object o) {
 

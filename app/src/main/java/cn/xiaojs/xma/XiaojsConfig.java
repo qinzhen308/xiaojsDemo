@@ -145,5 +145,7 @@ public class XiaojsConfig {
 
     public static boolean CURRENT_PAGE_IN_MESSAGE = false;
 
+    public static final String APP_QRCODE_URL = "http://www.xiaojs.cn/static/img/phone-xma.png";
+
 
 }
