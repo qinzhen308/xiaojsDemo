@@ -1,6 +1,7 @@
 package com.jeek.calendar.widget.calendar.week;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jimmy on 2016/10/7 0007.
@@ -57,6 +59,7 @@ public class WeekView extends View {
     private OnWeekClickListener mOnWeekClickListener;
     private GestureDetector mGestureDetector;
     private HashSet<Integer> mTaskHintList;
+    private Map<Integer,Integer> mTaskHintColors;
     private Bitmap mRestBitmap, mWorkBitmap;
 
     public WeekView(Context context, DateTime dateTime) {
@@ -332,9 +335,13 @@ public class WeekView extends View {
         if (mIsShowHint && mTaskHintList != null && mTaskHintList.size() > 0) {
             if(day==mSelDay)return;
             if (!mTaskHintList.contains(day)) return;
-            mPaint.setColor(mHintCircleColor);
             float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
             float circleY = (float) (mRowSize * 0.75);
+            if(mTaskHintColors!=null&&mTaskHintColors.size()==mTaskHintList.size()){
+                mPaint.setColor(mTaskHintColors.get(day));
+            }else {
+                mPaint.setColor(mHintCircleColor);
+            }
             canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
         }
     }
@@ -413,6 +420,19 @@ public class WeekView extends View {
     public void setTaskHintList(HashSet<Integer> taskHintList) {
         mTaskHintList = taskHintList;
         invalidate();
+    }
+
+    /**
+     * 设置圆点对应的颜色集合
+     *
+     * @param taskHintColors
+     * @param immediately 立即刷新
+     */
+    public void setTaskHintColors(Map<Integer,Integer> taskHintColors, boolean immediately) {
+        mTaskHintColors = taskHintColors;
+        if(immediately){
+            invalidate();
+        }
     }
 
     /**

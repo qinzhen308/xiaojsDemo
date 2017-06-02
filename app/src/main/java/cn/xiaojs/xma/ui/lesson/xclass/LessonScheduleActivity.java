@@ -163,7 +163,7 @@ public class LessonScheduleActivity extends BaseActivity{
         mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(selectyear,selectMonth,selectDay));
     }
 
-    @OnClick({R.id.right_view})
+    @OnClick({R.id.right_view,R.id.left_view})
     public void onClick(View v){
         switch (v.getId()){
             case R.id.right_view:

@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_my_course_search" />
+    <include
+        android:id="@+id/layout_top"
+        layout="@layout/layout_my_course_search" />
 
     <View
         android:id="@+id/filter_line"
-        style="@style/DividerHorizontal" />
+        style="@style/DividerHorizontal"
+        android:layout_below="@+id/layout_top"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/over_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/filter_line"
+        />
 
-</LinearLayout>
+</RelativeLayout>

@@ -22,10 +22,12 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.TimeZone;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -82,6 +84,11 @@ public class HomeClassContentBuz {
     int todayYear, todayMonth,todayDay;
 
     private List<PrivateClass> hotClass;
+
+    @BindColor(R.color.orange_point)
+    int c_red;
+    @BindColor(R.color.grey_point)
+    int c_gray;
 
     /**
      * @param context
@@ -141,20 +148,6 @@ public class HomeClassContentBuz {
     }
 
 
-    private void test() {
-
-
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                calendarView.addTaskHint(5);
-                calendarView.addTaskHint(10);
-                calendarView.addTaskHint(15);
-            }
-        }, 2000);
-
-    }
 
 
     @OnClick({R.id.btn_scan2, R.id.s_root, R.id.btn_add,R.id.btn_today})
@@ -259,12 +252,25 @@ public class HomeClassContentBuz {
             @Override
             public void onSuccess(ScheduleData object) {
                 HashSet hashSet=new HashSet<Integer>();
+                HashMap<Integer , Integer> colors=new HashMap<Integer, Integer>();
                 if(object!=null&&object.calendar!=null){
                     for(int i=0;i<object.calendar.size();i++){
                         String[] strings=object.calendar.get(i).date.split("-");
-                        hashSet.add(Integer.valueOf(strings[2]));
+                        int da=Integer.valueOf(strings[2]);
+                        int mo=Integer.valueOf(strings[1])-1;
+                        int ye=Integer.valueOf(strings[0]);
+
+                        if(mo==m){
+                            hashSet.add(da);
+                            if(todayYear>ye||todayMonth>mo||todayDay>da){//今天之前
+                                colors.put(da,c_gray);//灰色
+                            }else {
+                                colors.put(da,c_red);//红色
+                            }
+                        }
                     }
                 }
+                calendarView.setTaskHintColors(colors,false);
                 calendarView.setTaskHintList(hashSet);
             }
 
@@ -289,7 +295,6 @@ public class HomeClassContentBuz {
                     }
                 }
             }
-
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 if(!ArrayUtil.isEmpty(mAdapter.getList())){//课先回来，绑定班
