@@ -16,6 +16,7 @@ public class CLesson {
     public String id;
     public String title;
     public String type;
+    public String ticket;
     public Schedule schedule;
     public String state;
     public Account owner;
