@@ -38,20 +38,19 @@ import okhttp3.ResponseBody;
 
 public class ManualAddStudentActivity extends BaseActivity {
 
-    public static final String MANUAL_STUDENT_TYPE = "type";
     public static final String EXTRA_STUDENTS = "students";
-    public static final String EXTRA_CLASS_ID = "classid";
 
 
-    public static final int TYPE_ADD_ONE_ONLY = 0x1;
+
+    public static final int REQUEST_ADD_STUDENT_CODE = 0x1;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
     @BindView(R.id.lay_tips)
     LinearLayout tipsRootView;
 
-    @BindView(R.id.add_btn)
-    Button addButton;
+    @BindView(R.id.edit_lay)
+    LinearLayout editRootLayout;
     @BindView(R.id.student_num)
     EditText numEdit;
     @BindView(R.id.divider)
@@ -66,46 +65,37 @@ public class ManualAddStudentActivity extends BaseActivity {
 
     private int currentType;
     private String classId;
-
-    private boolean isEdit;
     private StudentsAdapter adapter;
 
 
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_manual_add_student);
-        setMiddleTitle(getString(R.string.manual_add_student));
+        setMiddleTitle(getString(R.string.student_list));
         initView();
     }
 
-    @OnClick({R.id.left_image, R.id.right_image2, R.id.add_btn, R.id.lesson_creation_tips_close})
+    @Override
+    public void onBackPressed() {
+
+        backCompleted();
+
+        super.onBackPressed();
+    }
+
+    @OnClick({R.id.left_image, R.id.right_image2, R.id.lesson_creation_tips_close})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
-                finish();
+                backCompleted();
                 break;
             case R.id.lesson_creation_tips_close://关闭提醒
                 closeCourCreateTips();
                 break;
-            case R.id.right_image2://确定 or 完成
-                if (isEdit) {
-                    addNewStudent();
-                } else {
-
-                    if (adapter != null) {
-                        ArrayList<StudentEnroll> studentEnrolls = (ArrayList<StudentEnroll>) adapter.getList();
-                        addCompleted(studentEnrolls);
-                    }
-
-
-                    finish();
-                }
-
+            case R.id.right_image2://添加
+                Intent i = new Intent(this, AddStudentActivity.class);
+                startActivityForResult(i, REQUEST_ADD_STUDENT_CODE);
                 break;
-            case R.id.add_btn://添加
-                showEditStatus();
-                break;
-
         }
     }
 
@@ -116,146 +106,67 @@ public class ManualAddStudentActivity extends BaseActivity {
     private void initView() {
 
         tipsContentView.setText(R.string.add_student_tips);
+        showAddStatus();
 
+        adapter = new StudentsAdapter(this, studentsListView);
 
-        currentType = getIntent().getIntExtra(MANUAL_STUDENT_TYPE, -1);
-
-        if (currentType == TYPE_ADD_ONE_ONLY) {
-            classId = getIntent().getStringExtra(EXTRA_CLASS_ID);
-            showEditStatus();
-            setRightText(R.string.finish);
-        } else {
-            ArrayList<StudentEnroll> students = getIntent().getParcelableArrayListExtra(EXTRA_STUDENTS);
-
-            if (students != null && students.size() > 0) {
-                initAdapter(students);
-                showAddStatus();
-            } else {
-                showEditStatus();
-            }
+        ArrayList<StudentEnroll> students = new ArrayList<>();
+        ArrayList<StudentEnroll> extraStudents = getIntent().getParcelableArrayListExtra(EXTRA_STUDENTS);
+        if (extraStudents !=null && extraStudents.size()>0) {
+            students.addAll(extraStudents);
         }
 
+        adapter.setList(students);
+        studentsListView.setAdapter(adapter);
+
+        studentsListView.setMode(PullToRefreshBase.Mode.DISABLED);
+
     }
 
-    private void initAdapter(ArrayList<StudentEnroll> students) {
-        if (adapter == null) {
-            adapter = new StudentsAdapter(this, studentsListView);
-            adapter.setList(students);
-            studentsListView.setAdapter(adapter);
-            studentsListView.setMode(PullToRefreshBase.Mode.DISABLED);
-        }
-    }
-
-    private void showEditStatus() {
-
-        addButton.setVisibility(View.GONE);
-
-        numEdit.setText("");
-        nameEdit.setText("");
-        numEdit.setVisibility(View.VISIBLE);
-        nameEdit.setVisibility(View.VISIBLE);
-        lineView.setVisibility(View.VISIBLE);
-
-        studentsListView.setVisibility(View.GONE);
-        setRightText(R.string.ok);
-
-        isEdit = true;
-    }
 
     private void showAddStatus() {
 
-        addButton.setVisibility(View.VISIBLE);
-
-        numEdit.setVisibility(View.GONE);
-        nameEdit.setVisibility(View.GONE);
-        lineView.setVisibility(View.GONE);
+        editRootLayout.setVisibility(View.GONE);
 
         studentsListView.setVisibility(View.VISIBLE);
-        setRightText(R.string.finish);
-
-        isEdit = false;
+        setRightText(R.string.add);
     }
 
-    private void addNewStudent() {
-        String phone = numEdit.getText().toString().trim();
-
-        if (TextUtils.isEmpty(phone)) {
-            Toast.makeText(this, R.string.phone_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!VerifyUtils.checkPhoneNum(phone)) {
-            Toast.makeText(this, R.string.phone_error, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        String name = nameEdit.getText().toString().trim();
-        if (TextUtils.isEmpty(name)) {
-            Toast.makeText(this, "学生姓名必须输入", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        StudentEnroll studentEnroll = new StudentEnroll();
-        studentEnroll.mobile = Long.parseLong(phone);
-        studentEnroll.name = name;
-
-
-        if (currentType == TYPE_ADD_ONE_ONLY) {
-            submitAdd(studentEnroll);
-
-        } else {
-            if (adapter == null) {
-                ArrayList<StudentEnroll> studentEnrolls = new ArrayList<>();
-                studentEnrolls.add(studentEnroll);
-                initAdapter(studentEnrolls);
-            } else {
-                adapter.getList().add(studentEnroll);
-                adapter.notifyDataSetChanged();
-            }
-
-            showAddStatus();
-        }
-
+    private void addNewStudent(StudentEnroll studentEnroll) {
+        adapter.getList().add(studentEnroll);
+        adapter.notifyDataSetChanged();
     }
 
-    private void submitAdd(StudentEnroll studentEnroll) {
 
-        final ArrayList<StudentEnroll> studentEnrolls = new ArrayList<>(1);
+    private void backCompleted() {
 
-        ClassEnrollParams enrollParams = new ClassEnrollParams();
+        if (adapter != null) {
+            ArrayList<StudentEnroll> studentEnrolls = (ArrayList<StudentEnroll>) adapter.getList();
 
-        ClassEnroll classEnroll = new ClassEnroll();
+            Intent i = new Intent();
+            i.putParcelableArrayListExtra(EXTRA_STUDENTS, studentEnrolls);
+            setResult(RESULT_OK, i);
+        }
 
-        studentEnrolls.add(studentEnroll);
-        classEnroll.students = studentEnrolls;
-        enrollParams.enroll = classEnroll;
-
-        showProgress(true);
-        LessonDataManager.addClassStudent(this, classId, enrollParams, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-
-                cancelProgress();
-
-                addCompleted(studentEnrolls);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
-                Toast.makeText(ManualAddStudentActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void addCompleted(ArrayList<StudentEnroll> studentEnrolls) {
-        Intent i = new Intent();
-        i.putParcelableArrayListExtra(EXTRA_STUDENTS, studentEnrolls);
-        setResult(RESULT_OK, i);
         finish();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_ADD_STUDENT_CODE:
+                    if (data != null) {
+                        StudentEnroll studentEnroll = data.getParcelableExtra(AddStudentActivity.EXTRA_STUDENT);
+                        //更新页面
+                        if (studentEnroll != null) {
+                            addNewStudent(studentEnroll);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 
     public class StudentsAdapter extends AbsSwipeAdapter<StudentEnroll, StudentsAdapter.Holder> {
 
@@ -286,12 +197,19 @@ public class ManualAddStudentActivity extends BaseActivity {
 
         @Override
         protected boolean leftSwipe() {
-            return false;
+            return true;
         }
 
         @Override
+        protected void onAttachSwipe(TextView mark, TextView del) {
+            mark.setVisibility(View.GONE);
+            setLeftOffset(mContext.getResources().getDimension(R.dimen.px140));
+        }
+
+
+        @Override
         protected void onSwipeDelete(int position) {
-            super.onSwipeDelete(position);
+            removeItem(position);
         }
 
         class Holder extends BaseHolder {

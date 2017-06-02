@@ -459,8 +459,9 @@ public interface XiaojsService {
     Call<CLResponse> modifyClass(@Path("class") String classid, @Body ModifyClassParams params);
 
     //Get Class Students
-    @GET("/v1/ctl/classes/{classes}/students/{pagination}")
+    @GET("/v1/ctl/classes/{classes}/students/{criteria}/{pagination}")
     Call<CollectionPage<StudentEnroll>> getClassStudents(@Path("classes") String classes,
+                                                         @Path("criteria") String criteria,
                                                          @Path("pagination") String pagination);
 
     //Add Class Student

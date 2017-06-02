@@ -38,6 +38,7 @@ import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
+import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
@@ -580,11 +581,15 @@ public class LessonDataManager {
      */
     public static void getClassStudents(Context context,
                                         String classes,
+                                        boolean joined,
                                         Pagination pagination,
                                         APIServiceCallback<CollectionPage<StudentEnroll>> callback) {
 
+        JoinCriteria joinCriteria = new JoinCriteria();
+        joinCriteria.joined = joined;
+
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassStudents(classes, pagination);
+        lessonRequest.getClassStudents(classes, joinCriteria, pagination);
 
     }
 

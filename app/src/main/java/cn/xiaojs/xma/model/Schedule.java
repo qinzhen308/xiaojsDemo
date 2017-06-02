@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.util.Date;
 
+import cn.xiaojs.xma.data.api.serialize.OriginDateSerializer;
+
 /**
  * Created by maxiaobao on 2016/11/8.
  */
@@ -13,6 +15,8 @@ import java.util.Date;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Schedule implements Serializable {
+
+    @JsonSerialize(using = OriginDateSerializer.class)
     private Date start;
     private long duration;
     private Recurrence recurrence;

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class StudentEnroll  implements Parcelable{
 
     public String id;
-    public long mobile;
+    public String mobile;
     public String name;
 
     public StudentEnroll() {
@@ -23,7 +23,7 @@ public class StudentEnroll  implements Parcelable{
 
     protected StudentEnroll(Parcel in) {
         id = in.readString();
-        mobile = in.readLong();
+        mobile = in.readString();
         name = in.readString();
     }
 
@@ -47,7 +47,7 @@ public class StudentEnroll  implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeLong(mobile);
+        dest.writeString(mobile);
         dest.writeString(name);
     }
 }

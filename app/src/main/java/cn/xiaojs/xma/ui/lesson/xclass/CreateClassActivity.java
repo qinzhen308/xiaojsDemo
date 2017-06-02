@@ -43,6 +43,7 @@ public class CreateClassActivity extends BaseActivity {
     private final int REQUEST_CLASS_SCHEDULE_CODE = 0x2;
     private final int REQUEST_MANUAL_STUDENTS_CODE = 0x3;
     private final int REQUEST_IMPORT_STUDENTS_CODE = 0x4;
+    private final int REQUEST_ZERO_ADD_STUDENT_CODE = 0x5;
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -184,12 +185,19 @@ public class CreateClassActivity extends BaseActivity {
                 switch (position) {
                     case 0://手动添加
 
-                        Intent ic = new Intent(CreateClassActivity.this,
-                                ManualAddStudentActivity.class);
-                        if (enrollStudents != null && enrollStudents.size() > 0) {
-                            ic.putExtra(ManualAddStudentActivity.EXTRA_STUDENTS, enrollStudents);
+                        if (enrollStudents !=null && enrollStudents.size()>0) {
+                            Intent ic = new Intent(CreateClassActivity.this,
+                                    ManualAddStudentActivity.class);
+                            if (enrollStudents != null && enrollStudents.size() > 0) {
+                                ic.putExtra(ManualAddStudentActivity.EXTRA_STUDENTS, enrollStudents);
+                            }
+                            startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
+                        }else {
+
+                            Intent i = new Intent(CreateClassActivity.this, AddStudentActivity.class);
+                            startActivityForResult(i, REQUEST_ZERO_ADD_STUDENT_CODE);
                         }
-                        startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
+
                         break;
                     case 1://从已有班级中添加
 
@@ -299,6 +307,19 @@ public class CreateClassActivity extends BaseActivity {
                 case REQUEST_IMPORT_STUDENTS_CODE:
                     if (data != null) {
                         enrollImports = data.getParcelableArrayListExtra(ImportStudentFormClassActivity.EXTRA_IMPORTS);
+                    }
+                    break;
+                case REQUEST_ZERO_ADD_STUDENT_CODE:
+                    if (data != null) {
+                        StudentEnroll studentEnroll = data.getParcelableExtra(AddStudentActivity.EXTRA_STUDENT);
+
+                        if (studentEnroll != null) {
+                            if (enrollStudents == null) {
+                                enrollStudents = new ArrayList<>();
+                            }
+                            enrollStudents.add(studentEnroll);
+                        }
+
                     }
                     break;
             }

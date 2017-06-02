@@ -322,6 +322,8 @@
         <activity android:name=".ui.lesson.xclass.ImportStudentFormClassActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.EnrollSuccessActivity"/>
+        <activity android:name=".ui.lesson.xclass.AddStudentActivity"
+                android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
