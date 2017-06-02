@@ -85,10 +85,8 @@ public class StudentsListActivity extends BaseActivity {
                 switch (position) {
                     case 0://手动添加
                         Intent addIntent = new Intent(StudentsListActivity.this,
-                                ManualAddStudentActivity.class);
-                        addIntent.putExtra(ManualAddStudentActivity.MANUAL_STUDENT_TYPE,
-                                ManualAddStudentActivity.TYPE_ADD_ONE_ONLY);
-                        addIntent.putExtra(ManualAddStudentActivity.EXTRA_CLASS_ID, classId);
+                                AddStudentActivity.class);
+                        addIntent.putExtra(AddStudentActivity.EXTRA_CLASS_ID, classId);
                         startActivityForResult(addIntent,REQUEST_ADD_STUDENT_CODE);
                         break;
                     case 1://从已有班级中添加
@@ -151,7 +149,8 @@ public class StudentsListActivity extends BaseActivity {
         @Override
         protected void doRequest() {
 
-            LessonDataManager.getClassStudents(mContext, classId, mPagination, new APIServiceCallback<CollectionPage<StudentEnroll>>() {
+            LessonDataManager.getClassStudents(mContext, classId, true, mPagination,
+                    new APIServiceCallback<CollectionPage<StudentEnroll>>() {
                 @Override
                 public void onSuccess(CollectionPage<StudentEnroll> object) {
 

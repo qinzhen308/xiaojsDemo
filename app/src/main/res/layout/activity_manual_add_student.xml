@@ -11,21 +11,12 @@
             />
 
     <LinearLayout
+            android:id="@+id/edit_lay"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px100"
             android:layout_marginTop="@dimen/px30"
             android:background="@color/white"
             android:orientation="horizontal">
-
-        <Button
-                android:id="@+id/add_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/add"
-                android:background="@android:color/transparent"
-                android:textSize="@dimen/font_30px"
-                android:textColor="@color/subject_selected_blue"
-                android:visibility="gone"/>
 
         <EditText
                 android:id="@+id/student_num"
@@ -40,7 +31,8 @@
                 android:textColor="@color/font_black"
                 android:paddingRight="5dp"
                 android:paddingLeft="5dp"
-                android:phoneNumber="true"/>
+                android:phoneNumber="true"
+                android:maxLength="11"/>
 
         <View
                 android:id="@+id/divider"
@@ -72,6 +64,5 @@
             android:layout_height="match_parent"
             android:scrollbars="none"
             android:orientation="vertical"
-            android:background="@color/white"
-            android:layout_marginTop="@dimen/px30"/>
+            android:background="@color/white"/>
 </LinearLayout>

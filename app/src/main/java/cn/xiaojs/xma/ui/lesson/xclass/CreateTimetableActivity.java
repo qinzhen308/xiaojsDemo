@@ -3,11 +3,13 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +18,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.XiaojsService;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.CheckLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
@@ -192,6 +195,7 @@ public class CreateTimetableActivity extends BaseActivity {
             if (!result) {
 
                 try {
+
                     Schedule schedule = new Schedule();
                     schedule.setStart(new Date(params[0]));
                     schedule.setDuration(params[1]);

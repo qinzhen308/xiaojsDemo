@@ -38,6 +38,7 @@ import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
@@ -442,17 +443,19 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.MODIFY_CLASS, call);
     }
 
-    public void getClassStudents(String classes, Pagination pagination) {
+    public void getClassStudents(String classes, JoinCriteria criteria, Pagination pagination) {
 
+        String criteriaJsonstr = objectToJsonString(criteria);
         String paginationJsonstr = objectToJsonString(pagination);
 
         if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
             Logger.json(paginationJsonstr);
         }
 
 
         Call<CollectionPage<StudentEnroll>> call = getService().getClassStudents(classes,
-                paginationJsonstr);
+                criteriaJsonstr,paginationJsonstr);
         enqueueRequest(APIType.GET_CLASS_STUDENTS, call);
     }
 
