@@ -8,11 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.socialize.media.UMImage;
+
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.ShareUtil;
@@ -80,7 +83,8 @@ public class ShareQrcodeActivity extends BaseActivity {
         if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
             Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.xjs_app_qrcode);
-            ShareUtil.shareImage(this,shareBitmap,"");
+
+            ShareUtil.shareImage(this,shareBitmap, XiaojsConfig.APP_QRCODE_URL,getString(R.string.client_download_qrcode));
         }
 
 

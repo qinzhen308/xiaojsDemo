@@ -355,6 +355,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem"
+                android:layout_marginBottom="@dimen/px120"
                 android:visibility="visible">
 
             <TextView
@@ -375,8 +376,6 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_entrance"/>
         </RelativeLayout>
-
-
 
     </LinearLayout>
 </ScrollView>

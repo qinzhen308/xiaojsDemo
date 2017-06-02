@@ -512,7 +512,6 @@ public class LessonDataManager {
         }else{
             lessonRequest.getClassesSchedule4Lesson(classId, start, end, type, state, limit, page, querys);
         }
-
     }
 
     /**

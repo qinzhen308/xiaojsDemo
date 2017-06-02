@@ -9,6 +9,8 @@ import com.tencent.open.SocialConstants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 
+import org.w3c.dom.Text;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
@@ -56,7 +58,12 @@ public class QQUtil {
         //分享的消息摘要，最长50个字
         bundle.putString(SocialConstants.PARAM_SUMMARY, summary);
 
-        bundle.putString(SocialConstants.PARAM_IMG_URL, imgUrl);
+        if (!TextUtils.isEmpty(imgUrl)) {
+            bundle.putString(SocialConstants.PARAM_TARGET_URL, imgUrl);
+            bundle.putString(SocialConstants.PARAM_IMG_URL, imgUrl);
+            //bundle.putString(SocialConstants.PARAM_AVATAR_URI, imgUrl);
+        }
+
         String appname = activity.getString(R.string.app_name);
 
         //标识该消息的来源应用，值为应用名称+AppId。

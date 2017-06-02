@@ -19,12 +19,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
-
-import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,8 +35,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import cn.xiaojs.xma.R;
-
-import static android.R.attr.path;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -565,39 +560,16 @@ public class BitmapUtils {
         return destPath;
     }
 
-    public static boolean saveImageToGallery(Context context, Bitmap bmp, File fileDir,String fileName, int quality, boolean updateTime) {
+    public static boolean saveImageToGallery(Context context, Bitmap bmp, File fileDir, String fileName, int quality, boolean updateTime) {
         // 首先保存图片
-        File file = new File(fileDir, fileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(CompressFormat.JPEG, quality, fos);
-            fos.flush();
-            fos.close();
-
-            if (updateTime) {
-                //Logger.d("=======" + file.getAbsolutePath());
-                setExifDateTime(file.getAbsolutePath());
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
+        String destPath = fileDir + "/" + fileName;
+        String savedPath = saveImage(bmp, destPath, quality, false, true);
+        if (savedPath == null) {
             return false;
         }
 
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), fileName, null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
         // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
-
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + savedPath)));
         return true;
     }
 
@@ -614,7 +586,7 @@ public class BitmapUtils {
         //image buffer data size
         int bufferSize = nBmpHeight * (nBmpWidth * 3 + nBmpWidth % 4);
         try {
-            String filename = oldFile.getAbsolutePath()+System.currentTimeMillis();
+            String filename = oldFile.getAbsolutePath() + System.currentTimeMillis();
             tempFile = new File(filename);
             if (!tempFile.exists()) {
                 tempFile.createNewFile();
@@ -828,7 +800,7 @@ public class BitmapUtils {
         if (ContentResolver.SCHEME_FILE.equals(source.getScheme())) {
             return new File(source.getPath());
         }
-        querySource(context, new String[] { MediaStore.Images.ImageColumns.DATA }, source, new ContentResolverQueryCallback () {
+        querySource(context, new String[]{MediaStore.Images.ImageColumns.DATA}, source, new ContentResolverQueryCallback() {
 
             @Override
             public void onCursorResult(Cursor cursor) {
@@ -927,7 +899,7 @@ public class BitmapUtils {
     }
 
 
-    private static void setExifDateTime (String filePath) {
+    private static void setExifDateTime(String filePath) {
         try {
             ExifInterface exifInterface = new ExifInterface(filePath);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
@@ -936,7 +908,7 @@ public class BitmapUtils {
             exifInterface.setAttribute(ExifInterface.TAG_DATETIME, time);
             exifInterface.saveAttributes();
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 }
