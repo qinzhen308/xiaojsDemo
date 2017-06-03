@@ -33,7 +33,7 @@ public class ClassScheduleActivity extends BaseActivity{
     boolean isTabMode=false;
 
     public static final String EXTRA_ID="extra_id";
-    public static final String EXTRA_TITLE="extra_id";
+    public static final String EXTRA_TITLE="extra_title";
     public static final int REQUEST_CODE_ADD=23;
 
     @Override
@@ -50,6 +50,7 @@ public class ClassScheduleActivity extends BaseActivity{
         }
         setRightImage(R.drawable.add_selector);
         setRightImage2(R.drawable.selector_mode_tab);
+        ButterKnife.bind(this);
         calenerFragment=new ClassSheduleCalenerFragment();
         tabFragment=new ClassSheduleTabModeFragment();
         mFm=getSupportFragmentManager();

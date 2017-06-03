@@ -98,8 +98,8 @@ public class ClassScheduleBuz {
                     mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(year,month,day));
                 }
                 selectyear=year;
-                selectMonth=year;
-                selectDay=year;
+                selectMonth=month;
+                selectDay=day;
             }
 
             @Override
