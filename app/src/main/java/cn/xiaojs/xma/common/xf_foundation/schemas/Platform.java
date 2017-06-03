@@ -8,6 +8,18 @@ public class Platform {
 
 
     //
+    // Defines the general student join privateClass lifecycle states, which inherits those common MSP states.
+    //
+    public static class JoinClassState {
+        public static final String PENDING_FOR_ACCEPTANCE = "PendingForAcceptance";
+        public static final String ACCEPTED = "Accepted";
+        public static final String REJECTTED = "Rejected";
+        public static final String NONE = "none";
+        public static final String FAILED = "Failed";
+        public static final String DELETED = "Deleted";
+    }
+
+    //
     // Defines the general verification lifecycle states, which inherits those common MSP states.
     //
     public static class VerificationState {
@@ -51,7 +63,7 @@ public class Platform {
     /**
      * Defines the mobile app new version available actions.
      */
-    public static class AvailableAction{
+    public static class AvailableAction {
 
         // Ignore this version
         public static final int IGNORE = 1;
@@ -60,7 +72,7 @@ public class Platform {
         public static final int TIPS = 2;
 
         // Require upgrade
-        public static  final int UPGRADE = 3;
+        public static final int UPGRADE = 3;
 
     }
 

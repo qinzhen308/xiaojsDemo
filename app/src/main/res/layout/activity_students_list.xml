@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/px30"/>
 </LinearLayout>

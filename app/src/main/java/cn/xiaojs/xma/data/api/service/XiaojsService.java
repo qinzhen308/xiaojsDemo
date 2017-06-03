@@ -58,6 +58,7 @@ import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
+import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.material.LibOverview;
@@ -473,6 +474,15 @@ public interface XiaojsService {
     @DELETE("/v1/ctl/classes/{classes}/students")
     Call<ResponseBody> removeClassStudent(@Path("classes") String classes, @Body String[] students);
 
+    //Join Class
+    @POST("/v1/ctl/classes/{classes}/students/join")
+    Call<ResponseBody> joinClass(@Path("classes") String classes);
+
+    //Review Join Class
+    @PATCH("/v1/ctl/classes/{classes}/students/{student}")
+    Call<ResponseBody> reviewJoinClass(@Path("classes") String classes,
+                                       @Path("student") String student,
+                                       @Body DecisionReason reason);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

@@ -159,7 +159,9 @@
 
         <!--加入班级是否需要验证-->
         <LinearLayout
-                style="@style/LiveLessonItem">
+                android:id="@+id/ver_layout"
+                style="@style/LiveLessonItem"
+                android:visibility="gone">
 
             <TextView
                     style="@style/LiveLessonCreateTitle"

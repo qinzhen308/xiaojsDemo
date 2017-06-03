@@ -5,7 +5,8 @@
                 android:paddingLeft="@dimen/px30"
                 android:paddingRight="@dimen/px30"
                 android:paddingBottom="@dimen/px32"
-                android:paddingTop="@dimen/px32">
+                android:paddingTop="@dimen/px32"
+                android:background="@color/white">
 
     <TextView
             android:id="@+id/time"
@@ -71,7 +72,7 @@
             android:layout_alignParentRight="true"
             android:textColor="@color/subject_selected_blue"
             android:textSize="@dimen/font_24px"
-            android:text="已同意"/>
+            android:text="@string/had_agreed"/>
 
     <TextView
             android:id="@+id/opera_name"
@@ -83,10 +84,6 @@
             android:textSize="@dimen/font_24px"
             android:layout_marginTop="@dimen/px13"
             android:text="处理人"/>
-
-
-
-
 
 
 </RelativeLayout>

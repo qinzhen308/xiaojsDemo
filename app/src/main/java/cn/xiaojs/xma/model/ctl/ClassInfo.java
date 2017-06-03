@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 
+import cn.xiaojs.xma.model.account.Account;
+
 /**
  * Created by maxiaobao on 2017/5/26.
  */
@@ -13,7 +15,8 @@ import java.util.Date;
 public class ClassInfo {
     public String title;
     public Date createdOn;
-    public String adviserName;
+    //public String adviserName;
+    public Account[] advisers;
     public String ownerName;
     public int lessons;
     public int students;

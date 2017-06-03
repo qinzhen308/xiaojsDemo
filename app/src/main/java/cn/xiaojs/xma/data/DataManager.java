@@ -164,6 +164,13 @@ public class DataManager {
         dataLoder.load(callback, -1, -1);
     }
 
+
+    public static void getPrivateClasses(Context context,
+                                  DataLoder.DataLoaderCallback<ArrayList<ContactGroup>> callback) {
+        DataLoder dataLoder = new DataLoder(context, new ContactDao());
+        dataLoder.load(callback, -1, -2);
+    }
+
 //    public static ArrayList<ContactGroup> getContactGroupData(Context context) {
 //        return getCache(context).getContactGroupData();
 //    }

@@ -121,7 +121,7 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 
 
     private void getData() {
-        DataManager.getClasses(this,
+        DataManager.getPrivateClasses(this,
                 new DataLoder.DataLoaderCallback<ArrayList<ContactGroup>>() {
 
                     @Override
@@ -137,26 +137,28 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 
     private void choiceComplete() {
 
-//        Intent i = new Intent();
-//
-//        if (adapter != null) {
-//            long[] ids = mList.getCheckItemIds();
-//            ArrayList<EnrollImport> contacts = new ArrayList<>(ids.length);
-//            for(long id: ids) {
-//
-//                Contact contact = adapter.getItem((int)id);
-//
-//                EnrollImport enrollImport = new EnrollImport();
-//                //enrollImport.id =
-//                //enrollImport.subtype
-//            }
-//
-//            i.putExtra(EXTRA_IMPORTS, contacts);
-//            setResult(RESULT_OK, i);
-//
-//        }
-//        setResult(RESULT_OK, i);
-//        finish();
+        Intent i = new Intent();
+
+        if (adapter != null) {
+            long[] ids = listView.getCheckItemIds();
+            ArrayList<EnrollImport> contacts = new ArrayList<>(ids.length);
+            for(long id: ids) {
+
+                Contact contact = adapter.getItem((int)id);
+
+                EnrollImport enrollImport = new EnrollImport();
+                enrollImport.id = contact.account;
+                enrollImport.subtype = contact.subtype;
+
+                contacts.add(enrollImport);
+            }
+
+            i.putExtra(EXTRA_IMPORTS, contacts);
+            setResult(RESULT_OK, i);
+
+        }
+        setResult(RESULT_OK, i);
+        finish();
     }
 
 

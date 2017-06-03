@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ import cn.xiaojs.xma.util.TimeUtil;
 public class ClassInfoActivity extends BaseActivity {
 
     public static final String EXTRA_CLASSID = "classid";
+    public static final String EXTRA_TEACHING = "teaching";
+    public static final String EXTRA_VERI = "verify";
     public final int REQUEST_NAME_CODE = 0x1;
     public final int REQUEST_ADD_ONE_STUDENT_CODE = 0x2;
     public final int REQUEST_STUDENT_LIST_CODE = 0x3;
@@ -44,6 +47,8 @@ public class ClassInfoActivity extends BaseActivity {
     TextView opentimeView;
     @BindView(R.id.creator)
     TextView creatorView;
+    @BindView(R.id.ver_layout)
+    LinearLayout verLayout;
     @BindView(R.id.join_veri)
     TextView verifyStatusView;
     @BindView(R.id.num_lesson)
@@ -52,12 +57,19 @@ public class ClassInfoActivity extends BaseActivity {
     private String classId;
     private ClassInfo classInfo;
 
+    private boolean teaching;
 
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_class_info);
         setMiddleTitle(getString(R.string.class_info));
         classId = getIntent().getStringExtra(EXTRA_CLASSID);
+
+        teaching = getIntent().getBooleanExtra(EXTRA_TEACHING, false);
+
+        initView();
+
+
     }
 
     @Override
@@ -76,7 +88,9 @@ public class ClassInfoActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.name_lay:
-                modifyName();
+                if (teaching) {
+                    modifyName();
+                }
                 break;
             case R.id.enter_btn:
                 //TODO 进入教室
@@ -88,17 +102,21 @@ public class ClassInfoActivity extends BaseActivity {
                 //TODO 资料库
                 //databank();
                 break;
-            case R.id.lay_student:
-                //学生
-                if (classInfo !=null && classInfo.join !=null && classInfo.join.current > 0) {
-                    Intent i = new Intent(this,StudentsListActivity.class);
-                    i.putExtra(StudentsListActivity.EXTRA_CLASS,classId);
-                    startActivityForResult(i,REQUEST_STUDENT_LIST_CODE);
-                }else {
+            case R.id.lay_student://学生列表
+                if (!teaching ||
+                        (classInfo != null && classInfo.join != null && classInfo.join.current > 0)) {
+                    Intent i = new Intent(this, StudentsListActivity.class);
+                    i.putExtra(StudentsListActivity.EXTRA_CLASS, classId);
+                    i.putExtra(EXTRA_TEACHING, teaching);
+                    boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION)?
+                            true :false;
+                    i.putExtra(EXTRA_VERI,verflag);
+                    startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);
+                } else {
                     Intent addIntent = new Intent(ClassInfoActivity.this,
                             AddStudentActivity.class);
                     addIntent.putExtra(AddStudentActivity.EXTRA_CLASS_ID, classId);
-                    startActivityForResult(addIntent,REQUEST_ADD_ONE_STUDENT_CODE);
+                    startActivityForResult(addIntent, REQUEST_ADD_ONE_STUDENT_CODE);
                 }
                 break;
             case R.id.lay_qrcode:
@@ -118,6 +136,13 @@ public class ClassInfoActivity extends BaseActivity {
 //        mContext.startActivity(intent);
     }
 
+    private void initView() {
+        if (!teaching) {
+            //学生UI
+            nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+        }
+    }
+
     private void bingView() {
 
         if (classInfo == null) {
@@ -125,23 +150,27 @@ public class ClassInfoActivity extends BaseActivity {
         }
 
         nameView.setText(classInfo.title);
-        //FIXME 老师名字是这个属性么？
-        teacherNameView.setText(classInfo.ownerName);
 
-        numLessonView.setText(getString(R.string.number_lesson,classInfo.lessons));
+        String teacher = (classInfo.advisers != null && classInfo.advisers.length > 0) ?
+                classInfo.advisers[0].name : classInfo.ownerName;
 
-        int studentCount = classInfo.join!=null? classInfo.join.current : 0;
-        studentNumView.setText(getString(R.string.number_student,studentCount));
-        opentimeView.setText(TimeUtil.format(classInfo.createdOn,TimeUtil.TIME_YYYY_MM_DD));
+        teacherNameView.setText(teacher);
+
+        numLessonView.setText(getString(R.string.number_lesson, classInfo.lessons));
+
+        int studentCount = classInfo.join != null ? classInfo.join.current : 0;
+        studentNumView.setText(getString(R.string.number_student, studentCount));
+        opentimeView.setText(TimeUtil.format(classInfo.createdOn, TimeUtil.TIME_YYYY_MM_DD));
         creatorView.setText(classInfo.ownerName);
 
+        if (teaching) {
+            verLayout.setVisibility(View.VISIBLE);
+            int vid = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
+                    R.string.need_confirm : R.string.no_verification_required;
 
-        //TODO 如果是学生，此处该隐藏
+            verifyStatusView.setText(vid);
+        }
 
-        int vid = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
-                R.string.need_confirm : R.string.no_verification_required;
-
-        verifyStatusView.setText(vid);
 
     }
 
@@ -154,11 +183,11 @@ public class ClassInfoActivity extends BaseActivity {
 //    }
 
     private void modifyName() {
-        Intent i = new Intent(this,AddLessonNameActivity.class);
-        i.putExtra(AddLessonNameActivity.EXTRA_CLASSID,classId);
-        i.putExtra(AddLessonNameActivity.EXTRA_NAME,nameView.getText().toString());
-        i.putExtra(AddLessonNameActivity.EXTRA_ROLE,AddLessonNameActivity.ROLE_CLASS);
-        startActivityForResult(i,REQUEST_NAME_CODE);
+        Intent i = new Intent(this, AddLessonNameActivity.class);
+        i.putExtra(AddLessonNameActivity.EXTRA_CLASSID, classId);
+        i.putExtra(AddLessonNameActivity.EXTRA_NAME, nameView.getText().toString());
+        i.putExtra(AddLessonNameActivity.EXTRA_ROLE, AddLessonNameActivity.ROLE_CLASS);
+        startActivityForResult(i, REQUEST_NAME_CODE);
     }
 
     private void loadClassInfo() {
@@ -198,7 +227,7 @@ public class ClassInfoActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_NAME_CODE:
-                    if (data!=null) {
+                    if (data != null) {
                         String newName = data.getStringExtra(AddLessonNameActivity.EXTRA_NAME);
                         if (!TextUtils.isEmpty(newName)) {
                             nameView.setText(newName);
@@ -213,7 +242,7 @@ public class ClassInfoActivity extends BaseActivity {
                     break;
                 case REQUEST_ADD_ONE_STUDENT_CODE:
                     if (data != null) {
-                        if (classInfo != null && classInfo.join !=null) {
+                        if (classInfo != null && classInfo.join != null) {
                             classInfo.join.current = 1;
                         }
                     }

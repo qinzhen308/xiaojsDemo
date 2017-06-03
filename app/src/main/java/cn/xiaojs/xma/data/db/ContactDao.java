@@ -49,6 +49,9 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
                 int type = (int)params[0];
                 if (type == -1){
                     return getClasses(context);
+                } else if (type == -2){
+
+                    return getPrivateClasses(context);
                 }else {
                     return getContacts(context, type);
                 }
@@ -123,6 +126,76 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
         String sql = "delete from " + DBTables.TContact.TABLE_NAME + " where "
                 + DBTables.TContact.CID + "='" + id + "'";
         mDb.execSQL(sql);
+    }
+
+    public ArrayList<ContactGroup> getPrivateClasses(Context context) {
+
+        SQLiteDatabase db = DBHelper.getReadDatabase(context);
+        ArrayList<ContactGroup> contactGroups = null;
+        Cursor cursor = null;
+        try{
+
+            String sql = new StringBuilder("select * from ")
+                    .append(DBTables.TContact.TABLE_NAME)
+                    .append(" where ")
+                    .append(DBTables.TContact.GID)
+                    .append(" = '")
+                    .append(CLASSES)
+                    .append("' and ")
+                    .append(DBTables.TContact.SUBTYPE)
+                    .append(" = 'PrivateClass'")
+                    .toString();
+
+            cursor = db.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                ArrayList<Contact> contacts = new ArrayList<>(cursor.getCount());
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+//                    long gid = cursor.getLong(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.GID));
+                    String id = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CID));
+//                    int followType = cursor.getInt(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.FOLLOW_TYPE));
+                    String name = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.NAME));
+                    String subtype = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.SUBTYPE));
+
+                    String chatid = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CHAT_ID));
+
+//                    String avatar = cursor.getString(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
+
+                    Contact contact = new Contact();
+                    contact.account = id;
+                    contact.alias = name;
+                    contact.subtype = subtype;
+                    contact.chatId = chatid;
+
+                    contacts.add(contact);
+
+                    cursor.moveToNext();
+                }
+
+                ContactGroup contactGroup = new ContactGroup();
+                contactGroup.collection = contacts;
+
+                contactGroups = new ArrayList<>(1);
+                contactGroups.add(contactGroup);
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor !=null) {
+                cursor.close();
+            }
+        }
+
+        return contactGroups;
     }
 
     public ArrayList<ContactGroup> getClasses(Context context) {

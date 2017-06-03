@@ -44,6 +44,7 @@ import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
+import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 
@@ -618,6 +619,35 @@ public class LessonDataManager {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.removeClassStudent(classid, students);
 
+    }
+
+    /**
+     * A person apply for join as student for the class
+     * @param context
+     * @param classid
+     * @param callback
+     */
+    public static void joinClass(Context context, String classid, APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.joinClass(classid);
+
+    }
+
+    /**
+     * Approved or rejected the person apply for join class as student.
+     * @param context
+     * @param classid
+     * @param studentid
+     * @param reason
+     * @param callback
+     */
+    public static void reviewJoinClass(Context context,
+                                       String classid,
+                                       String studentid,
+                                       DecisionReason reason,
+                                       APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.reviewJoinClass(classid, studentid, reason);
     }
 
 }

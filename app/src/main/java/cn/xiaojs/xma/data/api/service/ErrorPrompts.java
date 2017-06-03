@@ -39,6 +39,14 @@ public class ErrorPrompts {
         String errorMessage = "请求失败";
 
         switch (apiType) {
+            case APIType.JOIN_CLASS:
+                if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
+                    errorMessage = "你已申请加入班";
+                } else {
+                    errorMessage = "加入班失败";
+                }
+
+                break;
             case APIType.HIDE_LESSON:
                 errorMessage = "删除失败";
                 break;

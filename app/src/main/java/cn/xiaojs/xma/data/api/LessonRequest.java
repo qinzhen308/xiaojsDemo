@@ -28,8 +28,6 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
-
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 
@@ -48,9 +46,9 @@ import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
+import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
-import cn.xiaojs.xma.model.social.ContactGroup;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -473,6 +471,18 @@ public class LessonRequest extends ServiceRequest {
     public void joinLesson(String lesson) {
         Call<JoinResponse> call = getService().joinLesson(lesson);
         enqueueRequest(APIType.JOIN_LESSON, call);
+    }
+
+    public void joinClass(String classid) {
+        Call<ResponseBody> call = getService().joinClass(classid);
+        enqueueRequest(APIType.JOIN_CLASS, call);
+    }
+
+    public void reviewJoinClass(String classid,
+                                String studentid,
+                                DecisionReason reason) {
+        Call<ResponseBody> call = getService().reviewJoinClass(classid, studentid, reason);
+        enqueueRequest(APIType.REVIEW_JOIN_CLASS, call);
     }
 
 }

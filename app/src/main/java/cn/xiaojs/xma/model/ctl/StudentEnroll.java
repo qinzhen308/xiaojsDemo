@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.Date;
+
 /**
  * Created by maxiaobao on 2017/5/25.
  */
@@ -16,6 +18,9 @@ public class StudentEnroll  implements Parcelable{
     public String id;
     public String mobile;
     public String name;
+
+    public Date createdOn;
+    public String state;
 
     public StudentEnroll() {
 

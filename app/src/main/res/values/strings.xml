@@ -875,5 +875,7 @@
     <string name="save_picture_ok_tips">图片已保存在：%1$s/%2$s</string>
     <string name="save_picture_error_tips">保存失败</string>
     <string name="student_list">学生列表</string>
+    <string name="had_agreed">已同意</string>
+    <string name="had_refused">已拒绝</string>
 
 </resources>
