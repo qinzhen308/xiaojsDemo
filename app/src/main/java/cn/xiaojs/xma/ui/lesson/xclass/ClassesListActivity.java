@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
@@ -18,7 +21,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.TeachLessonAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.view.CommonPopupMenu;
+import cn.xiaojs.xma.util.JudgementUtil;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -30,6 +38,8 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
     RadioGroup tabGroupLayout;
     @BindView(R.id.tab_viewpager)
     ViewPager tabPager;
+    @BindView(R.id.add_btn)
+    View addBtn;
     private int curCheckedTabId;
 
 
@@ -51,7 +61,7 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                 finish();
                 break;
             case R.id.add_btn:
-                //TODO 添加
+                showMenu(addBtn);
                 break;
             case R.id.tab_class:
                 if(curCheckedTabId!=R.id.tab_class){
@@ -105,6 +115,38 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
         });
     }
 
+
+    private void showMenu(View targetView) {
+        CommonPopupMenu menu = new CommonPopupMenu(this);
+        String[] items = this.getResources().getStringArray(R.array.add_menu2);
+        menu.setWidth(this.getResources().getDimensionPixelSize(R.dimen.px280));
+        menu.addTextItems(items);
+        menu.addImgItems(new Integer[]{R.drawable.ic_menu_create_lesson,R.drawable.ic_add_class1});
+        menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                switch (i) {
+                    case 1:
+                        if (JudgementUtil.checkTeachingAbility(ClassesListActivity.this)) {
+                            ClassesListActivity.this.startActivity(new Intent(ClassesListActivity.this, CreateClassActivity.class));
+                        }
+                        break;
+                    case 0:
+                        if (JudgementUtil.checkTeachingAbility(ClassesListActivity.this)) {
+                            //老师可以开课
+                            Intent intent = new Intent(ClassesListActivity.this, LessonCreationActivity.class);
+                            ClassesListActivity.this.startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
+                        }
+                        break;
+                }
+
+            }
+        });
+        int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+        menu.show(targetView, offset);
+    }
+
     @Override
     public void updateData(boolean justNative) {
         ((IUpdateMethod)fragmentList.get(1)).updateData(justNative);
@@ -142,5 +184,20 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
         public CharSequence getPageTitle(int position) {
             return "";
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case CourseConstant.CODE_CANCEL_LESSON:
+                case CourseConstant.CODE_EDIT_LESSON:
+                case CourseConstant.CODE_LESSON_AGAIN:
+                case CourseConstant.CODE_CREATE_LESSON:
+                updateData(false);
+                    break;
+            }
+        }
+
     }
 }

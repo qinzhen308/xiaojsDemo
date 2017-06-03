@@ -50,7 +50,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
     View layoutEmpty;
     View layoutNormal;
 
-    public boolean isEmpty = true;
+    public boolean isEmpty = false;
     ImageView btnScan;
     TextView tabWannaLean;
     TextView tabWannaTeach;

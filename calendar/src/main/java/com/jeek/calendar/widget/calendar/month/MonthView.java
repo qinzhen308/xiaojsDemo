@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jimmy on 2016/10/6 0006.
@@ -58,6 +59,7 @@ public class MonthView extends View {
     private OnMonthClickListener mDateClickListener;
     private GestureDetector mGestureDetector;
     private HashSet<Integer> mTaskHintList;
+    private Map<Integer,Integer> mTaskHintColors;
     private Bitmap mRestBitmap, mWorkBitmap;
 
     public MonthView(Context context, int year, int month) {
@@ -409,9 +411,13 @@ public class MonthView extends View {
         if (mIsShowHint && mTaskHintList != null && mTaskHintList.size() > 0) {
             if(day==mSelDay)return;
             if (!mTaskHintList.contains(day)) return;
-            mPaint.setColor(mHintCircleColor);
             float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
             float circleY = (float) (mRowSize * row + mRowSize * 0.75);
+            if(mTaskHintColors!=null&&mTaskHintColors.size()==mTaskHintList.size()){
+                mPaint.setColor(mTaskHintColors.get(day));
+            }else {
+                mPaint.setColor(mHintCircleColor);
+            }
             canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
         }
     }
@@ -533,6 +539,19 @@ public class MonthView extends View {
     public void setTaskHintList(HashSet<Integer> taskHintList) {
         mTaskHintList = taskHintList;
         invalidate();
+    }
+
+    /**
+     * 设置圆点对应的颜色集合
+     *
+     * @param taskHintColors
+     * @param immediately 立即刷新
+     */
+    public void setTaskHintColors(Map<Integer,Integer> taskHintColors,boolean immediately) {
+        mTaskHintColors = taskHintColors;
+        if(immediately){
+            invalidate();
+        }
     }
 
     /**

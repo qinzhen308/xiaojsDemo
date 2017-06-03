@@ -23,6 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
+import cn.xiaojs.xma.common.pageload.stateview.AppLoadState;
+import cn.xiaojs.xma.common.pageload.stateview.AppLoadState2;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStateListener;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -39,6 +43,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -68,6 +73,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
     HomeClassAdapter mAdapter;
     DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
     Pagination mPagination;
+    LoadStatusViewDecoratee stateView;
 
 
     @Nullable
@@ -80,6 +86,8 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
         View v = LayoutInflater.from(context).inflate(R.layout.fragment_public_lesson, null);
         ButterKnife.bind(this,v);
         searchView.setHint(R.string.hint_input_lesson_name);
+//        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v));
+        stateView=new LoadStatusViewDecoratee(null);
         return v;
     }
 
@@ -150,6 +158,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             public void onRequst(int page) {
                 mPagination.setPage(page);
                 getMonthData();
+                stateView.change(LoadStateListener.STATE_LOADING,"");
             }
 
             @Override
@@ -161,6 +170,11 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             @Override
             public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
                 pageChangeInRecyclerView.completeLoading();
+                if(ArrayUtil.isEmpty(all)){
+                    stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
+                }else {
+                    stateView.change(LoadStateListener.STATE_NORMAL,"");
+                }
                 bindData(all);
             }
 
@@ -168,6 +182,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             public void onFailed(String errorCode, String errorMessage) {
                 pageChangeInRecyclerView.completeLoading();
                 bindData(new ArrayList<ClassSchedule>());
+                stateView.change(LoadStateListener.STATE_LOADING_ERROR,"");
             }
 
             @Override
@@ -206,7 +221,11 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
 
     @Override
     public void updateData(boolean justNative) {
-        dataPageLoader.refresh();
+        if(justNative){
+            mAdapter.notifyDataSetChanged();
+        }else {
+            dataPageLoader.refresh();
+        }
     }
 
     @Override

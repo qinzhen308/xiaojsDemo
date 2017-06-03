@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jimmy on 2016/10/7 0007.
@@ -189,10 +190,14 @@ public class ScheduleLayout extends FrameLayout {
         WeekView weekView = wcvCalendar.getCurrentWeekView();
         if (weekView != null) {
             weekView.setSelectYearMonth(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
+            weekView.setTaskHintList(mHintList);
+            weekView.setTaskHintColors(mHintColors,false);
             weekView.invalidate();
         } else {
             WeekView newWeekView = wcvCalendar.getWeekAdapter().instanceWeekView(position);
             newWeekView.setSelectYearMonth(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
+            weekView.setTaskHintList(mHintList);
+            weekView.setTaskHintColors(mHintColors,false);
             newWeekView.invalidate();
             wcvCalendar.setCurrentItem(position);
         }
@@ -224,8 +229,6 @@ public class ScheduleLayout extends FrameLayout {
             }
             if(mOnScheduleChangeListener!=null){
                 mOnScheduleChangeListener.onWeekChange(year, month, day);
-                if (wcvCalendar.getCurrentWeekView() != null)
-                    wcvCalendar.getCurrentWeekView().setTaskHintList(mHintList);
 
                 if (mCurrentSelectMonth != month) {
                     mOnScheduleChangeListener.onMonthChange(year,month,day);
@@ -238,6 +241,8 @@ public class ScheduleLayout extends FrameLayout {
         MonthView monthView = mcvCalendar.getCurrentMonthView();
         if (monthView != null) {
             monthView.setSelectYearMonth(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
+            monthView.setTaskHintList(mHintList);
+            monthView.setTaskHintColors(mHintColors,false);
             monthView.invalidate();
         }
         if (mOnScheduleChangeListener != null) {
@@ -568,6 +573,21 @@ public class ScheduleLayout extends FrameLayout {
             mcvCalendar.getCurrentMonthView().setTaskHintList(hintList);
         if (wcvCalendar.getCurrentWeekView() != null)
             wcvCalendar.getCurrentWeekView().setTaskHintList(hintList);
+    }
+
+    Map<Integer,Integer> mHintColors;
+
+    /**
+     * 设置圆点的颜色集合
+     * @param hintColors
+     * @param immediately true:刷新
+     */
+    public void setTaskHintColors(Map<Integer,Integer> hintColors,boolean immediately) {
+        mHintColors=hintColors;
+        if (mcvCalendar.getCurrentMonthView() != null)
+            mcvCalendar.getCurrentMonthView().setTaskHintColors(hintColors,immediately);
+        if (wcvCalendar.getCurrentWeekView() != null)
+            wcvCalendar.getCurrentWeekView().setTaskHintColors(hintColors,immediately);
     }
 
     public void removeAllTaskHint() {

@@ -22,7 +22,6 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
-import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
@@ -52,19 +51,33 @@ public class LOpModel {
     public static final int OP_CANCEL_SUBMIT=2;
     //班级信息
     public static final int OP_CLASS_INFO=3;
+    //资料库（黄icon）
     public static final int OP_DATABASE2 =4;
+    //删除
     public static final int OP_DELETE=5;
+    //编辑课
     public static final int OP_EDIT=6;
+    //进入教室
     public static final int OP_ENTER=7;
+    //进入教室（黄icon）
     public static final int OP_ENTER_2=8;
+    //查看详情
     public static final int OP_LOOK=9;
+    //修改上课时间
     public static final int OP_MODIFY_TIME=10;
+    //取消公开
     public static final int OP_PRIVATE=11;
+    //设为公开
     public static final int OP_PUBLIC=12;
+    //上架
     public static final int OP_PUBLISH=13;
+    //重新开课
     public static final int OP_RECREATE_LESSON=14;
+    //课表
     public static final int OP_SCHEDULE=15;
+    //分享(蓝图标按钮)
     public static final int OP_SHARE=16;
+    //报名注册
     public static final int OP_SIGNUP=17;
     //提交确认（机构端对老师）
     public static final int OP_SUBMIT=18;
@@ -95,81 +108,71 @@ public class LOpModel {
         switch (id){
             case OP_APPLY:
                 //报名页
-                enterClass(context,data.id);
+                enterApplyPage(context,data.id);
                 break;
             case OP_CANCEL_LESSON:
-
+                cancelLesson(context,data);
                 break;
             case OP_CANCEL_SUBMIT:
 
                 break;
             case OP_CLASS_INFO:
-                if(data instanceof CLesson) {
-                    classInfo(context, ((CLesson) data).classInfo.id);
-                }
+                classInfo(context, data.classInfo.id);
                 break;
             case OP_DATABASE2:
 //                enterDatabase(context);
-                if(data instanceof CLesson) {
-                    databank(context,((CLesson) data).title ,((CLesson) data).id);
-                }
+                databank(context,data.title ,data.id);
                 break;
             case OP_DELETE:
-
+                delete(context,position,data);
                 break;
             case OP_EDIT:
-//                editLesson(context);
-                if(data instanceof CLesson){
-                    edit(context,((CLesson) data).id);
-                }
+                edit(context, data.id);
                 break;
             case OP_ENTER:
-                if(data instanceof CLesson)
-                enterClass(context,((CLesson) data).classInfo.id);
+                enterClass(context, data.ticket);
                 break;
             case OP_ENTER_2:
-                enterClass(context,((CLesson) data).classInfo.id);
+                enterClass(context, data.ticket);
                 break;
             case OP_LOOK:
-                if(data instanceof CLesson){
-                    detail(context,((CLesson) data).id);
-                }
+                detail(context, data.id);
                 break;
             case OP_MODIFY_TIME:
+                modifyLesson(context,data);
                 break;
             case OP_PRIVATE:
+//                cancelPublish(context,data);
                 break;
             case OP_PUBLIC:
+//                publish(context,data);
                 break;
             case OP_PUBLISH:
+                //上架
+                shelves(context,data,position);
                 break;
             case OP_RECREATE_LESSON:
+                lessonAgain(context,data);
                 break;
             case OP_SCHEDULE:
-                if(data instanceof CLesson) {
-                    enterSchedule(context, ((CLesson) data).classInfo.id, ((CLesson) data).classInfo.title);
-                }
+                enterSchedule(context, data.classInfo.id, data.classInfo.title);
                 break;
             case OP_SHARE:
-                share(context);
+                share(context,data);
                 break;
             case OP_SIGNUP:
-
+                registration(context,data);
                 break;
             case OP_SUBMIT:
                 break;
             case OP_CANCEL_CHECK:
-                if(data instanceof CLesson){
-                    offShelves(context,((CLesson) data).id);
-                }
+                offShelves(context, data);
                 break;
             case OP_SHARE2:
-                share(context);
+                share(context,data);
                 break;
             case OP_DATABASE1:
-                if(data instanceof CLesson) {
-                    databank(context,((CLesson) data).title ,((CLesson) data).id);
-                }
+                databank(context,data.title ,data.id);
                 break;
             case OP_AGREE_INVITE:
                 dealAck(context,position,data,Ctl.ACKDecision.ACKNOWLEDGE);
@@ -236,9 +239,9 @@ public class LOpModel {
 
 
     //上架
-    private void shelves(final Activity context,final TeachLesson bean) {
+    private void shelves(final Activity context,final CLesson bean,final int position) {
         showProgress(context);
-        LessonDataManager.requestPutLessonOnShelves(context, bean.getId(), new APIServiceCallback() {
+        LessonDataManager.requestPutLessonOnShelves(context, bean.id, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress(context);
@@ -246,26 +249,21 @@ public class LOpModel {
                 //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
                 if (AccountDataManager.isVerified(context)) {
 
-                    if (TextUtils.isEmpty(bean.getTicket())) {
+                    if (TextUtils.isEmpty(bean.ticket)) {
                         //如果没有ticket，需要重新调用接口，刷新课的信息。
-//                        request(mCriteria);
-                        updateData(context,true);
+                        updateData(context,false);
 
                     }else {
-//                        bean.setState(LessonState.PENDING_FOR_LIVE);
+                        bean.state=LessonState.PENDING_FOR_LIVE;
                         ToastUtil.showToast(context, R.string.shelves_ok);
-
-//                        notifyData(bean);
                         updateData(context,true);
                     }
 
                 }else {
-                    bean.setState(LessonState.PENDING_FOR_APPROVAL);
+                    bean.state=LessonState.PENDING_FOR_APPROVAL;
                     ToastUtil.showToast(context, R.string.shelves_need_examine);
-                    updateData(context,true);
-//                    notifyData(bean);
+                    updateJustItem(context,position,bean);
                 }
-
 
 
             }
@@ -283,11 +281,11 @@ public class LOpModel {
         Intent intent = new Intent(context, LessonCreationActivity.class);
         intent.putExtra(CourseConstant.KEY_LESSON_ID, id);
         intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_EDIT);
-        ((BaseActivity) context).startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
+        context.startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
     }
 
     //撤销审核，取消上架
-    private void offShelves(final Activity context, final String id) {
+    private void offShelves(final Activity context, final CLesson bean) {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.cancel_examine);
         dialog.setDesc(R.string.cancel_examine_tip);
@@ -303,13 +301,11 @@ public class LOpModel {
             public void onClick() {
                 dialog.cancel();
                 showProgress(context);
-                LessonDataManager.requestCancelLessonOnShelves(context, id, new APIServiceCallback() {
+                LessonDataManager.requestCancelLessonOnShelves(context, bean.id, new APIServiceCallback() {
                     @Override
                     public void onSuccess(Object object) {
                         cancelProgress(context);
-//                        bean.setState(LessonState.DRAFT);
-//                        notifyData(bean);
-
+                        bean.state=LessonState.DRAFT;
                         updateData(context,true);
                         ToastUtil.showToast(context, R.string.off_shelves_success);
                     }
@@ -387,21 +383,28 @@ public class LOpModel {
         context.startActivity(i);
     }
 
-    private void modifyLesson(Activity context,TeachLesson bean) {
+    private void modifyLesson(Activity context,CLesson bean) {
         Intent intent = new Intent(context, ModifyLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
-        ((BaseActivity) context).startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
+        TeachLesson tl=new TeachLesson();
+        tl.setId(bean.id);
+        tl.setTitle(bean.title);
+        tl.setSchedule(bean.schedule);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, tl);
+        context.startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
     }
 
     //取消上课
-    private void cancelLesson(Activity context,TeachLesson bean) {
+    private void cancelLesson(Activity context,CLesson bean) {
         Intent intent = new Intent(context, CancelLessonActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
+        TeachLesson tl=new TeachLesson();
+        tl.setId(bean.id);
+        tl.setTitle(bean.title);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, tl);
         ((BaseActivity) context).startActivityForResult(intent, CourseConstant.CODE_CANCEL_LESSON);
     }
 
     //删除
-    private void delete(final Activity context,final int pos,final TeachLesson bean) {
+    private void delete(final Activity context,final int pos,final CLesson bean) {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
@@ -421,15 +424,14 @@ public class LOpModel {
         dialog.show();
     }
 
-    private void hideLesson(final Activity context, final int pos, final TeachLesson bean) {
+    private void hideLesson(final Activity context, final int pos, final CLesson bean) {
         showProgress(context);
-        LessonDataManager.hideLesson(context, bean.getId(), new APIServiceCallback() {
+        LessonDataManager.hideLesson(context, bean.id, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress(context);
-//                removeItem(pos);
                 ToastUtil.showToast(context, R.string.delete_success);
-                updateData(context,true);
+                removeJustItem(context, pos, bean);
             }
 
             @Override
@@ -453,31 +455,31 @@ public class LOpModel {
     }
 
     //分享
-    private void share(Context context,TeachLesson bean) {
+    private void share(Context context,CLesson bean) {
 
         if (bean == null) return;
 
-        String startTime = TimeUtil.format(bean.getSchedule().getStart().getTime(),
+        String startTime = TimeUtil.format(bean.schedule.getStart().getTime(),
                 TimeUtil.TIME_YYYY_MM_DD_HH_MM);
 
         String name = "";
-        if (bean.getTeacher() != null && bean.getTeacher().getBasic() != null) {
-            name = bean.getTeacher().getBasic().getName();
+        if (bean.teacher != null && bean.teacher.getBasic() != null) {
+            name = bean.teacher.getBasic().getName();
         }
 
-        String shareUrl = ApiManager.getShareLessonUrl(bean.getId());
+        String shareUrl = ApiManager.getShareLessonUrl(bean.id);
 
-        ShareUtil.show((Activity) context, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
+        ShareUtil.show((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //报名注册
-    private void registration(Context context,TeachLesson bean) {
-        Schedule schedule = bean.getSchedule();
+    private void registration(Context context,CLesson bean) {
+        Schedule schedule = bean.schedule;
         long start = (schedule != null && schedule.getStart() != null) ? schedule.getStart().getTime() : 0;
         LessonBusiness.enterEnrollRegisterPage(context,
-                bean.getId(),
-                bean.getCover(),
-                bean.getTitle(),
+                bean.id,
+                "",
+                bean.title,
                 start,
                 schedule != null ? schedule.getDuration() : 0);
     }
@@ -543,10 +545,10 @@ public class LOpModel {
     }
 
     //再次开课
-    private void lessonAgain(Activity context,TeachLesson bean) {
+    private void lessonAgain(Activity context,CLesson bean) {
         Intent intent = new Intent(context, LessonCreationActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.getId());
+        intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
         intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_AGAIN);
-        ((BaseActivity) context).startActivityForResult(intent, CourseConstant.CODE_LESSON_AGAIN);
+        context.startActivityForResult(intent, CourseConstant.CODE_LESSON_AGAIN);
     }
 }

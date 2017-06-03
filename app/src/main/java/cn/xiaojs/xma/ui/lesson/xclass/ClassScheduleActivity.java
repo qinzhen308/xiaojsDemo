@@ -16,7 +16,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 /**
- * Created by Administrator on 2017/5/23.
+ * Created by Paul Z on 2017/5/23.
  *
  * 班级课表
  * 两种查看模式分别用fragment管理

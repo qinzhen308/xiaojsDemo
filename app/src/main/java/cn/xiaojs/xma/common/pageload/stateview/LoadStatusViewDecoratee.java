@@ -24,28 +24,28 @@ public class LoadStatusViewDecoratee implements LoadStateListener{
     @Override
     public void onFailed(String msg) {
         if(stateView!=null)
-            stateView.onSuccess(msg);
+            stateView.onFailed(msg);
     }
 
     @Override
     public void onNoData(String msg) {
         if(stateView!=null)
 
-            stateView.onSuccess(msg);
+            stateView.onNoData(msg);
 
     }
 
     @Override
     public void onNoNetwork(String msg) {
         if(stateView!=null)
-        stateView.onSuccess(msg);
+        stateView.onNoNetwork(msg);
 
     }
 
     @Override
     public void onLoading(String msg) {
         if(stateView!=null)
-        stateView.onSuccess(msg);
+        stateView.onLoading(msg);
 
     }
 
