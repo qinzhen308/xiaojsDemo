@@ -58,7 +58,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_share,R.drawable.ic_op_signup,
             R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check,
             R.drawable.ic_op_share2,R.drawable.ic_op_database1,
-            R.drawable.ic_op_agree_invite,R.drawable.ic_op_disagree_invite
+            R.drawable.ic_op_agree_invite,R.drawable.ic_op_disagree_invite,
+            R.drawable.ic_op_reject_reason
     };
 
 
@@ -74,7 +75,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.string.lesson_op_share,R.string.lesson_op_signup,
             R.string.lesson_op_submit,R.string.lesson_op_cancel_check,
             R.string.lesson_op_share,R.string.lesson_op_database,
-            R.string.lesson_op_agree_invite,R.string.lesson_op_disagree_invite
+            R.string.lesson_op_agree_invite,R.string.lesson_op_disagree_invite,
+            R.string.lesson_op_reject_reason
     };
 
     private OnDialogCloseListener mOnDismissListener;

@@ -17,6 +17,7 @@ import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -91,6 +92,8 @@ public class LOpModel {
     public static final int OP_AGREE_INVITE=22;
     //拒绝邀请 （对于老师）
     public static final int OP_DISAGREE_INVITE=23;
+    //查看原因（审核被拒绝后）
+    public static final int OP_REJECT_REASON=24;
 
     
     
@@ -179,6 +182,9 @@ public class LOpModel {
                 break;
             case OP_DISAGREE_INVITE:
                 dealAck(context,position,data,Ctl.ACKDecision.REFUSED);
+                break;
+            case OP_REJECT_REASON:
+                rejectReason(context,data);
                 break;
 
         }
@@ -551,5 +557,10 @@ public class LOpModel {
         intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
         intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_AGAIN);
         context.startActivityForResult(intent, CourseConstant.CODE_LESSON_AGAIN);
+    }
+
+    private void rejectReason(Activity context, CLesson bean){
+        ToastUtil.showToast(context,"原因：不知道");
+
     }
 }

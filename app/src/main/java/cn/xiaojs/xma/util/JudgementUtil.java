@@ -36,6 +36,7 @@ public class JudgementUtil {
                     dialog.dismiss();
                 }
             });
+            dialog.show();
             return false;
         }
     }
