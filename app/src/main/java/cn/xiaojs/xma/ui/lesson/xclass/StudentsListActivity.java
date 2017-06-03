@@ -109,10 +109,8 @@ public class StudentsListActivity extends BaseActivity {
                     case 1://从已有班级中添加
 
                         Intent i = new Intent(StudentsListActivity.this,
-                                ChooseClassActivity.class);
-                        i.putExtra(ChooseClassActivity.EXTRA_ENTER_TYPE,
-                                ChooseClassActivity.ENTER_TYPE_ADD_STUDENT);
-
+                                ImportStudentFormClassActivity.class);
+                        i.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
                         startActivity(i);
                         break;
                 }
