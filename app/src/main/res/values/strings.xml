@@ -877,5 +877,6 @@
     <string name="student_list">学生列表</string>
     <string name="had_agreed">已同意</string>
     <string name="had_refused">已拒绝</string>
+    <string name="add_success">添加成功</string>
 
 </resources>
