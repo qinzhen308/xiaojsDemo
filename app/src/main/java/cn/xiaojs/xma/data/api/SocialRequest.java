@@ -224,7 +224,7 @@ public class SocialRequest extends ServiceRequest {
     @Override
     public void loadDbCompleted(int apiType, Object responseBody) {
         if (apiType == APIType.GET_CONTACTS) {
-            DataManager.lanuchLoadContactService(getContext());
+            DataManager.lanuchLoadContactService(getContext(),DataManager.TYPE_FETCH_CONTACT_FROM_NET);
         }
     }
 

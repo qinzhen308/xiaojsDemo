@@ -1,7 +1,9 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -51,12 +56,18 @@ public class ImportStudentFormClassActivity extends BaseActivity {
     private ChoiceAdapter adapter;
     private String classId;
 
+    private UpdateReceiver updateReceiver;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_share_scope);
 
         classId = getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID);
 
+        updateReceiver = new UpdateReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DataManager.ACTION_UPDATE_PRIVATECLASS_FROM_DB);
+        registerReceiver(updateReceiver,intentFilter);
 
         setMiddleTitle(R.string.student_add_from_exist_class);
         tipsContentView.setText(R.string.add_student_tips);
@@ -68,6 +79,13 @@ public class ImportStudentFormClassActivity extends BaseActivity {
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         getData();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(updateReceiver);
     }
 
     @OnClick({R.id.left_image, R.id.right_image2, R.id.lesson_creation_tips_close})
@@ -92,7 +110,7 @@ public class ImportStudentFormClassActivity extends BaseActivity {
         tipsRootView.setVisibility(View.GONE);
     }
 
-    private void updateAdapter(ArrayList<Contact> contacts) {
+    private synchronized void updateAdapter(ArrayList<Contact> contacts) {
 
         if (contacts == null || contacts.size() == 0) {
             showEmptyView();
@@ -120,6 +138,9 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 //                }
 //            }
 
+        }else {
+            adapter.clear();
+            adapter.addAll(contacts);
         }
 
 
@@ -136,11 +157,16 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 
                     @Override
                     public void loadCompleted(ArrayList<ContactGroup> contacts) {
+
+                        DataManager.lanuchLoadContactService(getApplicationContext(),
+                                DataManager.TYPE_FETCH_PRIVATECLASS_FROM_NET);
                         if (contacts == null || contacts.size() == 0) {
                             showEmptyView();
                             return;
                         }
                         updateAdapter(contacts.get(0).collection);
+
+
                     }
                 });
     }
@@ -219,6 +245,29 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 
             textView.setText(getItem(position).alias);
             return v;
+        }
+    }
+
+
+    private class UpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(DataManager.ACTION_UPDATE_PRIVATECLASS_FROM_DB)) {
+
+                if(XiaojsConfig.DEBUG) {
+                    Logger.d("UpdateReceiver: to update private class");
+                }
+
+                ArrayList<ContactGroup> newCGroups = (ArrayList<ContactGroup>) intent.
+                        getSerializableExtra(DataManager.EXTRA_CONTACT);
+
+                if(newCGroups != null) {
+                    updateAdapter(newCGroups.get(0).collection);
+                }
+
+            }
         }
     }
 }

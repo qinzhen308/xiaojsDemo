@@ -53,6 +53,31 @@ public class SyncService extends IntentService {
 
             int syncType = intent.getIntExtra(DataManager.SYNC_TYPE, -1);
             switch (syncType) {
+                case DataManager.TYPE_FETCH_PRIVATECLASS_FROM_NET:
+                    if (NetUtil.getCurrentNetwork(context) == NetUtil.NETWORK_NONE) {
+                        return;
+                    }
+
+                    ArrayList<ContactGroup> conGroups = SocialManager.getContacts(context);
+                    if (conGroups != null) {
+                        DataManager.syncContactData(context, conGroups);
+
+                        ContactDao contactDao = new ContactDao();
+
+                        ArrayList<ContactGroup> newCGroups = contactDao.getPrivateClasses(context);
+
+                        Intent i = new Intent(DataManager.ACTION_UPDATE_PRIVATECLASS_FROM_DB);
+                        i.putExtra(DataManager.EXTRA_CONTACT, newCGroups);
+                        sendBroadcast(i);
+                    } else {
+                        DataManager.reloadContactWhenEmpty(context);
+                    }
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("sync service: TYPE_FETCH_PRIVATECLASS_FROM_NET");
+                    }
+
+                    break;
                 case DataManager.TYPE_FETCH_CONTACT_FROM_NET:
 
                     if (NetUtil.getCurrentNetwork(context) == NetUtil.NETWORK_NONE) {

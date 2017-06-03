@@ -124,7 +124,11 @@ public class ClassInfoActivity extends BaseActivity {
                 }
                 break;
             case R.id.lay_qrcode:
-                //TODO 二维码
+                // 二维码
+                Intent qrIntent = new Intent(this, ShareQrcodeActivity.class);
+                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_QRCODE_TYPE,
+                        ShareQrcodeActivity.CLASS_QRCODE);
+                startActivity(qrIntent);
                 break;
         }
 
