@@ -201,8 +201,7 @@ public class LessonScheduleActivity extends BaseActivity{
     public void onClick(View v){
         switch (v.getId()){
             case R.id.right_view:
-                startActivityForResult(new Intent(this, CreateTimetableActivity.class),
-                        REQUEST_NEW_LESSON_CODE);
+                startActivityForResult(new Intent(this, CreateTimetableActivity.class).putExtra(CreateTimetableActivity.EXTRA_TARGET_DATE,ScheduleUtil.ymdToTimeMill(selectyear,selectMonth,selectDay)), REQUEST_NEW_LESSON_CODE);
                 break;
             case R.id.left_view:
                 finish();

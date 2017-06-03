@@ -79,7 +79,6 @@
         app:label_height="@dimen/px30"
         app:label_width="@dimen/px30"
         android:paddingRight="@dimen/px4"
-        android:src="@drawable/ic_share_wechat"
         app:labelSrc="@drawable/ic_speaker"
         app:label_position="LABEL_POSITION_RIGHT_BOTTOM"
         />
@@ -123,7 +122,6 @@
             android:layout_below="@+id/tv_lesson"
             app:label_height="@dimen/px30"
             app:label_width="@dimen/px30"
-            android:src="@drawable/ic_share_wechat"
             app:labelSrc="@drawable/ic_assistant"
             android:paddingRight="@dimen/px4"
             app:label_position="LABEL_POSITION_RIGHT_BOTTOM"
