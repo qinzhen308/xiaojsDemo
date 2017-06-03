@@ -62,6 +62,8 @@ public class CreateTimetableActivity extends BaseActivity {
         setMiddleTitle(R.string.time_table);
         setRightText(R.string.finish);
 
+        classId = getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID);
+
         initView();
     }
 
@@ -275,7 +277,6 @@ public class CreateTimetableActivity extends BaseActivity {
                 cancelProgress();
                 Toast.makeText(CreateTimetableActivity.this,R.string.add_success,Toast.LENGTH_SHORT).show();
                 finishCompleted(classLesson);
-
             }
 
             @Override
