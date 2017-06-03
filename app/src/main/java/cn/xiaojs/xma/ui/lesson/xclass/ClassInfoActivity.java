@@ -66,6 +66,8 @@ public class ClassInfoActivity extends BaseActivity {
         classId = getIntent().getStringExtra(EXTRA_CLASSID);
 
         teaching = getIntent().getBooleanExtra(EXTRA_TEACHING, false);
+        //FIXME 调式代码
+        teaching = true;
 
         initView();
 
@@ -97,6 +99,7 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.lay_time_table:
                 //TODO 课表
+
                 break;
             case R.id.lay_material:
                 //TODO 资料库
