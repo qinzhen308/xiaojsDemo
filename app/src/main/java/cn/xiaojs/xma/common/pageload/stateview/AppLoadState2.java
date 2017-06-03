@@ -130,7 +130,7 @@ public class AppLoadState2 implements LoadStateListener{
 
     private void attach(){
         if(mEmptyView.getParent()==null) {
-            parent.addView(mEmptyView);
+            parent.addView(mEmptyView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
     private void detach(){

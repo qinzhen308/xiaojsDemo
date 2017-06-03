@@ -166,13 +166,20 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             tvState.setVisibility(GONE);
         }
 
-        tvSpeaker.setText(data.teacher.name);
-        Glide.with(getContext())
-                .load(Account.getAvatar(data.teacher.getId(), 300))
-                .bitmapTransform(circleTransform)
-                .placeholder(R.drawable.default_avatar_grey)
-                .error(R.drawable.default_avatar_grey)
-                .into(ivAvatar);
+        if(data.teacher==null){
+            tvSpeaker.setVisibility(INVISIBLE);
+            ivAvatar.setVisibility(INVISIBLE);
+        }else {
+            tvSpeaker.setVisibility(VISIBLE);
+            ivAvatar.setVisibility(VISIBLE);
+            tvSpeaker.setText(data.teacher.name);
+            Glide.with(getContext())
+                    .load(Account.getAvatar(data.teacher.getId(), 300))
+                    .bitmapTransform(circleTransform)
+                    .placeholder(R.drawable.default_avatar_grey)
+                    .error(R.drawable.default_avatar_grey)
+                    .into(ivAvatar);
+        }
         if (data.assistants != null && data.assistants.length > 0) {
             ivAvatarMore.setVisibility(INVISIBLE);
             layoutTeachers.setVisibility(VISIBLE);
@@ -243,7 +250,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         List<LOpModel> ops;
         if (mData.owner != null && mData.owner.getId().equals(AccountPref.getAccountID(getContext()))) {//我是所有者，无论我是不是讲师
             ops = imOnwer();
-        } else if (mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))) {//我虽然不是所有者，但我是讲师
+        } else if (mData.teacher!=null&&mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))) {//我虽然不是所有者，但我是讲师
             ops = imSpeaker();
         } else {//我就是个学生
             ops = imStudent();

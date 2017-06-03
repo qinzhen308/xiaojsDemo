@@ -86,8 +86,8 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
         View v = LayoutInflater.from(context).inflate(R.layout.fragment_public_lesson, null);
         ButterKnife.bind(this,v);
         searchView.setHint(R.string.hint_input_lesson_name);
-//        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v));
-        stateView=new LoadStatusViewDecoratee(null);
+        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container)));
+//        stateView=new LoadStatusViewDecoratee(null);
         return v;
     }
 
