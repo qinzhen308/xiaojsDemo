@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,20 +19,23 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.loader.DataLoder;
+import cn.xiaojs.xma.model.ctl.ClassEnroll;
+import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChoiceContactActivity;
+import cn.xiaojs.xma.util.ToastUtil;
 
 import static cn.xiaojs.xma.ui.message.PostDynamicActivity.EXTRA_CLASS_POS;
 
 public class ImportStudentFormClassActivity extends BaseActivity {
 
-
     public static final String EXTRA_IMPORTS = "imports";
-
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -44,10 +49,14 @@ public class ImportStudentFormClassActivity extends BaseActivity {
     View emptyView;
 
     private ChoiceAdapter adapter;
+    private String classId;
 
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_share_scope);
+
+        classId = getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID);
+
 
         setMiddleTitle(R.string.student_add_from_exist_class);
         tipsContentView.setText(R.string.add_student_tips);
@@ -68,8 +77,9 @@ public class ImportStudentFormClassActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_image2:
-                //TODO finifsh
-                choiceComplete();
+                if (adapter != null) {
+                    choiceComplete();
+                }
                 break;
             case R.id.lesson_creation_tips_close://关闭提醒
                 closeCourCreateTips();
@@ -137,28 +147,63 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 
     private void choiceComplete() {
 
-        Intent i = new Intent();
+        long[] ids = listView.getCheckItemIds();
+        ArrayList<EnrollImport> contacts = new ArrayList<>(ids.length);
+        for (long id : ids) {
 
-        if (adapter != null) {
-            long[] ids = listView.getCheckItemIds();
-            ArrayList<EnrollImport> contacts = new ArrayList<>(ids.length);
-            for(long id: ids) {
+            Contact contact = adapter.getItem((int) id);
 
-                Contact contact = adapter.getItem((int)id);
+            EnrollImport enrollImport = new EnrollImport();
+            enrollImport.id = contact.account;
+            enrollImport.subtype = contact.subtype;
 
-                EnrollImport enrollImport = new EnrollImport();
-                enrollImport.id = contact.account;
-                enrollImport.subtype = contact.subtype;
+            contacts.add(enrollImport);
+        }
 
-                contacts.add(enrollImport);
+        if (TextUtils.isEmpty(classId)) {
+
+            finishComplete(contacts);
+        } else {
+            commitToClass(contacts);
+        }
+
+    }
+
+    private void commitToClass(final ArrayList<EnrollImport> imports) {
+
+
+        ClassEnroll classEnroll = new ClassEnroll();
+        classEnroll.importe = imports;
+
+        ClassEnrollParams params = new ClassEnrollParams();
+        params.enroll = classEnroll;
+
+        showProgress(true);
+        LessonDataManager.addClassStudent(this, classId, params, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+
+                cancelProgress();
+                Toast.makeText(ImportStudentFormClassActivity.this, R.string.add_success, Toast.LENGTH_SHORT).show();
+                finishComplete(imports);
             }
 
-            i.putExtra(EXTRA_IMPORTS, contacts);
-            setResult(RESULT_OK, i);
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
 
-        }
+                cancelProgress();
+                Toast.makeText(ImportStudentFormClassActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void finishComplete(ArrayList<EnrollImport> imports) {
+        Intent i = new Intent();
+        i.putExtra(EXTRA_IMPORTS, imports);
         setResult(RESULT_OK, i);
         finish();
+
     }
 
 

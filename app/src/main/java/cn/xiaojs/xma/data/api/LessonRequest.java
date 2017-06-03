@@ -48,6 +48,7 @@ import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -417,8 +418,8 @@ public class LessonRequest extends ServiceRequest {
     }
 
 
-    public void scheduleClassLesson(String classes, ClassLesson lesson) {
-        Call<ResponseBody> call = getService().scheduleClassLesson(classes, lesson);
+    public void scheduleClassLesson(String classes, ScheduleParams params) {
+        Call<ResponseBody> call = getService().scheduleClassLesson(classes, params);
         enqueueRequest(APIType.SCHEDULE_CLASS_LESSON, call);
     }
 

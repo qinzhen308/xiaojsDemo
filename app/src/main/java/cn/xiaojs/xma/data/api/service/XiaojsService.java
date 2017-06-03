@@ -60,6 +60,7 @@ import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
@@ -445,7 +446,7 @@ public interface XiaojsService {
     //Schedule Class Lesson
     @POST("/v1/ctl/classes/{classes}/schedule/lessons")
     Call<ResponseBody> scheduleClassLesson(@Path("classes") String classes,
-                                           @Body ClassLesson classLesson);
+                                           @Body ScheduleParams params);
 
     //Check Overlap
     @POST("/v1/ctl/classes/schedule/check")

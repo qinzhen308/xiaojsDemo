@@ -13,16 +13,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.CheckLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.DataPicker;
@@ -50,6 +53,8 @@ public class CreateTimetableActivity extends BaseActivity {
     CheckBox recordView;
 
     private long lessonStartTime;
+
+    private String classId;
     
     @Override
     protected void addViewContent() {
@@ -143,7 +148,7 @@ public class CreateTimetableActivity extends BaseActivity {
         }
 
 
-        //TODO 此处要判断时间是否有冲突
+        //此处判断时间是否有冲突
         new CheckConflictTask().execute(lessonStartTime, 
                 Long.parseLong(durationView.getText().toString()));
 
@@ -246,12 +251,47 @@ public class CreateTimetableActivity extends BaseActivity {
 
         classLesson.schedule = schedule;
 
+        if (TextUtils.isEmpty(classId)) {
+            finishCompleted(classLesson);
+        } else{
+            commitToClass(classLesson);
+        }
+
+        
+    }
+
+    private void commitToClass(final ClassLesson classLesson){
+
+        List<ClassLesson> lessons = new ArrayList<>(1);
+        lessons.add(classLesson);
+
+        ScheduleParams params = new ScheduleParams();
+        params.lessons = lessons;
+
+        showProgress(true);
+        LessonDataManager.scheduleClassLesson(this, classId, params, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                Toast.makeText(CreateTimetableActivity.this,R.string.add_success,Toast.LENGTH_SHORT).show();
+                finishCompleted(classLesson);
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(CreateTimetableActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void finishCompleted(ClassLesson classLesson) {
         Intent i = new Intent();
         i.putExtra(EXTRA_CLASS_LESSON, classLesson);
         setResult(RESULT_OK,i);
-
         finish();
-        
     }
 
     @Override

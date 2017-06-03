@@ -46,6 +46,7 @@ import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 
 import com.orhanobut.logger.Logger;
@@ -535,11 +536,11 @@ public class LessonDataManager {
      */
     public static void scheduleClassLesson(Context context,
                                            String classes,
-                                           ClassLesson lesson,
-                                           APIServiceCallback<ScheduleData> callback) {
+                                           ScheduleParams params,
+                                           APIServiceCallback callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.scheduleClassLesson(classes, lesson);
+        lessonRequest.scheduleClassLesson(classes, params);
     }
 
     /**
