@@ -241,13 +241,13 @@ public class LiveLessonDetailActivity extends BaseActivity {
     }
 
     private void loadData() {
-        Object obj = getIntent().getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+        lessonId = getIntent().getStringExtra(CourseConstant.KEY_LESSON_BEAN);
 
-        if (obj instanceof TeachLesson) {
-            lessonId = ((TeachLesson) obj).getId();
-        } else if (obj instanceof LiveItem){
-            lessonId = ((LiveItem) obj).id;
-        }
+//        if (obj instanceof TeachLesson) {
+//            lessonId = ((TeachLesson) obj).getId();
+//        } else if (obj instanceof LiveItem){
+//            lessonId = ((LiveItem) obj).id;
+//        }
 
         if (TextUtils.isEmpty(lessonId)) {
             finish();
