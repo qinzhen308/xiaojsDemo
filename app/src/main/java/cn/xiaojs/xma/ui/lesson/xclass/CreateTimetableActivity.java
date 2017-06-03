@@ -41,6 +41,7 @@ public class CreateTimetableActivity extends BaseActivity {
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
 
     public static final String EXTRA_CLASS_LESSON = "class_lesson";
+    public static final String EXTRA_TARGET_DATE = "extra_target_date";
     private final int REQUEST_NAME_CODE = 0x1;
 
     @BindView(R.id.lesson_name_text)

@@ -96,7 +96,8 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
         });
 
         initPageLoad();
-        getCountPerTab();
+        dataPageLoader.refresh();
+//        getCountPerTab();
     }
 
 
@@ -196,6 +197,10 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
     }
 
 
+    public void refresh(){
+        if(mContent==null)return;
+        dataPageLoader.refresh();
+    }
 
 
 }

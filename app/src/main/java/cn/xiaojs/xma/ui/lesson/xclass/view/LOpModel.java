@@ -229,6 +229,7 @@ public class LOpModel {
     public void classInfo(Activity context,String classId){
         Intent intent=new Intent(context,ClassInfoActivity.class);
         intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,classId);
+        intent.putExtra(ClassInfoActivity.EXTRA_TEACHING,classId);
         context.startActivity(intent);
     }
 

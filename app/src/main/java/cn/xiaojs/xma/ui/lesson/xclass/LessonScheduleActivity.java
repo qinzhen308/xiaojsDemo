@@ -15,10 +15,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -26,6 +29,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
@@ -36,6 +40,7 @@ import cn.xiaojs.xma.util.TimeUtil;
 /**
  * Created by Paul Z on 2017/5/18.
  * 创建班时的课表
+ * 纯本地课表
  */
 
 public class LessonScheduleActivity extends BaseActivity{
@@ -54,6 +59,12 @@ public class LessonScheduleActivity extends BaseActivity{
     int selectDay;
     int selectyear;
     int selectMonth;
+    int todayYear, todayMonth,todayDay;
+    @BindColor(R.color.orange_point)
+    int c_red;
+    @BindColor(R.color.grey_point)
+    int c_gray;
+
 
 
     @Override
@@ -68,9 +79,9 @@ public class LessonScheduleActivity extends BaseActivity{
         datas= ScheduleUtil.buildScheduleByMonth(CreateClassActivity.classLessons);
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        selectDay=calendar.get(Calendar.DAY_OF_MONTH);
-        selectMonth =calendar.get(Calendar.MONTH);
-        selectyear=calendar.get(Calendar.YEAR);
+        todayDay=selectDay=calendar.get(Calendar.DAY_OF_MONTH);
+        todayMonth=selectMonth =calendar.get(Calendar.MONTH);
+        todayYear=selectyear=calendar.get(Calendar.YEAR);
         selectDate=ScheduleUtil.getDateYM(selectyear,selectMonth,selectDay);
         bindData();
         calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
@@ -132,6 +143,7 @@ public class LessonScheduleActivity extends BaseActivity{
         if(list==null){
             list= new ArrayList<>(0);
         }
+        setPoint(list,selectyear,selectMonth,selectDay);
         int lessonIndex=0;
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
@@ -163,6 +175,28 @@ public class LessonScheduleActivity extends BaseActivity{
         mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(selectyear,selectMonth,selectDay));
     }
 
+    private void setPoint(List<ClassLesson> list, final int y, final int m, final int d){
+        HashSet hashSet=new HashSet<Integer>();
+        HashMap<Integer , Integer> colors=new HashMap<Integer, Integer>();
+        for(int i=0;i<list.size();i++){
+            String[] strings=ScheduleUtil.getDateYMD(list.get(i).schedule.getStart()).split("-");
+            int da=Integer.valueOf(strings[2]);
+            int mo=Integer.valueOf(strings[1])-1;
+            int ye=Integer.valueOf(strings[0]);
+
+            if(mo==m){
+                hashSet.add(da);
+                if(todayYear>ye||todayMonth>mo||todayDay>da){//今天之前
+                    colors.put(da,c_gray);//灰色
+                }else {
+                    colors.put(da,c_red);//红色
+                }
+            }
+        }
+        calendarView.setTaskHintColors(colors,false);
+        calendarView.setTaskHintList(hashSet);
+    }
+
     @OnClick({R.id.right_view,R.id.left_view})
     public void onClick(View v){
         switch (v.getId()){
@@ -177,6 +211,7 @@ public class LessonScheduleActivity extends BaseActivity{
                 break;
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
