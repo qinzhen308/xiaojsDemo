@@ -22,6 +22,7 @@ import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
+import cn.xiaojs.xma.ui.grade.ScheduleActivity;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
@@ -98,8 +99,8 @@ public class ClassInfoActivity extends BaseActivity {
                 //TODO 进入教室
                 break;
             case R.id.lay_time_table:
-                //TODO 课表
-
+                //课表
+                ClassScheduleActivity.invoke(this,classInfo.id, classInfo.title);
                 break;
             case R.id.lay_material:
                 //TODO 资料库
