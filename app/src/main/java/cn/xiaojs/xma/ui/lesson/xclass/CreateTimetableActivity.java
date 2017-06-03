@@ -56,6 +56,7 @@ public class CreateTimetableActivity extends BaseActivity {
     private long lessonStartTime;
 
     private String classId;
+    private long targetTime;
     
     @Override
     protected void addViewContent() {
@@ -64,6 +65,7 @@ public class CreateTimetableActivity extends BaseActivity {
         setRightText(R.string.finish);
 
         classId = getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID);
+        targetTime = getIntent().getLongExtra(EXTRA_TARGET_DATE, -1);
 
         initView();
     }
@@ -94,7 +96,9 @@ public class CreateTimetableActivity extends BaseActivity {
 
     private void selectStartTime() {
 
-        DataPicker.pickFutureDate(this, new Date(System.currentTimeMillis() + HALF_HOUR),
+        long timesp = targetTime == -1 ? System.currentTimeMillis() + HALF_HOUR : targetTime;
+
+        DataPicker.pickFutureDate(this, new Date(timesp),
                 new DataPicker.OnDatePickListener() {
                     @Override
                     public void onDatePicked(int year, int month, int day,
