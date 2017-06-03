@@ -13,6 +13,7 @@ import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 
 /**
@@ -33,6 +34,7 @@ public class ClassScheduleActivity extends BaseActivity{
 
     public static final String EXTRA_ID="extra_id";
     public static final String EXTRA_TITLE="extra_id";
+    public static final int REQUEST_CODE_ADD=23;
 
     @Override
     protected void addViewContent() {
@@ -46,17 +48,33 @@ public class ClassScheduleActivity extends BaseActivity{
             setMiddleTitle(title);
 
         }
-        setRightImage(R.drawable.selector_mode_tab);
+        setRightImage(R.drawable.add_selector);
+        setRightImage2(R.drawable.selector_mode_tab);
         calenerFragment=new ClassSheduleCalenerFragment();
         tabFragment=new ClassSheduleTabModeFragment();
         mFm=getSupportFragmentManager();
         mFm.beginTransaction().replace(R.id.base_content,calenerFragment).commitAllowingStateLoss();
-        findViewById(R.id.right_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+    }
+
+    @OnClick({R.id.right_image,R.id.right_image2,R.id.left_view})
+    public void onViewClick(View v){
+        switch (v.getId()){
+            case R.id.right_image:
+                Intent intent=new Intent(ClassScheduleActivity.this,CreateTimetableActivity.class);
+                intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,getIntent().getStringExtra(EXTRA_ID));
+                if(!isTabMode){
+                    intent.putExtra(CreateTimetableActivity.EXTRA_TARGET_DATE,calenerFragment.getSelectedDate());
+                }
+                startActivityForResult(intent,REQUEST_CODE_ADD);
+                break;
+            case R.id.right_image2:
                 checkMode();
-            }
-        });
+                break;
+            case R.id.left_view:
+                finish();
+                break;
+        }
     }
 
     private void checkMode(){
@@ -84,8 +102,23 @@ public class ClassScheduleActivity extends BaseActivity{
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            if(requestCode==REQUEST_CODE_ADD){
+                ClassLesson cl=(ClassLesson) data.getSerializableExtra(CreateTimetableActivity.EXTRA_CLASS_LESSON);
+                updateFragment(cl);
+            }
+        }
+    }
 
-    public static void invoke(Context context,String id,String title){
+    private void updateFragment(ClassLesson obj){
+        tabFragment.refresh();
+        calenerFragment.refresh(obj);
+    }
+
+    public static void invoke(Context context, String id, String title){
         Intent intent=new Intent(context,ClassScheduleActivity.class);
         intent.putExtra(EXTRA_ID,id);
         intent.putExtra(EXTRA_TITLE,title);
