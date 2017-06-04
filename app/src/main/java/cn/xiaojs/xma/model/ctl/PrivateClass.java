@@ -11,8 +11,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class PrivateClass {
     public String id;
     public String title;
-    public int enrolled;
-    public boolean learning;
+    public String ticket;
+    public Enroll enroll;
+    public String state;
+    public boolean teaching;
     public Adviser[] advisers;
 
 }
