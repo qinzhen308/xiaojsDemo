@@ -10,7 +10,7 @@ package cn.xiaojs.xma.ui.classroom.socketio;
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
  * Date:2017/1/8
- * Desc:
+ * Desc: reference https://github.com/socketio/socket.io-client-java
  *
  * ======================================================================================== */
 
@@ -52,7 +52,7 @@ public class SocketManager {
                 String forceStr = force ? "true" : "false";
                 IO.Options opts = new IO.Options();
                 opts.query = "secret=" + secret + "&" + "avc={\"video\":" + videoSupported + ",\"audio\":" + audioSupported + "}"
-                + "&" + "forcibly="+forceStr;
+                        + "&" + "forcibly=" + forceStr;
                 opts.timeout = TIME_OUT; //ms
                 opts.transports = new String[]{"websocket"};
                 mSocket = IO.socket(getClassroomSocketUrl(context, ticket), opts);
@@ -133,7 +133,7 @@ public class SocketManager {
         if (mSocket != null) {
             if (args != null && args.length > 0) {
                 if (args[args.length - 1] instanceof AckListener) {
-                    final AckListener listener = (AckListener)args[args.length - 1];
+                    final AckListener listener = (AckListener) args[args.length - 1];
                     JSONObject[] data = null;
                     if (args.length > 1) {
                         data = new JSONObject[args.length - 1];
@@ -213,13 +213,13 @@ public class SocketManager {
                     SocketCallback callback = null;
                     switch (msg.what) {
                         case MSG_ON_CALLBACK:
-                            callback = (SocketCallback)msg.obj;
+                            callback = (SocketCallback) msg.obj;
                             if (callback != null && callback.eventListener != null) {
                                 callback.eventListener.call(callback.data);
                             }
                             break;
                         case MSG_EMIT_CALLBACK:
-                            callback = (SocketCallback)msg.obj;
+                            callback = (SocketCallback) msg.obj;
                             if (callback != null && callback.ackListener != null) {
                                 callback.ackListener.call(callback.data);
                             }
