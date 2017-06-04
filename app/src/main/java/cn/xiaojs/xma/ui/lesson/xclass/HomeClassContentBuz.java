@@ -47,6 +47,7 @@ import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
@@ -89,6 +90,8 @@ public class HomeClassContentBuz {
     int c_red;
     @BindColor(R.color.grey_point)
     int c_gray;
+
+    LastEmptyModel lastEmptyModel=new LastEmptyModel();
 
     /**
      * @param context
@@ -311,6 +314,7 @@ public class HomeClassContentBuz {
             classLabel.hasData=true;
             mAdapter.getList().addAll(list);
         }
+        mAdapter.getList().add(lastEmptyModel);
     }
 
     public void update(){

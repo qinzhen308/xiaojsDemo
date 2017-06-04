@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
+import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
@@ -86,6 +87,9 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(holder.itemView instanceof IViewModel){
             ((IViewModel) holder.itemView).bindData(position,getItem(position));
         }
+        if(holder.itemView instanceof HomeLessonView&&mEventCallback!=null){
+            ((HomeLessonView) holder.itemView).setCallback(mEventCallback);
+        }
     }
 
     @Override
@@ -160,5 +164,11 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+
+    //通用callback，调用者和回传参数自己定义
+    private EventCallback mEventCallback;
+    public void setCallback(EventCallback eventCallback){
+        mEventCallback=eventCallback;
+    }
 
 }

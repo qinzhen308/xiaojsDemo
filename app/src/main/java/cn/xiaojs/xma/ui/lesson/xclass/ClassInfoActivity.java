@@ -100,7 +100,7 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.lay_time_table:
                 //课表
-                ClassScheduleActivity.invoke(this,classInfo.id, classInfo.title);
+                ClassScheduleActivity.invoke(this,classInfo.id, classInfo.title,teaching);
                 break;
             case R.id.lay_material:
                 //TODO 资料库

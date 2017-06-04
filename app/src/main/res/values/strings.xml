@@ -866,6 +866,7 @@
     <string name="no_need_enroll">无需报名</string>
     <string name="student_need_enroll_or_not">学生是否需要报名</string>
     <string name="living_paly_back">直播回放</string>
+    <string name="replay">回放</string>
     <string name="living_paly_back_tips">自动被录像，视频将保存到您的个人资料库，并且可以回放</string>
     <string name="enroll_result">报名结果</string>
     <string name="enroll_result_ok">您已报名成功！</string>

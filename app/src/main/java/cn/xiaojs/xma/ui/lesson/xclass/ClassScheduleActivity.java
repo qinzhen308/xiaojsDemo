@@ -34,6 +34,7 @@ public class ClassScheduleActivity extends BaseActivity{
 
     public static final String EXTRA_ID="extra_id";
     public static final String EXTRA_TITLE="extra_title";
+    public static final String EXTRA_TEACHING="extra_teaching";
     public static final int REQUEST_CODE_ADD=23;
 
     @Override
@@ -123,6 +124,14 @@ public class ClassScheduleActivity extends BaseActivity{
         Intent intent=new Intent(context,ClassScheduleActivity.class);
         intent.putExtra(EXTRA_ID,id);
         intent.putExtra(EXTRA_TITLE,title);
+        context.startActivity(intent);
+    }
+
+    public static void invoke(Context context, String id, String title,boolean teaching){
+        Intent intent=new Intent(context,ClassScheduleActivity.class);
+        intent.putExtra(EXTRA_ID,id);
+        intent.putExtra(EXTRA_TITLE,title);
+        intent.putExtra(EXTRA_TEACHING,teaching);
         context.startActivity(intent);
     }
 

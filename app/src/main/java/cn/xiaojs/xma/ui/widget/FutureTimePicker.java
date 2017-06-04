@@ -167,6 +167,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DATE);
+        calendar.setTime(new Date(0));
         calendar.set(year, month, day, 0, 0, 0);
         mStartDay = calendar.getTimeInMillis();
 

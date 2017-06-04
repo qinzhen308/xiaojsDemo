@@ -18,6 +18,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
@@ -91,7 +92,7 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
         Intent intent=null;
         switch (view.getId()) {
             case R.id.op_schedule_view:
-                ClassScheduleActivity.invoke(getContext(),mData.id,mData.title);
+                ClassScheduleActivity.invoke(getContext(),mData.id,mData.title,mData.teaching);
                 break;
             case R.id.op_data_view:
                 intent = new Intent(getContext(), ClassMaterialActivity.class);
@@ -104,6 +105,7 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
                 break;
             case R.id.op_room_view:
                 intent=new Intent(getContext(),ClassroomActivity.class);
+                intent.putExtra(Constants.KEY_TICKET,mData.ticket);
                 getContext().startActivity(intent);
                 break;
         }
@@ -123,7 +125,11 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
 //            statusView.setVisibility(GONE);
 //            entranceCount.setVisibility(GONE);
 //        }
-        memberView.setText(mData.enrolled+"人");
+        if(mData.enroll!=null){
+            memberView.setText(mData.enroll.current+"人");
+        }else {
+            memberView.setText(0+"人");
+        }
         String teachers="班主任：";
         for(int i=0;i<mData.advisers.length;i++){
             teachers+=mData.advisers[i].name;

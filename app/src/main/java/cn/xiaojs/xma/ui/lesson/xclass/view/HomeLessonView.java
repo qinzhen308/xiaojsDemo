@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
@@ -72,6 +73,8 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     TextView tvState;
 
     int position;
+    @BindView(R.id.btn_replay)
+    TextView btnReplay;
 
 
     private CircleTransform circleTransform;
@@ -110,19 +113,28 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
 
     @Override
-    public void bindData(int position,CLesson data) {
+    public void bindData(int position, CLesson data) {
         mData = data;
-        this.position=position;
+        this.position = position;
         tvDate.setText(ScheduleUtil.getHMDate(data.schedule.getStart()));
         tvTotalTime.setText(data.schedule.getDuration() + "分钟");
 
         tvLesson.setText(data.title);
-        if (data.classInfo != null) {
+        if (Account.TypeName.CLASS_LESSON.equals(data.type) && data.classInfo != null) {
             tvClassName.setText(data.classInfo.title);
             tvClassName.setVisibility(VISIBLE);
 
-        } else{
+        } else if (Account.TypeName.STAND_ALONE_LESSON.equals(data.type) && data.enroll != null) {
+            tvClassName.setText(data.enroll.current + "人");
+            tvClassName.setVisibility(VISIBLE);
+        } else {
             tvClassName.setVisibility(INVISIBLE);
+        }
+
+        if (Ctl.LiveLessonState.FINISHED.equals(data.state)) {
+            btnReplay.setVisibility(VISIBLE);
+        }else {
+            btnReplay.setVisibility(GONE);
         }
 
 
@@ -150,26 +162,26 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         } else if (Ctl.LiveLessonState.PENDING_FOR_APPROVAL.equals(data.state)) {
             tvState.setText("待审核");
             tvState.setVisibility(VISIBLE);
-        }else if (Ctl.LiveLessonState.ACKNOWLEDGED.equals(data.state)) {
+        } else if (Ctl.LiveLessonState.ACKNOWLEDGED.equals(data.state)) {
             tvState.setText("已确认");
             tvState.setVisibility(VISIBLE);
-        }else if (Ctl.LiveLessonState.CANCELLED.equals(data.state)) {
+        } else if (Ctl.LiveLessonState.CANCELLED.equals(data.state)) {
             tvState.setText("已取消");
             tvState.setVisibility(VISIBLE);
-        }else if (Ctl.LiveLessonState.REJECTED.equals(data.state)) {
+        } else if (Ctl.LiveLessonState.REJECTED.equals(data.state)) {
             tvState.setText("已拒绝");
             tvState.setVisibility(VISIBLE);
-        }else if (Ctl.LiveLessonState.STOPPED.equals(data.state)) {
+        } else if (Ctl.LiveLessonState.STOPPED.equals(data.state)) {
             tvState.setText("已停止");
             tvState.setVisibility(VISIBLE);
         } else {
             tvState.setVisibility(GONE);
         }
 
-        if(data.teacher==null){
+        if (data.teacher == null) {
             tvSpeaker.setVisibility(INVISIBLE);
             ivAvatar.setVisibility(INVISIBLE);
-        }else {
+        } else {
             tvSpeaker.setVisibility(VISIBLE);
             ivAvatar.setVisibility(VISIBLE);
             tvSpeaker.setText(data.teacher.name);
@@ -219,30 +231,40 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         }
     }
 
+    @OnClick(R.id.btn_replay)
+    public void replay(){
+        if(mEventCallback!=null){
+            //目前给教室里面的课表回调出去
+            mEventCallback.onEvent(EventCallback.EVENT_1,position,mData);
+        }else {
+            //其余地方课表的逻辑
+        }
+    }
+
     @OnClick(R.id.btn_more)
     public void onViewClicked() {
         if (Account.TypeName.STAND_ALONE_LESSON.equals(mData.type)) {//公开课
             List<LOpModel> group1 = new ArrayList<>();
-            List<LOpModel> publics=createPublicLessonMode();
-            for(int i=0;i<publics.size();i++){
-                LOpModel op=publics.get(i);
-                if(op.getId()==LOpModel.OP_APPLY){
+            List<LOpModel> publics = createPublicLessonMode();
+            for (int i = 0; i < publics.size(); i++) {
+                LOpModel op = publics.get(i);
+                if (op.getId() == LOpModel.OP_APPLY) {
                     publics.remove(i--);
                     group1.add(new LOpModel(LOpModel.OP_APPLY));
-                }else if(op.getId()==LOpModel.OP_DATABASE1){
+                } else if (op.getId() == LOpModel.OP_DATABASE1) {
                     publics.remove(i--);
                     group1.add(new LOpModel(LOpModel.OP_DATABASE2));
-                } else if(op.getId()==LOpModel.OP_ENTER){
+                } else if (op.getId() == LOpModel.OP_ENTER) {
                     publics.remove(i--);
                     group1.add(new LOpModel(LOpModel.OP_ENTER_2));
-                }else if(op.getId()==LOpModel.OP_SHARE){
+                } else if (op.getId() == LOpModel.OP_SHARE) {
                     publics.remove(i--);
                     group1.add(new LOpModel(LOpModel.OP_SHARE2));
                 }
             }
-            new LessonOperateBoard(getContext()).setOpGroup1(group1).setOpGroup2(publics).maybe((Activity) getContext(), mData,position).show();
+            new LessonOperateBoard(getContext()).setOpGroup1(group1).setOpGroup2(publics).maybe((Activity) getContext(), mData, position).show();
         } else {
-            new LessonOperateBoard(getContext()).setOpGroup2(classLesson()).maybe((Activity) getContext(), mData,position).show();
+            new LessonOperateBoard(getContext()).setOpGroup2(classLesson()).maybe((Activity) getContext(), mData, position).show();
         }
     }
 
@@ -250,7 +272,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         List<LOpModel> ops;
         if (mData.owner != null && mData.owner.getId().equals(AccountPref.getAccountID(getContext()))) {//我是所有者，无论我是不是讲师
             ops = imOnwer();
-        } else if (mData.teacher!=null&&mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))) {//我虽然不是所有者，但我是讲师
+        } else if (mData.teacher != null && mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))) {//我虽然不是所有者，但我是讲师
             ops = imSpeaker();
         } else {//我就是个学生
             ops = imStudent();
@@ -300,7 +322,6 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             //报名学生名单没有
 //            list.add(new LOpModel(LOpModel.OP_));
             list.add(new LOpModel(LOpModel.OP_SHARE));
-            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
             list.add(new LOpModel(LOpModel.OP_ENTER));
 
         } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//已开课
@@ -315,7 +336,6 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             //报名学生名单没有
 //            list.add(new LOpModel(LOpModel.OP_));
             list.add(new LOpModel(LOpModel.OP_SHARE));
-            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
             list.add(new LOpModel(LOpModel.OP_ENTER));
 
         } else if (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)) {//已完课
@@ -327,7 +347,6 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             //报名学生名单没有
 //            list.add(new LOpModel(LOpModel.OP_));
             list.add(new LOpModel(LOpModel.OP_SHARE));
-            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
             list.add(new LOpModel(LOpModel.OP_ENTER));
 
         } else if (Ctl.StandaloneLessonState.REJECTED.equals(mData.state)) {//审核失败
@@ -412,20 +431,17 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_APPROVAL.equals(mData.state)) {//待审核
 
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
-            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
             list.add(new LOpModel(LOpModel.OP_DATABASE1));
             list.add(new LOpModel(LOpModel.OP_ENTER));
             list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_APPLY));
         } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//已开课
-            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
             list.add(new LOpModel(LOpModel.OP_DATABASE1));
             list.add(new LOpModel(LOpModel.OP_ENTER));
             list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_APPLY));
 
         } else if (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)) {//已完课
-            list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
             list.add(new LOpModel(LOpModel.OP_DATABASE1));
             list.add(new LOpModel(LOpModel.OP_ENTER));
             list.add(new LOpModel(LOpModel.OP_SHARE));
@@ -447,5 +463,8 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     }
 
-
+    private EventCallback mEventCallback;
+    public void setCallback(EventCallback eventCallback){
+        mEventCallback=eventCallback;
+    }
 }

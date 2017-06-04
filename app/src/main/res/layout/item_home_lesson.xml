@@ -64,7 +64,22 @@
         android:layout_marginLeft="@dimen/px56"
         android:layout_toRightOf="@id/tv_date"
         android:text="什么什么课"
-        android:maxLines="1"
+        android:layout_toLeftOf="@+id/btn_replay"
+        android:maxLines="2"
+        />
+
+    <TextView
+        android:id="@+id/btn_replay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/replay"
+        android:textSize="@dimen/font_24px"
+        android:textColor="@color/subject_selected_blue"
+        android:layout_alignTop="@+id/tv_lesson"
+        android:padding="@dimen/px8"
+        android:layout_marginRight="@dimen/px20"
+        android:visibility="invisible"
         />
 
 
