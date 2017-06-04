@@ -17,7 +17,9 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.account.Account;
@@ -274,6 +276,10 @@ public class CreateClassActivity extends BaseActivity {
                         Toast.LENGTH_SHORT)
                         .show();
                 clearClassLessons();
+
+                DataChangeHelper.getInstance()
+                        .notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
+
                 finish();
             }
 

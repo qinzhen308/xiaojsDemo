@@ -25,6 +25,7 @@ import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -327,4 +328,13 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
         }
     }
 
+    @Override
+    protected int registerDataChangeListenerType() {
+        return SimpleDataChangeListener.CREATE_CLASS_CHANGED;
+    }
+
+    @Override
+    protected void onDataChanged() {
+        //TODO update ui
+    }
 }

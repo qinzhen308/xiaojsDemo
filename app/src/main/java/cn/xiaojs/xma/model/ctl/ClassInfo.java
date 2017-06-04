@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.account.Account;
 public class ClassInfo {
     public String title;
     public Date createdOn;
+    public String createdBy;
     //public String adviserName;
     public Account[] advisers;
     public String ownerName;
