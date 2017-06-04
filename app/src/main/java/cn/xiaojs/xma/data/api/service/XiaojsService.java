@@ -348,6 +348,12 @@ public interface XiaojsService {
                                                                       @Query("limit") int limit,
                                                                       @Query("page") int page);
 
+    @GET("/v1/ctl/schedule/{classId}")
+    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Path("classId") String classId,
+                                                                      @QueryMap Map<String,String> options,
+                                                                      @Query("limit") int limit,
+                                                                      @Query("page") int page);
+
     @GET("/v1/ctl/schedule")
     Call<CollectionResult<PrivateClass>> getClassesSchedule(@Query("type") String type,
                                                             @Query("limit") int limit);

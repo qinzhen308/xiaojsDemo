@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -215,7 +216,8 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
     private void getMonthData(){
         long start=new Date(0).getTime();
         long end=ScheduleUtil.ymdToTimeMill(2019,12,30);
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(),"", ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), Account.TypeName.STAND_ALONE_LESSON, LessonFilterHelper.getState(group2Position),mPagination , dataPageLoader);
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end),null,Account.TypeName.STAND_ALONE_LESSON,LessonFilterHelper.getState(group2Position),null,null);
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),map,mPagination , dataPageLoader);
     }
 
 

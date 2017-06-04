@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
@@ -76,7 +77,8 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
 
     @Override
     protected void doRequest() {
-        LessonDataManager.getClassesSchedule4Class(mContext, startTime, endTime, Account.TypeName.CLASS, state, mPagination, new APIServiceCallback<CollectionResult<PrivateClass>>() {
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,startTime, endTime,null,Account.TypeName.CLASS, state,null,key);
+        LessonDataManager.getClassesSchedule4Class(mContext, map, mPagination, new APIServiceCallback<CollectionResult<PrivateClass>>() {
             @Override
             public void onSuccess(CollectionResult<PrivateClass> object) {
                 if(object!=null){
@@ -90,7 +92,7 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
             public void onFailure(String errorCode, String errorMessage) {
                 ClassAdapter.this.onFailure(errorCode,errorMessage);
             }
-        },key);
+        });
     }
 
     static class Holder extends BaseHolder {

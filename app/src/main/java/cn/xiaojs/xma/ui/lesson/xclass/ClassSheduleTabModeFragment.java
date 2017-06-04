@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,8 +103,8 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
 
 
     private void request(){
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(),classId, ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),
-                Account.TypeName.CLASS_LESSON, state,mPagination , dataPageLoader);
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),null,Account.TypeName.CLASS_LESSON, state,null,null);
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),classId,map ,mPagination , dataPageLoader);
 
     }
 

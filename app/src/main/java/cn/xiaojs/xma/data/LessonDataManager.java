@@ -474,6 +474,19 @@ public class LessonDataManager {
         lessonRequest.getClassesSchedule4Lesson(options, limit, page);
     }
 
+    public static void getClassesSchedule4Lesson(Context context,
+                                                 String classid,
+                                                 Map<String, String> options,
+                                                 Pagination pagination,
+                                                 APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
+
+        int limit = pagination.getMaxNumOfObjectsPerPage();
+        int page = pagination.getPage();
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesSchedule4Lesson(classid,options, limit, page);
+    }
+
 
     /**
      * 为getClassesSchedule API创建查询参数

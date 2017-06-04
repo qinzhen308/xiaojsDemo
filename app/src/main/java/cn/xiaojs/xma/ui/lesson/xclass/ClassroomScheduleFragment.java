@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
@@ -113,8 +114,8 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
 
 
     private void request(){
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(),classId, ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),
-                Account.TypeName.CLASS_LESSON, "All",mPagination , dataPageLoader);
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),null,Account.TypeName.CLASS_LESSON,"All",null,null);
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(), classId,map,mPagination , dataPageLoader);
     }
 
 
