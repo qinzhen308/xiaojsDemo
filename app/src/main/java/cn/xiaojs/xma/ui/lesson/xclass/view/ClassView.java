@@ -16,14 +16,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.view.AnimationView;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -93,7 +98,7 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
         Intent intent=null;
         switch (view.getId()) {
             case R.id.op_schedule_view:
-                ClassScheduleActivity.invoke(getContext(),mData.id,mData.title,mData.teaching);
+                ClassScheduleActivity.invoke(getContext(),mData.id,mData.title,isTeaching());
                 break;
             case R.id.op_data_view:
                 intent = new Intent(getContext(), ClassMaterialActivity.class);
@@ -152,6 +157,27 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
             teachers+=mData.advisers[i].name;
         }
         teachersView.setText(teachers);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(),ClassInfoActivity.class);
+                intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,mData.id);
+                getContext().startActivity(intent);
+            }
+        });
+    }
 
+
+    //判断权限是否大于等于班主任
+    private boolean isTeaching(){
+        String id=AccountPref.getAccountID(getContext());
+        if(mData.owner!=null&&id.equals(mData.owner.getId())){//我是拥有者
+            return true;
+        }else if(!ArrayUtil.isEmpty(mData.advisers)){//我是班主任
+            for(Adviser ad:mData.advisers){
+                if(id.equals(ad.id))return true;
+            }
+        }
+        return false;
     }
 }

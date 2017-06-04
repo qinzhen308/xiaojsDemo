@@ -260,6 +260,7 @@ public class HomeClassContentBuz {
         final int d=day;
         int next=(y-todayYear)*12+(m-todayMonth);
         Map map=LessonDataManager.createScheduleOptions("monthly",""+next,"0",null,null,null,null,null,null,null);
+        Logger.d("-----qz-----time analyze---getMonthData="+(System.currentTimeMillis()-time));
         LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
@@ -293,7 +294,6 @@ public class HomeClassContentBuz {
 
             }
         });
-        Logger.d("-----qz-----time analyze---getMonthData="+(System.currentTimeMillis()-time));
     }
 
     private void loadHotClasses(){
