@@ -40,8 +40,8 @@ public class ClassScheduleActivity extends BaseActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        isTeaching=getIntent().getBooleanExtra(EXTRA_TEACHING,false);
         super.onCreate(savedInstanceState);
-        getIntent().getBooleanExtra(EXTRA_TEACHING,false);
     }
 
     @Override

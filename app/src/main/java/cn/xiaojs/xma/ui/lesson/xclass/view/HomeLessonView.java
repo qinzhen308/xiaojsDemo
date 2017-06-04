@@ -244,12 +244,14 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     }
 
     private void enterClassroom(){
-        if((Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.FINISHED.equals(mData.state))){//公开课能进教室的状态
+        if(Account.TypeName.CLASS_LESSON.equals(mData.type)&&(Ctl.ClassState.IDLE.equals(mData.state)||Ctl.ClassState.LIVE.equals(mData.state)||Ctl.ClassState.PENDING_FOR_LIVE.equals(mData.state))
+                ||Account.TypeName.STAND_ALONE_LESSON.equals(mData.type)&&(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.FINISHED.equals(mData.state))){//公开课能进教室的状态
             Intent i = new Intent();
             i.putExtra(Constants.KEY_TICKET, mData.ticket);
             i.setClass(getContext(), ClassroomActivity.class);
             getContext().startActivity(i);
         }
+
     }
 
     @OnClick(R.id.btn_replay)

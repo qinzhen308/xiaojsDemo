@@ -218,9 +218,15 @@ public class ClassScheduleBuz {
     public void updateAndMoveToDate(String date){
         String[] ymd=date.split("-");
         selectDay=Integer.valueOf(ymd[2]);
-        selectMonth=Integer.valueOf(ymd[1]);
+        selectMonth=Integer.valueOf(ymd[1])-1;
         selectyear=Integer.valueOf(ymd[0]);
         getMonthData(selectyear,selectMonth,selectDay);
+        calendarView.post(new Runnable() {
+            @Override
+            public void run() {
+                calendarView.initData(selectyear,selectMonth,selectDay);
+            }
+        });
     }
 
 
