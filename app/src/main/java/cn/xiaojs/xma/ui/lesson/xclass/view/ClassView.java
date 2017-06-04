@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
@@ -125,6 +126,22 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
 //            statusView.setVisibility(GONE);
 //            entranceCount.setVisibility(GONE);
 //        }
+        if(Ctl.LiveLessonState.LIVE.equals(mData.state)){
+            livingView.setVisibility(VISIBLE);
+            statusView.setVisibility(INVISIBLE);
+        }else {
+            livingView.setVisibility(INVISIBLE);
+            if(Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(mData.state)){
+                statusView.setText("待上课");
+                statusView.setVisibility(VISIBLE);
+            }else if(Ctl.LiveLessonState.FINISHED.equals(mData.state)){
+                statusView.setText("已完课");
+                statusView.setVisibility(VISIBLE);
+            }else {
+                statusView.setVisibility(INVISIBLE);
+            }
+        }
+
         if(mData.enroll!=null){
             memberView.setText(mData.enroll.current+"人");
         }else {

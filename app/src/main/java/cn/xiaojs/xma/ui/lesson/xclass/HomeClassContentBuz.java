@@ -321,6 +321,7 @@ public class HomeClassContentBuz {
     }
 
     public void update(){
+        hotClass=null;
         getMonthData();
         doRequest(year,month,day);
         loadHotClasses();

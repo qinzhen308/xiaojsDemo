@@ -36,6 +36,13 @@ public class ClassScheduleActivity extends BaseActivity{
     public static final String EXTRA_TITLE="extra_title";
     public static final String EXTRA_TEACHING="extra_teaching";
     public static final int REQUEST_CODE_ADD=23;
+    public boolean isTeaching=false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getIntent().getBooleanExtra(EXTRA_TEACHING,false);
+    }
 
     @Override
     protected void addViewContent() {
@@ -49,8 +56,14 @@ public class ClassScheduleActivity extends BaseActivity{
             setMiddleTitle(title);
 
         }
-        setRightImage(R.drawable.add_selector);
-        setRightImage2(R.drawable.selector_mode_tab);
+        //因为title_layout是公用的，按钮顺序无法改变，所以只能根据定义按钮的不同意义，来实现对应功能
+        if(isTeaching){
+            setRightImage(R.drawable.add_selector);
+            setRightImage2(R.drawable.selector_mode_tab);
+        }else {
+            setRightImage(R.drawable.selector_mode_tab);
+        }
+
         ButterKnife.bind(this);
         calenerFragment=new ClassSheduleCalenerFragment();
         tabFragment=new ClassSheduleTabModeFragment();
@@ -63,20 +76,29 @@ public class ClassScheduleActivity extends BaseActivity{
     public void onViewClick(View v){
         switch (v.getId()){
             case R.id.right_image:
-                Intent intent=new Intent(ClassScheduleActivity.this,CreateTimetableActivity.class);
-                intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,getIntent().getStringExtra(EXTRA_ID));
-                if(!isTabMode){
-                    intent.putExtra(CreateTimetableActivity.EXTRA_TARGET_DATE,calenerFragment.getSelectedDate());
+                if(isTeaching){
+                    addSchedule();
+                }else {
+                    checkMode();
                 }
-                startActivityForResult(intent,REQUEST_CODE_ADD);
                 break;
             case R.id.right_image2:
+                //学生身份就没有这个按钮
                 checkMode();
                 break;
             case R.id.left_view:
                 finish();
                 break;
         }
+    }
+
+    private void addSchedule(){
+        Intent intent=new Intent(ClassScheduleActivity.this,CreateTimetableActivity.class);
+        intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,getIntent().getStringExtra(EXTRA_ID));
+        if(!isTabMode){
+            intent.putExtra(CreateTimetableActivity.EXTRA_TARGET_DATE,calenerFragment.getSelectedDate());
+        }
+        startActivityForResult(intent,REQUEST_CODE_ADD);
     }
 
     private void checkMode(){
