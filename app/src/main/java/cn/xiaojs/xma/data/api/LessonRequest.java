@@ -28,6 +28,8 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 import com.orhanobut.logger.Logger;
 
+import java.util.Map;
+
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 
@@ -271,60 +273,14 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.CREATE_CLASS, call);
     }
 
-    public void getClassesSchedule(String classId, String cycle, int next, int pre) {
+    public void getClassesSchedule(String classId, Map<String,String> options) {
         Call<ScheduleData> call;
         if (TextUtils.isEmpty(classId)) {
-            call = getService().getClassesSchedule(cycle, next, pre);
+            call = getService().getClassesSchedule(options);
         }else {
-            call = getService().getClassesSchedule(classId,cycle, next, pre);
+            call = getService().getClassesSchedule(classId,options);
         }
 
-        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
-    }
-
-    public void getClassesSchedule(String classId,
-                                   String cycle,
-                                   int next,
-                                   int pre,
-                                   String unformat,
-                                   String type,
-                                   String state) {
-
-        Call<ScheduleData> call;
-        if (TextUtils.isEmpty(classId)) {
-            call = getService().getClassesSchedule(cycle, next, pre, unformat, type, state);
-        }else {
-            call = getService().getClassesSchedule(classId, cycle, next, pre, unformat, type, state);
-        }
-
-        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
-    }
-
-    public void getClassesSchedule(String classId, String start, String end) {
-
-        Call<ScheduleData> call;
-
-        if (TextUtils.isEmpty(classId)) {
-            call = getService().getClassesSchedule(start, end);
-        }else {
-            call = getService().getClassesSchedule(classId, start, end);
-        }
-        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
-    }
-
-    public void getClassesSchedule(String classId,
-                                   String start,
-                                   String end,
-                                   String unformat,
-                                   String type,
-                                   String state) {
-
-        Call<ScheduleData> call;
-        if (TextUtils.isEmpty(classId)) {
-            call = getService().getClassesSchedule(start, end, unformat, type, state);
-        }else {
-            call = getService().getClassesSchedule(classId, start, end, unformat, type, state);
-        }
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
@@ -333,8 +289,7 @@ public class LessonRequest extends ServiceRequest {
                                          String type,
                                          String state,
                                          int limit,
-                                         int page,
-                                         String... querys) {
+                                         int page) {
 
         Call<CollectionResult<PrivateClass>> call;
         if (querys !=null && querys.length > 0) {
