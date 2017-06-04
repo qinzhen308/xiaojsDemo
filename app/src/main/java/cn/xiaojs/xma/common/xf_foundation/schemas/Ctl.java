@@ -55,6 +55,12 @@ public class Ctl {
         public static final String STOPPED = "Stopped";
     }
 
+    public static class ClassState {
+        public static final String IDLE = "Idle";
+        public static final String PENDING_FOR_LIVE = "PendingForLive";
+        public static final String LIVE = "Live";
+    }
+
 
     //region Objects
 
