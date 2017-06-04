@@ -3,9 +3,11 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import org.w3c.dom.Text;
 
@@ -13,10 +15,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
@@ -50,8 +54,8 @@ public class ClassInfoActivity extends BaseActivity {
     TextView creatorView;
     @BindView(R.id.ver_layout)
     LinearLayout verLayout;
-    @BindView(R.id.join_veri)
-    TextView verifyStatusView;
+    @BindView(R.id.veri_switcher)
+    ToggleButton toggleButton;
     @BindView(R.id.num_lesson)
     TextView numLessonView;
 
@@ -66,13 +70,6 @@ public class ClassInfoActivity extends BaseActivity {
         setMiddleTitle(getString(R.string.class_info));
         classId = getIntent().getStringExtra(EXTRA_CLASSID);
 
-        teaching = getIntent().getBooleanExtra(EXTRA_TEACHING, false);
-        //FIXME 调式代码
-        teaching = true;
-
-        initView();
-
-
     }
 
     @Override
@@ -84,7 +81,7 @@ public class ClassInfoActivity extends BaseActivity {
 
     @OnClick({R.id.left_image, R.id.enter_btn,
             R.id.lay_time_table, R.id.lay_material,
-            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay})
+            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay,R.id.veri_switcher})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -130,6 +127,11 @@ public class ClassInfoActivity extends BaseActivity {
                         ShareQrcodeActivity.CLASS_QRCODE);
                 startActivity(qrIntent);
                 break;
+            case R.id.veri_switcher:
+                //是否需要验证
+                boolean checked = ((ToggleButton) v).isChecked();
+                modifyVerify(checked);
+                break;
         }
 
 
@@ -144,17 +146,18 @@ public class ClassInfoActivity extends BaseActivity {
 //        mContext.startActivity(intent);
     }
 
-    private void initView() {
-        if (!teaching) {
-            //学生UI
-            nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-        }
-    }
 
     private void bingView() {
 
         if (classInfo == null) {
             return;
+        }
+
+        teaching = initTeaching();
+
+        if (!teaching) {
+            //学生UI
+            nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
         }
 
         nameView.setText(classInfo.title);
@@ -173,13 +176,37 @@ public class ClassInfoActivity extends BaseActivity {
 
         if (teaching) {
             verLayout.setVisibility(View.VISIBLE);
-            int vid = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
-                    R.string.need_confirm : R.string.no_verification_required;
+            boolean verify = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
+                    true : false;
 
-            verifyStatusView.setText(vid);
+            toggleButton.setChecked(verify);
         }
 
 
+    }
+
+
+    private boolean initTeaching() {
+        if (classInfo== null)
+            return false;
+
+        String mid = AccountDataManager.getAccountID(this);
+
+        //创建者
+        if (mid.equals(classInfo.createdBy)) {
+            return true;
+        }
+
+        //班主任
+        if (classInfo.advisers !=null && classInfo.advisers.length>0) {
+            for (Account account : classInfo.advisers){
+                if (mid.equals(account.getId())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 //    private void updateStudentsView(int count) {
@@ -193,6 +220,7 @@ public class ClassInfoActivity extends BaseActivity {
     private void modifyName() {
         Intent i = new Intent(this, AddLessonNameActivity.class);
         i.putExtra(AddLessonNameActivity.EXTRA_CLASSID, classId);
+        i.putExtra(AddLessonNameActivity.EXTRA_VER_MODE, classInfo.join.mode);
         i.putExtra(AddLessonNameActivity.EXTRA_NAME, nameView.getText().toString());
         i.putExtra(AddLessonNameActivity.EXTRA_ROLE, AddLessonNameActivity.ROLE_CLASS);
         startActivityForResult(i, REQUEST_NAME_CODE);
@@ -225,6 +253,40 @@ public class ClassInfoActivity extends BaseActivity {
                         loadClassInfo();
                     }
                 });
+            }
+        });
+    }
+
+    private void modifyVerify(final boolean verify) {
+
+        ModifyClassParams classParams = new ModifyClassParams();
+
+        classParams.className = classInfo.title;
+
+        int mode = verify? Ctl.JoinMode.VERIFICATION: Ctl.JoinMode.OPEN;
+        classParams.mode = mode;
+
+        showProgress(true);
+        LessonDataManager.modifyClass(this, classId, classParams, new APIServiceCallback<CLResponse>() {
+            @Override
+            public void onSuccess(CLResponse object) {
+                cancelProgress();
+                toggleButton.setChecked(verify);
+                Toast.makeText(ClassInfoActivity.this,
+                        R.string.lesson_edit_success,
+                        Toast.LENGTH_SHORT)
+                        .show();
+
+
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                toggleButton.setChecked(!verify);
+                Toast.makeText(ClassInfoActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+
             }
         });
     }
