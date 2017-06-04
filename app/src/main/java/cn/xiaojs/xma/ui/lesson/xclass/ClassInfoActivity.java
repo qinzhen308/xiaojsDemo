@@ -69,7 +69,6 @@ public class ClassInfoActivity extends BaseActivity {
         addView(R.layout.activity_class_info);
         setMiddleTitle(getString(R.string.class_info));
         classId = getIntent().getStringExtra(EXTRA_CLASSID);
-
     }
 
     @Override
