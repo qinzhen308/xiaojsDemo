@@ -18,6 +18,7 @@ public class CLesson {
     public String type;
     public String ticket;
     public Schedule schedule;
+    public Enroll enroll;
     public String state;
     public Account owner;
     public Account teacher;
