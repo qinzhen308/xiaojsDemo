@@ -19,6 +19,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -134,9 +135,9 @@ public class SearchLessonActivity extends BaseActivity {
     }
 
     private void request(){
-
-        LessonDataManager.getClassesSchedule4Lesson(this,"", ScheduleUtil.getUTCDate(new Date(0).getTime()),ScheduleUtil.getUTCDate(ScheduleUtil.ymdToTimeMill(2100,12,30)), Account.TypeName.STAND_ALONE_LESSON,"All",mPagination,dataPageLoader,key);
-
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(new Date(0).getTime()),ScheduleUtil.getUTCDate(ScheduleUtil.ymdToTimeMill(2100,12,30)),
+                null,Account.TypeName.STAND_ALONE_LESSON,"All",null,key);
+        LessonDataManager.getClassesSchedule4Lesson(this, map,mPagination,dataPageLoader);
 
     }
 

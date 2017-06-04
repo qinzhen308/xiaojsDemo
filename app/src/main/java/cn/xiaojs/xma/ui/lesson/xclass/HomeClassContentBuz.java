@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.BindColor;
@@ -47,6 +48,7 @@ import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
@@ -89,6 +91,8 @@ public class HomeClassContentBuz {
     int c_red;
     @BindColor(R.color.grey_point)
     int c_gray;
+
+    LastEmptyModel lastEmptyModel=new LastEmptyModel();
 
     /**
      * @param context
@@ -213,7 +217,8 @@ public class HomeClassContentBuz {
             Logger.d("----qz----start GMT+8:00 Time="+ScheduleUtil.getDateYMDHMS(start)+"---end GMT+8:00 Time="+ScheduleUtil.getDateYMDHMS(end));
             Logger.d("----qz----start UTC Time="+ScheduleUtil.getUTCDate(start)+"---end UTC Time="+ScheduleUtil.getUTCDate(end));
         }
-        LessonDataManager.getClassesSchedule(mContext,"", ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end), new APIServiceCallback<ScheduleData>() {
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end),null,null,null,null,null);
+        LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
                 LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
@@ -248,7 +253,8 @@ public class HomeClassContentBuz {
         final int m=month;
         final int d=day;
         int next=(y-todayYear)*12+(m-todayMonth);
-        LessonDataManager.getClassesSchedule(mContext,"", "monthly", next, 0, new APIServiceCallback<ScheduleData>() {
+        Map map=LessonDataManager.createScheduleOptions("monthly",""+next,"0",null,null,null,null,null,null,null);
+        LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
                 HashSet hashSet=new HashSet<Integer>();
@@ -311,6 +317,7 @@ public class HomeClassContentBuz {
             classLabel.hasData=true;
             mAdapter.getList().addAll(list);
         }
+        mAdapter.getList().add(lastEmptyModel);
     }
 
     public void update(){
