@@ -26,6 +26,7 @@ import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
+
 import com.orhanobut.logger.Logger;
 
 import java.util.Map;
@@ -75,8 +76,8 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
-    public void getLessons(String account,int page, int limit){
-        Call<CollectionPageData<PersonHomeUserLesson>> call = getService().getLessons(account,page,limit);
+    public void getLessons(String account, int page, int limit) {
+        Call<CollectionPageData<PersonHomeUserLesson>> call = getService().getLessons(account, page, limit);
         enqueueRequest(APIType.GET_LESSONS_BY_USER, call);
     }
 
@@ -156,13 +157,12 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void editLessonSchedule(@NonNull String lesson,
-                           @NonNull LessonSchedule lessonSchedule) {
+                                   @NonNull LessonSchedule lessonSchedule) {
 
         Call<ResponseBody> call = getService().editLessonSchedule(lesson, lessonSchedule);
         enqueueRequest(APIType.EDIT_LESSON_SCHEDULE, call);
 
     }
-
 
 
     public void enrollLesson(@NonNull String lesson,
@@ -252,9 +252,9 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
-    public void getEnrolledStudents(String lesson,int page, int limit, String state){
+    public void getEnrolledStudents(String lesson, int page, int limit, String state) {
         Call<EnrollPage> call = getService().getEnrolledStudents(lesson, page, limit, state);
-        enqueueRequest(APIType.GET_ENROLLED_STUDENTS,call);
+        enqueueRequest(APIType.GET_ENROLLED_STUDENTS, call);
 
     }
 
@@ -264,7 +264,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void joinLesson(String lesson, Registrant registrant) {
-        Call<JoinResponse> call = getService().joinLesson(lesson,registrant);
+        Call<JoinResponse> call = getService().joinLesson(lesson, registrant);
         enqueueRequest(APIType.JOIN_LESSON, call);
     }
 
@@ -273,96 +273,31 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.CREATE_CLASS, call);
     }
 
-    public void getClassesSchedule(String classId, Map<String,String> options) {
+    public void getClassesSchedule(String classId, Map<String, String> options) {
         Call<ScheduleData> call;
         if (TextUtils.isEmpty(classId)) {
             call = getService().getClassesSchedule(options);
-        }else {
-            call = getService().getClassesSchedule(classId,options);
+        } else {
+            call = getService().getClassesSchedule(classId, options);
         }
 
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule4Class(String start,
-                                         String end,
-                                         String type,
-                                         String state,
+    public void getClassesSchedule4Class(Map<String, String> options,
                                          int limit,
                                          int page) {
-
-        Call<CollectionResult<PrivateClass>> call;
-        if (querys !=null && querys.length > 0) {
-            int count = querys.length;
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< count; i++) {
-                sb.append(querys[i]);
-
-                if (i< count-1) {
-                    sb.append(",");
-                }
-            }
-            call = getService().getClassesSchedule4Class(start, end, type, state, limit, page, sb.toString());
-        }else {
-            call = getService().getClassesSchedule4Class(start, end, type, state, limit, page);
-        }
-
+        Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule4Class(options,
+                limit, page);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
-    public void getClassesSchedule4Lesson(String start,
-                                          String end,
-                                          String type,
-                                          String state,
+    public void getClassesSchedule4Lesson(Map<String, String> options,
                                           int limit,
-                                          int page,
-                                          String... querys) {
+                                          int page) {
 
-        Call<CollectionCalendar<ClassSchedule>> call;
-        if (querys !=null && querys.length > 0) {
-            int count = querys.length;
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< count; i++) {
-                sb.append(querys[i]);
-
-                if (i< count-1) {
-                    sb.append(",");
-                }
-            }
-            call = getService().getClassesSchedule4Lesson(start, end, type, state, limit, page, sb.toString());
-        }else {
-            call = getService().getClassesSchedule4Lesson(start, end, type, state, limit, page);
-        }
-
-        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
-    }
-
-
-    public void getClassesSchedule4Lesson(String classId,
-                                          String start,
-                                          String end,
-                                          String type,
-                                          String state,
-                                          int limit,
-                                          int page,
-                                          String... querys) {
-
-        Call<CollectionCalendar<ClassSchedule>> call;
-        if (querys !=null && querys.length > 0) {
-            int count = querys.length;
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< count; i++) {
-                sb.append(querys[i]);
-
-                if (i< count-1) {
-                    sb.append(",");
-                }
-            }
-            call = getService().getClassesSchedule4Lesson(classId,start, end, type, state, limit, page, sb.toString());
-        }else {
-            call = getService().getClassesSchedule4Lesson(classId,start, end, type, state, limit, page);
-        }
-
+        Call<CollectionCalendar<ClassSchedule>> call = getService().getClassesSchedule4Lesson(options,
+                limit, page);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 
@@ -378,7 +313,7 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.SCHEDULE_CLASS_LESSON, call);
     }
 
-    public boolean checkOverlapSync(CheckOverlapParams params) throws Exception{
+    public boolean checkOverlapSync(CheckOverlapParams params) throws Exception {
 
         Response<ResponseBody> response = getService().checkOverlap(params).execute();
         if (response != null && response.code() == SUCCESS_CODE) {
@@ -393,7 +328,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void modifyClass(String classid, ModifyClassParams params) {
-        Call<CLResponse> call = getService().modifyClass(classid,params);
+        Call<CLResponse> call = getService().modifyClass(classid, params);
         enqueueRequest(APIType.MODIFY_CLASS, call);
     }
 
@@ -409,13 +344,13 @@ public class LessonRequest extends ServiceRequest {
 
 
         Call<CollectionPage<StudentEnroll>> call = getService().getClassStudents(classes,
-                criteriaJsonstr,paginationJsonstr);
+                criteriaJsonstr, paginationJsonstr);
         enqueueRequest(APIType.GET_CLASS_STUDENTS, call);
     }
 
     public void addClassStudent(String classId, ClassEnrollParams enrollParams) {
         Call<ResponseBody> call = getService().addClassStudent(classId, enrollParams);
-        enqueueRequest(APIType.ADD_CLASS_STUDENTS,call);
+        enqueueRequest(APIType.ADD_CLASS_STUDENTS, call);
 
     }
 
