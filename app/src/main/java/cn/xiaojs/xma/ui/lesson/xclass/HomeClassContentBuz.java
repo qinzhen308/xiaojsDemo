@@ -8,6 +8,7 @@ import android.os.Debug;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -210,6 +211,7 @@ public class HomeClassContentBuz {
 
 
     private void doRequest(final int y,final int m,final int d){
+        long time=System.currentTimeMillis();
         long start= ScheduleUtil.ymdToTimeMill(y,m,d);
         long end=start+ ScheduleUtil.DAY-1000;
         if(XiaojsConfig.DEBUG){
@@ -221,6 +223,7 @@ public class HomeClassContentBuz {
         LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
+                long time=System.currentTimeMillis();
                 LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
                 ArrayList list=new ArrayList();
                 list.add(label);
@@ -235,6 +238,7 @@ public class HomeClassContentBuz {
                     bindHotClasses(hotClass);
                 }
                 mAdapter.notifyDataSetChanged();
+                Logger.d("-----qz-----time analyze---bindLessons="+(System.currentTimeMillis()-time));
             }
             @Override
             public void onFailure(String errorCode, String errorMessage) {
@@ -245,10 +249,12 @@ public class HomeClassContentBuz {
                 mAdapter.notifyDataSetChanged();
             }
         });
+        Logger.d("-----qz-----time analyze---doRequest="+(System.currentTimeMillis()-time));
     }
 
 
     private void getMonthData(){
+        long time=System.currentTimeMillis();
         final int y=year;
         final int m=month;
         final int d=day;
@@ -257,6 +263,7 @@ public class HomeClassContentBuz {
         LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
+                long time=System.currentTimeMillis();
                 HashSet hashSet=new HashSet<Integer>();
                 HashMap<Integer , Integer> colors=new HashMap<Integer, Integer>();
                 if(object!=null&&object.calendar!=null){
@@ -278,6 +285,7 @@ public class HomeClassContentBuz {
                 }
                 calendarView.setTaskHintColors(colors,false);
                 calendarView.setTaskHintList(hashSet);
+                Logger.d("-----qz-----time analyze---setPoint="+(System.currentTimeMillis()-time));
             }
 
             @Override
@@ -285,9 +293,11 @@ public class HomeClassContentBuz {
 
             }
         });
+        Logger.d("-----qz-----time analyze---getMonthData="+(System.currentTimeMillis()-time));
     }
 
     private void loadHotClasses(){
+        long time=System.currentTimeMillis();
         LessonDataManager.getHotClasses(mContext, 4, new APIServiceCallback<CollectionResult<PrivateClass>>() {
             @Override
             public void onSuccess(CollectionResult<PrivateClass> object) {
@@ -309,8 +319,10 @@ public class HomeClassContentBuz {
                 }
             }
         });
+        Logger.d("-----qz-----time analyze---doRequest="+(System.currentTimeMillis()-time));
     }
     private void bindHotClasses(List<PrivateClass> list){
+        long time=System.currentTimeMillis();
         ClassLabelModel classLabel=new ClassLabelModel(false);
         mAdapter.getList().add(classLabel);
         if(!ArrayUtil.isEmpty(list)){
@@ -318,6 +330,7 @@ public class HomeClassContentBuz {
             mAdapter.getList().addAll(list);
         }
         mAdapter.getList().add(lastEmptyModel);
+        Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));
     }
 
     public void update(){
