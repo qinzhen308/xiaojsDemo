@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cn.xiaojs.xma.model.APIEntity;
 import cn.xiaojs.xma.model.AccessLesson;
@@ -103,6 +104,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 
 /**
@@ -326,118 +328,25 @@ public interface XiaojsService {
     @POST("/v1/ctl/classes")
     Call<CLResponse> createClass(@Body ClassParams params);
 
-    //Get Classes Schedule
+
     @GET("/v1/ctl/schedule")
-    Call<ScheduleData> getClassesSchedule(@Query("cycle") String cycle,
-                                          @Query("next") int next,
-                                          @Query("pre") int pre);
+    Call<ScheduleData> getClassesSchedule(@QueryMap Map<String,String> options);
 
     @GET("/v1/ctl/schedule/{classId}")
     Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
-                                          @Query("cycle") String cycle,
-                                          @Query("next") int next,
-                                          @Query("pre") int pre);
-
-
-    //Get Classes Schedule
-    @GET("/v1/ctl/schedule")
-    Call<ScheduleData> getClassesSchedule(@Query("cycle") String cycle,
-                                          @Query("next") int next,
-                                          @Query("pre") int pre,
-                                          @Query("unformat") String unformat,
-                                          @Query("type") String type,
-                                          @Query("state") String state);
-
-    @GET("/v1/ctl/schedule/{classId}")
-    Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
-                                          @Query("cycle") String cycle,
-                                          @Query("next") int next,
-                                          @Query("pre") int pre,
-                                          @Query("unformat") String unformat,
-                                          @Query("type") String type,
-                                          @Query("state") String state);
+                                          @QueryMap Map<String,String> options);
 
 
     @GET("/v1/ctl/schedule")
-    Call<ScheduleData> getClassesSchedule(@Query("start") String start,
-                                          @Query("end") String end);
-
-    @GET("/v1/ctl/schedule/{classId}")
-    Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
-                                          @Query("start") String start,
-                                          @Query("end") String end);
-
-    @GET("/v1/ctl/schedule")
-    Call<ScheduleData> getClassesSchedule(@Query("start") String start,
-                                          @Query("end") String end,
-                                          @Query("unformat") String unformat,
-                                          @Query("type") String type,
-                                          @Query("state") String state);
-
-
-    @GET("/v1/ctl/schedule/{classId}")
-    Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
-                                          @Query("start") String start,
-                                          @Query("end") String end,
-                                          @Query("unformat") String unformat,
-                                          @Query("type") String type,
-                                          @Query("state") String state);
-
-
-    @GET("/v1/ctl/schedule")
-    Call<CollectionResult<PrivateClass>> getClassesSchedule4Class(@Query("start") String start,
-                                                                  @Query("end") String end,
-                                                                  @Query("type") String type,
-                                                                  @Query("state") String state,
+    Call<CollectionResult<PrivateClass>> getClassesSchedule4Class(@QueryMap Map<String,String> options,
                                                                   @Query("limit") int limit,
                                                                   @Query("page") int page);
 
-    @GET("/v1/ctl/schedule")
-    Call<CollectionResult<PrivateClass>> getClassesSchedule4Class(@Query("start") String start,
-                                                                  @Query("end") String end,
-                                                                  @Query("type") String type,
-                                                                  @Query("state") String state,
-                                                                  @Query("limit") int limit,
-                                                                  @Query("page") int page,
-                                                                  @Query("q") String q);
 
-    @GET("/v1/ctl/schedule/{classId}")
-    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Path("classId") String classId,
-                                                                      @Query("start") String start,
-                                                                      @Query("end") String end,
-                                                                      @Query("type") String type,
-                                                                      @Query("state") String state,
+    @GET("/v1/ctl/schedule")
+    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@QueryMap Map<String,String> options,
                                                                       @Query("limit") int limit,
                                                                       @Query("page") int page);
-
-
-    @GET("/v1/ctl/schedule")
-    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Query("start") String start,
-                                                                      @Query("end") String end,
-                                                                      @Query("type") String type,
-                                                                      @Query("state") String state,
-                                                                      @Query("limit") int limit,
-                                                                      @Query("page") int page);
-
-    @GET("/v1/ctl/schedule/{classId}")
-    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Path("classId") String classId,
-                                                                      @Query("start") String start,
-                                                                      @Query("end") String end,
-                                                                      @Query("type") String type,
-                                                                      @Query("state") String state,
-                                                                      @Query("limit") int limit,
-                                                                      @Query("page") int page,
-                                                                      @Query("q") String q);
-
-
-    @GET("/v1/ctl/schedule")
-    Call<CollectionCalendar<ClassSchedule>> getClassesSchedule4Lesson(@Query("start") String start,
-                                                                      @Query("end") String end,
-                                                                      @Query("type") String type,
-                                                                      @Query("state") String state,
-                                                                      @Query("limit") int limit,
-                                                                      @Query("page") int page,
-                                                                      @Query("q") String q);
 
     @GET("/v1/ctl/schedule")
     Call<CollectionResult<PrivateClass>> getClassesSchedule(@Query("type") String type,

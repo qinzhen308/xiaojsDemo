@@ -3,6 +3,7 @@ package cn.xiaojs.xma.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -50,6 +51,9 @@ import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 
 import com.orhanobut.logger.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -432,89 +436,113 @@ public class LessonDataManager {
      * Get Classes Schedule
      */
     public static void getClassesSchedule(Context context,
-                                          String classId,
-                                          String cycle,
-                                          int next,
-                                          int pre,
+                                          Map<String, String> options,
                                           APIServiceCallback<ScheduleData> callback) {
-        LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(classId, cycle, next, pre);
+        getClassesSchedule(context, null, options, callback);
     }
 
     public static void getClassesSchedule(Context context,
                                           String classId,
-                                          String cycle,
-                                          int next,
-                                          int pre,
-                                          String unformat,
-                                          String type,
-                                          String state,
+                                          Map<String, String> options,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(classId, cycle, next, pre, unformat, type, state);
-    }
-
-    /**
-     * Get Classes Schedule
-     */
-    public static void getClassesSchedule(Context context,
-                                          String classId,
-                                          String start,
-                                          String end,
-                                          APIServiceCallback<ScheduleData> callback) {
-        LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(classId, start, end);
-    }
-
-
-    public static void getClassesSchedule(Context context,
-                                          String classId,
-                                          String start,
-                                          String end,
-                                          String unformat,
-                                          String type,
-                                          String state,
-                                          APIServiceCallback<ScheduleData> callback) {
-        LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(classId, start, end, unformat, type, state);
+        lessonRequest.getClassesSchedule(classId, options);
     }
 
 
     public static void getClassesSchedule4Class(Context context,
-                                                String start,
-                                                String end,
-                                                String type,
-                                                String state,
+                                                Map<String, String> options,
                                                 Pagination pagination,
-                                                APIServiceCallback<CollectionResult<PrivateClass>> callback,
-                                                String... querys) {
+                                                APIServiceCallback<CollectionResult<PrivateClass>> callback) {
 
         int limit = pagination.getMaxNumOfObjectsPerPage();
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Class(start, end, type, state, limit, page, querys);
+        lessonRequest.getClassesSchedule4Class(options, limit, page);
     }
 
     public static void getClassesSchedule4Lesson(Context context,
-                                                 String classId,
-                                                 String start,
-                                                 String end,
-                                                 String type,
-                                                 String state,
+                                                 Map<String, String> options,
                                                  Pagination pagination,
-                                                 APIServiceCallback<CollectionCalendar<ClassSchedule>> callback,
-                                                 String... querys) {
+                                                 APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
 
         int limit = pagination.getMaxNumOfObjectsPerPage();
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        if (TextUtils.isEmpty(classId)) {
-            lessonRequest.getClassesSchedule4Lesson(start, end, type, state, limit, page, querys);
-        }else{
-            lessonRequest.getClassesSchedule4Lesson(classId, start, end, type, state, limit, page, querys);
+        lessonRequest.getClassesSchedule4Lesson(options, limit, page);
+    }
+
+
+    /**
+     * 为getClassesSchedule API创建查询参数
+     * @param cycle
+     * @param next
+     * @param pre
+     * @param start
+     * @param end
+     * @param unformat
+     * @param type
+     * @param state
+     * @param role
+     * @param q
+     * @return
+     */
+    public static Map<String, String> createScheduleOptions(String cycle,
+                                                          String next,
+                                                          String pre,
+                                                          String start,
+                                                          String end,
+                                                          String unformat,
+                                                          String type,
+                                                          String state,
+                                                          String role,
+                                                          String q){
+
+        Map<String, String> options = new HashMap<>();
+
+        if (!TextUtils.isEmpty(cycle)) {
+            options.put("cycle",cycle);
         }
+
+        if (!TextUtils.isEmpty(next)) {
+            options.put("next",next);
+        }
+
+        if (!TextUtils.isEmpty(pre)) {
+            options.put("pre",pre);
+        }
+
+        if (!TextUtils.isEmpty(start)) {
+            options.put("start",start);
+        }
+
+        if (!TextUtils.isEmpty(end)) {
+            options.put("end",end);
+        }
+
+        if (!TextUtils.isEmpty(unformat)) {
+            options.put("unformat",unformat);
+        }
+
+        if (!TextUtils.isEmpty(state)) {
+            options.put("state",state);
+        }
+
+        if (!TextUtils.isEmpty(type)) {
+            options.put("type",type);
+        }
+
+        if (!TextUtils.isEmpty(role)) {
+            options.put("role",role);
+        }
+
+        if (!TextUtils.isEmpty(q)) {
+            options.put("q",q);
+        }
+
+        return options;
     }
 
     /**
