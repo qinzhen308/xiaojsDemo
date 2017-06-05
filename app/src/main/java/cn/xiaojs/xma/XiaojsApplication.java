@@ -10,6 +10,7 @@ import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.xiaojs.xma.data.DataManager;
@@ -67,6 +68,16 @@ public class XiaojsApplication extends Application {
         }
 
 
+        //umeng release版本时，才加入统计
+        if (APPUtils.isProEvn()) {
+            MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(getApplicationContext(),
+                    XiaojsConfig.UMENG_APPKEY,
+                    XiaojsConfig.CHANNEL,
+                    MobclickAgent.EScenarioType.E_UM_NORMAL,
+                    false);
+            MobclickAgent.startWithConfigure(config);
+        }
+        
         //init xiaojs utils
         XjsUtils.init(this);
 
