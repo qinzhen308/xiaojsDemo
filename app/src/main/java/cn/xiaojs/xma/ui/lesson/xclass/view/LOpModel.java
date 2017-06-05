@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -127,7 +129,7 @@ public class LOpModel {
                 break;
             case OP_DATABASE2:
 //                enterDatabase(context);
-                databank(context,data.title ,data.id);
+                databank(context,data);
                 break;
             case OP_DELETE:
                 delete(context,position,data);
@@ -178,7 +180,7 @@ public class LOpModel {
                 share(context,data);
                 break;
             case OP_DATABASE1:
-                databank(context,data.title ,data.id);
+                databank(context,data);
                 break;
             case OP_AGREE_INVITE:
                 dealAck(context,position,data,Ctl.ACKDecision.ACKNOWLEDGE);
@@ -376,11 +378,12 @@ public class LOpModel {
     }
 
     //资料库
-    private void databank(Activity context,String title,String id) {
+    private void databank(Activity context,CLesson cl) {
         Intent intent = new Intent(context, ClassMaterialActivity.class);
-        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
-        intent.putExtra(ClassMaterialActivity.EXTRA_ID, id);
-        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, title);
+//        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
+        intent.putExtra(ClassMaterialActivity.EXTRA_ID, cl.id);
+        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, cl.title);
+        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)?Collaboration.SubType.STANDA_LONE_LESSON:Collaboration.SubType.PRIVATE_CLASS);
         context.startActivity(intent);
     }
 

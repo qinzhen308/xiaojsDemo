@@ -24,7 +24,7 @@ public class ScheduleUtil {
     public static final String simpleUTCFormatStr="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public static final String simpleMDFormatStr="MM-dd";
     public static final String simpleYMFormatStr="yyyy-MM";
-    public static final String simpleYM_ChFormatStr="yyyy-MM";
+    public static final String simpleYM_ChFormatStr="yyyy年MM月";
     public static final String simpleHMFormatStr="HH:mm";
     public static final String simpleYMDHMSFormatStr="yyyy-MM-dd HH:mm:ss";
     public static final SimpleDateFormat simpleYMDFormat=new SimpleDateFormat(simpleYMDFormatStr, Locale.CHINA);

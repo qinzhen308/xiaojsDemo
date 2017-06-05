@@ -22,6 +22,7 @@
             android:paddingLeft="@dimen/px8"
             android:paddingRight="@dimen/px16"
             android:layout_marginTop="@dimen/px8"
+            android:layout_marginBottom="@dimen/px10"
             />
     </LinearLayout>
 
@@ -30,7 +31,6 @@
     <com.jeek.calendar.widget.calendar.WeekBarView
         android:layout_width="match_parent"
         android:layout_height="@dimen/px40"
-        android:layout_marginTop="@dimen/px10"
         android:background="@color/calendar_bg_color"
         app:week_text_color="@color/week_header_text_color"
         app:week_text_size="11" />
