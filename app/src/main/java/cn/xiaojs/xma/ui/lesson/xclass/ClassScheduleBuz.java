@@ -110,9 +110,8 @@ public class ClassScheduleBuz {
 
             @Override
             public void onMonthChange(int year, int month, int day) {
-                if(year!=selectyear||month!=selectMonth){
-                    getMonthData(year,month,day);
-                }
+                getMonthData(year,month,day);
+
             }
         });
 
