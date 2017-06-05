@@ -28,6 +28,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PublishVideoController;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
@@ -285,6 +286,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             }
         }
 
+        //TODO 当是classroom为班时，是否title显示要改变？
         mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
         if (mFullScreenTalkPresenter == null) {
             mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
@@ -540,6 +542,12 @@ public class PublishFragment extends ClassroomLiveFragment {
         if (mTipsHelper != null) {
             mTipsHelper.hideTips();
         }
+    }
+
+    @Override
+    protected void onSyncClassStateChanged(SyncClassStateResponse syncState) {
+
+        //TODO 同步班状态
     }
 
     private void handOnBackPressed() {

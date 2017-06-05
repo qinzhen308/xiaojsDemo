@@ -34,6 +34,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.ui.classroom.bean.ModeSwitcher;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -239,14 +240,17 @@ public class ClassroomActivity extends FragmentActivity {
 
         //init socket
         if (!networkChanged) {
+            //初始化socket并连接。
             initSocketIO(mTicket, ctlSession.secret, forceConnect);
         } else {
+            //重制并重新初始化和连接socket
             SocketManager.close(false);
             SocketManager.init(ClassroomActivity.this, mTicket, ctlSession.secret, true, true, forceConnect);
             mSocket = SocketManager.getSocket();
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
             SocketManager.reListener();
+            SocketManager.connect();
         }
 
         //init fragment
@@ -299,6 +303,7 @@ public class ClassroomActivity extends FragmentActivity {
         SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mSocketTimeoutListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH), mModeSwitchListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
         SocketManager.connect();
     }
@@ -334,6 +339,18 @@ public class ClassroomActivity extends FragmentActivity {
         public void call(Object... args) {
             Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
             finish();
+        }
+    };
+
+    private SocketManager.EventListener mModeSwitchListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            //解析并更新session mode
+            if (args != null && args.length > 0) {
+                ModeSwitcher switcher = ClassroomBusiness.parseSocketBean(args[0], ModeSwitcher.class);
+                LiveCtlSessionManager.getInstance().updateCtlSessionMode(switcher.to);
+            }
+
         }
     };
 

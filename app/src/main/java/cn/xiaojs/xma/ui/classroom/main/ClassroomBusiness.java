@@ -42,6 +42,11 @@ public class ClassroomBusiness {
     public static final int NETWORK_OTHER = 3;
     private static final String BASE64_JPEG_HEADER = "data:image/jpeg;base64,";
 
+    /**
+     * 获取用户身份
+     * @param psType
+     * @return
+     */
     public static Constants.User getUser(String psType) {
         Constants.User user = Constants.User.STUDENT;
         if ("LeadSession".equals(psType)) {
@@ -63,6 +68,7 @@ public class ClassroomBusiness {
         return user;
     }
 
+    //用户场景模式：预览、参与者等模式
     public static Constants.UserMode getUserByCtlSession(CtlSession session) {
         if (session == null) {
             return Constants.UserMode.PARTICIPANT;

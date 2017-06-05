@@ -23,6 +23,7 @@ public class LiveCtlSessionManager {
     private Constants.User mUser;
     private Constants.UserMode mUserMode;
     private String mTicket = "";
+    private Constants.ClassroomType mClassroomType;
 
     private static LiveCtlSessionManager mInstance;
 
@@ -39,6 +40,8 @@ public class LiveCtlSessionManager {
         mUser = ClassroomBusiness.getUser(ctlSession.psType);
         mUserMode = ClassroomBusiness.getUserByCtlSession(ctlSession);
         mTicket = ticket;
+        mClassroomType = ctlSession.cls == null?
+                Constants.ClassroomType.StandaloneLesson : Constants.ClassroomType.PrivateClass;
     }
 
     public synchronized void updateCtlSessionState(String liveState) {
@@ -72,6 +75,10 @@ public class LiveCtlSessionManager {
 
     public Constants.UserMode getUserMode() {
         return mUserMode != null ? mUserMode : ClassroomBusiness.getUserByCtlSession(mCtlSession);
+    }
+
+    public Constants.ClassroomType getClassroomType() {
+        return mClassroomType;
     }
 
     public Constants.User getUser() {

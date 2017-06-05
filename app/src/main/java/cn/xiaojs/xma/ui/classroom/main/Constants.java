@@ -135,4 +135,10 @@ public interface Constants {
     public static final int PARTICIPANT_MODE = 2;
     public static final int MEDIA_MODE = 3;
     public static final int PREVIEW_MODE = 4;
+
+    //教室类型
+    public static enum ClassroomType {
+        PrivateClass,
+        StandaloneLesson,
+    }
 }

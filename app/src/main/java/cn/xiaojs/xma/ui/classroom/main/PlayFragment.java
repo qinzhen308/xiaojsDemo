@@ -33,6 +33,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
@@ -248,6 +249,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void initData() {
+        //TODO 当是classroom为班时，是否title显示要改变？
         mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
         initCtlLive();
 
@@ -676,6 +678,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         if (mTipsHelper != null) {
             mTipsHelper.hideTips();
         }
+    }
+
+    @Override
+    protected void onSyncClassStateChanged(SyncClassStateResponse syncState) {
+        //TODO 同步班状态
     }
 
     /**
