@@ -37,6 +37,7 @@ public class InviteFriendAdapter extends AbsSwipeAdapter<Attendee, InviteFriendA
     private Context mContext;
     private List<String> mChoiceList;
     private SelectionListener mSelectionListener;
+    private int mSize = 90;
 
 
     public InviteFriendAdapter(Context context, PullToRefreshSwipeListView listView) {
@@ -44,6 +45,7 @@ public class InviteFriendAdapter extends AbsSwipeAdapter<Attendee, InviteFriendA
 
         mContext = context;
         mChoiceList = new ArrayList<String>();
+        mSize = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
     }
 
     public void resetSelection() {
@@ -59,7 +61,8 @@ public class InviteFriendAdapter extends AbsSwipeAdapter<Attendee, InviteFriendA
     protected void setViewContent(ViewHolder holder, Attendee bean, int position) {
         holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
         holder.position = position;
-        Glide.with(mContext).load(bean.avatar).error(R.drawable.default_avatar).into(holder.portrait);
+        String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(bean.accountId, mSize);
+        Glide.with(mContext).load(portraitUrl).error(R.drawable.default_avatar).into(holder.portrait);
         holder.name.setText(bean.name);
     }
 
@@ -120,8 +123,6 @@ public class InviteFriendAdapter extends AbsSwipeAdapter<Attendee, InviteFriendA
         for (int i = 0; i < 10; i++) {
             Attendee attendee = new Attendee();
             attendee.name = "张无忌" + i;
-            attendee.avatar = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1485083983103&di=c4c4d2b8cafe4b5b94e41" +
-                    "171a5d138ff&imgtype=0&src=http%3A%2F%2Fwww.qq1234.org%2Fuploads%2Fallimg%2F140526%2F3_140526213847_1-lp.jpg";
             attendees.add(attendee);
         }
 

@@ -53,12 +53,14 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private Constants.UserMode mUser;
     private ColorMatrixColorFilter mGrayFilter;
     private ColorMatrixColorFilter mNormalFilter;
+    private int mSize = 90;
 
     public ContactBookAdapter(Context context) {
         mContext = context;
         mChoiceList = new ArrayList<String>();
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
         mUser = LiveCtlSessionManager.getInstance().getUserMode();
+        mSize = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
 
         initColorFilter();
     }
@@ -140,8 +142,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private void bindData(Holder holder, int position) {
         holder.position = position;
         Attendee attendee = mAttendeeList.get(position);
-        int size = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
-        String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(attendee.accountId, size);
+        String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(attendee.accountId, mSize);
         ColorMatrixColorFilter filter = attendee.xa == 0 ? mGrayFilter : mNormalFilter;
         holder.portrait.setColorFilter(filter);
         Glide.with(mContext)
