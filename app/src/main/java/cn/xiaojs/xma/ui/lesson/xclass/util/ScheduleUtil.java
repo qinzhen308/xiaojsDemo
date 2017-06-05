@@ -272,7 +272,7 @@ public class ScheduleUtil {
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        calendar.set(Integer.valueOf(ymd[0]),Integer.valueOf(ymd[1]),Integer.valueOf(ymd[2]));
+        calendar.set(Integer.valueOf(ymd[0]),Integer.valueOf(ymd[1])-1,Integer.valueOf(ymd[2]));
         return simpleYMDFormat.format(new Date(calendar.getTimeInMillis()))+" "+getWeek(calendar.getTimeInMillis());
     }
 
