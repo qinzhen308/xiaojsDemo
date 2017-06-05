@@ -836,7 +836,7 @@
     <string name="lesson_op_cancel_submit">撤销确认</string>
     <string name="lesson_op_cancel_check">撤销审核</string>
     <string name="lesson_op_signup">报名注册</string>
-    <string name="lesson_op_modify_time">修改上课事件</string>
+    <string name="lesson_op_modify_time">修改上课时间</string>
     <string name="lesson_op_public">设为公开</string>
     <string name="lesson_op_private">取消公开</string>
     <string name="lesson_op_recreate_lesson">再次开课</string>

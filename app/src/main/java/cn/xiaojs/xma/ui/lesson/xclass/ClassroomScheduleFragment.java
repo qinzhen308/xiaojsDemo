@@ -28,6 +28,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -187,7 +188,7 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
         LessonLabelModel tempLabel=null;
         for(int j=0;j<list.size();j++){
             ClassSchedule cs=list.get(j);
-            tempLabel=new LessonLabelModel(cs.date,0,false);
+            tempLabel=new LessonLabelModel(ScheduleUtil.getDateYMDW(cs.date),0,false);
             monthLists.add(tempLabel);
             monthLists.addAll(cs.lessons);
             tempLabel.lessonCount=cs.lessons.size();

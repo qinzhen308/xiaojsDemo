@@ -128,7 +128,12 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             tvClassName.setVisibility(VISIBLE);
 
         } else if (Account.TypeName.STAND_ALONE_LESSON.equals(data.type) && data.enroll != null) {
-            tvClassName.setText(data.enroll.current + "人");
+            if(data.enroll.mandatory){//需要报名
+                tvClassName.setText(data.enroll.current+"/"+data.enroll.max + "人报名");
+
+            }else {
+                tvClassName.setText(data.enroll.current + "人学");
+            }
             tvClassName.setVisibility(VISIBLE);
         } else {
             tvClassName.setVisibility(INVISIBLE);

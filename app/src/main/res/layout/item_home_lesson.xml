@@ -215,7 +215,7 @@
         android:paddingTop="@dimen/px10"
         android:paddingBottom="@dimen/px10"
         android:text="班级名字"
-        android:drawableLeft="@drawable/ic_home_class"
+        android:drawableLeft="@drawable/ic_class_member"
         android:layout_alignBottom="@+id/btn_more"
         android:gravity="center_vertical"
         android:drawablePadding="@dimen/px16"

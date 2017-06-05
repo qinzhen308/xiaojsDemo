@@ -48,7 +48,7 @@ public class WeekView extends View {
     private int mColumnSize, mRowSize, mSelectCircleSize;
     private int mDaySize;
     private int mLunarTextSize;
-    private int mCircleRadius = 6;
+    private int mCircleRadius = 10;
     private int[] mHolidays;
     private String mHolidayOrLunarText[];
     private boolean mIsShowLunar;
