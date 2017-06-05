@@ -134,11 +134,11 @@ public class ClassroomActivity extends FragmentActivity {
             List<Fragment> fragmentList = fragmentManager.getFragments();
             Fragment topFragment = null;
             if (fragmentList != null && fragmentList.size() > 0) {
-                topFragment = fragmentList.get(fragmentList.size() -1);
+                topFragment = fragmentList.get(fragmentList.size() - 1);
             }
             if (topFragment instanceof PhotoDoodleFragment) {
-                if (((PhotoDoodleFragment)topFragment).isEditMode()) {
-                    ((PhotoDoodleFragment)topFragment).exitEdiModeWhitTips();
+                if (((PhotoDoodleFragment) topFragment).isEditMode()) {
+                    ((PhotoDoodleFragment) topFragment).exitEdiModeWhitTips();
                     return false;
                 }
             }
@@ -297,7 +297,7 @@ public class ClassroomActivity extends FragmentActivity {
         SocketManager.on(Socket.EVENT_CONNECT, mOnConnect);
         SocketManager.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
-        SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mOnConnectError);
+        SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mSocketTimeoutListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
         SocketManager.connect();
@@ -343,6 +343,15 @@ public class ClassroomActivity extends FragmentActivity {
             mSktConnected = false;
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private SocketManager.EventListener mSocketTimeoutListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(ClassroomActivity.this, "socket connect time out", Toast.LENGTH_SHORT).show();
             }
         }
     };
