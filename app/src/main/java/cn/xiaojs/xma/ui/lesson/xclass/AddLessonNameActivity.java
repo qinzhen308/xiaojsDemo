@@ -28,7 +28,6 @@ public class AddLessonNameActivity extends BaseActivity {
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_ROLE = "role";
     public static final String EXTRA_CLASSID = "classid";
-    public static final String EXTRA_VER_MODE = "mode";
 
     public static final int ROLE_LESSON = 0x1;
     public static final int ROLE_CLASS = 0x2;
@@ -42,7 +41,6 @@ public class AddLessonNameActivity extends BaseActivity {
     private int currentRole;
     private String orginName;
     private String classId;
-    private int verMode;
 
 
     @Override
@@ -53,7 +51,6 @@ public class AddLessonNameActivity extends BaseActivity {
         orginName = getIntent().getStringExtra(EXTRA_NAME);
 
         classId = getIntent().getStringExtra(EXTRA_CLASSID);
-        verMode = getIntent().getIntExtra(EXTRA_VER_MODE, Ctl.JoinMode.OPEN);
 
         if (currentRole == ROLE_CLASS) {
             setMiddleTitle(R.string.live_class_name);
@@ -110,7 +107,6 @@ public class AddLessonNameActivity extends BaseActivity {
         ModifyClassParams classParams = new ModifyClassParams();
 
         classParams.className = newName;
-        classParams.mode = verMode;
 
         showProgress(true);
         LessonDataManager.modifyClass(this, classId, classParams, new APIServiceCallback<CLResponse>() {
