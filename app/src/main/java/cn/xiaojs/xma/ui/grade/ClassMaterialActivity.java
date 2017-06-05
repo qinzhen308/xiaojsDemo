@@ -70,10 +70,10 @@ import static cn.xiaojs.xma.ui.message.ShareScopeActivity.REQUEST_CHOOSE_CLASS_C
 
 public class ClassMaterialActivity extends BaseActivity {
 
-    public static final String EXTRA_LESSON_ID = "lesson_id";
-
+    public static final String EXTRA_ID = "clesson_id";
+    public static final String EXTRA_SUBTYPE = "subtype";
     public static final String EXTRA_DELETEABLE = "del_able";
-    public static final String EXTRA_LESSON_NAME = "lesson_name";
+    public static final String EXTRA_TITLE = "title";
     private static final int REQUEST_PERMISSION = 1002;
 
     @BindView(R.id.material_list)
@@ -115,8 +115,9 @@ public class ClassMaterialActivity extends BaseActivity {
 
         tipsLay.setVisibility(View.VISIBLE);
 
-        String lessonId = getIntent().getStringExtra(EXTRA_LESSON_ID);
-        String lessonName = getIntent().getStringExtra(EXTRA_LESSON_NAME);
+        String id = getIntent().getStringExtra(EXTRA_ID);
+        String subType = getIntent().getStringExtra(EXTRA_SUBTYPE);
+        String lessonName = getIntent().getStringExtra(EXTRA_TITLE);
         boolean deleteAble = getIntent().getBooleanExtra(EXTRA_DELETEABLE,false);
 
 
@@ -127,7 +128,7 @@ public class ClassMaterialActivity extends BaseActivity {
         mTitle.setGravity(Gravity.CENTER);
         //mTitle.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
 
-        mAdapter = new ClassMaterialAdapter(this, mList, lessonId, deleteAble);
+        mAdapter = new ClassMaterialAdapter(this, mList, subType, id, deleteAble);
         mList.setAdapter(mAdapter);
         mRightImage2.setImageResource(R.drawable.upload_selector);
         mRightImage.setImageResource(R.drawable.ic_my_download);

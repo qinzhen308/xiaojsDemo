@@ -58,14 +58,16 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
     private String myAccountId;
 
     private boolean delable;
+    private String subType;
 
-    public ClassMaterialAdapter(Context context, PullToRefreshSwipeListView listView, String owner, boolean deleteAble) {
+    public ClassMaterialAdapter(Context context, PullToRefreshSwipeListView listView,String subtype, String owner, boolean deleteAble) {
         super(context, listView);
         if (TextUtils.isEmpty(owner)) {
             mIsMine = true;
         }
         mOwner = owner;
         delable = deleteAble;
+        subType = subtype;
 
         myAccountId = AccountDataManager.getAccountID(mContext);
 
@@ -203,7 +205,7 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
     @Override
     protected void doRequest() {
 
-        CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.STANDA_LONE_LESSON, mPagination, new APIServiceCallback<UserDoc>() {
+        CollaManager.getDocuments(mContext, mOwner, subType, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
 

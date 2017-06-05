@@ -14,6 +14,7 @@ import org.w3c.dom.Text;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -100,8 +101,8 @@ public class ClassInfoActivity extends BaseActivity {
                 ClassScheduleActivity.invoke(this,classInfo.id, classInfo.title,teaching);
                 break;
             case R.id.lay_material:
-                //TODO 资料库
-                //databank();
+                //资料库
+                databank();
                 break;
             case R.id.lay_student://学生列表
                 if (!teaching ||
@@ -139,11 +140,12 @@ public class ClassInfoActivity extends BaseActivity {
 
     //资料库
     private void databank() {
-//        Intent intent = new Intent(this, ClassMaterialActivity.class);
-//        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
-//        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.getId());
-//        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.getTitle());
-//        mContext.startActivity(intent);
+        Intent intent = new Intent(this, ClassMaterialActivity.class);
+        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE, teaching? true : false);
+        intent.putExtra(ClassMaterialActivity.EXTRA_ID, classInfo.id);
+        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, classInfo.title);
+        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Collaboration.SubType.PRIVATE_CLASS);
+        startActivity(intent);
     }
 
 

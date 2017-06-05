@@ -29,6 +29,7 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -263,8 +264,9 @@ public class LiveEnrollLessonAdapter extends CanInScrollviewListView.Adapter {
     //资料库
     private void databank(LiveItem bean) {
         Intent intent = new Intent(mContext, ClassMaterialActivity.class);
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.id);
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.title);
+        intent.putExtra(ClassMaterialActivity.EXTRA_ID, bean.id);
+        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, bean.title);
+        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Collaboration.SubType.STANDA_LONE_LESSON);
         mContext.startActivity(intent);
     }
 
