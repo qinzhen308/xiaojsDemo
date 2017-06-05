@@ -24,15 +24,17 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonAdapter;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
+import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.JudgementUtil;
 
 /**
  * Created by maxiaobao on 2017/5/22.
  */
 
-public class ClassesListActivity extends FragmentActivity implements IUpdateMethod{
+public class ClassesListActivity extends FragmentActivity implements IUpdateMethod,IDialogMethod{
 
     @BindView(R.id.lay_tab_group)
     RadioGroup tabGroupLayout;
@@ -157,6 +159,32 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
         ((IUpdateMethod)fragmentList.get(1)).updateItem(position,obj,others);
     }
 
+    private ProgressHUD progress;
+
+    @Override
+    public void showProgress(boolean cancellable) {
+        if (progress == null) {
+            progress = ProgressHUD.create(this);
+        }
+        progress.setCancellable(cancellable);
+        progress.show();
+    }
+
+    @Override
+    public void cancelProgress() {
+        if (progress != null && progress.isShowing()) {
+            progress.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (progress != null && progress.isShowing()) {
+            progress.dismiss();
+            progress = null;
+        }
+        super.onDestroy();
+    }
 
     class FrgStatePageAdapter extends FragmentStatePagerAdapter {
 

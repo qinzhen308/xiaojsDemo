@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
@@ -48,7 +49,8 @@ public class LessonScheduleActivity extends BaseActivity{
     @BindView(R.id.over_layout)
     RecyclerView mListView;
     public final int REQUEST_NEW_LESSON_CODE = 0x1;
-
+    @BindView(R.id.tv_top_date)
+    TextView tvTopDate;
 
     HomeClassAdapter mAdapter;
 
@@ -83,6 +85,7 @@ public class LessonScheduleActivity extends BaseActivity{
         todayMonth=selectMonth =calendar.get(Calendar.MONTH);
         todayYear=selectyear=calendar.get(Calendar.YEAR);
         selectDate=ScheduleUtil.getDateYM(selectyear,selectMonth,selectDay);
+        tvTopDate.setText(ScheduleUtil.getDateYM_Ch(new Date()));
         bindData();
         calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
@@ -93,6 +96,7 @@ public class LessonScheduleActivity extends BaseActivity{
 
                 if(year!=selectyear||month!=selectMonth||day!=selectDay){
                     mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(year,month,day));
+                    tvTopDate.setText(ScheduleUtil.getDateYM_Ch(year,month,day));
                 }
 
                 selectDate=ScheduleUtil.getDateYM(year,month,day);

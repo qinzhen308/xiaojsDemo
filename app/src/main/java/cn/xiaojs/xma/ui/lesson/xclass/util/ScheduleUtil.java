@@ -24,6 +24,7 @@ public class ScheduleUtil {
     public static final String simpleUTCFormatStr="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public static final String simpleMDFormatStr="MM-dd";
     public static final String simpleYMFormatStr="yyyy-MM";
+    public static final String simpleYM_ChFormatStr="yyyy年MM月";
     public static final String simpleHMFormatStr="HH:mm";
     public static final String simpleYMDHMSFormatStr="yyyy-MM-dd HH:mm:ss";
     public static final SimpleDateFormat simpleYMDFormat=new SimpleDateFormat(simpleYMDFormatStr, Locale.CHINA);
@@ -31,6 +32,7 @@ public class ScheduleUtil {
     public static final SimpleDateFormat simpleMDFormat=new SimpleDateFormat(simpleMDFormatStr,Locale.CHINA);
     public static final SimpleDateFormat simpleHMFormat=new SimpleDateFormat(simpleHMFormatStr,Locale.CHINA);
     public static final SimpleDateFormat simpleYMFormat=new SimpleDateFormat(simpleYMFormatStr,Locale.CHINA);
+    public static final SimpleDateFormat simpleYM_ChFormat=new SimpleDateFormat(simpleYM_ChFormatStr,Locale.CHINA);
     public static final SimpleDateFormat simpleYMDHMSFormat=new SimpleDateFormat(simpleYMDHMSFormatStr,Locale.CHINA);
 
     public final static long DAY=3600*24*1000;
@@ -163,9 +165,19 @@ public class ScheduleUtil {
         calendar.set(year,month,day,0,0,0);
         return simpleYMFormat.format(new Date(calendar.getTimeInMillis()));
     }
+    public static String getDateYM_Ch(int year,int month,int day){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        calendar.set(year,month,day,0,0,0);
+        return simpleYM_ChFormat.format(new Date(calendar.getTimeInMillis()));
+    }
 
     public static String getDateYM(Date date){
         return simpleYMFormat.format(date);
+    }
+    public static String getDateYM_Ch(Date date){
+        return simpleYM_ChFormat.format(date);
     }
 
     public static String getDateYMDHMS(Date date){

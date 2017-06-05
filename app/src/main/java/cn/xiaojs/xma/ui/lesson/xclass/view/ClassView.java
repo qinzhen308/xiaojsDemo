@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.account.Account;
@@ -102,9 +103,10 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
                 break;
             case R.id.op_data_view:
                 intent = new Intent(getContext(), ClassMaterialActivity.class);
-                intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
+//                intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
                 intent.putExtra(ClassMaterialActivity.EXTRA_ID, mData.id);
                 intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, mData.title);
+                intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Collaboration.SubType.PRIVATE_CLASS);
                 getContext().startActivity(intent);
                 break;
             case R.id.op_more_view:

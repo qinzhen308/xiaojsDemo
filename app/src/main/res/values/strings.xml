@@ -844,7 +844,7 @@
     <string name="lesson_op_cancel_lesson">取消开课</string>
     <string name="lesson_op_submit">提交确认</string>
     <string name="lesson_op_publish">上架</string>
-    <string name="lesson_op_edit">边记</string>
+    <string name="lesson_op_edit">编辑</string>
     <string name="lesson_op_look">查看详情</string>
     <string name="lesson_op_database">资料库</string>
     <string name="lesson_op_enter">进入教室</string>

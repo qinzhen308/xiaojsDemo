@@ -66,6 +66,7 @@ public class SearchClassActivity extends BaseActivity {
 //        recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
 //        recyclerview.setAdapter(mAdapter);
         mAdapter=new ClassAdapter(this,listview);
+        mAdapter.setKeyword("囃");//这个关键字只是为了不让adapter第一次加载出数据
         listview.setAdapter(mAdapter);
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
