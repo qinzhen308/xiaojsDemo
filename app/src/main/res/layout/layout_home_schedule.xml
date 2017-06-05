@@ -6,6 +6,27 @@
     android:layout_alignWithParentIfMissing="true"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/calendar_bg_color"
+        >
+        <TextView
+            android:id="@+id/tv_top_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_half_circle_right_chocolate"
+            android:textColor="@color/white"
+            android:textSize="@dimen/px22"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/px8"
+            android:paddingRight="@dimen/px16"
+            android:layout_marginTop="@dimen/px8"
+            />
+    </LinearLayout>
+
+
+
     <com.jeek.calendar.widget.calendar.WeekBarView
         android:layout_width="match_parent"
         android:layout_height="@dimen/px40"

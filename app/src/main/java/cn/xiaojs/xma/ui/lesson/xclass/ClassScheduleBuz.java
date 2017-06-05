@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.TextView;
 
 import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
@@ -44,6 +45,8 @@ public class ClassScheduleBuz {
     ScheduleRecyclerView overLayout;
     @BindView(R.id.slSchedule)
     ScheduleLayout calendarView;
+    @BindView(R.id.tv_top_date)
+    TextView tvTopDate;
 
     HomeClassAdapter mAdapter;
 
@@ -88,6 +91,7 @@ public class ClassScheduleBuz {
         todayDay=selectDay=calendar.get(Calendar.DAY_OF_MONTH);
         todayMonth=selectMonth =calendar.get(Calendar.MONTH);
         todayYear=selectyear=calendar.get(Calendar.YEAR);
+        tvTopDate.setText(ScheduleUtil.getDateYM_Ch(new Date()));
     }
 
 
@@ -97,6 +101,7 @@ public class ClassScheduleBuz {
             public void onClickDate(int year, int month, int day) {
                 if(year!=selectyear||month!=selectMonth||day!=selectDay){
                     mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(year,month,day));
+                    tvTopDate.setText(ScheduleUtil.getDateYM_Ch(year,month,day));
                 }
                 selectyear=year;
                 selectMonth=month;

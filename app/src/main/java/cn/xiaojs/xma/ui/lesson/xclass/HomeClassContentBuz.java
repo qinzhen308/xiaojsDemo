@@ -23,6 +23,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,6 +81,8 @@ public class HomeClassContentBuz {
     ScheduleRecyclerView overLayout;
     @BindView(R.id.slSchedule)
     ScheduleLayout calendarView;
+    @BindView(R.id.tv_top_date)
+    TextView tvTopDate;
 
     HomeClassAdapter mAdapter;
 
@@ -117,6 +120,7 @@ public class HomeClassContentBuz {
     }
 
     private void initListView() {
+        tvTopDate.setText(ScheduleUtil.getDateYM_Ch(new Date()));
         mAdapter = new HomeClassAdapter(overLayout);
         overLayout.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         overLayout.setAdapter(mAdapter);
@@ -129,6 +133,7 @@ public class HomeClassContentBuz {
                     HomeClassContentBuz.this.year=year;
                     HomeClassContentBuz.this.month=month;
                     doRequest(year,month,day);
+                    tvTopDate.setText(ScheduleUtil.getDateYM_Ch(year,month,day));
                 }
             }
 
