@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.whiteboard;
+package cn.xiaojs.xma.ui.classroom.page;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -24,6 +24,7 @@ import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.InviteFriendAdapter;
+import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 
