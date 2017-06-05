@@ -39,6 +39,7 @@ import cn.xiaojs.xma.model.GENotificationsResponse;
 import cn.xiaojs.xma.model.Notification;
 import cn.xiaojs.xma.model.NotificationCriteria;
 import cn.xiaojs.xma.model.account.DealAck;
+import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.util.TimeUtil;
 
 import butterknife.BindView;
@@ -219,10 +220,9 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
         DealAck dealAck = new DealAck();
         dealAck.decision = decision;
 
-        showProgress(false);
 
         if (bean.doc.subtype.equals("StandaloneLesson")) {
-
+            showProgress(true);
             LessonDataManager.acknowledgeLesson(mContext, bean.doc.id, dealAck, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
@@ -250,6 +250,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
             });
 
         }else if (bean.doc.subtype.equals("ITTOInvitation")) {
+            showProgress(true);
             AccountDataManager.acknowledgeInvitation(mContext, bean.doc.id, dealAck, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
@@ -274,7 +275,38 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
                     Toast.makeText(mContext,errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
+        } else if (bean.doc.subtype.equals("StudentJoinPrivateClass")) {
+
+            DecisionReason decisionReason = new DecisionReason();
+            decisionReason.action = decision;
+
+            showProgress(true);
+            //FIXME 此处没有返回classid,所以调用操作失败
+            LessonDataManager.reviewJoinClass(mContext, bean.doc.id, bean.initiator.id, decisionReason, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    cancelProgress();
+                    bean.state = Platform.NotificationState.DISMISSED;
+                    bean.actions = null;
+                    notifyDataSetChanged();
+
+                    if (decision == Ctl.ACKDecision.ACKNOWLEDGE) {
+                        Toast.makeText(mContext,"您已同意", Toast.LENGTH_SHORT).show();
+                    }else if (decision == Ctl.ACKDecision.REFUSED){
+                        Toast.makeText(mContext,"您已拒绝", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(mContext,"操作成功", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    Toast.makeText(mContext,errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
     }
+
 }
