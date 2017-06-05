@@ -64,11 +64,6 @@ public class ClassroomController {
     public final static int REQUEST_TALK = 5;
     public final static int REQUEST_SETTING = 6;
 
-    public final static int PAGE_TOP = 1 << 0;
-    public final static int PAGE_PHOTO_DOODLE = 1 << 1;
-    public final static int PAGE_DOCUMENT = 1 << 2;
-    public final static int PAGE_VIDEO_PLAY = 1 << 3;
-
     public static int MODE_FRAGMENT_PLAY_TALK = 0; //播放端交流模式
     public static int MODE_FRAGMENT_PLAY_FULL_SCREEN = 1; //播放全屏模式
 
