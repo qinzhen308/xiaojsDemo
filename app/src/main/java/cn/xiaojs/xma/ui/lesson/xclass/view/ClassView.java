@@ -103,8 +103,8 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
             case R.id.op_data_view:
                 intent = new Intent(getContext(), ClassMaterialActivity.class);
                 intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
-                intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, mData.id);
-                intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, mData.title);
+                intent.putExtra(ClassMaterialActivity.EXTRA_ID, mData.id);
+                intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, mData.title);
                 getContext().startActivity(intent);
                 break;
             case R.id.op_more_view:

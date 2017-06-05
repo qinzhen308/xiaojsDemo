@@ -31,6 +31,7 @@ public class ChooseClassActivity extends BaseActivity {
     public static final int ENTER_TYPE_CHOOSE_CLASS = 0;
     public static final int ENTER_TYPE_ADD_STUDENT = 1;
     public static final String EXTRA_ENTER_TYPE = "enter_type";
+    public static final String EXTRA_SUBTYPE = "subtype";
 
     @BindView(R.id.tips_content)
     TextView tipsContentView;
@@ -150,6 +151,7 @@ public class ChooseClassActivity extends BaseActivity {
                 Contact contact = adapter.getItem(pos);
                 contacts.add(contact);
                 i.putExtra(ChoiceContactActivity.CHOOSE_CONTACT_EXTRA, contacts);
+                i.putExtra(EXTRA_SUBTYPE, contact.subtype);
                 i.putExtra(EXTRA_CLASS_POS,pos);
                 setResult(RESULT_OK, i);
             }

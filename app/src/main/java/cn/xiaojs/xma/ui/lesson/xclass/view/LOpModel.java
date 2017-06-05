@@ -379,8 +379,8 @@ public class LOpModel {
     private void databank(Activity context,String title,String id) {
         Intent intent = new Intent(context, ClassMaterialActivity.class);
         intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, id);
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, title);
+        intent.putExtra(ClassMaterialActivity.EXTRA_ID, id);
+        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, title);
         context.startActivity(intent);
     }
 

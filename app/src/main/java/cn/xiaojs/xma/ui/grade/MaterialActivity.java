@@ -318,12 +318,14 @@ public class MaterialActivity extends BaseActivity {
                 ArrayList<Contact> choiceContacts = (ArrayList<Contact>) data.getSerializableExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
 
+                String subtype = data.getStringExtra(ChooseClassActivity.EXTRA_SUBTYPE);
+
                 if (choiceContacts != null && choiceContacts.size() > 0 && targetDocIds !=null) {
 
                     Contact chooseClass = choiceContacts.get(0);
 
                     //无论是单个分享或者多个分享，都用批量分享的接口
-                    toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias,false);
+                    toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias, subtype, false);
 //                    if (targetDocIds.length == 1) {
 //                        toshare(targetDocIds[0], chooseClass.account, chooseClass.alias);
 //                    }else{
@@ -532,11 +534,11 @@ public class MaterialActivity extends BaseActivity {
         startActivityForResult(i, REQUEST_CHOOSE_CLASS_CODE);
     }
 
-    private void toPatchShare(final String targetId, String[] documentIds, final String classname,boolean repeat) {
+    private void toPatchShare(final String targetId, String[] documentIds, final String classname, final String subType,boolean repeat) {
 
         ShareResource resource = new ShareResource();
         resource.documents = documentIds;
-        resource.subtype = Collaboration.SubType.STANDA_LONE_LESSON;
+        resource.subtype = subType;
         resource.repeated = repeat;
 
         showProgress(true);
@@ -547,10 +549,10 @@ public class MaterialActivity extends BaseActivity {
 
                 if(object!= null && object.repeated !=null && object.repeated.length>0) {
                     //说明分享的文件有已存在的，需要询问用户
-                    shareConflictWithPatch(targetId,object.repeated,classname);
+                    shareConflictWithPatch(targetId,object.repeated,classname, subType);
                 }else{
                     changeChoiceMode(ListView.CHOICE_MODE_NONE);
-                    shareSuccess(targetId, classname);
+                    shareSuccess(targetId, classname, subType);
                 }
                 //Toast.makeText(MaterialActivity.this, R.string.shareok_and_to_class, Toast.LENGTH_SHORT).show();
             }
@@ -594,7 +596,7 @@ public class MaterialActivity extends BaseActivity {
         targetDocIds = null;
     }
 
-    private void shareConflictWithPatch(final String targetId, final ConflictRes[] conflicts, final String classname) {
+    private void shareConflictWithPatch(final String targetId, final ConflictRes[] conflicts, final String classname, final String subType) {
         View view = LayoutInflater.from(this).inflate(R.layout.layout_dlg_list,null);
         final ListView listView = (ListView) view;
 
@@ -635,7 +637,7 @@ public class MaterialActivity extends BaseActivity {
                     documentIds[i] = conflicts[i].id;
                 }
 
-                toPatchShare(targetId,documentIds,classname,true);
+                toPatchShare(targetId,documentIds,classname, subType,true);
 
             }
         });
@@ -644,7 +646,7 @@ public class MaterialActivity extends BaseActivity {
 
     }
 
-    public void shareSuccess(final String classId, final String classname) {
+    public void shareSuccess(final String classId, final String classname, final String subType) {
         final CommonDialog dialog = new CommonDialog(this);
         dialog.setTitle("提示");
         dialog.setDesc(R.string.shareok_and_to_class);
@@ -655,7 +657,7 @@ public class MaterialActivity extends BaseActivity {
             @Override
             public void onClick() {
                 dialog.dismiss();
-                databank(classId, classname);
+                databank(classId, classname, subType);
             }
         });
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
@@ -668,11 +670,12 @@ public class MaterialActivity extends BaseActivity {
     }
 
     //资料库
-    private void databank(String classid, String name) {
+    private void databank(String classid, String name, String subType) {
         Intent intent = new Intent(this, ClassMaterialActivity.class);
         //FIXME 此处如果是助教、老师、主讲进入班级资料库，
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, classid);
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, name);
+        intent.putExtra(ClassMaterialActivity.EXTRA_ID, classid);
+        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, name);
+        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE,subType);
         startActivity(intent);
     }
 

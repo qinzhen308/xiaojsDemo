@@ -30,6 +30,7 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -280,8 +281,9 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
     //资料库
     private void databank(EnrolledLesson bean) {
         Intent intent = new Intent(mContext, ClassMaterialActivity.class);
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_ID, bean.getId());
-        intent.putExtra(ClassMaterialActivity.EXTRA_LESSON_NAME, bean.getTitle());
+        intent.putExtra(ClassMaterialActivity.EXTRA_ID, bean.getId());
+        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, bean.getTitle());
+        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Collaboration.SubType.STANDA_LONE_LESSON);
         mContext.startActivity(intent);
     }
 
