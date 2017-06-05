@@ -28,7 +28,7 @@
                 android:drawableLeft="@drawable/ic_search"
                 android:paddingLeft="@dimen/px10"
                 android:paddingRight="@dimen/px10"
-                android:hint="@string/home_search_hint"
+                android:hint="@string/hint_input_class_name"
                 android:layout_gravity="center_vertical"
                 android:textSize="@dimen/font_28px"
                 android:gravity="center_vertical"

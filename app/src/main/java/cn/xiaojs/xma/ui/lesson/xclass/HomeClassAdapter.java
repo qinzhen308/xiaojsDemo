@@ -14,6 +14,7 @@ import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
@@ -37,9 +38,12 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private List<?> mList;
     private RecyclerView mRecyclerView;
+    RecyclerViewScrollHelper scrollHelper;
 
     public HomeClassAdapter(RecyclerView recyclerView){
         mRecyclerView=recyclerView;
+        scrollHelper=new RecyclerViewScrollHelper();
+        scrollHelper.bind(recyclerView);
     }
 
 
@@ -140,7 +144,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
         if(index>=0){
-            mRecyclerView.smoothScrollToPosition(index);
+//            mRecyclerView.smoothScrollToPosition(index);
+            scrollHelper.smoothMoveToPosition(mRecyclerView,index);
         }
     }
 
