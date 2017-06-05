@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.orhanobut.logger.Logger;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionResult;
@@ -34,6 +32,7 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
     String startTime;
     String endTime;
     String key="";
+    boolean firstNotLoad=true;
 
     public ClassAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);

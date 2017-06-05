@@ -298,14 +298,22 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     public List<LOpModel> createPublicLessonMode() {
         List<LOpModel> ops;
-        if (mData.owner != null && mData.owner.getId().equals(AccountPref.getAccountID(getContext()))) {//我是所有者，无论我是不是讲师
+        if (mData.owner != null && AccountPref.getAccountID(getContext()).equals(mData.owner.getId())||forceDealToOwner()) {//我是所有者，无论我是不是讲师
             ops = imOnwer();
-        } else if (mData.teacher != null && mData.teacher.getId().equals(AccountPref.getAccountID(getContext()))) {//我虽然不是所有者，但我是讲师
+        } else if (mData.teacher != null && AccountPref.getAccountID(getContext()).equals(mData.teacher.getId())) {//我虽然不是所有者，但我是讲师
             ops = imSpeaker();
         } else {//我就是个学生
             ops = imStudent();
         }
         return ops;
+    }
+
+    //临时处理：草稿、待审核和已取消状态的课，一定是我的课
+    private boolean forceDealToOwner(){
+        if(Ctl.StandaloneLessonState.DRAFT.equals(mData.state)||Ctl.StandaloneLessonState.PENDING_FOR_APPROVAL.equals(mData.state)||Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)){
+            return true;
+        }
+        return false;
     }
 
 
@@ -323,6 +331,9 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         List<LOpModel> list = new ArrayList<>();
 
         if (Ctl.StandaloneLessonState.DRAFT.equals(mData.state)) {//草稿
+            list.add(new LOpModel(LOpModel.OP_SUBMIT));
+            list.add(new LOpModel(LOpModel.OP_PUBLISH));
+            list.add(new LOpModel(LOpModel.OP_EDIT));
             list.add(new LOpModel(LOpModel.OP_DELETE));
 //            list.add(new LOpModel(LOpModel.OP_APPLY));
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_ACK.equals(mData.state)) {//待确认
@@ -331,7 +342,8 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 //            list.add(new LOpModel(LOpModel.OP_APPLY));
 
         } else if (Ctl.StandaloneLessonState.ACKNOWLEDGED.equals(mData.state)) {//已确认
-
+            list.add(new LOpModel(LOpModel.OP_PUBLISH));
+            list.add(new LOpModel(LOpModel.OP_EDIT));
 //            list.add(new LOpModel(LOpModel.OP_APPLY));
 
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_APPROVAL.equals(mData.state)) {//待审核
