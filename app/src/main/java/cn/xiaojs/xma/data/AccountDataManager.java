@@ -67,6 +67,15 @@ public class AccountDataManager {
         return XiaojsConfig.mLoginUser.getAccount();
     }
 
+    public static boolean hasClass(Context context) {
+        return getUser(context).hasClass;
+    }
+
+    public static void setHasClass(Context context,boolean has) {
+        getUser(context).hasClass = has;
+        setUserInfo(context, XiaojsConfig.mLoginUser);
+    }
+
     /**
      *
      * @param context
