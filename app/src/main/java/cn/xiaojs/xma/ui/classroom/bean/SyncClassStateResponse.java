@@ -9,9 +9,8 @@ package cn.xiaojs.xma.ui.classroom.bean;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/2/12
- * Desc: Receives an event that indicates a state transition on the live session associated
- * with specific standalone lesson was occurred.
+ * Date:2017/6/5
+ * Desc: Receives an event that indicates a state transition on the class was occurred.
  *
  * ======================================================================================== */
 
@@ -22,41 +21,46 @@ import java.util.Date;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SyncStateResponse {
+public class SyncClassStateResponse {
     public String event;
     public String from;
     public String to;
-    public TimeLine timeline;
-    public String psType;
+    public Current current;
+    public Next next;
+    public Volatiles volatiles;
 
-    /**
-     * The timeline details. Use with cautious due to several attributes are available on specific
-     * states only.
-     */
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class TimeLine {
-        public boolean hasPostponed;
-        public Duration currentDuration;
-        public Date startOnDate;
-        public long startOn;
-        public Date finishOnDate;
-        public long finishOn;
-        public Date conveneOn;
-        public Date restartOn;
-        public Date dismissDue;
-        public Date resumeDue;
-        public long hasTaken;
+    public static class Current {
+        public String id;
+        public String title;
+        public Schedule schedule;
+        public boolean playback;
     }
 
-    /**
-     * The current duration.
-     */
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Duration {
-        public Date start;
-        public long duration;
+    public static class Next {
+        public String id;
+        public String title;
+        public String typeName;
+        public Schedule schedule;
+        public boolean playback;
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Schedule {
+        public Date state;
+        public int duration;
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Volatiles {
+        public String accountId;
+        public String psType;
     }
 
 }

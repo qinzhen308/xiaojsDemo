@@ -13,14 +13,14 @@ import java.io.Serializable;
 public class Attendee implements Serializable{
 
     public String psType;
+    public String psTypeInLesson;
     public int xa;
     public String xav;
     public String accountId;
     public String name;
-    public String avatar;
+    public int sort;
     public MediaSetting avc;
     public int unReadMsgCount;
-    public int sort;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)

@@ -57,6 +57,7 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
     private WhiteboardController mBoardController;
     private OnPhotoDoodleShareListener mEditedVideoShareListener;
     private ArrayList<Attendee> mAttendees;
+    private int mSize = 90;
 
     public ShareDoodlePopWindow(Context context, WhiteboardController controller, OnPhotoDoodleShareListener listener) {
         mContext = context;
@@ -73,6 +74,8 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
         setClippingEnabled(false);
         setBackgroundDrawable(new ColorDrawable());
         setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+        mSize = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
 
         View v = LayoutInflater.from(mContext).inflate(R.layout.layout_share_contact_book, null);
         setContentView(v);
@@ -220,10 +223,11 @@ public class ShareDoodlePopWindow extends PopupWindow implements InviteFriendAda
 
         private void setContentView(int position, Holder holder) {
             Attendee bean = mAttendeeList.get(position);
+            String portraitUrl = cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(bean.accountId, mSize);
             holder.checkbox.setSelected(mChoiceList.contains(String.valueOf(position)));
             holder.position = position;
             Glide.with(mContext)
-                    .load(bean.avatar)
+                    .load(portraitUrl)
                     .transform(new CircleTransform(mContext))
                     .placeholder(R.drawable.default_avatar)
                     .error(R.drawable.default_avatar)
