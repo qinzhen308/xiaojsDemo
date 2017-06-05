@@ -513,6 +513,7 @@ as
 
         <service android:name="com.amap.api.location.APSService"/>
 
+
     </application>
 
 </manifest>
