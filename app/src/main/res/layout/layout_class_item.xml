@@ -1,153 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/px20"
     android:layout_marginLeft="@dimen/px25"
     android:layout_marginRight="@dimen/px25"
     android:layout_marginTop="@dimen/px20"
-    android:layout_marginBottom="@dimen/px20"
-    android:background="@drawable/selector_bg_class"
-        >
+    android:background="@drawable/selector_bg_class">
 
     <ImageView
-            android:id="@+id/flag_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_flag_teach"
-            />
+        android:id="@+id/flag_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_flag_teach" />
 
     <TextView
-            android:id="@+id/title_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/font_black"
-            android:textSize="@dimen/font_34px"
-            android:layout_below="@id/flag_view"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
-            android:text="我的标题"
-            />
-
-
-    <TextView
-            android:id="@+id/member_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_class_member"
-            android:layout_marginLeft="@dimen/px40"
-            android:textSize="@dimen/font_24px"
-            android:textColor="@color/class_grey"
-        android:layout_below="@id/title_view"
-        android:text="180人"
-        android:layout_marginTop="@dimen/px16"
-            />
-
-    <TextView
-            android:id="@+id/status_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_24px"
-            android:textColor="@color/class_orange"
-        android:text="待上课"
-            android:layout_alignRight="@id/title_view"
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/flag_view"
-        android:visibility="gone"
-        />
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:text="我的标题"
+        android:textColor="@color/font_black"
+        android:textSize="@dimen/font_34px" />
+
+
+    <TextView
+        android:id="@+id/member_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_view"
+        android:layout_marginLeft="@dimen/px40"
+        android:layout_marginTop="@dimen/px16"
+        android:drawableLeft="@drawable/ic_class_member"
+        android:text="0人"
+        android:drawablePadding="@dimen/px16"
+        android:textColor="@color/class_grey"
+        android:textSize="@dimen/font_24px" />
+
+    <TextView
+        android:id="@+id/status_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/title_view"
+        android:layout_below="@id/flag_view"
+        android:text="待上课"
+        android:textColor="@color/class_orange"
+        android:textSize="@dimen/font_24px"
+        android:visibility="gone" />
 
     <cn.xiaojs.xma.ui.view.AnimationView
-            android:id="@+id/living_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/live_animation"
+        android:id="@+id/living_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/flag_view"
         android:layout_alignRight="@+id/title_view"
+        android:layout_below="@id/flag_view"
+        android:layout_gravity="center_vertical"
         android:layout_marginRight="@dimen/px30"
-            />
-
+        android:background="@drawable/live_animation" />
 
 
     <TextView
-            android:id="@+id/teachers_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_24px"
-            android:textColor="@color/class_grey"
-            android:text="班主任：我我我我"
-            android:layout_toRightOf="@id/member_view"
-            android:layout_alignBaseline="@id/member_view"
-            android:layout_marginTop="@dimen/px20"
-            android:layout_marginLeft="@dimen/px36"
-            />
+        android:id="@+id/teachers_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/member_view"
+        android:layout_marginLeft="@dimen/px36"
+        android:layout_marginTop="@dimen/px20"
+        android:layout_toRightOf="@id/member_view"
+        android:text="班主任：我我我我"
+        android:textColor="@color/class_grey"
+        android:textSize="@dimen/font_24px" />
 
 
     <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px99"
-            android:background="@drawable/bg_class_bottom"
-            android:layout_below="@id/member_view"
-            android:layout_marginTop="@dimen/px44"
-            android:paddingLeft="@dimen/px22"
-            android:paddingRight="@dimen/px22"
-            android:paddingTop="@dimen/px15"
-            android:paddingBottom="@dimen/px15"
-            >
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px99"
+        android:layout_below="@id/member_view"
+        android:layout_marginTop="@dimen/px44"
+        android:background="@drawable/bg_class_bottom"
+        android:paddingBottom="@dimen/px15"
+        android:paddingLeft="@dimen/px22"
+        android:paddingRight="@dimen/px22"
+        android:paddingTop="@dimen/px15">
 
         <ImageButton
-                android:id="@+id/op_schedule_view"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_class_schedule"
-                android:layout_marginRight="@dimen/px40"
-                />
+            android:id="@+id/op_schedule_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/px40"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_class_schedule" />
 
         <ImageButton
             android:id="@+id/op_data_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_class_database"
             android:layout_marginRight="@dimen/px40"
             android:layout_toRightOf="@+id/op_schedule_view"
-            />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_class_database" />
 
         <ImageButton
-                android:id="@+id/op_more_view"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_class_more"
-                android:layout_marginRight="@dimen/px40"
-                android:layout_toRightOf="@id/op_data_view"
-            android:visibility="gone"
-                />
+            android:id="@+id/op_more_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/px40"
+            android:layout_toRightOf="@id/op_data_view"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_class_more"
+            android:visibility="gone" />
 
         <Button
-                android:id="@+id/op_room_view"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:text="@string/into_cls_flag"
-                android:textSize="@dimen/font_28px"
-                android:textColor="@color/subject_selected_blue"
-                android:layout_alignParentRight="true"
-                />
+            android:id="@+id/op_room_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:text="@string/into_cls_flag"
+            android:textColor="@color/subject_selected_blue"
+            android:textSize="@dimen/font_28px" />
+
         <TextView
             android:id="@+id/entrance_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_24px"
-            android:textColor="@color/main_orange"
-            android:text="60人"
-            android:layout_toLeftOf="@id/op_room_view"
             android:layout_alignTop="@id/op_room_view"
-            android:layout_marginTop="@dimen/px_3"
             android:layout_marginRight="@dimen/px6"
-            android:visibility="gone"
-            />
+            android:layout_marginTop="@dimen/px_3"
+            android:layout_toLeftOf="@id/op_room_view"
+            android:text="60人"
+            android:textColor="@color/main_orange"
+            android:textSize="@dimen/font_24px"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

@@ -126,6 +126,9 @@ public class XiaojsConfig {
     //ping++
     public static final String PING_WALLET = "con.xiaojs.xma.wallet";
 
+    //umeng
+    public static final String UMENG_APPKEY = "592f92426e27a41dc2001d26";
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //其他
     //file provider

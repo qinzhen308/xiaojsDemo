@@ -51,7 +51,9 @@
                         app:week_hint_circle_color="@color/orange_point"
                         app:month_show_holiday_hint="false"
                         app:month_show_lunar="false"
-                        app:month_show_task_hint="true" />
+                        app:month_show_task_hint="true"
+                        app:month_count="240"
+                        />
                 </RelativeLayout>
 
                 <com.jeek.calendar.widget.calendar.week.WeekCalendarView
@@ -71,7 +73,9 @@
                     app:week_hint_circle_color="@color/orange_point"
                     app:week_show_holiday_hint="false"
                     app:week_show_lunar="false"
-                    app:week_show_task_hint="true" />
+                    app:week_show_task_hint="true"
+                    app:week_count="1030"
+                    />
             </RelativeLayout>
 
             <RelativeLayout

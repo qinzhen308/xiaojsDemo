@@ -190,28 +190,62 @@ public class ScheduleUtil {
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.set(year,month,day,0,0,0);
 
-        String week = "星期日";
+        String week = "周日";
         switch (calendar.get(Calendar.DAY_OF_WEEK)) {
             case 1:
-                week = "星期日";
+                week = "周日";
                 break;
             case 2:
-                week = "星期一";
+                week = "周一";
                 break;
             case 3:
-                week = "星期二";
+                week = "周二";
                 break;
             case 4:
-                week = "星期三";
+                week = "周三";
                 break;
             case 5:
-                week = "星期四";
+                week = "周四";
                 break;
             case 6:
-                week = "星期五";
+                week = "周五";
                 break;
             case 7:
-                week = "星期六";
+                week = "周六";
+                break;
+            default:
+                break;
+        }
+        return week;
+    }
+
+    public static String getWeek(long timeMills){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(timeMills));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+
+        String week = "周日";
+        switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+            case 1:
+                week = "周日";
+                break;
+            case 2:
+                week = "周一";
+                break;
+            case 3:
+                week = "周二";
+                break;
+            case 4:
+                week = "周三";
+                break;
+            case 5:
+                week = "周四";
+                break;
+            case 6:
+                week = "周五";
+                break;
+            case 7:
+                week = "周六";
                 break;
             default:
                 break;
@@ -225,7 +259,21 @@ public class ScheduleUtil {
         calendar.setTime(new Date(0));
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.setTime(date);
-        return simpleYMDFormat.format(date)+" "+TimeUtil.getWeak(date.getTime());
+        return simpleYMDFormat.format(date)+" "+getWeek(date.getTime());
+    }
+
+    /**
+     *
+     * @param dateStr 格式 yyyy-MM-dd  or  yyyy-M-d
+     * @return yyyy-MM-dd 周日
+     */
+    public static String getDateYMDW(String dateStr){
+        String[] ymd=dateStr.split("-");
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        calendar.set(Integer.valueOf(ymd[0]),Integer.valueOf(ymd[1])-1,Integer.valueOf(ymd[2]));
+        return simpleYMDFormat.format(new Date(calendar.getTimeInMillis()))+" "+getWeek(calendar.getTimeInMillis());
     }
 
     public static boolean isSameDay(Date date,Calendar c){

@@ -184,7 +184,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
         LessonLabelModel tempLabel=null;
         for(int j=0;j<list.size();j++){
             ClassSchedule cs=list.get(j);
-            tempLabel=new LessonLabelModel(cs.date,0,false);
+            tempLabel=new LessonLabelModel(ScheduleUtil.getDateYMDW(cs.date),0,false);
             monthLists.add(tempLabel);
             monthLists.addAll(cs.lessons);
             tempLabel.lessonCount=cs.lessons.size();

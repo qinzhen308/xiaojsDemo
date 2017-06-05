@@ -13,9 +13,11 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.account.DealAck;
+import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -35,6 +37,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -158,7 +161,7 @@ public class LOpModel {
                 lessonAgain(context,data);
                 break;
             case OP_SCHEDULE:
-                enterSchedule(context, data.classInfo.id, data.classInfo.title,false);
+                enterSchedule(context, data.classInfo.id, data.classInfo.title,isTeaching(context,data));
                 break;
             case OP_SHARE:
                 share(context,data);
@@ -561,5 +564,18 @@ public class LOpModel {
     private void rejectReason(Activity context, CLesson bean){
         ToastUtil.showToast(context,"原因：不知道");
 
+    }
+
+    //判断权限是否大于等于班主任
+    private boolean isTeaching(Context context,CLesson cl){
+        String id= AccountPref.getAccountID(context);
+        if(cl.owner!=null&&id.equals(cl.owner.getId())){//我是拥有者
+            return true;
+        }else if(!ArrayUtil.isEmpty(cl.advisers)){//我是班主任
+            for(Adviser ad:cl.advisers){
+                if(id.equals(ad.id))return true;
+            }
+        }
+        return false;
     }
 }

@@ -25,4 +25,5 @@ public class CLesson {
     public Account[] assistants;
     @JsonProperty("class")
     public ClassInfo classInfo;
+    public Adviser[] advisers;
 }

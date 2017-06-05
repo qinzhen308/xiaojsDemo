@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model.ctl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.model.account.Account;
+
 /**
  * Created by maxiaobao on 2017/5/31.
  */
@@ -16,5 +18,6 @@ public class PrivateClass {
     public String state;
     public boolean teaching;
     public Adviser[] advisers;
+    public Account owner;
 
 }

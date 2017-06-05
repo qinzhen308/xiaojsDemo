@@ -13,6 +13,7 @@ public class LessonFilterHelper {
         String state="All";
         switch (position){
             case 0:
+                state="All";
                 break;
             case 1:
                 state= Ctl.LiveLessonState.LIVE;

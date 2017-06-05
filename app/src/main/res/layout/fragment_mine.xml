@@ -315,14 +315,47 @@
         </RelativeLayout>
 
 
+        <!--小教室下载二维码-->
+        <RelativeLayout
+                android:id="@+id/qrcode_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/MinePageItem"
+                android:layout_marginTop="@dimen/px20"
+                android:visibility="visible">
+
+            <TextView
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_26px"
+                    android:drawableLeft="@drawable/ic_share_my"
+                    android:drawablePadding="@dimen/px20"
+                    android:text="@string/client_download_qrcode"/>
+
+
+            <ImageView
+                    android:id="@+id/enter_qrcode"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_entrance"/>
+        </RelativeLayout>
+
+
+        <View
+                style="@style/DividerHorizontal"
+                android:visibility="visible"/>
+
         <!--设置-->
         <RelativeLayout
                 android:id="@+id/settings_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem"
-                android:layout_marginTop="@dimen/px20"
                 android:visibility="visible"
+                android:layout_marginBottom="@dimen/px120"
                 >
 
             <TextView
@@ -345,37 +378,6 @@
 
         </RelativeLayout>
 
-        <View
-                style="@style/DividerHorizontal"
-                android:visibility="visible"/>
-
-        <!--小教室下载二维码-->
-        <RelativeLayout
-                android:id="@+id/qrcode_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/MinePageItem"
-                android:layout_marginBottom="@dimen/px120"
-                android:visibility="visible">
-
-            <TextView
-                    android:layout_alignParentLeft="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_26px"
-                    android:drawableLeft="@drawable/ic_share_my"
-                    android:drawablePadding="@dimen/px20"
-                    android:text="@string/client_download_qrcode"/>
-
-
-            <ImageView
-                    android:id="@+id/enter_qrcode"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_entrance"/>
-        </RelativeLayout>
 
     </LinearLayout>
 </ScrollView>

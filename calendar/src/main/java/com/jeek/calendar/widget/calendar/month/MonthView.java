@@ -48,7 +48,7 @@ public class MonthView extends View {
     private int mDaySize;
     private int mLunarTextSize;
     private int mWeekRow; // 当前月份第几周
-    private int mCircleRadius = 6;
+    private int mCircleRadius = 10;
     private int[][] mDaysText;
     private int[] mHolidays;
     private String[][] mHolidayOrLunarText;

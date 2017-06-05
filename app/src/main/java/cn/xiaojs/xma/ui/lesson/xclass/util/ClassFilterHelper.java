@@ -174,6 +174,7 @@ public class ClassFilterHelper {
         String type="All";
         switch (position){
             case 0:
+                type="All";
                 break;
             case 1:
                 type="Teacher";

@@ -61,6 +61,7 @@ android {
 dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.umeng.analytics:analytics:latest.integration'
 
     //compile 'com.google.zxing:core:3.3.0'
 

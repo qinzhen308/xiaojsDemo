@@ -110,9 +110,8 @@ public class ClassScheduleBuz {
 
             @Override
             public void onMonthChange(int year, int month, int day) {
-                if(year!=selectyear||month!=selectMonth){
-                    getMonthData(year,month,day);
-                }
+                getMonthData(year,month,day);
+
             }
         });
 
@@ -218,9 +217,15 @@ public class ClassScheduleBuz {
     public void updateAndMoveToDate(String date){
         String[] ymd=date.split("-");
         selectDay=Integer.valueOf(ymd[2]);
-        selectMonth=Integer.valueOf(ymd[1]);
+        selectMonth=Integer.valueOf(ymd[1])-1;
         selectyear=Integer.valueOf(ymd[0]);
         getMonthData(selectyear,selectMonth,selectDay);
+        calendarView.post(new Runnable() {
+            @Override
+            public void run() {
+                calendarView.initData(selectyear,selectMonth,selectDay);
+            }
+        });
     }
 
 

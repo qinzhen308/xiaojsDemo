@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +25,8 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
@@ -125,7 +128,12 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             tvClassName.setVisibility(VISIBLE);
 
         } else if (Account.TypeName.STAND_ALONE_LESSON.equals(data.type) && data.enroll != null) {
-            tvClassName.setText(data.enroll.current + "人");
+            if(data.enroll.mandatory){//需要报名
+                tvClassName.setText(data.enroll.current+"/"+data.enroll.max + "人报名");
+
+            }else {
+                tvClassName.setText(data.enroll.current + "人学");
+            }
             tvClassName.setVisibility(VISIBLE);
         } else {
             tvClassName.setVisibility(INVISIBLE);
@@ -229,6 +237,26 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         } else {
             layoutTeachers.setVisibility(INVISIBLE);
         }
+
+        if(mEventCallback==null){//目前教室的课表会有这个回调
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    enterClassroom();
+                }
+            });
+        }
+    }
+
+    private void enterClassroom(){
+        if(Account.TypeName.CLASS_LESSON.equals(mData.type)&&(Ctl.ClassState.IDLE.equals(mData.state)||Ctl.ClassState.LIVE.equals(mData.state)||Ctl.ClassState.PENDING_FOR_LIVE.equals(mData.state))
+                ||Account.TypeName.STAND_ALONE_LESSON.equals(mData.type)&&(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.FINISHED.equals(mData.state))){//公开课能进教室的状态
+            Intent i = new Intent();
+            i.putExtra(Constants.KEY_TICKET, mData.ticket);
+            i.setClass(getContext(), ClassroomActivity.class);
+            getContext().startActivity(i);
+        }
+
     }
 
     @OnClick(R.id.btn_replay)

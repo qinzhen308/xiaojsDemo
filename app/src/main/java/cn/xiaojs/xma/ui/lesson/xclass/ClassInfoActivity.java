@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
+import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.ScheduleActivity;
@@ -69,7 +70,6 @@ public class ClassInfoActivity extends BaseActivity {
         addView(R.layout.activity_class_info);
         setMiddleTitle(getString(R.string.class_info));
         classId = getIntent().getStringExtra(EXTRA_CLASSID);
-
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ClassInfoActivity extends BaseActivity {
     private void modifyName() {
         Intent i = new Intent(this, AddLessonNameActivity.class);
         i.putExtra(AddLessonNameActivity.EXTRA_CLASSID, classId);
-        i.putExtra(AddLessonNameActivity.EXTRA_VER_MODE, classInfo.join.mode);
+        //i.putExtra(AddLessonNameActivity.EXTRA_VER_MODE, classInfo.join.mode);
         i.putExtra(AddLessonNameActivity.EXTRA_NAME, nameView.getText().toString());
         i.putExtra(AddLessonNameActivity.EXTRA_ROLE, AddLessonNameActivity.ROLE_CLASS);
         startActivityForResult(i, REQUEST_NAME_CODE);
@@ -259,15 +259,13 @@ public class ClassInfoActivity extends BaseActivity {
 
     private void modifyVerify(final boolean verify) {
 
-        ModifyClassParams classParams = new ModifyClassParams();
-
-        classParams.className = classInfo.title;
+        ModifyModeParam modeParam = new ModifyModeParam();
 
         int mode = verify? Ctl.JoinMode.VERIFICATION: Ctl.JoinMode.OPEN;
-        classParams.mode = mode;
+        modeParam.mode = mode;
 
         showProgress(true);
-        LessonDataManager.modifyClass(this, classId, classParams, new APIServiceCallback<CLResponse>() {
+        LessonDataManager.modifyClass(this, classId, modeParam, new APIServiceCallback<CLResponse>() {
             @Override
             public void onSuccess(CLResponse object) {
                 cancelProgress();
