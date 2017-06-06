@@ -30,10 +30,12 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.internal.ListenerClass;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
@@ -123,6 +125,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.portrait = (MessageImageView) v.findViewById(R.id.portrait);
         holder.name = (TextView) v.findViewById(R.id.name);
         holder.label = (TextView) v.findViewById(R.id.label);
+        holder.labelSecond = (TextView) v.findViewById(R.id.label_second);
         holder.video = (ImageView) v.findViewById(R.id.video);
         holder.talk = (MessageImageView) v.findViewById(R.id.talk);
 
@@ -178,16 +181,51 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.talk.setVisibility(isMyself ? View.INVISIBLE : View.VISIBLE);
         holder.talk.setCount(attendee.unReadMsgCount);
 
-        Constants.User user = ClassroomBusiness.getUser(attendee.psType);
+        Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
+        Constants.User userInLesson = ClassroomBusiness.getUser(attendee.psTypeInLesson, Constants.User.NONE);
+
+        if (userInLesson == Constants.User.NONE) {
+
+            bindUserView(holder.label, user);
+            holder.labelSecond.setText("");
+            holder.labelSecond.setVisibility(View.GONE);
+
+            if (user == Constants.User.STUDENT) {
+                holder.label.setVisibility(View.GONE);
+            }else {
+                holder.label.setVisibility(View.VISIBLE);
+            }
+
+        }else {
+
+            bindUserView(holder.label, userInLesson);
+            bindUserView(holder.labelSecond, user);
+            holder.labelSecond.setVisibility(View.VISIBLE);
+
+            if (userInLesson == Constants.User.STUDENT || userInLesson == Constants.User.NONE) {
+                holder.label.setVisibility(View.GONE);
+            }else {
+                holder.label.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+
+    }
+
+    private void bindUserView(TextView v, Constants.User user) {
         switch (user) {
             case TEACHER:
-                holder.label.setText(R.string.lead_teacher);
+                v.setText(R.string.lead_teacher);
                 break;
             case ASSISTANT:
-                holder.label.setText(R.string.assistant_teacher);
+                v.setText(R.string.assistant_teacher);
+                break;
+            case ADVISER:
+                v.setText(R.string.head_teacher);
                 break;
             default:
-                holder.label.setText("");
+                v.setText("");
                 break;
         }
     }
@@ -221,7 +259,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 String liveState = LiveCtlSessionManager.getInstance().getLiveState();
                 Attendee attendee = mAttendeeList.get(pos);
                 if (mOnAttendItemClick != null) {
-                    Constants.User user = ClassroomBusiness.getUser(attendee.psType);
+                    Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
                     if (Live.LiveSessionState.LIVE.equals(liveState)
                             && user == Constants.User.STUDENT
                             && !AccountDataManager.isTeacher(mContext)) {
@@ -259,6 +297,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         MessageImageView portrait;
         TextView name;
         TextView label;
+        TextView labelSecond;
         ImageView video;
         MessageImageView talk;
         int position = -1;

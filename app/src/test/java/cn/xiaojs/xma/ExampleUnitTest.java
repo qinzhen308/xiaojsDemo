@@ -51,13 +51,21 @@ public class ExampleUnitTest {
 //        }
 
 
-        String v = "1.0.7.35";
+//        String v = "1.0.7.35";
+//
+//        int pos = v.lastIndexOf(".");
+//        System.out.println("pos:" + pos);
+//        String newstr = v.substring(0,pos);
+//
+//        System.out.println("new v:" + newstr);
 
-        int pos = v.lastIndexOf(".");
-        System.out.println("pos:" + pos);
-        String newstr = v.substring(0,pos);
+        TEST test = null;
 
-        System.out.println("new v:" + newstr);
+        switch (test){
+            case NO:
+                break;
+        }
+
 
 //        Duration duration = new Duration();
 //        duration.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
@@ -307,6 +315,10 @@ public class ExampleUnitTest {
 //    }
 
 
+    public enum TEST {
+        NO,
+        YES
+    }
 
 
 }

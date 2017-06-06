@@ -47,8 +47,8 @@ public class ClassroomBusiness {
      * @param psType
      * @return
      */
-    public static Constants.User getUser(String psType) {
-        Constants.User user = Constants.User.STUDENT;
+    public static Constants.User getUser(String psType, Constants.User defaultUser) {
+        Constants.User user = defaultUser;
         if ("LeadSession".equals(psType)) {
             user = Constants.User.TEACHER;
         } else if ("AssistantSession".equals(psType)) {
@@ -63,6 +63,8 @@ public class ClassroomBusiness {
             user = Constants.User.AUDITOR;
         } else if ("AuditorSession".equals(psType)) {
             user = Constants.User.ADMINISTRATOR;
+        } else if ("AdviserSession".equals(psType)) {
+            user = Constants.User.ADVISER;
         }
 
         return user;
@@ -75,7 +77,7 @@ public class ClassroomBusiness {
         }
 
         Constants.UserMode mode = Constants.UserMode.PARTICIPANT;
-        Constants.User user = ClassroomBusiness.getUser(session.psType);
+        Constants.User user = ClassroomBusiness.getUser(session.psType, Constants.User.STUDENT);
         if (user == Constants.User.TEACHER
                 || user == Constants.User.ASSISTANT
                 || user == Constants.User.REMOTE_ASSISTANT) {

@@ -37,7 +37,7 @@ public class LiveCtlSessionManager {
 
     public void init(CtlSession ctlSession, String ticket) {
         mCtlSession = ctlSession;
-        mUser = ClassroomBusiness.getUser(ctlSession.psType);
+        mUser = ClassroomBusiness.getUser(ctlSession.psType, Constants.User.STUDENT);
         mUserMode = ClassroomBusiness.getUserByCtlSession(ctlSession);
         mTicket = ticket;
         mClassroomType = ctlSession.cls == null?

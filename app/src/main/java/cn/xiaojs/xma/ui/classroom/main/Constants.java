@@ -87,6 +87,8 @@ public interface Constants {
      * 客户端用户
      */
     public static enum User {
+        NONE("None"),                                  //无效身份
+        ADVISER("AdviserSession"),                     //班主任
         TEACHER("LeadSession"),                        //老师
         ASSISTANT("AssistantSession"),                 //助教
         REMOTE_ASSISTANT("RemoteAssistantSession"),    //远程助教
