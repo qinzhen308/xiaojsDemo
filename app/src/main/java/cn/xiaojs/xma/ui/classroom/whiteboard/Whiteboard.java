@@ -1175,7 +1175,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 ///mPaintColor = Color.argb(255, r, g, b);
                 mPaintColor = Color.RED;
                 Doodle d = buildDoodle(null, m);
-                d.setState(Doodle.STATE_EDIT);
+                d.setRole(Doodle.STATE_EDIT);
                 //addRecords(d, Action.ADD_ACTION);
                 params[0] = "rect";
                 params[1] = String.valueOf((int)(Math.random() * 800));

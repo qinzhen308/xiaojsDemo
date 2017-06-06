@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -18,16 +17,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
-import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.model.Criteria;
-import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
-import cn.xiaojs.xma.ui.lesson.LessonBusiness;
-import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
-import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
-import cn.xiaojs.xma.ui.widget.CommonDialog;
-import cn.xiaojs.xma.util.TimeUtil;
 
 /**
  * Created by maxiaobao on 2017/5/22.
@@ -113,7 +104,7 @@ public class MyClassFragment extends Fragment {
                 MyClassFragment.this.statePosition = group2Position;
                 //TODO 重新查询
                 if (classAdapter != null) {
-                    classAdapter.setState(ClassFilterHelper.getType(group1Position));
+                    classAdapter.setRole(ClassFilterHelper.getType(group1Position));
                     classAdapter.setTime(ClassFilterHelper.getStartTime(group2Position),ClassFilterHelper.getEndTime(group2Position));
                     classAdapter.refresh();
                 }

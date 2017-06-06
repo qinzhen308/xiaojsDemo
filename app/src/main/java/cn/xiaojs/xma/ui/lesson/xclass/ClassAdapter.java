@@ -28,7 +28,7 @@ import cn.xiaojs.xma.util.JudgementUtil;
  */
 
 public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Holder> {
-    String state="All";
+    String role =null;
     String startTime;
     String endTime;
     String key="";
@@ -70,13 +70,13 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
         key=keyword;
     }
 
-    public void setState(String state){
-        this.state=state;
+    public void setRole(String role){
+        this.role = role;
     }
 
     @Override
     protected void doRequest() {
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,startTime, endTime,null,Account.TypeName.CLASS, state,null,key);
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,startTime, endTime,null,Account.TypeName.CLASS, "All", role,key);
         LessonDataManager.getClassesSchedule4Class(mContext, map, mPagination, new APIServiceCallback<CollectionResult<PrivateClass>>() {
             @Override
             public void onSuccess(CollectionResult<PrivateClass> object) {

@@ -128,6 +128,9 @@ public class HomeClassContentBuz {
         calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("----qz----calendar---onClickDate---"+year+"年"+(month+1)+"月"+day);
+                }
                 if(HomeClassContentBuz.this.month!=month||HomeClassContentBuz.this.year!=year||HomeClassContentBuz.this.day!=day){
                     HomeClassContentBuz.this.day=day;
                     HomeClassContentBuz.this.year=year;
@@ -139,11 +142,17 @@ public class HomeClassContentBuz {
 
             @Override
             public void onWeekChange(int year, int month, int day) {
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("----qz----calendar---onWeekChange---"+year+"年"+(month+1)+"月"+day);
+                }
 
             }
 
             @Override
             public void onMonthChange(int year, int month, int day) {
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("----qz----calendar---onMonthChange---"+year+"年"+(month+1)+"月"+day);
+                }
                 getMonthData();
                 if(todayYear==year&&todayMonth==month){
                     btnToday.setVisibility(View.GONE);
