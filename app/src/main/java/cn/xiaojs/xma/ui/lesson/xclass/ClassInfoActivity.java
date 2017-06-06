@@ -29,6 +29,8 @@ import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.ScheduleActivity;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
@@ -82,7 +84,7 @@ public class ClassInfoActivity extends BaseActivity {
 
     @OnClick({R.id.left_image, R.id.enter_btn,
             R.id.lay_time_table, R.id.lay_material,
-            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay,R.id.veri_switcher})
+            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay,R.id.veri_switcher, R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -133,6 +135,9 @@ public class ClassInfoActivity extends BaseActivity {
                 boolean checked = ((ToggleButton) v).isChecked();
                 modifyVerify(checked);
                 break;
+            case R.id.right_image:
+                showMoreDlg();
+                break;
         }
 
 
@@ -155,10 +160,15 @@ public class ClassInfoActivity extends BaseActivity {
             return;
         }
 
+        String mid = AccountDataManager.getAccountID(this);
+        //创建者
+        if (Ctl.ClassState.IDLE.equals(classInfo.state) && mid.equals(classInfo.createdBy)) {
+            setRightImage(R.drawable.ic_title_more_selector);
+        }
+
         teaching = initTeaching();
 
-        if (!teaching) {
-            //学生UI
+        if (!teaching) {//学生UI
             nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
         }
 
@@ -255,6 +265,62 @@ public class ClassInfoActivity extends BaseActivity {
                         loadClassInfo();
                     }
                 });
+            }
+        });
+    }
+
+    private void showMoreDlg() {
+        ListBottomDialog dialog = new ListBottomDialog(this);
+        String[] items = new String[]{getString(R.string.disband_class)};
+        dialog.setItems(items);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                switch (position) {
+                    case 0://解散
+                        showDisbandConfirmDlg(classInfo.id);
+                        break;
+                }
+            }
+        });
+    }
+
+    //删除
+    private void showDisbandConfirmDlg(final String classId) {
+        final CommonDialog dialog = new CommonDialog(this);
+        dialog.setTitle(R.string.disband_class);
+        dialog.setDesc(R.string.disband_class_tip);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+                disbandClass(classId);
+            }
+        });
+        dialog.show();
+    }
+
+    private void disbandClass(String classId) {
+
+        showProgress(true);
+        LessonDataManager.removeClass(this, classId, new APIServiceCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                cancelProgress();
+                Toast.makeText(ClassInfoActivity.this,R.string.disband_success,Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(ClassInfoActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
             }
         });
     }

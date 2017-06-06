@@ -84,6 +84,14 @@ public class CreateClassActivity extends BaseActivity {
 
     }
 
+    public static void removeClassLesson(ClassLesson lesson) {
+        if (lesson == null) return;
+
+        if (classLessons != null && classLessons.size()>0) {
+            classLessons.remove(lesson);
+        }
+    }
+
     public static void clearClassLessons() {
         if (classLessons != null) {
             classLessons.clear();

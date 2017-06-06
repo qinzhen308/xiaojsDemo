@@ -181,5 +181,6 @@ public class APIType {
     public static final int REMOVE_CLASS_STUDENT = 108;
     public static final int JOIN_CLASS = 109;
     public static final int REVIEW_JOIN_CLASS = 110;
+    public static final int REMOVE_CLASS = 111;
 
 }

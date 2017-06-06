@@ -400,6 +400,11 @@ public interface XiaojsService {
                                        @Path("student") String student,
                                        @Body DecisionReason reason);
 
+    //Remove Class
+    @DELETE("/v1/ctl/classes/{class}")
+    Call<ResponseBody> removeClass(@Path("class") String classId);
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories

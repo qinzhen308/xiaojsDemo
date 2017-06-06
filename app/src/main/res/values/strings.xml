@@ -880,5 +880,9 @@
     <string name="had_agreed">已同意</string>
     <string name="had_refused">已拒绝</string>
     <string name="add_success">添加成功</string>
+    <string name="disband_class_tip">所有资料、联系人等班级信息将丢失，且不可恢复，是否解散该班？</string>
+    <string name="disband_class">解散班</string>
+    <string name="disband_success">解散成功</string>
+    <string name="disband">解散</string>
 
 </resources>

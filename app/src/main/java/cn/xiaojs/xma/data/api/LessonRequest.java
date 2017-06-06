@@ -389,6 +389,13 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.REVIEW_JOIN_CLASS, call);
     }
 
+
+    public void removeClass(String classid) {
+        Call<ResponseBody> call = getService().removeClass(classid);
+        enqueueRequest(APIType.REMOVE_CLASS, call);
+    }
+
+
     @Override
     public void doTask(int apiType, Object responseBody) {
         if (apiType == APIType.JOIN_CLASS
@@ -397,7 +404,9 @@ public class LessonRequest extends ServiceRequest {
                 || apiType == APIType.CREATE_CLASS
                 || apiType == APIType.CREATE_LESSON) {
 
-            //FIXME 此处有个BUG，当等于APIType.JOIN_CLASS时，如果加入需要验证的班，验证通过后才能改为true。先忽略此问题。
+            //FIXME 此处有个BUG，
+            // 1.当等于APIType.JOIN_CLASS时，如果加入需要验证的班，验证通过后才能改为true。先忽略此问题。
+            // 2.解散班、删除公开课后，也会有此问题，也先忽略
             AccountDataManager.setHasClass(getContext(), true);
         }
     }

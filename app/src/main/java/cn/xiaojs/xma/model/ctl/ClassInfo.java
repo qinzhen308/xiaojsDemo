@@ -23,4 +23,5 @@ public class ClassInfo {
     public int students;
     public String id;
     public ClassJoin join;
+    public String state;
 }

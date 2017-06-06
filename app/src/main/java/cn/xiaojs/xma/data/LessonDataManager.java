@@ -692,4 +692,18 @@ public class LessonDataManager {
         lessonRequest.reviewJoinClass(classid, studentid, reason);
     }
 
+
+    /**
+     * Remove a class.
+     Can only be removed if the state as Idle. if there are unfinished lessons in the class,
+     please cancelled or removed the lessons if you want to do this .
+     * @param context
+     * @param classid
+     * @param callback
+     */
+    public static void removeClass(Context context, String classid, APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.removeClass(classid);
+    }
+
 }
