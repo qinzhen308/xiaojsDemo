@@ -286,6 +286,7 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     private void initSocketIO(String ticket, String secret, boolean force) {
+        SocketManager.off();
         SocketManager.close();
         SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
         mSocket = SocketManager.getSocket();
