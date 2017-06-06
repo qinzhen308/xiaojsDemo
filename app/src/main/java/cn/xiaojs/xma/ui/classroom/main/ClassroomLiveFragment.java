@@ -279,7 +279,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         showProgress(true);
         StreamingMode streamMode = new StreamingMode();
         streamMode.mode = Live.StreamMode.AV;
-        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.AckListener() {
+        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.IAckListener() {
             @Override
             public void call(final Object... args) {
                 cancelProgress();
@@ -400,7 +400,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         OpenMedia openMedia = new OpenMedia();
         openMedia.to = accountId;
         if (!ContactManager.getInstance().hasPeer2PeerStream(accountId)) {
-            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.AckListener() {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.IAckListener() {
                 @Override
                 public void call(final Object... args) {
                     if (args != null && args.length > 0) {
@@ -414,7 +414,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 }
             });
         } else {
-            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), openMedia, new SocketManager.AckListener() {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), openMedia, new SocketManager.IAckListener() {
                 @Override
                 public void call(final Object... args) {
                     if (args != null && args.length > 0) {

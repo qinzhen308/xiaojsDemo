@@ -389,7 +389,7 @@ public class TalkManager {
 
         if (talkBean != null) {
             String event = Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK);
-            SocketManager.emit(event, talkBean, new SocketManager.AckListener() {
+            SocketManager.emit(event, talkBean, new SocketManager.IAckListener() {
                 @Override
                 public void call(final Object... args) {
                     // 处理消息发送的回调信息
