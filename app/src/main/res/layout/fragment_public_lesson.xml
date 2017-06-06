@@ -15,12 +15,18 @@
         android:layout_below="@+id/layout_top"
         />
 
-    <android.support.v7.widget.RecyclerView
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshRecyclerView
         android:id="@+id/over_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/filter_line"
-        />
+        android:layout_below="@+id/filter_line"/>
+
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/over_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/filter_line"-->
+        <!--/>-->
 
     <FrameLayout
         android:layout_width="match_parent"
