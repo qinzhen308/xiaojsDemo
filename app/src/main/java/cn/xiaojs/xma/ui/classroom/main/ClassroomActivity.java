@@ -120,6 +120,11 @@ public class ClassroomActivity extends FragmentActivity {
         LiveCtlSessionManager.getInstance().release();
         ContactManager.getInstance().release();
         TalkManager.getInstance().release();
+
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
     }
 
     @Override
