@@ -178,7 +178,13 @@ public class LessonScheduleActivity extends BaseActivity{
 
         mAdapter.setList(monthLists);
         mAdapter.notifyDataSetChanged();
-        mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(selectyear,selectMonth,selectDay));
+        mListView.post(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(selectyear,selectMonth,selectDay));
+
+            }
+        });
     }
 
     private void setPoint(List<ClassLesson> list, final int y, final int m, final int d){
