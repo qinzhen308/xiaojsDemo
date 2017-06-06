@@ -132,7 +132,6 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.tv_search:
                 startActivityForResult(new Intent(getActivity(),SearchActivity.class),100);
-                isEmpty=false;
                 break;
             case R.id.layout_creative_lesson:
                 if(JudgementUtil.checkTeachingAbility(mContext)){
@@ -155,9 +154,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(!isEmpty&&layoutNormal==null){
-            changeToNormal();
-        }
+
     }
 
     private void changeTab(int tab){
@@ -335,6 +332,9 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     protected void onDataChanged() {
-        //TODO update ui
+        isEmpty=false;
+        if(layoutEmpty!=null){
+            changeToNormal();
+        }
     }
 }

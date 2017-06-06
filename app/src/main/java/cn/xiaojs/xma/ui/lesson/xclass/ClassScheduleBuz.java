@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jeek.calendar.widget.calendar.CalendarUtils;
+import com.jeek.calendar.widget.calendar.HintBoxPool;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
@@ -96,6 +97,7 @@ public class ClassScheduleBuz {
 
 
     private void setListener(){
+        calendarView.setHintBoxTag(HintBoxPool.TAG_SENCOND_BOX);
         calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
@@ -194,7 +196,7 @@ public class ClassScheduleBuz {
 
     private void setPoint(List<ClassSchedule> list,final int y,final int m,final int d){
         HashSet hashSet=new HashSet<Integer>();
-        HashMap<Integer , Integer> colors=new HashMap<Integer, Integer>();
+        HashMap<String , Integer> colors=new HashMap<String, Integer>();
             for(int i=0;i<list.size();i++){
                 String[] strings=list.get(i).date.split("-");
                 int da=Integer.valueOf(strings[2]);
@@ -204,14 +206,14 @@ public class ClassScheduleBuz {
                 if(mo==m){
                     hashSet.add(da);
                     if(todayYear>ye||todayMonth>mo||todayDay>da){//今天之前
-                        colors.put(da,c_gray);//灰色
+                        colors.put(list.get(i).date,c_gray);//灰色
                     }else {
-                        colors.put(da,c_red);//红色
+                        colors.put(list.get(i).date,c_red);//红色
                     }
                 }
             }
-        calendarView.setTaskHintColors(colors,false);
-        calendarView.setTaskHintList(hashSet);
+        HintBoxPool.box(HintBoxPool.TAG_SENCOND_BOX).setMonthDates(colors);
+        calendarView.hintBoxChanged();
     }
 
 

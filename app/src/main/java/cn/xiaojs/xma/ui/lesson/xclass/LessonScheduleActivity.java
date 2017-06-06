@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jeek.calendar.widget.calendar.CalendarUtils;
+import com.jeek.calendar.widget.calendar.HintBoxPool;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
@@ -87,6 +88,7 @@ public class LessonScheduleActivity extends BaseActivity{
         selectDate=ScheduleUtil.getDateYM(selectyear,selectMonth,selectDay);
         tvTopDate.setText(ScheduleUtil.getDateYM_Ch(new Date()));
         bindData();
+        calendarView.setHintBoxTag(HintBoxPool.TAG_THIRD_BOX);
         calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
@@ -180,25 +182,24 @@ public class LessonScheduleActivity extends BaseActivity{
     }
 
     private void setPoint(List<ClassLesson> list, final int y, final int m, final int d){
-        HashSet hashSet=new HashSet<Integer>();
-        HashMap<Integer , Integer> colors=new HashMap<Integer, Integer>();
+        HashMap<String , Integer> colors=new HashMap<String, Integer>();
         for(int i=0;i<list.size();i++){
-            String[] strings=ScheduleUtil.getDateYMD(list.get(i).schedule.getStart()).split("-");
+            String date=ScheduleUtil.getDateYMD(list.get(i).schedule.getStart());
+            String[] strings=date.split("-");
             int da=Integer.valueOf(strings[2]);
             int mo=Integer.valueOf(strings[1])-1;
             int ye=Integer.valueOf(strings[0]);
 
             if(mo==m){
-                hashSet.add(da);
                 if(todayYear>ye||todayMonth>mo||todayDay>da){//今天之前
-                    colors.put(da,c_gray);//灰色
+                    colors.put(date,c_gray);//灰色
                 }else {
-                    colors.put(da,c_red);//红色
+                    colors.put(date,c_red);//红色
                 }
             }
         }
-        calendarView.setTaskHintColors(colors,false);
-        calendarView.setTaskHintList(hashSet);
+        HintBoxPool.box(HintBoxPool.TAG_THIRD_BOX).setMonthDates(colors);
+        calendarView.hintBoxChanged();
     }
 
     @OnClick({R.id.right_view,R.id.left_view})

@@ -200,24 +200,39 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
                     .error(R.drawable.default_avatar_grey)
                     .into(ivAvatar);
         }
-        if (data.assistants != null && data.assistants.length > 0) {
+
+//        showAssistantLogic1();
+        showAssistantLogic2();
+        if(mEventCallback==null){//目前教室的课表会有这个回调
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    enterClassroom();
+                }
+            });
+        }
+    }
+
+    //显示3个以内的助教，超过的显示人数
+    private void showAssistantLogic1(){
+        if (mData.assistants != null && mData.assistants.length > 0) {
             ivAvatarMore.setVisibility(INVISIBLE);
             layoutTeachers.setVisibility(VISIBLE);
             Glide.with(getContext())
-                    .load(Account.getAvatar(data.assistants[0].getId(), 300))
+                    .load(Account.getAvatar(mData.assistants[0].getId(), 300))
                     .bitmapTransform(circleTransform)
                     .placeholder(R.drawable.default_avatar_grey)
                     .error(R.drawable.default_avatar_grey)
                     .into(ivAvatar1);
-            if (data.assistants.length == 1) {
+            if (mData.assistants.length == 1) {
                 tvAssistant.setVisibility(VISIBLE);
-                tvAssistant.setText(data.assistants[0].name);
+                tvAssistant.setText(mData.assistants[0].name);
                 ivAvatar2.setVisibility(INVISIBLE);
 
-            } else if (data.assistants.length == 2) {
+            } else if (mData.assistants.length == 2) {
                 tvAssistant.setVisibility(GONE);
                 Glide.with(getContext())
-                        .load(Account.getAvatar(data.assistants[1].getId(), 300))
+                        .load(Account.getAvatar(mData.assistants[1].getId(), 300))
                         .bitmapTransform(circleTransform)
                         .placeholder(R.drawable.default_avatar_grey)
                         .error(R.drawable.default_avatar_grey)
@@ -227,7 +242,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
                 tvAssistant.setVisibility(GONE);
                 ivAvatar2.setVisibility(VISIBLE);
                 Glide.with(getContext())
-                        .load(Account.getAvatar(data.assistants[1].getId(), 300))
+                        .load(Account.getAvatar(mData.assistants[1].getId(), 300))
                         .bitmapTransform(circleTransform)
                         .placeholder(R.drawable.default_avatar_grey)
                         .error(R.drawable.default_avatar_grey)
@@ -237,14 +252,26 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         } else {
             layoutTeachers.setVisibility(INVISIBLE);
         }
-
-        if(mEventCallback==null){//目前教室的课表会有这个回调
-            setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    enterClassroom();
-                }
-            });
+    }
+    //显示1个助教头像和名字，2个以及以上名字换成人数
+    private void showAssistantLogic2(){
+        if (mData.assistants != null && mData.assistants.length > 0) {
+            ivAvatarMore.setVisibility(INVISIBLE);
+            ivAvatar2.setVisibility(INVISIBLE);
+            layoutTeachers.setVisibility(VISIBLE);
+            Glide.with(getContext())
+                    .load(Account.getAvatar(mData.assistants[0].getId(), 300))
+                    .bitmapTransform(circleTransform)
+                    .placeholder(R.drawable.default_avatar_grey)
+                    .error(R.drawable.default_avatar_grey)
+                    .into(ivAvatar1);
+            if (mData.assistants.length == 1) {
+                tvAssistant.setText(mData.assistants[0].name);
+            }  else {
+                tvAssistant.setText(mData.assistants.length+"名助教");
+            }
+        } else {
+            layoutTeachers.setVisibility(INVISIBLE);
         }
     }
 
