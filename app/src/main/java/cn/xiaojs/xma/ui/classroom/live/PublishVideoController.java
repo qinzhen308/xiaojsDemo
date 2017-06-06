@@ -114,7 +114,7 @@ public class PublishVideoController extends VideoController {
                 if (mStreamPublishing) {
                     //send stopped stream
                     SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                            new SocketManager.AckListener() {
+                            new SocketManager.IAckListener() {
                                 @Override
                                 public void call(Object... args) {
                                     if (args != null && args.length > 0) {
@@ -191,7 +191,7 @@ public class PublishVideoController extends VideoController {
                         Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
                 FeedbackStatus fbStatus = new FeedbackStatus();
                 fbStatus.status = Live.MediaStatus.READY;
-                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.AckListener() {
+                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.IAckListener() {
                     @Override
                     public void call(final Object... args) {
                         if (args != null && args.length > 0) {

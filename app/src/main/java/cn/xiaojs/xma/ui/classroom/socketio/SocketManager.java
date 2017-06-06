@@ -192,8 +192,8 @@ public class SocketManager {
     public static void emit(final String event, final Object... args) {
         if (mSocket != null) {
             if (args != null && args.length > 0) {
-                if (args[args.length - 1] instanceof AckListener) {
-                    final AckListener listener = (AckListener) args[args.length - 1];
+                if (args[args.length - 1] instanceof IAckListener) {
+                    final IAckListener listener = (IAckListener) args[args.length - 1];
                     JSONObject[] data = null;
                     if (args.length > 1) {
                         data = new JSONObject[args.length - 1];
@@ -310,7 +310,7 @@ public class SocketManager {
 
     private static class SocketCallback {
         public EventListener eventListener;
-        public AckListener ackListener;
+        public IAckListener ackListener;
         public Object[] data;
     }
 
@@ -322,7 +322,7 @@ public class SocketManager {
         public void call(Object... args);
     }
 
-    public interface AckListener {
+    public interface IAckListener {
         void call(Object... args);
     }
 
