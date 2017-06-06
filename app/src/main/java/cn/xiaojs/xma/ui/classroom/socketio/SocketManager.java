@@ -21,8 +21,10 @@ import android.os.Message;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
@@ -43,7 +45,7 @@ public class SocketManager {
 
     private static Socket mSocket;
     private static Handler mHandler;
-    private static Map<String, EventListener> mEventListeners;
+    private static ConcurrentMap<String, ConcurrentLinkedQueue<EventListener>> mEventListeners;
 
     public synchronized static void init(Context context, String ticket, String secret, boolean videoSupported, boolean audioSupported, boolean force) {
         initHandler();
@@ -60,7 +62,9 @@ public class SocketManager {
                 throw new RuntimeException(e);
             }
 
-            mEventListeners = new HashMap<String, EventListener>();
+            if (mEventListeners == null) {
+                mEventListeners = new ConcurrentHashMap<String, ConcurrentLinkedQueue<EventListener>>();
+            }
         } else {
             throw new RuntimeException("Only one socket may be created!");
         }
@@ -81,27 +85,83 @@ public class SocketManager {
         }
     }
 
+    /**
+     * off all listeners
+     */
     public static void off() {
+        if (mEventListeners != null) {
+            for (String event : mEventListeners.keySet()) {
+                ConcurrentLinkedQueue<EventListener> eventListeners = mEventListeners.get(event);
+                if (eventListeners != null) {
+                    //off emit listener
+                    if (mSocket != null) {
+                        for (EventListener listener : eventListeners) {
+                            mSocket.off(event, listener.originalEmitListener);
+                        }
+                    }
+
+                    eventListeners.clear();
+                }
+            }
+            mEventListeners.clear();
+        }
+
         if (mSocket != null) {
             mSocket.off();
         }
     }
 
+
+    /**
+     * off some listeners special event
+     */
     public static void off(String event) {
+        if (mEventListeners != null) {
+            ConcurrentLinkedQueue<EventListener> eventListeners = mEventListeners.get(event);
+            if (eventListeners != null) {
+                //off emit listener
+                if (mSocket != null) {
+                    for (EventListener listener : eventListeners) {
+                        mSocket.off(event, listener.originalEmitListener);
+                    }
+                }
+
+                eventListeners.clear();
+            }
+        }
+
         if (mSocket != null) {
             mSocket.off(event);
         }
+    }
 
-        if (mEventListeners != null && mEventListeners.containsKey(event)) {
-            mEventListeners.remove(event);
+    /**
+     * off special listener
+     */
+    public static void off(String event, EventListener listener) {
+        if (mEventListeners == null) {
+            return;
+        }
+
+        //off emit listener
+        if (mSocket != null) {
+            mSocket.off(event, listener.originalEmitListener);
+        }
+
+        ConcurrentLinkedQueue<EventListener> eventListeners = mEventListeners.get(event);
+        if (eventListeners != null) {
+            Iterator<EventListener> it = eventListeners.iterator();
+            while (it.hasNext()) {
+                EventListener internal = it.next();
+                if (internal != null && internal.originalEmitListener == listener.originalEmitListener) {
+                    it.remove();
+                    break;
+                }
+            }
         }
     }
 
     public static void close() {
-        close(true);
-    }
-
-    public static void close(boolean clearListener) {
         if (mSocket != null) {
             mSocket.close();
             mSocket = null;
@@ -110,21 +170,22 @@ public class SocketManager {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
-
-        if (clearListener) {
-            if (mEventListeners != null) {
-                mEventListeners.clear();
-                mEventListeners = null;
-            }
-        }
+        mHandler = null;
     }
 
     public static void reListener() {
-        if (mEventListeners != null) {
-            for (Map.Entry<String, EventListener> entry : mEventListeners.entrySet()) {
-                String event = entry.getKey();
-                EventListener listener = entry.getValue();
-                on(event, listener, false);
+        if (mEventListeners == null) {
+            return;
+        }
+
+        for (String event : mEventListeners.keySet()) {
+            ConcurrentLinkedQueue<EventListener> eventListeners = mEventListeners.get(event);
+            if (eventListeners != null) {
+                Iterator<EventListener> it = eventListeners.iterator();
+                while (it.hasNext()) {
+                    EventListener listener = it.next();
+                    on(event, listener, false);
+                }
             }
         }
     }
@@ -132,8 +193,8 @@ public class SocketManager {
     public static void emit(final String event, final Object... args) {
         if (mSocket != null) {
             if (args != null && args.length > 0) {
-                if (args[args.length - 1] instanceof AckListener) {
-                    final AckListener listener = (AckListener) args[args.length - 1];
+                if (args[args.length - 1] instanceof IAckListener) {
+                    final IAckListener listener = (IAckListener) args[args.length - 1];
                     JSONObject[] data = null;
                     if (args.length > 1) {
                         data = new JSONObject[args.length - 1];
@@ -184,7 +245,7 @@ public class SocketManager {
 
     public static void on(String event, final EventListener listener, boolean needAdd) {
         if (mSocket != null) {
-            mSocket.on(event, new Emitter.Listener() {
+            Emitter.Listener emitterListener = new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     Message msg = new Message();
@@ -197,10 +258,12 @@ public class SocketManager {
                         mHandler.sendMessage(msg);
                     }
                 }
-            });
+            };
+            listener.originalEmitListener = emitterListener;
 
+            mSocket.on(event, emitterListener);
             if (needAdd) {
-                mEventListeners.put(event, listener);
+                addListener2Map(event, listener);
             }
         }
     }
@@ -230,17 +293,37 @@ public class SocketManager {
         };
     }
 
+    private static void addListener2Map(String event, EventListener listener) {
+        if (mEventListeners == null) {
+            return;
+        }
+
+        ConcurrentLinkedQueue<EventListener> eventListeners = mEventListeners.get(event);
+        if (eventListeners == null) {
+            eventListeners = new ConcurrentLinkedQueue<EventListener>();
+            ConcurrentLinkedQueue<EventListener> tempEventListeners = mEventListeners.putIfAbsent(event, eventListeners);
+            if (tempEventListeners != null) {
+                eventListeners = tempEventListeners;
+            }
+        }
+        eventListeners.add(listener);
+    }
+
     private static class SocketCallback {
         public EventListener eventListener;
-        public AckListener ackListener;
+        public IAckListener ackListener;
         public Object[] data;
     }
 
-    public interface EventListener {
-        void call(Object... args);
+    public static abstract class EventListener implements IEventListener {
+        public Emitter.Listener originalEmitListener;
     }
 
-    public interface AckListener {
+    public interface IEventListener {
+        public void call(Object... args);
+    }
+
+    public interface IAckListener {
         void call(Object... args);
     }
 

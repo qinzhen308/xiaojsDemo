@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
@@ -388,4 +389,16 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.REVIEW_JOIN_CLASS, call);
     }
 
+    @Override
+    public void doTask(int apiType, Object responseBody) {
+        if (apiType == APIType.JOIN_CLASS
+                || apiType == APIType.JOIN_LESSON
+                || apiType == APIType.ENROLL_LESSON
+                || apiType == APIType.CREATE_CLASS
+                || apiType == APIType.CREATE_LESSON) {
+
+            //FIXME 此处有个BUG，当等于APIType.JOIN_CLASS时，如果加入需要验证的班，验证通过后才能改为true。先忽略此问题。
+            AccountDataManager.setHasClass(getContext(), true);
+        }
+    }
 }

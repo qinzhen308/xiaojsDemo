@@ -19,6 +19,7 @@ public class User implements Serializable{
     private Account account;
     private String name;
     private AliasTags aliasAndTags;
+    public boolean hasClass;
 
     public String getId() {
         return id;

@@ -34,6 +34,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.ui.classroom.bean.ModeSwitcher;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -65,7 +66,9 @@ public class ClassroomActivity extends FragmentActivity {
     private final static int MSG_SOCKET_TIME_OUT = 0;
 
     //socket time out
-    private final static int SOCKET_TIME_OUT = 10 * 1000; //10s
+    private final static int SOCKET_TIME_OUT = 5 * 1000; //10s
+    //socket retry count after time out
+    private final static int RETRY_COUNT = 3;
 
     private ProgressHUD mProgress;
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
@@ -119,6 +122,11 @@ public class ClassroomActivity extends FragmentActivity {
         LiveCtlSessionManager.getInstance().release();
         ContactManager.getInstance().release();
         TalkManager.getInstance().release();
+
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
     }
 
     @Override
@@ -239,14 +247,17 @@ public class ClassroomActivity extends FragmentActivity {
 
         //init socket
         if (!networkChanged) {
+            //初始化socket并连接。
             initSocketIO(mTicket, ctlSession.secret, forceConnect);
         } else {
-            SocketManager.close(false);
+            //重制并重新初始化和连接socket
+            SocketManager.close();
             SocketManager.init(ClassroomActivity.this, mTicket, ctlSession.secret, true, true, forceConnect);
             mSocket = SocketManager.getSocket();
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
             SocketManager.reListener();
+            SocketManager.connect();
         }
 
         //init fragment
@@ -275,6 +286,7 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     private void initSocketIO(String ticket, String secret, boolean force) {
+        SocketManager.off();
         SocketManager.close();
         SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
         mSocket = SocketManager.getSocket();
@@ -299,6 +311,7 @@ public class ClassroomActivity extends FragmentActivity {
         SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mSocketTimeoutListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH), mModeSwitchListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
         SocketManager.connect();
     }
@@ -337,6 +350,18 @@ public class ClassroomActivity extends FragmentActivity {
         }
     };
 
+    private SocketManager.EventListener mModeSwitchListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            //解析并更新session mode
+            if (args != null && args.length > 0) {
+                ModeSwitcher switcher = ClassroomBusiness.parseSocketBean(args[0], ModeSwitcher.class);
+                LiveCtlSessionManager.getInstance().updateCtlSessionMode(switcher.to);
+            }
+
+        }
+    };
+
     private SocketManager.EventListener mOnConnectError = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
@@ -363,7 +388,7 @@ public class ClassroomActivity extends FragmentActivity {
                 switch (msg.what) {
                     case MSG_SOCKET_TIME_OUT:
                         //socket time out
-                        if (!mSktConnected && mSocketRetryCount++ < 3) {
+                        if (!mSktConnected && mSocketRetryCount++ < RETRY_COUNT) {
                             //reconnect
                             initData(false, false);
                         } else {

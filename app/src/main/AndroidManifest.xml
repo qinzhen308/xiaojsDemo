@@ -84,7 +84,7 @@
         <activity
                 android:name=".ui.account.BindThirdAccountActivity"
                 android:screenOrientation="portrait"
-                >
+        >
         </activity>
         <activity
                 android:name=".ui.account.ForgetPasswordStepOneActivity"
@@ -140,12 +140,12 @@
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".ui.lesson.xclass.ClassScheduleActivity"
-            android:screenOrientation="portrait"/>
+                android:name=".ui.lesson.xclass.ClassScheduleActivity"
+                android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.lesson.TeachingSubjectSearchActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"/>
+                android:name=".ui.lesson.TeachingSubjectSearchActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateAlwaysVisible|adjustPan"/>
 
         <activity
                 android:name=".ui.lesson.SubjectSelectorActivity"
@@ -185,8 +185,7 @@
         <activity android:name=".ui.classroom.main.ClassroomActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="screenSize|orientation"
-                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-                  android:process=":classroom"/>
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
                 android:name=".ui.search.SearchActivity"
                 android:screenOrientation="portrait"
@@ -315,16 +314,16 @@
         <activity android:name=".ui.lesson.xclass.ShareQrcodeActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.ClassInfoActivity"
-                android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.StudentsListActivity"
-                android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.ClassesListActivity"
-                android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.ImportStudentFormClassActivity"
-                android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.EnrollSuccessActivity"/>
         <activity android:name=".ui.lesson.xclass.AddStudentActivity"
-                android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.VerificationActivity"
                   android:screenOrientation="portrait"/>
         <!-- QQ -->
@@ -334,7 +333,7 @@
                 android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-as
+                as
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 

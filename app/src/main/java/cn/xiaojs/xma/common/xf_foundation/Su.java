@@ -35,7 +35,7 @@ public class Su {
         public static final int CLASSROOM = 6001;
     }
 
-    public class EventType {
+    public class EventType {//参考su.js
         //教室交流
         public static final int TALK = 690001;
         //绘制
@@ -62,6 +62,8 @@ public class Su {
 
         //同步状态
         public static final int SYNC_STATE = 640000;
+        //班同步状态
+        public static final int SYNC_CLASS_STATE = 640005;
 
         public static final int PRoVISION_FEEDBACK = 630002;
         public static final int CLAIM_STREAMING = 670012;

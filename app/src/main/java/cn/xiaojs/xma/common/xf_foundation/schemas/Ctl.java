@@ -55,10 +55,16 @@ public class Ctl {
         public static final String STOPPED = "Stopped";
     }
 
+    //
+    // Defines the class lifecycle states, which inherits those common MSP states.
+    //
     public static class ClassState {
+        public static final String DRAFT = "Draft";
         public static final String IDLE = "Idle";
         public static final String PENDING_FOR_LIVE = "PendingForLive";
+        public static final String REST_ON_CANCELLATION = "ResetOnCancellation";
         public static final String LIVE = "Live";
+        public static final String FROZEN = "Frozen";
     }
 
 

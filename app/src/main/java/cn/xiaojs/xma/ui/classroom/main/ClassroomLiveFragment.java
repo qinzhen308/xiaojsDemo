@@ -46,6 +46,7 @@ import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
+import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
@@ -146,6 +147,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
 
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE), mSyncClassStateListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
@@ -277,7 +279,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         showProgress(true);
         StreamingMode streamMode = new StreamingMode();
         streamMode.mode = Live.StreamMode.AV;
-        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.AckListener() {
+        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.IAckListener() {
             @Override
             public void call(final Object... args) {
                 cancelProgress();
@@ -315,6 +317,18 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 SyncStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
                 if (syncState != null) {
                     onSyncStateChanged(syncState);
+                }
+            }
+        }
+    };
+
+    private SocketManager.EventListener mSyncClassStateListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+                SyncClassStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncClassStateResponse.class);
+                if (syncState != null) {
+                    onSyncClassStateChanged(syncState);
                 }
             }
         }
@@ -386,7 +400,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         OpenMedia openMedia = new OpenMedia();
         openMedia.to = accountId;
         if (!ContactManager.getInstance().hasPeer2PeerStream(accountId)) {
-            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.AckListener() {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.IAckListener() {
                 @Override
                 public void call(final Object... args) {
                     if (args != null && args.length > 0) {
@@ -400,7 +414,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 }
             });
         } else {
-            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), openMedia, new SocketManager.AckListener() {
+            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), openMedia, new SocketManager.IAckListener() {
                 @Override
                 public void call(final Object... args) {
                     if (args != null && args.length > 0) {
@@ -530,6 +544,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         }
 
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
@@ -569,6 +584,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected abstract void initData();
 
     protected abstract void onSyncStateChanged(SyncStateResponse syncState);
+    protected abstract void onSyncClassStateChanged(SyncClassStateResponse syncState);
 
     public void playStream(String url) {
 
