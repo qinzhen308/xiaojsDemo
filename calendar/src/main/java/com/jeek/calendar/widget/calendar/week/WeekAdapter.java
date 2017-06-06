@@ -49,8 +49,10 @@ public class WeekAdapter extends PagerAdapter {
                 instanceWeekView(position - 2 + i);
             }
         }
-        container.addView(mViews.get(position));
-        return mViews.get(position);
+        WeekView v=mViews.get(position);
+        v.setHintBoxTag(tag);
+        container.addView(v);
+        return v;
     }
 
     @Override
@@ -79,6 +81,11 @@ public class WeekAdapter extends PagerAdapter {
         weekView.invalidate();
         mViews.put(position, weekView);
         return weekView;
+    }
+
+    String tag;
+    public void setHintBoxTag(String tag){
+        this.tag=tag;
     }
 
 }

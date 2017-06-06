@@ -6,7 +6,7 @@
     android:layout_marginLeft="@dimen/px25"
     android:layout_marginRight="@dimen/px25"
     android:layout_marginTop="@dimen/px20"
-    android:background="@drawable/selector_bg_class">
+    >
 
     <ImageView
         android:id="@+id/flag_view"

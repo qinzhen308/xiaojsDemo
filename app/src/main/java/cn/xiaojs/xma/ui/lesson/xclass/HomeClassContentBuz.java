@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jeek.calendar.widget.calendar.HintBoxPool;
 import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
@@ -124,10 +125,13 @@ public class HomeClassContentBuz {
         mAdapter = new HomeClassAdapter(overLayout);
         overLayout.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         overLayout.setAdapter(mAdapter);
-
+        calendarView.setHintBoxTag(HintBoxPool.TAG_FIRST_BOX);
         calendarView.setOnScheduleChangeListener(new OnScheduleChangeListener() {
             @Override
             public void onClickDate(int year, int month, int day) {
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("----qz----calendar---onClickDate---"+year+"年"+(month+1)+"月"+day);
+                }
                 if(HomeClassContentBuz.this.month!=month||HomeClassContentBuz.this.year!=year||HomeClassContentBuz.this.day!=day){
                     HomeClassContentBuz.this.day=day;
                     HomeClassContentBuz.this.year=year;
@@ -139,11 +143,17 @@ public class HomeClassContentBuz {
 
             @Override
             public void onWeekChange(int year, int month, int day) {
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("----qz----calendar---onWeekChange---"+year+"年"+(month+1)+"月"+day);
+                }
 
             }
 
             @Override
             public void onMonthChange(int year, int month, int day) {
+                if(XiaojsConfig.DEBUG){
+                    Logger.d("----qz----calendar---onMonthChange---"+year+"年"+(month+1)+"月"+day);
+                }
                 getMonthData();
                 if(todayYear==year&&todayMonth==month){
                     btnToday.setVisibility(View.GONE);
@@ -271,7 +281,7 @@ public class HomeClassContentBuz {
             public void onSuccess(ScheduleData object) {
                 long time=System.currentTimeMillis();
                 HashSet hashSet=new HashSet<Integer>();
-                HashMap<Integer , Integer> colors=new HashMap<Integer, Integer>();
+                HashMap<String , Integer> colors=new HashMap<String, Integer>();
                 if(object!=null&&object.calendar!=null){
                     for(int i=0;i<object.calendar.size();i++){
                         String[] strings=object.calendar.get(i).date.split("-");
@@ -282,15 +292,16 @@ public class HomeClassContentBuz {
                         if(mo==m){
                             hashSet.add(da);
                             if(todayYear>ye||todayMonth>mo||todayDay>da){//今天之前
-                                colors.put(da,c_gray);//灰色
+                                colors.put(object.calendar.get(i).date,c_gray);//灰色
                             }else {
-                                colors.put(da,c_red);//红色
+                                colors.put(object.calendar.get(i).date,c_red);//红色
                             }
                         }
                     }
                 }
-                calendarView.setTaskHintColors(colors,false);
-                calendarView.setTaskHintList(hashSet);
+                HintBoxPool.box(HintBoxPool.TAG_FIRST_BOX).setMonthDates(colors);
+                calendarView.hintBoxChanged();
+//                calendarView.setTaskHintList(hashSet);
                 Logger.d("-----qz-----time analyze---setPoint="+(System.currentTimeMillis()-time));
             }
 

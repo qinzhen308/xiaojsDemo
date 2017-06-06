@@ -47,8 +47,10 @@ public class MonthAdapter extends PagerAdapter {
             monthView.setOnDateClickListener(mMonthCalendarView);
             mViews.put(position, monthView);
         }
-        container.addView(mViews.get(position));
-        return mViews.get(position);
+        MonthView v=mViews.get(position);
+        v.setHintBoxTag(hintBoxTag);
+        container.addView(v);
+        return v;
     }
 
     private int[] getYearAndMonth(int position) {
@@ -76,6 +78,11 @@ public class MonthAdapter extends PagerAdapter {
 
     public int getMonthCount() {
         return mMonthCount;
+    }
+
+    String hintBoxTag;
+    public void setHintBoxTag(String tag){
+        this.hintBoxTag=tag;
     }
 
 }

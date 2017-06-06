@@ -140,6 +140,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if(o instanceof LessonLabelModel){
                 if(((LessonLabelModel) o).date.contains(date)){
                     index=i;
+                    break;
                 }
             }
         }

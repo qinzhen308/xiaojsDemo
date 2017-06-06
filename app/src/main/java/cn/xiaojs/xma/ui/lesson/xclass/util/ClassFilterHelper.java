@@ -171,10 +171,10 @@ public class ClassFilterHelper {
     }
 
     public static String getType(int position){
-        String type="All";
+        String type=null;
         switch (position){
             case 0:
-                type="All";
+                type=null;
                 break;
             case 1:
                 type="Teacher";

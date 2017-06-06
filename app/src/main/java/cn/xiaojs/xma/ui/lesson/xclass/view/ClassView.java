@@ -75,6 +75,7 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
 
     private void init() {
         inflate(getContext(), R.layout.layout_class_item, this);
+        setBackgroundResource(R.drawable.bg_classlist_item);
         ButterKnife.bind(this);
     }
 

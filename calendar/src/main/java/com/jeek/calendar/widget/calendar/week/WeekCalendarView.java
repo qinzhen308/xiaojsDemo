@@ -94,4 +94,8 @@ public class WeekCalendarView extends ViewPager implements OnWeekClickListener {
         return getWeekViews().get(getCurrentItem());
     }
 
+    public void setHintBoxTag(String tag){
+        mWeekAdapter.setHintBoxTag(tag);
+    }
+
 }

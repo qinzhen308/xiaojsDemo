@@ -17,6 +17,8 @@ import android.view.View;
 
 import com.jeek.calendar.library.R;
 import com.jeek.calendar.widget.calendar.CalendarUtils;
+import com.jeek.calendar.widget.calendar.HintBox;
+import com.jeek.calendar.widget.calendar.HintBoxPool;
 import com.jeek.calendar.widget.calendar.LunarCalendarUtils;
 
 import org.joda.time.DateTime;
@@ -207,6 +209,7 @@ public class WeekView extends View {
         int selected = drawThisWeek(canvas);
         drawLunarText(canvas, selected);
         drawHoliday(canvas);
+        drawHintCircles(canvas);
     }
 
     private void clearData() {
@@ -246,7 +249,7 @@ public class WeekView extends View {
                 }
                 canvas.drawCircle((startRecX + endRecX) / 2, mRowSize / 2, mSelectCircleSize, mPaint);
             }
-            drawHintCircle(i, day, canvas);
+//            drawHintCircle(i, day, canvas);
             if (day == mSelDay) {
                 selected = i;
                 mPaint.setColor(mSelectDayColor);
@@ -342,6 +345,25 @@ public class WeekView extends View {
             }else {
                 mPaint.setColor(mHintCircleColor);
             }
+            canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
+        }
+    }
+
+    private void drawHintCircles(  Canvas canvas){
+        if(!mIsShowHint)return;
+        HintBox box=HintBoxPool.box(hintBoxTag);
+        Map<String ,Integer> hints=box.getMonthDates();
+        if(hints.size()==0)return;
+        for(int i=0;i<7;i++){
+            DateTime date = mStartDate.plusDays(i);
+            int day=date.getDayOfMonth();
+            int month=date.getMonthOfYear();
+            int year=date.getYear();
+            if(day==mSelDay)continue;
+            if(!box.contains(date))continue;
+            float circleX = (float) (mColumnSize * i + mColumnSize * 0.5);
+            float circleY = (float) (mRowSize * 0.75);
+            mPaint.setColor(box.getColor(date));
             canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
         }
     }
@@ -460,5 +482,10 @@ public class WeekView extends View {
                 invalidate();
             }
         }
+    }
+
+    String hintBoxTag;
+    public void setHintBoxTag(String tag){
+        this.hintBoxTag=tag;
     }
 }
