@@ -30,6 +30,7 @@ import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -139,7 +140,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             tvClassName.setVisibility(INVISIBLE);
         }
 
-        if (Ctl.LiveLessonState.FINISHED.equals(data.state)) {
+        if (false&&Ctl.LiveLessonState.FINISHED.equals(data.state)) {
             btnReplay.setVisibility(VISIBLE);
         }else {
             btnReplay.setVisibility(GONE);
@@ -325,7 +326,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
     public List<LOpModel> createPublicLessonMode() {
         List<LOpModel> ops;
-        if (mData.owner != null && AccountPref.getAccountID(getContext()).equals(mData.owner.getId())||forceDealToOwner()) {//我是所有者，无论我是不是讲师
+        if (mData.owner != null && AccountPref.getAccountID(getContext()).equals(mData.owner.getId())) {//我是所有者，无论我是不是讲师
             ops = imOnwer();
         } else if (mData.teacher != null && AccountPref.getAccountID(getContext()).equals(mData.teacher.getId())) {//我虽然不是所有者，但我是讲师
             ops = imSpeaker();
@@ -380,7 +381,9 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
             list.add(new LOpModel(LOpModel.OP_LOOK));
-            list.add(new LOpModel(LOpModel.OP_SIGNUP));
+            if(mData.enroll!=null&&mData.enroll.mandatory){//是否需要报名
+                list.add(new LOpModel(LOpModel.OP_SIGNUP));
+            }
 //            list.add(new LOpModel(LOpModel.OP_MODIFY_TIME));
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
             list.add(new LOpModel(LOpModel.OP_PUBLIC));
@@ -393,7 +396,9 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
         } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//已开课
             list.add(new LOpModel(LOpModel.OP_LOOK));
-            list.add(new LOpModel(LOpModel.OP_SIGNUP));
+            if(mData.enroll!=null&&mData.enroll.mandatory){//是否需要报名
+                list.add(new LOpModel(LOpModel.OP_SIGNUP));
+            }
             list.add(new LOpModel(LOpModel.OP_PUBLIC));
             list.add(new LOpModel(LOpModel.OP_PRIVATE));
             //强行停止 没有

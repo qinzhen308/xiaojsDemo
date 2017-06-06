@@ -59,7 +59,7 @@ public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
         // 如果未设置Adapter或者Adapter没有数据可以下拉刷新
         if (null == adapter || adapter.getItemCount() == 0) {
 
-            return false;
+            return true;
 
         } else {
             // 第一个条目完全展示,可以刷新

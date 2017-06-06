@@ -29,6 +29,8 @@ import cn.xiaojs.xma.common.pageload.stateview.AppLoadState2;
 import cn.xiaojs.xma.common.pageload.stateview.LoadStateListener;
 import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
+import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionCalendar;
@@ -62,6 +64,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
     @BindView(R.id.course_filter)
     TextView mFilter;
     @BindView(R.id.over_layout)
+    PullToRefreshRecyclerView mPullRecyclerView;
     RecyclerView mRecyclerView;
 
 
@@ -87,6 +90,15 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
         View v = LayoutInflater.from(context).inflate(R.layout.fragment_public_lesson, null);
         ButterKnife.bind(this,v);
         searchView.setHint(R.string.hint_input_lesson_name);
+        mPullRecyclerView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        mPullRecyclerView.setFirstLoading(false);
+        mPullRecyclerView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<RecyclerView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                dataPageLoader.refresh();
+            }
+        });
+        mRecyclerView=mPullRecyclerView.getRefreshableView();
         stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container)));
 //        stateView=new LoadStatusViewDecoratee(null);
         return v;
@@ -171,6 +183,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             @Override
             public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
                 pageChangeInRecyclerView.completeLoading();
+                mPullRecyclerView.onRefreshComplete();
                 if(ArrayUtil.isEmpty(all)){
                     stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
                 }else {
@@ -182,6 +195,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             @Override
             public void onFailed(String errorCode, String errorMessage) {
                 pageChangeInRecyclerView.completeLoading();
+                mPullRecyclerView.onRefreshComplete();
                 bindData(new ArrayList<ClassSchedule>());
                 stateView.change(LoadStateListener.STATE_LOADING_ERROR,"");
             }
