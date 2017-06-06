@@ -8,13 +8,10 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-
-import retrofit2.http.PUT;
 
 
 /*  =======================================================================================
@@ -331,46 +328,24 @@ public class ClosableSlidingLayout extends FrameLayout {
                     if ((mSlideOrientation == SLIDE_FROM_TOP_TO_BOTTOM && yvel > 0)
                             || (mSlideOrientation == SLIDE_FROM_BOTTOM_TO_TOP && yvel < 0)) {
                         dismiss(releasedChild);
+                    } else if ((mSlideOrientation == SLIDE_FROM_TOP_TO_BOTTOM && yvel < 0)
+                            || (mSlideOrientation == SLIDE_FROM_BOTTOM_TO_TOP && yvel > 0)) {
+                        dismissOrSmoothSlideClose(releasedChild);
                     }
                 } else {
-                    if (mSlideOrientation == SLIDE_FROM_TOP_TO_BOTTOM) {
-                        if (releasedChild.getTop() >= top + height / 2) {
-                            dismiss(releasedChild);
-                        } else {
-                            mDragHelper.smoothSlideViewTo(releasedChild, 0, top);
-                            ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
-                        }
-                    } else if (mSlideOrientation == SLIDE_FROM_BOTTOM_TO_TOP) {
-                        if (releasedChild.getTop() <= top - height / 2) {
-                            dismiss(releasedChild);
-                        } else {
-                            mDragHelper.smoothSlideViewTo(releasedChild, 0, -(top + height));
-                            ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
-                        }
-                    }
+                    dismissOrSmoothSlideClose(releasedChild);
                 }
             } else {
                 if (Math.abs(xvel) > MINVEL) {
-                    if ((mSlideOrientation == SLIDE_FROM_LEFT_TO_RIGHT && xvel >= 0)
-                            || (mSlideOrientation == SLIDE_FROM_RIGHT_TO_LEFT && xvel <= 0)) {
+                    if ((mSlideOrientation == SLIDE_FROM_LEFT_TO_RIGHT && xvel > 0)
+                            || (mSlideOrientation == SLIDE_FROM_RIGHT_TO_LEFT && xvel < 0)) {
                         dismiss(releasedChild);
+                    } else if ((mSlideOrientation == SLIDE_FROM_LEFT_TO_RIGHT && xvel < 0)
+                            || (mSlideOrientation == SLIDE_FROM_RIGHT_TO_LEFT && xvel > 0)) {
+                        dismissOrSmoothSlideClose(releasedChild);
                     }
                 } else {
-                    if (mSlideOrientation == SLIDE_FROM_LEFT_TO_RIGHT) {
-                        if (releasedChild.getLeft() >= left + width / 2) {
-                            dismiss(releasedChild);
-                        } else {
-                            mDragHelper.smoothSlideViewTo(releasedChild, left, 0);
-                            ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
-                        }
-                    } else if (mSlideOrientation == SLIDE_FROM_RIGHT_TO_LEFT) {
-                        if (releasedChild.getLeft() <= left - width / 2) {
-                            dismiss(releasedChild);
-                        } else {
-                            mDragHelper.smoothSlideViewTo(releasedChild, -(left + width), 0);
-                            ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
-                        }
-                    }
+                    dismissOrSmoothSlideClose(releasedChild);
                 }
             }
         }
@@ -427,6 +402,47 @@ public class ClosableSlidingLayout extends FrameLayout {
 
     public void setSlideOrientation(int slideOrientation) {
         mSlideOrientation = slideOrientation;
+    }
+
+
+    /**
+     * 处理手指离开后view的滑动效果
+     */
+    private void dismissOrSmoothSlideClose(View releasedChild) {
+        switch (mSlideOrientation) {
+            case SLIDE_FROM_TOP_TO_BOTTOM:
+                if (releasedChild.getTop() >= top + height / 2) {
+                    dismiss(releasedChild);
+                } else {
+                    mDragHelper.smoothSlideViewTo(releasedChild, 0, top);
+                    ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
+                }
+                break;
+            case SLIDE_FROM_BOTTOM_TO_TOP:
+                if (releasedChild.getTop() <= top - height / 2) {
+                    dismiss(releasedChild);
+                } else {
+                    mDragHelper.smoothSlideViewTo(releasedChild, 0, -(top + height));
+                    ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
+                }
+                break;
+            case SLIDE_FROM_LEFT_TO_RIGHT:
+                if (releasedChild.getLeft() >= left + width / 2) {
+                    dismiss(releasedChild);
+                } else {
+                    mDragHelper.smoothSlideViewTo(releasedChild, left, 0);
+                    ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
+                }
+                break;
+            case SLIDE_FROM_RIGHT_TO_LEFT:
+                if (releasedChild.getLeft() <= left - width / 2) {
+                    dismiss(releasedChild);
+                } else {
+                    mDragHelper.smoothSlideViewTo(releasedChild, -(left + width), 0);
+                    ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
+                }
+                break;
+        }
     }
 
     /**
