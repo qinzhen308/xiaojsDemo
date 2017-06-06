@@ -244,7 +244,7 @@ public class ClassroomActivity extends FragmentActivity {
             initSocketIO(mTicket, ctlSession.secret, forceConnect);
         } else {
             //重制并重新初始化和连接socket
-            SocketManager.close(false);
+            SocketManager.close();
             SocketManager.init(ClassroomActivity.this, mTicket, ctlSession.secret, true, true, forceConnect);
             mSocket = SocketManager.getSocket();
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
