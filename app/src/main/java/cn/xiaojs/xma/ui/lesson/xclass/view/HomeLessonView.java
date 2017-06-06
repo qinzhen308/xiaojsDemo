@@ -381,7 +381,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
             list.add(new LOpModel(LOpModel.OP_LOOK));
             list.add(new LOpModel(LOpModel.OP_SIGNUP));
-            list.add(new LOpModel(LOpModel.OP_MODIFY_TIME));
+//            list.add(new LOpModel(LOpModel.OP_MODIFY_TIME));
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
             list.add(new LOpModel(LOpModel.OP_PUBLIC));
             list.add(new LOpModel(LOpModel.OP_PRIVATE));
