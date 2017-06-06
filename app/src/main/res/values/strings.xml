@@ -884,5 +884,6 @@
     <string name="disband_class">解散班</string>
     <string name="disband_success">解散成功</string>
     <string name="disband">解散</string>
+    <string name="import_class_students_count">导入%1$d个班级</string>
 
 </resources>

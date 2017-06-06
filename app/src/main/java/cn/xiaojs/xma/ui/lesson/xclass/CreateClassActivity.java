@@ -228,16 +228,18 @@ public class CreateClassActivity extends BaseActivity {
         if (classLessons != null && classLessons.size() > 0) {
             timetableTipsView.setText(getString(R.string.number_lesson, classLessons.size()));
 
-        } else {
+        } else{
             timetableTipsView.setText("");
             //timetableTipsView.setHint(R.string.arrange_class);
         }
 
         if (enrollStudents != null && enrollStudents.size() > 0) {
             studentTipsView.setText(getString(R.string.number_student, enrollStudents.size()));
-        } else {
-            studentTipsView.setText("");
+        } else if (enrollImports != null && enrollImports.size() > 0){
+            studentTipsView.setText(getString(R.string.import_class_students_count, enrollImports.size()));
             //studentTipsView.setHint(R.string.please_select);
+        }else {
+            studentTipsView.setText("");
         }
     }
 
@@ -265,8 +267,8 @@ public class CreateClassActivity extends BaseActivity {
                 Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         params.lessons = classLessons;
 
-        //TODO 此处要加入从班级中导入的情况
-        if ((enrollStudents != null && enrollStudents.size() > 0) || (enrollImports != null && enrollImports.size() > 0)) {
+        if ((enrollStudents != null && enrollStudents.size() > 0)
+                || (enrollImports != null && enrollImports.size() > 0)) {
 
             ClassEnroll classEnroll = new ClassEnroll();
             classEnroll.students = enrollStudents;
@@ -316,11 +318,25 @@ public class CreateClassActivity extends BaseActivity {
                 case REQUEST_MANUAL_STUDENTS_CODE:
                     if (data != null) {
                         enrollStudents = data.getParcelableArrayListExtra(ManualAddStudentActivity.EXTRA_STUDENTS);
+                        if (enrollStudents !=null) {
+                            //清空导入班级的学生
+                            if(enrollImports !=null) {
+                                enrollImports.clear();
+                                enrollImports = null;
+                            }
+                        }
                     }
                     break;
                 case REQUEST_IMPORT_STUDENTS_CODE:
                     if (data != null) {
                         enrollImports = data.getParcelableArrayListExtra(ImportStudentFormClassActivity.EXTRA_IMPORTS);
+                        if (enrollImports !=null) {
+                            //清空手动加入的学生
+                            if (enrollStudents != null) {
+                                enrollStudents.clear();
+                                enrollStudents = null;
+                            }
+                        }
                     }
                     break;
                 case REQUEST_ZERO_ADD_STUDENT_CODE:
@@ -332,6 +348,13 @@ public class CreateClassActivity extends BaseActivity {
                                 enrollStudents = new ArrayList<>();
                             }
                             enrollStudents.add(studentEnroll);
+
+                            //清空导入班级的学生
+                            if(enrollImports !=null) {
+                                enrollImports.clear();
+                                enrollImports = null;
+                            }
+
                         }
 
                     }

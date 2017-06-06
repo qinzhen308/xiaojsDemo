@@ -84,7 +84,7 @@ public class ClassInfoActivity extends BaseActivity {
 
     @OnClick({R.id.left_image, R.id.enter_btn,
             R.id.lay_time_table, R.id.lay_material,
-            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay,R.id.veri_switcher, R.id.right_image})
+            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay, R.id.veri_switcher, R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -100,28 +100,39 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.lay_time_table:
                 //课表
-                ClassScheduleActivity.invoke(this,classInfo.id, classInfo.title,teaching);
+                ClassScheduleActivity.invoke(this, classInfo.id, classInfo.title, teaching);
                 break;
             case R.id.lay_material:
                 //资料库
                 databank();
                 break;
             case R.id.lay_student://学生列表
-                if (!teaching ||
-                        (classInfo != null && classInfo.join != null && classInfo.join.current > 0)) {
+
+                if (teaching) {
+
+                    if (classInfo != null && classInfo.join != null && classInfo.join.current > 0) {
+                        Intent i = new Intent(this, StudentsListActivity.class);
+                        i.putExtra(StudentsListActivity.EXTRA_CLASS, classId);
+                        i.putExtra(EXTRA_TEACHING, teaching);
+                        boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
+                                true : false;
+                        i.putExtra(EXTRA_VERI, verflag);
+                        startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);
+
+                    } else {
+                        addStudents();
+                    }
+
+                } else {
                     Intent i = new Intent(this, StudentsListActivity.class);
                     i.putExtra(StudentsListActivity.EXTRA_CLASS, classId);
                     i.putExtra(EXTRA_TEACHING, teaching);
-                    boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION)?
-                            true :false;
-                    i.putExtra(EXTRA_VERI,verflag);
+                    boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
+                            true : false;
+                    i.putExtra(EXTRA_VERI, verflag);
                     startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);
-                } else {
-                    Intent addIntent = new Intent(ClassInfoActivity.this,
-                            AddStudentActivity.class);
-                    addIntent.putExtra(AddStudentActivity.EXTRA_CLASS_ID, classId);
-                    startActivityForResult(addIntent, REQUEST_ADD_ONE_STUDENT_CODE);
                 }
+
                 break;
             case R.id.lay_qrcode:
                 // 二维码
@@ -146,7 +157,7 @@ public class ClassInfoActivity extends BaseActivity {
     //资料库
     private void databank() {
         Intent intent = new Intent(this, ClassMaterialActivity.class);
-        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE, teaching? true : false);
+        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE, teaching ? true : false);
         intent.putExtra(ClassMaterialActivity.EXTRA_ID, classInfo.id);
         intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, classInfo.title);
         intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Collaboration.SubType.PRIVATE_CLASS);
@@ -169,7 +180,7 @@ public class ClassInfoActivity extends BaseActivity {
         teaching = initTeaching();
 
         if (!teaching) {//学生UI
-            nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+            nameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
         nameView.setText(classInfo.title);
@@ -199,7 +210,7 @@ public class ClassInfoActivity extends BaseActivity {
 
 
     private boolean initTeaching() {
-        if (classInfo== null)
+        if (classInfo == null)
             return false;
 
         String mid = AccountDataManager.getAccountID(this);
@@ -210,8 +221,8 @@ public class ClassInfoActivity extends BaseActivity {
         }
 
         //班主任
-        if (classInfo.advisers !=null && classInfo.advisers.length>0) {
-            for (Account account : classInfo.advisers){
+        if (classInfo.advisers != null && classInfo.advisers.length > 0) {
+            for (Account account : classInfo.advisers) {
                 if (mid.equals(account.getId())) {
                     return true;
                 }
@@ -219,6 +230,45 @@ public class ClassInfoActivity extends BaseActivity {
         }
 
         return false;
+    }
+
+
+    private void addStudents() {
+
+        ListBottomDialog dialog = new ListBottomDialog(this);
+
+        String[] items = getResources().getStringArray(R.array.add_student);
+        dialog.setMiddleText(getString(R.string.add_student_type_tips));
+        dialog.setItems(items);
+        dialog.setTitleVisibility(View.VISIBLE);
+        dialog.setTitleBackground(R.color.white);
+        dialog.setRightBtnVisibility(View.GONE);
+        dialog.setLeftBtnVisibility(View.GONE);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                switch (position) {
+                    case 0://手动添加
+
+                        Intent addIntent = new Intent(ClassInfoActivity.this,
+                                AddStudentActivity.class);
+                        addIntent.putExtra(AddStudentActivity.EXTRA_CLASS_ID, classId);
+                        startActivityForResult(addIntent, REQUEST_ADD_ONE_STUDENT_CODE);
+
+                        break;
+                    case 1://从已有班级中添加
+
+                        Intent i = new Intent(ClassInfoActivity.this,
+                                ImportStudentFormClassActivity.class);
+                        i.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
+                        startActivity(i);
+                        break;
+                }
+
+            }
+
+        });
+        dialog.show();
     }
 
 //    private void updateStudentsView(int count) {
@@ -313,14 +363,14 @@ public class ClassInfoActivity extends BaseActivity {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                Toast.makeText(ClassInfoActivity.this,R.string.disband_success,Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClassInfoActivity.this, R.string.disband_success, Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(ClassInfoActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClassInfoActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -329,7 +379,7 @@ public class ClassInfoActivity extends BaseActivity {
 
         ModifyModeParam modeParam = new ModifyModeParam();
 
-        int mode = verify? Ctl.JoinMode.VERIFICATION: Ctl.JoinMode.OPEN;
+        int mode = verify ? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         modeParam.mode = mode;
 
         showProgress(true);
@@ -342,7 +392,6 @@ public class ClassInfoActivity extends BaseActivity {
                         R.string.lesson_edit_success,
                         Toast.LENGTH_SHORT)
                         .show();
-
 
 
             }
