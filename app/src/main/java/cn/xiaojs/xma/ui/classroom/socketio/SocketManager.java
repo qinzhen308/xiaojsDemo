@@ -170,6 +170,7 @@ public class SocketManager {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        mHandler = null;
     }
 
     public static void reListener() {
