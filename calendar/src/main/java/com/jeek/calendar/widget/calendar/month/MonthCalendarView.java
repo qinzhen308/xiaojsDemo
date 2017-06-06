@@ -123,4 +123,8 @@ public class MonthCalendarView extends ViewPager implements OnMonthClickListener
         return getMonthViews().get(getCurrentItem());
     }
 
+    public void setHintBoxTag(String tag){
+        mMonthAdapter.setHintBoxTag(tag);
+    }
+
 }

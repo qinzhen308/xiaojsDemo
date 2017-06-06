@@ -565,6 +565,18 @@ public class ScheduleLayout extends FrameLayout {
             wcvCalendar.getCurrentWeekView().removeTaskHint(day);
     }
 
+    public void setHintBoxTag(String tag){
+        mcvCalendar.setHintBoxTag(tag);
+        wcvCalendar.setHintBoxTag(tag);
+    }
+
+    public void hintBoxChanged() {
+        if (mcvCalendar.getCurrentMonthView() != null)
+            mcvCalendar.getCurrentMonthView().invalidate();
+        if (wcvCalendar.getCurrentWeekView() != null)
+            wcvCalendar.getCurrentWeekView().invalidate();
+    }
+
     private HashSet<Integer> mHintList=new HashSet<>();
 
     public void setTaskHintList(HashSet<Integer> hintList) {

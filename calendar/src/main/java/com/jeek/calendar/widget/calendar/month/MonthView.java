@@ -16,7 +16,11 @@ import android.view.View;
 
 import com.jeek.calendar.library.R;
 import com.jeek.calendar.widget.calendar.CalendarUtils;
+import com.jeek.calendar.widget.calendar.HintBox;
+import com.jeek.calendar.widget.calendar.HintBoxPool;
 import com.jeek.calendar.widget.calendar.LunarCalendarUtils;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -407,19 +411,30 @@ public class MonthView extends View {
      * @param day
      * @param canvas
      */
+//    private void drawHintCircle(int row, int column, int day, Canvas canvas) {
+//        if (mIsShowHint && mTaskHintList != null && mTaskHintList.size() > 0) {
+//            if(day==mSelDay)return;
+//            if (!mTaskHintList.contains(day)) return;
+//            float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
+//            float circleY = (float) (mRowSize * row + mRowSize * 0.75);
+//            if(mTaskHintColors!=null&&mTaskHintColors.size()==mTaskHintList.size()){
+//                mPaint.setColor(mTaskHintColors.get(day));
+//            }else {
+//                mPaint.setColor(mHintCircleColor);
+//            }
+//            canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
+//        }
+//    }
+
     private void drawHintCircle(int row, int column, int day, Canvas canvas) {
-        if (mIsShowHint && mTaskHintList != null && mTaskHintList.size() > 0) {
-            if(day==mSelDay)return;
-            if (!mTaskHintList.contains(day)) return;
-            float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
-            float circleY = (float) (mRowSize * row + mRowSize * 0.75);
-            if(mTaskHintColors!=null&&mTaskHintColors.size()==mTaskHintList.size()){
-                mPaint.setColor(mTaskHintColors.get(day));
-            }else {
-                mPaint.setColor(mHintCircleColor);
-            }
-            canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
-        }
+        if (!mIsShowHint) return;
+        if(day==mSelDay)return;
+        HintBox box= HintBoxPool.box(hintBoxTag);
+        if (!box.contains(mSelYear,mSelMonth,day)) return;
+        float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
+        float circleY = (float) (mRowSize * row + mRowSize * 0.75);
+        mPaint.setColor(box.getColor(mSelYear,mSelMonth,day));
+        canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
     }
 
     @Override
@@ -579,6 +594,11 @@ public class MonthView extends View {
                 invalidate();
             }
         }
+    }
+
+    String hintBoxTag;
+    public void setHintBoxTag(String tag){
+        this.hintBoxTag=tag;
     }
 
     /**
