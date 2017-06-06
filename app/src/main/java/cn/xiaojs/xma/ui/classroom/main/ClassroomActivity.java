@@ -66,7 +66,9 @@ public class ClassroomActivity extends FragmentActivity {
     private final static int MSG_SOCKET_TIME_OUT = 0;
 
     //socket time out
-    private final static int SOCKET_TIME_OUT = 10 * 1000; //10s
+    private final static int SOCKET_TIME_OUT = 5 * 1000; //10s
+    //socket retry count after time out
+    private final static int RETRY_COUNT = 3;
 
     private ProgressHUD mProgress;
     private NetworkChangedBReceiver mNetworkChangedBReceiver;
@@ -385,7 +387,7 @@ public class ClassroomActivity extends FragmentActivity {
                 switch (msg.what) {
                     case MSG_SOCKET_TIME_OUT:
                         //socket time out
-                        if (!mSktConnected && mSocketRetryCount++ < 3) {
+                        if (!mSktConnected && mSocketRetryCount++ < RETRY_COUNT) {
                             //reconnect
                             initData(false, false);
                         } else {
