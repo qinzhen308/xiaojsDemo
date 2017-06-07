@@ -120,6 +120,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     ImageView mSendOtherBtn;
     @BindView(R.id.talk_share_btn)
     ImageView mShareBtn;
+    @BindView(R.id.class_canlender)
+    ImageView mCanlenderBtn;
+
 
     //full screen bottom panel
     @BindView(R.id.fc_bottom_panel)
@@ -160,7 +163,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @OnClick({R.id.back_btn, R.id.play_pause_btn, R.id.setting_btn, R.id.open_docs_btn, R.id.talk_open_contact_btn,
             R.id.talk_send_txt_btn, R.id.talk_send_other_btn, R.id.talk_share_btn, R.id.enter_full_screen, R.id.play_layout,
             R.id.fc_land_portrait_btn, R.id.fc_screenshot_land_btn, R.id.fc_screenshot_portrait_btn, R.id.fc_open_contact_btn,
-            R.id.fc_hide_show_talk_btn, R.id.fc_open_talk_btn, R.id.play_video})
+            R.id.fc_hide_show_talk_btn, R.id.fc_open_talk_btn, R.id.play_video, R.id.class_canlender})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -218,6 +221,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 break;
             case R.id.play_video:
                 break;
+            case R.id.class_canlender://日历课表
+                mClassroomController.enterClassCanlenderFragment(this);
+                break;
             default:
                 break;
         }
@@ -245,6 +251,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mEmbedTalkFragment.setArguments(getArguments());
         mEmbedTalkFragment.setExitPeerTalkListener(this);
         getChildFragmentManager().beginTransaction().add(R.id.talk_layout, mEmbedTalkFragment).commit();
+
+
+        Constants.ClassroomType classroomType = LiveCtlSessionManager.getInstance().getClassroomType();
+        //判断教室类型，如果为PrivateClass,需要显示教学日历
+        if (classroomType == Constants.ClassroomType.PrivateClass) {
+            mCanlenderBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -558,6 +571,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 case ClassroomController.REQUEST_DOC:
                     LibDoc doc = (LibDoc) data.getSerializableExtra(Constants.KEY_OPEN_DOC_BEAN);
                     ClassroomController.getInstance().exitDocFragmentWhitOpenMime(doc, this);
+                    break;
+                case ClassroomController.REQUEST_CLASS_CANLENDER:
+                    //TODO 是否回放
+                    //ClassroomController.getInstance().enterVideoPlayPage();
                     break;
             }
         }

@@ -27,6 +27,7 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
 
 /*  =======================================================================================
@@ -77,6 +78,8 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
 
     private String mLessonId;
     private String mMyAccountId;
+
+    private Constants.ClassroomType mClassroomType;
 
     @Override
     protected View getContentView() {
@@ -129,12 +132,21 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     private void initData() {
+
+        mClassroomType = LiveCtlSessionManager.getInstance().getClassroomType();
+
         mTempData = new ArrayList<LibDoc>();
         Bundle data = null;
         if ((data = getArguments()) != null) {
-            mLessonId = getArguments().getString(Constants.KEY_LESSON_ID);
+            //mLessonId = getArguments().getString(Constants.KEY_LESSON_ID);
             CtlSession session = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
-            mLessonId = session != null && session.ctl != null ? session.ctl.id : "";
+
+            if (mClassroomType == Constants.ClassroomType.PrivateClass) {
+                mLessonId = session != null && session.cls != null ? session.cls.id : "";
+            } else {
+                mLessonId = session != null && session.ctl != null ? session.ctl.id : "";
+            }
+
         }
         mMyAccountId = AccountDataManager.getAccountID(mContext);
 
@@ -169,7 +181,12 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         mClassDocumentTv.setTextColor(getResources().getColor(R.color.font_white));
 
         if (mClassDocumentAdapter == null) {
-            mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.STANDA_LONE_LESSON);
+            if (mClassroomType == Constants.ClassroomType.PrivateClass) {
+                mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.PRIVATE_CLASS);
+            } else {
+                mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.STANDA_LONE_LESSON);
+            }
+
             mDocListView.setAdapter(mClassDocumentAdapter);
             mDocListView.setOnItemClickListener(this);
         } else {
@@ -195,6 +212,8 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         mTempData.clear();
         List<LibDoc> allData = mCurrDocumentAdapter.getData();
         String type = mCurrDocumentAdapter.getType();
+        String lessonId = mCurrDocumentAdapter.getLessonId();
+        String ownerId = mCurrDocumentAdapter.getOwnerId();
         String filterMineType = "";
 
         switch (v.getId()) {
@@ -248,7 +267,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         }
 
         if (mFilterDocumentAdapter == null) {
-            mFilterDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mTempData);
+            mFilterDocumentAdapter = new DocumentAdapter(mContext, mDocListView, lessonId, ownerId, type, mTempData);
         } else {
             mFilterDocumentAdapter.setData(mTempData, type);
         }

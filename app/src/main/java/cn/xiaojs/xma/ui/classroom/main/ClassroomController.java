@@ -41,6 +41,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.document.DocumentFragment;
+import cn.xiaojs.xma.ui.classroom.page.ClassroomScheduleFragment;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom.page.OnSettingChangedListener;
@@ -63,6 +64,7 @@ public class ClassroomController {
     public final static int REQUEST_DOC = 4;
     public final static int REQUEST_TALK = 5;
     public final static int REQUEST_SETTING = 6;
+    public final static int REQUEST_CLASS_CANLENDER = 7;
 
     public static int MODE_FRAGMENT_PLAY_TALK = 0; //播放端交流模式
     public static int MODE_FRAGMENT_PLAY_FULL_SCREEN = 1; //播放全屏模式
@@ -420,6 +422,25 @@ public class ClassroomController {
                     .add(R.id.publish_mode_layout, fragment)
                     .commit();
         }
+    }
+
+    /**
+     * 进入班级课表
+     */
+    public void enterClassCanlenderFragment(Fragment target) {
+
+        String classId = LiveCtlSessionManager.getInstance().getCtlSession().cls.id;
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.KEY_CLASS_ID, classId);
+        ClassroomScheduleFragment scheduleFragment = new ClassroomScheduleFragment();
+        scheduleFragment.setArguments(bundle);
+        scheduleFragment.setTargetFragment(target, REQUEST_CLASS_CANLENDER);
+        ((ClassroomActivity) mContext).getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.class_canlender_layout, scheduleFragment)
+                .addToBackStack("canlender_layout")
+                .commit();
     }
 
     /**

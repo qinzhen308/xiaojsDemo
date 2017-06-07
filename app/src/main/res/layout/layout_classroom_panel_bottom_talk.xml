@@ -44,6 +44,15 @@
                 android:src="@drawable/ic_cr_open_talk"/>
 
         <ImageView
+                android:id="@+id/class_canlender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/px20"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_mode_calender1"/>
+
+        <ImageView
                 android:id="@+id/talk_send_other_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
