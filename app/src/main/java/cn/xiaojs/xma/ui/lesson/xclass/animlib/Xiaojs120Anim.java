@@ -2,6 +2,8 @@ package cn.xiaojs.xma.ui.lesson.xclass.animlib;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PixelFormat;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -27,12 +29,16 @@ public class Xiaojs120Anim {
             fistCircleEditBtn=new ImageView(context);
             fistCircleEditBtn.setImageResource(R.drawable.ic_first_circle_edit_btn);
         }
-        WindowManager.LayoutParams lp=new WindowManager.LayoutParams(tagView.getWidth(),tagView.getHeight());
+        WindowManager.LayoutParams lp=new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_TOAST);
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
         lp.type=WindowManager.LayoutParams.TYPE_TOAST;
-        lp.alpha=0;
+        lp.height=WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.width=WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.format= PixelFormat.TRANSPARENT;
+        lp.gravity= Gravity.LEFT|Gravity.TOP;
+//        lp.alpha=0;
         int[] xy=new int[2];
         tagView.getLocationInWindow(xy);
         lp.x=xy[0];

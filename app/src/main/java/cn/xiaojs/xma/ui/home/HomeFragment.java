@@ -284,13 +284,18 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         mBanner.start();
-        if(guide==null){
-            guide=new Xiaojs120Anim(getActivity());
-            guide.attachCircleEditView(getActivity(),mContent.findViewById(R.id.iv_write_dynamic));
-        }
+//        if(guide==null){
+//            guide=new Xiaojs120Anim(getActivity());
+//            mContent.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    guide.attachCircleEditView(getActivity(),mContent.findViewById(R.id.iv_write_dynamic));
+//                }
+//            });
+//        }
     }
 
-    Xiaojs120Anim guide;
+//    Xiaojs120Anim guide;
 
     @Override
     public void onPause() {

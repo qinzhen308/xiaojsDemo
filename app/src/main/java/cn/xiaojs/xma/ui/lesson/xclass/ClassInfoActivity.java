@@ -106,30 +106,14 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.lay_student://学生列表
 
-                if (teaching) {
 
-                    if (classInfo != null && classInfo.join != null && classInfo.join.current > 0) {
-                        Intent i = new Intent(this, StudentsListActivity.class);
-                        i.putExtra(StudentsListActivity.EXTRA_CLASS, classId);
-                        i.putExtra(EXTRA_TEACHING, teaching);
-                        boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
-                                true : false;
-                        i.putExtra(EXTRA_VERI, verflag);
-                        startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);
-
-                    } else {
-                        addStudents();
-                    }
-
-                } else {
-                    Intent i = new Intent(this, StudentsListActivity.class);
-                    i.putExtra(StudentsListActivity.EXTRA_CLASS, classId);
-                    i.putExtra(EXTRA_TEACHING, teaching);
-                    boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
-                            true : false;
-                    i.putExtra(EXTRA_VERI, verflag);
-                    startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);
-                }
+                Intent i = new Intent(this, StudentsListActivity.class);
+                i.putExtra(StudentsListActivity.EXTRA_CLASS, classId);
+                i.putExtra(EXTRA_TEACHING, teaching);
+                boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
+                        true : false;
+                i.putExtra(EXTRA_VERI, verflag);
+                startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);
 
                 break;
             case R.id.lay_qrcode:

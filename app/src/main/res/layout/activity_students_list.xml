@@ -16,7 +16,7 @@
             android:paddingBottom="@dimen/px20"
             android:paddingLeft="@dimen/px25"
             android:paddingRight="@dimen/px25"
-            android:visibility="gone"
+            android:visibility="visible"
             >
 
         <ImageView
@@ -38,6 +38,20 @@
                 android:layout_toRightOf="@id/veri_img"
             android:layout_centerVertical="true"
                 />
+
+
+        <TextView
+            android:id="@+id/veri_count"
+            android:layout_width="@dimen/px34"
+            android:layout_height="@dimen/px34"
+            android:textSize="@dimen/font_16px"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:background="@drawable/bg_red_circle_point"
+            android:visibility="gone"
+            />
 
         <TextView
                 android:id="@+id/veri_time"

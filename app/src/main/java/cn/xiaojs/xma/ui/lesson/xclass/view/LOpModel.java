@@ -567,7 +567,7 @@ public class LOpModel {
 
     private void rejectReason(Activity context, CLesson bean){
         Common2Dialog dialog=new Common2Dialog(context);
-        dialog.setTitle("原因");
+        dialog.setTitle("取消原因");
         dialog.setDesc("原因：不知道");
         dialog.show();
     }
