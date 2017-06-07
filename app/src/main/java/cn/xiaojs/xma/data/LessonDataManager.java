@@ -704,4 +704,24 @@ public class LessonDataManager {
         lessonRequest.removeClass(classid);
     }
 
+
+    /**
+     * 编辑班课
+     * @param context
+     * @param classId
+     * @param lessonId
+     * @param classLesson
+     * @param callback
+     */
+    public static void modifyClassesLesson(Context context,
+                                           String classId,
+                                           String lessonId,
+                                           ClassLesson classLesson,
+                                           APIServiceCallback callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.modifyClassesLesson(classId, lessonId, classLesson);
+
+    }
+
 }
