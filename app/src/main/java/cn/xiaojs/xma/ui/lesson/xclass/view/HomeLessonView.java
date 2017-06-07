@@ -224,9 +224,15 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     }
 
     private void showOperateBtn(){
-        if(fromSchedule&&!(isAdviser()||mData.owner!=null&&AccountPref.getAccountID(getContext()).equals(mData.owner.getId()))){//课表里面只有班主任和所有者有操作权限
-            btnMore.setVisibility(INVISIBLE);
+        if(fromSchedule){//课表里
             tvClassName.setVisibility(INVISIBLE);
+
+            if(!(isAdviser()||mData.owner!=null&&AccountPref.getAccountID(getContext()).equals(mData.owner.getId()))){//只有班主任和所有者有操作权限显示按钮
+                btnMore.setVisibility(INVISIBLE);
+            } else if(!(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)||
+                    Ctl.StandaloneLessonState.LIVE.equals(mData.state)||Ctl.StandaloneLessonState.CANCELLED.equals(mData.state))){//除了这个状态，其他不要操作
+                btnMore.setVisibility(INVISIBLE);
+            }
         }
     }
 

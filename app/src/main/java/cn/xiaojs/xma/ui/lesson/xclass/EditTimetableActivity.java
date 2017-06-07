@@ -298,7 +298,7 @@ public class EditTimetableActivity extends BaseActivity {
 
     private void finishCompleted(ClassLesson classLesson) {
         Intent i = new Intent();
-        i.putExtra(EXTRA_CLASS_LESSON, classLesson);
+        i.putExtra(EXTRA_C_LESSON, classLesson);
         setResult(RESULT_OK,i);
         finish();
     }
