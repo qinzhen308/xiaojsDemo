@@ -42,7 +42,7 @@ public class EditTimetableActivity extends BaseActivity {
 
     private final int REQUEST_NAME_CODE = 0x1;
 
-    
+
     @BindView(R.id.lesson_name_text)
     TextView nameView;
     @BindView(R.id.lesson_time)
@@ -93,6 +93,13 @@ public class EditTimetableActivity extends BaseActivity {
 
         if (cLesson == null)
             finish();
+
+        nameView.setText(cLesson.title);
+        timeView.setText(TimeUtil.format(cLesson.schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+        durationView.setText(String.valueOf(cLesson.schedule.getDuration()));
+
+        //FIXME Clesson 没有返回是否播放字段
+        //recordView.setChecked(cLesson.);
 
 
     }
@@ -158,45 +165,15 @@ public class EditTimetableActivity extends BaseActivity {
         }
 
 
+        //FIXME 如果时间未修改，择不需要检测冲突
         //此处判断时间是否有冲突
-        new CheckConflictTask().execute(lessonStartTime, 
+        new CheckConflictTask().execute(lessonStartTime,
                 Long.parseLong(durationView.getText().toString()));
 
 
-        
-
     }
 
-
-    private boolean checkLocalConflict(long startTime,long duration) {
-
-        long endTime = startTime + duration * 60 * 1000;
-
-        ArrayList<ClassLesson> classLessons = CreateClassActivity.classLessons;
-        if (classLessons != null && classLessons.size() > 0) {
-
-            for (ClassLesson clesson: classLessons) {
-                Schedule schedule = clesson.schedule;
-                long start = schedule.getStart().getTime();
-                long end = start + duration * 60 * 1000;
-
-                if (startTime >= start && startTime <= end) {
-                    return true;
-                }
-
-                if (endTime >= start && endTime <= end) {
-                    return true;
-                }
-            }
-
-
-        }
-
-        return false;
-    }
-
-
-    private class CheckConflictTask extends AsyncTask<Long,Void,Boolean> {
+    private class CheckConflictTask extends AsyncTask<Long, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -206,30 +183,25 @@ public class EditTimetableActivity extends BaseActivity {
         @Override
         protected Boolean doInBackground(Long... params) {
 
-            boolean result = checkLocalConflict(params[0],params[1]);
-            if (!result) {
+            boolean result = false;
+            try {
+                Schedule schedule = new Schedule();
+                schedule.setStart(new Date(params[0]));
+                schedule.setDuration(params[1]);
 
-                try {
+                CheckLesson checkLesson = new CheckLesson();
+                checkLesson.schedule = schedule;
 
-                    Schedule schedule = new Schedule();
-                    schedule.setStart(new Date(params[0]));
-                    schedule.setDuration(params[1]);
+                CheckOverlapParams overlapParams = new CheckOverlapParams();
+                overlapParams.lessons = new ArrayList<>(1);
+                overlapParams.lessons.add(checkLesson);
 
-                    CheckLesson checkLesson = new CheckLesson();
-                    checkLesson.schedule = schedule;
-
-                    CheckOverlapParams overlapParams = new CheckOverlapParams();
-                    overlapParams.lessons = new ArrayList<>(1);
-                    overlapParams.lessons.add(checkLesson);
-
-                    // 去服务器检测
-                    if(!LessonDataManager.checkOverlap(getApplicationContext(),overlapParams)) {
-                        result = true;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // 去服务器检测
+                if (!LessonDataManager.checkOverlap(getApplicationContext(), overlapParams)) {
+                    result = true;
                 }
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             return result;
@@ -242,17 +214,23 @@ public class EditTimetableActivity extends BaseActivity {
                 Toast.makeText(EditTimetableActivity.this,
                         R.string.clesson_time_has_conflict,
                         Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 submit();
             }
         }
     }
-    
-    
+
+
     private void submit() {
-        
+
         ClassLesson classLesson = new ClassLesson();
-        classLesson.title = nameView.getText().toString().trim();
+
+        String title = nameView.getText().toString().trim();
+        if (!title.equals(cLesson.title)) {
+            classLesson.title = title;
+        }
+
+        //FIXME 需要修改
         classLesson.recordable = recordView.isChecked();
 
         Schedule schedule = new Schedule();
@@ -260,53 +238,43 @@ public class EditTimetableActivity extends BaseActivity {
         schedule.setDuration(Integer.parseInt(durationView.getText().toString()));
 
         classLesson.schedule = schedule;
+        editClasslesson(classLesson);
 
-        if (TextUtils.isEmpty(classId)) {
-            finishCompleted(classLesson);
-        } else{
-            commitToClass(classLesson);
-        }
 
-        
     }
 
-    private void commitToClass(final ClassLesson classLesson){
-
-        List<ClassLesson> lessons = new ArrayList<>(1);
-        lessons.add(classLesson);
-
-        ScheduleParams params = new ScheduleParams();
-        params.lessons = lessons;
+    private void editClasslesson(final ClassLesson classLesson) {
 
         showProgress(true);
-        LessonDataManager.scheduleClassLesson(this, classId, params, new APIServiceCallback() {
+        LessonDataManager.modifyClassesLesson(this, classId, cLesson.id, classLesson, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                Toast.makeText(EditTimetableActivity.this,R.string.add_success,Toast.LENGTH_SHORT).show();
-                finishCompleted(classLesson);
+                Toast.makeText(EditTimetableActivity.this, R.string.lesson_edit_success, Toast.LENGTH_SHORT).show();
+                finish();
+                //finishCompleted(classLesson);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(EditTimetableActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditTimetableActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    private void finishCompleted(ClassLesson classLesson) {
-        Intent i = new Intent();
-        i.putExtra(EXTRA_CLASS_LESSON, classLesson);
-        setResult(RESULT_OK,i);
-        finish();
-    }
+//    private void finishCompleted(ClassLesson classLesson) {
+//        Intent i = new Intent();
+//        i.putExtra(EXTRA_CLASS_LESSON, classLesson);
+//        setResult(RESULT_OK,i);
+//        finish();
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            switch (requestCode){
+            switch (requestCode) {
                 case REQUEST_NAME_CODE:
                     if (data != null) {
                         String name = data.getStringExtra(AddLessonNameActivity.EXTRA_NAME);
