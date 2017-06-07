@@ -32,6 +32,8 @@ import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
+import static cn.xiaojs.xma.ui.classroom.main.Constants.KEY_CLASS_ID;
+
 /**
  * Created by Paul Z on 2017/5/23.
  * 教室里面的课表
@@ -65,7 +67,10 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
 
     @Override
     protected void init() {
-        classId = getActivity().getIntent().getStringExtra(ClassScheduleActivity.EXTRA_ID);
+        if (getArguments() != null) {
+            classId = getArguments().getString(KEY_CLASS_ID);
+        }
+
         mAdapter = new HomeClassAdapter(recyclerview);
         recyclerview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         recyclerview.setAdapter(mAdapter);
