@@ -36,6 +36,7 @@ import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.EditTimetableActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
@@ -136,7 +137,7 @@ public class LOpModel {
                 delete(context,position,data);
                 break;
             case OP_EDIT:
-                edit(context, data.id);
+                edit(context, data);
                 break;
             case OP_ENTER:
                 enterClass(context, data.ticket);
@@ -288,12 +289,20 @@ public class LOpModel {
         });
     }
 
-    //编辑
-    private void edit(Activity context,String id) {
-        Intent intent = new Intent(context, LessonCreationActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_ID, id);
-        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_EDIT);
-        context.startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
+    //编辑（区分公开课和班课）
+    private void edit(Activity context,CLesson bean) {
+        if(Account.TypeName.STAND_ALONE_LESSON.equals(bean.type)){
+            Intent intent = new Intent(context, LessonCreationActivity.class);
+            intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
+            intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_EDIT);
+            context.startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
+        }else {
+            Intent intent = new Intent(context, EditTimetableActivity.class);
+            intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,bean.classInfo.id);
+            intent.putExtra(EditTimetableActivity.EXTRA_C_LESSON,bean);
+            context.startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
+        }
+
     }
 
     //撤销审核，取消上架
