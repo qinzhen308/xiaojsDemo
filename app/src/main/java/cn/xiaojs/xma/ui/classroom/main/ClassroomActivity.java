@@ -328,6 +328,9 @@ public class ClassroomActivity extends FragmentActivity {
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mSktConnected = true;
 
+            //从socket中删除所有监听器，并且重新监听
+            SocketManager.off(false);
+            SocketManager.reListener();
             ClassroomController.getInstance().notifySocketConnectChanged(true);
         }
     };
