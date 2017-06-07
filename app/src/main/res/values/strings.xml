@@ -885,5 +885,8 @@
     <string name="disband_success">解散成功</string>
     <string name="disband">解散</string>
     <string name="import_class_students_count">导入%1$d个班级</string>
+    <string name="overlay_students_tips">手动添加的学生将被覆盖，确定要继续吗？</string>
+    <string name="overlay_import_tips">从班级中导入的学生将被覆盖，确定要继续吗？</string>
+    <string name="go_on">继续</string>
 
 </resources>
