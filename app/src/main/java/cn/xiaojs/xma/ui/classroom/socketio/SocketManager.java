@@ -86,9 +86,16 @@ public class SocketManager {
     }
 
     /**
-     * off all listeners
+     * off all socket listeners and clear EventListeners
      */
     public static void off() {
+        off(true);
+    }
+
+    /**
+     * off all listeners
+     */
+    public static void off(boolean clear) {
         if (mEventListeners != null) {
             for (String event : mEventListeners.keySet()) {
                 ConcurrentLinkedQueue<EventListener> eventListeners = mEventListeners.get(event);
@@ -100,10 +107,14 @@ public class SocketManager {
                         }
                     }
 
-                    eventListeners.clear();
+                    if (clear) {
+                        eventListeners.clear();
+                    }
                 }
             }
-            mEventListeners.clear();
+            if (clear) {
+                mEventListeners.clear();
+            }
         }
 
         if (mSocket != null) {
