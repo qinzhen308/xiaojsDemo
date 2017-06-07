@@ -1,6 +1,8 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.TextView;
@@ -117,8 +119,8 @@ public class ClassScheduleBuz {
 
             @Override
             public void onMonthChange(int year, int month, int day) {
-                getMonthData(year,month,day);
-
+//                getMonthData(year,month,day);
+                prepareRequest();
             }
         });
 
@@ -239,5 +241,27 @@ public class ClassScheduleBuz {
     public long getSelectedDate(){
         return ScheduleUtil.ymdToTimeMill(selectyear,selectMonth,selectDay);
     }
+
+
+    private final static int BEGIN_REQUEST =0xff;
+
+
+    //延迟加载,优化滑动时的卡顿(网络请求造成)
+    private void prepareRequest() {
+        handler.removeMessages(BEGIN_REQUEST);
+        Message msg=new Message();
+        msg.what= BEGIN_REQUEST;
+        handler.sendMessageDelayed(msg,450);
+    }
+
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+            if(msg.what== BEGIN_REQUEST){
+                getMonthData(selectyear,selectMonth,selectDay);
+            }
+        }
+    };
 
 }
