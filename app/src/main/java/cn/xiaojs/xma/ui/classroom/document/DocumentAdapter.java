@@ -24,6 +24,8 @@ import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -57,9 +59,13 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
     private CommonDialog mDelDocDialog;
     private String mMyAccountId;
     private String mLessonId;
+    private Constants.ClassroomType mClassroomType;
 
-    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView, List<LibDoc> data) {
+    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView,String lessonId, String ownerId, String type, List<LibDoc> data) {
         super(context, listView, data);
+        mLessonId = lessonId;
+        mOwnerId = ownerId;
+        mType = type;
         init();
     }
 
@@ -81,11 +87,21 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         return mType;
     }
 
+    public String getLessonId() {
+        return mLessonId;
+    }
+
+    public String getOwnerId() {
+        return mOwnerId;
+    }
+
     private void init() {
         mDefaultBgColor = mContext.getResources().getColor(R.color.white);
         mHoverBgColor = mContext.getResources().getColor(R.color.main_blue);
         drawSize = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
         mMyAccountId = AccountDataManager.getAccountID(mContext);
+
+        mClassroomType = LiveCtlSessionManager.getInstance().getClassroomType();
     }
 
     public List<LibDoc> getData() {
@@ -144,7 +160,9 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         holder.action.setVisibility(bean.showAction ? View.VISIBLE : View.GONE);
         //holder.info.setBackgroundColor(bean.isShowAction() ? mHoverBgColor : mDefaultBgColor);
 
-        if (mType == Collaboration.SubType.STANDA_LONE_LESSON) {
+        if (Collaboration.SubType.STANDA_LONE_LESSON.equals(mType)
+                || Collaboration.SubType.PRIVATE_CLASS.equals(mType)) {
+
             String owner = bean.owner != null ? bean.owner.id : "";
             if (owner != null && owner.equals(mMyAccountId)) {
                 //myself
@@ -179,7 +197,8 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         holder.share.setOnClickListener(this);
         holder.delete.setOnClickListener(this);
 
-        if (mType == Collaboration.SubType.STANDA_LONE_LESSON) {
+        if (Collaboration.SubType.STANDA_LONE_LESSON.equals(mType)
+                || Collaboration.SubType.PRIVATE_CLASS.equals(mType)) {
             holder.share.setVisibility(View.GONE);
         } else {
             holder.share.setVisibility(View.VISIBLE);
@@ -234,7 +253,11 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
                     showProgress(false);
                     ShareResource shareResource = new ShareResource();
                     shareResource.targetId = mLessonId;
-                    shareResource.subtype = Collaboration.SubType.STANDA_LONE_LESSON;
+
+                    String subtype = Constants.ClassroomType.PrivateClass.equals(mClassroomType)?
+                            Collaboration.SubType.PRIVATE_CLASS : Collaboration.SubType.STANDA_LONE_LESSON;
+
+                    shareResource.subtype = subtype;
                     shareResource.sharedType = Collaboration.ShareType.SHORTCUT;
                     CollaManager.shareDocument(mContext, clsDoc.id, shareResource, new APIServiceCallback<ShareDoc>() {
                         @Override
@@ -289,7 +312,8 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
                     //delete
                     LibDoc clsDoc = data.get(pos);
                     showProgress(false);
-                    boolean shared = mType == Collaboration.SubType.STANDA_LONE_LESSON;
+                    boolean shared = (Collaboration.SubType.STANDA_LONE_LESSON.equals(mType))
+                            || (Collaboration.SubType.PRIVATE_CLASS.equals(mType));
                     CollaManager.deleteDocument(mContext, clsDoc.id, shared, new APIServiceCallback() {
                         @Override
                         public void onSuccess(Object object) {

@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 
+import cn.xiaojs.xma.model.Doc;
+import cn.xiaojs.xma.model.material.LibDoc;
+
 /**
  * Created by maxiaobao on 2017/5/25.
  */
@@ -21,6 +24,8 @@ public class StudentEnroll  implements Parcelable{
 
     public Date createdOn;
     public String state;
+
+    public Doc doc;
 
     public StudentEnroll() {
 

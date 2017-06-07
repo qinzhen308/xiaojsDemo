@@ -678,18 +678,16 @@ public class LessonDataManager {
     /**
      * Approved or rejected the person apply for join class as student.
      * @param context
-     * @param classid
-     * @param studentid
+     * @param joinId
      * @param reason
      * @param callback
      */
     public static void reviewJoinClass(Context context,
-                                       String classid,
-                                       String studentid,
+                                       String joinId,
                                        DecisionReason reason,
                                        APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.reviewJoinClass(classid, studentid, reason);
+        lessonRequest.reviewJoinClass(joinId, reason);
     }
 
 

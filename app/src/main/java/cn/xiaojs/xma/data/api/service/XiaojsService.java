@@ -395,9 +395,8 @@ public interface XiaojsService {
     Call<ResponseBody> joinClass(@Path("classes") String classes);
 
     //Review Join Class
-    @PATCH("/v1/ctl/classes/{classes}/students/{student}")
-    Call<ResponseBody> reviewJoinClass(@Path("classes") String classes,
-                                       @Path("student") String student,
+    @PATCH("/v1/ctl/cls/students/{joinId}/review")
+    Call<ResponseBody> reviewJoinClass(@Path("joinId") String joinId,
                                        @Body DecisionReason reason);
 
     //Remove Class

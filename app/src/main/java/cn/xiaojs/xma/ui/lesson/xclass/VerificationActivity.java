@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
@@ -46,6 +47,15 @@ public class VerificationActivity extends BaseActivity {
 
     }
 
+    @OnClick({R.id.left_image})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.left_image:
+                finish();
+                break;
+        }
+    }
+
     private void initView() {
         verifyAdapter = new VerifyAdapter(this,listView);
         listView.setAdapter(verifyAdapter);
@@ -81,7 +91,8 @@ public class VerificationActivity extends BaseActivity {
                 holder.refuseBtn.setVisibility(View.GONE);
 
                 holder.statusView.setVisibility(View.VISIBLE);
-                holder.operaNameView.setVisibility(View.VISIBLE);
+                //FIXME 处理人姓名没返回,先隐藏
+                holder.operaNameView.setVisibility(View.GONE);
 
                 holder.statusView.setText(R.string.had_agreed);
 
@@ -90,7 +101,8 @@ public class VerificationActivity extends BaseActivity {
                 holder.refuseBtn.setVisibility(View.GONE);
 
                 holder.statusView.setVisibility(View.VISIBLE);
-                holder.operaNameView.setVisibility(View.VISIBLE);
+                //FIXME 处理人姓名没返回,先隐藏
+                holder.operaNameView.setVisibility(View.GONE);
 
                 holder.statusView.setText(R.string.had_refused);
 
@@ -104,7 +116,6 @@ public class VerificationActivity extends BaseActivity {
                 holder.statusView.setText("");
             }
 
-            //TODO 处理人姓名没返回
 
             holder.agreeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -182,7 +193,7 @@ public class VerificationActivity extends BaseActivity {
             reason.action = decision;
 
             showProgress(true);
-            LessonDataManager.reviewJoinClass(mContext, classId, student.id, reason, new APIServiceCallback() {
+            LessonDataManager.reviewJoinClass(mContext, student.doc.id, reason, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
 

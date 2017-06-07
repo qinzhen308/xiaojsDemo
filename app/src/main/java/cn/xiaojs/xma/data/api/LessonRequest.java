@@ -382,10 +382,8 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.JOIN_CLASS, call);
     }
 
-    public void reviewJoinClass(String classid,
-                                String studentid,
-                                DecisionReason reason) {
-        Call<ResponseBody> call = getService().reviewJoinClass(classid, studentid, reason);
+    public void reviewJoinClass(String joinId, DecisionReason reason) {
+        Call<ResponseBody> call = getService().reviewJoinClass(joinId, reason);
         enqueueRequest(APIType.REVIEW_JOIN_CLASS, call);
     }
 

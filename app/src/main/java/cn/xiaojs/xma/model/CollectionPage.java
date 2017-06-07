@@ -19,4 +19,5 @@ public class CollectionPage<T> {
     public int numOfPages;
     public int maxNumOfObjectsPerPage;
     public ArrayList<T> objectsOfPage;
+    public int countOfApplying;
 }
