@@ -4,11 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Debug;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -16,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jeek.calendar.widget.calendar.HintBoxPool;
-import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
@@ -38,7 +36,6 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionResult;
@@ -49,7 +46,6 @@ import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
-import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
@@ -57,7 +53,6 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
-import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.JudgementUtil;
 
@@ -133,10 +128,11 @@ public class HomeClassContentBuz {
                     Logger.d("----qz----calendar---onClickDate---"+year+"年"+(month+1)+"月"+day);
                 }
                 if(HomeClassContentBuz.this.month!=month||HomeClassContentBuz.this.year!=year||HomeClassContentBuz.this.day!=day){
+                    prepareRequestDay(month==HomeClassContentBuz.this.month?0:450);
                     HomeClassContentBuz.this.day=day;
                     HomeClassContentBuz.this.year=year;
                     HomeClassContentBuz.this.month=month;
-                    doRequest(year,month,day);
+//                    doRequest(year,month,day);
                     tvTopDate.setText(ScheduleUtil.getDateYM_Ch(year,month,day));
                 }
             }
@@ -154,7 +150,7 @@ public class HomeClassContentBuz {
                 if(XiaojsConfig.DEBUG){
                     Logger.d("----qz----calendar---onMonthChange---"+year+"年"+(month+1)+"月"+day);
                 }
-                getMonthData();
+                prepareRequestMonth();
                 if(todayYear==year&&todayMonth==month){
                     btnToday.setVisibility(View.GONE);
                 }else {
@@ -355,4 +351,34 @@ public class HomeClassContentBuz {
         doRequest(year,month,day);
         loadHotClasses();
     }
+
+
+    private final static int BEGIN_REQUEST_MONTH =0xff;
+    private final static int BEGIN_REQUEST_DAY =0xfe;
+
+    private void prepareRequestMonth() {
+        handler.removeMessages(BEGIN_REQUEST_MONTH);
+        Message msg=new Message();
+        msg.what= BEGIN_REQUEST_MONTH;
+        handler.sendMessageDelayed(msg,450);
+    }
+
+    private void prepareRequestDay(long delayed) {
+        handler.removeMessages(BEGIN_REQUEST_DAY);
+        Message msg=new Message();
+        msg.what= BEGIN_REQUEST_DAY;
+        handler.sendMessageDelayed(msg,delayed);
+    }
+
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+            if(msg.what== BEGIN_REQUEST_MONTH){
+                getMonthData();
+            }else if(msg.what== BEGIN_REQUEST_DAY){
+                doRequest(year,month,day);
+            }
+        }
+    };
 }
