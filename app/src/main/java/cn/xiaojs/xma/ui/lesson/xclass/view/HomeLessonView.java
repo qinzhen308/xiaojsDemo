@@ -359,14 +359,14 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         List<LOpModel> list = new ArrayList<>();
 
         if (Ctl.StandaloneLessonState.DRAFT.equals(mData.state)) {//草稿
-            list.add(new LOpModel(LOpModel.OP_SUBMIT));
+//            list.add(new LOpModel(LOpModel.OP_SUBMIT));
             list.add(new LOpModel(LOpModel.OP_PUBLISH));
             list.add(new LOpModel(LOpModel.OP_EDIT));
             list.add(new LOpModel(LOpModel.OP_DELETE));
 //            list.add(new LOpModel(LOpModel.OP_APPLY));
         } else if (Ctl.StandaloneLessonState.PENDING_FOR_ACK.equals(mData.state)) {//待确认
             list.add(new LOpModel(LOpModel.OP_LOOK));
-            list.add(new LOpModel(LOpModel.OP_CANCEL_SUBMIT));
+//            list.add(new LOpModel(LOpModel.OP_CANCEL_SUBMIT));
 //            list.add(new LOpModel(LOpModel.OP_APPLY));
 
         } else if (Ctl.StandaloneLessonState.ACKNOWLEDGED.equals(mData.state)) {//已确认

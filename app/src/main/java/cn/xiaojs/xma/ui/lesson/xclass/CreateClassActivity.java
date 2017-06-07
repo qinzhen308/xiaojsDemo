@@ -297,7 +297,7 @@ public class CreateClassActivity extends BaseActivity {
                 clearClassLessons();
 
                 DataChangeHelper.getInstance()
-                        .notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
+                        .notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
 
                 finish();
             }
