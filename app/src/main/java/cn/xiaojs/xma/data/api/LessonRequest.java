@@ -393,6 +393,11 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.REMOVE_CLASS, call);
     }
 
+    public void modifyClassesLesson(String classId, String lessonId, ClassLesson classLesson) {
+        Call<ResponseBody> call = getService().modifyClassesLesson(classId, lessonId, classLesson);
+        enqueueRequest(APIType.MODIFY_CLASSES_LESSON, call);
+    }
+
 
     @Override
     public void doTask(int apiType, Object responseBody) {

@@ -3,13 +3,11 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,7 +18,6 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.api.service.XiaojsService;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.CheckLesson;
@@ -36,17 +33,16 @@ import cn.xiaojs.xma.util.TimeUtil;
  * Created by maxiaobao on 2017/5/17.
  */
 
-public class CreateTimetableActivity extends BaseActivity {
+public class EditTimetableActivity extends BaseActivity {
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
 
-    public static final String EXTRA_CLASS_LESSON = "class_lesson";
-    public static final String EXTRA_TARGET_DATE = "extra_target_date";
+    public static final String EXTRA_C_LESSON = "class_lesson";
 
     private final int REQUEST_NAME_CODE = 0x1;
 
-
+    
     @BindView(R.id.lesson_name_text)
     TextView nameView;
     @BindView(R.id.lesson_time)
@@ -59,7 +55,7 @@ public class CreateTimetableActivity extends BaseActivity {
     private long lessonStartTime;
 
     private String classId;
-    private long targetTime;
+    private CLesson cLesson;
 
     @Override
     protected void addViewContent() {
@@ -67,11 +63,8 @@ public class CreateTimetableActivity extends BaseActivity {
         setMiddleTitle(R.string.time_table);
         setRightText(R.string.finish);
 
-
         classId = getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID);
-        targetTime = getIntent().getLongExtra(EXTRA_TARGET_DATE, -1);
-
-
+        cLesson = getIntent().getParcelableExtra(EXTRA_C_LESSON);
 
         initView();
     }
@@ -98,11 +91,15 @@ public class CreateTimetableActivity extends BaseActivity {
 
     private void initView() {
 
+        if (cLesson == null)
+            finish();
+
+
     }
 
     private void selectStartTime() {
 
-        long timesp = targetTime == -1 ? System.currentTimeMillis() + HALF_HOUR : targetTime;
+        long timesp = System.currentTimeMillis() + HALF_HOUR;
 
         DataPicker.pickFutureDate(this, new Date(timesp),
                 new DataPicker.OnDatePickListener() {
@@ -242,7 +239,7 @@ public class CreateTimetableActivity extends BaseActivity {
         protected void onPostExecute(Boolean conflict) {
             cancelProgress();
             if (conflict) {
-                Toast.makeText(CreateTimetableActivity.this,
+                Toast.makeText(EditTimetableActivity.this,
                         R.string.clesson_time_has_conflict,
                         Toast.LENGTH_SHORT).show();
             }else {
@@ -286,14 +283,14 @@ public class CreateTimetableActivity extends BaseActivity {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                Toast.makeText(CreateTimetableActivity.this,R.string.add_success,Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditTimetableActivity.this,R.string.add_success,Toast.LENGTH_SHORT).show();
                 finishCompleted(classLesson);
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
-                Toast.makeText(CreateTimetableActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditTimetableActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
             }
         });
 

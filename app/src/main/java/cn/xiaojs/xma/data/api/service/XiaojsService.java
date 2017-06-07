@@ -403,6 +403,12 @@ public interface XiaojsService {
     @DELETE("/v1/ctl/classes/{class}")
     Call<ResponseBody> removeClass(@Path("class") String classId);
 
+    //Modify Classes Lesson
+    @PATCH("/v1/ctl/classes/{classId}/{lessonId}")
+    Call<ResponseBody> modifyClassesLesson(@Path("classId") String classId,
+                                           @Path("lessonId") String lessonId,
+                                           @Body ClassLesson classLesson);
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
