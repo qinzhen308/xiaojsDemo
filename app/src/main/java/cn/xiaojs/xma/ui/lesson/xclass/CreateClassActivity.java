@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 
@@ -195,25 +196,33 @@ public class CreateClassActivity extends BaseActivity {
                 switch (position) {
                     case 0://手动添加
 
-                        if (enrollStudents !=null && enrollStudents.size()>0) {
-                            Intent ic = new Intent(CreateClassActivity.this,
-                                    ManualAddStudentActivity.class);
-                            if (enrollStudents != null && enrollStudents.size() > 0) {
-                                ic.putExtra(ManualAddStudentActivity.EXTRA_STUDENTS, enrollStudents);
-                            }
-                            startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
-                        }else {
-
-                            Intent i = new Intent(CreateClassActivity.this, AddStudentActivity.class);
-                            startActivityForResult(i, REQUEST_ZERO_ADD_STUDENT_CODE);
+                        if (enrollImports !=null && enrollImports.size() > 0) {
+                            showOverlayTips(false);
+                        } else {
+                            enterStudentPage();
                         }
+
+                        //if (enrollStudents !=null && enrollStudents.size()>0) {
+//                        Intent ic = new Intent(CreateClassActivity.this,
+//                                ManualAddStudentActivity.class);
+//                        if (enrollStudents != null && enrollStudents.size() > 0) {
+//                            ic.putExtra(ManualAddStudentActivity.EXTRA_STUDENTS, enrollStudents);
+//                        }
+//                        startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
+//                        }else {
+//
+//                            Intent i = new Intent(CreateClassActivity.this, AddStudentActivity.class);
+//                            startActivityForResult(i, REQUEST_ZERO_ADD_STUDENT_CODE);
+//                        }
 
                         break;
                     case 1://从已有班级中添加
+                        if (enrollStudents !=null && enrollStudents.size()>0) {
+                            showOverlayTips(true);
+                        }else {
+                            enterImportPage();
+                        }
 
-                        Intent i = new Intent(CreateClassActivity.this,
-                                ImportStudentFormClassActivity.class);
-                        startActivityForResult(i, REQUEST_IMPORT_STUDENTS_CODE);
                         break;
                 }
 
@@ -228,16 +237,18 @@ public class CreateClassActivity extends BaseActivity {
         if (classLessons != null && classLessons.size() > 0) {
             timetableTipsView.setText(getString(R.string.number_lesson, classLessons.size()));
 
-        } else {
+        } else{
             timetableTipsView.setText("");
             //timetableTipsView.setHint(R.string.arrange_class);
         }
 
         if (enrollStudents != null && enrollStudents.size() > 0) {
             studentTipsView.setText(getString(R.string.number_student, enrollStudents.size()));
-        } else {
-            studentTipsView.setText("");
+        } else if (enrollImports != null && enrollImports.size() > 0){
+            studentTipsView.setText(getString(R.string.import_class_students_count, enrollImports.size()));
             //studentTipsView.setHint(R.string.please_select);
+        }else {
+            studentTipsView.setText("");
         }
     }
 
@@ -265,8 +276,8 @@ public class CreateClassActivity extends BaseActivity {
                 Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         params.lessons = classLessons;
 
-        //TODO 此处要加入从班级中导入的情况
-        if ((enrollStudents != null && enrollStudents.size() > 0) || (enrollImports != null && enrollImports.size() > 0)) {
+        if ((enrollStudents != null && enrollStudents.size() > 0)
+                || (enrollImports != null && enrollImports.size() > 0)) {
 
             ClassEnroll classEnroll = new ClassEnroll();
             classEnroll.students = enrollStudents;
@@ -300,6 +311,54 @@ public class CreateClassActivity extends BaseActivity {
     }
 
 
+    private void showOverlayTips(final boolean imports) {
+
+        final CommonDialog dialog = new CommonDialog(this);
+        //dialog.setTitle(R.string.disband_class);
+        if (imports) {
+            dialog.setDesc(R.string.overlay_students_tips);
+        }else {
+            dialog.setDesc(R.string.overlay_import_tips);
+        }
+        dialog.setRightBtnText(R.string.go_on);
+        dialog.setLefBtnText(R.string.cancel);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+                if (imports) {
+                    enterImportPage();
+                }else {
+                    enterStudentPage();
+                }
+            }
+        });
+        dialog.show();
+
+    }
+
+    private void enterImportPage() {
+        Intent i = new Intent(CreateClassActivity.this,
+                ImportStudentFormClassActivity.class);
+        startActivityForResult(i, REQUEST_IMPORT_STUDENTS_CODE);
+    }
+
+    private void enterStudentPage() {
+        Intent ic = new Intent(CreateClassActivity.this,
+                ManualAddStudentActivity.class);
+        if (enrollStudents != null && enrollStudents.size() > 0) {
+            ic.putExtra(ManualAddStudentActivity.EXTRA_STUDENTS, enrollStudents);
+        }
+        startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -316,11 +375,25 @@ public class CreateClassActivity extends BaseActivity {
                 case REQUEST_MANUAL_STUDENTS_CODE:
                     if (data != null) {
                         enrollStudents = data.getParcelableArrayListExtra(ManualAddStudentActivity.EXTRA_STUDENTS);
+                        if (enrollStudents !=null) {
+                            //清空导入班级的学生
+                            if(enrollImports !=null) {
+                                enrollImports.clear();
+                                enrollImports = null;
+                            }
+                        }
                     }
                     break;
                 case REQUEST_IMPORT_STUDENTS_CODE:
                     if (data != null) {
                         enrollImports = data.getParcelableArrayListExtra(ImportStudentFormClassActivity.EXTRA_IMPORTS);
+                        if (enrollImports !=null) {
+                            //清空手动加入的学生
+                            if (enrollStudents != null) {
+                                enrollStudents.clear();
+                                enrollStudents = null;
+                            }
+                        }
                     }
                     break;
                 case REQUEST_ZERO_ADD_STUDENT_CODE:
@@ -332,6 +405,13 @@ public class CreateClassActivity extends BaseActivity {
                                 enrollStudents = new ArrayList<>();
                             }
                             enrollStudents.add(studentEnroll);
+
+                            //清空导入班级的学生
+                            if(enrollImports !=null) {
+                                enrollImports.clear();
+                                enrollImports = null;
+                            }
+
                         }
 
                     }
