@@ -12,6 +12,18 @@
         android:src="@drawable/ic_home_first_scan"
         android:layout_margin="@dimen/px32"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_tab_class"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_32px"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/btn_scan"
+        android:layout_alignBottom="@+id/btn_scan"
+        />
     
     <LinearLayout
         android:id="@+id/layout_wanna"
@@ -144,7 +156,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/px70"
         android:layout_marginRight="@dimen/px70"
-        android:layout_marginTop="@dimen/px400"
+        android:layout_marginTop="@dimen/px500"
         android:orientation="vertical">
 
         <TextView
@@ -168,6 +180,7 @@
             android:textSize="@dimen/px28"
             android:layout_marginTop="@dimen/px32"
             android:text="@string/search_tip1"
+            android:visibility="gone"
             />
 
     </LinearLayout>
