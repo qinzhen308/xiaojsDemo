@@ -49,6 +49,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.LessonScheduleActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.animlib.Xiaojs120Anim;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
@@ -283,7 +284,18 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         mBanner.start();
+//        if(guide==null){
+//            guide=new Xiaojs120Anim(getActivity());
+//            mContent.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    guide.attachCircleEditView(getActivity(),mContent.findViewById(R.id.iv_write_dynamic));
+//                }
+//            });
+//        }
     }
+
+//    Xiaojs120Anim guide;
 
     @Override
     public void onPause() {

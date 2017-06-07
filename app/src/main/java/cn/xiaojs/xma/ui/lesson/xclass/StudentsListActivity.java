@@ -37,6 +37,8 @@ public class StudentsListActivity extends BaseActivity {
     PullToRefreshSwipeListView listView;
     @BindView(R.id.lay_veri)
     RelativeLayout verLayout;
+    @BindView(R.id.veri_count)
+    TextView veriCount;
 
     private String classId;
     private boolean teaching;
@@ -139,6 +141,18 @@ public class StudentsListActivity extends BaseActivity {
         }
     }
 
+    private void setMsgCount(int count){
+        if(count<=0){
+            veriCount.setVisibility(View.GONE);
+        }else if(count<100){
+            veriCount.setText(""+count);
+            veriCount.setVisibility(View.VISIBLE);
+        }else {
+            veriCount.setText("99+");
+            veriCount.setVisibility(View.VISIBLE);
+        }
+    }
+
     public class StudentsListAdapter extends AbsSwipeAdapter<StudentEnroll, StudentsListAdapter.Holder> {
 
         public StudentsListAdapter(Context context, PullToRefreshSwipeListView listView) {
@@ -176,6 +190,7 @@ public class StudentsListActivity extends BaseActivity {
 
                             if (object != null) {
                                 StudentsListAdapter.this.onSuccess(object.objectsOfPage);
+                                setMsgCount(object.countOfApplying);
                             }
                         }
 
