@@ -26,6 +26,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
+import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -77,7 +79,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void init() {
-        if (isEmpty) {
+        if (!AccountPref.getUser(getActivity()).hasClass) {
             emptyStub.setLayoutResource(R.layout.fragment_home_class_empty);
             layoutEmpty = emptyStub.inflate();
             btnScan=(ImageView) layoutEmpty.findViewById(R.id.btn_scan);
@@ -330,9 +332,9 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
         return SimpleDataChangeListener.CREATE_CLASS_CHANGED;
     }
 
+
     @Override
     protected void onDataChanged() {
-        isEmpty=false;
         if(layoutEmpty!=null){
             changeToNormal();
         }
