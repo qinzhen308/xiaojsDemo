@@ -38,6 +38,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ShareUtil;
@@ -565,8 +566,10 @@ public class LOpModel {
     }
 
     private void rejectReason(Activity context, CLesson bean){
-        ToastUtil.showToast(context,"原因：不知道");
-
+        Common2Dialog dialog=new Common2Dialog(context);
+        dialog.setTitle("原因");
+        dialog.setDesc("原因：不知道");
+        dialog.show();
     }
 
     //判断权限是否大于等于班主任

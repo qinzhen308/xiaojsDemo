@@ -1,15 +1,15 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -20,15 +20,13 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLResponse;
-import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
-import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
-import cn.xiaojs.xma.ui.grade.ScheduleActivity;
+import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -82,7 +80,7 @@ public class ClassInfoActivity extends BaseActivity {
         loadClassInfo();
     }
 
-    @OnClick({R.id.left_image, R.id.enter_btn,
+    @OnClick({R.id.left_image, R.id.enter_btn,R.id.teacher_name,
             R.id.lay_time_table, R.id.lay_material,
             R.id.lay_student, R.id.lay_qrcode, R.id.name_lay, R.id.veri_switcher, R.id.right_image})
     public void onClick(View v) {
@@ -149,9 +147,29 @@ public class ClassInfoActivity extends BaseActivity {
             case R.id.right_image:
                 showMoreDlg();
                 break;
+            case R.id.teacher_name:
+                teacherNamesDialog();
+
+                break;
         }
 
 
+    }
+
+    private void teacherNamesDialog(){
+        if(classInfo==null||classInfo.advisers==null||classInfo.advisers.length<2){
+            return;
+        }
+        Common2Dialog common2Dialog=new Common2Dialog(this);
+        ListView content= new ListView(this);
+        content.setDivider(new ColorDrawable(getResources().getColor(R.color.main_bg)));
+        content.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.px2));
+        String[] teachers=new String[classInfo.advisers.length];
+        for(int i=0;i<classInfo.advisers.length;i++)teachers[i]=classInfo.advisers[i].name;
+        content.setAdapter(new ArrayAdapter<String>(this,R.layout.item_simple_text,R.id.textview,teachers));
+        common2Dialog.setTitle(R.string.head_teacher);
+        common2Dialog.setCustomView(content);
+        common2Dialog.show();
     }
 
     //资料库

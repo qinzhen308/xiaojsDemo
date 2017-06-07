@@ -3,5 +3,7 @@
     <drawable name="transparent">#00000000</drawable>
     <drawable name="white">#ffffff</drawable>
     <drawable name="main_orange">#ff9833</drawable>
+    <drawable name="color_main_bg">#f7f7f7</drawable>
+
 
 </resources>
