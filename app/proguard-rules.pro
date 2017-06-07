@@ -138,6 +138,12 @@
      public void onEvent*(**);
  }
 
+#========================okhttp==============================
+-dontwarn okio.**
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+-dontwarn javax.annotation.**
+
 #========================gson================================
 -dontwarn com.google.**
 -keep class com.google.gson.** {*;}

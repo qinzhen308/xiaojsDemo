@@ -282,7 +282,7 @@ public class NotificationCategoryAdapter extends AbsSwipeAdapter<Notification,No
 
             showProgress(true);
             //FIXME 此处没有返回classid,所以调用操作失败
-            LessonDataManager.reviewJoinClass(mContext, bean.doc.id, bean.initiator.id, decisionReason, new APIServiceCallback() {
+            LessonDataManager.reviewJoinClass(mContext, bean.doc.id, decisionReason, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
                     cancelProgress();
