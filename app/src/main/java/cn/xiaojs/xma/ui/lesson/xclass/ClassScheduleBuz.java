@@ -193,7 +193,12 @@ public class ClassScheduleBuz {
 
         mAdapter.setList(monthLists);
         mAdapter.notifyDataSetChanged();
-        mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(y,m,d));
+        overLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.scrollToLabel(ScheduleUtil.getDateYMD(y,m,d));
+            }
+        });
     }
 
     private void setPoint(List<ClassSchedule> list,final int y,final int m,final int d){
