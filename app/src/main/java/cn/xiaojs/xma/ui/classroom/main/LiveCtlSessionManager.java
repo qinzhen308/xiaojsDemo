@@ -21,6 +21,7 @@ import cn.xiaojs.xma.model.live.CtlSession;
 public class LiveCtlSessionManager {
     private CtlSession mCtlSession;
     private Constants.User mUser;
+    private Constants.User mUserInLesson;
     private Constants.UserMode mUserMode;
     private String mTicket = "";
     private Constants.ClassroomType mClassroomType;
@@ -38,6 +39,7 @@ public class LiveCtlSessionManager {
     public void init(CtlSession ctlSession, String ticket) {
         mCtlSession = ctlSession;
         mUser = ClassroomBusiness.getUser(ctlSession.psType, Constants.User.STUDENT);
+        mUserInLesson = ClassroomBusiness.getUser(ctlSession.psTypeInLesson, Constants.User.NONE);
         mUserMode = ClassroomBusiness.getUserByCtlSession(ctlSession);
         mTicket = ticket;
         mClassroomType = ctlSession.cls == null?
@@ -69,6 +71,18 @@ public class LiveCtlSessionManager {
         return mCtlSession != null ? mCtlSession.mode : 0;
     }
 
+    public synchronized String getClassOrLessonState() {
+        if (mCtlSession != null) {
+            if (mCtlSession.cls != null) {
+                return mCtlSession.cls.state;
+            }
+
+            return mCtlSession.state;
+        }
+
+        return "";
+    }
+
     public String getTicket() {
         return mTicket;
     }
@@ -83,6 +97,10 @@ public class LiveCtlSessionManager {
 
     public Constants.User getUser() {
         return mUser;
+    }
+
+    public Constants.User getUserInLesson() {
+        return mUserInLesson;
     }
 
     public void release() {

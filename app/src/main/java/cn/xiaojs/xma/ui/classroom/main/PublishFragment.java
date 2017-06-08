@@ -558,7 +558,12 @@ public class PublishFragment extends ClassroomLiveFragment {
         mHandKeyPressing = true;
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
-            pauseClass(true);
+            boolean isPrivateClass = mCtlSession.cls != null;
+            if (isPrivateClass) {
+                finishClass(true);
+            } else {
+                pauseClass(true);
+            }
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
             //pause and exit
             pauseIndividual(true);
@@ -614,7 +619,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             //pause and exit
             mHandKeyPressing = true;
             pauseIndividual(true);
-        } else if (Live.LiveSessionState.FINISHED.equals(liveState)) {
+        } else if (ClassroomBusiness.canIndividual(mCtlSession)) {
             individualPublishStream();
         }
     }
@@ -625,14 +630,13 @@ public class PublishFragment extends ClassroomLiveFragment {
             return;
         }
 
-        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState)) {
+        if (ClassroomBusiness.canIndividual(mCtlSession)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             mPlayPauseBtn.setVisibility(View.VISIBLE);
             mFinishBtn.setVisibility(View.INVISIBLE);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
                 Live.LiveSessionState.RESET.equals(liveState)) {
-            if (mUserMode == Constants.UserMode.TEACHING) {
+            if (ClassroomBusiness.hasTeachingAbility()) {
                 mFinishBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
@@ -640,7 +644,9 @@ public class PublishFragment extends ClassroomLiveFragment {
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
         } else if (Live.LiveSessionState.LIVE.equals(liveState)) {
-            if (mUserMode == Constants.UserMode.TEACHING) {
+            //私有班课不能课间休息
+            boolean isPrivateClass = mCtlSession.cls != null;
+            if (ClassroomBusiness.hasTeachingAbility() && !isPrivateClass) {
                 mFinishBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
@@ -657,6 +663,12 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     private void pauseClass(final boolean withExitFragment) {
+        //私有班课不能课间休息
+        boolean isPrivateClass = mCtlSession.cls != null;
+        if (isPrivateClass) {
+            return;
+        }
+
         showProgress(true);
         LiveManager.pauseClass(mContext, mTicket, new APIServiceCallback<ResponseBody>() {
             @Override
@@ -703,16 +715,20 @@ public class PublishFragment extends ClassroomLiveFragment {
         });
     }
 
-    private void finishClass() {
+    private void finishClass(final boolean withFragment) {
         showProgress(true);
         LiveManager.finishClass(mContext, mTicket, new APIServiceCallback<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody object) {
                 cancelProgress();
                 LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.FINISHED);
-                mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
-                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
-                mFinishBtn.setVisibility(View.INVISIBLE);
+                if (withFragment) {
+                    exitCurrentFragment();
+                } else {
+                    mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
+                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+                    mFinishBtn.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -738,7 +754,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 @Override
                 public void onClick() {
                     mFinishDialog.dismiss();
-                    finishClass();
+                    finishClass(false);
                 }
             });
         }

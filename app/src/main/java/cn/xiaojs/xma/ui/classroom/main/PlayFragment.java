@@ -279,9 +279,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             //预览模式, 不能有任何操作
             mPlayPauseBtn.setVisibility(View.INVISIBLE);
         } else {
-            if (Live.LiveSessionState.SCHEDULED.equals(liveState)
-                    || Live.LiveSessionState.FINISHED.equals(liveState)) {
-                //课前课后
+            if (ClassroomBusiness.canIndividual(mCtlSession)) {
+                //课前课后或者班课的课外时间
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             } else {
@@ -707,12 +706,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
      */
     private void initCtlLive() {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String privateClassState = mCtlSession.cls != null ? mCtlSession.cls.state : "";
         mPlayUrl = null;
-        if (Live.LiveSessionState.LIVE.equals(liveState)) {
+        if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
+                Live.LiveSessionState.LIVE.equals(liveState)) {
             mPlayUrl = mCtlSession.playUrl;
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
-                Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState)) {
+        } else if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
+                Live.LiveSessionState.FINISHED.equals(liveState) ||
+                Live.LiveSessionState.IDLE.equals(privateClassState)) {
             mPlayUrl = mCtlSession.playUrl;
             mIndividualStreamDuration = mCtlSession.finishOn;
         }
@@ -743,8 +744,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             return;
         }
 
-        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState)) {
+        if (ClassroomBusiness.canIndividual(mCtlSession)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             mPlayPauseBtn.setVisibility(View.VISIBLE);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
@@ -783,8 +783,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mPlayOrPausePressTime = System.currentTimeMillis();
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState)) {
+        if (ClassroomBusiness.canIndividual(mCtlSession)) {
             individualPublishStream();
         } else if (Live.LiveSessionState.RESET.equals(liveState)) {
             showProgress(true);
