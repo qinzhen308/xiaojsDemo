@@ -53,7 +53,7 @@ public class SyncService extends IntentService {
 
             int syncType = intent.getIntExtra(DataManager.SYNC_TYPE, -1);
             switch (syncType) {
-                case DataManager.TYPE_FETCH_PRIVATECLASS_FROM_NET:
+                case DataManager.TYPE_FETCH_CLASS_FROM_NET:
                     if (NetUtil.getCurrentNetwork(context) == NetUtil.NETWORK_NONE) {
                         return;
                     }
@@ -64,9 +64,9 @@ public class SyncService extends IntentService {
 
                         ContactDao contactDao = new ContactDao();
 
-                        ArrayList<ContactGroup> newCGroups = contactDao.getPrivateClasses(context);
+                        ArrayList<ContactGroup> newCGroups = contactDao.getClasses(context);
 
-                        Intent i = new Intent(DataManager.ACTION_UPDATE_PRIVATECLASS_FROM_DB);
+                        Intent i = new Intent(DataManager.ACTION_UPDATE_CLASS_FROM_DB);
                         i.putExtra(DataManager.EXTRA_CONTACT, newCGroups);
                         sendBroadcast(i);
                     } else {

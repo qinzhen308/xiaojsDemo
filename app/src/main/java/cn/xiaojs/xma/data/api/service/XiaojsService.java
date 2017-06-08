@@ -60,6 +60,7 @@ import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
+import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
@@ -98,6 +99,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -387,8 +389,8 @@ public interface XiaojsService {
                                        @Body ClassEnrollParams enrollParams);
 
     //Remove Class Student
-    @DELETE("/v1/ctl/classes/{classes}/students")
-    Call<ResponseBody> removeClassStudent(@Path("classes") String classes, @Body String[] students);
+    @HTTP(method = "DELETE", path = "/v1/ctl/classes/{classes}/students", hasBody = true)
+    Call<ResponseBody> removeClassStudent(@Path("classes") String classes, @Body RemoveStudentParams students);
 
     //Join Class
     @POST("/v1/ctl/classes/{classes}/students/join")

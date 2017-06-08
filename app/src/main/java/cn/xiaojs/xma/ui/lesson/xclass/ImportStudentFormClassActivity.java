@@ -66,7 +66,7 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 
         updateReceiver = new UpdateReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(DataManager.ACTION_UPDATE_PRIVATECLASS_FROM_DB);
+        intentFilter.addAction(DataManager.ACTION_UPDATE_CLASS_FROM_DB);
         registerReceiver(updateReceiver,intentFilter);
 
         setMiddleTitle(R.string.student_add_from_exist_class);
@@ -152,14 +152,14 @@ public class ImportStudentFormClassActivity extends BaseActivity {
 
 
     private void getData() {
-        DataManager.getPrivateClasses(this,
+        DataManager.getClasses(this,
                 new DataLoder.DataLoaderCallback<ArrayList<ContactGroup>>() {
 
                     @Override
                     public void loadCompleted(ArrayList<ContactGroup> contacts) {
 
                         DataManager.lanuchLoadContactService(getApplicationContext(),
-                                DataManager.TYPE_FETCH_PRIVATECLASS_FROM_NET);
+                                DataManager.TYPE_FETCH_CLASS_FROM_NET);
                         if (contacts == null || contacts.size() == 0) {
                             showEmptyView();
                             return;
@@ -254,7 +254,7 @@ public class ImportStudentFormClassActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(DataManager.ACTION_UPDATE_PRIVATECLASS_FROM_DB)) {
+            if (action.equals(DataManager.ACTION_UPDATE_CLASS_FROM_DB)) {
 
                 if(XiaojsConfig.DEBUG) {
                     Logger.d("UpdateReceiver: to update private class");

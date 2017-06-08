@@ -46,6 +46,7 @@ import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
+import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
@@ -658,8 +659,13 @@ public class LessonDataManager {
                                           String[] students,
                                           APIServiceCallback callback) {
 
+
+        RemoveStudentParams params = new RemoveStudentParams();
+        params.students = students;
+
+
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.removeClassStudent(classid, students);
+        lessonRequest.removeClassStudent(classid, params);
 
     }
 
