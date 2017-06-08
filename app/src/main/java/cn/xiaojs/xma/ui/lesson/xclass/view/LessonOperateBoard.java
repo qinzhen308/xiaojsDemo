@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     ItemAdapter mAdapter2;
 
 
+    //请一定按顺序，并且和LOpModel里面的OP_..顺序保持一致
     private final static int[] icons={
             R.drawable.ic_op_apply,R.drawable.ic_op_cancel_lesson,
             R.drawable.ic_op_cancel_submit,R.drawable.ic_op_class_info,
@@ -62,7 +65,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_reject_reason
     };
 
-
+    //请一定按顺序，并且和LOpModel里面的OP_..顺序保持一致
     private final static int[] names={
             R.string.lesson_op_look_apply,R.string.lesson_op_cancel_lesson,
             R.string.lesson_op_cancel_submit,R.string.lesson_op_class_info,
@@ -111,6 +114,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     }
 
     private void init() {
+        initItemWidth();
         setCanceledOnTouchOutside(true);
         Window dialogWindow = getWindow();
         setContentView(R.layout.dialog_lesson_operate);
@@ -212,6 +216,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         @Override
         public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ItemHolder holder=new ItemHolder(View.inflate(parent.getContext(), R.layout.item_lesson_operate, null));
+            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(itemWidth, ViewGroup.LayoutParams.MATCH_PARENT));
             return holder;
         }
 
@@ -234,6 +239,10 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
+    int itemWidth=0;
+    private void initItemWidth(){
+        itemWidth=(ScreenUtils.getScreenWidth(getContext())-getContext().getResources().getDimensionPixelSize(R.dimen.px60))/4;
+    }
 
     public static class ItemHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.icon)

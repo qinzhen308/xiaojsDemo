@@ -22,6 +22,7 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
@@ -145,7 +146,7 @@ public class ClassInfoActivity extends BaseActivity {
     }
 
     private void teacherNamesDialog(){
-        if(classInfo==null||classInfo.advisers==null||classInfo.advisers.length<2){
+        if(classInfo==null||classInfo.advisers==null||classInfo.advisers.length<3){
             return;
         }
         Common2Dialog common2Dialog=new Common2Dialog(this);
@@ -199,8 +200,22 @@ public class ClassInfoActivity extends BaseActivity {
 
         nameView.setText(classInfo.title);
 
-        String teacher = (classInfo.advisers != null && classInfo.advisers.length > 0) ?
-                classInfo.advisers[0].name : classInfo.ownerName;
+        //班主任的显示逻辑
+        String teacher = "";
+        if(classInfo.advisers != null && classInfo.advisers.length > 0){
+            teacher+=classInfo.advisers[0].name;
+            if(classInfo.advisers.length>1){
+                teacher+="、"+classInfo.advisers[0].name;
+            }
+            if( classInfo.advisers.length>2 ){//大于2个才能点击弹框
+                teacher+="...";
+                teacherNameView.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_entrance,0);
+            }else {
+                teacherNameView.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+            }
+        }else {
+            teacher=classInfo.ownerName;
+        }
 
         teacherNameView.setText(teacher);
 

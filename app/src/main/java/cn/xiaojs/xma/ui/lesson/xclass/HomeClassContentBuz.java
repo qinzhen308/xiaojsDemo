@@ -249,6 +249,13 @@ public class HomeClassContentBuz {
                     bindHotClasses(hotClass);
                 }
                 mAdapter.notifyDataSetChanged();
+                overLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.scrollToPosition(0);
+                    }
+                });
+                if(XiaojsConfig.DEBUG)
                 Logger.d("-----qz-----time analyze---bindLessons="+(System.currentTimeMillis()-time));
             }
             @Override
@@ -271,7 +278,8 @@ public class HomeClassContentBuz {
         final int d=day;
         int next=(y-todayYear)*12+(m-todayMonth);
         Map map=LessonDataManager.createScheduleOptions("monthly",""+next,"0",null,null,null,null,null,null,null);
-        Logger.d("-----qz-----time analyze---getMonthData="+(System.currentTimeMillis()-time));
+        if(XiaojsConfig.DEBUG)
+            Logger.d("-----qz-----time analyze---getMonthData="+(System.currentTimeMillis()-time));
         LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
@@ -298,7 +306,8 @@ public class HomeClassContentBuz {
                 HintBoxPool.box(HintBoxPool.TAG_FIRST_BOX).setMonthDates(colors);
                 calendarView.hintBoxChanged();
 //                calendarView.setTaskHintList(hashSet);
-                Logger.d("-----qz-----time analyze---setPoint="+(System.currentTimeMillis()-time));
+                if(XiaojsConfig.DEBUG)
+                    Logger.d("-----qz-----time analyze---setPoint="+(System.currentTimeMillis()-time));
             }
 
             @Override
@@ -331,7 +340,8 @@ public class HomeClassContentBuz {
                 }
             }
         });
-        Logger.d("-----qz-----time analyze---doRequest="+(System.currentTimeMillis()-time));
+        if(XiaojsConfig.DEBUG)
+            Logger.d("-----qz-----time analyze---doRequest="+(System.currentTimeMillis()-time));
     }
     private void bindHotClasses(List<PrivateClass> list){
         long time=System.currentTimeMillis();
@@ -342,7 +352,8 @@ public class HomeClassContentBuz {
             mAdapter.getList().addAll(list);
         }
         mAdapter.getList().add(lastEmptyModel);
-        Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));
+        if(XiaojsConfig.DEBUG)
+            Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));
     }
 
     public void update(){

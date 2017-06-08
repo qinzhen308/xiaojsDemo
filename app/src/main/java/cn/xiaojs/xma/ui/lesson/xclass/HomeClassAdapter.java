@@ -150,6 +150,16 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    /**
+     * 跳转到 指定位置
+     * @param position
+     */
+    public void scrollToPosition(int position){
+        if(position>=0&&getItemCount()>0){
+            scrollHelper.smoothMoveToPosition(mRecyclerView,position);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return mList==null?0:mList.size();
