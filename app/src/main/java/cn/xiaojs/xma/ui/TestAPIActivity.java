@@ -29,6 +29,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.download.DConstants;
 import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.account.OrgTeacher;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -170,6 +171,30 @@ public class TestAPIActivity extends Activity {
 
 
     public void testCache() {
+
+//        String ticket = "e5339de8e921dce21724bd35234287469a97a18a85d98255cfd81277928e11dbeddeeab6469add1ffa596f3fdea3a68ce574686981b9180d6f8b4c4507845d45";
+//
+//        Duration schedule = new Duration();
+//        schedule.setStart(new Date(System.currentTimeMillis()-(3600*1000*24)));
+//        schedule.setEnd(new Date(System.currentTimeMillis()+(3600*1000*24)));
+//
+//        Criteria criteria = new Criteria();
+//        criteria.setDuration(schedule);
+//
+//        Pagination pagination = new Pagination();
+//        pagination.setMaxNumOfObjectsPerPage(10);
+//
+//        LiveManager.getLiveSchedule(this, ticket, criteria, pagination, new APIServiceCallback<ResponseBody>() {
+//            @Override
+//            public void onSuccess(ResponseBody object) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        String start = "2014-05-25T16:00:00.000Z";
 //        String end = "2080-05-25T16:00:00.000Z";

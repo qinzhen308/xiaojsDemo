@@ -121,4 +121,20 @@ public class LiveRequest extends ServiceRequest{
         Call<ClassResponse> call = getLiveService().resumeClass(ticket,mode);
         enqueueRequest(APIType.RESUME_CLASS,call);
     }
+
+    public void getLiveSchedule(String ticket, Criteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+        Call<ResponseBody> call = getLiveService().getLiveSchedule(ticket,
+                criteriaJsonstr,
+                paginationJsonstr);
+
+        enqueueRequest(APIType.GET_LIVE_SCHEDULE,call);
+    }
 }
