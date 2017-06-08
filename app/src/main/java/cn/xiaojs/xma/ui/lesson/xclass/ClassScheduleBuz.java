@@ -51,7 +51,7 @@ public class ClassScheduleBuz {
     @BindView(R.id.tv_top_date)
     TextView tvTopDate;
 
-    HomeClassAdapter mAdapter;
+    ScheduleAdapter mAdapter;
 
     int selectDay;
     int selectyear;
@@ -83,7 +83,7 @@ public class ClassScheduleBuz {
     }
 
     private void initListView(){
-        mAdapter=new HomeClassAdapter(overLayout);
+        mAdapter=new ScheduleAdapter(overLayout);
         overLayout.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         overLayout.setAdapter(mAdapter);
     }

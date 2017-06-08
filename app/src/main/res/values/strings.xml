@@ -133,9 +133,11 @@
     <string name="i_wanna_lean">我要学</string>
     <string name="i_wanna_teach">我要教</string>
     <string name="creative_class">开班</string>
-    <string name="creative_class_tip">可以开设多节课，并且你能对该班级进行管理（排课，增减学生，资料上传、分享等）</string>
-    <string name="creative_lesson">开课</string>
-    <string name="creative_lesson_tip">只能开设单节课，学生能够通过搜索报名，进入教室上课</string>
+    <string name="creative_class_tip">多节课，自主管理学生，上传及分享班级资料</string>
+    <!--<string name="creative_class_tip">可以开设多节课，并且你能对该班级进行管理（排课，增减学生，资料上传、分享等）</string>-->
+    <string name="creative_lesson">开公开课</string>
+    <string name="creative_lesson_tip">单节课，学生通过搜索该课报名，进入教室上课</string>
+    <!--<string name="creative_lesson_tip">只能开设单节课，学生能够通过搜索报名，进入教室上课</string>-->
     <string name="search_global_tip">班课/个人/机构</string>
     <string name="search_tip1">输入你要找的班课名称，老师或者机构\n报名你要学的班课，开始学习</string>
 

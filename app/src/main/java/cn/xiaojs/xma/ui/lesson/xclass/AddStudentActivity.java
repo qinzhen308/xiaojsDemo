@@ -154,8 +154,8 @@ public class AddStudentActivity extends BaseActivity {
 
                     if (hasExist) {
                         studentEnroll.id = currSearch._id;
-                        studentEnroll.name = "";
-                        studentEnroll.mobile = "";
+//                        studentEnroll.name = "";
+//                        studentEnroll.mobile = "";
                     }
 
                     //OK

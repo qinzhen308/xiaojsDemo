@@ -30,7 +30,8 @@ public class CLesson implements Parcelable{
     public ClassInfo classInfo;
     public Adviser[] advisers;
 
-
+    public CLesson() {
+    }
 
     protected CLesson(Parcel in) {
         id = in.readString();

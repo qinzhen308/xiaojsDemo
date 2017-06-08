@@ -276,15 +276,20 @@ public class CreateClassActivity extends BaseActivity {
                 Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         params.lessons = classLessons;
 
-        if ((enrollStudents != null && enrollStudents.size() > 0)
-                || (enrollImports != null && enrollImports.size() > 0)) {
-
-            ClassEnroll classEnroll = new ClassEnroll();
+        ClassEnroll classEnroll = new ClassEnroll();
+        if (enrollStudents != null && enrollStudents.size() > 0) {
+            for(StudentEnroll e:enrollStudents){
+                if(!TextUtils.isEmpty(e.id)){
+                    e.name="";
+                    e.mobile="";
+                }
+            }
             classEnroll.students = enrollStudents;
-            classEnroll.importe = enrollImports;
-            params.enroll = classEnroll;
         }
-
+        if((enrollImports != null && enrollImports.size() > 0)){
+            classEnroll.importe = enrollImports;
+        }
+        params.enroll = classEnroll;
         showProgress(true);
         LessonDataManager.createClass(this, params, new APIServiceCallback<CLResponse>() {
             @Override
