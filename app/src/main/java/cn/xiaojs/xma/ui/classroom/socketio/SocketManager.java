@@ -276,6 +276,10 @@ public class SocketManager {
             if (needAdd) {
                 addListener2Map(event, listener);
             }
+        } else {
+            if (needAdd) {
+                addListener2Map(event, listener);
+            }
         }
     }
 
