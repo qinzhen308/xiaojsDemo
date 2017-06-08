@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
+
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.account.Account;
 
@@ -15,7 +17,7 @@ import cn.xiaojs.xma.model.account.Account;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CLesson implements Parcelable{
+public class CLesson implements Serializable{
     public String id;
     public String title;
     public String type;
@@ -41,29 +43,7 @@ public class CLesson implements Parcelable{
         state = in.readString();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(title);
-        dest.writeString(type);
-        dest.writeString(ticket);
-        dest.writeString(state);
-    }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    public static final Creator<CLesson> CREATOR = new Creator<CLesson>() {
-        @Override
-        public CLesson createFromParcel(Parcel in) {
-            return new CLesson(in);
-        }
 
-        @Override
-        public CLesson[] newArray(int size) {
-            return new CLesson[size];
-        }
-    };
 }

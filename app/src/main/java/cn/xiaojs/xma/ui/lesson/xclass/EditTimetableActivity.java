@@ -65,7 +65,7 @@ public class EditTimetableActivity extends BaseActivity {
         setRightText(R.string.finish);
 
         classId = getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID);
-        cLesson = getIntent().getParcelableExtra(EXTRA_C_LESSON);
+        cLesson = (CLesson) getIntent().getSerializableExtra(EXTRA_C_LESSON);
 
         initView();
     }
