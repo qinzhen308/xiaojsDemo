@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -241,7 +242,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
 
     int itemWidth=0;
     private void initItemWidth(){
-        itemWidth=(ScreenUtils.getScreenWidth(getContext())-getContext().getResources().getDimensionPixelSize(R.dimen.px60))/4;
+        itemWidth=(ScreenUtils.getScreenWidth(getContext())-getContext().getResources().getDimensionPixelSize(R.dimen.px100))/4;
+        Logger.d("----qz----initItemWidth="+itemWidth);
     }
 
     public static class ItemHolder extends RecyclerView.ViewHolder {
