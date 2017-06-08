@@ -44,8 +44,6 @@ public class ClassroomBusiness {
 
     /**
      * 获取用户身份
-     * @param psType
-     * @return
      */
     public static Constants.User getUser(String psType, Constants.User defaultUser) {
         Constants.User user = defaultUser;
@@ -77,10 +75,7 @@ public class ClassroomBusiness {
         }
 
         Constants.UserMode mode = Constants.UserMode.PARTICIPANT;
-        Constants.User user = ClassroomBusiness.getUser(session.psType, Constants.User.STUDENT);
-        if (user == Constants.User.TEACHER
-                || user == Constants.User.ASSISTANT
-                || user == Constants.User.REMOTE_ASSISTANT) {
+        if (hasTeachingAbility()) {
             mode = Constants.UserMode.TEACHING;
             if (Constants.PREVIEW_MODE == session.mode) {
                 mode = Constants.UserMode.PREVIEW;
@@ -93,6 +88,36 @@ public class ClassroomBusiness {
         }
 
         return mode;
+    }
+
+    /**
+     * 是否具有教学能力
+     */
+    public static boolean hasTeachingAbility() {
+        Constants.User user = LiveCtlSessionManager.getInstance().getUser();
+        Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
+        return user == Constants.User.TEACHER
+                || user == Constants.User.ASSISTANT
+                || user == Constants.User.REMOTE_ASSISTANT
+                || userInLesson == Constants.User.TEACHER
+                || userInLesson == Constants.User.ASSISTANT
+                || userInLesson == Constants.User.REMOTE_ASSISTANT;
+    }
+
+    /**
+     * 是否能个人推流
+     */
+    public static boolean canIndividual(CtlSession session) {
+        String liveState = session.state;
+        String lessonState = session.cls != null ? session.cls.state : "";
+        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
+                Live.LiveSessionState.FINISHED.equals(liveState) ||
+                Live.LiveSessionState.IDLE.equals(lessonState) ||
+                Live.LiveSessionState.SCHEDULED.equals(lessonState) ||
+                Live.LiveSessionState.FINISHED.equals(lessonState)) {
+            return true;
+        }
+        return false;
     }
 
     public static <T> T parseSocketBean(Object obj, Class<T> valueType) {
@@ -152,8 +177,6 @@ public class ClassroomBusiness {
 
     /**
      * 获得视频在七牛服务器的url
-     * @param name
-     * @return
      */
     public static String getVideoUrl(String name, String mimeType) {
         if (Collaboration.isStreaming(mimeType)) {

@@ -41,6 +41,7 @@ public class Live {
     }
 
     public class LiveSessionState {
+        public static final String IDLE = "Idle";
         public static final String SCHEDULED = "Scheduled";
         public static final String PENDING_FOR_JOIN = "PendingForJoin";
         public static final String LIVE = "Live";

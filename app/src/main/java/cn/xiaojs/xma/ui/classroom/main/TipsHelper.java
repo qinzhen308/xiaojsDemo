@@ -54,18 +54,17 @@ public class TipsHelper {
 
     public void setTipsByState(String liveSessionState) {
         Constants.User user = LiveCtlSessionManager.getInstance().getUser();
+        Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)) {
-            if (user == Constants.User.TEACHER) {
+            if (ClassroomBusiness.hasTeachingAbility()) {
                 setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
             } else {
                 setTips(R.string.cls_pending_class_stu_title, R.string.cls_pending_class_stu_desc);
             }
         } else if (Live.LiveSessionState.RESET.equals(liveSessionState)) {
-            if (user == Constants.User.TEACHER
-                    || user == Constants.User.ASSISTANT
-                    || user == Constants.User.REMOTE_ASSISTANT) {
+            if (ClassroomBusiness.hasTeachingAbility()) {
                 setTips(R.string.cls_break_title, R.string.cls_break_desc_teacher);
             } else {
                 setTips(R.string.cls_break_title, R.string.cls_break_desc);
