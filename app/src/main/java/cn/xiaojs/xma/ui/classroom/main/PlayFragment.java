@@ -584,11 +584,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     public void playStream(String url) {
         int type = StreamType.TYPE_STREAM_PLAY;
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-        if (Live.LiveSessionState.LIVE.equals(liveState)) {
+        if (Live.LiveSessionState.LIVE.equals(liveState)
+                || Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState)
+                || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {
             type = StreamType.TYPE_STREAM_PLAY;
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
-                Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState)) {
+        } else if (ClassroomBusiness.canIndividual(mCtlSession)) {
             type = StreamType.TYPE_STREAM_PLAY_INDIVIDUAL;
         }
 
@@ -667,7 +667,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         boolean autoCountTime = false;
 
         String liveState = null;
-        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
+        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {//TODO 是否要加入班的PEND_FOR_LIVE ？
             liveState = Live.LiveSessionState.PENDING_FOR_JOIN;
 
         } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))
@@ -699,6 +699,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     protected void onSyncClassStateChanged(SyncClassStateResponse syncState) {
         //TODO 同步班状态
+        //TODO 是否要加入班的PEND_FOR_LIVE ？
     }
 
     /**
@@ -706,15 +707,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
      */
     private void initCtlLive() {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-        String privateClassState = mCtlSession.cls != null ? mCtlSession.cls.state : "";
-        mPlayUrl = null;
-        if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
-                Live.LiveSessionState.LIVE.equals(liveState)) {
-            mPlayUrl = mCtlSession.playUrl;
-        } else if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState) ||
-                Live.LiveSessionState.IDLE.equals(privateClassState)) {
-            mPlayUrl = mCtlSession.playUrl;
+        mPlayUrl =  mCtlSession.playUrl;
+
+        if (ClassroomBusiness.canIndividual(mCtlSession)) {
             mIndividualStreamDuration = mCtlSession.finishOn;
         }
 
@@ -747,8 +742,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         if (ClassroomBusiness.canIndividual(mCtlSession)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             mPlayPauseBtn.setVisibility(View.VISIBLE);
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
-                Live.LiveSessionState.RESET.equals(liveState)) {
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState)
+                || Live.LiveSessionState.RESET.equals(liveState)
+                || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {
             if (mUserMode == Constants.UserMode.TEACHING) {
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
@@ -801,7 +797,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     cancelProgress();
                 }
             });
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState)) {
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
+                Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {//公开课在教室内没有pending_for_live状态，班才有
             showProgress(true);
             LiveManager.beginClass(mContext, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ResponseBody>() {
                 @Override

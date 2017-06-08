@@ -116,7 +116,7 @@ public class TimeProgressHelper {
 
         if (Live.LiveSessionState.SCHEDULED.equals(state)) {
             return TYPE_LIVE_PENDING;
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)) {
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)) { //TODO 是否要加入班的PEND_FOR_LIVE ？
             return TYPE_LIVE_PENDING;
         } else if (Live.LiveSessionState.LIVE.equals(state)) {
             return TYPE_LIVE_PLAYING;

@@ -201,6 +201,12 @@ public class AddStudentActivity extends BaseActivity {
 
     private void submitAdd(final StudentEnroll studentEnroll) {
 
+        if (!TextUtils.isEmpty(studentEnroll.id)) {
+            studentEnroll.name = "";
+            studentEnroll.mobile = "";
+        }
+
+
         final ArrayList<StudentEnroll> studentEnrolls = new ArrayList<>(1);
 
         ClassEnrollParams enrollParams = new ClassEnrollParams();

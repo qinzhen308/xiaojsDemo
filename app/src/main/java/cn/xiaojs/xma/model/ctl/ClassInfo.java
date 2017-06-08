@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.account.Account;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClassInfo implements Serializable{
     public String title;
+    public String ticket;
     public Date createdOn;
     public String createdBy;
     //public String adviserName;

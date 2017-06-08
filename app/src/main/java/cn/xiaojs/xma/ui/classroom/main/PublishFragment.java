@@ -518,7 +518,7 @@ public class PublishFragment extends ClassroomLiveFragment {
     @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
         boolean autoCountTime = false;
-        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
+        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {//TODO 是否要加入班的PEND_FOR_LIVE ？
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.PENDING_FOR_JOIN);
             setControllerBtnStyle(Live.LiveSessionState.PENDING_FOR_JOIN);
             autoCountTime = true;
@@ -560,7 +560,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
             boolean isPrivateClass = mCtlSession.cls != null;
             if (isPrivateClass) {
-                finishClass(true);
+                exitCurrentFragment();
             } else {
                 pauseClass(true);
             }
@@ -634,24 +634,31 @@ public class PublishFragment extends ClassroomLiveFragment {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             mPlayPauseBtn.setVisibility(View.VISIBLE);
             mFinishBtn.setVisibility(View.INVISIBLE);
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
-                Live.LiveSessionState.RESET.equals(liveState)) {
-            if (ClassroomBusiness.hasTeachingAbility()) {
-                mFinishBtn.setVisibility(View.VISIBLE);
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState)
+                || Live.LiveSessionState.RESET.equals(liveState)
+                || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {
+            boolean isPrivateClass = mCtlSession.cls != null;
+            if (ClassroomBusiness.hasTeachingAbility() && !isPrivateClass) {
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
             } else {
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
+
+            if (ClassroomBusiness.hasTeachingAbility()) {
+                mFinishBtn.setVisibility(View.VISIBLE);
+            }
         } else if (Live.LiveSessionState.LIVE.equals(liveState)) {
-            //私有班课不能课间休息
             boolean isPrivateClass = mCtlSession.cls != null;
             if (ClassroomBusiness.hasTeachingAbility() && !isPrivateClass) {
-                mFinishBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
             } else {
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
+            }
+
+            if (ClassroomBusiness.hasTeachingAbility()) {
+                mFinishBtn.setVisibility(View.VISIBLE);
             }
         } else if (Live.LiveSessionState.DELAY.equals(liveState)) {
             mPlayPauseBtn.setVisibility(View.INVISIBLE);

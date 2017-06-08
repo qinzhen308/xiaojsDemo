@@ -108,13 +108,11 @@ public class ClassroomBusiness {
      * 是否能个人推流
      */
     public static boolean canIndividual(CtlSession session) {
-        String liveState = session.state;
-        String lessonState = session.cls != null ? session.cls.state : "";
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState) ||
-                Live.LiveSessionState.IDLE.equals(lessonState) ||
-                Live.LiveSessionState.SCHEDULED.equals(lessonState) ||
-                Live.LiveSessionState.FINISHED.equals(lessonState)) {
+                Live.LiveSessionState.IDLE.equals(liveState)) {
             return true;
         }
         return false;
@@ -247,7 +245,7 @@ public class ClassroomBusiness {
             //autoCountTime = true;
             countTime = session.ctl.duration * 60 - session.finishOn;
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(session.state) ||
-                Live.LiveSessionState.SCHEDULED.equals(session.state)) {
+                Live.LiveSessionState.SCHEDULED.equals(session.state)) {//TODO 是否要加入班的PEND_FOR_LIVE ？
             countTime = session.startOn;
         } else if (Live.LiveSessionState.RESET.equals(session.state)) {
             //autoCountTime = false;

@@ -65,7 +65,7 @@ public class CreateTimetableActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_create_timetable);
-        setMiddleTitle(R.string.time_table);
+        setMiddleTitle(R.string.add_schudle_class);
         setRightText(R.string.finish);
 
 
