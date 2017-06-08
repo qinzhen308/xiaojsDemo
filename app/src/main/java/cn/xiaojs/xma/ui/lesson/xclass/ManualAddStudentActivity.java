@@ -44,10 +44,10 @@ public class ManualAddStudentActivity extends BaseActivity {
 
     public static final int REQUEST_ADD_STUDENT_CODE = 0x1;
 
-    @BindView(R.id.tips_content)
-    TextView tipsContentView;
-    @BindView(R.id.lay_tips)
-    LinearLayout tipsRootView;
+//    @BindView(R.id.tips_content)
+//    TextView tipsContentView;
+//    @BindView(R.id.lay_tips)
+//    LinearLayout tipsRootView;
 
     @BindView(R.id.edit_lay)
     LinearLayout editRootLayout;
@@ -83,15 +83,15 @@ public class ManualAddStudentActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    @OnClick({R.id.left_image, R.id.right_image2, R.id.lesson_creation_tips_close})
+    @OnClick({R.id.left_image, R.id.right_image2})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 backCompleted();
                 break;
-            case R.id.lesson_creation_tips_close://关闭提醒
-                closeCourCreateTips();
-                break;
+//            case R.id.lesson_creation_tips_close://关闭提醒
+//                closeCourCreateTips();
+//                break;
             case R.id.right_image2://添加
                 Intent i = new Intent(this, AddStudentActivity.class);
                 startActivityForResult(i, REQUEST_ADD_STUDENT_CODE);
@@ -99,13 +99,13 @@ public class ManualAddStudentActivity extends BaseActivity {
         }
     }
 
-    private void closeCourCreateTips() {
-        tipsRootView.setVisibility(View.GONE);
-    }
+//    private void closeCourCreateTips() {
+//        tipsRootView.setVisibility(View.GONE);
+//    }
 
     private void initView() {
 
-        tipsContentView.setText(R.string.add_student_tips);
+//        tipsContentView.setText(R.string.add_student_tips);
         showAddStatus();
 
         adapter = new StudentsAdapter(this, studentsListView);

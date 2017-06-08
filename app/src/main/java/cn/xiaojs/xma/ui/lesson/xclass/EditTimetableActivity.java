@@ -37,6 +37,7 @@ public class EditTimetableActivity extends BaseActivity {
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
+    private final int MIN_CLASS_LESSON_DURATION = 10; //10 minutes
 
     public static final String EXTRA_C_LESSON = "class_lesson";
 
@@ -160,6 +161,12 @@ public class EditTimetableActivity extends BaseActivity {
 
         if (Integer.parseInt(durationStr) > MAX_LESSON_DURATION) {
             String tips = String.format(getString(R.string.lesson_duration_must_be_less_than), MAX_LESSON_DURATION);
+            Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (Integer.parseInt(durationStr) < MIN_CLASS_LESSON_DURATION) {
+            String tips = String.format(getString(R.string.class_lesson_duration_must_be_more_than), MIN_CLASS_LESSON_DURATION);
             Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
             return;
         }

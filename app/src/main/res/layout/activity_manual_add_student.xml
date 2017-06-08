@@ -5,10 +5,11 @@
               android:orientation="vertical"
         >
 
-    <include
-            layout="@layout/layout_create_tips"
-            android:id="@+id/lay_tips"
-            />
+    <!--<include-->
+            <!--layout="@layout/layout_create_tips"-->
+            <!--android:id="@+id/lay_tips"-->
+            <!--android:visibility="gone"-->
+            <!--/>-->
 
     <LinearLayout
             android:id="@+id/edit_lay"

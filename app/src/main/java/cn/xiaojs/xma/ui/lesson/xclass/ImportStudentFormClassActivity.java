@@ -70,7 +70,7 @@ public class ImportStudentFormClassActivity extends BaseActivity {
         registerReceiver(updateReceiver,intentFilter);
 
         setMiddleTitle(R.string.student_add_from_exist_class);
-        tipsContentView.setText(R.string.add_student_tips);
+        tipsContentView.setText(R.string.import_class_student_tips);
         tipsRootView.setVisibility(View.VISIBLE);
 
 

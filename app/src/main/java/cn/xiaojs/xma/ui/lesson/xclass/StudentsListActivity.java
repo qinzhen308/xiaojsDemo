@@ -97,7 +97,12 @@ public class StudentsListActivity extends BaseActivity {
         ListBottomDialog dialog = new ListBottomDialog(this);
 
         String[] items = getResources().getStringArray(R.array.add_student);
+        dialog.setMiddleText(getString(R.string.add_student_tips));
         dialog.setItems(items);
+        dialog.setTitleVisibility(View.VISIBLE);
+        dialog.setTitleBackground(R.color.white);
+        dialog.setRightBtnVisibility(View.GONE);
+        dialog.setLeftBtnVisibility(View.GONE);
         dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
             @Override
             public void onItemClick(int position) {

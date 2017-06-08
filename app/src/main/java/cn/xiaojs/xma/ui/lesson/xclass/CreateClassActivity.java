@@ -184,7 +184,7 @@ public class CreateClassActivity extends BaseActivity {
         ListBottomDialog dialog = new ListBottomDialog(this);
 
         String[] items = getResources().getStringArray(R.array.add_student);
-        dialog.setMiddleText(getString(R.string.add_student_type_tips));
+        dialog.setMiddleText(getString(R.string.add_student_tips));
         dialog.setItems(items);
         dialog.setTitleVisibility(View.VISIBLE);
         dialog.setTitleBackground(R.color.white);

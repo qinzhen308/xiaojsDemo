@@ -36,10 +36,10 @@ public class AddStudentActivity extends BaseActivity {
     public static final String EXTRA_STUDENT = "student";
 
 
-    @BindView(R.id.tips_content)
-    TextView tipsContentView;
-    @BindView(R.id.lay_tips)
-    LinearLayout tipsRootView;
+//    @BindView(R.id.tips_content)
+//    TextView tipsContentView;
+//    @BindView(R.id.lay_tips)
+//    LinearLayout tipsRootView;
 
 
     @BindView(R.id.student_num)
@@ -65,15 +65,15 @@ public class AddStudentActivity extends BaseActivity {
         initView();
     }
 
-    @OnClick({R.id.left_image, R.id.right_image2, R.id.lesson_creation_tips_close})
+    @OnClick({R.id.left_image, R.id.right_image2})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.lesson_creation_tips_close://关闭提醒
-                closeCourCreateTips();
-                break;
+//            case R.id.lesson_creation_tips_close://关闭提醒
+//                closeCourCreateTips();
+//                break;
             case R.id.right_image2://确定
                 addNewStudent();
                 break;
@@ -83,6 +83,8 @@ public class AddStudentActivity extends BaseActivity {
 
 
     private void initView() {
+
+//        tipsRootView.setVisibility(View.VISIBLE);
 
         numEdit.setText("");
         nameEdit.setText("");
@@ -94,9 +96,9 @@ public class AddStudentActivity extends BaseActivity {
         setRightText(R.string.ok);
     }
 
-    private void closeCourCreateTips() {
-        tipsRootView.setVisibility(View.GONE);
-    }
+//    private void closeCourCreateTips() {
+//        tipsRootView.setVisibility(View.GONE);
+//    }
 
 
     private void addNewStudent() {
