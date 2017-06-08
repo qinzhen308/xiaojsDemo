@@ -619,7 +619,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             //pause and exit
             mHandKeyPressing = true;
             pauseIndividual(true);
-        } else if (Live.LiveSessionState.FINISHED.equals(liveState)) {
+        } else if (ClassroomBusiness.canIndividual(mCtlSession)) {
             individualPublishStream();
         }
     }

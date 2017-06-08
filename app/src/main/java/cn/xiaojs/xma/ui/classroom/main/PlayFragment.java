@@ -706,12 +706,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
      */
     private void initCtlLive() {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String privateClassState = mCtlSession.cls != null ? mCtlSession.cls.state : "";
         mPlayUrl = null;
-        if (Live.LiveSessionState.LIVE.equals(liveState)) {
+        if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
+                Live.LiveSessionState.LIVE.equals(liveState)) {
             mPlayUrl = mCtlSession.playUrl;
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
-                Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState)) {
+        } else if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
+                Live.LiveSessionState.FINISHED.equals(liveState) ||
+                Live.LiveSessionState.IDLE.equals(privateClassState)) {
             mPlayUrl = mCtlSession.playUrl;
             mIndividualStreamDuration = mCtlSession.finishOn;
         }
@@ -781,8 +783,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mPlayOrPausePressTime = System.currentTimeMillis();
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-                Live.LiveSessionState.FINISHED.equals(liveState)) {
+        if (ClassroomBusiness.canIndividual(mCtlSession)) {
             individualPublishStream();
         } else if (Live.LiveSessionState.RESET.equals(liveState)) {
             showProgress(true);

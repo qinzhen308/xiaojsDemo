@@ -71,6 +71,18 @@ public class LiveCtlSessionManager {
         return mCtlSession != null ? mCtlSession.mode : 0;
     }
 
+    public synchronized String getClassOrLessonState() {
+        if (mCtlSession != null) {
+            if (mCtlSession.cls != null) {
+                return mCtlSession.cls.state;
+            }
+
+            return mCtlSession.state;
+        }
+
+        return "";
+    }
+
     public String getTicket() {
         return mTicket;
     }
