@@ -139,15 +139,16 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
             statusView.setVisibility(INVISIBLE);
         }else {
             livingView.setVisibility(INVISIBLE);
-            if(Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(mData.state)){
-                statusView.setText("待上课");
-                statusView.setVisibility(VISIBLE);
-            }else if(Ctl.LiveLessonState.FINISHED.equals(mData.state)){
-                statusView.setText("已完课");
-                statusView.setVisibility(VISIBLE);
-            }else {
-                statusView.setVisibility(INVISIBLE);
-            }
+            statusView.setVisibility(INVISIBLE);
+//            if(Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(mData.state)){
+//                statusView.setText("待上课");
+//                statusView.setVisibility(VISIBLE);
+//            }else if(Ctl.LiveLessonState.FINISHED.equals(mData.state)){
+//                statusView.setText("已完课");
+//                statusView.setVisibility(VISIBLE);
+//            }else {
+//                statusView.setVisibility(INVISIBLE);
+//            }
         }
 
         if(mData.enroll!=null){
