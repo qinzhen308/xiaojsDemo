@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:paddingLeft="@dimen/px22"
         android:paddingTop="@dimen/px27"
-        android:paddingBottom="@dimen/px42"
+        android:paddingBottom="@dimen/px7"
         android:paddingRight="@dimen/px24"
         android:layout_height="wrap_content">
 
