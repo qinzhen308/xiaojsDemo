@@ -44,6 +44,7 @@ public class Live {
         public static final String IDLE = "Idle";
         public static final String SCHEDULED = "Scheduled";
         public static final String PENDING_FOR_JOIN = "PendingForJoin";
+        public static final String PENDING_FOR_LIVE = "PendingForLive";
         public static final String LIVE = "Live";
         public static final String DELAY = "Delayed";
         public static final String FINISHED = "Finished";
@@ -53,6 +54,7 @@ public class Live {
         public static final String RESET = "Rest";
         public static final String INDIVIDUAL = "Individual";
     }
+
 
     public class MediaStatus {
         public static final int READY = 1;

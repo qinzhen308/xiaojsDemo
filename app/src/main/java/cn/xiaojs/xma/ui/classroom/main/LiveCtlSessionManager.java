@@ -64,7 +64,16 @@ public class LiveCtlSessionManager {
     }
 
     public synchronized String getLiveState() {
-        return mCtlSession != null ? mCtlSession.state : "";
+        //return mCtlSession != null ? mCtlSession.state : "";
+        if (mCtlSession != null) {
+            if (mCtlSession.cls != null) {
+                return mCtlSession.cls.state;
+            }
+
+            return mCtlSession.state;
+        }
+
+        return "";
     }
 
     public synchronized int getLiveMode() {

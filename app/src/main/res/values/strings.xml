@@ -796,7 +796,7 @@
 
     <!--班-->
     <string name="create_class">开班</string>
-    <string name="class_create_tips">创建班级之后，你可以随时添加学生、任课老师、排课等，对班级进行实时管理</string>
+    <string name="class_create_tips">创建班级之后，你可以随时添加学生、排课等，对班级进行实时管理</string>
     <string name="live_class_name">班级名称</string>
     <string name="head_teacher">班主任</string>
     <string name="join_type">加入班级是否需要验证</string>
@@ -891,6 +891,7 @@
     <string name="overlay_import_tips">从班级中导入的学生将被覆盖，确定要继续吗？</string>
     <string name="go_on">继续</string>
     <string name="class_lesson_duration_must_be_more_than">上课时长不能小于%1$s分钟</string>
-    <string name="import_class_student_tips">只导入选择班级中的学生，且会自动排除重复的学生</string>
+    <string name="import_class_student_tips">只导入选择班／公开课中的学生，且会自动排除重复的学生</string>
+    <string name="add_schudle_class">添加课</string>
 
 </resources>

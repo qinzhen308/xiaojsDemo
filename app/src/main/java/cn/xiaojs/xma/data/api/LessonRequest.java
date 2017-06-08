@@ -51,6 +51,7 @@ import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
+import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
@@ -367,7 +368,7 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
-    public void removeClassStudent(String classid, String[] students) {
+    public void removeClassStudent(String classid, RemoveStudentParams students) {
         Call<ResponseBody> call = getService().removeClassStudent(classid, students);
         enqueueRequest(APIType.REMOVE_CLASS_STUDENT, call);
     }

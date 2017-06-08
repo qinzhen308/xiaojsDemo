@@ -362,6 +362,7 @@ public class ClassInfoActivity extends BaseActivity {
                 }
             }
         });
+        dialog.show();
     }
 
     //删除

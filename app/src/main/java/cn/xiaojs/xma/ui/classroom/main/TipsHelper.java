@@ -57,7 +57,8 @@ public class TipsHelper {
         Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)) {
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)
+                || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveSessionState)) {
             if (ClassroomBusiness.hasTeachingAbility()) {
                 setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
             } else {

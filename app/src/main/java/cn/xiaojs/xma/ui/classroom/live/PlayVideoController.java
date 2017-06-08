@@ -220,11 +220,11 @@ public class PlayVideoController extends VideoController {
             if (startedNotify != null) {
                 int type = StreamType.TYPE_STREAM_PLAY;
                 String state = LiveCtlSessionManager.getInstance().getLiveState();
-                if (Live.LiveSessionState.LIVE.equals(state)) {
+                if (Live.LiveSessionState.LIVE.equals(state)
+                        || Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)
+                        || Live.LiveSessionState.PENDING_FOR_LIVE.equals(state)) {
                     type = StreamType.TYPE_STREAM_PLAY;
-                } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)
-                        || Live.LiveSessionState.SCHEDULED.equals(state)
-                        || Live.LiveSessionState.FINISHED.equals(state)) {
+                } else if (ClassroomBusiness.canIndividual(LiveCtlSessionManager.getInstance().getCtlSession())) {
                     type = StreamType.TYPE_STREAM_PLAY_INDIVIDUAL;
                 }
                 playStream(type, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
