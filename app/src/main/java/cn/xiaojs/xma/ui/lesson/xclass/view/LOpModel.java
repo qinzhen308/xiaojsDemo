@@ -389,18 +389,28 @@ public class LOpModel {
 
     //资料库
     private void databank(Activity context,CLesson cl) {
-        Intent intent = new Intent(context, ClassMaterialActivity.class);
+        if(Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)){
+            Intent intent = new Intent(context, ClassMaterialActivity.class);
 //        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
-        intent.putExtra(ClassMaterialActivity.EXTRA_ID, cl.id);
-        intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, cl.title);
-        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)?Collaboration.SubType.STANDA_LONE_LESSON:Collaboration.SubType.PRIVATE_CLASS);
-        context.startActivity(intent);
+            intent.putExtra(ClassMaterialActivity.EXTRA_ID, cl.id);
+            intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, cl.title);
+            intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)?Collaboration.SubType.STANDA_LONE_LESSON:Collaboration.SubType.PRIVATE_CLASS);
+            context.startActivity(intent);
+        }else if(cl.classInfo!=null){
+            Intent intent = new Intent(context, ClassMaterialActivity.class);
+//        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
+            intent.putExtra(ClassMaterialActivity.EXTRA_ID, cl.classInfo.id);
+            intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, cl.classInfo.title);
+            intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)?Collaboration.SubType.STANDA_LONE_LESSON:Collaboration.SubType.PRIVATE_CLASS);
+            context.startActivity(intent);
+        }
+
     }
 
     //进入教室
-    private void enterClass(Activity context,String ticket) {
+    private void enterClass(Activity context,CLesson data) {
         Intent i = new Intent();
-        i.putExtra(Constants.KEY_TICKET, ticket);
+        i.putExtra(Constants.KEY_TICKET, data.classInfo!=null&&!TextUtils.isEmpty(data.classInfo.title)?data.classInfo.title:data.ticket);
         i.setClass(context, ClassroomActivity.class);
         context.startActivity(i);
     }

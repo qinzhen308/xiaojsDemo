@@ -297,6 +297,16 @@ public class ScheduleUtil {
         return calendar.get(Calendar.DAY_OF_MONTH)==c.get(Calendar.DAY_OF_MONTH)&&calendar.get(Calendar.MONTH)==c.get(Calendar.MONTH)&&calendar.get(Calendar.YEAR)==c.get(Calendar.YEAR);
     }
 
+    public static boolean isSameDay(Date d1,Date d2){
+        Calendar calendar1=Calendar.getInstance();
+        calendar1.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        calendar1.setTime(d1);
+        Calendar calendar2=Calendar.getInstance();
+        calendar2.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        calendar2.setTime(d2);
+        return calendar1.get(Calendar.DAY_OF_MONTH)==calendar2.get(Calendar.DAY_OF_MONTH)&&calendar1.get(Calendar.MONTH)==calendar2.get(Calendar.MONTH)&&calendar1.get(Calendar.YEAR)==calendar2.get(Calendar.YEAR);
+    }
+
 
     public static String getMMDDDate(Date date){
         return simpleMDFormat.format(date);

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/layout_base_header" />
+
+    <View
+        android:id="@+id/divider"
+        style="@style/DividerHorizontal"
+        android:layout_below="@+id/title" />
+
+    <RadioGroup
+        android:id="@+id/tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px100"
+        android:layout_below="@id/divider"
+        android:background="@color/white"
+        android:checkedButton="@+id/tab1"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/tab1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:button="@null"
+            android:gravity="center"
+            android:text="全部"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_32px" />
+
+        <RadioButton
+            android:id="@+id/tab2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:button="@null"
+            android:drawableBottom="@color/main_orange"
+            android:gravity="center"
+            android:text="我教的课"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_32px" />
+
+    </RadioGroup>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_bar"
+        android:layout_marginTop="@dimen/px25" />
+
+    <FrameLayout
+        android:id="@+id/load_state_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_bar" />
+
+
+</RelativeLayout>

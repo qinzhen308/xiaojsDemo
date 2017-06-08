@@ -11,6 +11,7 @@ import java.util.List;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
@@ -20,11 +21,14 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.ui.lesson.xclass.view.LiveScheduleLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.NativeLessonView;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/22.
+ *
+ * 
  */
 
 public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -33,7 +37,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int VIEW_TYPE_HOME_CLASS_LABEL=3;
     public static final int VIEW_TYPE_HOME_CLASS =4;
     public static final int VIEW_TYPE_NATIVE_LESSON=5;
-//    public static final int VIEW_TYPE_HOME_NO_CLASS=6;
+    public static final int VIEW_TYPE_LIVE_SCHEDULE_LESSON=6;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
     private List<?> mList;
@@ -70,6 +74,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder=new CommonHolder(new ClassView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_NATIVE_LESSON){
             holder=new CommonHolder(new NativeLessonView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_LIVE_SCHEDULE_LESSON){
+            holder=new CommonHolder(new LiveScheduleLessonView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -91,24 +97,14 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(holder.itemView instanceof IViewModel){
             ((IViewModel) holder.itemView).bindData(position,getItem(position));
         }
-        if(holder.itemView instanceof HomeLessonView&&mEventCallback!=null){
-            ((HomeLessonView) holder.itemView).setCallback(mEventCallback);
+        if(holder.itemView instanceof LiveScheduleLessonView&&mEventCallback!=null){
+            ((LiveScheduleLessonView) holder.itemView).setCallback(mEventCallback);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        /*if(position==0){
-            return VIEW_TYPE_HOME_LESSON_LABEL;
-        }else if(position<5){
-            return VIEW_TYPE_HOME_LESSON;
-        }else if(position==5){
-            return VIEW_TYPE_HOME_CLASS_LABEL;
-        }else if(position==(getItemCount()-1)){
-            return VIEW_TYPE_LAST_EMPTY;
-        }*/
         Object o=getItem(position);
-        Logger.d("-----qz-----o="+o);
         if(o instanceof ClassLesson){
             return VIEW_TYPE_NATIVE_LESSON;
         }else if(o instanceof LastEmptyModel){
@@ -119,6 +115,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_HOME_LESSON_LABEL;
         }else if(o instanceof CLesson){
             return VIEW_TYPE_HOME_LESSON;
+        }else if(o instanceof LiveSchedule){
+            return VIEW_TYPE_LIVE_SCHEDULE_LESSON;
         }
         return VIEW_TYPE_HOME_CLASS;
     }

@@ -1,44 +1,45 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
+import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.stateview.AppLoadState2;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStateListener;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
-import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.lesson.xclass.AbsClassScheduleFragment;
-import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
-import okhttp3.ResponseBody;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 import static cn.xiaojs.xma.ui.classroom.main.Constants.KEY_CLASS_ID;
 
@@ -58,20 +59,29 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
     RadioButton tab2;
     String classId = "";
 
-    DataPageLoader<ClassSchedule, CollectionCalendar<ClassSchedule>> dataPageLoader;
+    DataPageLoader<LiveSchedule, List<LiveSchedule>> dataPageLoader;
     Pagination mPagination;
     String role;
+    LoadStatusViewDecoratee stateView;
 
 
     @Override
     protected View getContentView() {
-        View v = View.inflate(getActivity(), R.layout.fragment_class_schedule_tab_mode, null);
+        View v = View.inflate(getActivity(), R.layout.fragment_classroom_schedule, null);
         recyclerview = (RecyclerView) v.findViewById(R.id.recyclerview);
         tabBar = (RadioGroup) v.findViewById(R.id.tab_bar);
         tab1 = (RadioButton) v.findViewById(R.id.tab1);
         tab2 = (RadioButton) v.findViewById(R.id.tab2);
+        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container)));
         return v;
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((TextView)mContent.findViewById(R.id.middle_view)).setText("课表");
+    }
+
 
     @Override
     protected void init() {
@@ -100,6 +110,10 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
 //        getCountPerTab();
         if (isStudents()) {
             tabBar.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams lp= (RelativeLayout.LayoutParams)recyclerview.getLayoutParams();
+            lp.addRule(RelativeLayout.BELOW,R.id.divider);
+            lp= (RelativeLayout.LayoutParams)mContent.findViewById(R.id.load_state_container).getLayoutParams();
+            lp.addRule(RelativeLayout.BELOW,R.id.divider);
         }
 
         mAdapter.setCallback(new EventCallback() {
@@ -128,12 +142,17 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
         return true;
     }
 
+    @OnClick(R.id.left_image)
+    public void exit(){
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
 
     private void request() {
 
         Duration schedule = new Duration();
-        schedule.setStart(new Date(System.currentTimeMillis()-(3600*1000*24*10)));
-        schedule.setEnd(new Date(System.currentTimeMillis()+(3600*1000*24 * 10)));
+        schedule.setStart(new Date(0));
+        schedule.setEnd(new Date(ScheduleUtil.ymdToTimeMill(2100,12,30)));
 
         Criteria criteria = new Criteria();
         criteria.setDuration(schedule);
@@ -141,17 +160,7 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
         Pagination pagination = new Pagination();
         pagination.setMaxNumOfObjectsPerPage(10);
 
-        LiveManager.getLiveSchedule(getActivity(), LiveCtlSessionManager.getInstance().getTicket(), criteria, pagination, new APIServiceCallback<List<LiveSchedule>>() {
-            @Override
-            public void onSuccess(List<LiveSchedule> object) {
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+        LiveManager.getLiveSchedule(getActivity(), LiveCtlSessionManager.getInstance().getTicket(), criteria, pagination, dataPageLoader);
     }
 
 
@@ -184,31 +193,44 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
         mPagination = new Pagination();
         mPagination.setPage(1);
         mPagination.setMaxNumOfObjectsPerPage(10);
-        dataPageLoader = new DataPageLoader<ClassSchedule, CollectionCalendar<ClassSchedule>>() {
+        dataPageLoader = new DataPageLoader<LiveSchedule, List<LiveSchedule>>() {
             PageChangeInRecyclerView pageChangeInRecyclerView;
+
+            @Override
+            public void next() {
+                //不想分页就重写它，什么都不做
+            }
 
             @Override
             public void onRequst(int page) {
                 mPagination.setPage(page);
+                stateView.change(LoadStateListener.STATE_LOADING,"");
                 request();
             }
 
             @Override
-            public List<ClassSchedule> adaptData(CollectionCalendar<ClassSchedule> object) {
+            public List<LiveSchedule> adaptData(List<LiveSchedule> object) {
                 if (object == null) return new ArrayList<>();
-                return object.calendar;
+                return object;
             }
 
             @Override
-            public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
+            public void onSuccess(List<LiveSchedule> curPage, List<LiveSchedule> all) {
                 pageChangeInRecyclerView.completeLoading();
+                if(ArrayUtil.isEmpty(all)){
+                    stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
+                }else {
+                    stateView.change(LoadStateListener.STATE_NORMAL,"");
+                }
                 bindData(all);
+
             }
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
                 pageChangeInRecyclerView.completeLoading();
-                bindData(new ArrayList<ClassSchedule>());
+                bindData(new ArrayList<LiveSchedule>());
+                stateView.change(LoadStateListener.STATE_LOADING_ERROR,"");
             }
 
             @Override
@@ -219,18 +241,23 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
         };
     }
 
-    private void bindData(List<ClassSchedule> list) {
+    //这里认为服务器返回的数据是经过排序后的，不管倒叙还是顺序。
+    private void bindData(List<LiveSchedule> list) {
         ArrayList monthLists = new ArrayList();
         LessonLabelModel tempLabel = null;
+        Date tempDate=new Date(0);
+        int tempCount=0;
         for (int j = 0; j < list.size(); j++) {
-            ClassSchedule cs = list.get(j);
-            tempLabel = new LessonLabelModel(ScheduleUtil.getDateYMDW(cs.date), 0, false);
-            monthLists.add(tempLabel);
-            monthLists.addAll(cs.lessons);
-            tempLabel.lessonCount = cs.lessons.size();
-            if (cs.lessons.size() > 0) {
-                tempLabel.hasData = true;
+            LiveSchedule cs = list.get(j);
+            if(!ScheduleUtil.isSameDay(cs.schedule.getStart(),tempDate)){//不是同一天
+                tempCount=0;
+                tempDate=cs.schedule.getStart();
+                tempLabel = new LessonLabelModel(ScheduleUtil.getDateYMDW(cs.schedule.getStart()), 0, true);
+                monthLists.add(tempLabel);
             }
+            tempCount++;
+            monthLists.add(cs);
+            tempLabel.lessonCount = tempCount;
         }
         monthLists.add(new LastEmptyModel());
         mAdapter.setList(monthLists);
