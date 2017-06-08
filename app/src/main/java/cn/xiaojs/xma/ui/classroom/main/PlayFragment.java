@@ -263,7 +263,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     protected void initData() {
         //TODO 当是classroom为班时，是否title显示要改变？
-        mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
+        mLessonTitle.setText(getLessonTitle());
         initCtlLive();
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();

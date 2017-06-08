@@ -287,7 +287,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         }
 
         //TODO 当是classroom为班时，是否title显示要改变？
-        mLessonTitle.setText(!TextUtils.isEmpty(mCtlSession.titleOfPrimary) ? mCtlSession.titleOfPrimary : mCtlSession.ctl.title);
+        mLessonTitle.setText(getLessonTitle());
         if (mFullScreenTalkPresenter == null) {
             mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
             mFullScreenTalkPresenter.switchFullMultiTalk();

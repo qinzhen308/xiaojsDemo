@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class TimeProgressHelper {
@@ -53,7 +54,9 @@ public class TimeProgressHelper {
         mTitleBarTimeInfoTv = timeInfoView;
         mFullScreenTimeInfoTv = (TextView) timeStatusBar.findViewById(R.id.count_down_time);
         mLiveShowTv = (TextView) timeStatusBar.findViewById(R.id.live_show);
-        mLessonDuration = LiveCtlSessionManager.getInstance().getCtlSession().ctl.duration;
+        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        //TODO get duration
+        mLessonDuration = session.ctl != null ? session.ctl.duration : 0;
 
         mHandler = new Handler(mContext.getMainLooper()) {
             @Override

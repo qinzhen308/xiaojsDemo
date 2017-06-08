@@ -240,10 +240,6 @@ public class ClassroomActivity extends FragmentActivity {
         if (!TextUtils.isEmpty(ctlSession.ticket)) {
             mTicket = ctlSession.ticket;
         }
-        //init global data
-        LiveCtlSessionManager.getInstance().init(ctlSession, mTicket);
-        ContactManager.getInstance().init();
-        TalkManager.getInstance().init(ClassroomActivity.this, mTicket);
 
         //init socket
         if (!networkChanged) {
@@ -259,6 +255,11 @@ public class ClassroomActivity extends FragmentActivity {
             SocketManager.reListener();
             SocketManager.connect();
         }
+
+        //init global data
+        LiveCtlSessionManager.getInstance().init(ctlSession, mTicket);
+        ContactManager.getInstance().init();
+        TalkManager.getInstance().init(ClassroomActivity.this, mTicket);
 
         //init fragment
         if (ClassroomController.getInstance().getStackFragment() == null) {
@@ -281,8 +282,6 @@ public class ClassroomActivity extends FragmentActivity {
         } else {
             ClassroomController.getInstance().enterPlayFragment(null, false);
         }
-
-        ContactManager.getInstance().getAttendees(this, null);
     }
 
     private void initSocketIO(String ticket, String secret, boolean force) {
@@ -328,9 +327,7 @@ public class ClassroomActivity extends FragmentActivity {
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mSktConnected = true;
 
-            //从socket中删除所有监听器，并且重新监听
-            SocketManager.off(false);
-            SocketManager.reListener();
+            ContactManager.getInstance().getAttendees(ClassroomActivity.this, null);
             ClassroomController.getInstance().notifySocketConnectChanged(true);
         }
     };

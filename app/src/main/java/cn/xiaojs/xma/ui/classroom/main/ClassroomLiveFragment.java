@@ -168,6 +168,21 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
+    protected String getLessonTitle() {
+        String title = "";
+        if (!TextUtils.isEmpty(mCtlSession.titleOfPrimary)) {
+            title = mCtlSession.titleOfPrimary;
+        } else {
+            if (mCtlSession.ctl != null) {
+                title = mCtlSession.ctl.title;
+            } else if (mCtlSession.cls != null) {
+                title = mCtlSession.cls.title;
+            }
+        }
+
+        return title;
+    }
+
     protected FadeAnimListener getAnimListener(String name) {
         if (mFadeAnimListeners == null) {
             return null;
