@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +21,16 @@ import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionCalendar;
+import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.live.LiveSchedule;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.lesson.xclass.AbsClassScheduleFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
@@ -31,6 +38,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.ui.classroom.main.Constants.KEY_CLASS_ID;
 
@@ -122,8 +130,28 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
 
 
     private void request() {
-        Map map = LessonDataManager.createScheduleOptions(null, null, null, ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0), null, Account.TypeName.CLASS_LESSON, "All", null, null);
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(), classId, map, mPagination, dataPageLoader);
+
+        Duration schedule = new Duration();
+        schedule.setStart(new Date(System.currentTimeMillis()-(3600*1000*24*10)));
+        schedule.setEnd(new Date(System.currentTimeMillis()+(3600*1000*24 * 10)));
+
+        Criteria criteria = new Criteria();
+        criteria.setDuration(schedule);
+
+        Pagination pagination = new Pagination();
+        pagination.setMaxNumOfObjectsPerPage(10);
+
+        LiveManager.getLiveSchedule(getActivity(), LiveCtlSessionManager.getInstance().getTicket(), criteria, pagination, new APIServiceCallback<List<LiveSchedule>>() {
+            @Override
+            public void onSuccess(List<LiveSchedule> object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
 

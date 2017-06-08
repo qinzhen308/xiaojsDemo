@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
@@ -25,6 +26,8 @@ import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -94,7 +97,8 @@ public class ClassInfoActivity extends BaseActivity {
                 }
                 break;
             case R.id.enter_btn:
-                //TODO 进入教室
+                //FIXME 进入教室,没有ticket
+                enterClass(this,"");
                 break;
             case R.id.lay_time_table:
                 //课表
@@ -164,6 +168,14 @@ public class ClassInfoActivity extends BaseActivity {
         intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, classInfo.title);
         intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Collaboration.SubType.PRIVATE_CLASS);
         startActivity(intent);
+    }
+
+    //进入教室
+    private void enterClass(Activity context, String ticket) {
+        Intent i = new Intent();
+        i.putExtra(Constants.KEY_TICKET, ticket);
+        i.setClass(context, ClassroomActivity.class);
+        context.startActivity(i);
     }
 
 

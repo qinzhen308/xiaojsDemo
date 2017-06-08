@@ -184,7 +184,7 @@ public class CreateClassActivity extends BaseActivity {
         ListBottomDialog dialog = new ListBottomDialog(this);
 
         String[] items = getResources().getStringArray(R.array.add_student);
-        dialog.setMiddleText(getString(R.string.add_student_type_tips));
+        dialog.setMiddleText(getString(R.string.add_student_tips));
         dialog.setItems(items);
         dialog.setTitleVisibility(View.VISIBLE);
         dialog.setTitleBackground(R.color.white);
@@ -276,7 +276,7 @@ public class CreateClassActivity extends BaseActivity {
                 Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         params.lessons = classLessons;
 
-        ClassEnroll classEnroll = new ClassEnroll();
+        ClassEnroll classEnroll = null;
         if (enrollStudents != null && enrollStudents.size() > 0) {
             for(StudentEnroll e:enrollStudents){
                 if(!TextUtils.isEmpty(e.id)){
@@ -284,10 +284,22 @@ public class CreateClassActivity extends BaseActivity {
                     e.mobile="";
                 }
             }
+
+            if (classEnroll == null) {
+                classEnroll = new ClassEnroll();
+            }
+
             classEnroll.students = enrollStudents;
         }
+
         if((enrollImports != null && enrollImports.size() > 0)){
+
+            if (classEnroll == null) {
+                classEnroll = new ClassEnroll();
+            }
+
             classEnroll.importe = enrollImports;
+
         }
         params.enroll = classEnroll;
         showProgress(true);

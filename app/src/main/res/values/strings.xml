@@ -890,5 +890,7 @@
     <string name="overlay_students_tips">手动添加的学生将被覆盖，确定要继续吗？</string>
     <string name="overlay_import_tips">从班级中导入的学生将被覆盖，确定要继续吗？</string>
     <string name="go_on">继续</string>
+    <string name="class_lesson_duration_must_be_more_than">上课时长不能小于%1$s分钟</string>
+    <string name="import_class_student_tips">只导入选择班级中的学生，且会自动排除重复的学生</string>
 
 </resources>

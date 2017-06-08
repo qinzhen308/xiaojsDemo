@@ -40,6 +40,7 @@ public class CreateTimetableActivity extends BaseActivity {
 
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
     private final int MAX_LESSON_DURATION = 600; //600 minutes, 10 hours
+    private final int MIN_CLASS_LESSON_DURATION = 10; //10 minutes
 
     public static final String EXTRA_CLASS_LESSON = "class_lesson";
     public static final String EXTRA_TARGET_DATE = "extra_target_date";
@@ -160,6 +161,12 @@ public class CreateTimetableActivity extends BaseActivity {
             return;
         }
 
+        if (Integer.parseInt(durationStr) < MIN_CLASS_LESSON_DURATION) {
+            String tips = String.format(getString(R.string.class_lesson_duration_must_be_more_than), MIN_CLASS_LESSON_DURATION);
+            Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         //此处判断时间是否有冲突
         new CheckConflictTask().execute(lessonStartTime, 
@@ -183,7 +190,7 @@ public class CreateTimetableActivity extends BaseActivity {
                 long start = schedule.getStart().getTime();
                 long end = start + duration * 60 * 1000;
 
-                if (startTime >= start && startTime <= end) {
+                if (startTime >= start && startTime <= (end + 5*60*1000)) {//每节课间隔不能小于五分钟
                     return true;
                 }
 

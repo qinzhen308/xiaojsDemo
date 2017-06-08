@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.data.api.service;
 
+import java.util.List;
+
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
@@ -8,6 +10,7 @@ import cn.xiaojs.xma.model.live.ClassMode;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.live.Ticket;
 import okhttp3.ResponseBody;
@@ -84,6 +87,13 @@ public interface LiveService {
     //Resume Class
     @PATCH("/v1/live/{ticket}/resume")
     Call<ClassResponse> resumeClass(@Path("ticket") String ticket, @Body ClassMode mode);
+
+
+    //Get Live Schedule
+    @GET("/v1/live/{ticket}/schedule/{criteria}/{pagination}")
+    Call<List<LiveSchedule>> getLiveSchedule(@Path("ticket") String ticket,
+                                             @Path("criteria") String criteria,
+                                             @Path("pagination") String pagination);
 
 
 }
