@@ -823,7 +823,12 @@ public class PublishFragment extends ClassroomLiveFragment {
 
             @Override
             public void onVideoClose() {
-                //close();
+                if (ClassroomBusiness.hasTeachingAbility()) {
+                    mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+                } else {
+                    mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+                }
+
             }
         });
     }

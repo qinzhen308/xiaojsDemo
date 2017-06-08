@@ -38,6 +38,7 @@ public class LiveMenu extends PopupWindow {
     private ImageView mVideo;
     private ImageView mAudio;
     private ImageView mScale;
+    private ImageView mClose;
 
     private OnItemClickListener mListener;
 
@@ -56,6 +57,7 @@ public class LiveMenu extends PopupWindow {
         mScale = (ImageView) mRootView.findViewById(R.id.live_menu_scale);
         mAudio = (ImageView) mRootView.findViewById(R.id.live_menu_audio);
         mVideo = (ImageView) mRootView.findViewById(R.id.live_menu_video);
+        mClose = (ImageView) mRootView.findViewById(R.id.live_menu_close);
         mLayout = new ClassroomPopupWindowLayout(mContext);
 
         mVideo.setVisibility(View.GONE);
@@ -96,6 +98,18 @@ public class LiveMenu extends PopupWindow {
                 dismiss();
             }
         });
+
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onVideoClose();
+                }
+                dismiss();
+            }
+        });
+
+
     }
 
     public void show(View anchor, int width, int height) {
