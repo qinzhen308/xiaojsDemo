@@ -158,7 +158,10 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
         }
         String teachers="班主任：";
         for(int i=0;i<mData.advisers.length;i++){
-            teachers+=mData.advisers[i].name;
+            teachers+=mData.advisers[i].name+"、";
+        }
+        if("、".equals(teachers.charAt(teachers.length()-1))){
+            teachers=teachers.substring(0,teachers.length()-1);
         }
         teachersView.setText(teachers);
         setOnClickListener(new OnClickListener() {
