@@ -140,10 +140,10 @@ public class LOpModel {
                 edit(context, data);
                 break;
             case OP_ENTER:
-                enterClass(context, data.ticket);
+                enterClass(context, data);
                 break;
             case OP_ENTER_2:
-                enterClass(context, data.ticket);
+                enterClass(context, data);
                 break;
             case OP_LOOK:
                 detail(context, data.id);
@@ -410,7 +410,7 @@ public class LOpModel {
     //进入教室
     private void enterClass(Activity context,CLesson data) {
         Intent i = new Intent();
-        i.putExtra(Constants.KEY_TICKET, data.classInfo!=null&&!TextUtils.isEmpty(data.classInfo.title)?data.classInfo.title:data.ticket);
+        i.putExtra(Constants.KEY_TICKET, data.classInfo!=null&&!TextUtils.isEmpty(data.classInfo.ticket)?data.classInfo.ticket:data.ticket);
         i.setClass(context, ClassroomActivity.class);
         context.startActivity(i);
     }
