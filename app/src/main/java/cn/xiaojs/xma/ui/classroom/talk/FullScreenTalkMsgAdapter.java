@@ -87,6 +87,11 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
     }
 
     @Override
+    protected boolean filterDuplication() {
+        return true;
+    }
+
+    @Override
     public void add(TalkItem talkItem) {
         if (!contains(talkItem)) {
             super.add(talkItem);

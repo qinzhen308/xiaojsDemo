@@ -84,6 +84,11 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
     }
 
     @Override
+    protected boolean filterDuplication() {
+        return true;
+    }
+
+    @Override
     public void add(TalkItem talkItem) {
         if (!contains(talkItem)) {
             super.add(talkItem);
