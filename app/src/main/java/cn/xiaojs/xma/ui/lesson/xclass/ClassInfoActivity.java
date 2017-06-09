@@ -412,7 +412,7 @@ public class ClassInfoActivity extends BaseActivity {
         ModifyModeParam modeParam = new ModifyModeParam();
 
         int mode = verify ? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
-        modeParam.mode = mode;
+        modeParam.join = mode;
 
         showProgress(true);
         LessonDataManager.modifyClass(this, classId, modeParam, new APIServiceCallback<CLResponse>() {

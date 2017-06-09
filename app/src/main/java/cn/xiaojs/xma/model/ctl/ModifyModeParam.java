@@ -6,5 +6,5 @@ package cn.xiaojs.xma.model.ctl;
 
 public class ModifyModeParam extends ModifyClassParams {
 
-    public int mode;
+    public int join;
 }

@@ -6,6 +6,7 @@ import cn.xiaojs.xma.model.QRCodeData;
 import cn.xiaojs.xma.model.QRImgRequst;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.FieldMap;
 import retrofit2.http.POST;
 
 /**
@@ -15,5 +16,5 @@ import retrofit2.http.POST;
 public interface OtherService {
 
     @POST("/xjsweixin/web/index.php?r=public/getimgcode")
-    Call<QRCodeData> getQRImg(@Body QRImgRequst params);
+    Call<QRCodeData> getQRImg(@FieldMap Map<String,String> params);
 }

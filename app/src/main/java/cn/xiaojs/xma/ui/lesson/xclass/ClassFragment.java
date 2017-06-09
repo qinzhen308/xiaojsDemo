@@ -329,7 +329,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     protected int registerDataChangeListenerType() {
-        return SimpleDataChangeListener.CREATE_CLASS_CHANGED;
+        return SimpleDataChangeListener.CREATE_CLASS_CHANGED|SimpleDataChangeListener.LESSON_CREATION_CHANGED;
     }
 
 
