@@ -142,18 +142,18 @@ public abstract class AbsChatAdapter<B, H extends BaseHolder> extends BaseAdapte
                 }
             }
         });
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    int idx = i;
-                    if (mListView.getRefreshableView().getHeaderViewsCount() > 0 || mListView.getRefreshableView().getFooterViewsCount() > 0) {
-                        idx = i - mListView.getRefreshableView().getHeaderViewsCount();
-                    }
-                    if (idx >= 0 && idx < mBeanList.size()) {
-                        onDataItemClick(idx, mBeanList.get(idx));
-                    }
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                int idx = i;
+                if (mListView.getRefreshableView().getHeaderViewsCount() > 0 || mListView.getRefreshableView().getFooterViewsCount() > 0) {
+                    idx = i - mListView.getRefreshableView().getHeaderViewsCount();
                 }
-            });
+                if (idx >= 0 && idx < mBeanList.size()) {
+                    onDataItemClick(idx, mBeanList.get(idx));
+                }
+            }
+        });
 
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -218,7 +218,7 @@ public abstract class AbsChatAdapter<B, H extends BaseHolder> extends BaseAdapte
 //            onAttachSwipe(mark, delete);
 //            return templateView;
 //        } else {
-            return createContentView(position);
+        return createContentView(position);
 //        }
     }
 
@@ -453,9 +453,25 @@ public abstract class AbsChatAdapter<B, H extends BaseHolder> extends BaseAdapte
             return;
         }
         if (!data.isEmpty()) {
-            mBeanList.addAll(0, data);
-            notifyDataSetChanged();
-            adjustScroll(data.size());
+            if (filterDuplication()) {
+                int size = 0;
+                for (int i = data.size() - 1; i >= 0; i--) {
+                    B b = data.get(i);
+                    if (!contains(b)) {
+                        mBeanList.add(0, b);
+                        size++;
+                    }
+                }
+
+                if (size > 0) {
+                    notifyDataSetChanged();
+                    adjustScroll(size);
+                }
+            } else {
+                mBeanList.addAll(0, data);
+                notifyDataSetChanged();
+                adjustScroll(data.size());
+            }
         }
 
         if (mBeanList == null || mBeanList.size() == 0) {
@@ -477,6 +493,13 @@ public abstract class AbsChatAdapter<B, H extends BaseHolder> extends BaseAdapte
             return mBeanList.contains(b);
         }
 
+        return false;
+    }
+
+    /**
+     * 是否去掉重复
+     */
+    protected boolean filterDuplication() {
         return false;
     }
 

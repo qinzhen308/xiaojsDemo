@@ -42,7 +42,7 @@ public class LiveCtlSessionManager {
         mUserInLesson = ClassroomBusiness.getUser(ctlSession.psTypeInLesson, Constants.User.NONE);
         mUserMode = ClassroomBusiness.getUserByCtlSession(ctlSession);
         mTicket = ticket;
-        mClassroomType = ctlSession.cls == null?
+        mClassroomType = ctlSession.cls == null ?
                 Constants.ClassroomType.StandaloneLesson : Constants.ClassroomType.PrivateClass;
     }
 
@@ -66,11 +66,19 @@ public class LiveCtlSessionManager {
     public synchronized String getLiveState() {
         //return mCtlSession != null ? mCtlSession.state : "";
         if (mCtlSession != null) {
+
             if (mCtlSession.cls != null) {
-                return mCtlSession.cls.state;
+
+                if (mCtlSession.ctl != null) {
+                    return mCtlSession.state;
+                } else {
+                    return mCtlSession.cls.state;
+                }
+
+            } else {
+                return mCtlSession.state;
             }
 
-            return mCtlSession.state;
         }
 
         return "";

@@ -27,7 +27,7 @@ public class SyncClassStateResponse {
     public String to;
     public Current current;
     public Next next;
-    public Volatiles volatiles;
+    public Volatiles[] volatiles;
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -36,6 +36,7 @@ public class SyncClassStateResponse {
         public String id;
         public String title;
         public Schedule schedule;
+        public String typeName;
         public boolean playback;
     }
 
@@ -52,7 +53,7 @@ public class SyncClassStateResponse {
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Schedule {
-        public Date state;
+        public Date start;
         public int duration;
     }
 

@@ -895,5 +895,6 @@
     <string name="class_lesson_duration_must_be_more_than">上课时长不能小于%1$s分钟</string>
     <string name="import_class_student_tips">只导入选择班／公开课中的学生，且会自动排除重复的学生</string>
     <string name="add_schudle_class">添加课</string>
+    <string name="recommend_xiaojs">推荐小教室</string>
 
 </resources>

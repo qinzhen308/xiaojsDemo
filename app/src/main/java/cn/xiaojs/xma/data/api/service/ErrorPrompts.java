@@ -86,13 +86,11 @@ public class ErrorPrompts {
                 break;
             case APIType.BOOT_SESSION:
                 if (errorCode.equals(Errors.CLASS_NOT_READY)) {
-                    errorMessage = "教室没准备好或着无法访问";
-                } else if (errorCode.equals(Errors.CLASS_NOT_INVOLVED)) {
-                    errorMessage = "Class not involved";
-                } else if (errorCode.equals(Errors.BAD_GATEWAY)) {
-                    errorMessage = "Bad gateway";
+                    errorMessage = "教室尚未准备好或着无法访问";
+                } else if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
+                    errorMessage = "您没有权限进入教室";
                 } else {
-                    errorMessage = "进入教室失败";
+                    errorMessage = "请检查您的网络链接是否正常，然后在重新连接";
                 }
                 break;
             case APIType.GENERATE_TICKET:

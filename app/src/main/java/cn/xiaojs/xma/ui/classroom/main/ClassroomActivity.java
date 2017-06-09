@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -208,7 +210,7 @@ public class ClassroomActivity extends FragmentActivity {
                     Log.i("aaa", "BootSession fail");
                 }
                 cancelProgress();
-                showContinueConnectClassroom();
+                showContinueConnectClassroom(errorMessage);
             }
         });
     }
@@ -393,7 +395,7 @@ public class ClassroomActivity extends FragmentActivity {
                             initData(false, false);
                         } else {
                             cancelProgress();
-                            showContinueConnectClassroom();
+                            showContinueConnectClassroom(null);
                         }
                         break;
                 }
@@ -447,11 +449,15 @@ public class ClassroomActivity extends FragmentActivity {
     /**
      * 是否继续连接教室
      */
-    private void showContinueConnectClassroom() {
+    private void showContinueConnectClassroom(String errorTips) {
         if (mContinueConnectDialog == null) {
             mContinueConnectDialog = new CommonDialog(this);
             mContinueConnectDialog.setTitle(R.string.cr_live_connect_fail_title);
-            mContinueConnectDialog.setDesc(R.string.cr_live_connect_fail_desc);
+            if (TextUtils.isEmpty(errorTips)) {
+                mContinueConnectDialog.setDesc(R.string.cr_live_connect_fail_desc);
+            } else {
+                mContinueConnectDialog.setDesc(errorTips);
+            }
             mContinueConnectDialog.setLefBtnText(R.string.cr_live_connect_fail_exit);
             mContinueConnectDialog.setRightBtnText(R.string.cr_live_connect_fail_continue);
             mContinueConnectDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
@@ -528,14 +534,16 @@ public class ClassroomActivity extends FragmentActivity {
 
                 //disconnect all socket
                 mNetworkDisconnected = true;
-                SocketManager.off();
+                SocketManager.off(false);
             } else if (wifiNet) {
                 // wifi network
                 mNetworkState = ClassroomBusiness.NETWORK_WIFI;
                 if (mNetworkDisconnected) {
                     mNetworkDisconnected = false;
                     setNoNetworkTips(false);
-                    initData(true, true);
+                    //initData(true, true);
+                    SocketManager.reListener();
+                    SocketManager.connect();
                 }
             } else if (mobileNet) {
                 // mobile network
@@ -543,7 +551,9 @@ public class ClassroomActivity extends FragmentActivity {
                 if (mNetworkDisconnected) {
                     mNetworkDisconnected = false;
                     setNoNetworkTips(false);
-                    initData(true, true);
+                    //initData(true, true);
+                    SocketManager.reListener();
+                    SocketManager.connect();
                 }
             }
         }

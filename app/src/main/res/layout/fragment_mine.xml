@@ -332,7 +332,7 @@
                     android:textSize="@dimen/font_26px"
                     android:drawableLeft="@drawable/ic_share_my"
                     android:drawablePadding="@dimen/px20"
-                    android:text="@string/client_download_qrcode"/>
+                    android:text="@string/recommend_xiaojs"/>
 
 
             <ImageView

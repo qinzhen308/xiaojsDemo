@@ -58,6 +58,7 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.ExitPeerTalkListener;
+import cn.xiaojs.xma.ui.classroom.talk.OnTalkItemClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -71,7 +72,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         OnPhotoDoodleShareListener,
         ExitPeerTalkListener,
         TalkManager.OnTalkMsgReceived,
-        SocketManager.OnSocketListener {
+        SocketManager.OnSocketListener,
+        OnTalkItemClickListener {
 
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
     protected final static int BTN_PRESS_INTERVAL = 1000; //ms
@@ -558,11 +560,11 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             mFullScreenTalkPresenter.release();
         }
 
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE), mSyncClassStateListener);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 
     /**

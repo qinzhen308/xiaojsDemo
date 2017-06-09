@@ -1,8 +1,4 @@
-package cn.xiaojs.xma.ui.classroom.bean;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
+package cn.xiaojs.xma.ui.classroom.talk;
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -13,12 +9,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  *
  *  ---------------------------------------------------------------------------------------
  * Author:huangyong
- * Date:2017/3/1
+ * Date:2017/6/9
  * Desc:
  *
  * ======================================================================================== */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class FeedbackStatus {
-    public int status;
+
+public interface OnTalkItemClickListener {
+    public void onTalkItemClick();
 }

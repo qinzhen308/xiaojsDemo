@@ -32,5 +32,14 @@
             android:layout_marginLeft="@dimen/px20"
             android:layout_marginRight="@dimen/px20"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/scale_selector"/>
+            android:src="@drawable/ic_cr_full_screen"/>
+
+    <ImageView
+            android:id="@+id/live_menu_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_marginRight="@dimen/px20"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_cr_peer_close"/>
 </LinearLayout>
