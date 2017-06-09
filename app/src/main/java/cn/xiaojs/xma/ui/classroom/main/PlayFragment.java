@@ -327,6 +327,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         ClassroomController.getInstance().enterLandFullScreen(isPortrait(), mContext);
         if (mFullScreenTalkPresenter == null) {
             mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
+            mFullScreenTalkPresenter.setOnTalkItemClickListener(this);
             mDiscussionListView.setVisibility(View.VISIBLE);
             mFullScreenTalkPresenter.switchFullMultiTalk();
         }
@@ -893,5 +894,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 mFullScreenTalkPresenter.switchFullMultiTalk();
             }
         }
+    }
+
+    @Override
+    public void onTalkItemClick() {
+        startAnim();
     }
 }

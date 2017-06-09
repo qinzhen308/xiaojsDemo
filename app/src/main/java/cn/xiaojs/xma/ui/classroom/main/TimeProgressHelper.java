@@ -82,7 +82,7 @@ public class TimeProgressHelper {
     }
 
     public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, boolean play) {
-        setTimeProgress(countTime, individualDuration, liveState, null, null, play);
+        setTimeProgress(countTime, individualDuration, liveState, extra, null, play);
     }
 
     public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, String originState, boolean play) {
