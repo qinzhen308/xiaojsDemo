@@ -55,7 +55,8 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
     private TalkComparator mTalkComparator;
     private LiveCriteria mLiveCriteria;
     private OnGetTalkListener mOnGetTalkListener;
-    private OnImageClickListener mOnImageClickListener;
+    private OnImageClickListener mOnImageClickListener; //图片点击监听器
+    private OnTalkItemClickListener mOnTalkItemClickListener; //talk item点击监听器
 
     private int mScreenW = 0;
     private int mTalkNameColor = 0;
@@ -69,6 +70,10 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
         mOnImageClickListener = listener;
     }
 
+    public void setOnTalkItemClickListener(OnTalkItemClickListener listener) {
+        mOnTalkItemClickListener = listener;
+    }
+
     private void init(String ticket, OnGetTalkListener listener) {
         mTicket = ticket;
         mOnGetTalkListener = listener;
@@ -79,6 +84,11 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
         mTalkNameColor = mContext.getResources().getColor(R.color.classroom_talk_name);
         mScreenW = mContext.getResources().getDisplayMetrics().widthPixels;
         MAX_SIZE = mContext.getResources().getDimensionPixelSize(R.dimen.px130);
+    }
+
+    @Override
+    protected boolean filterDuplication() {
+        return true;
     }
 
     @Override
@@ -153,6 +163,7 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
         holder.msgName = (TextView) view.findViewById(R.id.msg_name);
         holder.msgImg = (ImageView) view.findViewById(R.id.msg_img);
         holder.msgImg.setOnClickListener(this);
+        view.setOnClickListener(this);
         return holder;
     }
 
@@ -217,42 +228,48 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
 
     @Override
     public void onClick(View v) {
-        View parent = (View) v.getParent();
-        Object obj = parent.getTag();
-        try {
-            Integer position = (Integer) obj;
-            TalkItem talkItem = getItem(position);
+        if (v.getId() == R.id.talk_msg_info) {
+            if (mOnTalkItemClickListener != null) {
+                mOnTalkItemClickListener.onTalkItemClick();
+            }
+        } else {
+            View parent = (View) v.getParent();
+            Object obj = parent.getTag();
+            try {
+                Integer position = (Integer) obj;
+                TalkItem talkItem = getItem(position);
 
-            boolean isText = false;
-            String drawingKey = null;
-            String base64Txt = null;
+                boolean isText = false;
+                String drawingKey = null;
+                String base64Txt = null;
 
-            if (talkItem.body != null) {
-                if (!TextUtils.isEmpty(talkItem.body.text)) {
-                    base64Txt = talkItem.body.text;
-                    if (talkItem.body.contentType == Communications.ContentType.TEXT) {
-                        isText = true;
-                    }
-                } else {
-                    if (talkItem.body.drawing != null) {
-                        drawingKey = talkItem.body.drawing.name;
+                if (talkItem.body != null) {
+                    if (!TextUtils.isEmpty(talkItem.body.text)) {
+                        base64Txt = talkItem.body.text;
+                        if (talkItem.body.contentType == Communications.ContentType.TEXT) {
+                            isText = true;
+                        }
+                    } else {
+                        if (talkItem.body.drawing != null) {
+                            drawingKey = talkItem.body.drawing.name;
+                        }
                     }
                 }
-            }
 
-            if (!isText && (!TextUtils.isEmpty(base64Txt) || !TextUtils.isEmpty(drawingKey))) {
-                if (!TextUtils.isEmpty(base64Txt)) {
-                    if (mOnImageClickListener != null) {
-                        mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_BASE64, base64Txt);
-                    }
-                } else {
-                    if (mOnImageClickListener != null) {
-                        mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_QINIU, drawingKey);
+                if (!isText && (!TextUtils.isEmpty(base64Txt) || !TextUtils.isEmpty(drawingKey))) {
+                    if (!TextUtils.isEmpty(base64Txt)) {
+                        if (mOnImageClickListener != null) {
+                            mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_BASE64, base64Txt);
+                        }
+                    } else {
+                        if (mOnImageClickListener != null) {
+                            mOnImageClickListener.onImageClick(OnImageClickListener.IMG_FROM_QINIU, drawingKey);
+                        }
                     }
                 }
-            }
-        } catch (Exception e) {
+            } catch (Exception e) {
 
+            }
         }
     }
 

@@ -56,6 +56,7 @@ public class TalkPresenter implements
 
     private int mTalkCriteria = TalkManager.TYPE_MSG_MUlTI_TAlk;
     private ProgressHUD mProgress;
+    private OnTalkItemClickListener mOnTalkItemClickListener;
 
     public TalkPresenter(Context context, PullToRefreshListView talkMsgLv, TextView talkTargetNameTv) {
         mContext = context;
@@ -64,6 +65,10 @@ public class TalkPresenter implements
 
         mMyAccountId = AccountDataManager.getAccountID(mContext);
         TalkManager.getInstance().registerMsgReceiveListener(this);
+    }
+
+    public void setOnTalkItemClickListener(OnTalkItemClickListener listener) {
+        mOnTalkItemClickListener = listener;
     }
 
     /**
@@ -132,6 +137,7 @@ public class TalkPresenter implements
             ((TalkMsgAdapter)adapter).setOnPortraitClickListener(this);
         } else if (adapter instanceof FullScreenTalkMsgAdapter) {
             ((FullScreenTalkMsgAdapter)adapter).setOnImageClickListener(this);
+            ((FullScreenTalkMsgAdapter)adapter).setOnTalkItemClickListener(mOnTalkItemClickListener);
         }
 
         if (adapter != null && talkItem != null) {

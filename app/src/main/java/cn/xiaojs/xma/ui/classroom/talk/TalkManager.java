@@ -400,6 +400,8 @@ public class TalkManager {
                     try {
                         TalkResponse talkResponse = ClassroomBusiness.parseSocketBean(args[0], TalkResponse.class);
                         if (talkResponse != null && talkResponse.result) {
+                            //TODO 现在服务器返回消息的时间是是使用的本地时间戳，如果服务器返回的消息时间戳和本地不一样，需要更新本地的时间
+                            //talkItem.time = talkResponse.time;
                             int type = addTalkItemToAdapter(talkItem, talkBean.to);
                             if (type == TYPE_MSG_MUlTI_TAlk || type == TYPE_FULL_SCREEN_MUlTI_TAlk) {
                                 notifyMsgChanged(false, talkType, talkItem);

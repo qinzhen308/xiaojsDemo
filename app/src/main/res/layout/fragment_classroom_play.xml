@@ -45,7 +45,6 @@
                 android:layout_height="@dimen/px260"
                 android:listSelector="@android:color/transparent"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="@dimen/px10"
                 android:scrollbars="none"
                 android:layout_above="@+id/fc_bottom_panel">
 

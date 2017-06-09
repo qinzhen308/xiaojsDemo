@@ -293,6 +293,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         mLessonTitle.setText(getLessonTitle());
         if (mFullScreenTalkPresenter == null) {
             mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
+            mFullScreenTalkPresenter.setOnTalkItemClickListener(this);
             mFullScreenTalkPresenter.switchFullMultiTalk();
         }
 
@@ -942,5 +943,10 @@ public class PublishFragment extends ClassroomLiveFragment {
                 mFullScreenTalkPresenter.switchFullMultiTalk();
             }
         }
+    }
+
+    @Override
+    public void onTalkItemClick() {
+        startAnim();
     }
 }
