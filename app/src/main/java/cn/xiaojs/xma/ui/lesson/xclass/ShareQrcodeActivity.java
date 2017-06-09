@@ -95,7 +95,7 @@ public class ShareQrcodeActivity extends BaseActivity {
             setViewHeight = false;
 
             if (qrcodeType == CLASS_QRCODE) {
-                getQR(getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID), 10);
+                getQR(getIntent().getStringExtra(ClassInfoActivity.EXTRA_CLASSID));
             }
         }
     }
