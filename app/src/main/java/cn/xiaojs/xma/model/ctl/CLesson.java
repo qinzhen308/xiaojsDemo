@@ -31,6 +31,7 @@ public class CLesson implements Serializable{
     @JsonProperty("class")
     public ClassInfo classInfo;
     public Adviser[] advisers;
+    public boolean accessible;
 
     public CLesson() {
     }

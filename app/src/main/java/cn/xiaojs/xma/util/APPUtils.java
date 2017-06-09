@@ -37,6 +37,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.meituan.android.walle.WalleChannelReader;
+import com.umeng.socialize.UMShareAPI;
 
 import java.io.File;
 
@@ -242,6 +243,8 @@ public class APPUtils {
         Toast.makeText(context, exitTips, Toast.LENGTH_SHORT).show();
         XiaojsConfig.mLoginUser = null;
         AccountDataManager.clearUserInfo(context);
+        //取消友盟授权
+        UMShareAPI.get(context).release();
 
         //jump login page
         Intent i = new Intent(context, LoginActivity.class);

@@ -255,7 +255,9 @@ public class WeekView extends View {
                 mPaint.setColor(mSelectDayColor);
             } else if (date.getYear() == mCurrYear && date.getMonthOfYear() - 1 == mCurrMonth && day == mCurrDay && day != mSelDay && mCurrYear == mSelYear) {
                 mPaint.setColor(mCurrentDayColor);
-            } else {
+            } else if(day==1){
+                mPaint.setColor(mCurrentDayColor);
+            }else {
                 mPaint.setColor(mNormalDayColor);
             }
             canvas.drawText(dayString, startX, startY, mPaint);
@@ -359,11 +361,15 @@ public class WeekView extends View {
             int day=date.getDayOfMonth();
             int month=date.getMonthOfYear();
             int year=date.getYear();
-            if(day==mSelDay)continue;
+//            if(day==mSelDay)continue;
             if(!box.contains(date))continue;
             float circleX = (float) (mColumnSize * i + mColumnSize * 0.5);
             float circleY = (float) (mRowSize * 0.75);
-            mPaint.setColor(box.getColor(date));
+            if(day==mSelDay){
+                mPaint.setColor(Color.WHITE);
+            }else {
+                mPaint.setColor(box.getColor(date));
+            }
             canvas.drawCircle(circleX, circleY, mCircleRadius, mPaint);
         }
     }

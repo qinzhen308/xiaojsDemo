@@ -3,6 +3,7 @@ package cn.xiaojs.xma.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.renderscript.Allocation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,10 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.widget.BottomSheet;
@@ -25,6 +30,11 @@ import cn.xiaojs.xma.R;
  */
 
 public class ShareUtil {
+
+    static {
+        PlatformConfig.setWeixin(XiaojsConfig.WX_APP_ID,XiaojsConfig.WX_APP_KEY);
+        PlatformConfig.setQQZone(XiaojsConfig.QQ_APP_ID,XiaojsConfig.QQ_APP_KEY);
+    }
 
 
     /**
@@ -46,6 +56,7 @@ public class ShareUtil {
                     case R.id.tv_wechat:
                         IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
                         WechatUtil.sharePicture(iwxapi,bitmap,true);
+
                         break;
                     case R.id.tv_fcircle:
                         IWXAPI iwxapiq = WechatUtil.registerToWechat(activity.getApplicationContext());
@@ -79,6 +90,35 @@ public class ShareUtil {
 
 
     }
+
+
+    public static void shareByUmeng(final Activity activity, final String imgUrl, final String title) {
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the share url" + imgUrl);
+        }
+        final UMImage umImage=new UMImage(activity,imgUrl);
+        umImage.setThumb(new UMImage(activity,R.drawable.ic_launcher));
+        umImage.setTitle(title);
+        shareDld(activity, new ShareBtnListener() {
+            @Override
+            public void onClickListener(View v) {
+                switch (v.getId()) {
+                    case R.id.tv_wechat:
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.WEIXIN).withMedia(umImage).share();
+                        break;
+                    case R.id.tv_fcircle:
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).withMedia(umImage).share();
+                        break;
+                    case R.id.tv_qq:
+                        //QQ
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.QQ).withMedia(umImage).share();
+                        break;
+                }
+
+            }
+        });
+    }
+
 
     /**
      * 显示分享框

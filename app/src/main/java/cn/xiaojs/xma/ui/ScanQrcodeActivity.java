@@ -25,6 +25,8 @@ public class ScanQrcodeActivity extends QrCodeActivity {
     private final String urlSuffix = "/1";
     private String urlPrefix;
 
+    private final String IDENTIFICATION_CLASS_CODE="xjsweixin";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,16 @@ public class ScanQrcodeActivity extends QrCodeActivity {
             Intent i = new Intent(this, ClassroomActivity.class);
             i.putExtra(Constants.KEY_TICKET,key);
             startActivity(i);
+            finish();
+        } else if(data!=null&&data.contains(IDENTIFICATION_CLASS_CODE)){
+            //h5 班级信息的url
+            String url=null;
+            if(data.contains("?")){
+                url=data+"&app=android";
+            }else {
+                url=data+"?app=android";
+            }
+            CommonWebActivity.invoke(this,"",url);
             finish();
         }else {
             Toast.makeText(this, R.string.Invalid_calss_qrcode_tips, Toast.LENGTH_SHORT).show();

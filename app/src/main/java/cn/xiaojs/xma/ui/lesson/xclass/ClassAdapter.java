@@ -36,8 +36,6 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
 
     public ClassAdapter(Context context, PullToRefreshSwipeListView listView) {
         super(context, listView);
-        startTime=ScheduleUtil.getUTCDate(new Date(0).getTime());
-        endTime=ScheduleUtil.getUTCDate((new Date().getTime()+365*24*60*60*1000));
     }
 
     @Override

@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
 import cn.xiaojs.xma.data.api.service.LiveService;
+import cn.xiaojs.xma.data.api.service.OtherService;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.live.ClassResponse;
@@ -208,6 +209,21 @@ public class ApiManager {
 
         return null;
 
+    }
+
+    public OtherService createOtherService(String url) {
+
+
+        if (XiaojsConfig.SHOW_DEMO) {
+            Log.d("HTTP_LOG", "XLS url:" + url);
+        }
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(JacksonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+
+        return retrofit.create(OtherService.class);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

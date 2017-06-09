@@ -105,7 +105,11 @@ public class MyClassFragment extends Fragment {
                 //TODO 重新查询
                 if (classAdapter != null) {
                     classAdapter.setRole(ClassFilterHelper.getType(group1Position));
-                    classAdapter.setTime(ClassFilterHelper.getStartTime(group2Position),ClassFilterHelper.getEndTime(group2Position));
+                    if(group2Position==0){
+                        classAdapter.setTime(null,null);
+                    }else {
+                        classAdapter.setTime(ClassFilterHelper.getStartTime(group2Position),ClassFilterHelper.getEndTime(group2Position));
+                    }
                     classAdapter.refresh();
                 }
             }

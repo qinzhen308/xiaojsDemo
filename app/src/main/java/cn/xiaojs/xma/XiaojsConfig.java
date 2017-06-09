@@ -149,6 +149,8 @@ public class XiaojsConfig {
     public static boolean CURRENT_PAGE_IN_MESSAGE = false;
 
     public static final String APP_QRCODE_URL = "http://www.xiaojs.cn/static/img/phone-xma.png";
+    //分享二维码获取图片和图片域名
+    public static final String APP_QRCODE_IMG_BASE_URL = "http://myxjs.tunnel.2bdata.com";
 
 
 }

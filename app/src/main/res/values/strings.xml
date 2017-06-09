@@ -826,6 +826,7 @@
     <string name="class_info">班级信息</string>
     <string name="client_download_qrcode">小教室下载二维码</string>
     <string name="client_download_qrcode_tips">扫一扫二维码，即可下载小教室App</string>
+    <string name="class_qrcode_tips">扫一扫上面的二维码图案，加入班级</string>
     <string name="gradle">班</string>
     <string name="hint_input_class_name">请输入班级名称</string>
     <string name="hint_input_lesson_name">请输入公开课名称</string>
@@ -841,7 +842,7 @@
     <string name="lesson_op_modify_time">修改上课时间</string>
     <string name="lesson_op_public">设为公开</string>
     <string name="lesson_op_private">取消公开</string>
-    <string name="lesson_op_recreate_lesson">再次开课</string>
+    <string name="lesson_op_recreate_lesson">重新开课</string>
     <string name="lesson_op_share">分享</string>
     <string name="lesson_op_cancel_lesson">取消</string>
     <string name="lesson_op_submit">提交确认</string>
@@ -856,6 +857,7 @@
     <string name="lesson_op_agree_invite">同意邀请</string>
     <string name="lesson_op_disagree_invite">拒绝邀请</string>
     <string name="lesson_op_reject_reason">查看原因</string>
+    <string name="lesson_op_create_lesson_again">再次开课</string>
 
     <string name="create_class_success">创建班成功</string>
     <string name="class_name_not_null">班级名称不能为空</string>

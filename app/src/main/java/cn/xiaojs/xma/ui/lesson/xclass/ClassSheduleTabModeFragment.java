@@ -43,7 +43,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
 
     RecyclerView recyclerview;
-    HomeClassAdapter mAdapter;
+    ScheduleAdapter mAdapter;
     RadioGroup tabBar;
     RadioButton tab1;
     RadioButton tab2;
@@ -72,7 +72,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
     protected void init() {
         classId=getActivity().getIntent().getStringExtra(ClassScheduleActivity.EXTRA_ID);
         state=LessonFilterHelper.getState(0);
-        mAdapter=new HomeClassAdapter(recyclerview);
+        mAdapter=new ScheduleAdapter(recyclerview);
         recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         recyclerview.setAdapter(mAdapter);
         tabBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

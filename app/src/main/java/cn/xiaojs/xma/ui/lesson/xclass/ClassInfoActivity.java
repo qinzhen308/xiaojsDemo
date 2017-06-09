@@ -126,6 +126,8 @@ public class ClassInfoActivity extends BaseActivity {
                 Intent qrIntent = new Intent(this, ShareQrcodeActivity.class);
                 qrIntent.putExtra(ShareQrcodeActivity.EXTRA_QRCODE_TYPE,
                         ShareQrcodeActivity.CLASS_QRCODE);
+                qrIntent.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
+                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_CLASS_NAME, nameView.getText().toString());
                 startActivity(qrIntent);
                 break;
             case R.id.veri_switcher:

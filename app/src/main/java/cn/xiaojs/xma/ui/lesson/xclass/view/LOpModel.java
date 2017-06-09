@@ -21,7 +21,6 @@ import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.CLesson;
-import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -79,8 +78,8 @@ public class LOpModel {
     public static final int OP_PUBLIC=12;
     //上架
     public static final int OP_PUBLISH=13;
-    //重新开课
-    public static final int OP_RECREATE_LESSON=14;
+    //再次开课
+    public static final int OP_CREATE_LESSON_AGAIN =14;
     //课表
     public static final int OP_SCHEDULE=15;
     //分享(蓝图标按钮)
@@ -101,8 +100,9 @@ public class LOpModel {
     public static final int OP_DISAGREE_INVITE=23;
     //查看原因（审核被拒绝后）
     public static final int OP_REJECT_REASON=24;
+    //重新开课
+    public static final int OP_RECREATE_LESSON=25;
 
-    
     
     private int id;
 
@@ -161,7 +161,7 @@ public class LOpModel {
                 //上架
                 shelves(context,data,position);
                 break;
-            case OP_RECREATE_LESSON:
+            case OP_CREATE_LESSON_AGAIN:
                 lessonAgain(context,data);
                 break;
             case OP_SCHEDULE:
@@ -192,6 +192,9 @@ public class LOpModel {
                 break;
             case OP_REJECT_REASON:
                 rejectReason(context,data);
+                break;
+            case OP_RECREATE_LESSON:
+                lessonAgain(context,data);
                 break;
 
         }
