@@ -39,6 +39,8 @@ public class TimeProgressHelper {
     private final static int TYPE_LIVE_DELAY = 4;
     private final static int TYPE_LIVE_FINISH = 5;
     private final static int TYPE_LIVE_INDIVIDUAL = 6;
+    private final static int TYPE_LIVE_IDLE = 7;
+    private final static int TYPE_LIVE_PENDING_LIVE = 8;
 
     private long mLessonDuration;
     private long mCountTime = 0;
@@ -116,7 +118,7 @@ public class TimeProgressHelper {
 
         if (Live.LiveSessionState.SCHEDULED.equals(state)) {
             return TYPE_LIVE_PENDING;
-        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)) { //TODO 是否要加入班的PEND_FOR_LIVE ？
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)) {
             return TYPE_LIVE_PENDING;
         } else if (Live.LiveSessionState.LIVE.equals(state)) {
             return TYPE_LIVE_PLAYING;
@@ -128,6 +130,10 @@ public class TimeProgressHelper {
             return TYPE_LIVE_DELAY;
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(state)) {
             return TYPE_LIVE_INDIVIDUAL;
+        } else if (Live.LiveSessionState.IDLE.equals(state)) {//班级特有
+            return TYPE_LIVE_IDLE;
+        } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(state)) {//班级特有
+            return TYPE_LIVE_PENDING_LIVE;
         }
 
         return TYPE_LIVE_PENDING;
@@ -149,7 +155,14 @@ public class TimeProgressHelper {
                     int type = msg.arg1;
                     mFullScreenTimeInfoTv.setVisibility(View.VISIBLE);
                     switch (type) {
+
+                        case TYPE_LIVE_IDLE:
+                            //班是空闲状态
+                            mFullScreenTimeInfoTv.setVisibility(View.GONE);
+                            mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
+                            break;
                         //上课或者待上课
+                        case TYPE_LIVE_PENDING_LIVE://班是带上课状态
                         case TYPE_LIVE_PENDING:
                         case TYPE_LIVE_SCHEDULED:
                             mCountTime--;
@@ -200,7 +213,6 @@ public class TimeProgressHelper {
                             mTitleBarTimeInfoTv.setText(total + "/" + total);
                             mFullScreenTimeInfoTv.setText(time);
                             mFullScreenTimeInfoTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cr_publish_video_stop, 0, 0, 0);
-
                             mHandler.sendMessageDelayed(m, 1000);
                             break;
                         case TYPE_LIVE_FINISH:

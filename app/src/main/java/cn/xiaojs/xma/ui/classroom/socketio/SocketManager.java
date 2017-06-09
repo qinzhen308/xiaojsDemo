@@ -95,7 +95,7 @@ public class SocketManager {
     /**
      * off all listeners
      */
-    private static void off(boolean clear) {
+    public static void off(boolean clear) {
         if (mEventListeners != null) {
             for (String event : mEventListeners.keySet()) {
                 ConcurrentLinkedQueue<EventListener> eventListeners = mEventListeners.get(event);

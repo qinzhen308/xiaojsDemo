@@ -22,9 +22,11 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONObject;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -136,6 +138,12 @@ public class ClassroomBusiness {
             if (TextUtils.isEmpty(result)) {
                 return null;
             }
+
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("socket event info: " + result);
+            }
+
 
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(result, valueType);

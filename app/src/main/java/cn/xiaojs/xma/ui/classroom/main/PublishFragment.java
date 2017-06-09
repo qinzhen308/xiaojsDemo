@@ -17,9 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LiveManager;
@@ -548,6 +551,31 @@ public class PublishFragment extends ClassroomLiveFragment {
     protected void onSyncClassStateChanged(SyncClassStateResponse syncState) {
 
         //TODO 同步班状态
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("-----------------------onSyncClassStateChanged---------------------------");
+        }
+
+
+        //TODO 班课状态发生变化
+        //syncState.to
+
+        //班中当前课的信息
+        if (syncState.current != null) {
+            //TODO 更新当前课的信息
+        }
+
+        //是否班中有下一节课
+        if (syncState.next != null) {
+            //TODO 更新界面，显示下一节的信息
+        }
+
+        //是否身份有变化
+        if (syncState.volatiles !=null && syncState.volatiles.length > 0) {
+            //TODO 有角色变化、要更新界面和操作权限，以及更新联系人列表
+            //TODO 如果psType 没有值，身份要恢复到bootSession的原始身份
+
+        }
     }
 
     private void handOnBackPressed() {
