@@ -311,6 +311,6 @@ public class PublishVideoController extends VideoController {
     protected void offSocketListener() {
         super.offSocketListener();
 
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
     }
 }

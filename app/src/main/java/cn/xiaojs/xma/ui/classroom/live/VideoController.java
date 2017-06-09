@@ -162,10 +162,10 @@ public abstract class VideoController implements StreamConfirmCallback {
     }
 
     protected void offSocketListener() {
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLAIM_STREAMING));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION));
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLAIM_STREAMING), mStreamReclaimedListener);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION), mStreamStopByExpirationListener);
     }
 
     /**

@@ -61,13 +61,6 @@ public class ContactManager {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
     }
 
-    public void reListenerSocket() {
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN));
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE));
-
-        init();
-    }
-
     public void release() {
         if (mLiveCollection != null) {
             if (mLiveCollection.attendees != null) {
