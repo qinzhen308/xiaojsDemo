@@ -179,18 +179,21 @@ public class ContactFragment extends SheetFragment implements OnAttendItemClick,
     }
 
     @Override
-    public void onAttendsChanged(ArrayList<Attendee> attendees, boolean join) {
+    public void onAttendsChanged(ArrayList<Attendee> attendees, int action) {
         //update list
-        int total = attendees != null ? attendees.size() : 0;
-        int current = 0;
-        if (attendees != null) {
-            for (Attendee attendee : attendees) {
-                if (attendee.xa > 0) {
-                    current++;
+        if (action == ContactManager.ACTION_JOIN || action == ContactManager.ACTION_LEAVE) {
+            int total = attendees != null ? attendees.size() : 0;
+            int current = 0;
+            if (attendees != null) {
+                for (Attendee attendee : attendees) {
+                    if (attendee.xa > 0) {
+                        current++;
+                    }
                 }
             }
+            mContactTitleTv.setText(Html.fromHtml(mContext.getString(R.string.cr_room_numbers, current, total)));
         }
-        mContactTitleTv.setText(Html.fromHtml(mContext.getString(R.string.cr_room_numbers, current, total)));
+
         if (mContactBookAdapter != null) {
             mContactBookAdapter.notifyDataSetChanged();
         }

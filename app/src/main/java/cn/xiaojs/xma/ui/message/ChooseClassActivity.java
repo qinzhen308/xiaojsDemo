@@ -1,7 +1,9 @@
 package cn.xiaojs.xma.ui.message;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.loader.DataLoder;
 import cn.xiaojs.xma.model.social.Contact;
@@ -45,6 +50,7 @@ public class ChooseClassActivity extends BaseActivity {
     View emptyView;
 
     private ChoiceAdapter adapter;
+    private UpdateReceiver updateReceiver;
 
     @Override
     protected void addViewContent() {
@@ -59,11 +65,25 @@ public class ChooseClassActivity extends BaseActivity {
             setMiddleTitle(R.string.choose_class);
         }
 
+
+        updateReceiver = new UpdateReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DataManager.ACTION_UPDATE_CLASS_FROM_DB);
+        registerReceiver(updateReceiver,intentFilter);
+
+
         setRightText(R.string.finish);
         setRightTextColor(getResources().getColor(R.color.font_orange));
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getData();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(updateReceiver);
     }
 
     @OnClick({R.id.left_image, R.id.right_image2, R.id.lesson_creation_tips_close})
@@ -131,6 +151,10 @@ public class ChooseClassActivity extends BaseActivity {
 
                     @Override
                     public void loadCompleted(ArrayList<ContactGroup> contacts) {
+
+                        DataManager.lanuchLoadContactService(getApplicationContext(),
+                                DataManager.TYPE_FETCH_CLASS_FROM_NET);
+
                         if (contacts == null || contacts.size() == 0) {
                             showEmptyView();
                             return;
@@ -174,6 +198,28 @@ public class ChooseClassActivity extends BaseActivity {
 
             textView.setText(getItem(position).alias);
             return v;
+        }
+    }
+
+    private class UpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(DataManager.ACTION_UPDATE_CLASS_FROM_DB)) {
+
+                if(XiaojsConfig.DEBUG) {
+                    Logger.d("UpdateReceiver: to update class");
+                }
+
+                ArrayList<ContactGroup> newCGroups = (ArrayList<ContactGroup>) intent.
+                        getSerializableExtra(DataManager.EXTRA_CONTACT);
+
+                if(newCGroups != null) {
+                    updateAdapter(newCGroups.get(0).collection);
+                }
+
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
@@ -34,6 +35,10 @@ import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class ContactManager {
+    public final static int ACTION_JOIN = 1 << 1;
+    public final static int ACTION_LEAVE = 1 << 2;
+    public final static int ACTION_PSTYPE_CHANGE = 1 << 3;
+
     private static ContactManager mInstance;
     private AttendsComparator mAttendsComparator;
 
@@ -59,6 +64,7 @@ public class ContactManager {
     public void init() {
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE), mSyncClassStateListener);
     }
 
     public void release() {
@@ -138,6 +144,40 @@ public class ContactManager {
         }
     };
 
+
+    private SocketManager.EventListener mSyncClassStateListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            if (args != null && args.length > 0) {
+                SyncClassStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncClassStateResponse.class);
+
+                if (syncState != null && syncState.volatiles != null && syncState.volatiles.length > 0) {
+
+                    if (mLiveCollection != null && mLiveCollection.attendees != null) {
+
+                        for (Attendee attendee : mLiveCollection.attendees) {
+
+                            for(SyncClassStateResponse.Volatiles volatiles : syncState.volatiles) {
+
+                                if (attendee.accountId.equals(volatiles.accountId)) {
+                                    attendee.psType = volatiles.psType;
+                                    break;
+                                }
+
+                            }
+
+
+                        }
+
+                    }
+
+                    notifyAttendChanged(mLiveCollection.attendees, ACTION_PSTYPE_CHANGE);
+                }
+            }
+        }
+    };
+
+
     /**
      * 更新联系人列表
      */
@@ -167,7 +207,7 @@ public class ContactManager {
                     sort(mLiveCollection.attendees);
                 }
 
-                notifyAttendChanged(mLiveCollection.attendees, join);
+                notifyAttendChanged(mLiveCollection.attendees, join ? ACTION_JOIN : ACTION_LEAVE);
             }
         }
 
@@ -189,10 +229,10 @@ public class ContactManager {
         }
     }
 
-    public void notifyAttendChanged(ArrayList<Attendee> attendees, boolean join) {
+    public void notifyAttendChanged(ArrayList<Attendee> attendees, int action) {
         if (mOnAttendsChangeListeners != null) {
             for (OnAttendsChangeListener listener : mOnAttendsChangeListeners) {
-                listener.onAttendsChanged(attendees, join);
+                listener.onAttendsChanged(attendees, action);
             }
         }
     }
@@ -204,7 +244,7 @@ public class ContactManager {
     }
 
     public static interface OnAttendsChangeListener {
-        public void onAttendsChanged(ArrayList<Attendee> attendees, boolean join);
+        public void onAttendsChanged(ArrayList<Attendee> attendees, int action);
     }
 
     public void putPeer2PeerSteamToSet(String accountId) {
@@ -232,7 +272,7 @@ public class ContactManager {
             mPeer2PeerSteamSet = new HashSet<String>();
         }
 
-       return mPeer2PeerSteamSet.contains(accountId);
+        return mPeer2PeerSteamSet.contains(accountId);
     }
 
     private void sort(ArrayList<Attendee> attendees) {

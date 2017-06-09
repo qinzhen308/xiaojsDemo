@@ -659,7 +659,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
 
 
-
     }
 
     @Override
@@ -729,7 +728,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         //TODO 同步班状态
         //TODO 是否要加入班的PEND_FOR_LIVE ？
 
-        if (syncState ==null)
+        if (syncState == null)
             return;
 
         if (XiaojsConfig.DEBUG) {
@@ -747,61 +746,35 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             updateTitle();
             mTipsHelper.setTipsByState(syncState.to);
             //FIXME 总是时间，应该显示为0；
-            mTimeProgressHelper.setTimeProgress(0,syncState.to,false);
-            updateViewStyleByLiveState(syncState.to);
+            mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
+            setControllerBtnStyle(syncState.to);
 
             //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
             mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
 
 
-        }else if(Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
+        } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
             //班中当前课的信息
             if (syncState.current != null) {
 
-                CtlSession.Ctl newCtl = new CtlSession.Ctl();
-                newCtl.title = syncState.current.title;
-                newCtl.id = syncState.current.id;
-                newCtl.subtype = syncState.current.typeName;
-                newCtl.duration = syncState.current.schedule.duration;
-                newCtl.startedOn = syncState.current.schedule.start.toGMTString();
+                if (mCtlSession.ctl == null || !mCtlSession.ctl.id.equals(syncState.current.id)) {
+                    CtlSession.Ctl newCtl = new CtlSession.Ctl();
+                    newCtl.title = syncState.current.title;
+                    newCtl.id = syncState.current.id;
+                    newCtl.subtype = syncState.current.typeName;
+                    newCtl.duration = syncState.current.schedule.duration;
+                    newCtl.startedOn = syncState.current.schedule.start.toGMTString();
 
-                mCtlSession.ctl = newCtl;
+                    mCtlSession.ctl = newCtl;
 
-                updateTitle();
-                mTipsHelper.setTipsByState(syncState.to);
-                //FIXME
-                mTimeProgressHelper.setTimeProgress(syncState.current.schedule.duration,syncState.to,false);
-                updateViewStyleByLiveState(syncState.to);
+                    updateTitle();
+                    mTipsHelper.setTipsByState(syncState.to);
+                    //FIXME
+                    mTimeProgressHelper.setTimeProgress(syncState.current.schedule.duration, syncState.to, false);
+                    setControllerBtnStyle(syncState.to);
+                }
             }
-
-        }else {
-
         }
-
-
-        //班中当前课的信息
-        if (syncState.current != null) {
-            //TODO 更新当前课的信息
-            //mTimeProgressHelper.setTimeProgress();
-
-        }
-
-        //是否班中有下一节课
-        if (syncState.next != null) {
-            //TODO 更新界面，显示下一节的信息
-//            if(Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
-//
-//            }
-
-        }
-
-        //是否身份有变化
-        if (syncState.volatiles !=null && syncState.volatiles.length > 0) {
-            //TODO 有角色变化、要更新界面和操作权限，以及更新联系人列表
-            //TODO 如果psType 没有值，身份要恢复到bootSession的原始身份。
-
-        }
-
     }
 
     /**
