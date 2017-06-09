@@ -49,7 +49,9 @@ import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
@@ -371,11 +373,13 @@ public interface XiaojsService {
 
     //Get Class
     @GET("/v1/ctl/classes/{class}")
-    Call<ClassInfoData> getClass(@Path("class") String classid);
+    Call<ClassInfo> getClass(@Path("class") String classid);
 
     //Modify Class
     @PATCH("/v1/ctl/classes/{class}/modify")
     Call<CLResponse> modifyClass(@Path("class") String classid, @Body ModifyClassParams params);
+    @PATCH("/v1/ctl/classes/{class}/modify")
+    Call<CLResponse> modifyClass(@Path("class") String classid, @Body ModifyModeParam params);
 
     //Get Class Students
     @GET("/v1/ctl/classes/{classes}/students/{criteria}/{pagination}")

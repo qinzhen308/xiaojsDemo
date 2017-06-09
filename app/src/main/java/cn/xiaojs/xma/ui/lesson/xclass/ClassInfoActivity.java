@@ -321,14 +321,14 @@ public class ClassInfoActivity extends BaseActivity {
 
     private void loadClassInfo() {
         showProgress(true);
-        LessonDataManager.getClassInfo(this, classId, new APIServiceCallback<ClassInfoData>() {
+        LessonDataManager.getClassInfo(this, classId, new APIServiceCallback<ClassInfo>() {
             @Override
-            public void onSuccess(ClassInfoData object) {
+            public void onSuccess(ClassInfo object) {
 
                 cancelProgress();
 
-                if (object != null && object.adviserclass != null) {
-                    classInfo = object.adviserclass;
+                if (object != null ) {
+                    classInfo=object;
                     bingView();
                 } else {
                     showEmptyView(getString(R.string.empty_tips));

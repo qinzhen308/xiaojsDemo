@@ -106,7 +106,7 @@ public class AddLessonNameActivity extends BaseActivity {
 
         ModifyClassParams classParams = new ModifyClassParams();
 
-        classParams.className = newName;
+        classParams.title = newName;
 
         showProgress(true);
         LessonDataManager.modifyClass(this, classId, classParams, new APIServiceCallback<CLResponse>() {

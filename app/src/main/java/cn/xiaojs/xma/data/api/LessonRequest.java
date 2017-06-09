@@ -39,8 +39,10 @@ import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
+import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
@@ -337,11 +339,15 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getClass(String classid) {
-        Call<ClassInfoData> call = getService().getClass(classid);
+        Call<ClassInfo> call = getService().getClass(classid);
         enqueueRequest(APIType.GET_CLASS, call);
     }
 
     public void modifyClass(String classid, ModifyClassParams params) {
+        Call<CLResponse> call = getService().modifyClass(classid, params);
+        enqueueRequest(APIType.MODIFY_CLASS, call);
+    }
+    public void modifyClass(String classid, ModifyModeParam params) {
         Call<CLResponse> call = getService().modifyClass(classid, params);
         enqueueRequest(APIType.MODIFY_CLASS, call);
     }

@@ -34,6 +34,7 @@ import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
@@ -44,6 +45,7 @@ import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
 import cn.xiaojs.xma.model.ctl.LiveClass;
 import cn.xiaojs.xma.model.ctl.ModifyClassParams;
+import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
@@ -601,7 +603,7 @@ public class LessonDataManager {
      */
     public static void getClassInfo(Context context,
                                     String classid,
-                                    APIServiceCallback<ClassInfoData> callback) {
+                                    APIServiceCallback<ClassInfo> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClass(classid);
@@ -614,6 +616,14 @@ public class LessonDataManager {
     public static void modifyClass(Context context,
                                    String classid,
                                    ModifyClassParams params,
+                                   APIServiceCallback<CLResponse> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.modifyClass(classid, params);
+    }
+
+    public static void modifyClass(Context context,
+                                   String classid,
+                                   ModifyModeParam params,
                                    APIServiceCallback<CLResponse> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClass(classid, params);
