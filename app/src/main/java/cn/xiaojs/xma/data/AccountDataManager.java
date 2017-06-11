@@ -68,7 +68,8 @@ public class AccountDataManager {
     }
 
     public static boolean hasClass(Context context) {
-        return getUser(context).hasClass;
+        return true;
+        //return getUser(context).hasClass;
     }
 
     public static void setHasClass(Context context,boolean has) {

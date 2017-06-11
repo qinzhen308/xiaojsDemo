@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.main;
 
 import android.text.TextUtils;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.CtlSession;
 
 public class LiveCtlSessionManager {
@@ -68,9 +69,16 @@ public class LiveCtlSessionManager {
         if (mCtlSession != null) {
 
             if (mCtlSession.cls != null) {
-
                 if (mCtlSession.ctl != null) {
-                    return mCtlSession.state;
+
+                    if (Live.LiveSessionState.FINISHED.equals(mCtlSession.state)
+                            || Live.LiveSessionState.CANCELLED.equals(mCtlSession.state))  {
+
+                        return mCtlSession.cls.state;
+                    }else {
+                        return mCtlSession.state;
+                    }
+
                 } else {
                     return mCtlSession.cls.state;
                 }

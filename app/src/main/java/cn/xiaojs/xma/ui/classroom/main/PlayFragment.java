@@ -746,6 +746,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             updateTitle();
             mTipsHelper.setTipsByState(syncState.to);
             //FIXME 总是时间，应该显示为0；
+            mTimeProgressHelper.reloadLessonDuration();
             mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
             setControllerBtnStyle(syncState.to);
 
@@ -769,11 +770,15 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
                     updateTitle();
                     mTipsHelper.setTipsByState(syncState.to);
-                    //FIXME
-                    mTimeProgressHelper.setTimeProgress(syncState.current.schedule.duration, syncState.to, false);
+
+                    mTimeProgressHelper.reloadLessonDuration();
+                    mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
                     setControllerBtnStyle(syncState.to);
                 }
             }
+
+            //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
+            mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
         }
     }
 
