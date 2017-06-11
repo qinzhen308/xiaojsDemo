@@ -572,6 +572,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             updateTitle();
             mTipsHelper.setTipsByState(syncState.to);
             //FIXME 总是时间，应该显示为0；
+            mTimeProgressHelper.reloadLessonDuration();
             mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
             setControllerBtnStyle(syncState.to);
 
@@ -593,7 +594,8 @@ public class PublishFragment extends ClassroomLiveFragment {
                     updateTitle();
                     mTipsHelper.setTipsByState(syncState.to);
                     //FIXME
-                    mTimeProgressHelper.setTimeProgress(syncState.current.schedule.duration, syncState.to, false);
+                    mTimeProgressHelper.reloadLessonDuration();
+                    mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
                     setControllerBtnStyle(syncState.to);
                 }
             }

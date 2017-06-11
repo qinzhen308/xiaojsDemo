@@ -75,6 +75,13 @@ public class TimeProgressHelper {
         }
     }
 
+
+    public void reloadLessonDuration() {
+        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        mLessonDuration = session.ctl != null ? session.ctl.duration : 0;
+    }
+
+
     public void setTimeProgress(long countTime, String liveState) {
         setTimeProgress(countTime, 0, liveState, null, null, true);
     }

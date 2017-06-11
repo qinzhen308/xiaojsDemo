@@ -79,7 +79,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void init() {
-        if (!AccountPref.getUser(getActivity()).hasClass) {
+        if (!AccountDataManager.hasClass(mContext)) {
             emptyStub.setLayoutResource(R.layout.fragment_home_class_empty);
             layoutEmpty = emptyStub.inflate();
             btnScan=(ImageView) layoutEmpty.findViewById(R.id.btn_scan);
