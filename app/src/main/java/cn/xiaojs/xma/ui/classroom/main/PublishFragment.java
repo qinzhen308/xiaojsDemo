@@ -29,6 +29,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
@@ -548,6 +549,10 @@ public class PublishFragment extends ClassroomLiveFragment {
         }
     }
 
+    private void updateTitle() {
+        mLessonTitle.setText(getLessonTitle());
+    }
+
     @Override
     protected void onSyncClassStateChanged(SyncClassStateResponse syncState) {
 
@@ -557,25 +562,41 @@ public class PublishFragment extends ClassroomLiveFragment {
             Logger.d("-----------------------onSyncClassStateChanged---------------------------");
         }
 
+        //班课状态发生变化
+        mCtlSession.cls.state = syncState.to;
 
-        //TODO 班课状态发生变化
-        //syncState.to
 
-        //班中当前课的信息
-        if (syncState.current != null) {
-            //TODO 更新当前课的信息
-        }
+        if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
+            mCtlSession.ctl = null;
 
-        //是否班中有下一节课
-        if (syncState.next != null) {
-            //TODO 更新界面，显示下一节的信息
-        }
+            updateTitle();
+            mTipsHelper.setTipsByState(syncState.to);
+            //FIXME 总是时间，应该显示为0；
+            mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
+            setControllerBtnStyle(syncState.to);
 
-        //是否身份有变化
-        if (syncState.volatiles !=null && syncState.volatiles.length > 0) {
-            //TODO 有角色变化、要更新界面和操作权限，以及更新联系人列表
-            //TODO 如果psType 没有值，身份要恢复到bootSession的原始身份
 
+        } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
+            //班中当前课的信息
+            if (syncState.current != null) {
+
+                if (mCtlSession.ctl == null || !mCtlSession.ctl.id.equals(syncState.current.id)) {
+                    CtlSession.Ctl newCtl = new CtlSession.Ctl();
+                    newCtl.title = syncState.current.title;
+                    newCtl.id = syncState.current.id;
+                    newCtl.subtype = syncState.current.typeName;
+                    newCtl.duration = syncState.current.schedule.duration;
+                    newCtl.startedOn = syncState.current.schedule.start.toGMTString();
+
+                    mCtlSession.ctl = newCtl;
+
+                    updateTitle();
+                    mTipsHelper.setTipsByState(syncState.to);
+                    //FIXME
+                    mTimeProgressHelper.setTimeProgress(syncState.current.schedule.duration, syncState.to, false);
+                    setControllerBtnStyle(syncState.to);
+                }
+            }
         }
     }
 

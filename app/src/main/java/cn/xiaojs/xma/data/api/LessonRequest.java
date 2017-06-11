@@ -405,6 +405,16 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.MODIFY_CLASSES_LESSON, call);
     }
 
+    public void deleteClassesLesson(String classId, String lessonId) {
+        Call<ResponseBody> call = getService().deleteClassesLesson(classId, lessonId);
+        enqueueRequest(APIType.DELETE_CLASS_LESSON, call);
+    }
+
+    public void cancelClassesLesson(String classId, String lessonId, CancelReason reason) {
+        Call<ResponseBody> call = getService().cancelClassesLesson(classId, lessonId, reason);
+        enqueueRequest(APIType.CANCEL_CLASS_LESSON, call);
+    }
+
 
     @Override
     public void doTask(int apiType, Object responseBody) {

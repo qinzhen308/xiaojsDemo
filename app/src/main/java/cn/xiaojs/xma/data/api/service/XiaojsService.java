@@ -416,6 +416,21 @@ public interface XiaojsService {
                                            @Body ClassLesson classLesson);
 
 
+    //Cancel Classes Lesson
+    @POST("/v1/ctl/classes/{classId}/{lessonId}/cancel")
+    Call<ResponseBody> cancelClassesLesson(@Path("classId") String classId,
+                                           @Path("lessonId") String lessonId,
+                                           @Body CancelReason reason);
+
+
+    //Delete Classes Lesson
+    @DELETE("/v1/ctl/classes/{classId}/{lessonId}")
+    Call<ResponseBody> deleteClassesLesson(@Path("classId") String classId,
+                                           @Path("lessonId") String lessonId);
+
+
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories

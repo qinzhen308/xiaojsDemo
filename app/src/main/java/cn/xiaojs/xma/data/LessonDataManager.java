@@ -740,4 +740,37 @@ public class LessonDataManager {
 
     }
 
+    /**
+     * 删除班课
+     * @param context
+     * @param classId
+     * @param lessonId
+     * @param callback
+     */
+    public static void deleteClassesLesson(Context context,
+                                           String classId,
+                                           String lessonId,
+                                           APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.deleteClassesLesson(classId, lessonId);
+    }
+
+
+    /**
+     * 取消班课.
+     * @param context
+     * @param classId
+     * @param lessonId
+     * @param reason
+     * @param callback
+     */
+    public static void cancelClassesLesson(Context context,
+                                           String classId,
+                                           String lessonId,
+                                           CancelReason reason,
+                                           APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.cancelClassesLesson(classId, lessonId, reason);
+    }
+
 }
