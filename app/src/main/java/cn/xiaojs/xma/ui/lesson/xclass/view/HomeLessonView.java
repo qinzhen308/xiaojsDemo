@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -330,14 +332,20 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     }
 
     private void enterClassroom() {
-        if (Account.TypeName.CLASS_LESSON.equals(mData.type) && (Ctl.ClassState.IDLE.equals(mData.classInfo.state) || Ctl.ClassState.LIVE.equals(mData.classInfo.state) || Ctl.ClassState.PENDING_FOR_LIVE.equals(mData.classInfo.state))
-                || Account.TypeName.STAND_ALONE_LESSON.equals(mData.type) && (Ctl.StandaloneLessonState.FINISHED.equals(mData.state) || Ctl.StandaloneLessonState.FINISHED.equals(mData.state) || Ctl.StandaloneLessonState.FINISHED.equals(mData.state))) {//公开课能进教室的状态
+        if (Account.TypeName.CLASS_LESSON.equals(mData.type)){
+            if(XiaojsConfig.DEBUG) Logger.d("--------qz--------ticket="+mData.classInfo.ticket);
+            Intent i = new Intent();
+            i.putExtra(Constants.KEY_TICKET, mData.classInfo.ticket);
+            i.setClass(getContext(), ClassroomActivity.class);
+            getContext().startActivity(i);
+        }else if( Account.TypeName.STAND_ALONE_LESSON.equals(mData.type) && (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)
+                || Ctl.StandaloneLessonState.FINISHED.equals(mData.state)
+                || Ctl.StandaloneLessonState.FINISHED.equals(mData.state))) {
             Intent i = new Intent();
             i.putExtra(Constants.KEY_TICKET, mData.ticket);
             i.setClass(getContext(), ClassroomActivity.class);
             getContext().startActivity(i);
         }
-
     }
 
     @OnClick(R.id.btn_replay)
@@ -424,6 +432,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)) {//已取消
             list.add(new LOpModel(LOpModel.OP_DELETE));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
         }else {//其余状态，班课除了上面的几个状态，其余的就是待开课前的状态（排课中）
             list.add(new LOpModel(LOpModel.OP_EDIT));
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
