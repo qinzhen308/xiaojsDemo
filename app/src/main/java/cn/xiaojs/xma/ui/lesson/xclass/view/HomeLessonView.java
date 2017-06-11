@@ -157,41 +157,50 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             btnReplay.setVisibility(GONE);
         }
 
-
-        if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
-            statePoint.setVisibility(VISIBLE);
-            statePoint.setBackgroundResource(R.drawable.shape_orange_point);
-            iconLive.setVisibility(GONE);
-
-        } else if (Ctl.LiveLessonState.LIVE.equals(data.state)) {
-            statePoint.setVisibility(INVISIBLE);
-            iconLive.setVisibility(VISIBLE);
-
-        } else {
-            statePoint.setVisibility(VISIBLE);
-            statePoint.setBackgroundResource(R.drawable.shape_grey_point);
-            iconLive.setVisibility(GONE);
-        }
-
         if(Account.TypeName.CLASS_LESSON.equals(data.type)&&data.classInfo!=null){
-            if(Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)){
-                tvState.setVisibility(GONE);
+            tvState.setVisibility(GONE);
 
-            }else if(Ctl.LiveLessonState.LIVE.equals(data.state)){
-                tvState.setVisibility(GONE);
+            if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
+                statePoint.setVisibility(VISIBLE);
+                statePoint.setBackgroundResource(R.drawable.shape_orange_point);
+                iconLive.setVisibility(GONE);
 
-            }else if(Ctl.LiveLessonState.CANCELLED.equals(data.state)){
+            } else if (Ctl.LiveLessonState.LIVE.equals(data.state)) {
+                statePoint.setVisibility(INVISIBLE);
+                iconLive.setVisibility(VISIBLE);
+            } else if(Ctl.LiveLessonState.CANCELLED.equals(data.state)){
+                statePoint.setVisibility(VISIBLE);
+                statePoint.setBackgroundResource(R.drawable.shape_grey_point);
+                iconLive.setVisibility(GONE);
                 tvState.setText("已取消");
                 tvState.setVisibility(VISIBLE);
             }else if(Ctl.LiveLessonState.FINISHED.equals(data.state)){
-                tvState.setText("已完课");
-                tvState.setVisibility(VISIBLE);
+                statePoint.setVisibility(VISIBLE);
+                statePoint.setBackgroundResource(R.drawable.shape_grey_point);
+                iconLive.setVisibility(GONE);
+
             }else {
-                tvState.setText("排课中");
-                tvState.setVisibility(VISIBLE);
+                statePoint.setVisibility(VISIBLE);
+                statePoint.setBackgroundResource(R.drawable.shape_orange_point);
+                iconLive.setVisibility(GONE);
             }
 
         }else {
+            if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
+                statePoint.setVisibility(VISIBLE);
+                statePoint.setBackgroundResource(R.drawable.shape_orange_point);
+                iconLive.setVisibility(GONE);
+
+            } else if (Ctl.LiveLessonState.LIVE.equals(data.state)) {
+                statePoint.setVisibility(INVISIBLE);
+                iconLive.setVisibility(VISIBLE);
+
+            } else {
+                statePoint.setVisibility(VISIBLE);
+                statePoint.setBackgroundResource(R.drawable.shape_grey_point);
+                iconLive.setVisibility(GONE);
+            }
+
             if (Ctl.LiveLessonState.PENDING_FOR_ACK.equals(data.state)) {
                 tvState.setText("待确认");
                 tvState.setVisibility(VISIBLE);
