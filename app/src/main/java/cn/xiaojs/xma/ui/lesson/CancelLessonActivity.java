@@ -20,10 +20,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CancelReason;
 import cn.xiaojs.xma.model.TeachLesson;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.LimitInputBox;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -38,16 +40,16 @@ public class CancelLessonActivity extends BaseActivity {
     @BindView(R.id.cancel_lesson_reason)
     LimitInputBox mInput;
 
-    private TeachLesson lesson;
+    private CLesson lesson;
 
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_cancel_lesson);
         Intent intent = getIntent();
         if (intent != null) {
-            lesson = (TeachLesson) intent.getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
+            lesson = (CLesson) intent.getSerializableExtra(CourseConstant.KEY_LESSON_BEAN);
             if (lesson != null) {
-                mName.setText(lesson.getTitle());
+                mName.setText(lesson.title);
             }
         }
         setMiddleTitle(R.string.cancel_lesson);
@@ -61,7 +63,11 @@ public class CancelLessonActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.cancel_lesson_ok://确定取消
-                cancel();
+                if(Account.TypeName.STAND_ALONE_LESSON.equals(lesson.type)){
+                    cancel();
+                }else {
+                    cancelClassLesson();
+                }
                 break;
             default:
                 break;
@@ -77,7 +83,7 @@ public class CancelLessonActivity extends BaseActivity {
         if (lesson != null){
             CancelReason reason = new CancelReason();
             reason.setReason(input);
-            LessonDataManager.requestCancelLesson(this, lesson.getId(), reason, new APIServiceCallback() {
+            LessonDataManager.requestCancelLesson(this, lesson.id, reason, new APIServiceCallback() {
                 @Override
                 public void onSuccess(Object object) {
                     cancelProgress();
@@ -96,4 +102,36 @@ public class CancelLessonActivity extends BaseActivity {
             showProgress(true);
         }
     }
+
+
+    private void cancelClassLesson(){
+        String input = mInput.getInput().getText().toString();
+        if (TextUtils.isEmpty(input)){
+            ToastUtil.showToast(this,R.string.cancel_reason_hint);
+            return;
+        }
+        if (lesson != null&&lesson.classInfo!=null){
+            CancelReason reason = new CancelReason();
+            reason.setReason(input);
+            LessonDataManager.cancelClassesLesson(this, lesson.classInfo.id, lesson.id, reason, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    cancelProgress();
+                    ToastUtil.showToast(CancelLessonActivity.this,"成功取消上课!");
+                    setResult(RESULT_OK);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    ToastUtil.showToast(CancelLessonActivity.this,errorMessage);
+                }
+            });
+
+            showProgress(true);
+        }
+    }
+
+
 }

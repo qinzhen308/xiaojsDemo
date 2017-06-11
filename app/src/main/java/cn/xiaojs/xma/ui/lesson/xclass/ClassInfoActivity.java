@@ -207,7 +207,7 @@ public class ClassInfoActivity extends BaseActivity {
         if(classInfo.advisers != null && classInfo.advisers.length > 0){
             teacher+=classInfo.advisers[0].name;
             if(classInfo.advisers.length>1){
-                teacher+="、"+classInfo.advisers[0].name;
+                teacher+="、"+classInfo.advisers[1].name;
             }
             if( classInfo.advisers.length>2 ){//大于2个才能点击弹框
                 teacher+="...";
@@ -216,7 +216,7 @@ public class ClassInfoActivity extends BaseActivity {
                 teacherNameView.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
             }
         }else {
-            teacher=classInfo.ownerName;
+            teacher=classInfo.owner!=null?classInfo.owner.name:"";
         }
 
         teacherNameView.setText(teacher);
@@ -226,7 +226,7 @@ public class ClassInfoActivity extends BaseActivity {
         int studentCount = classInfo.join != null ? classInfo.join.current : 0;
         studentNumView.setText(getString(R.string.number_student, studentCount));
         opentimeView.setText(TimeUtil.format(classInfo.createdOn, TimeUtil.TIME_YYYY_MM_DD));
-        creatorView.setText(classInfo.ownerName);
+        creatorView.setText(classInfo.owner!=null?classInfo.owner.name:"");
 
         if (teaching) {
             verLayout.setVisibility(View.VISIBLE);

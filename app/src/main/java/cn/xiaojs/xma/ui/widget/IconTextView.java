@@ -784,8 +784,10 @@ public class IconTextView extends View {
 		if (resIds != null) {
 			List<Drawable> ds = new ArrayList<Drawable>();
 			for (int id : resIds) {
-				Drawable d = getResources().getDrawable(id);
-				ds.add(d);
+				if(id>0){
+					Drawable d = getResources().getDrawable(id);
+					ds.add(d);
+				}
 			}
 			addIcons(ds);
 		}

@@ -45,6 +45,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
 
@@ -151,9 +152,8 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             public void onOk(int group1Position, int group2Position) {
                 LessonFragment.this.group1Position = group1Position;
                 LessonFragment.this.group2Position = group2Position;
-                LessonFilterHelper.getType(group1Position);
-                LessonFilterHelper.getState(group2Position);
-                //TODO 重新查询
+//                LessonFilterHelper.getType(group1Position);
+//                LessonFilterHelper.getState(group2Position);
                 dataPageLoader.refresh();
 
             }
@@ -230,7 +230,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
     private void getMonthData(){
         long start=new Date(0).getTime();
         long end=ScheduleUtil.ymdToTimeMill(2019,12,30);
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end),null,Account.TypeName.STAND_ALONE_LESSON,LessonFilterHelper.getState(group2Position),null,null);
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end),null,Account.TypeName.STAND_ALONE_LESSON,LessonFilterHelper.getState(group2Position),LessonFilterHelper.getType(group1Position),null);
         LessonDataManager.getClassesSchedule4Lesson(getActivity(),map,mPagination , dataPageLoader);
     }
 
@@ -252,9 +252,20 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             if(item instanceof CLesson&&((CLesson)item).id.equals(((CLesson)obj).id)){
                 if(others.length>0&&others[0].equals("remove")){
                     mAdapter.getList().remove(position);
+                    //除了删除该项，还需要处理该课对应日期的标签：删除或者改变课的数量
+                    for(int i=position-1;i>=0;i--){
+                        Object preItem=mAdapter.getList().get(position-1);
+                        if(preItem instanceof LessonLabelModel){
+                            if(((LessonLabelModel) preItem).lessonCount==1){
+                                mAdapter.getList().remove(i);
+                            }else {
+                                ((LessonLabelModel) preItem).lessonCount--;
+                            }
+                            break;
+                        }
+                    }
                 }else {
                     mAdapter.getList().set(position,obj);
-
                 }
                 mAdapter.notifyDataSetChanged();
             }

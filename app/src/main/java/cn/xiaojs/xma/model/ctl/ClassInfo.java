@@ -20,7 +20,7 @@ public class ClassInfo implements Serializable{
     public String createdBy;
     //public String adviserName;
     public Account[] advisers;
-    public String ownerName;
+    public Account owner;
     public int lessons;
     public int students;
     public String id;

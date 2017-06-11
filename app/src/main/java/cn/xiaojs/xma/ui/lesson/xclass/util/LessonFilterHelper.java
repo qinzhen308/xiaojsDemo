@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass.util;
 
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 
 /**
@@ -63,13 +64,22 @@ public class LessonFilterHelper {
 
 
     public static String getType(int position){
-        String type="All";
+        String type=null;
         switch (position){
             case 0:
+                type= null;
                 break;
             case 1:
+                type= "Owner";
+
                 break;
             case 2:
+                type= "InvitedTeacher";
+
+                break;
+            case 3:
+                type= "Student";
+
                 break;
         }
         return type;

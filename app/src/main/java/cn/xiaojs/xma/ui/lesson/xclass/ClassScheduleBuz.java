@@ -31,17 +31,19 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
 /**
  * Created by Paul Z on 2017/5/22.
  */
 
-public class ClassScheduleBuz {
+public class ClassScheduleBuz implements IUpdateMethod{
     Activity mContext;
     View mRoot;
     @BindView(R.id.over_layout)
@@ -268,5 +270,44 @@ public class ClassScheduleBuz {
             }
         }
     };
+
+
+    @Override
+    public void updateData(boolean justNative) {
+
+        if(justNative){
+            mAdapter.notifyDataSetChanged();
+        }else {
+            getMonthData(selectyear,selectMonth,selectDay);
+        }
+    }
+
+    @Override
+    public void updateItem(int position, Object obj,Object... others) {
+
+        if(position<mAdapter.getItemCount()){
+            Object item=mAdapter.getList().get(position);
+            //由于有些操作是异步的，为了防止在本方法调用前，列表已经刷新过，作如下判断
+            if(item instanceof CLesson &&((CLesson)item).id.equals(((CLesson)obj).id)){
+                if(others.length>0&&others[0].equals("remove")){
+                    mAdapter.getList().remove(position);
+                    //除了删除该项，还需要处理该课对应日期的标签：删除或者改变课的数量
+                    for(int i=position-1;i>=0;i--){
+                        Object preItem=mAdapter.getList().get(position-1);
+                        if(preItem instanceof LessonLabelModel){
+                            if(((LessonLabelModel) preItem).lessonCount==1){
+                                ((LessonLabelModel) preItem).hasData=false;
+                            }
+                            ((LessonLabelModel) preItem).lessonCount--;
+                            break;
+                        }
+                    }
+                }else {
+                    mAdapter.getList().set(position,obj);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
 }

@@ -335,8 +335,10 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     protected void onDataChanged() {
-        if(layoutEmpty!=null){
+        if(layoutEmpty!=null){//第一次创建班或者公开课
             changeToNormal();
+        }else if(layoutNormal!=null&&contentBuz!=null){//以后创建时的回调
+            contentBuz.update();
         }
     }
 }
