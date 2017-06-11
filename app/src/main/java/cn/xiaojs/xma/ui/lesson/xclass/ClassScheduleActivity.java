@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -23,7 +26,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
  * 两种查看模式分别用fragment管理
  */
 
-public class ClassScheduleActivity extends BaseActivity{
+public class ClassScheduleActivity extends BaseActivity implements IUpdateMethod {
     FragmentManager mFm;
     FragmentTransaction mFt;
 
@@ -138,9 +141,17 @@ public class ClassScheduleActivity extends BaseActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
-            if(requestCode==REQUEST_CODE_ADD){
-                ClassLesson cl=(ClassLesson) data.getSerializableExtra(CreateTimetableActivity.EXTRA_CLASS_LESSON);
-                updateFragment(cl);
+            switch (requestCode) {
+                case REQUEST_CODE_ADD:
+                    ClassLesson cl=(ClassLesson) data.getSerializableExtra(CreateTimetableActivity.EXTRA_CLASS_LESSON);
+                    updateFragment(cl);
+                    break;
+                case CourseConstant.CODE_CANCEL_LESSON:
+                case CourseConstant.CODE_EDIT_LESSON:
+                case CourseConstant.CODE_LESSON_AGAIN:
+                case CourseConstant.CODE_CREATE_LESSON:
+                    updateData(false);
+                    break;
             }
         }
     }
@@ -164,5 +175,25 @@ public class ClassScheduleActivity extends BaseActivity{
         intent.putExtra(EXTRA_TEACHING,teaching);
         context.startActivity(intent);
     }
+
+    @Override
+    public void updateData(boolean justNative) {
+        tabFragment.updateData(justNative);
+        calenerFragment.updateData(justNative);
+    }
+
+    @Override
+    public void updateItem(int position, Object obj, Object... others) {
+        //因为两种模式的数据集在代码层不同的，但是在概念上是相同的，所以没法做到精准同步。
+        //所以对于当前模式下的操作，可以精准刷新，但是另一个模式只能采取从接口重新拉取数据
+        if(isTabMode){
+            tabFragment.updateItem(position,obj,others);
+            calenerFragment.updateData(false);
+        }else {
+            calenerFragment.updateItem(position,obj,others);
+            tabFragment.updateData(false);
+        }
+    }
+
 
 }

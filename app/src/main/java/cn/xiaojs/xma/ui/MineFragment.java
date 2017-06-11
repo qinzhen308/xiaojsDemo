@@ -100,6 +100,7 @@ public class MineFragment extends BaseFragment {
     RedTipTextView messageEntrace;
 
 
+    int[] icons=new int[2];
 
     private Drawable mBlurFloatUpBg;
 
@@ -302,7 +303,9 @@ public class MineFragment extends BaseFragment {
 
         //set title
         if (basic != null) {
-            mPortraitView.setSex(basic.getSex());
+//            mPortraitView.setSex(basic.getSex());
+            icons[0]= cn.xiaojs.xma.common.xf_foundation.schemas.Account.Sex.MALE.equalsIgnoreCase(basic.getSex())?R.drawable.ic_male:R.drawable.ic_female;
+            mUserName.setIcons(icons);
             String title = basic.getTitle();
             if (TextUtils.isEmpty(title)) {
                 mMyProfileTxtTv.setText(R.string.default_profile_txt);
@@ -343,10 +346,12 @@ public class MineFragment extends BaseFragment {
 
         if (AccountDataManager.isVerified(getContext())) {
             cerTips.setText("已认证");
-            mUserName.setIcon(R.drawable.ic_vip);
+            icons[1]=R.drawable.ic_vip;
+            mUserName.setIcons(icons);
         }else {
             cerTips.setText("未认证");
-            mUserName.setIcon(0);
+            icons[1]=0;
+            mUserName.setIcons(icons);
         }
     }
 

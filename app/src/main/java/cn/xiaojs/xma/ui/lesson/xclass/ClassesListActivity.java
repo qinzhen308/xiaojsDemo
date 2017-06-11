@@ -226,6 +226,5 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                     break;
             }
         }
-
     }
 }

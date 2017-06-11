@@ -29,10 +29,12 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
@@ -40,7 +42,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
  * Created by Paul Z on 2017/5/23.
  */
 
-public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
+public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment implements IUpdateMethod {
 
     RecyclerView recyclerview;
     ScheduleAdapter mAdapter;
@@ -203,5 +205,46 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment {
         dataPageLoader.refresh();
     }
 
+
+    @Override
+    public void updateData(boolean justNative) {
+        if(mContent==null)return;
+
+        if(justNative){
+            mAdapter.notifyDataSetChanged();
+        }else {
+            dataPageLoader.refresh();
+        }
+    }
+
+    @Override
+    public void updateItem(int position, Object obj,Object... others) {
+        if(mContent==null)return;
+
+        if(position<mAdapter.getItemCount()){
+            Object item=mAdapter.getList().get(position);
+            //由于有些操作是异步的，为了防止在本方法调用前，列表已经刷新过，作如下判断
+            if(item instanceof CLesson &&((CLesson)item).id.equals(((CLesson)obj).id)){
+                if(others.length>0&&others[0].equals("remove")){
+                    mAdapter.getList().remove(position);
+                    //除了删除该项，还需要处理该课对应日期的标签：删除或者改变课的数量
+                    for(int i=position-1;i>=0;i--){
+                        Object preItem=mAdapter.getList().get(position-1);
+                        if(preItem instanceof LessonLabelModel){
+                            if(((LessonLabelModel) preItem).lessonCount==1){
+                                mAdapter.getList().remove(i);
+                            }else {
+                                ((LessonLabelModel) preItem).lessonCount--;
+                            }
+                            break;
+                        }
+                    }
+                }else {
+                    mAdapter.getList().set(position,obj);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
 }

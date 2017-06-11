@@ -35,6 +35,7 @@ import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -45,7 +46,7 @@ import cn.xiaojs.xma.util.TimeUtil;
  * 纯本地课表
  */
 
-public class LessonScheduleActivity extends BaseActivity{
+public class LessonScheduleActivity extends BaseActivity implements IUpdateMethod{
 
     @BindView(R.id.over_layout)
     RecyclerView mListView;
@@ -162,14 +163,12 @@ public class LessonScheduleActivity extends BaseActivity{
             for(int j=lessonIndex;j<list.size();j++){
                 if(ScheduleUtil.isSameDay(list.get(j).schedule.getStart(),calendar)){//是否同一天
                     monthLists.add(list.get(j));
-                    tempLabel.lessonCount++;
+                    tempLabel.lessonCount+=1;
                     tempLabel.hasData=true;
                     lessonIndex++;
+
                 }else {//不是同一天，一次从这天开始
-                    tempLabel.lessonCount=j-lessonIndex;
-                    if(j-lessonIndex>0){
-                        tempLabel.hasData=true;
-                    }
+
                     break;
                 }
             }
@@ -237,6 +236,38 @@ public class LessonScheduleActivity extends BaseActivity{
                     bindData();
                     break;
             }
+        }
+    }
+
+    @Override
+    public void updateData(boolean justNative) {
+        if(justNative){
+            mAdapter.notifyDataSetChanged();
+        }else {
+            datas= ScheduleUtil.buildScheduleByMonth(CreateClassActivity.classLessons);
+            bindData();
+        }
+    }
+
+    @Override
+    public void updateItem(int position, Object obj, Object... others) {
+        if(others!=null&&others.length>0&&"remove".equals(others[0])){
+            ClassLesson removedItem=(ClassLesson)mAdapter.getList().get(position);
+            CreateClassActivity.classLessons.remove(removedItem);
+            //除了删除该项，还需要处理该课对应日期的标签：改变课的数量
+//            for(int i=position-1;i>=0;i--){
+//                Object preItem=mAdapter.getList().get(position-1);
+//                if(preItem instanceof LessonLabelModel){
+//                    if(((LessonLabelModel) preItem).lessonCount==1){
+//                        ((LessonLabelModel) preItem).hasData=false;
+//                    }
+//                    ((LessonLabelModel) preItem).lessonCount--;
+//                    break;
+//                }
+//            }
+//            mAdapter.notifyDataSetChanged();
+            datas= ScheduleUtil.buildScheduleByMonth(CreateClassActivity.classLessons);
+            bindData();
         }
     }
 }

@@ -298,9 +298,9 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                     }
                 });
 
-        mPortraitView.setSex(home.profile.sex);
+//        mPortraitView.setSex(home.profile.sex);
         mName.setText(home.profile.name);
-
+        mName.setIcon(Account.Sex.MALE.equalsIgnoreCase(home.profile.sex)?R.drawable.ic_male:R.drawable.ic_female);
         int fancount = home.profile.stats.fans > 0? home.profile.stats.fans: 0;
         int followcount = home.profile.stats.followships > 0? home.profile.stats.followships: 0;
 
@@ -357,13 +357,15 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         mMessageEntrace.setVisibility(View.GONE);
         mScrollTitleBar.setBackgroundResource(R.drawable.ic_home_title_bg);
         if (mIsMyself) {
-            mPortraitView.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
+//            mPortraitView.setSex(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex());
             mName.setText(XiaojsConfig.mLoginUser.getName());
+            mName.setIcon(Account.Sex.MALE.equalsIgnoreCase(XiaojsConfig.mLoginUser.getAccount().getBasic().getSex())?R.drawable.ic_male:R.drawable.ic_female);
             mFollows.setVisibility(View.VISIBLE);
             needFooter(false);
             myself();
         } else {
-            mPortraitView.setSex("true");
+//            mPortraitView.setSex("true");
+            mName.setIcon(R.drawable.ic_male);
             mFollows.setVisibility(View.GONE);
             mFirstDivider.setVisibility(View.GONE);
         }

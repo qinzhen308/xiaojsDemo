@@ -171,29 +171,49 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             iconLive.setVisibility(GONE);
         }
 
-        if (Ctl.LiveLessonState.PENDING_FOR_ACK.equals(data.state)) {
-            tvState.setText("待确认");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.DRAFT.equals(data.state)) {
-            tvState.setText("草稿");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.PENDING_FOR_APPROVAL.equals(data.state)) {
-            tvState.setText("待审核");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.ACKNOWLEDGED.equals(data.state)) {
-            tvState.setText("已确认");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.CANCELLED.equals(data.state)) {
-            tvState.setText("已取消");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.REJECTED.equals(data.state)) {
-            tvState.setText("已拒绝");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.STOPPED.equals(data.state)) {
-            tvState.setText("已停止");
-            tvState.setVisibility(VISIBLE);
-        } else {
-            tvState.setVisibility(GONE);
+        if(Account.TypeName.CLASS_LESSON.equals(data.type)&&data.classInfo!=null){
+            if(Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)){
+                tvState.setVisibility(GONE);
+
+            }else if(Ctl.LiveLessonState.LIVE.equals(data.state)){
+                tvState.setVisibility(GONE);
+
+            }else if(Ctl.LiveLessonState.CANCELLED.equals(data.state)){
+                tvState.setText("已取消");
+                tvState.setVisibility(VISIBLE);
+            }else if(Ctl.LiveLessonState.FINISHED.equals(data.state)){
+                tvState.setText("已完课");
+                tvState.setVisibility(VISIBLE);
+            }else {
+                tvState.setText("排课中");
+                tvState.setVisibility(VISIBLE);
+            }
+
+        }else {
+            if (Ctl.LiveLessonState.PENDING_FOR_ACK.equals(data.state)) {
+                tvState.setText("待确认");
+                tvState.setVisibility(VISIBLE);
+            } else if (Ctl.LiveLessonState.DRAFT.equals(data.state)) {
+                tvState.setText("草稿");
+                tvState.setVisibility(VISIBLE);
+            } else if (Ctl.LiveLessonState.PENDING_FOR_APPROVAL.equals(data.state)) {
+                tvState.setText("待审核");
+                tvState.setVisibility(VISIBLE);
+            } else if (Ctl.LiveLessonState.ACKNOWLEDGED.equals(data.state)) {
+                tvState.setText("已确认");
+                tvState.setVisibility(VISIBLE);
+            } else if (Ctl.LiveLessonState.CANCELLED.equals(data.state)) {
+                tvState.setText("已取消");
+                tvState.setVisibility(VISIBLE);
+            } else if (Ctl.LiveLessonState.REJECTED.equals(data.state)) {
+                tvState.setText("已拒绝");
+                tvState.setVisibility(VISIBLE);
+            } else if (Ctl.LiveLessonState.STOPPED.equals(data.state)) {
+                tvState.setText("已停止");
+                tvState.setVisibility(VISIBLE);
+            } else {
+                tvState.setVisibility(GONE);
+            }
         }
 
         if (data.teacher == null) {
@@ -229,10 +249,11 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
             if(!(isAdviser()||mData.owner!=null&&AccountPref.getAccountID(getContext()).equals(mData.owner.getId()))){//只有班主任和所有者有操作权限显示按钮
                 btnMore.setVisibility(INVISIBLE);
-            } else if(!(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)||
-                    Ctl.StandaloneLessonState.LIVE.equals(mData.state)||Ctl.StandaloneLessonState.CANCELLED.equals(mData.state))){//除了这个状态，其他不要操作
-                btnMore.setVisibility(INVISIBLE);
             }
+//            else if(!(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)||
+//                    Ctl.StandaloneLessonState.LIVE.equals(mData.state)||Ctl.StandaloneLessonState.CANCELLED.equals(mData.state))){//除了这个状态，其他不要操作
+//                btnMore.setVisibility(INVISIBLE);
+//            }
         }
     }
 
@@ -391,7 +412,6 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     public List<LOpModel> classLessonOperate() {
         List<LOpModel> list = new ArrayList<>();
         if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
-            list.add(new LOpModel(LOpModel.OP_EDIT));
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
 //            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
@@ -404,6 +424,11 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)) {//已取消
             list.add(new LOpModel(LOpModel.OP_DELETE));
+        }else {//其余状态，班课除了上面的几个状态，其余的就是待开课前的状态（排课中）
+            list.add(new LOpModel(LOpModel.OP_EDIT));
+            list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
+//            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_ENTER));
         }
         return list;
     }

@@ -103,7 +103,6 @@ public class LOpModel {
     //重新开课
     public static final int OP_RECREATE_LESSON=25;
 
-    
     private int id;
 
     public LOpModel(int id){
@@ -134,7 +133,11 @@ public class LOpModel {
                 databank(context,data);
                 break;
             case OP_DELETE:
-                delete(context,position,data);
+                if(data==null){
+                    deleteNativeLesson(context,position);
+                }else {
+                    delete(context,position,data);
+                }
                 break;
             case OP_EDIT:
                 edit(context, data);
@@ -431,11 +434,8 @@ public class LOpModel {
     //取消上课
     private void cancelLesson(Activity context,CLesson bean) {
         Intent intent = new Intent(context, CancelLessonActivity.class);
-        TeachLesson tl=new TeachLesson();
-        tl.setId(bean.id);
-        tl.setTitle(bean.title);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, tl);
-        ((BaseActivity) context).startActivityForResult(intent, CourseConstant.CODE_CANCEL_LESSON);
+        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, bean);
+        context.startActivityForResult(intent, CourseConstant.CODE_CANCEL_LESSON);
     }
 
     //删除
@@ -461,20 +461,38 @@ public class LOpModel {
 
     private void hideLesson(final Activity context, final int pos, final CLesson bean) {
         showProgress(context);
-        LessonDataManager.hideLesson(context, bean.id, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-                cancelProgress(context);
-                ToastUtil.showToast(context, R.string.delete_success);
-                removeJustItem(context, pos, bean);
-            }
+        if(Account.TypeName.STAND_ALONE_LESSON.equals(bean.type)){
+            LessonDataManager.hideLesson(context, bean.id, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    cancelProgress(context);
+                    ToastUtil.showToast(context, R.string.delete_success);
+                    removeJustItem(context, pos, bean);
+                }
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress(context);
-                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress(context);
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else {
+            LessonDataManager.deleteClassesLesson(context, bean.classInfo.id, bean.id, new APIServiceCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    cancelProgress(context);
+                    ToastUtil.showToast(context, R.string.delete_success);
+                    removeJustItem(context, pos, bean);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress(context);
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
     }
 
 
@@ -606,4 +624,10 @@ public class LOpModel {
         }
         return false;
     }
+
+    //删除
+    private void deleteNativeLesson(final Activity context,final int pos) {
+        ((IUpdateMethod)context).updateItem(pos,null,"remove");
+    }
+
 }
