@@ -71,14 +71,7 @@ public class LiveCtlSessionManager {
             if (mCtlSession.cls != null) {
                 if (mCtlSession.ctl != null) {
 
-                    if (Live.LiveSessionState.FINISHED.equals(mCtlSession.state)
-                            || Live.LiveSessionState.CANCELLED.equals(mCtlSession.state))  {
-
-                        return mCtlSession.cls.state;
-                    }else {
-                        return mCtlSession.state;
-                    }
-
+                    return mCtlSession.state;
                 } else {
                     return mCtlSession.cls.state;
                 }
@@ -125,6 +118,7 @@ public class LiveCtlSessionManager {
     }
 
     public Constants.User getUserInLesson() {
+        mUserInLesson = ClassroomBusiness.getUser(mCtlSession.psTypeInLesson, Constants.User.NONE);
         return mUserInLesson;
     }
 

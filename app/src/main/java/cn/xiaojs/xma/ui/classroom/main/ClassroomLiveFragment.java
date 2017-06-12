@@ -172,15 +172,27 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
     protected String getLessonTitle() {
         String title = "";
-        if (!TextUtils.isEmpty(mCtlSession.titleOfPrimary)) {
-            title = mCtlSession.titleOfPrimary;
-        } else {
+
+        if (mCtlSession.cls != null) {
+
             if (mCtlSession.ctl != null) {
                 title = mCtlSession.ctl.title;
-            } else if (mCtlSession.cls != null) {
+            } else {
                 title = mCtlSession.cls.title;
             }
+
+        } else {
+
+            if (!TextUtils.isEmpty(mCtlSession.titleOfPrimary)) {
+                title = mCtlSession.titleOfPrimary;//FIXME 这是啥？
+            } else {
+
+                if (mCtlSession.ctl != null) {
+                    title = mCtlSession.ctl.title;
+                }
+            }
         }
+
 
         return title;
     }
@@ -601,6 +613,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected abstract void initData();
 
     protected abstract void onSyncStateChanged(SyncStateResponse syncState);
+
     protected abstract void onSyncClassStateChanged(SyncClassStateResponse syncState);
 
     public void playStream(String url) {

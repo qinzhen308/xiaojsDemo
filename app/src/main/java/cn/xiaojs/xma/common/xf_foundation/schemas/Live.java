@@ -53,6 +53,7 @@ public class Live {
         public static final String CANCELLED = "Cancelled";
         public static final String RESET = "Rest";
         public static final String INDIVIDUAL = "Individual";
+        public static final String NONE = "none";
     }
 
 

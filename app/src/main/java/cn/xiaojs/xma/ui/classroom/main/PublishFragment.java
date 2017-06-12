@@ -25,6 +25,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -523,10 +524,15 @@ public class PublishFragment extends ClassroomLiveFragment {
     @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
         boolean autoCountTime = false;
-        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {//TODO 是否要加入班的PEND_FOR_LIVE ？
+        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.PENDING_FOR_JOIN);
             setControllerBtnStyle(Live.LiveSessionState.PENDING_FOR_JOIN);
             autoCountTime = true;
+
+            if (syncState.timeline != null) {
+                mCountTime = syncState.timeline.startOn;
+            }
+
         } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.RESET.equals(syncState.to)) {
             setControllerBtnStyle(Live.LiveSessionState.RESET);
             autoCountTime = false;
@@ -540,13 +546,21 @@ public class PublishFragment extends ClassroomLiveFragment {
             LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.FINISHED);
             setControllerBtnStyle(Live.LiveSessionState.FINISHED);
             autoCountTime = true;
+
+        } else if (Live.LiveSessionState.NONE.equals(syncState.from) && Live.LiveSessionState.SCHEDULED.equals(syncState.to)) {
+            LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.SCHEDULED);
+            setControllerBtnStyle(Live.LiveSessionState.SCHEDULED);
+            autoCountTime = true;
+            mCountTime = syncState.timeline != null ? syncState.timeline.startOn : 0;
         }
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mTimeProgressHelper.setTimeProgress(mCountTime, liveState, autoCountTime);
-        if (mTipsHelper != null) {
-            mTipsHelper.hideTips();
-        }
+//        if (mTipsHelper != null) {
+//            mTipsHelper.hideTips();
+//        }
+
+        mTipsHelper.setTipsByState(liveState);
     }
 
     private void updateTitle() {
@@ -561,6 +575,9 @@ public class PublishFragment extends ClassroomLiveFragment {
         if (XiaojsConfig.DEBUG) {
             Logger.d("-----------------------onSyncClassStateChanged---------------------------");
         }
+
+        if (syncState == null)
+            return;
 
         //班课状态发生变化
         mCtlSession.cls.state = syncState.to;
@@ -587,18 +604,46 @@ public class PublishFragment extends ClassroomLiveFragment {
                     newCtl.id = syncState.current.id;
                     newCtl.subtype = syncState.current.typeName;
                     newCtl.duration = syncState.current.schedule.duration;
-                    newCtl.startedOn = syncState.current.schedule.start.toGMTString();
+                    //newCtl.startedOn = syncState.current.schedule.start.toGMTString();
 
                     mCtlSession.ctl = newCtl;
 
                     updateTitle();
-                    mTipsHelper.setTipsByState(syncState.to);
-                    //FIXME
                     mTimeProgressHelper.reloadLessonDuration();
-                    mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
-                    setControllerBtnStyle(syncState.to);
+
+
+//                    mTipsHelper.setTipsByState(syncState.to);
+//                    //FIXME
+//
+//
+//                    long sep = (syncState.current.schedule.start.getTime()-System.currentTimeMillis()) / 1000;
+//
+//                    mTimeProgressHelper.setTimeProgress(sep, syncState.to, false);
+//                    setControllerBtnStyle(syncState.to);
                 }
             }
+        }
+
+
+        if (syncState.volatiles != null && syncState.volatiles.length > 0) {
+
+            String mid = AccountDataManager.getAccountID(mContext);
+            if (!TextUtils.isEmpty(mid)) {
+                for (SyncClassStateResponse.Volatiles volatil : syncState.volatiles) {
+
+                    if (mid.equals(volatil.accountId)) {
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("============my pstyp changed=111========");
+                        }
+
+                        LiveCtlSessionManager.getInstance().getCtlSession().psTypeInLesson = volatil.psType;
+
+                        break;
+                    }
+                }
+            }
+
+
         }
     }
 
@@ -612,7 +657,8 @@ public class PublishFragment extends ClassroomLiveFragment {
         if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
             boolean isPrivateClass = mCtlSession.cls != null;
             if (isPrivateClass) {
-                exitCurrentFragment();
+                //exitCurrentFragment();
+                showBackDlgForClasslesson();
             } else {
                 pauseClass(true);
             }
@@ -623,6 +669,31 @@ public class PublishFragment extends ClassroomLiveFragment {
             exitCurrentFragment();
         }
     }
+
+    private void showBackDlgForClasslesson() {
+
+        final CommonDialog dialog = new CommonDialog(mContext);
+        //dialog.setTitle(R.string.finish_classroom);
+        dialog.setDesc(R.string.exit_live_tips);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                mHandKeyPressing = false;
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                exitCurrentFragment();
+            }
+        });
+
+        dialog.show();
+    }
+
 
     private void updateLandViewStyle() {
         mScreenshotLandBtn.setVisibility(View.VISIBLE);
@@ -667,7 +738,8 @@ public class PublishFragment extends ClassroomLiveFragment {
         } else if (Live.LiveSessionState.RESET.equals(liveState)) {
             //resume
             resumeClass();
-        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
+                || Live.LiveSessionState.IDLE.equals(liveState)) {
             //pause and exit
             mHandKeyPressing = true;
             pauseIndividual(true);
@@ -689,8 +761,9 @@ public class PublishFragment extends ClassroomLiveFragment {
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState)
                 || Live.LiveSessionState.RESET.equals(liveState)
                 || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {
-            boolean isPrivateClass = mCtlSession.cls != null;
-            if (ClassroomBusiness.hasTeachingAbility() && !isPrivateClass) {
+            //boolean isPrivateClass = mCtlSession.cls != null;
+            //if (ClassroomBusiness.hasTeachingAbility() && !isPrivateClass) {
+            if (ClassroomBusiness.hasTeachingAbility()) {
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
             } else {
@@ -846,6 +919,12 @@ public class PublishFragment extends ClassroomLiveFragment {
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:
                 data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
+
+                boolean isPrivateClass = mCtlSession.cls != null;
+                if (isPrivateClass) {
+                    data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
+                }
+
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                 data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, mIndividualResponseBody);

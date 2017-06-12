@@ -896,5 +896,9 @@
     <string name="import_class_student_tips">只导入选择班／公开课中的学生，且会自动排除重复的学生</string>
     <string name="add_schudle_class">添加课</string>
     <string name="recommend_xiaojs">推荐小教室</string>
+    <string name="cls_not_on_class_lesson_title">当前无课</string>
+    <string name="exit_live_tips">是否退出直播？</string>
+    <string name="class_lesson_living_back_title">当前处于交流模式</string>
+    <string name="class_lesson_living_back_sub">学生看不到您的直播视频</string>
 
 </resources>

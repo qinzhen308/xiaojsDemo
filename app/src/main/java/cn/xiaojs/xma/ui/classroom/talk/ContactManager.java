@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -160,7 +162,14 @@ public class ContactManager {
                             for(SyncClassStateResponse.Volatiles volatiles : syncState.volatiles) {
 
                                 if (attendee.accountId.equals(volatiles.accountId)) {
-                                    attendee.psType = volatiles.psType;
+//                                    if (TextUtils.isEmpty(volatiles.psType)) {
+//                                        attendee.psType = LiveCtlSessionManager.getInstance().getCtlSession().psType;
+//                                    }else {
+                                        attendee.psTypeInLesson = volatiles.psType;
+                                    //}
+
+
+
                                     break;
                                 }
 

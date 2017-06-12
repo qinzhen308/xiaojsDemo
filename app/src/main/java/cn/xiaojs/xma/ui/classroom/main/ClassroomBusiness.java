@@ -96,6 +96,11 @@ public class ClassroomBusiness {
      * 是否具有教学能力
      */
     public static boolean hasTeachingAbility() {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("hasTeachingAbility---------------------");
+        }
+
         Constants.User user = LiveCtlSessionManager.getInstance().getUser();
         Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
         return user == Constants.User.TEACHER
@@ -112,6 +117,20 @@ public class ClassroomBusiness {
     public static boolean canIndividual(CtlSession session) {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
 
+//        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
+//                Live.LiveSessionState.FINISHED.equals(liveState) ||
+//                Live.LiveSessionState.IDLE.equals(liveState)) {
+//            return true;
+//        }
+//        return false;
+        return canIndividualByState(liveState);
+    }
+
+    /**
+     * 是否能个人推流
+     */
+    public static boolean canIndividualByState(String liveState) {
+
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState) ||
                 Live.LiveSessionState.IDLE.equals(liveState)) {
@@ -119,6 +138,7 @@ public class ClassroomBusiness {
         }
         return false;
     }
+
 
     public static <T> T parseSocketBean(Object obj, Class<T> valueType) {
         if (obj == null) {
