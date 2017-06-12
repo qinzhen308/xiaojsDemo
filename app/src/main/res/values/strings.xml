@@ -138,7 +138,7 @@
     <string name="creative_lesson">开公开课</string>
     <string name="creative_lesson_tip">单节课，学生通过搜索该课报名，进入教室上课</string>
     <!--<string name="creative_lesson_tip">只能开设单节课，学生能够通过搜索报名，进入教室上课</string>-->
-    <string name="search_global_tip">班课/个人/机构</string>
+    <string name="search_global_tip">课/个人/机构</string>
     <string name="search_tip1">输入你要找的班课名称，老师或者机构\n报名你要学的班课，开始学习</string>
 
 
@@ -238,7 +238,7 @@
     <string name="invite">邀请</string>
 
     <!--lesson creation-->
-    <string name="lesson_creation_title">开课</string>
+    <string name="lesson_creation_title">开公开课</string>
     <string name="lesson_creation">我要开课</string>
     <string name="lesson_creation_tips">目前只支持创建免费公开课</string>
     <string name="live_lesson">直播课</string>
@@ -812,7 +812,7 @@
     <string name="add_student_type_tips"><![CDATA[初次添加完学生，点击\"我的>我的班课>班级管理\",可对学生进行添加、删除、编辑等操作]]></string>
     <string name="manual_add_student">手动添加学生</string>
     <string name="student_name">学生姓名</string>
-    <string name="add_student_tips">添加学生后，手机号将作为学生登陆小教室的唯一账号</string>
+    <string name="add_student_tips">添加学生后，手机号将作为学生登录小教室的唯一账号</string>
     <string name="student_add_from_exist_class">从已有班级中添加</string>
     <string name="input_lesson_name_hint">请输入课名称</string>
     <string name="add_class_verification_msg">加班验证消息</string>

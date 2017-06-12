@@ -104,6 +104,8 @@ public class LiveScheduleLessonView extends RelativeLayout implements IViewModel
             btnReplay.setVisibility(GONE);
         }
 
+        tvState.setVisibility(GONE);
+
         if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
             statePoint.setVisibility(VISIBLE);
             statePoint.setBackgroundResource(R.drawable.shape_orange_point);
@@ -112,36 +114,21 @@ public class LiveScheduleLessonView extends RelativeLayout implements IViewModel
         } else if (Ctl.LiveLessonState.LIVE.equals(data.state)) {
             statePoint.setVisibility(INVISIBLE);
             iconLive.setVisibility(VISIBLE);
-
-        } else {
+        } else if(Ctl.LiveLessonState.CANCELLED.equals(data.state)){
             statePoint.setVisibility(VISIBLE);
             statePoint.setBackgroundResource(R.drawable.shape_grey_point);
             iconLive.setVisibility(GONE);
-        }
-
-        if (Ctl.LiveLessonState.PENDING_FOR_ACK.equals(data.state)) {
-            tvState.setText("待确认");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.DRAFT.equals(data.state)) {
-            tvState.setText("草稿");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.PENDING_FOR_APPROVAL.equals(data.state)) {
-            tvState.setText("待审核");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.ACKNOWLEDGED.equals(data.state)) {
-            tvState.setText("已确认");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.CANCELLED.equals(data.state)) {
             tvState.setText("已取消");
             tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.REJECTED.equals(data.state)) {
-            tvState.setText("已拒绝");
-            tvState.setVisibility(VISIBLE);
-        } else if (Ctl.LiveLessonState.STOPPED.equals(data.state)) {
-            tvState.setText("已停止");
-            tvState.setVisibility(VISIBLE);
-        } else {
-            tvState.setVisibility(GONE);
+        }else if(Ctl.LiveLessonState.FINISHED.equals(data.state)){
+            statePoint.setVisibility(VISIBLE);
+            statePoint.setBackgroundResource(R.drawable.shape_grey_point);
+            iconLive.setVisibility(GONE);
+
+        }else {
+            statePoint.setVisibility(VISIBLE);
+            statePoint.setBackgroundResource(R.drawable.shape_orange_point);
+            iconLive.setVisibility(GONE);
         }
 
         if (data.lead.name == null) {
