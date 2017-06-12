@@ -617,9 +617,9 @@ public class LOpModel {
         String id= AccountPref.getAccountID(context);
         if(cl.owner!=null&&id.equals(cl.owner.getId())){//我是拥有者
             return true;
-        }else if(!ArrayUtil.isEmpty(cl.advisers)){//我是班主任
-            for(Adviser ad:cl.advisers){
-                if(id.equals(ad.id))return true;
+        }else if(cl.classInfo!=null&&!ArrayUtil.isEmpty(cl.classInfo.advisers)){//我是班主任
+            for(cn.xiaojs.xma.model.account.Account ad:cl.classInfo.advisers){
+                if(id.equals(ad.getId()))return true;
             }
         }
         return false;

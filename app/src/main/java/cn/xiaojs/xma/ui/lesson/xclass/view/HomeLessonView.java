@@ -257,9 +257,10 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     private void showOperateBtn(){
         if(fromSchedule){//课表里
             tvClassName.setVisibility(INVISIBLE);
-
+            Logger.d("----qz---my id="+AccountPref.getAccountID(getContext()));
             if(!(isAdviser()||mData.owner!=null&&AccountPref.getAccountID(getContext()).equals(mData.owner.getId()))){//只有班主任和所有者有操作权限显示按钮
                 btnMore.setVisibility(INVISIBLE);
+                Logger.d("----qz---is adviser="+isAdviser());
             }
 //            else if(!(Ctl.StandaloneLessonState.FINISHED.equals(mData.state)||Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)||
 //                    Ctl.StandaloneLessonState.LIVE.equals(mData.state)||Ctl.StandaloneLessonState.CANCELLED.equals(mData.state))){//除了这个状态，其他不要操作
@@ -269,10 +270,10 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     }
 
     private boolean isAdviser(){
-        if(mData.advisers==null)return false;
+        if(mData.classInfo==null||mData.classInfo.advisers==null)return false;
         String id=AccountPref.getAccountID(getContext());
-        for(Adviser ad:mData.advisers){
-            if(id.equals(ad.id))return true;
+        for(cn.xiaojs.xma.model.account.Account ad:mData.classInfo.advisers){
+            if(id.equals(ad.getId()))return true;
         }
         return false;
     }
