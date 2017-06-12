@@ -68,7 +68,7 @@ public class CreateClassActivity extends BaseActivity {
     TextView timetableTipsView;
 
 
-    public static ArrayList<ClassLesson> classLessons;
+    public static ArrayList<ClassLesson> classLessons=new ArrayList<>();
     private ArrayList<StudentEnroll> enrollStudents;
     private ArrayList<EnrollImport> enrollImports;
 
@@ -139,13 +139,15 @@ public class CreateClassActivity extends BaseActivity {
                 //startActivity(new Intent(this, ShareQrcodeActivity.class));
                 break;
             case R.id.lay_time_table://课表
-                if (classLessons != null && classLessons.size() > 0) {
-                    startActivityForResult(new Intent(this, LessonScheduleActivity.class),
-                            REQUEST_CLASS_SCHEDULE_CODE);
-                } else {
-                    startActivityForResult(new Intent(this, CreateTimetableActivity.class),
-                            REQUEST_CLASS_LESSON_CODE);
-                }
+                startActivityForResult(new Intent(this, LessonScheduleActivity.class),
+                        REQUEST_CLASS_SCHEDULE_CODE);
+//                if (classLessons != null && classLessons.size() > 0) {
+//                    startActivityForResult(new Intent(this, LessonScheduleActivity.class),
+//                            REQUEST_CLASS_SCHEDULE_CODE);
+//                } else {
+//                    startActivityForResult(new Intent(this, CreateTimetableActivity.class),
+//                            REQUEST_CLASS_LESSON_CODE);
+//                }
 
                 break;
             case R.id.lay_class_student://学生
