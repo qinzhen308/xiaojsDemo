@@ -271,7 +271,10 @@ public class ClassroomBusiness {
         CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
         if (Live.LiveSessionState.LIVE.equals(session.state)) {
             //autoCountTime = true;
-            countTime = session.ctl.duration * 60 - session.finishOn;
+            if (session.ctl != null) {
+                countTime = session.ctl.duration * 60 - session.finishOn;
+            }
+
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(session.state) ||
                 Live.LiveSessionState.SCHEDULED.equals(session.state)) {//TODO 是否要加入班的PEND_FOR_LIVE ？
             countTime = session.startOn;

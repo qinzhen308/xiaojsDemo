@@ -587,12 +587,14 @@ public class PublishFragment extends ClassroomLiveFragment {
             mCtlSession.ctl = null;
 
             updateTitle();
+
             mTipsHelper.setTipsByState(syncState.to);
-            //FIXME 总是时间，应该显示为0；
+
             mTimeProgressHelper.reloadLessonDuration();
             mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
             setControllerBtnStyle(syncState.to);
 
+            updateFinishStreamingView();
 
         } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
             //班中当前课的信息
@@ -609,11 +611,16 @@ public class PublishFragment extends ClassroomLiveFragment {
                     mCtlSession.ctl = newCtl;
 
                     updateTitle();
+
                     mTimeProgressHelper.reloadLessonDuration();
+
+                    updateFinishStreamingView();
+
+                    //ClassroomController.getInstance().enterPlayFragment(null, true);
 
 
 //                    mTipsHelper.setTipsByState(syncState.to);
-//                    //FIXME
+//
 //
 //
 //                    long sep = (syncState.current.schedule.start.getTime()-System.currentTimeMillis()) / 1000;
@@ -645,6 +652,13 @@ public class PublishFragment extends ClassroomLiveFragment {
 
 
         }
+    }
+
+
+    private void updateFinishStreamingView() {
+        mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
+        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+        mFinishBtn.setVisibility(View.INVISIBLE);
     }
 
     private void handOnBackPressed() {
@@ -857,9 +871,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 if (withFragment) {
                     exitCurrentFragment();
                 } else {
-                    mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);
-                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
-                    mFinishBtn.setVisibility(View.INVISIBLE);
+                    updateFinishStreamingView();
                 }
             }
 
@@ -921,7 +933,7 @@ public class PublishFragment extends ClassroomLiveFragment {
                 data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
 
                 boolean isPrivateClass = mCtlSession.cls != null;
-                if (isPrivateClass) {
+                if (isPrivateClass && Live.LiveSessionState.LIVE.equals(mCtlSession.state)) {
                     data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
                 }
 

@@ -870,11 +870,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
 
 
-//        if (data != null) {
-//            if(data.getBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS,false)) {
-//                mTipsHelper.setTips(R.string.class_lesson_living_back_title, R.string.class_lesson_living_back_sub);
-//            }
-//        }
+        if (data != null) {
+            if(data.getBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS,false)) {
+                mTipsHelper.setTips(R.string.class_lesson_living_back_title, R.string.class_lesson_living_back_sub);
+            }
+        }
 
     }
 
@@ -973,10 +973,25 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 }
             });
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+
             cancelProgress();
             LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
             setControllerBtnStyle(mOriginSteamState);
             mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL);
+
+        } else if (Live.LiveSessionState.LIVE.equals(liveState)
+                || Live.LiveSessionState.DELAY.equals(liveState)) {
+            cancelProgress();
+            //进入播放端
+            Constants.UserMode mode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
+            if (mode == Constants.UserMode.TEACHING) {
+                //teacher-->live, delay
+                Bundle data = new Bundle();
+                data.putInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
+                data.putSerializable(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
+                data.putString(Constants.KEY_PUBLISH_URL, mCtlSession.publishUrl);
+                ClassroomController.getInstance().enterPublishFragment(data, true);
+            }
         } else {
             cancelProgress();
         }
