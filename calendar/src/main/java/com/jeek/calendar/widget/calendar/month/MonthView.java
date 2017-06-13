@@ -248,7 +248,7 @@ public class MonthView extends View {
             mDaysText[row][col] = day + 1;
             int startX = (int) (mColumnSize * col + (mColumnSize - mPaint.measureText(dayString)) / 2);
             int startY = (int) (mRowSize * row + mRowSize / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
-            if (dayString.equals(String.valueOf(mSelDay))) {
+            if (dayString.equals(String.valueOf(mSelDay))||mSelYear == mCurrYear && mCurrMonth == mSelMonth && day + 1 == mCurrDay) {
                 int startRecX = mColumnSize * col;
                 int startRecY = mRowSize * row;
                 int endRecX = startRecX + mColumnSize;
@@ -267,7 +267,7 @@ public class MonthView extends View {
                 selectedPoint[1] = col;
                 mPaint.setColor(mSelectDayColor);
             } else if (dayString.equals(String.valueOf(mCurrDay)) && mCurrDay != mSelDay && mCurrMonth == mSelMonth && mCurrYear == mSelYear) {
-                mPaint.setColor(mCurrentDayColor);
+                mPaint.setColor(mSelectDayColor);
             } else if(day==0){
                 mPaint.setColor(mCurrentDayColor);
             }else {
@@ -440,7 +440,7 @@ public class MonthView extends View {
         if (!box.contains(mSelYear,mSelMonth,day)) return;
         float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
         float circleY = (float) (mRowSize * row + mRowSize * 0.75);
-        if(day==mSelDay){
+        if(day==mSelDay||mCurrDay==day&&mCurrMonth==mSelMonth&&mCurrYear==mSelYear){
             mPaint.setColor(Color.WHITE);
         }else {
             mPaint.setColor(box.getColor(mSelYear,mSelMonth,day));

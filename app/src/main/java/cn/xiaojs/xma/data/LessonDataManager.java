@@ -572,7 +572,7 @@ public class LessonDataManager {
                                      APIServiceCallback<CollectionResult<PrivateClass>> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(Account.TypeName.CLASS, limit);
+        lessonRequest.getClassesSchedule(Account.TypeName.CLASS, limit,"NotHumanRemoved");
     }
 
     /**

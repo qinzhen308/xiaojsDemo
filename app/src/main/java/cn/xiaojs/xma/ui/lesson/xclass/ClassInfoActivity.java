@@ -20,6 +20,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.Adviser;
@@ -136,7 +137,9 @@ public class ClassInfoActivity extends BaseActivity {
                 modifyVerify(checked);
                 break;
             case R.id.right_image:
-                showMoreDlg();
+                if(Ctl.ClassState.IDLE.equals(classInfo.state) &&AccountDataManager.getAccountID(this).equals(classInfo.owner!=null?classInfo.owner.getId():"")){
+                    showMoreDlg();
+                }
                 break;
             case R.id.teacher_name:
                 teacherNamesDialog();
@@ -190,7 +193,7 @@ public class ClassInfoActivity extends BaseActivity {
 
         String mid = AccountDataManager.getAccountID(this);
         //创建者
-        if (Ctl.ClassState.IDLE.equals(classInfo.state) && mid.equals(classInfo.createdBy)) {
+        if (Ctl.ClassState.IDLE.equals(classInfo.state) && mid.equals(classInfo.owner!=null?classInfo.owner.getId():"")) {
             setRightImage(R.drawable.ic_title_more_selector);
         }
 
@@ -247,7 +250,7 @@ public class ClassInfoActivity extends BaseActivity {
         String mid = AccountDataManager.getAccountID(this);
 
         //创建者
-        if (mid.equals(classInfo.createdBy)) {
+        if (mid.equals(classInfo.owner.getId())) {
             return true;
         }
 
@@ -467,5 +470,14 @@ public class ClassInfoActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    private boolean isAdviser(){
+        if(classInfo==null||classInfo.advisers==null)return false;
+        String id= AccountPref.getAccountID(this);
+        for(cn.xiaojs.xma.model.account.Account ad:classInfo.advisers){
+            if(id.equals(ad.getId()))return true;
+        }
+        return false;
     }
 }

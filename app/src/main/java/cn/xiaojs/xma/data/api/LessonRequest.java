@@ -318,8 +318,8 @@ public class LessonRequest extends ServiceRequest {
     }
 
 
-    public void getClassesSchedule(String type, int limit) {
-        Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule(type, limit);
+    public void getClassesSchedule(String type, int limit,String state) {
+        Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule(type, limit,state);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
 

@@ -243,6 +243,7 @@ public class ShareQrcodeActivity extends BaseActivity {
         OtherDataManager.getQRCodeImg(this, classid, new APIServiceCallback<QRCodeData>() {
             @Override
             public void onSuccess(QRCodeData object) {
+                imgUrl=object.url;
                 Glide.with(ShareQrcodeActivity.this).load(XiaojsConfig.APP_QRCODE_IMG_BASE_URL + object.url).into(qrcodeView);
             }
 
@@ -253,48 +254,5 @@ public class ShareQrcodeActivity extends BaseActivity {
         });
     }
 
-
-    private void getQR(final String classid, final int size) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("http://myxjs.tunnel.2bdata.com/xjsweixin/web/index.php?r=public/getimgcode");
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("POST");
-                    connection.setUseCaches(false);
-                    DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
-                    String p1 = "code=" + classid;
-                    String p2 = "size=" + size;
-                    Logger.d("----qz----QR---id=" + classid);
-                    dos.writeBytes(p1 + "&" + p2);
-//                    dos.writeBytes(p2);
-                    dos.flush();
-                    dos.close();
-                    int resultCode = connection.getResponseCode();
-                    if (HttpURLConnection.HTTP_OK == resultCode) {
-                        StringBuffer sb = new StringBuffer();
-                        String readLine = new String();
-                        BufferedReader responseReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-                        while ((readLine = responseReader.readLine()) != null) {
-                            sb.append(readLine).append("\n");
-                        }
-                        responseReader.close();
-                        JSONObject jsonObject = new JSONObject(sb.toString());
-                        imgUrl = jsonObject.getString("url");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Glide.with(ShareQrcodeActivity.this).load(XiaojsConfig.APP_QRCODE_IMG_BASE_URL + imgUrl).into(qrcodeView);
-                            }
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
-    }
 
 }

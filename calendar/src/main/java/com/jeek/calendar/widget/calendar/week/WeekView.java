@@ -239,7 +239,7 @@ public class WeekView extends View {
             }
             int startX = (int) (mColumnSize * i + (mColumnSize - mPaint.measureText(dayString)) / 2);
             int startY = (int) (mRowSize / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
-            if (day == mSelDay) {
+            if (day == mSelDay||date.getYear() == mCurrYear && date.getMonthOfYear() - 1 == mCurrMonth && day == mCurrDay) {
                 int startRecX = mColumnSize * i;
                 int endRecX = startRecX + mColumnSize;
                 if (date.getYear() == mCurrYear && date.getMonthOfYear() - 1 == mCurrMonth && day == mCurrDay) {
@@ -254,7 +254,7 @@ public class WeekView extends View {
                 selected = i;
                 mPaint.setColor(mSelectDayColor);
             } else if (date.getYear() == mCurrYear && date.getMonthOfYear() - 1 == mCurrMonth && day == mCurrDay && day != mSelDay && mCurrYear == mSelYear) {
-                mPaint.setColor(mCurrentDayColor);
+                mPaint.setColor(mSelectDayColor);
             } else if(day==1){
                 mPaint.setColor(mCurrentDayColor);
             }else {
@@ -365,7 +365,7 @@ public class WeekView extends View {
             if(!box.contains(date))continue;
             float circleX = (float) (mColumnSize * i + mColumnSize * 0.5);
             float circleY = (float) (mRowSize * 0.75);
-            if(day==mSelDay){
+            if(day==mSelDay||mCurrDay==day&&mCurrMonth+1==month&&mCurrYear==year){
                 mPaint.setColor(Color.WHITE);
             }else {
                 mPaint.setColor(box.getColor(date));

@@ -360,7 +360,8 @@ public interface XiaojsService {
 
     @GET("/v1/ctl/schedule")
     Call<CollectionResult<PrivateClass>> getClassesSchedule(@Query("type") String type,
-                                                            @Query("limit") int limit);
+                                                            @Query("limit") int limit,
+                                                            @Query("state") String state);
 
     //Schedule Class Lesson
     @POST("/v1/ctl/classes/{classes}/schedule/lessons")

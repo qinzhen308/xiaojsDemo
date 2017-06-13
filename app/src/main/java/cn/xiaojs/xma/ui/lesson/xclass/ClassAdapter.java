@@ -74,7 +74,7 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
 
     @Override
     protected void doRequest() {
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,startTime, endTime,null,Account.TypeName.CLASS, "All", role,key);
+        Map map=LessonDataManager.createScheduleOptions(null,null,null,startTime, endTime,null,Account.TypeName.CLASS, "NotHumanRemoved", role,key);
         LessonDataManager.getClassesSchedule4Class(mContext, map, mPagination, new APIServiceCallback<CollectionResult<PrivateClass>>() {
             @Override
             public void onSuccess(CollectionResult<PrivateClass> object) {

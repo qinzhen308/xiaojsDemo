@@ -73,7 +73,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment implem
     @Override
     protected void init() {
         classId=getActivity().getIntent().getStringExtra(ClassScheduleActivity.EXTRA_ID);
-        state=LessonFilterHelper.getState(0);
+        state="NotHumanRemoved";
         mAdapter=new ScheduleAdapter(recyclerview);
         recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
         recyclerview.setAdapter(mAdapter);
@@ -82,7 +82,7 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment implem
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId){
                     case R.id.tab1:
-                        state=LessonFilterHelper.getState(0);
+                        state="NotHumanRemoved";
                         break;
                     case R.id.tab2:
                         state=LessonFilterHelper.getState(2);
