@@ -86,7 +86,7 @@ public class ErrorPrompts {
                 break;
             case APIType.BOOT_SESSION:
                 if (errorCode.equals(Errors.CLASS_NOT_READY)) {
-                    errorMessage = "教室尚未准备好或着无法访问";
+                    errorMessage = "教室尚未准备好或者无法访问";
                 } else if (errorCode.equals(Errors.ACCESS_VIOLATION)) {
                     errorMessage = "您没有权限进入教室";
                 } else {
