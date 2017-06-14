@@ -99,8 +99,8 @@ public class ClassInfoActivity extends BaseActivity {
                 }
                 break;
             case R.id.enter_btn:
-                //FIXME 进入教室,没有ticket
-                enterClass(this,"");
+                //进入教室
+                enterClass(this,classInfo.ticket);
                 break;
             case R.id.lay_time_table:
                 //课表

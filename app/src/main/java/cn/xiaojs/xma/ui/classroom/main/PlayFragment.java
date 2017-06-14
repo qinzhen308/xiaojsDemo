@@ -871,8 +871,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
 
         if (data != null) {
-            if(data.getBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS,false)) {
-                mTipsHelper.setTips(R.string.class_lesson_living_back_title, R.string.class_lesson_living_back_sub);
+            if(data.getBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS,false)
+                    || data.getBoolean(Constants.KEY_SHOW_STANDLONG_LESSON_DELAY_TIPS,false)) {
+                mTipsHelper.setTips(R.string.living_back_to_talk_mode_title, R.string.living_back_to_talk_mode_sub);
             }
         }
 

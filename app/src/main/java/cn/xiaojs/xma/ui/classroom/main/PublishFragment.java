@@ -462,7 +462,10 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     public void onStreamStarted(int type, Object extra) {
-        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+        if (mPlayPauseBtn != null) {
+            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
+        }
+
         mTipsHelper.hideTips();
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         switch (type) {
@@ -935,6 +938,10 @@ public class PublishFragment extends ClassroomLiveFragment {
                 boolean isPrivateClass = mCtlSession.cls != null;
                 if (isPrivateClass && Live.LiveSessionState.LIVE.equals(mCtlSession.state)) {
                     data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
+                }
+
+                if (Live.LiveSessionState.DELAY.equals(mCtlSession.state)) {
+                    data.putBoolean(Constants.KEY_SHOW_STANDLONG_LESSON_DELAY_TIPS, true);
                 }
 
                 break;

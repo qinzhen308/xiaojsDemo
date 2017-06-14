@@ -51,6 +51,7 @@ public interface Constants {
     public final static String KEY_COUNT_TIME = "key_count_time";
     public final static String KEY_FROM = "key_from";
     public final static String KEY_SHOW_CLASS_LESSON_TIPS = "key_show_class_lesson_tips";
+    public final static String KEY_SHOW_STANDLONG_LESSON_DELAY_TIPS = "key_show_lesson_delay_tips";
 
     public final static int FROM_ACTIVITY = 0;
     public final static int FROM_PLAY_FRAGMENT = 1;

@@ -74,7 +74,7 @@ public class TipsHelper {
             hideTips();
         } else if (Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
             setTips(R.string.cls_finish_title, R.string.cls_not_on_class_desc);
-        } else if(Live.LiveSessionState.IDLE.equals(liveSessionState)) {
+        } else if (Live.LiveSessionState.IDLE.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_lesson_title, R.string.cls_not_on_class_desc);
         }
     }

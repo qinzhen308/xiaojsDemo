@@ -898,7 +898,7 @@
     <string name="recommend_xiaojs">推荐小教室</string>
     <string name="cls_not_on_class_lesson_title">当前无课</string>
     <string name="exit_live_tips">是否退出直播？</string>
-    <string name="class_lesson_living_back_title">学生看不到你的视频</string>
-    <string name="class_lesson_living_back_sub">你可以和学生进行文字交流</string>
+    <string name="living_back_to_talk_mode_title">学生看不到你的视频</string>
+    <string name="living_back_to_talk_mode_sub">你可以和学生进行文字交流</string>
 
 </resources>

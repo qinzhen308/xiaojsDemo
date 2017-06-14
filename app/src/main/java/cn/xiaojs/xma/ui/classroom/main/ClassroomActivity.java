@@ -281,7 +281,6 @@ public class ClassroomActivity extends FragmentActivity {
 
             boolean isPrivateClass = mCtlSession.cls != null;
             if (isPrivateClass) {
-
                 data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
                 ClassroomController.getInstance().enterPlayFragment(data, false);
 
