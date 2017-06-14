@@ -131,7 +131,7 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                 switch (i) {
                     case 1:
                         if (JudgementUtil.checkTeachingAbility(ClassesListActivity.this)) {
-                            ClassesListActivity.this.startActivity(new Intent(ClassesListActivity.this, CreateClassActivity.class));
+                            ClassesListActivity.this.startActivityForResult(new Intent(ClassesListActivity.this, CreateClassActivity.class),CourseConstant.CODE_CREATE_CLASS);
                         }
                         break;
                     case 0:
@@ -222,7 +222,10 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                 case CourseConstant.CODE_EDIT_LESSON:
                 case CourseConstant.CODE_LESSON_AGAIN:
                 case CourseConstant.CODE_CREATE_LESSON:
-                updateData(false);
+                    updateData(false);
+                    break;
+                case CourseConstant.CODE_CREATE_CLASS:
+                    ((MyClassFragment)fragmentList.get(0)).refresh();
                     break;
             }
         }

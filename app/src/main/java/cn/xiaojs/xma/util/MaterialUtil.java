@@ -68,7 +68,6 @@ public class MaterialUtil {
             intent.setDataAndType(data, mimeType);
             activity.startActivity(intent);
 
-
         } else {
 
             Toast.makeText(activity,"暂不支持打开此格式的文件",Toast.LENGTH_SHORT).show();
