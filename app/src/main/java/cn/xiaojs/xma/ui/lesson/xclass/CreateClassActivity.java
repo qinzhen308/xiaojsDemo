@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -68,10 +69,15 @@ public class CreateClassActivity extends BaseActivity {
     TextView timetableTipsView;
 
 
-    public static ArrayList<ClassLesson> classLessons=new ArrayList<>();
+    public static ArrayList<ClassLesson> classLessons;
     private ArrayList<StudentEnroll> enrollStudents;
     private ArrayList<EnrollImport> enrollImports;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        classLessons=new ArrayList<>();
+    }
 
     public static void addClassLesson(ClassLesson lesson) {
 
