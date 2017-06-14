@@ -196,8 +196,8 @@ public class ScheduleLayout extends FrameLayout {
         } else {
             WeekView newWeekView = wcvCalendar.getWeekAdapter().instanceWeekView(position);
             newWeekView.setSelectYearMonth(mCurrentSelectYear, mCurrentSelectMonth, mCurrentSelectDay);
-            weekView.setTaskHintList(mHintList);
-            weekView.setTaskHintColors(mHintColors,false);
+            newWeekView.setTaskHintList(mHintList);
+            newWeekView.setTaskHintColors(mHintColors,false);
             newWeekView.invalidate();
             wcvCalendar.setCurrentItem(position);
         }
