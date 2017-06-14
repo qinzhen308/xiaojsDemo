@@ -116,4 +116,9 @@ public class MyClassFragment extends Fragment {
         });
     }
 
+
+    public void refresh(){
+        classAdapter.refresh();
+    }
+
 }

@@ -323,7 +323,7 @@ public class CreateClassActivity extends BaseActivity {
 
                 DataChangeHelper.getInstance()
                         .notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
-
+                setResult(RESULT_OK);
                 finish();
             }
 
