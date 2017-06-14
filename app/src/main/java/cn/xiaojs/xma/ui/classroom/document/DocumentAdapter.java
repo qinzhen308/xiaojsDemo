@@ -147,7 +147,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
             drawId = R.drawable.ic_picture;
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
             drawId = R.drawable.ic_pdf;
-        } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)) {
+        } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType) || Collaboration.isStreaming(bean.mimeType)) {
             drawId = R.drawable.ic_video_mine;
         } else {
             drawId = R.drawable.ic_unknown;

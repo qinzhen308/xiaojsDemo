@@ -900,5 +900,6 @@
     <string name="exit_live_tips">是否退出直播？</string>
     <string name="living_back_to_talk_mode_title">学生看不到你的视频</string>
     <string name="living_back_to_talk_mode_sub">你可以和学生进行文字交流</string>
+    <string name="offline_peer_to_peer_tips">该学生已下线，不能1对1视频哦～</string>
 
 </resources>

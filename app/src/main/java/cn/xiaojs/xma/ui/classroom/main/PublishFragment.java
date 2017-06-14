@@ -936,7 +936,9 @@ public class PublishFragment extends ClassroomLiveFragment {
                 data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
 
                 boolean isPrivateClass = mCtlSession.cls != null;
-                if (isPrivateClass && Live.LiveSessionState.LIVE.equals(mCtlSession.state)) {
+
+                String classState = LiveCtlSessionManager.getInstance().getLiveState();
+                if (isPrivateClass && Live.LiveSessionState.LIVE.equals(classState)) {
                     data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
                 }
 
