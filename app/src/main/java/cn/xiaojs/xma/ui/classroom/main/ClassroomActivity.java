@@ -324,7 +324,6 @@ public class ClassroomActivity extends FragmentActivity {
         SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mSocketTimeoutListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH), mModeSwitchListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
         SocketManager.connect();
     }
 
@@ -410,23 +409,6 @@ public class ClassroomActivity extends FragmentActivity {
                         }
                         break;
                 }
-            }
-        }
-    };
-
-    /**
-     * 成员退出事件
-     */
-    private SocketManager.EventListener mOnLeave = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
-            if (args == null || args.length == 0) {
-                return;
-            }
-
-            Attendee attendee = ClassroomBusiness.parseSocketBean(args[0], Attendee.class);
-            if (attendee != null) {
-                //TODO
             }
         }
     };

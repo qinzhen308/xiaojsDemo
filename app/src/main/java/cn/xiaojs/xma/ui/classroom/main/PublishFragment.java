@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom.main;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -707,6 +708,12 @@ public class PublishFragment extends ClassroomLiveFragment {
                 exitCurrentFragment();
             }
         });
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mHandKeyPressing = false;
+            }
+        });
 
         dialog.show();
     }
@@ -936,7 +943,9 @@ public class PublishFragment extends ClassroomLiveFragment {
                 data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
 
                 boolean isPrivateClass = mCtlSession.cls != null;
-                if (isPrivateClass && Live.LiveSessionState.LIVE.equals(mCtlSession.state)) {
+
+                String classState = LiveCtlSessionManager.getInstance().getLiveState();
+                if (isPrivateClass && Live.LiveSessionState.LIVE.equals(classState)) {
                     data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
                 }
 

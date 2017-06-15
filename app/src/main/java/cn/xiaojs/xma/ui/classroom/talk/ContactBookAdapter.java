@@ -166,14 +166,18 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setVisibility(View.GONE);
         }
 
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         boolean isMyself = ClassroomBusiness.isMyself(mContext, attendee.accountId);
         boolean isSupport = (attendee.avc != null && attendee.avc.video != null && attendee.avc.audio != null)
                 ? (attendee.avc.video.supported && attendee.avc.audio.supported) : true;
+        boolean online = attendee.xa == 0? false : true;
         //set video
         if (!mContactManagementMode
                 && mUser == Constants.UserMode.TEACHING
+                && Live.LiveSessionState.LIVE.equals(liveState) //FIXME 拖堂也能1对1么？
                 && !isMyself
-                && isSupport) {
+                && isSupport
+                && online) {
             holder.video.setVisibility(View.VISIBLE);
         } else {
             holder.video.setVisibility(View.INVISIBLE);
@@ -274,7 +278,12 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                                 break;
                             case R.id.video:
                                 if (mOnAttendItemClick != null) {
-                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);
+
+                                    if (attendee.xa == 0) {
+                                        Toast.makeText(mContext, R.string.offline_peer_to_peer_tips, Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);
+                                    }
                                 }
                                 break;
                             default:

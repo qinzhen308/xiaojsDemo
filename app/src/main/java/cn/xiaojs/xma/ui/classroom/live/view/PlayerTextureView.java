@@ -54,6 +54,7 @@ public class PlayerTextureView extends BaseMediaView {
     private boolean mRecycleOnPauseOrStop = RECYCLE_DEFAULT; //在暂停/停止时是否回收mPlayer
     private int mRatio;
     protected OnStreamChangeListener mStreamListener;
+    private boolean mPlayerDestroyed = false;
 
     public PlayerTextureView(Context context) {
         super(context);
@@ -207,6 +208,7 @@ public class PlayerTextureView extends BaseMediaView {
 
     @Override
     protected View initMediaView() {
+        mPlayerDestroyed = false;
         mPlayer = (PLVideoTextureView) LayoutInflater.from(getContext()).inflate(R.layout.layout_texture_player_view, null);
         mPlayer.setBufferingIndicator(mLoadingLayout);
         mPlayer.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
@@ -264,6 +266,11 @@ public class PlayerTextureView extends BaseMediaView {
 
     @Override
     public void destroy() {
+        if (mPlayerDestroyed) {
+            return;
+        }
+
+        mPlayerDestroyed = true;
         stopInternal();
     }
 
