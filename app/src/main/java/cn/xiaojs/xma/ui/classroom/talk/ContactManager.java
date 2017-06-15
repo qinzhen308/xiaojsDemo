@@ -15,16 +15,12 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -44,7 +40,6 @@ public class ContactManager {
     private static ContactManager mInstance;
     private AttendsComparator mAttendsComparator;
 
-    private Set<String> mPeer2PeerSteamSet;
     private LiveCollection<Attendee> mLiveCollection;
 
     private List<OnAttendsChangeListener> mOnAttendsChangeListeners;
@@ -82,11 +77,6 @@ public class ContactManager {
         if (mOnAttendsChangeListeners != null) {
             mOnAttendsChangeListeners.clear();
             mOnAttendsChangeListeners = null;
-        }
-
-        if (mPeer2PeerSteamSet != null) {
-            mPeer2PeerSteamSet.clear();
-            mPeer2PeerSteamSet = null;
         }
 
         mInstance = null;
@@ -219,11 +209,6 @@ public class ContactManager {
                 notifyAttendChanged(mLiveCollection.attendees, join ? ACTION_JOIN : ACTION_LEAVE);
             }
         }
-
-        if (attendee != null && !join) {
-            //leave
-            removePeer2PeerSteamFromSet(attendee.accountId);
-        }
     }
 
     public void registerAttendsChangeListener(OnAttendsChangeListener listener) {
@@ -254,34 +239,6 @@ public class ContactManager {
 
     public static interface OnAttendsChangeListener {
         public void onAttendsChanged(ArrayList<Attendee> attendees, int action);
-    }
-
-    public void putPeer2PeerSteamToSet(String accountId) {
-        if (mPeer2PeerSteamSet == null) {
-            mPeer2PeerSteamSet = new HashSet<String>();
-        }
-
-        if (!hasPeer2PeerStream(accountId)) {
-            mPeer2PeerSteamSet.add(accountId);
-        }
-    }
-
-    public void removePeer2PeerSteamFromSet(String accountId) {
-        if (mPeer2PeerSteamSet == null) {
-            mPeer2PeerSteamSet = new HashSet<String>();
-        }
-
-        if (hasPeer2PeerStream(accountId)) {
-            mPeer2PeerSteamSet.remove(accountId);
-        }
-    }
-
-    public boolean hasPeer2PeerStream(String accountId) {
-        if (mPeer2PeerSteamSet == null) {
-            mPeer2PeerSteamSet = new HashSet<String>();
-        }
-
-        return mPeer2PeerSteamSet.contains(accountId);
     }
 
     private void sort(ArrayList<Attendee> attendees) {

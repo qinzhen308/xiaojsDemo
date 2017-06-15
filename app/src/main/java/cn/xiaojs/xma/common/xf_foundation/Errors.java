@@ -231,6 +231,9 @@ public class Errors {
     // Somebody already claimed to on live.
     public static final String SOMEBODY_ALREADY_CLAIMED = "0x30000011";
 
+    //Media already opened.
+    public static final String MEDIA_ALREADY_OPENED = "0x30000013";
+
     //endregion
 
 
