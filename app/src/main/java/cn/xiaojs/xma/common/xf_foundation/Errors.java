@@ -228,6 +228,8 @@ public class Errors {
     // Live streaming already claimed.
     public static final String STREAM_ALREADY_CLAIMED = "0x30000007";
 
+    public static final String STREAM_ALREADY_STARTED = "0x30000010";
+
     // Somebody already claimed to on live.
     public static final String SOMEBODY_ALREADY_CLAIMED = "0x30000011";
 

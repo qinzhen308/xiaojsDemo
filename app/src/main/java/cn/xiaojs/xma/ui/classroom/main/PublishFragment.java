@@ -500,12 +500,20 @@ public class PublishFragment extends ClassroomLiveFragment {
 
         switch (type) {
             case StreamType.TYPE_STREAM_PUBLISH:
-            case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
                 mCountTime = mTimeProgressHelper.getCountTime();
                 mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
-                if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+
+                break;
+            case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
+
+                if (ClassroomBusiness.hasTeachingAbility()) {
+                    mCountTime = mTimeProgressHelper.getCountTime();
+                    mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
                     mPlayVideoView.setVisibility(View.GONE);
+                } else {
+                    exitCurrentFragment();
                 }
+
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
                 //mIndividualStreamDuration = mTimeProgressHelper.getIndividualStreamDuration();
@@ -984,6 +992,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             public void onVideoClose() {
                 if (ClassroomBusiness.hasTeachingAbility()) {
                     mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+                    sendCloseMedia();
                 } else {
                     mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
                 }

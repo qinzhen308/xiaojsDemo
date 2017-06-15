@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
@@ -105,6 +106,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected int mSlideViewHeight;
 
     protected Handler mHandler;
+
+    private String peerAccountId;
 
     @Override
     public void onAttach(Context context) {
@@ -409,6 +412,11 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+
+            if(XiaojsConfig.DEBUG) {
+                Logger.d("received close media....");
+            }
+
             onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, null);
         }
     };
@@ -434,6 +442,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                     StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                     if (response != null) {
                         if (response.result) {
+
+                            peerAccountId = accountId;
+
                             if (XiaojsConfig.DEBUG) {
                                 Toast.makeText(mContext, "open peer to peer video", Toast.LENGTH_LONG).show();
                             }
@@ -442,6 +453,34 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                             Toast.makeText(mContext, tips, Toast.LENGTH_LONG).show();
                         }
                     }
+                }
+            }
+        });
+    }
+
+    protected void sendCloseMedia() {
+
+        OpenMedia media = new OpenMedia();
+        media.to = peerAccountId;
+        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA),
+                media,
+                new SocketManager.IAckListener() {
+
+            @Override
+            public void call(Object... args) {
+                if (args != null && args.length > 0) {
+                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                    if (response != null) {
+                        if (response.result) {
+                            if (XiaojsConfig.DEBUG) {
+                                Toast.makeText(mContext, "close open peer to peer video success", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            //String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
+                            Toast.makeText(mContext, "关闭失败", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
                 }
             }
         });
