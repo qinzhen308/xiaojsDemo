@@ -147,7 +147,7 @@ public class ShareQrcodeActivity extends BaseActivity {
 
             ShareUtil.shareImage(this, shareBitmap, XiaojsConfig.APP_QRCODE_URL, getString(R.string.client_download_qrcode));
         } else if (qrcodeType == CLASS_QRCODE) {
-            ShareUtil.shareByUmeng(this, XiaojsConfig.APP_QRCODE_IMG_BASE_URL + imgUrl, getString(R.string.client_download_qrcode));
+            ShareUtil.shareByUmeng(this,  imgUrl, getString(R.string.client_download_qrcode));
         }
 
 
@@ -168,7 +168,7 @@ public class ShareQrcodeActivity extends BaseActivity {
             toSave(shareBitmap, fileName);
         } else {
 
-            Glide.with(this).load(XiaojsConfig.APP_QRCODE_IMG_BASE_URL + imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+            Glide.with(this).load(imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                     if (resource != null) {
@@ -244,7 +244,7 @@ public class ShareQrcodeActivity extends BaseActivity {
             @Override
             public void onSuccess(QRCodeData object) {
                 imgUrl=object.url;
-                Glide.with(ShareQrcodeActivity.this).load(XiaojsConfig.APP_QRCODE_IMG_BASE_URL + object.url).into(qrcodeView);
+                Glide.with(ShareQrcodeActivity.this).load(object.url).into(qrcodeView);
             }
 
             @Override

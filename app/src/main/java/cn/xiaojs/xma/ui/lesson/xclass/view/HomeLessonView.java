@@ -349,8 +349,8 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             i.setClass(getContext(), ClassroomActivity.class);
             getContext().startActivity(i);
         }else if( Account.TypeName.STAND_ALONE_LESSON.equals(mData.type) && (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)
-                || Ctl.StandaloneLessonState.FINISHED.equals(mData.state)
-                || Ctl.StandaloneLessonState.FINISHED.equals(mData.state))) {
+                || Ctl.StandaloneLessonState.LIVE.equals(mData.state)
+                || Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state))) {
             Intent i = new Intent();
             i.putExtra(Constants.KEY_TICKET, mData.ticket);
             i.setClass(getContext(), ClassroomActivity.class);

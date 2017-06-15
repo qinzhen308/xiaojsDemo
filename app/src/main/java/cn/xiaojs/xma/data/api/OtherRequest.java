@@ -30,6 +30,7 @@ public class OtherRequest extends ServiceRequest{
         Map<String ,String > map=new HashMap<>();
         map.put("code",classid);
         map.put("size",size);
+        map.put("type","classhome");
         Call<QRCodeData> call = getApiManager().createOtherService(XiaojsConfig.APP_QRCODE_IMG_BASE_URL).getQRImg(map);
         enqueueRequest(APIType.GET_ACCOUNT_ACTIVITIES,call);
     }

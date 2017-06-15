@@ -524,6 +524,10 @@ public class ServiceRequest<T> implements ContextLifecycle {
                 if (serviceCallback != null) {
                     serviceCallback.onSuccess(object);
                 }
+            } else if (apiType == APIType.JOIN_CLASS && responseCode == 502) {
+                if (serviceCallback != null) {
+                    serviceCallback.onSuccess(null);
+                }
             } else {
                 Error error = getError(errorBody);
                 String errorCode = "-1";

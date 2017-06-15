@@ -16,6 +16,6 @@ import retrofit2.http.POST;
 
 public interface OtherService {
     @FormUrlEncoded
-    @POST("/xjsweixin/web/index.php?r=public/getimgcode")
+    @POST("/web/index.php?r=public/getimgcode")
     Call<QRCodeData> getQRImg(@FieldMap Map<String,String> params);
 }
