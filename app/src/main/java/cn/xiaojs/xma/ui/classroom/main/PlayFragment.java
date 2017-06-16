@@ -613,9 +613,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
-    public void onStreamStarted(int type, Object extra) {
+    public void onStreamStarted(int type, String streamUrl, Object extra) {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mCountTime = mTimeProgressHelper.getCountTime();
+        mPlayUrl = streamUrl;
         switch (type) {
             case StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER:
             case StreamType.TYPE_STREAM_PLAY:
@@ -857,6 +858,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             int from = data.getInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
             if (from == Constants.FROM_PUBLISH_FRAGMENT) {
                 mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
+                mPlayUrl = data.getString(Constants.KEY_PLAY_URL, mPlayUrl);
             }
 
             mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
@@ -866,7 +868,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         if (TextUtils.isEmpty(mPlayUrl)) {
             mTipsHelper.setTipsByState(liveState);
         } else {
-            playStream(mCtlSession.playUrl);
+            playStream(mPlayUrl);
         }
 
 

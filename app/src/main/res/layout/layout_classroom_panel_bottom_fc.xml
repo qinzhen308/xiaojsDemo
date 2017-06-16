@@ -37,6 +37,9 @@
             android:layout_height="wrap_content"
             android:src="@drawable/cr_publish_take_pic"/>
 
+
+
+
     <ImageView
             android:id="@+id/fc_open_talk_btn"
             android:layout_width="wrap_content"
@@ -45,7 +48,7 @@
             android:paddingRight="@dimen/px30"
             android:paddingTop="@dimen/px20"
             android:paddingBottom="@dimen/px20"
-            android:layout_toLeftOf="@+id/fc_hide_show_talk_btn"
+            android:layout_alignParentRight="true"
             android:src="@drawable/ic_cr_fc_talk"/>
 
     <cn.xiaojs.xma.ui.widget.MessageImageView
@@ -56,7 +59,7 @@
             android:paddingRight="@dimen/px30"
             android:paddingTop="@dimen/px20"
             android:paddingBottom="@dimen/px20"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/fc_open_talk_btn"
             android:src="@drawable/ic_cr_hide_talk"/>
 
 </RelativeLayout>

@@ -60,6 +60,8 @@ public class LiveMenu extends PopupWindow {
         mClose = (ImageView) mRootView.findViewById(R.id.live_menu_close);
         mLayout = new ClassroomPopupWindowLayout(mContext);
 
+
+        mClose.setVisibility(mIsTeacher ? View.VISIBLE : View.GONE);
         mVideo.setVisibility(View.GONE);
         mAudio.setVisibility(View.GONE);
 
@@ -119,7 +121,7 @@ public class LiveMenu extends PopupWindow {
             int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.px13);
             mLayout.setIndicatorOffsetX(offset);
             showAsDropDown(anchor, 0, -(height + mRootView.getMeasuredHeight() + topOffset));
-        } else if (mGravity == Gravity.TOP){
+        } else if (mGravity == Gravity.TOP) {
             int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.px13);
             int offset = mContext.getResources().getDimensionPixelSize(R.dimen.px30) - mRootView.getMeasuredWidth() / 2;
             mLayout.setIndicatorOffsetX(offset);
