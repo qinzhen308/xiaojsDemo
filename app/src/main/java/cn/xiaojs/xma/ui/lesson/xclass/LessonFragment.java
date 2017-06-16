@@ -38,6 +38,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.ui.lesson.CourseFilterDialog;
 import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
@@ -230,8 +231,11 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
     private void getMonthData(){
         long start=new Date(0).getTime();
         long end=ScheduleUtil.ymdToTimeMill(3000,1,1);
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end),null,Account.TypeName.STAND_ALONE_LESSON,LessonFilterHelper.getState(group2Position),LessonFilterHelper.getType(group1Position),null);
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(),map,mPagination , dataPageLoader);
+        ScheduleOptions options=new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(start))
+                .setEnd(ScheduleUtil.getUTCDate(end)).setState(LessonFilterHelper.getState(group2Position))
+                .setType(Account.TypeName.STAND_ALONE_LESSON).setRole(LessonFilterHelper.getType(group1Position))
+                .build();
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),options,mPagination , dataPageLoader);
     }
 
 

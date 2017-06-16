@@ -31,6 +31,7 @@ import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
@@ -105,8 +106,11 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment implem
 
 
     private void request(){
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,ClassFilterHelper.getStartTime(0), ClassFilterHelper.getEndTime(0),null,Account.TypeName.CLASS_LESSON, state,null,null);
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(),classId,map ,mPagination , dataPageLoader);
+        ScheduleOptions options=new ScheduleOptions.Builder().setStart(ClassFilterHelper.getStartTime(0))
+                .setEnd(ClassFilterHelper.getEndTime(0))
+                .setState(state).setType(Account.TypeName.CLASS_LESSON)
+                .build();
+        LessonDataManager.getClassesSchedule4Lesson(getActivity(),classId,options ,mPagination , dataPageLoader);
 
     }
 

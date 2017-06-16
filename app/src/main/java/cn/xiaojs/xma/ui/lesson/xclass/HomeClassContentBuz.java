@@ -36,12 +36,14 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
@@ -230,8 +232,10 @@ public class HomeClassContentBuz {
             Logger.d("----qz----start GMT+8:00 Time="+ScheduleUtil.getDateYMDHMS(start)+"---end GMT+8:00 Time="+ScheduleUtil.getDateYMDHMS(end));
             Logger.d("----qz----start UTC Time="+ScheduleUtil.getUTCDate(start)+"---end UTC Time="+ScheduleUtil.getUTCDate(end));
         }
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end),null,null,null,null,null);
-        LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
+        ScheduleOptions options=new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(start))
+                .setEnd(ScheduleUtil.getUTCDate(end))
+                .build();
+        LessonDataManager.getClassesSchedule(mContext, options, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
                 long time=System.currentTimeMillis();
@@ -277,10 +281,11 @@ public class HomeClassContentBuz {
         final int m=month;
         final int d=day;
         int next=(y-todayYear)*12+(m-todayMonth);
-        Map map=LessonDataManager.createScheduleOptions("monthly",""+next,"0",null,null,null,null,null,null,null);
+        ScheduleOptions options=new ScheduleOptions.Builder().setCycle("monthly").setNext(""+next)
+                .build();
         if(XiaojsConfig.DEBUG)
             Logger.d("-----qz-----time analyze---getMonthData="+(System.currentTimeMillis()-time));
-        LessonDataManager.getClassesSchedule(mContext, map, new APIServiceCallback<ScheduleData>() {
+        LessonDataManager.getClassesSchedule(mContext, options, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
                 long time=System.currentTimeMillis();

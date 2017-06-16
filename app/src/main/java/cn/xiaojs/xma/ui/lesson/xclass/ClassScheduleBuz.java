@@ -29,11 +29,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
@@ -140,9 +142,11 @@ public class ClassScheduleBuz implements IUpdateMethod{
             Logger.d("----qz----monthData--UTC--("+ScheduleUtil.getUTCDate(start)+")----("+ScheduleUtil.getUTCDate(end)+")");
             Logger.d("----qz----monthData--GMT8:00--("+ScheduleUtil.getDateYMDHMS(start)+")----("+ScheduleUtil.getDateYMDHMS(end)+")");
         }
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(start), ScheduleUtil.getUTCDate(end),null,null,"NotHumanRemoved",null,null);
-
-        LessonDataManager.getClassesSchedule(mContext,classId, map, new APIServiceCallback<ScheduleData>() {
+        ScheduleOptions options=new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(start))
+                .setEnd(ScheduleUtil.getUTCDate(end))
+                .setState("NotHumanRemoved")
+                .build();
+        LessonDataManager.getClassesSchedule(mContext,classId, options, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
 

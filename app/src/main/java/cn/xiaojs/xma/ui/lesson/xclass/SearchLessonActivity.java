@@ -1,8 +1,5 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -14,21 +11,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
@@ -36,12 +29,12 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
-import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/5/31.
@@ -135,10 +128,11 @@ public class SearchLessonActivity extends BaseActivity {
     }
 
     private void request(){
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,ScheduleUtil.getUTCDate(new Date(0).getTime()),ScheduleUtil.getUTCDate(ScheduleUtil.ymdToTimeMill(2100,12,30)),
-                null,Account.TypeName.STAND_ALONE_LESSON,"All",null,key);
-        LessonDataManager.getClassesSchedule4Lesson(this, map,mPagination,dataPageLoader);
-
+        ScheduleOptions options=new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(new Date(0).getTime()))
+                .setEnd(ScheduleUtil.getUTCDate(ScheduleUtil.ymdToTimeMill(2100,12,30)))
+                .setState("All").setType(Account.TypeName.STAND_ALONE_LESSON).setQ(key)
+                .build();
+        LessonDataManager.getClassesSchedule4Lesson(this, options,mPagination,dataPageLoader);
     }
 
     private boolean verifyInput(String content){

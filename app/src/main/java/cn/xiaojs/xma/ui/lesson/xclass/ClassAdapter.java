@@ -18,6 +18,7 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
@@ -74,8 +75,10 @@ public class ClassAdapter extends AbsSwipeAdapter<PrivateClass,ClassAdapter.Hold
 
     @Override
     protected void doRequest() {
-        Map map=LessonDataManager.createScheduleOptions(null,null,null,startTime, endTime,null,Account.TypeName.CLASS, "NotHumanRemoved", role,key);
-        LessonDataManager.getClassesSchedule4Class(mContext, map, mPagination, new APIServiceCallback<CollectionResult<PrivateClass>>() {
+        ScheduleOptions options=new ScheduleOptions.Builder().setStart(startTime).setEnd(endTime)
+                .setState("NotHumanRemoved").setType(Account.TypeName.CLASS).setRole(role).setQ(key)
+                .build();
+        LessonDataManager.getClassesSchedule4Class(mContext, options, mPagination, new APIServiceCallback<CollectionResult<PrivateClass>>() {
             @Override
             public void onSuccess(CollectionResult<PrivateClass> object) {
                 if(object!=null){

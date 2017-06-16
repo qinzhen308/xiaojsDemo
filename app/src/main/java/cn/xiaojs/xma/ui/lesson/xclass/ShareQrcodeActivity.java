@@ -167,17 +167,17 @@ public class ShareQrcodeActivity extends BaseActivity {
     private void savePicture() {
         layQrcode.setDrawingCacheEnabled(true);
         Bitmap bm=layQrcode.getDrawingCache();
-        bm=bm.createBitmap(bm);
-        layQrcode.setDrawingCacheEnabled(false);
+//        bm=bm.createBitmap(bm);
+//        layQrcode.setDrawingCacheEnabled(false);
         if(bm!=null){
-            ShareUtil.shareByUmeng(this,  bm, "");
-        }
-        String fileName = new StringBuilder("xjs_download_")
-                .append(System.currentTimeMillis())
-                .append(".jpg")
-                .toString();
+            String fileName = new StringBuilder("xjs_download_")
+                    .append(System.currentTimeMillis())
+                    .append(".png")
+                    .toString();
 
-        toSave(bm, fileName);
+            toSave(bm, fileName);
+        }
+
 //        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
 //
 //            Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),

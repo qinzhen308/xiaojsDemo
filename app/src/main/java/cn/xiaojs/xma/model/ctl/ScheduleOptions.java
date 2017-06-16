@@ -15,6 +15,9 @@ public class ScheduleOptions {
         this.options = builder.optionsMap;
     }
 
+    private ScheduleOptions() {
+    }
+
     public Map<String, String> getOptions() {
         return options;
     }
