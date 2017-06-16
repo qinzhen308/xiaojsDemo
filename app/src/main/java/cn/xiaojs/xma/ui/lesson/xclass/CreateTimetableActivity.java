@@ -217,6 +217,11 @@ public class CreateTimetableActivity extends BaseActivity {
         protected Boolean doInBackground(Long... params) {
 
             boolean result = checkLocalConflict(params[0],params[1]);
+
+            if (TextUtils.isEmpty(classId)) {
+                return result;
+            }
+
             if (!result) {
 
                 try {
@@ -231,6 +236,7 @@ public class CreateTimetableActivity extends BaseActivity {
                     CheckOverlapParams overlapParams = new CheckOverlapParams();
                     overlapParams.lessons = new ArrayList<>(1);
                     overlapParams.lessons.add(checkLesson);
+                    overlapParams.classes = classId;
 
                     // 去服务器检测
                     if(!LessonDataManager.checkOverlap(getApplicationContext(),overlapParams)) {
