@@ -50,6 +50,7 @@ import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 
@@ -439,22 +440,23 @@ public class LessonDataManager {
      * Get Classes Schedule
      */
     public static void getClassesSchedule(Context context,
-                                          Map<String, String> options,
+                                          ScheduleOptions options,
                                           APIServiceCallback<ScheduleData> callback) {
+
         getClassesSchedule(context, null, options, callback);
     }
 
     public static void getClassesSchedule(Context context,
                                           String classId,
-                                          Map<String, String> options,
+                                          ScheduleOptions options,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(classId, options);
+        lessonRequest.getClassesSchedule(classId, options.getOptions());
     }
 
 
     public static void getClassesSchedule4Class(Context context,
-                                                Map<String, String> options,
+                                                ScheduleOptions options,
                                                 Pagination pagination,
                                                 APIServiceCallback<CollectionResult<PrivateClass>> callback) {
 
@@ -462,11 +464,11 @@ public class LessonDataManager {
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Class(options, limit, page);
+        lessonRequest.getClassesSchedule4Class(options.getOptions(), limit, page);
     }
 
     public static void getClassesSchedule4Lesson(Context context,
-                                                 Map<String, String> options,
+                                                 ScheduleOptions options,
                                                  Pagination pagination,
                                                  APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
 
@@ -474,12 +476,12 @@ public class LessonDataManager {
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Lesson(options, limit, page);
+        lessonRequest.getClassesSchedule4Lesson(options.getOptions(), limit, page);
     }
 
     public static void getClassesSchedule4Lesson(Context context,
                                                  String classid,
-                                                 Map<String, String> options,
+                                                 ScheduleOptions options,
                                                  Pagination pagination,
                                                  APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
 
@@ -487,79 +489,9 @@ public class LessonDataManager {
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Lesson(classid,options, limit, page);
+        lessonRequest.getClassesSchedule4Lesson(classid,options.getOptions(), limit, page);
     }
 
-
-    /**
-     * 为getClassesSchedule API创建查询参数
-     * @param cycle
-     * @param next
-     * @param pre
-     * @param start
-     * @param end
-     * @param unformat
-     * @param type
-     * @param state
-     * @param role
-     * @param q
-     * @return
-     */
-    public static Map<String, String> createScheduleOptions(String cycle,
-                                                          String next,
-                                                          String pre,
-                                                          String start,
-                                                          String end,
-                                                          String unformat,
-                                                          String type,
-                                                          String state,
-                                                          String role,
-                                                          String q){
-
-        Map<String, String> options = new HashMap<>();
-
-        if (!TextUtils.isEmpty(cycle)) {
-            options.put("cycle",cycle);
-        }
-
-        if (!TextUtils.isEmpty(next)) {
-            options.put("next",next);
-        }
-
-        if (!TextUtils.isEmpty(pre)) {
-            options.put("pre",pre);
-        }
-
-        if (!TextUtils.isEmpty(start)) {
-            options.put("start",start);
-        }
-
-        if (!TextUtils.isEmpty(end)) {
-            options.put("end",end);
-        }
-
-        if (!TextUtils.isEmpty(unformat)) {
-            options.put("unformat",unformat);
-        }
-
-        if (!TextUtils.isEmpty(state)) {
-            options.put("state",state);
-        }
-
-        if (!TextUtils.isEmpty(type)) {
-            options.put("type",type);
-        }
-
-        if (!TextUtils.isEmpty(role)) {
-            options.put("role",role);
-        }
-
-        if (!TextUtils.isEmpty(q)) {
-            options.put("q",q);
-        }
-
-        return options;
-    }
 
     /**
      * 获取热门班

@@ -264,9 +264,9 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 Attendee attendee = mAttendeeList.get(pos);
                 if (mOnAttendItemClick != null) {
                     Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
-                    if (Live.LiveSessionState.LIVE.equals(liveState)
+                    if ((Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
                             && user == Constants.User.STUDENT
-                            && !AccountDataManager.isTeacher(mContext)) {
+                            && LiveCtlSessionManager.getInstance().getUser() == Constants.User.STUDENT) {
                         //Toast
                         Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
                     } else {
