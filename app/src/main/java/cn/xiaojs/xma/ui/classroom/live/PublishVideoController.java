@@ -26,8 +26,10 @@ import com.qiniu.pili.droid.streaming.StreamingState;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
@@ -112,22 +114,46 @@ public class PublishVideoController extends VideoController {
                 }
             } else {
                 if (mStreamPublishing) {
-                    //send stopped stream
-                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                            new SocketManager.IAckListener() {
-                                @Override
-                                public void call(Object... args) {
-                                    if (args != null && args.length > 0) {
-                                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                        if (response.result) {
-                                            mNeedStreamRePublishing = true;
-                                            if (mStreamChangeListener != null) {
-                                                mStreamChangeListener.onStreamStopped(type, null);
+
+                    if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+                        //TODO 学生关闭一对一流后，需要通知老师端，老师端1对1窗口要关闭
+//                        OpenMedia media = new OpenMedia();
+//                        media.to = AccountDataManager.getAccountID(mContext);
+//                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), media,
+//                                new SocketManager.IAckListener() {
+//                                    @Override
+//                                    public void call(Object... args) {
+//                                        if (args != null && args.length > 0) {
+//                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+//                                            if (response.result) {
+//                                                mNeedStreamRePublishing = true;
+//                                                if (mStreamChangeListener != null) {
+//                                                    mStreamChangeListener.onStreamStopped(type, null);
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                });
+                    } else {
+                        //send stopped stream
+                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                                new SocketManager.IAckListener() {
+                                    @Override
+                                    public void call(Object... args) {
+                                        if (args != null && args.length > 0) {
+                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                            if (response.result) {
+                                                mNeedStreamRePublishing = true;
+                                                if (mStreamChangeListener != null) {
+                                                    mStreamChangeListener.onStreamStopped(type, null);
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            });
+                                });
+                    }
+
+
                 } else {
                     if (mStreamChangeListener != null) {
                         mStreamChangeListener.onStreamStopped(type, null);
