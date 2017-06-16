@@ -46,7 +46,7 @@
             android:paddingRight="@dimen/px30"
             android:paddingTop="@dimen/px20"
             android:paddingBottom="@dimen/px20"
-            android:layout_toLeftOf="@id/fc_open_talk_btn"
+            android:layout_toLeftOf="@+id/fc_open_talk_btn"
             android:src="@drawable/ic_cr_hide_talk"/>
 
     <ImageView
