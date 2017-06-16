@@ -3,6 +3,8 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,15 +26,19 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
+import cn.xiaojs.xma.util.MaterialUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -151,7 +157,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
         showOperateBtn();
 
-        if (false && Ctl.LiveLessonState.FINISHED.equals(data.state)) {
+        if (!TextUtils.isEmpty(data.playback )) {
             btnReplay.setVisibility(VISIBLE);
         } else {
             btnReplay.setVisibility(GONE);
@@ -365,6 +371,12 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             mEventCallback.onEvent(EventCallback.EVENT_1, position, mData);
         } else {
             //其余地方课表的逻辑
+            // TODO: 后续加上调用客户端里面播放器的逻辑 2017/6/16
+            String url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(mData.playback).append(".m3u8").toString();
+            Uri data = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(data, Collaboration.StreamingTypes.HLS);
+            getContext().startActivity(intent);
         }
     }
 

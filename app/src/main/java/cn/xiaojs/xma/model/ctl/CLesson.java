@@ -32,6 +32,7 @@ public class CLesson implements Serializable{
     public ClassInfo classInfo;
     public Adviser[] advisers;
     public boolean accessible;
+    public String playback;
 
     public CLesson() {
     }
