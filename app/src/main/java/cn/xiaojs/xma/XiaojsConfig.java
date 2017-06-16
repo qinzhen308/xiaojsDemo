@@ -51,7 +51,7 @@ public class XiaojsConfig {
     // 华东:存储空间列表(图片和文档存储)Bucket (files) CDN 加速域名
     public static final String FILES_BUCKET_URL = "http://xcfs.xiaojs.cn";
     //华北:存储空间列表(视频存储)Bucket (live) CDN 加速域名
-    public static final String LIVE_BUCKET_URL = "http://xcfs.xiaojs.cn";
+    public static final String LIVE_BUCKET_URL = "http://live.xiaojs.cn";
 
     ///////////////外网预发布环境域名/////////////
     //XAS
