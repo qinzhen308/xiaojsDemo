@@ -3,8 +3,10 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +70,8 @@ public class ShareQrcodeActivity extends BaseActivity {
     TextView tipsView;
     @BindView(R.id.qrcode_title)
     TextView qrcodeTitle;
+    @BindView(R.id.lay_qrcode)
+    View layQrcode;
 
     private int qrcodeType;
     String imgUrl;
@@ -140,50 +144,69 @@ public class ShareQrcodeActivity extends BaseActivity {
     }
 
     private void sharePicture() {
-
-        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
-            Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.xjs_app_qrcode);
-
-            ShareUtil.shareImage(this, shareBitmap, XiaojsConfig.APP_QRCODE_URL, getString(R.string.client_download_qrcode));
-        } else if (qrcodeType == CLASS_QRCODE) {
-            ShareUtil.shareByUmeng(this,  imgUrl, getString(R.string.client_download_qrcode));
+        layQrcode.setDrawingCacheEnabled(true);
+        Bitmap bm=layQrcode.getDrawingCache();
+        bm=bm.createBitmap(bm);
+        layQrcode.setDrawingCacheEnabled(false);
+        if(bm!=null){
+            ShareUtil.shareByUmeng(this,  bm, "");
         }
+//        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
+//            Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),
+//                    R.drawable.xjs_app_qrcode);
+//
+//            ShareUtil.shareImage(this, shareBitmap, XiaojsConfig.APP_QRCODE_URL, getString(R.string.client_download_qrcode));
+//        } else if (qrcodeType == CLASS_QRCODE) {
+//            ShareUtil.shareByUmeng(this,  imgUrl, getString(R.string.client_download_qrcode));
+//        }
 
 
     }
 
 
     private void savePicture() {
-        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
-
-            Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.xjs_app_qrcode);
-
-            String fileName = new StringBuilder("xjs_download_")
-                    .append(System.currentTimeMillis())
-                    .append(".jpg")
-                    .toString();
-
-            toSave(shareBitmap, fileName);
-        } else {
-
-            Glide.with(this).load(imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    if (resource != null) {
-                        String fileName = new StringBuilder("xjs_download_")
-                                .append(System.currentTimeMillis())
-                                .append(".jpg")
-                                .toString();
-                        toSave(resource, fileName);
-                    } else {
-                        ToastUtil.showToast(getApplicationContext(), "保存失败");
-                    }
-                }
-            });
-
+        layQrcode.setDrawingCacheEnabled(true);
+        Bitmap bm=layQrcode.getDrawingCache();
+        bm=bm.createBitmap(bm);
+        layQrcode.setDrawingCacheEnabled(false);
+        if(bm!=null){
+            ShareUtil.shareByUmeng(this,  bm, "");
         }
+        String fileName = new StringBuilder("xjs_download_")
+                .append(System.currentTimeMillis())
+                .append(".jpg")
+                .toString();
+
+        toSave(bm, fileName);
+//        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
+//
+//            Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),
+//                    R.drawable.xjs_app_qrcode);
+//
+//            String fileName = new StringBuilder("xjs_download_")
+//                    .append(System.currentTimeMillis())
+//                    .append(".jpg")
+//                    .toString();
+//
+//            toSave(shareBitmap, fileName);
+//        } else {
+//
+//            Glide.with(this).load(imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+//                @Override
+//                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                    if (resource != null) {
+//                        String fileName = new StringBuilder("xjs_download_")
+//                                .append(System.currentTimeMillis())
+//                                .append(".jpg")
+//                                .toString();
+//                        toSave(resource, fileName);
+//                    } else {
+//                        ToastUtil.showToast(getApplicationContext(), "保存失败");
+//                    }
+//                }
+//            });
+//
+//        }
     }
 
 

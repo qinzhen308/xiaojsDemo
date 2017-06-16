@@ -14,6 +14,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.umeng.social.tool.UMImageMark;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -97,6 +98,32 @@ public class ShareUtil {
             Logger.d("the share url" + imgUrl);
         }
         final UMImage umImage=new UMImage(activity,imgUrl);
+        umImage.setThumb(new UMImage(activity,R.drawable.ic_launcher));
+        umImage.setTitle(title);
+        shareDld(activity, new ShareBtnListener() {
+            @Override
+            public void onClickListener(View v) {
+                switch (v.getId()) {
+                    case R.id.tv_wechat:
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.WEIXIN).withMedia(umImage).share();
+                        break;
+                    case R.id.tv_fcircle:
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).withMedia(umImage).share();
+                        break;
+                    case R.id.tv_qq:
+                        //QQ
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.QQ).withMedia(umImage).share();
+                        break;
+                }
+
+            }
+        });
+    }
+
+    public static void shareByUmeng(final Activity activity, final Bitmap imgBm, final String title) {
+
+        final UMImage umImage=new UMImage(activity,imgBm);
+        umImage.compressFormat= Bitmap.CompressFormat.PNG;
         umImage.setThumb(new UMImage(activity,R.drawable.ic_launcher));
         umImage.setTitle(title);
         shareDld(activity, new ShareBtnListener() {
