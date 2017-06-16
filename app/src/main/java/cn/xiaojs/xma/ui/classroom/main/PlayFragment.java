@@ -858,6 +858,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             int from = data.getInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
             if (from == Constants.FROM_PUBLISH_FRAGMENT) {
                 mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
+                mPlayUrl = data.getString(Constants.KEY_PLAY_URL, mPlayUrl);
             }
 
             mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
@@ -867,7 +868,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         if (TextUtils.isEmpty(mPlayUrl)) {
             mTipsHelper.setTipsByState(liveState);
         } else {
-            playStream(mCtlSession.playUrl);
+            playStream(mPlayUrl);
         }
 
 
