@@ -20,21 +20,15 @@ import android.view.View;
 
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
-import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
-import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 
 public class PlayVideoController extends VideoController {
 
@@ -53,8 +47,7 @@ public class PlayVideoController extends VideoController {
 
     @Override
     protected void listenerSocket() {
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
+
     }
 
     @Override
@@ -80,42 +73,11 @@ public class PlayVideoController extends VideoController {
     }
 
     /**
-     * 暂停推流
+     * 暂停推流,
      */
     @Override
     public void pausePublishStream(final int type) {
-        if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
-            if (ClassroomBusiness.NETWORK_NONE == ClassroomBusiness.getCurrentNetwork(mContext)) {
-                mNeedStreamRePublishing = true;
-                if (mStreamChangeListener != null) {
-                    mStreamChangeListener.onStreamStopped(type, null);
-                }
-            } else {
-                if (mStreamPublishing) {
-                    //send stopped stream
-                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                            new SocketManager.IAckListener() {
-                                @Override
-                                public void call(Object... args) {
-                                    if (args != null && args.length > 0) {
-                                        StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                        if (response.result) {
-                                            mNeedStreamRePublishing = true;
-                                            if (mStreamChangeListener != null) {
-                                                mStreamChangeListener.onStreamStopped(type, null);
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                } else {
-                    if (mStreamChangeListener != null) {
-                        mStreamChangeListener.onStreamStopped(type, null);
-                    }
-                }
-            }
-        }
-        mStreamPublishing = false;
+        //do nothing
     }
 
     /**
@@ -152,66 +114,6 @@ public class PlayVideoController extends VideoController {
             }
         }
     }
-
-    @Override
-    public void onSteamStateChanged(StreamingState streamingState, Object data) {
-        switch (streamingState) {
-            case STREAMING:
-                if (mOnDestroy || mCancelPublish) {
-                    return;
-                }
-
-                mNeedStreamRePublishing = false;
-                FeedbackStatus fbStatus = new FeedbackStatus();
-                fbStatus.status = Live.MediaStatus.READY;
-                int eventType = mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL ? Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
-                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.IAckListener() {
-                    @Override
-                    public void call(Object... args) {
-                        if (args != null && args.length > 0) {
-                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                            if (response != null && response.result) {
-                                mStreamPublishing = true;
-                                if (mStreamChangeListener != null) {
-                                    mStreamChangeListener.onStreamStarted(mPublishType, null);
-                                    muteOrUnmute();
-                                }
-
-                            } else {
-                                //暂停推流
-                                if (!mPausePublishByToggleResolution && !mStreamPublishing) {
-                                    pausePublishStream(mPublishType);
-                                }
-
-                                mPausePublishByToggleResolution = false;
-                            }
-                        } else {
-                            //暂停推流
-                            if (!mPausePublishByToggleResolution && !mStreamPublishing) {
-                                pausePublishStream(mPublishType);
-                            }
-
-                            mPausePublishByToggleResolution = false;
-                        }
-                    }
-                });
-                break;
-        }
-    }
-
-    private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-        }
-    };
-
-    private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-        }
-    };
 
     @Override
     protected void onStreamingStarted(Object... args) {
@@ -277,7 +179,5 @@ public class PlayVideoController extends VideoController {
     @Override
     protected void offSocketListener() {
         super.offSocketListener();
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
     }
 }
