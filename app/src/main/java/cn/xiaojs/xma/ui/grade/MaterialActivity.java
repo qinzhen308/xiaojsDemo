@@ -374,11 +374,11 @@ public class MaterialActivity extends BaseActivity {
         if(i>0){
             int type=FileUtil.getFileTypeBySuffix(name.substring(i+1,name.length()));
             if(type!=FileUtil.PPT&&type!=FileUtil.PICTURE&&type!=FileUtil.VIDEO){
-                ToastUtil.showToast(getApplicationContext(),"暂不支持该格式文件");
+                ToastUtil.showToast(getApplicationContext(),getString(R.string.upload_support_error_tips));
                 return;
             }
         }else {
-            ToastUtil.showToast(getApplicationContext(),"暂不支持该格式文件");
+            ToastUtil.showToast(getApplicationContext(),getString(R.string.upload_support_error_tips));
             return;
         }
 
