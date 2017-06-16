@@ -29,6 +29,7 @@ import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.home.MomentDetailActivity;
+import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.VerifyUtils;
 import okhttp3.ResponseBody;
 
@@ -160,12 +161,26 @@ public class ManualAddStudentActivity extends BaseActivity {
                         StudentEnroll studentEnroll = data.getParcelableExtra(AddStudentActivity.EXTRA_STUDENT);
                         //更新页面
                         if (studentEnroll != null) {
-                            addNewStudent(studentEnroll);
+                            if(contain(studentEnroll)){
+                                ToastUtil.showToast(getApplicationContext(),"该手机号码已添加");
+                            }else {
+                                addNewStudent(studentEnroll);
+                            }
                         }
                     }
                     break;
             }
         }
+    }
+
+
+    private boolean contain(StudentEnroll target){
+        for(StudentEnroll s:adapter.getList()){
+            if(s.mobile.equals(target.mobile)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public class StudentsAdapter extends AbsSwipeAdapter<StudentEnroll, StudentsAdapter.Holder> {

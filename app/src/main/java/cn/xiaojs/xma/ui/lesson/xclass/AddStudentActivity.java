@@ -1,7 +1,9 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Intent;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -94,11 +96,42 @@ public class AddStudentActivity extends BaseActivity {
 
         studentsListView.setVisibility(View.GONE);
         setRightText(R.string.ok);
+
+        numEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String phone=numEdit.getText().toString().trim();
+                if(phone.length()==11){
+                    previewStudent(phone);
+                }
+            }
+        });
     }
 
 //    private void closeCourCreateTips() {
 //        tipsRootView.setVisibility(View.GONE);
 //    }
+
+    private void previewStudent(String phone){
+        if (!VerifyUtils.checkPhoneNum(phone)) {
+            return;
+        }
+
+        StudentEnroll studentEnroll = new StudentEnroll();
+        studentEnroll.mobile = phone;
+
+        checkAccount(studentEnroll,true);
+    }
 
 
     private void addNewStudent() {
@@ -125,18 +158,19 @@ public class AddStudentActivity extends BaseActivity {
         studentEnroll.mobile = phone;
         studentEnroll.name = name;
 
-        checkAccount(studentEnroll);
+        checkAccount(studentEnroll,false);
 
     }
 
 
-    private void checkAccount(final StudentEnroll studentEnroll) {
+    private void checkAccount(final StudentEnroll studentEnroll, final boolean preview) {
         try {
             showProgress(false);
             //因为已经注册的用户，需要上传用户的ID，所以在这里要检测是否注册，如果注册了就获取ID.
             SearchManager.searchAccounts(this, String.valueOf(studentEnroll.mobile), new APIServiceCallback<ArrayList<AccountSearch>>() {
                 @Override
                 public void onSuccess(ArrayList<AccountSearch> object) {
+                    cancelProgress();
                     boolean hasExist = false;
                     AccountSearch currSearch = null;
                     if (object != null && !object.isEmpty()) {
@@ -156,9 +190,15 @@ public class AddStudentActivity extends BaseActivity {
 
                     if (hasExist) {
                         studentEnroll.id = currSearch._id;
+                        studentEnroll.name=currSearch._source.basic.getName();
+                        if(preview){
+                            nameEdit.setText(studentEnroll.name);
+                        }
 //                        studentEnroll.name = "";
 //                        studentEnroll.mobile = "";
                     }
+                    //搜索时不用跳转
+                    if(preview)return;
 
                     //OK
                     toAdd(studentEnroll);
@@ -168,7 +208,7 @@ public class AddStudentActivity extends BaseActivity {
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     cancelProgress();
-
+                    if(preview)return;
                     //OK
                     toAdd(studentEnroll);
                 }
