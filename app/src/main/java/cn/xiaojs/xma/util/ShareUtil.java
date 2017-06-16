@@ -122,11 +122,9 @@ public class ShareUtil {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void shareByUmeng(final Activity activity, final Bitmap imgBm, final String title) {
 
         final UMImage umImage=new UMImage(activity,imgBm);
-        imgBm.setConfig(Bitmap.Config.ARGB_8888);
         umImage.compressFormat= Bitmap.CompressFormat.PNG;
         umImage.setThumb(new UMImage(activity,R.drawable.ic_launcher));
         umImage.setTitle(title);

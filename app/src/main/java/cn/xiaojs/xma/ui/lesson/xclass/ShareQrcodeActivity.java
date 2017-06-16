@@ -167,8 +167,8 @@ public class ShareQrcodeActivity extends BaseActivity {
     private void savePicture() {
         layQrcode.setDrawingCacheEnabled(true);
         Bitmap bm=layQrcode.getDrawingCache();
-//        bm=bm.createBitmap(bm);
-//        layQrcode.setDrawingCacheEnabled(false);
+        bm=bm.createBitmap(bm);
+        layQrcode.setDrawingCacheEnabled(false);
         if(bm!=null){
             String fileName = new StringBuilder("xjs_download_")
                     .append(System.currentTimeMillis())
@@ -214,7 +214,7 @@ public class ShareQrcodeActivity extends BaseActivity {
 
         File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-        if (BitmapUtils.saveImageToGallery(this, bitmap, fileDir, fileName, 100, true)) {
+        if (BitmapUtils.savePngImageToGallery(this, bitmap, fileDir, fileName,100, true)) {
 
             String tips = getString(R.string.save_picture_ok_tips,
                     fileDir.getAbsolutePath(),

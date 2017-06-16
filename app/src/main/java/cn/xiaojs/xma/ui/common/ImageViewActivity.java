@@ -16,11 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.DownloadCompletionCallback;
@@ -244,8 +246,8 @@ public class ImageViewActivity extends BaseActivity {
             }else {
                 Glide.with(mContext)
                         .load(Social.getDrawing(mList.get(position % mList.size()),false))
-                        .asBitmap()
                         //.placeholder(R.drawable.ic_home_picture)
+                        .fitCenter()
                         .error(R.drawable.ic_home_picture)
                         .into(imageView);
             }

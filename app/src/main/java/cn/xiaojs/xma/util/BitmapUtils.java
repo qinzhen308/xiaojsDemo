@@ -560,6 +560,54 @@ public class BitmapUtils {
         return destPath;
     }
 
+    public static String savePngImage(Bitmap bitmap, String destPath, int quality, boolean recycle, boolean updateTime) {
+        if (bitmap == null) {
+            return null;
+        }
+
+        try {
+            FileUtil.deleteFile(destPath);
+            if (FileUtil.createFile(destPath)) {
+                FileOutputStream out = new FileOutputStream(destPath);
+                if (bitmap.compress(CompressFormat.PNG, quality, out)) {
+                    out.flush();
+                    out.close();
+                    out = null;
+                }
+
+                if (updateTime) {
+                    setExifDateTime(destPath);
+                }
+
+                if (out != null) {
+                    out.close();
+                }
+            }
+            if (recycle) {
+                bitmap.recycle();
+                bitmap = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return destPath;
+    }
+
+    public static boolean savePngImageToGallery(Context context, Bitmap bmp, File fileDir, String fileName, int quality, boolean updateTime) {
+        // 首先保存图片
+        String destPath = fileDir + "/" + fileName;
+        String savedPath = savePngImage(bmp, destPath, quality, false, true);
+        if (savedPath == null) {
+            return false;
+        }
+
+        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + savedPath)));
+        return true;
+    }
+
     public static boolean saveImageToGallery(Context context, Bitmap bmp, File fileDir, String fileName, int quality, boolean updateTime) {
         // 首先保存图片
         String destPath = fileDir + "/" + fileName;

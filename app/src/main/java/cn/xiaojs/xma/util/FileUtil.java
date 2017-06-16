@@ -705,4 +705,40 @@ public class FileUtil {
         }
     }
 
+
+    public static int getFileTypeBySuffix(String type){
+        if (TextUtils.isEmpty(type)){
+            return UNKNOWN;
+        }
+        if (type.equalsIgnoreCase("doc")||
+                type.equalsIgnoreCase("docx")){
+            return DOC;
+        }else if (type.equalsIgnoreCase("ppt")||
+                type.equalsIgnoreCase(Collaboration.OfficeMimeTypes.PPTX)){
+            return PPT;
+        }else if (type.equalsIgnoreCase("pdf")){
+            return PDF;
+        }else if (type.equalsIgnoreCase("bmp")||
+                type.equalsIgnoreCase("gif")||
+                type.equalsIgnoreCase("jpeg")||
+                type.equalsIgnoreCase("jpg")||
+                type.equalsIgnoreCase("png")||
+                type.equalsIgnoreCase("tiff")){
+            return PICTURE;
+        }else if (type.equalsIgnoreCase("mp3")||
+                type.equalsIgnoreCase("wav")){
+            return AUDIO;
+        }else if (type.equalsIgnoreCase("avi")||
+                type.equalsIgnoreCase("mov")||
+                type.equalsIgnoreCase("mp4")||
+                type.equalsIgnoreCase("mpeg")||
+                type.equalsIgnoreCase("mpg")||
+                type.equalsIgnoreCase("ogg")||
+                type.equalsIgnoreCase("qt")||
+                type.equalsIgnoreCase("3gp")){
+            return VIDEO;
+        }
+        return UNKNOWN;
+    }
+
 }

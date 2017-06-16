@@ -70,6 +70,8 @@ import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.message.ChoiceContactActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 import static cn.xiaojs.xma.ui.message.PostDynamicActivity.EXTRA_CLASS_POS;
@@ -365,6 +367,18 @@ public class MaterialActivity extends BaseActivity {
 
     private void addToLibrary(File file) {
         if (file == null) {
+            return;
+        }
+        String name=file.getName();
+        int i=name.lastIndexOf(".");
+        if(i>0){
+            int type=FileUtil.getFileTypeBySuffix(name.substring(i+1,name.length()));
+            if(type!=FileUtil.PPT&&type!=FileUtil.PICTURE&&type!=FileUtil.VIDEO){
+                ToastUtil.showToast(getApplicationContext(),"暂不支持该格式文件");
+                return;
+            }
+        }else {
+            ToastUtil.showToast(getApplicationContext(),"暂不支持该格式文件");
             return;
         }
 
