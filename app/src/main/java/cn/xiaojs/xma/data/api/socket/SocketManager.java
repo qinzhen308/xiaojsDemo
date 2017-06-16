@@ -23,7 +23,9 @@ public class SocketManager {
 
     public void init() {
 
-        Request request = new Request.Builder().url("").build();
+        Request request = new Request.Builder()
+                .url("")
+                .build();
 
         OkHttpClient okHttpClient = createOkhttp();
 
