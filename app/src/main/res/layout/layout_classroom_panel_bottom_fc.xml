@@ -38,16 +38,7 @@
             android:src="@drawable/cr_publish_take_pic"/>
 
 
-    <cn.xiaojs.xma.ui.widget.MessageImageView
-            android:id="@+id/fc_hide_show_talk_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/px30"
-            android:paddingRight="@dimen/px30"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
-            android:layout_toLeftOf="@+id/fc_open_talk_btn"
-            android:src="@drawable/ic_cr_hide_talk"/>
+
 
     <ImageView
             android:id="@+id/fc_open_talk_btn"
@@ -59,5 +50,16 @@
             android:paddingBottom="@dimen/px20"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_cr_fc_talk"/>
+
+    <cn.xiaojs.xma.ui.widget.MessageImageView
+            android:id="@+id/fc_hide_show_talk_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:layout_toLeftOf="@id/fc_open_talk_btn"
+            android:src="@drawable/ic_cr_hide_talk"/>
 
 </RelativeLayout>
