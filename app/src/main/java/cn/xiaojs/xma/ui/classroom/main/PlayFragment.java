@@ -613,9 +613,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
-    public void onStreamStarted(int type, Object extra) {
+    public void onStreamStarted(int type, String streamUrl, Object extra) {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mCountTime = mTimeProgressHelper.getCountTime();
+        mPlayUrl = streamUrl;
         switch (type) {
             case StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER:
             case StreamType.TYPE_STREAM_PLAY:

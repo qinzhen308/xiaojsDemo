@@ -20,7 +20,7 @@ public interface OnStreamChangeListener {
     /**
      * 当流已经开始
      */
-    public void onStreamStarted(int type, Object extra);
+    public void onStreamStarted(int type, String url, Object extra);
 
     /**
      * 当前流已经暂停

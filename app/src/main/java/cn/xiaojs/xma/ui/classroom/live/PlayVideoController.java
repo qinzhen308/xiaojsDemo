@@ -70,7 +70,7 @@ public class PlayVideoController extends VideoController {
         mPlayView.resume();
         mPlayView.showLoading(true);
         if (mStreamChangeListener != null) {
-            mStreamChangeListener.onStreamStarted(mPlayType, mExtraData);
+            mStreamChangeListener.onStreamStarted(mPlayType, mPlayStreamUrl, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {

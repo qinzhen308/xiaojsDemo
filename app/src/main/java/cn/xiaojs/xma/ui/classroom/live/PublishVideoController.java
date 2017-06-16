@@ -88,7 +88,7 @@ public class PublishVideoController extends VideoController {
 
 
         if (mStreamChangeListener != null) {
-            mStreamChangeListener.onStreamStarted(mPlayType, mExtraData);
+            mStreamChangeListener.onStreamStarted(mPlayType, mPlayStreamUrl, mExtraData);
         }
 
         if (mPlayView instanceof PlayerTextureView && mNeedStreamRePlaying) {
@@ -198,7 +198,7 @@ public class PublishVideoController extends VideoController {
                             StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
                             if (response != null && response.result) {
                                 if (mStreamChangeListener != null) {
-                                    mStreamChangeListener.onStreamStarted(mPublishType, null);
+                                    mStreamChangeListener.onStreamStarted(mPublishType, mPublishStreamUrl, null);
                                     muteOrUnmute();
                                 }
                                 mStreamPublishing = true;

@@ -462,7 +462,7 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
-    public void onStreamStarted(int type, Object extra) {
+    public void onStreamStarted(int type, String streamUrl, Object extra) {
         if (mPlayPauseBtn != null) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
         }
