@@ -859,6 +859,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             if (from == Constants.FROM_PUBLISH_FRAGMENT) {
                 mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
                 mPlayUrl = data.getString(Constants.KEY_PLAY_URL, mPlayUrl);
+                mPublishUrl = data.getString(Constants.KEY_PUBLISH_URL, mPublishUrl);
             }
 
             mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
@@ -992,7 +993,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 Bundle data = new Bundle();
                 data.putInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
                 data.putSerializable(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
-                data.putString(Constants.KEY_PUBLISH_URL, mCtlSession.publishUrl);
+                //班课中，由于没有暂停上课，再次进入直播是，需要传之前的播放URL
+                data.putString(Constants.KEY_PUBLISH_URL, mPublishUrl);
                 ClassroomController.getInstance().enterPublishFragment(data, true);
             }
         } else {

@@ -101,6 +101,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     private CommonDialog mAgreeOpenCamera;
 
     protected String mPlayUrl;
+    protected String mPublishUrl;
 
     protected int mSlideViewWidth;
     protected int mSlideViewHeight;
