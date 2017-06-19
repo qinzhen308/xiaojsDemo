@@ -124,8 +124,6 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     private TalkPresenter mFullScreenTalkPresenter;
     private int mPublishType = StreamType.TYPE_STREAM_PUBLISH;
-    private String mPlayUrl = "";
-    private String mPublishUrl = "";
 
     private CommonDialog mFinishDialog;
     private boolean mScaled = false;
@@ -713,6 +711,7 @@ public class PublishFragment extends ClassroomLiveFragment {
             @Override
             public void onClick() {
                 dialog.dismiss();
+
                 exitCurrentFragment();
             }
         });
@@ -955,6 +954,8 @@ public class PublishFragment extends ClassroomLiveFragment {
                 String classState = LiveCtlSessionManager.getInstance().getLiveState();
                 if (isPrivateClass && Live.LiveSessionState.LIVE.equals(classState)) {
                     data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
+                    //班课在退出直播页面后，需要将url传回Play页面。
+                    data.putString(Constants.KEY_PUBLISH_URL, mPublishUrl);
                 }
 
                 if (Live.LiveSessionState.DELAY.equals(mCtlSession.state)) {
