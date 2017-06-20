@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.orhanobut.logger.Logger;
-import com.qiniu.android.common.ServiceAddress;
 import com.qiniu.android.common.Zone;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.Configuration;
@@ -201,24 +200,24 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
 
 
 
-    private Configuration createConfiguration() {
-
-        String upIp = "183.136.139.10";
-        String upIp2 = "115.231.182.136";
-
-        String upHost = "upload-z2.qiniu.com";
-        String upHostBackup = "up-z2.qiniu.com";
-
-        String[] upIps = {upIp, upIp2};
-        ServiceAddress up = new ServiceAddress("http://" + upHost, upIps);
-        ServiceAddress upBackup = new ServiceAddress("http://" + upHostBackup, upIps);
-
-        Zone zone = new Zone(up, upBackup);
-
-        Configuration con = new Configuration.Builder().zone(zone).build();
-
-        return con;
-    }
+//    private Configuration createConfiguration() {
+//
+//        String upIp = "183.136.139.10";
+//        String upIp2 = "115.231.182.136";
+//
+//        String upHost = "upload-z2.qiniu.com";
+//        String upHostBackup = "up-z2.qiniu.com";
+//
+//        String[] upIps = {upIp, upIp2};
+//        ServiceAddress up = new ServiceAddress("http://" + upHost, upIps);
+//        ServiceAddress upBackup = new ServiceAddress("http://" + upHostBackup, upIps);
+//
+//        Zone zone = new Zone(up, upBackup);
+//
+//        Configuration con = new Configuration.Builder().zone(zone).build();
+//
+//        return con;
+//    }
 
 
 

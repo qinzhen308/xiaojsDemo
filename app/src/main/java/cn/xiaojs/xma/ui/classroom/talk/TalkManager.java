@@ -279,6 +279,7 @@ public class TalkManager {
             notifyMsgChanged(true, type, talkItem);
         } catch (Exception e) {
 
+            e.printStackTrace();
         }
     }
 
