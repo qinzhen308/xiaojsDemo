@@ -52,6 +52,8 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment implem
     RadioButton tab2;
     RadioButton tab3;
     RadioButton tab4;
+    RadioButton tab5;
+    RadioButton tab6;
     String classId="";
 
     DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
@@ -68,6 +70,13 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment implem
         tab2=(RadioButton) v.findViewById(R.id.tab2);
         tab3=(RadioButton) v.findViewById(R.id.tab3);
         tab4=(RadioButton) v.findViewById(R.id.tab4);
+        tab5=(RadioButton) v.findViewById(R.id.tab5);
+        tab6=(RadioButton) v.findViewById(R.id.tab6);
+        if(getActivity().getIntent().getBooleanExtra(ClassScheduleActivity.EXTRA_TEACHING,false)){
+            tab6.setVisibility(View.VISIBLE);
+        }else {
+            tab6.setVisibility(View.GONE);
+        }
         return v;
     }
 
@@ -92,7 +101,13 @@ public class ClassSheduleTabModeFragment extends AbsClassScheduleFragment implem
                         state=LessonFilterHelper.getState(1);
                         break;
                     case R.id.tab4:
+                        state=LessonFilterHelper.getState(3);
+                        break;
+                    case R.id.tab5:
                         state=LessonFilterHelper.getState(4);
+                        break;
+                    case R.id.tab6:
+                        state=LessonFilterHelper.getState(11);
                         break;
                 }
                 dataPageLoader.refresh();

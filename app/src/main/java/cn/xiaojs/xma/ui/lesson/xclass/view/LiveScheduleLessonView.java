@@ -131,13 +131,13 @@ public class LiveScheduleLessonView extends RelativeLayout implements IViewModel
             iconLive.setVisibility(GONE);
         }
 
-        if (data.lead.name == null) {
+        if (data.lead == null&&data.lead.getBasic()!=null&&data.lead.getBasic().getName()!=null) {
             tvSpeaker.setVisibility(INVISIBLE);
             ivAvatar.setVisibility(INVISIBLE);
         } else {
             tvSpeaker.setVisibility(VISIBLE);
             ivAvatar.setVisibility(VISIBLE);
-            tvSpeaker.setText(data.lead.name);
+            tvSpeaker.setText(data.lead.getBasic().getName());
             Glide.with(getContext())
                     .load(Account.getAvatar(data.lead.getId(), 300))
                     .bitmapTransform(circleTransform)
