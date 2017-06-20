@@ -33,6 +33,7 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.pili.pldroid.player.widget.PLVideoView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
 
@@ -214,6 +215,11 @@ public class PlayerTextureView extends BaseMediaView {
         mPlayer.setOnVideoSizeChangedListener(new PLMediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height, int i2, int i3) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("onVideoSizeChanged------------------------------------");
+                }
+
                 if (mStreamListener != null) {
                     mStreamListener.onStreamSizeChanged(PlayerTextureView.this, width, height);
                 }
@@ -295,7 +301,9 @@ public class PlayerTextureView extends BaseMediaView {
                     mHandler.sendEmptyMessage(MESSAGE_MEDIA_INFO_RENDERING_START);
                     break;
                 case PLMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
-                    //Log.i("aaa", "=========video rotation changed=================");
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("MEDIA_INFO_VIDEO_ROTATION_CHANGED---------------------------------");
+                    }
                     break;
             }
 
@@ -382,9 +390,10 @@ public class PlayerTextureView extends BaseMediaView {
             return true;
         }
     };
+
     private PLMediaPlayer.OnPreparedListener mPrepared = new PLMediaPlayer.OnPreparedListener() {
         @Override
-        public void onPrepared(PLMediaPlayer plMediaPlayer) {
+        public void onPrepared(PLMediaPlayer plMediaPlayer, int i) {
             Log.e(TAG, "Play prepared !");
         }
     };

@@ -134,7 +134,7 @@ public class VideoPlayFragment extends BaseFragment {
 
                 pLVideoTextureView.setOnPreparedListener(new PLMediaPlayer.OnPreparedListener() {
                     @Override
-                    public void onPrepared(PLMediaPlayer plMediaPlayer) {
+                    public void onPrepared(PLMediaPlayer plMediaPlayer, int i) {
                         if (plMediaPlayer != null) {
                             mPlMediaPlayer = plMediaPlayer;
                             mDuration = plMediaPlayer.getDuration();
@@ -162,6 +162,7 @@ public class VideoPlayFragment extends BaseFragment {
                         }
                     }
                 });
+
             }
         }
     }
