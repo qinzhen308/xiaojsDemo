@@ -233,7 +233,7 @@ public class TalkPresenter implements
 
                 @Override
                 protected void onPostExecute(String result) {
-                    if (!TextUtils.isEmpty(result)) {
+                    if (!TextUtils.isEmpty(result) && attendee != null) {
                         TalkManager.getInstance().sendImg(attendee.accountId, mTalkCriteria, result);
                     } else {
                         cancelProgress();

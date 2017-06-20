@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
+import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -532,6 +533,29 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
+    public void onStreamException(StreamingState errorCode, int type, Object extra) {
+
+
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        //FIXME
+                        Toast.makeText(mContext, R.string.live_occur_exception, Toast.LENGTH_SHORT).show();
+                        //exitCurrentFragment();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
         boolean autoCountTime = false;
         if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
@@ -936,6 +960,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     private void exitCurrentFragment() {
         if (mAlreadyExitFragment) {
+            mHandKeyPressing = true;
             return;
         }
 
@@ -947,6 +972,9 @@ public class PublishFragment extends ClassroomLiveFragment {
                 data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:
+
+                mCountTime = mTimeProgressHelper.getCountTime();
+
                 data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
 
                 boolean isPrivateClass = mCtlSession.cls != null;
@@ -970,6 +998,8 @@ public class PublishFragment extends ClassroomLiveFragment {
                 break;
         }
         ClassroomController.getInstance().enterPlayFragment(data, true);
+
+        mHandKeyPressing = true;
     }
 
     private void onPlayVideoViewClick() {

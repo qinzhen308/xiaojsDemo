@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
+import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -661,11 +662,23 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mTipsHelper.setTipsByStateOnStrop(liveState);
 
         switch (type) {
+            case StreamType.TYPE_STREAM_PLAY:
+
+                if (LiveCtlSessionManager.getInstance().getCtlSession().cls != null && Live.LiveSessionState.LIVE.equals(liveState)) {
+                    mTimeProgressHelper.setTimeProgress(mCountTime, 0, liveState, mIndividualName, true);
+                }
+
+                break;
             case StreamType.TYPE_STREAM_PLAY_INDIVIDUAL:
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 break;
         }
 
+
+    }
+
+    @Override
+    public void onStreamException(StreamingState errorCode, int type, Object extra) {
 
     }
 
@@ -847,6 +860,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     private void initCtlLive() {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mPlayUrl = mCtlSession.playUrl;
+        mPublishUrl = mCtlSession.publishUrl;
 
         if (ClassroomBusiness.canIndividual(mCtlSession)) {
             mIndividualStreamDuration = mCtlSession.finishOn;
@@ -864,7 +878,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
             mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
         }
-        mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+
+        if (LiveCtlSessionManager.getInstance().getCtlSession().cls != null) {
+            mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, true);
+        }else{
+            mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+        }
+
 
         if (TextUtils.isEmpty(mPlayUrl)) {
             mTipsHelper.setTipsByState(liveState);
@@ -991,7 +1011,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             if (mode == Constants.UserMode.TEACHING) {
                 //teacher-->live, delay
                 Bundle data = new Bundle();
-                data.putInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
+                data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
+                mCountTime = mTimeProgressHelper.getCountTime();
+                data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
                 data.putSerializable(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
                 //班课中，由于没有暂停上课，再次进入直播是，需要传之前的播放URL
                 data.putString(Constants.KEY_PUBLISH_URL, mPublishUrl);

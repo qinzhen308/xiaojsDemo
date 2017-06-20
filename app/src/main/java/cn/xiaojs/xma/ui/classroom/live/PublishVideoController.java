@@ -245,6 +245,14 @@ public class PublishVideoController extends VideoController {
                     }
                 });
                 break;
+
+            case IOERROR:
+            case INVALID_STREAMING_URL:
+            case UNAUTHORIZED_STREAMING_URL:
+                if (mStreamChangeListener != null) {
+                    mStreamChangeListener.onStreamException(streamingState, mPublishType, data);
+                }
+                break;
         }
     }
 

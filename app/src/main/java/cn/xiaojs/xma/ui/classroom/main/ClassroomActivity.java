@@ -282,6 +282,7 @@ public class ClassroomActivity extends FragmentActivity {
             boolean isPrivateClass = mCtlSession.cls != null;
             if (isPrivateClass) {
                 data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
+                data.putString(Constants.KEY_PUBLISH_URL, ctlSession.publishUrl);
                 ClassroomController.getInstance().enterPlayFragment(data, false);
 
             } else {

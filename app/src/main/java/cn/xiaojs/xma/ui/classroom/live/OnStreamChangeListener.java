@@ -14,6 +14,8 @@ package cn.xiaojs.xma.ui.classroom.live;
  *
  * ======================================================================================== */
 
+import com.qiniu.pili.droid.streaming.StreamingState;
+
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 
 public interface OnStreamChangeListener {
@@ -31,5 +33,9 @@ public interface OnStreamChangeListener {
      * 当流的尺寸发生变化
      */
     public void onStreamSizeChanged(BaseMediaView v, int w, int h);
+
+    public void onStreamException(StreamingState errorCode, int type, Object extra);
+
+
 
 }
