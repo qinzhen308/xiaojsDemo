@@ -16,7 +16,7 @@
             android:paddingBottom="@dimen/px20"
             android:paddingLeft="@dimen/px25"
             android:paddingRight="@dimen/px25"
-            android:visibility="visible"
+            android:visibility="gone"
             >
 
         <ImageView
