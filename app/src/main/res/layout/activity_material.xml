@@ -157,6 +157,7 @@
                     android:paddingRight="@dimen/px26"
                     android:paddingTop="@dimen/px16"
                     android:paddingBottom="@dimen/px16"
+                android:visibility="gone"
                     android:src="@drawable/ic_edit_text_del"/>
         </LinearLayout>
 

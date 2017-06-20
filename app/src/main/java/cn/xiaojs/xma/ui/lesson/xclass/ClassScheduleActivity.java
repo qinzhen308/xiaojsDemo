@@ -51,7 +51,7 @@ public class ClassScheduleActivity extends BaseActivity implements IUpdateMethod
     protected void addViewContent() {
         String title=getIntent().getStringExtra(EXTRA_TITLE);
         if(TextUtils.isEmpty(title)){
-            setMiddleTitle(R.string.schedule);
+            setMiddleTitle(R.string.class_schedule);
         }else {
             if(title.length()>8){
                 title=title.substring(0,8)+"...";

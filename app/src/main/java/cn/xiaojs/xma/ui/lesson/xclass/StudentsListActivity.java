@@ -48,7 +48,7 @@ public class StudentsListActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_students_list);
-        setMiddleTitle(getString(R.string.class_student));
+        setMiddleTitle(getString(R.string.class_students));
 
         classId = getIntent().getStringExtra(EXTRA_CLASS);
         teaching = getIntent().getBooleanExtra(ClassInfoActivity.EXTRA_TEACHING, false);
