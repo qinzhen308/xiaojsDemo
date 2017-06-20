@@ -511,6 +511,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putString(Constants.KEY_INDIVIDUAL_NAME, "");
         data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, response);
         XjsUtils.hideIMM(mContext, mContent.getWindowToken());
+
+
+        //当老师挤掉学生个人推流并进行直播推流后，需要将老师端学生的播放地址重制，避免老师直播结束后回到小屏模式，还要播放之前学生端推流的问题。
+        if (ClassroomBusiness.hasTeachingAbility() || ClassroomBusiness.isAdviserSession()) {
+            mCtlSession.playUrl = "";
+        }
+
         ClassroomController.getInstance().enterPublishFragment(data, true);
     }
 
@@ -625,8 +632,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 break;
             case StreamType.TYPE_STREAM_PLAY_INDIVIDUAL:
 
-                if (ClassroomBusiness.hasTeachingAbility()) {
-                    //个人推流时，如果不是同学身份，此按钮要现实，因为老师可以强制尽心推流。
+                if (ClassroomBusiness.hasTeachingAbility() || ClassroomBusiness.isAdviserSession()) {
+                    //个人推流时，如果不是同学身份，此按钮要现实，因为老师/班主任可以强制尽心推流。
                     mPlayPauseBtn.setVisibility(View.VISIBLE);
                 } else {
                     mPlayPauseBtn.setVisibility(View.GONE);

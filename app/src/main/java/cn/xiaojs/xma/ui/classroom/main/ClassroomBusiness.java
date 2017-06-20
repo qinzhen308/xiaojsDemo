@@ -44,6 +44,15 @@ public class ClassroomBusiness {
     public static final int NETWORK_OTHER = 3;
     private static final String BASE64_JPEG_HEADER = "data:image/jpeg;base64,";
 
+
+    public static boolean isAdviserSession() {
+        String ps = LiveCtlSessionManager.getInstance().getCtlSession().psType;
+        if (Constants.User.ADVISER == getUser(ps, Constants.User.STUDENT)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 获取用户身份
      */

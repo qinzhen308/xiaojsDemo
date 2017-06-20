@@ -6,6 +6,16 @@ package cn.xiaojs.xma.common.xf_foundation.schemas;
 
 public class Live {
 
+    /**
+     * The type of streaming within a live session.
+     */
+    public static class StreamType {
+        public static final int LIVE = 1;
+        public static final int INDIVIDUAL = 2;
+        public static final int DISCUSSION = 3;
+        public static final int TALK = 4;
+    }
+
     //
     // Defines the board types.
     //

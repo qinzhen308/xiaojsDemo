@@ -174,7 +174,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         //set video
         if (!mContactManagementMode
                 && mUser == Constants.UserMode.TEACHING
-                && Live.LiveSessionState.LIVE.equals(liveState) //FIXME 拖堂也能1对1么？
+                && (Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
                 && !isMyself
                 && isSupport
                 && online) {

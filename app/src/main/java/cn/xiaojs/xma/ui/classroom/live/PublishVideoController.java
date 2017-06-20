@@ -34,6 +34,7 @@ import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingStoppedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
@@ -248,7 +249,7 @@ public class PublishVideoController extends VideoController {
 
             case IOERROR:
             case INVALID_STREAMING_URL:
-            case UNAUTHORIZED_STREAMING_URL:
+            case AUDIO_RECORDING_FAIL:
                 if (mStreamChangeListener != null) {
                     mStreamChangeListener.onStreamException(streamingState, mPublishType, data);
                 }
@@ -284,9 +285,16 @@ public class PublishVideoController extends VideoController {
     @Override
     protected void onStreamingStopped(Object... args) {
         if (args != null && args.length > 0) {
-            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
+            StreamingStoppedNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingStoppedNotify.class);
             if (notify != null) {
-                pausePlayStream(mPlayType);
+                if (notify.streamType == Live.StreamType.INDIVIDUAL) {
+                    //老师端的推流将学生端的个人推流，强制挤掉。
+                    if (mStreamChangeListener != null) {
+                        mStreamChangeListener.onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, null);
+                    }
+                } else {
+                    pausePlayStream(mPlayType);
+                }
             }
         }
     }

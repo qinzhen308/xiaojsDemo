@@ -17,6 +17,8 @@ package cn.xiaojs.xma.ui.classroom.talk;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -221,6 +223,11 @@ public class TalkManager {
     private SocketManager.EventListener mOnReceiveTalk = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("received talk msg........");
+            }
+
             if (args != null && args.length > 0) {
                 //TODO fix同一条消息多次回调?
                 handleReceivedMsg(args);
