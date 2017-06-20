@@ -28,6 +28,18 @@
             android:background="@android:color/transparent"
             android:src="@drawable/qr_back"/>
 
+        <TextView
+            android:id="@+id/qr_code_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:text="相册"
+            android:layout_marginRight="10dp"
+            android:padding="8dp"
+            android:textColor="@color/qr_code_white"
+            android:textSize="15sp"/>
+
     </RelativeLayout>
 
     <SurfaceView

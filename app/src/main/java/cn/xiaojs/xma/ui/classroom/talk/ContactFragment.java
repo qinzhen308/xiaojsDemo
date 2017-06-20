@@ -41,7 +41,10 @@ import cn.xiaojs.xma.ui.widget.SheetFragment;
  *
  * ======================================================================================== */
 
-public class ContactFragment extends SheetFragment implements OnAttendItemClick, ContactManager.OnAttendsChangeListener, TalkManager.OnTalkMsgReceived {
+public class ContactFragment extends SheetFragment implements
+        OnAttendItemClick,
+        ContactManager.OnAttendsChangeListener,
+        TalkManager.OnTalkMsgReceived {
     //contact
     @BindView(R.id.contact_view)
     View mContactView;
