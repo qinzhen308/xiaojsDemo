@@ -36,6 +36,7 @@ public class ContactManager {
     public final static int ACTION_JOIN = 1 << 1;
     public final static int ACTION_LEAVE = 1 << 2;
     public final static int ACTION_PSTYPE_CHANGE = 1 << 3;
+    public final static int ACTION_GET_ATTENDS_SUCC = 1 << 4;
 
     private static ContactManager mInstance;
     private AttendsComparator mAttendsComparator;
@@ -92,10 +93,12 @@ public class ContactManager {
                         sort(liveCollection.attendees);
                     }
                     mLiveCollection = liveCollection;
-
                     if (callback != null) {
-                        callback.onGetAttendeesSuccess(liveCollection);
+                        callback.onGetAttendeesSuccess(mLiveCollection);
                     }
+
+                    //notify attend getting succ
+                    notifyAttendChanged(mLiveCollection != null ? mLiveCollection.attendees : null, ACTION_GET_ATTENDS_SUCC);
                 }
 
                 @Override
@@ -149,15 +152,14 @@ public class ContactManager {
 
                         for (Attendee attendee : mLiveCollection.attendees) {
 
-                            for(SyncClassStateResponse.Volatiles volatiles : syncState.volatiles) {
+                            for (SyncClassStateResponse.Volatiles volatiles : syncState.volatiles) {
 
                                 if (attendee.accountId.equals(volatiles.accountId)) {
 //                                    if (TextUtils.isEmpty(volatiles.psType)) {
 //                                        attendee.psType = LiveCtlSessionManager.getInstance().getCtlSession().psType;
 //                                    }else {
-                                        attendee.psTypeInLesson = volatiles.psType;
+                                    attendee.psTypeInLesson = volatiles.psType;
                                     //}
-
 
 
                                     break;

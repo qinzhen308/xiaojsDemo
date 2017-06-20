@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -32,7 +34,8 @@ import cn.xiaojs.xma.model.live.Attendee;
  *
  * ======================================================================================== */
 
-public class EmbedTalkFragment extends Fragment {
+public class EmbedTalkFragment extends Fragment implements
+        ContactManager.OnAttendsChangeListener {
     //talk
     @BindView(R.id.talk_view)
     View mTalkView;
@@ -45,6 +48,7 @@ public class EmbedTalkFragment extends Fragment {
     private ExitPeerTalkListener mExitPeerTalkListener;
     private Context mContext;
     private Unbinder mBinder;
+    private int mOnlineCount; //在线人数
 
     @Override
     public void onAttach(Context context) {
@@ -71,6 +75,7 @@ public class EmbedTalkFragment extends Fragment {
 
         //load discussion
         mTalkPresenter.switchTalkTab(TalkManager.TYPE_MSG_MUlTI_TAlk, null);
+        ContactManager.getInstance().registerAttendsChangeListener(this);
     }
 
     private void initParams() {
@@ -91,8 +96,7 @@ public class EmbedTalkFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mTalkPresenter.getTalkCriteria() == TalkManager.TYPE_PEER_TALK) {
-                    mTalkNameTv.setText(R.string.cr_talk_discussion);
-                    mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    setMultiTalkTitle();
                     mTalkPresenter.switchMsgMultiTalk();
                     if (mExitPeerTalkListener != null) {
                         mExitPeerTalkListener.onExitTalk(TalkManager.TYPE_PEER_TALK);
@@ -120,6 +124,7 @@ public class EmbedTalkFragment extends Fragment {
         }
 
         TalkManager.getInstance().setPeekTalkingAccount(null);
+        ContactManager.getInstance().unregisterAttendsChangeListener(this);
     }
 
     /**
@@ -135,5 +140,38 @@ public class EmbedTalkFragment extends Fragment {
 
     public void updatePeerTalk(String accountId) {
         mTalkPresenter.switchTalkTab(TalkManager.TYPE_PEER_TALK, accountId);
+    }
+
+    /**
+     * 联系人加入或离开回调
+     */
+    @Override
+    public void onAttendsChanged(ArrayList<Attendee> attendees, int action) {
+        mOnlineCount = 0;
+        if (action == ContactManager.ACTION_JOIN
+                || action == ContactManager.ACTION_LEAVE
+                || action == ContactManager.ACTION_GET_ATTENDS_SUCC) {
+            if (attendees != null) {
+                for (Attendee attendee : attendees) {
+                    if (attendee.xa > 0) {
+                        mOnlineCount++;
+                    }
+                }
+            }
+        }
+
+        if (mTalkPresenter.getTalkCriteria() == TalkManager.TYPE_MSG_MUlTI_TAlk) {
+            setMultiTalkTitle();
+        }
+    }
+
+    /**
+     * 设置教室交流title
+     */
+    private void setMultiTalkTitle() {
+        String title = mOnlineCount > 0 ? mContext.getString(R.string.cr_talk_discussion_whit_peoples, mOnlineCount)
+                : mContext.getString(R.string.cr_talk_discussion);
+        mTalkNameTv.setText(title);
+        mTalkNameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
     }
 }

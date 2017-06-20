@@ -495,6 +495,7 @@
     <string name="cr_room_numbers">班级成员名单(<![CDATA[<font color="#ff9833">%1$d</font>]]>/%2$d)</string>
     <string name="cr_manage_contact">管理成员</string>
     <string name="cr_talk_discussion">教室交流</string>
+    <string name="cr_talk_discussion_whit_peoples">教室交流 (%1$s人)</string>
     <string name="cr_save_edit">保存图片编辑</string>
     <string name="cr_save_edit_desc">是否保存对当前图片的编辑?</string>
     <string name="cr_individual_end">直播秀已结束，点击播放按钮可再次直播秀</string>
