@@ -5,76 +5,107 @@
     android:orientation="vertical"
     >
 
-    <RadioGroup
-        android:id="@+id/tab_bar"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/px100"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:checkedButton="@+id/tab1"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
         >
+        <RadioGroup
+            android:id="@+id/tab_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px100"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/tab1"
+            >
 
-        <RadioButton
-            android:id="@+id/tab1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="全部"
-            android:gravity="center"
-            android:background="@drawable/selector_line_bottom_orange"
-            android:textSize="@dimen/font_32px"
-            android:textColor="@color/selector_btn_orange_black"
-            android:button="@null"
-            />
-        <RadioButton
-            android:id="@+id/tab2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="待上课"
-            android:gravity="center"
-            android:background="@drawable/selector_line_bottom_orange"
-            android:drawableBottom="@color/main_orange"
-            android:layout_marginLeft="10dp"
-            android:textSize="@dimen/font_32px"
-            android:textColor="@color/selector_btn_orange_black"
-            android:button="@null"
+            <RadioButton
+                android:id="@+id/tab1"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="全部"
+                android:gravity="center"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:button="@null"
+                />
+            <RadioButton
+                android:id="@+id/tab2"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="待上课"
+                android:gravity="center"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:drawableBottom="@color/main_orange"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:button="@null"
 
-            />
+                />
 
-        <RadioButton
-            android:id="@+id/tab3"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="上课中"
-            android:gravity="center"
-            android:drawableBottom="@color/main_orange"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/selector_line_bottom_orange"
-            android:textSize="@dimen/font_32px"
-            android:textColor="@color/selector_btn_orange_black"
-            android:button="@null"
+            <RadioButton
+                android:id="@+id/tab3"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="上课中"
+                android:gravity="center"
+                android:drawableBottom="@color/main_orange"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:button="@null"
+                />
 
-            />
+            <RadioButton
+                android:id="@+id/tab4"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="已完课"
+                android:gravity="center"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:drawableBottom="@color/main_orange"
+                android:layout_marginLeft="10dp"
+                android:button="@null"
+                />
 
-        <RadioButton
-            android:id="@+id/tab4"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="已完课"
-            android:gravity="center"
-            android:textSize="@dimen/font_32px"
-            android:textColor="@color/selector_btn_orange_black"
-            android:background="@drawable/selector_line_bottom_orange"
-            android:drawableBottom="@color/main_orange"
-            android:layout_marginLeft="10dp"
-            android:button="@null"
+            <RadioButton
+                android:id="@+id/tab5"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="排课中"
+                android:gravity="center"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:drawableBottom="@color/main_orange"
+                android:layout_marginLeft="10dp"
+                android:button="@null"
+                />
 
-            />
+            <RadioButton
+                android:id="@+id/tab6"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="已取消"
+                android:gravity="center"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:drawableBottom="@color/main_orange"
+                android:layout_marginLeft="10dp"
+                android:button="@null"
+                />
 
-    </RadioGroup>
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+
 
 
     <android.support.v7.widget.RecyclerView

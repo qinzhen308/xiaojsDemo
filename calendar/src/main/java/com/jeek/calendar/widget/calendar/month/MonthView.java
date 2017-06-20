@@ -255,10 +255,17 @@ public class MonthView extends View {
                 int endRecY = startRecY + mRowSize;
                 if (mSelYear == mCurrYear && mCurrMonth == mSelMonth && day + 1 == mCurrDay) {
                     mPaint.setColor(mSelectBGTodayColor);
+                    if(day+1!=mSelDay){
+                        mPaint.setColor(mSelectBGTodayColor);
+                        mPaint.setStyle(Paint.Style.STROKE);
+                        mPaint.setStrokeWidth(3);
+                    }
+                    canvas.drawCircle((startRecX + endRecX) / 2, (startRecY + endRecY) / 2, mSelectCircleSize, mPaint);
+                    mPaint.setStyle(Paint.Style.FILL);
                 } else {
                     mPaint.setColor(mSelectBGColor);
+                    canvas.drawCircle((startRecX + endRecX) / 2, (startRecY + endRecY) / 2, mSelectCircleSize, mPaint);
                 }
-                canvas.drawCircle((startRecX + endRecX) / 2, (startRecY + endRecY) / 2, mSelectCircleSize, mPaint);
                 mWeekRow = row + 1;
             }
             drawHintCircle(row, col, day + 1, canvas);
@@ -267,7 +274,7 @@ public class MonthView extends View {
                 selectedPoint[1] = col;
                 mPaint.setColor(mSelectDayColor);
             } else if (dayString.equals(String.valueOf(mCurrDay)) && mCurrDay != mSelDay && mCurrMonth == mSelMonth && mCurrYear == mSelYear) {
-                mPaint.setColor(mSelectDayColor);
+                mPaint.setColor(mCurrentDayColor);
             } else if(day==0){
                 mPaint.setColor(mCurrentDayColor);
             }else {
@@ -440,7 +447,7 @@ public class MonthView extends View {
         if (!box.contains(mSelYear,mSelMonth,day)) return;
         float circleX = (float) (mColumnSize * column + mColumnSize * 0.5);
         float circleY = (float) (mRowSize * row + mRowSize * 0.75);
-        if(day==mSelDay||mCurrDay==day&&mCurrMonth==mSelMonth&&mCurrYear==mSelYear){
+        if(day==mSelDay){
             mPaint.setColor(Color.WHITE);
         }else {
             mPaint.setColor(box.getColor(mSelYear,mSelMonth,day));
