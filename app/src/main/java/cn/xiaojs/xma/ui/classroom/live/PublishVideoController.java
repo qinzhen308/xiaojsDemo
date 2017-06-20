@@ -120,21 +120,21 @@ public class PublishVideoController extends VideoController {
                         //TODO 学生关闭一对一流后，需要通知老师端，老师端1对1窗口要关闭
 //                        OpenMedia media = new OpenMedia();
 //                        media.to = AccountDataManager.getAccountID(mContext);
-//                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA), media,
-//                                new SocketManager.IAckListener() {
-//                                    @Override
-//                                    public void call(Object... args) {
-//                                        if (args != null && args.length > 0) {
-//                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-//                                            if (response.result) {
-//                                                mNeedStreamRePublishing = true;
-//                                                if (mStreamChangeListener != null) {
-//                                                    mStreamChangeListener.onStreamStopped(type, null);
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                });
+                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA),
+                                new SocketManager.IAckListener() {
+                                    @Override
+                                    public void call(Object... args) {
+                                        if (args != null && args.length > 0) {
+                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                            if (response.result) {
+                                                mNeedStreamRePublishing = true;
+                                                if (mStreamChangeListener != null) {
+                                                    mStreamChangeListener.onStreamStopped(type, null);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
                     } else {
                         //send stopped stream
                         SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),

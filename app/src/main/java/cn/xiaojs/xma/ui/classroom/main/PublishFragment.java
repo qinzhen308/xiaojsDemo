@@ -241,22 +241,22 @@ public class PublishFragment extends ClassroomLiveFragment {
     protected void toggleLandPortrait() {
         if (mVideoController.hasStreamPublishing()) {
             //TODO to be optimized
-            //int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            //mVideoController.togglePublishOrientation(targetOrientation, null);
+            int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            mVideoController.togglePublishOrientation(targetOrientation, null);
 
-            if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
-                int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                mVideoController.togglePublishOrientation(targetOrientation, null);
-            } else {
-                mVideoController.pausePublishStream(mPublishType);
-                int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                mVideoController.togglePublishOrientation(targetOrientation, new LiveRecordView.OnStreamOrientationListener() {
-                    @Override
-                    public void onStreamOrientationChanged(int orientation) {
-                        mVideoController.publishStream(mPublishType, mPublishUrl);
-                    }
-                });
-            }
+//            if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL) {
+//                int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+//                mVideoController.togglePublishOrientation(targetOrientation, null);
+//            } else {
+//                mVideoController.pausePublishStream(mPublishType);
+//                int targetOrientation = isPortrait() ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+//                mVideoController.togglePublishOrientation(targetOrientation, new LiveRecordView.OnStreamOrientationListener() {
+//                    @Override
+//                    public void onStreamOrientationChanged(int orientation) {
+//                        mVideoController.publishStream(mPublishType, mPublishUrl);
+//                    }
+//                });
+//            }
         }
 
         super.toggleLandPortrait();
