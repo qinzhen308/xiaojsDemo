@@ -227,6 +227,7 @@
     <string name="into_cls">进入教室</string>
     <string name="data_bank">资料库</string>
     <string name="class_data_bank">班级资料库</string>
+    <string name="class_data_banks">班资料库</string>
     <string name="data_bank_of_mine">我的资料库</string>
     <string name="more">更多</string>
     <string name="leave_lesson">退课</string>
@@ -339,6 +340,7 @@
     <string name="enter_cls_stu_hint">刚进教室的同学</string>
     <string name="room_mates">同学</string>
     <string name="schedule">课表</string>
+    <string name="class_schedule">班课表</string>
     <string name="living_time">直播进行时</string>
     <string name="live_today">今日直播</string>
     <string name="teacher_recommend">名师精英推荐</string>
@@ -806,6 +808,7 @@
     <string name="time_table">课表</string>
     <string name="arrange_class">请排课</string>
     <string name="class_student">学生</string>
+    <string name="class_students">班学生</string>
     <string name="video_setting">直播回放</string>
     <string name="video_auto_repaly">自动录像回放</string>
     <string name="video_auto_repaly_tips">自动录像后的视频，会保存到您的个人资料库中，并可自动回放</string>

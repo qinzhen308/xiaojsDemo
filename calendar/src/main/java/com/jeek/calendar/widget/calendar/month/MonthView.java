@@ -266,7 +266,9 @@ public class MonthView extends View {
                     mPaint.setColor(mSelectBGColor);
                     canvas.drawCircle((startRecX + endRecX) / 2, (startRecY + endRecY) / 2, mSelectCircleSize, mPaint);
                 }
-                mWeekRow = row + 1;
+                if(dayString.equals(String.valueOf(mSelDay))){
+                    mWeekRow = row + 1;
+                }
             }
             drawHintCircle(row, col, day + 1, canvas);
             if (dayString.equals(String.valueOf(mSelDay))) {

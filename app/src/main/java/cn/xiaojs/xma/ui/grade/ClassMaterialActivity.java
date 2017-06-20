@@ -124,7 +124,7 @@ public class ClassMaterialActivity extends BaseActivity {
         mTitle.setEms(8);
         mTitle.setSingleLine(true);
         mTitle.setEllipsize(TextUtils.TruncateAt.END);
-        mTitle.setText(lessonName);
+        mTitle.setText(getString(Collaboration.SubType.STANDA_LONE_LESSON.equals(subType)?R.string.class_data_bank:R.string.class_data_banks));
         mTitle.setGravity(Gravity.CENTER);
         //mTitle.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
 
