@@ -50,15 +50,16 @@ public class ClassScheduleActivity extends BaseActivity implements IUpdateMethod
     @Override
     protected void addViewContent() {
         String title=getIntent().getStringExtra(EXTRA_TITLE);
-        if(TextUtils.isEmpty(title)){
-            setMiddleTitle(R.string.class_schedule);
-        }else {
-            if(title.length()>8){
-                title=title.substring(0,8)+"...";
-            }
-            setMiddleTitle(title);
+        setMiddleTitle(R.string.class_schedule);
 
-        }
+//        if(TextUtils.isEmpty(title)){
+//            setMiddleTitle(R.string.class_schedule);
+//        }else {
+//            if(title.length()>8){
+//                title=title.substring(0,8)+"...";
+//            }
+//            setMiddleTitle(title);
+//        }
         //因为title_layout是公用的，按钮顺序无法改变，所以只能根据定义按钮的不同意义，来实现对应功能
         if(isTeaching){
             setRightImage(R.drawable.add_selector);
