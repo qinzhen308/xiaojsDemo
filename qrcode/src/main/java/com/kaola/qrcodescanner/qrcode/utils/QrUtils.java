@@ -3,6 +3,7 @@ package com.kaola.qrcodescanner.qrcode.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -160,6 +161,7 @@ public class QrUtils {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
+        Log.d("qz","------pic decode-----imgPath="+imgPath);
         return BitmapFactory.decodeFile(imgPath, options);
     }
 
