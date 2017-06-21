@@ -31,9 +31,11 @@ import com.orhanobut.logger.Logger;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.live.filter.IFilter;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
@@ -58,6 +60,7 @@ public class TalkPresenter implements
     private int mTalkCriteria = TalkManager.TYPE_MSG_MUlTI_TAlk;
     private ProgressHUD mProgress;
     private OnTalkItemClickListener mOnTalkItemClickListener;
+    private AbsChatAdapter mBaseMsgAdapter;
 
     public TalkPresenter(Context context, PullToRefreshListView talkMsgLv, TextView talkTargetNameTv) {
         mContext = context;
@@ -145,7 +148,14 @@ public class TalkPresenter implements
             adapter.add(talkItem);
         }
 
-        scrollMsgLvToBottom();
+        mBaseMsgAdapter = adapter;
+        if (talkItem != null && talkItem.body.contentType == Communications.ContentType.TEXT) {
+            scrollMsgLvToBottom();
+        } else {
+            if (adapter instanceof BaseTalkMsgAdapter) {
+                ((BaseTalkMsgAdapter)adapter).setOnTalkImgLoadListener(this);
+            }
+        }
     }
 
     public int getTalkCriteria() {
@@ -263,6 +273,10 @@ public class TalkPresenter implements
     public void onTalkImgLoadFinish(String key, boolean succ) {
         if (succ) {
             scrollMsgLvToBottom();
+
+            if (mBaseMsgAdapter instanceof BaseTalkMsgAdapter) {
+                ((BaseTalkMsgAdapter)mBaseMsgAdapter).setOnTalkImgLoadListener(null);
+            }
         }
     }
 

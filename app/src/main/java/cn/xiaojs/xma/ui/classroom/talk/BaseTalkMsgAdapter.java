@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -34,7 +35,8 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 
-public abstract class BaseTalkMsgAdapter<B, H extends BaseHolder> extends AbsChatAdapter<B, H> implements View.OnClickListener{
+public abstract class BaseTalkMsgAdapter<B, H extends BaseHolder> extends AbsChatAdapter<B, H> implements
+        View.OnClickListener, AbsListView.OnScrollListener{
     protected int MAX_SIZE = 280;
 
     protected Context mContext;
@@ -47,6 +49,8 @@ public abstract class BaseTalkMsgAdapter<B, H extends BaseHolder> extends AbsCha
 
     public BaseTalkMsgAdapter (Context context, PullToRefreshListView listView) {
         super(context, listView);
+        mContext = context;
+        listView.getRefreshableView().setOnScrollListener(this);
     }
 
     public void setOnImageClickListener(OnImageClickListener listener) {
@@ -122,5 +126,17 @@ public abstract class BaseTalkMsgAdapter<B, H extends BaseHolder> extends AbsCha
 
             }
         };
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState != SCROLL_STATE_IDLE) {
+            mOnTalkImgLoadListener = null;
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
     }
 }
