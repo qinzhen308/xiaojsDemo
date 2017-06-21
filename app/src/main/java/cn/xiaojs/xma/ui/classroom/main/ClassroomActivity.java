@@ -22,7 +22,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -34,7 +34,6 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.classroom.bean.ModeSwitcher;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
@@ -299,13 +298,25 @@ public class ClassroomActivity extends FragmentActivity {
     }
 
     private void initSocketIO(String ticket, String secret, boolean force) {
-        SocketManager.off();
+        //off listener
+        if (SocketManager.hasEventListeners()) {
+            SocketManager.off(false);
+        } else {
+            SocketManager.off();
+        }
+
         SocketManager.close();
         SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
         mSocket = SocketManager.getSocket();
         mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
         mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
-        listenSocket();
+
+        //listener again
+        if (SocketManager.hasEventListeners()) {
+            SocketManager.reListener();
+        } else {
+            listenSocket();
+        }
     }
 
     private void disConnectIO() {
@@ -403,6 +414,7 @@ public class ClassroomActivity extends FragmentActivity {
                         //socket time out
                         if (!mSktConnected && mSocketRetryCount++ < RETRY_COUNT) {
                             //reconnect
+                            Logger.i("socket reconnecting!");
                             initData(false, false);
                         } else {
                             cancelProgress();
