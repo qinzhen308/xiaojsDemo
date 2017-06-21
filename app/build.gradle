@@ -16,8 +16,8 @@ android {
         applicationId "cn.xiaojs.xma"
         minSdkVersion 15
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 46
-        versionName "2.0.3"
+        versionCode 48
+        versionName "2.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {

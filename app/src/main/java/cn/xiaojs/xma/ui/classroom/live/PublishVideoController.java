@@ -226,7 +226,8 @@ public class PublishVideoController extends VideoController {
                             if (response != null && response.result) {
                                 if (mStreamChangeListener != null) {
                                     mStreamChangeListener.onStreamStarted(mPublishType, mPublishStreamUrl, null);
-                                    muteOrUnmute();
+                                    //FIXME 设置打开后，需要将下面代码打开
+                                    //muteOrUnmute();
                                 }
                                 mStreamPublishing = true;
                             } else {
