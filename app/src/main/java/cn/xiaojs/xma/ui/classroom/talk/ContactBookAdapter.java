@@ -170,10 +170,20 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         boolean isMyself = ClassroomBusiness.isMyself(mContext, attendee.accountId);
         boolean isSupport = (attendee.avc != null && attendee.avc.video != null && attendee.avc.audio != null)
                 ? (attendee.avc.video.supported && attendee.avc.audio.supported) : true;
-        boolean online = attendee.xa == 0? false : true;
+        boolean online = attendee.xa == 0 ? false : true;
+
+
+        Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
+        Constants.User userInLesson = ClassroomBusiness.getUser(attendee.psTypeInLesson, Constants.User.NONE);
+
+
+        String vPs = LiveCtlSessionManager.getInstance().getPsType();
+
         //set video
         if (!mContactManagementMode
                 && mUser == Constants.UserMode.TEACHING
+                && (ClassroomBusiness.getUser(vPs, Constants.User.STUDENT) == Constants.User.LEAD)//只有主讲才能主动发1对1
+                && (userInLesson == Constants.User.STUDENT || user == Constants.User.STUDENT)
                 && (Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
                 && !isMyself
                 && isSupport
@@ -185,8 +195,6 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         holder.talk.setVisibility(isMyself ? View.INVISIBLE : View.VISIBLE);
         holder.talk.setCount(attendee.unReadMsgCount);
 
-        Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
-        Constants.User userInLesson = ClassroomBusiness.getUser(attendee.psTypeInLesson, Constants.User.NONE);
 
         if (userInLesson == Constants.User.NONE) {
 
@@ -196,41 +204,58 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
             if (user == Constants.User.STUDENT) {
                 holder.label.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.label.setVisibility(View.VISIBLE);
             }
 
-        }else {
+        } else {
 
             bindUserView(holder.label, userInLesson);
             bindUserView(holder.labelSecond, user);
             holder.labelSecond.setVisibility(View.VISIBLE);
 
-            if (userInLesson == Constants.User.STUDENT || userInLesson == Constants.User.NONE) {
+            if (userInLesson == Constants.User.STUDENT
+                    || userInLesson == Constants.User.NONE) {
+
                 holder.label.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.label.setVisibility(View.VISIBLE);
             }
         }
-
 
 
     }
 
     private void bindUserView(TextView v, Constants.User user) {
         switch (user) {
-            case TEACHER:
+            case LEAD:
                 v.setText(R.string.lead_teacher);
+                break;
+            case TEACHER2:
+                v.setText(R.string.teacher);
                 break;
             case ASSISTANT:
                 v.setText(R.string.assistant_teacher);
                 break;
+            case REMOTE_ASSISTANT://远程助教
+                v.setText(R.string.remote_assistant_session);
+                break;
             case ADVISER:
                 v.setText(R.string.head_teacher);
+                break;
+            case MANAGER:
+                v.setText(R.string.manager_session);
+                break;
+            case ADMINISTRATOR://管理员
+                v.setText(R.string.admin_session);
+                break;
+            case AUDITOR://旁听
+                v.setText(R.string.auditor_session);
                 break;
             default:
                 v.setText("");
                 break;
+
         }
     }
 
@@ -264,53 +289,87 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 Attendee attendee = mAttendeeList.get(pos);
                 if (mOnAttendItemClick != null) {
                     Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
-                    if ((Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
-                            && user == Constants.User.STUDENT
-                            && LiveCtlSessionManager.getInstance().getUser() == Constants.User.STUDENT) {
-                        //Toast
-                        Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
-                    } else {
                         switch (v.getId()) {
                             case R.id.talk:
                                 //enter chat
-                                attendee.unReadMsgCount = 0;
-                                mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+                                if ((Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
+                                        && user == Constants.User.STUDENT
+                                        && LiveCtlSessionManager.getInstance().getUser() == Constants.User.STUDENT) {
+                                    //Toast
+                                    Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
+                                }else {
+                                    attendee.unReadMsgCount = 0;
+                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+                                }
+
                                 break;
                             case R.id.video:
                                 if (mOnAttendItemClick != null) {
-
                                     if (attendee.xa == 0) {
                                         Toast.makeText(mContext, R.string.offline_peer_to_peer_tips, Toast.LENGTH_SHORT).show();
-                                    }else{
+                                    } else {
                                         mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);
                                     }
                                 }
                                 break;
                             default:
                                 //enter chat
-                                if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
-                                    attendee.unReadMsgCount = 0;
-                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
-                                }
+//                                if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+//                                    attendee.unReadMsgCount = 0;
+//                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+//                                }
                                 break;
                         }
 
+
+//                    Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
+//                    if ((Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
+//                            && user == Constants.User.STUDENT
+//                            && LiveCtlSessionManager.getInstance().getUser() == Constants.User.STUDENT) {
+//                        //Toast
+//                        Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        switch (v.getId()) {
+//                            case R.id.talk:
+//                                //enter chat
+//                                attendee.unReadMsgCount = 0;
+//                                mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+//                                break;
+//                            case R.id.video:
+//                                if (mOnAttendItemClick != null) {
+//
+//                                    if (attendee.xa == 0) {
+//                                        Toast.makeText(mContext, R.string.offline_peer_to_peer_tips, Toast.LENGTH_SHORT).show();
+//                                    }else{
+//                                        mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);
+//                                    }
+//                                }
+//                                break;
+//                            default:
+//                                //enter chat
+//                                if (!ClassroomBusiness.isMyself(mContext, attendee.accountId)) {
+//                                    attendee.unReadMsgCount = 0;
+//                                    mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_TALK, attendee);
+//                                }
+//                                break;
+//                        }
+//
+//                    }
                     }
                 }
             }
         }
-    }
 
-    private class Holder {
-        ImageView checkbox;
-        MessageImageView portrait;
-        TextView name;
-        TextView label;
-        TextView labelSecond;
-        ImageView video;
-        MessageImageView talk;
-        int position = -1;
-    }
+        private class Holder {
+            ImageView checkbox;
+            MessageImageView portrait;
+            TextView name;
+            TextView label;
+            TextView labelSecond;
+            ImageView video;
+            MessageImageView talk;
+            int position = -1;
+        }
 
     public void enterManagementMode() {
         mContactManagementMode = true;

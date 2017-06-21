@@ -443,6 +443,13 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        //updateSettingBtn();
+    }
+
+    @Override
     public void onResolutionChanged(int quality) {
         mVideoController.setPublishStreamByToggleResolution(true);
         mVideoController.togglePublishResolution();
@@ -457,6 +464,17 @@ public class PublishFragment extends ClassroomLiveFragment {
             case Constants.SWITCHER_AUDIO:
                 mVideoController.muteOrUnmute();
                 break;
+        }
+    }
+
+    private void updateSettingBtn() {
+        String state = LiveCtlSessionManager.getInstance().getLiveState();
+        if (Live.LiveSessionState.DELAY.equals(state)
+                || Live.LiveSessionState.LIVE.equals(state)
+                ||Live.LiveSessionState.INDIVIDUAL.equals(state)) {
+            mSettingBtn.setVisibility(View.GONE);
+        } else {
+            mSettingBtn.setVisibility(View.VISIBLE);
         }
     }
 

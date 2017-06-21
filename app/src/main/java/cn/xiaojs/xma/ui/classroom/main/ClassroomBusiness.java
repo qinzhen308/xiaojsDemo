@@ -59,7 +59,9 @@ public class ClassroomBusiness {
     public static Constants.User getUser(String psType, Constants.User defaultUser) {
         Constants.User user = defaultUser;
         if ("LeadSession".equals(psType)) {
-            user = Constants.User.TEACHER;
+            user = Constants.User.LEAD;
+        } else if ("TeacherSession".equals(psType)) {
+            user = Constants.User.TEACHER2;
         } else if ("AssistantSession".equals(psType)) {
             user = Constants.User.ASSISTANT;
         } else if ("RemoteAssistantSession".equals(psType)) {
@@ -112,10 +114,10 @@ public class ClassroomBusiness {
 
         Constants.User user = LiveCtlSessionManager.getInstance().getUser();
         Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
-        return user == Constants.User.TEACHER
+        return user == Constants.User.LEAD
                 || user == Constants.User.ASSISTANT
                 || user == Constants.User.REMOTE_ASSISTANT
-                || userInLesson == Constants.User.TEACHER
+                || userInLesson == Constants.User.LEAD
                 || userInLesson == Constants.User.ASSISTANT
                 || userInLesson == Constants.User.REMOTE_ASSISTANT;
     }

@@ -200,8 +200,11 @@ public class ContactManager {
                     //add
                     mLiveCollection.attendees.add(attendee);
                 } else {
-                    Attendee oldAttend = mLiveCollection.attendees.get(index);
-                    oldAttend.xa = join ? attendee.xa : 0;
+                    if (index >0) {
+                        Attendee oldAttend = mLiveCollection.attendees.get(index);
+                        oldAttend.xa = join ? attendee.xa : 0;
+                    }
+
                 }
 
                 if (mLiveCollection.attendees != null) {

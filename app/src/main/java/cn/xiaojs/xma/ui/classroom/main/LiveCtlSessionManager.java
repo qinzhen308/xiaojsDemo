@@ -85,6 +85,24 @@ public class LiveCtlSessionManager {
         return "";
     }
 
+    public synchronized String getPsType() {
+        if (mCtlSession != null) {
+
+            if (mCtlSession.cls != null) {
+
+                return TextUtils.isEmpty(mCtlSession.psTypeInLesson) ?
+                        mCtlSession.psType : mCtlSession.psTypeInLesson;
+
+            } else {
+                return mCtlSession.psType;
+            }
+
+        }
+
+        return "";
+    }
+
+
     public synchronized int getLiveMode() {
         return mCtlSession != null ? mCtlSession.mode : 0;
     }

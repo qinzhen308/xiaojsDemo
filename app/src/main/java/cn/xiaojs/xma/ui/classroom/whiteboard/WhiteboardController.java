@@ -92,7 +92,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     private boolean mSavingWhiteboard = false;
     private AsyncTask mSaveTask;
 
-    private Constants.User mUser = Constants.User.TEACHER;
+    private Constants.User mUser = Constants.User.LEAD;
     private int mAppType = Platform.AppType.UNKNOWN;
 
     private WhiteboardCollection mCurrWhiteboardColl;

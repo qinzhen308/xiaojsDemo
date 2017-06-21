@@ -59,12 +59,12 @@ public class ExampleUnitTest {
 //
 //        System.out.println("new v:" + newstr);
 
-        TEST test = null;
-
-        switch (test){
-            case NO:
-                break;
-        }
+//        TEST test = null;
+//
+//        switch (test){
+//            case NO:
+//                break;
+//        }
 
 
 //        Duration duration = new Duration();

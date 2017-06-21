@@ -72,7 +72,7 @@ public class PhotoDoodleFragment extends BaseFragment {
     private WhiteboardController mBoardController;
     private Bitmap mBitmap;
     private ShareDoodlePopWindow mSharePopWindow;
-    private Constants.User mUser = Constants.User.TEACHER;
+    private Constants.User mUser = Constants.User.LEAD;
     private OnPhotoDoodleShareListener mPhotoDoodleShareListener;
     private CommonDialog mSaveDoodleDialog;
 

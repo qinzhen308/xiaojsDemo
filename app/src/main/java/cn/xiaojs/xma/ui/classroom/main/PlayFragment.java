@@ -163,6 +163,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        //updateSettingBtn();
+    }
+
+    @Override
     protected View getContentView() {
         return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_play, null);
     }
@@ -279,11 +285,18 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mTalkOpenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
         postHideAnim();
 
-
-
-
     }
 
+    private void updateSettingBtn() {
+        String state = LiveCtlSessionManager.getInstance().getLiveState();
+        if (Live.LiveSessionState.DELAY.equals(state)
+                || Live.LiveSessionState.LIVE.equals(state)
+                ||Live.LiveSessionState.INDIVIDUAL.equals(state)) {
+            mSettingBtn.setVisibility(View.GONE);
+        } else {
+            mSettingBtn.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void updateTitle() {
         mLessonTitle.setText(getLessonTitle());
