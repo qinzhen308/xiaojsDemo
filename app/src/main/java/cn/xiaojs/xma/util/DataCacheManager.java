@@ -22,6 +22,8 @@ import java.io.File;
 import java.math.BigDecimal;
 
 public class DataCacheManager {
+    public final static double ZERO = 1e-9;
+
     /**
      * * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * *
      *
@@ -186,7 +188,11 @@ public class DataCacheManager {
     public static String getFormatSize(double size) {
         double kiloByte = size / 1024;
         if (kiloByte < 1) {
-            return size + "Byte";
+            if (kiloByte < ZERO) {
+                return "0KB";
+            } else {
+                return size + "B";
+            }
         }
 
         double megaByte = kiloByte / 1024;
