@@ -60,7 +60,6 @@ public class TalkPresenter implements
     private int mTalkCriteria = TalkManager.TYPE_MSG_MUlTI_TAlk;
     private ProgressHUD mProgress;
     private OnTalkItemClickListener mOnTalkItemClickListener;
-    private AbsChatAdapter mBaseMsgAdapter;
 
     public TalkPresenter(Context context, PullToRefreshListView talkMsgLv, TextView talkTargetNameTv) {
         mContext = context;
@@ -148,7 +147,6 @@ public class TalkPresenter implements
             adapter.add(talkItem);
         }
 
-        mBaseMsgAdapter = adapter;
         if (talkItem != null && talkItem.body.contentType == Communications.ContentType.TEXT) {
             scrollMsgLvToBottom();
         } else {
@@ -245,7 +243,13 @@ public class TalkPresenter implements
                 @Override
                 protected void onPostExecute(String result) {
                     if (!TextUtils.isEmpty(result)) {
-                        TalkManager.getInstance().sendImg(attendee.accountId, mTalkCriteria, result);
+                        if (attendee == null || TextUtils.isEmpty(attendee.accountId)) {
+                            //send to multi talk
+                            TalkManager.getInstance().sendImg(result);
+                        } else {
+                            //send to peer talk
+                            TalkManager.getInstance().sendImg(attendee.accountId, mTalkCriteria, result);
+                        }
                     } else {
                         cancelProgress();
                     }
@@ -274,9 +278,10 @@ public class TalkPresenter implements
         if (succ) {
             scrollMsgLvToBottom();
 
-            if (mBaseMsgAdapter instanceof BaseTalkMsgAdapter) {
-                ((BaseTalkMsgAdapter)mBaseMsgAdapter).setOnTalkImgLoadListener(null);
-            }
+            /*ListAdapter adapter = mTalkMsgLv.getRefreshableView().getAdapter();
+            if (adapter instanceof BaseTalkMsgAdapter) {
+                ((BaseTalkMsgAdapter)adapter).setOnTalkImgLoadListener(null);
+            }*/
         }
     }
 
