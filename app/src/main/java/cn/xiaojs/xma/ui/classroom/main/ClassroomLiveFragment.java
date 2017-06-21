@@ -46,6 +46,7 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
@@ -156,6 +157,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION), mReceivedRemind);
+        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY), mReceivedStreamingQuality);
     }
 
     /**
@@ -422,6 +425,35 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         }
     };
 
+    private SocketManager.EventListener mReceivedRemind = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+
+            if(XiaojsConfig.DEBUG) {
+                Logger.d("received remind finalzation....");
+            }
+
+            onRemindFinalization();
+        }
+    };
+
+    private SocketManager.EventListener mReceivedStreamingQuality = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            if(XiaojsConfig.DEBUG) {
+                Logger.d("received remind finalzation....");
+            }
+
+            if (args != null && args.length > 0) {
+                StreamingQuality streamingQuality = ClassroomBusiness.parseSocketBean(args[0],
+                        StreamingQuality.class);
+
+                onStreamingQualityChanged(streamingQuality);
+            }
+
+        }
+    };
+
     /**
      * 申请打开学生视频
      */
@@ -604,6 +636,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
         SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION), mReceivedRemind);
+        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY), mReceivedStreamingQuality);
     }
 
     /**

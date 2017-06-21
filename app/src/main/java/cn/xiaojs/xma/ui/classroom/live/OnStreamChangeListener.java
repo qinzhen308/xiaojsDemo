@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.live;
 
 import com.qiniu.pili.droid.streaming.StreamingState;
 
+import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 
 public interface OnStreamChangeListener {
@@ -35,6 +36,10 @@ public interface OnStreamChangeListener {
     public void onStreamSizeChanged(BaseMediaView v, int w, int h);
 
     public void onStreamException(StreamingState errorCode, int type, Object extra);
+
+    public void onRemindFinalization();
+
+    public void onStreamingQualityChanged(StreamingQuality streamingQuality);
 
 
 

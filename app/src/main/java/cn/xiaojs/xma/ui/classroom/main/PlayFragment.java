@@ -38,6 +38,7 @@ import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
@@ -698,6 +699,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
+    public void onRemindFinalization() {
+        Toast.makeText(mContext,R.string.remind_final_tips, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void onStreamException(StreamingState errorCode, int type, Object extra) {
 
     }
@@ -872,6 +878,16 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         }
 
+    }
+
+    @Override
+    public void onStreamingQualityChanged(StreamingQuality streamingQuality) {
+
+        if (streamingQuality !=null) {
+            if (streamingQuality.quality == 1 || streamingQuality.quality == 2) {
+                Toast.makeText(mContext, R.string.liver_bad_net_tips, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**

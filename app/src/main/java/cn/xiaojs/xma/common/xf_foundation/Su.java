@@ -76,10 +76,13 @@ public class Su {
         public static final int STOP_STREAM_BY_EXPIRATION = 600111;
 
         public static final int REFRESH_MEDIA_DEVICES = 670005;
-        public static final int REFRESH_STEAMING_QUALITY = 670025;
         public static final int CLASS_MODE_SWITCH = 670021;
         public static final int CLOSE_PREVIEW_BY_CLASS_OVER = 600112;
         public static final int PLAYBACK_SAVED = 630005;
+
+
+        public static final int REMIND_FINALIZATION = 600114;
+        public static final int REFRESH_STREAMING_QUALITY = 670025;
 
     }
 

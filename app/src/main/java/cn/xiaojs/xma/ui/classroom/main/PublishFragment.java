@@ -34,6 +34,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
@@ -706,6 +707,16 @@ public class PublishFragment extends ClassroomLiveFragment {
         }
     }
 
+    @Override
+    public void onRemindFinalization() {
+        Toast.makeText(mContext,R.string.remind_final_tips, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onStreamingQualityChanged(StreamingQuality streamingQuality) {
+
+        //TODO
+    }
 
     private void updateFinishStreamingView() {
         mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH);

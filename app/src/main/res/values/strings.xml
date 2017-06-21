@@ -913,5 +913,7 @@
     <string name="admin_session">管理员</string>
     <string name="auditor_session">旁听</string>
     <string name="remote_assistant_session">远程助教</string>
+    <string name="remind_final_tips">亲，还有5分就要下课呢，抓紧时间哟~</string>
+    <string name="liver_bad_net_tips">直播者的网络状况很差，随时可能断线！</string>
 
 </resources>
