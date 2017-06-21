@@ -202,6 +202,7 @@ public class ContactFragment extends SheetFragment implements
         }
     }
 
+    //update unread msg
     @Override
     public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
         if (mContactBookAdapter != null) {

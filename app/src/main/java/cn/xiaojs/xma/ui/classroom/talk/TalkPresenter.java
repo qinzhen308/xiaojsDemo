@@ -35,7 +35,6 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.TalkItem;
-import cn.xiaojs.xma.ui.classroom.live.filter.IFilter;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
@@ -109,13 +108,13 @@ public class TalkPresenter implements
      * 切换不同的talk tab
      */
     public void switchTalkTab(int type, String accountId) {
-        switchTalkTab(type, accountId, null);
+        switchTalkTab(type, accountId, Communications.ContentType.TEXT);
     }
 
     /**
      * 切换不同的talk tab
      */
-    public void switchTalkTab(int type, String accountId, TalkItem talkItem) {
+    public void switchTalkTab(int type, String accountId, int contentType) {
         AbsChatAdapter adapter = null;
         mTalkCriteria = type;
         switch (type) {
@@ -143,17 +142,16 @@ public class TalkPresenter implements
             ((FullScreenTalkMsgAdapter)adapter).setOnTalkItemClickListener(mOnTalkItemClickListener);
         }
 
-        if (adapter != null && talkItem != null) {
-            adapter.add(talkItem);
-        }
+        scrollMsgLvToBottom();
 
-        if (talkItem != null && talkItem.body.contentType == Communications.ContentType.TEXT) {
+        //TODO 发送图片滚动到底部
+        /*if (contentType == Communications.ContentType.TEXT) {
             scrollMsgLvToBottom();
         } else {
             if (adapter instanceof BaseTalkMsgAdapter) {
                 ((BaseTalkMsgAdapter)adapter).setOnTalkImgLoadListener(this);
             }
-        }
+        }*/
     }
 
     public int getTalkCriteria() {
@@ -260,9 +258,23 @@ public class TalkPresenter implements
 
     @Override
     public void onMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
-        //switchTalkTab(mTalkCriteria, receive ? talkItem.from.accountId : talkItem.to);
+        //TODO 发送图片滚动到底部
+        /*int contentType = talkItem.body.contentType;
         if (!receive) {
-            switchTalkTab(mTalkCriteria, talkItem.to);
+            switchTalkTab(mTalkCriteria, talkItem.to, talkItem.body.contentType);
+        } else {
+            if (contentType == Communications.ContentType.TEXT) {
+                scrollMsgLvToBottom();
+            } else {
+                ListAdapter adapter = mTalkMsgLv.getRefreshableView().getAdapter();
+                if (adapter instanceof BaseTalkMsgAdapter) {
+                    ((BaseTalkMsgAdapter)adapter).setOnTalkImgLoadListener(this);
+                }
+            }
+        }*/
+
+        if (!receive) {
+            switchTalkTab(mTalkCriteria, talkItem.to, talkItem.body.contentType);
         }
     }
 
