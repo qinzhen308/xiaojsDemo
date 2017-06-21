@@ -324,6 +324,10 @@ public class SocketManager {
         eventListeners.add(listener);
     }
 
+    public static boolean hasEventListeners() {
+        return mEventListeners != null && !mEventListeners.isEmpty();
+    }
+
     private static class SocketCallback {
         public EventListener eventListener;
         public IAckListener ackListener;
