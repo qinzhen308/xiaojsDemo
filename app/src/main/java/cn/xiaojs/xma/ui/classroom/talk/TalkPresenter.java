@@ -47,7 +47,8 @@ public class TalkPresenter implements
         OnImageClickListener,
         OnPhotoDoodleShareListener,
         TalkManager.OnTalkMsgReceived,
-        OnPortraitClickListener{
+        OnPortraitClickListener,
+        OnTalkImgLoadListener{
     private Context mContext;
 
     private PullToRefreshListView mTalkMsgLv;
@@ -255,6 +256,13 @@ public class TalkPresenter implements
     public void onPortraitClick(Attendee attendee) {
         if (attendee != null) {
             switchPeerTalk(attendee, true);
+        }
+    }
+
+    @Override
+    public void onTalkImgLoadFinish(String key, boolean succ) {
+        if (succ) {
+            scrollMsgLvToBottom();
         }
     }
 

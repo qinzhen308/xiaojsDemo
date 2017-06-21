@@ -1,29 +1,19 @@
 package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.Collections;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
@@ -32,7 +22,6 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -49,34 +38,24 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
  *
  * ======================================================================================== */
 
-public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScreenTalkMsgAdapter.Holder> implements View.OnClickListener{
-    private static int MAX_SIZE = 130; // 260/2
-    private String mTicket;
-    private TalkComparator mTalkComparator;
-    private LiveCriteria mLiveCriteria;
-    private OnGetTalkListener mOnGetTalkListener;
-    private OnImageClickListener mOnImageClickListener; //图片点击监听器
+public class FullScreenTalkMsgAdapter extends BaseTalkMsgAdapter<TalkItem, FullScreenTalkMsgAdapter.Holder>{
     private OnTalkItemClickListener mOnTalkItemClickListener; //talk item点击监听器
 
     private int mScreenW = 0;
     private int mTalkNameColor = 0;
 
-    public FullScreenTalkMsgAdapter(Context context, String ticket, PullToRefreshListView listView, OnGetTalkListener listener) {
+    public FullScreenTalkMsgAdapter(Context context, String ticket, PullToRefreshListView listView) {
         super(context, listView);
-        init(ticket, listener);
-    }
-
-    public void setOnImageClickListener(OnImageClickListener listener) {
-        mOnImageClickListener = listener;
+        init(ticket);
     }
 
     public void setOnTalkItemClickListener(OnTalkItemClickListener listener) {
         mOnTalkItemClickListener = listener;
     }
 
-    private void init(String ticket, OnGetTalkListener listener) {
+
+    private void init(String ticket) {
         mTicket = ticket;
-        mOnGetTalkListener = listener;
         mTalkComparator = new TalkComparator();
         mLiveCriteria = new LiveCriteria();
         mLiveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
@@ -87,15 +66,22 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
     }
 
     @Override
-    protected boolean filterDuplication() {
-        return true;
-    }
+    protected void doRequest() {
+        //onSuccess(getTalkList());
+        LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
+            @Override
+            public void onSuccess(CollectionPage<TalkItem> object) {
+                if (object.objectsOfPage != null) {
+                    Collections.sort(object.objectsOfPage, mTalkComparator);
+                }
+                FullScreenTalkMsgAdapter.this.onSuccess(object.objectsOfPage);
+            }
 
-    @Override
-    public void add(TalkItem talkItem) {
-        if (!contains(talkItem)) {
-            super.add(talkItem);
-        }
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                FullScreenTalkMsgAdapter.this.onFailure(errorCode, errorMessage);
+            }
+        });
     }
 
     @Override
@@ -132,20 +118,7 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
             holder.msgTxt.setVisibility(View.GONE);
             holder.msgName.setText(bean.from.name + ":");
             holder.msgImgLayout.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(txt)) {
-                //decode base64 to bitmap
-                byte[] imgData = ClassroomBusiness.base64ToByteData(txt);
-                Glide.with(mContext)
-                        .load(imgData)
-                        .into(getImgViewTarget(holder.msgImg));
-            } else {
-                //load img from qiniu url
-                String imgUrl = ClassroomBusiness.getSnapshot(imgKey, MAX_SIZE);
-                Glide.with(mContext)
-                        .load(imgUrl)
-                        .into(getImgViewTarget(holder.msgImg));
-            }
-
+            loadImg(txt, imgKey, holder.msgImg);
         }
     }
 
@@ -165,65 +138,6 @@ public class FullScreenTalkMsgAdapter extends AbsChatAdapter<TalkItem, FullScree
         holder.msgImg.setOnClickListener(this);
         view.setOnClickListener(this);
         return holder;
-    }
-
-
-    @Override
-    protected void doRequest() {
-        LiveManager.getTalks(mContext, mTicket, mLiveCriteria, mPagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
-            @Override
-            public void onSuccess(CollectionPage<TalkItem> object) {
-                if (object.objectsOfPage != null) {
-                    Collections.sort(object.objectsOfPage, mTalkComparator);
-                }
-                FullScreenTalkMsgAdapter.this.onSuccess(object.objectsOfPage);
-                if (mOnGetTalkListener != null) {
-                    mOnGetTalkListener.onGetTalkFinished(true);
-                }
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                FullScreenTalkMsgAdapter.this.onFailure(errorCode, errorMessage);
-                if (mOnGetTalkListener != null) {
-                    mOnGetTalkListener.onGetTalkFinished(false);
-                }
-            }
-        });
-    }
-
-    private GlideDrawableImageViewTarget getImgViewTarget(final ImageView imgView) {
-        return new GlideDrawableImageViewTarget(imgView) {
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                super.onResourceReady(resource, animation);
-                if (resource instanceof GlideBitmapDrawable) {
-                    Bitmap bmp = ((GlideBitmapDrawable)resource).getBitmap();
-                    if (bmp != null) {
-                        ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) imgView.getLayoutParams();
-                        int w = 0;
-                        int h = 0;
-                        if (bmp.getWidth() / (float)bmp.getHeight() > mScreenW / (float)MAX_SIZE) {
-                            //depend on width
-                            w = mScreenW;
-                            h = (int) ((bmp.getHeight() / (float) bmp.getWidth()) * mScreenW);
-                        } else {
-                            h = MAX_SIZE;
-                            w = (int) ((bmp.getWidth() / (float) bmp.getHeight()) * MAX_SIZE);
-                        }
-                        params.width = w;
-                        params.height = h;
-                    }
-                    imgView.setImageBitmap(bmp);
-                }
-            }
-
-            @Override
-            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                super.onLoadFailed(e, errorDrawable);
-
-            }
-        };
     }
 
     @Override

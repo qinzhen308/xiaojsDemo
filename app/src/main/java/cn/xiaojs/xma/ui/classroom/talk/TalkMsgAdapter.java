@@ -15,34 +15,25 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.orhanobut.logger.Logger;
 
 import java.util.Collections;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.pulltorefresh.AbsChatAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -54,17 +45,10 @@ import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.TimeUtil;
 
-public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Holder> implements View.OnClickListener {
+public class TalkMsgAdapter extends BaseTalkMsgAdapter<TalkItem, TalkMsgAdapter.Holder> {
     public final static int TYPE_MY_SPEAKER = 0;
     public final static int TYPE_OTHER_SPEAKER = 1;
-    private static int MAX_SIZE = 280;
-
-    private Context mContext;
-    private String mTicket;
-    private LiveCriteria mLiveCriteria;
-    private OnImageClickListener mOnImageClickListener;
-    private OnPortraitClickListener mPortraitClickListener;
-    private TalkComparator mTalkComparator;
+    private OnPortraitClickListener mPortraitClickListener; //头像点击监听器
 
     public TalkMsgAdapter(Context context, String ticket, LiveCriteria liveCriteria, PullToRefreshListView listView) {
         super(context, listView);
@@ -75,24 +59,8 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         mTalkComparator = new TalkComparator();
     }
 
-    public void setOnImageClickListener(OnImageClickListener listener) {
-        mOnImageClickListener = listener;
-    }
-
     public void setOnPortraitClickListener(OnPortraitClickListener listener) {
         mPortraitClickListener = listener;
-    }
-
-    @Override
-    protected boolean filterDuplication() {
-        return true;
-    }
-
-    @Override
-    public void add(TalkItem talkItem) {
-        if (!contains(talkItem)) {
-            super.add(talkItem);
-        }
     }
 
     @Override
@@ -171,20 +139,7 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
         } else if (!TextUtils.isEmpty(txt) || !TextUtils.isEmpty(imgKey)) {
             holder.msgTxt.setVisibility(View.GONE);
             holder.msgImg.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(txt)) {
-                //decode base64 to bitmap
-                byte[] imgData = ClassroomBusiness.base64ToByteData(txt);
-                Glide.with(mContext)
-                        .load(imgData)
-                        .into(getImgViewTarget(holder.msgImg));
-            } else {
-                //load img from qiniu url
-                String imgUrl = ClassroomBusiness.getSnapshot(imgKey, MAX_SIZE);
-                Glide.with(mContext)
-                        .load(imgUrl)
-                        .into(getImgViewTarget(holder.msgImg));
-            }
-
+            loadImg(txt, imgKey, holder.msgImg);
         }
 
         holder.time.setText(TimeUtil.format(bean.time, TimeUtil.TIME_HH_MM_SS));
@@ -332,38 +287,4 @@ public class TalkMsgAdapter extends AbsChatAdapter<TalkItem, TalkMsgAdapter.Hold
             super(view);
         }
     }
-
-    private GlideDrawableImageViewTarget getImgViewTarget(final ImageView imgView) {
-        return new GlideDrawableImageViewTarget(imgView) {
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                super.onResourceReady(resource, animation);
-                if (resource instanceof GlideBitmapDrawable) {
-                    Bitmap bmp = ((GlideBitmapDrawable) resource).getBitmap();
-                    if (bmp != null) {
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imgView.getLayoutParams();
-                        int w = MAX_SIZE;
-                        int h = MAX_SIZE;
-                        if (bmp.getWidth() > bmp.getHeight()) {
-                            w = MAX_SIZE;
-                            h = (int) ((bmp.getHeight() / (float) bmp.getWidth()) * MAX_SIZE);
-                        } else {
-                            h = MAX_SIZE;
-                            w = (int) ((bmp.getWidth() / (float) bmp.getHeight()) * MAX_SIZE);
-                        }
-                        params.width = w;
-                        params.height = h;
-                    }
-                    imgView.setImageBitmap(bmp);
-                }
-            }
-
-            @Override
-            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                super.onLoadFailed(e, errorDrawable);
-
-            }
-        };
-    }
-
 }

@@ -124,7 +124,7 @@ public class TalkManager {
                     mTeachingTalkAdapter = new TalkMsgAdapter(context, ticket, lveCriteria, listView);
                     return mTeachingTalkAdapter;
                 case TYPE_FULL_SCREEN_MUlTI_TAlk:
-                    mFullScreenTalkMsgAdapter = new FullScreenTalkMsgAdapter(context, ticket, listView, null);
+                    mFullScreenTalkMsgAdapter = new FullScreenTalkMsgAdapter(context, ticket, listView);
                     return mFullScreenTalkMsgAdapter;
                 case TYPE_PEER_TALK:
                     return getPeekChatAdapter(context, accountId, ticket, listView);
