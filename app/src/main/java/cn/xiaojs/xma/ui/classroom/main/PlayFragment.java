@@ -649,7 +649,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     //个人推流时，如果不是同学身份，此按钮要现实，因为老师/班主任可以强制尽心推流。
                     mPlayPauseBtn.setVisibility(View.VISIBLE);
                 } else {
-                    mPlayPauseBtn.setVisibility(View.GONE);
+                    mPlayPauseBtn.setVisibility(View.INVISIBLE);
                 }
 
 
