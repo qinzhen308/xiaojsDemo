@@ -524,6 +524,12 @@
             android:value="592f92426e27a41dc2001d26" >
         </meta-data>
 
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:label="@string/app_name"
+            android:exported="true"
+            />
+
     </application>
 
 </manifest>

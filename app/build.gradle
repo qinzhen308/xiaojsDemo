@@ -44,6 +44,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+        //debug时使用正式签名（比如测试某些三方功能，但注意，容易造成数据污染）
+//        debug {
+//            signingConfig signingConfigs.release_config
+//        }
+
     }
 
     packagingOptions {
