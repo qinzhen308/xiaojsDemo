@@ -68,7 +68,7 @@ import okhttp3.ResponseBody;
  *
  * ======================================================================================== */
 
-public class PublishFragment extends ClassroomLiveFragment {
+public class PublishFragment extends ClassroomLiveFragment implements LiveRecordView.Listener{
     private final static float PLAY_VIDEO_RATION = 16 / 9.0f;
 
     @BindView(R.id.tip_view)
@@ -219,6 +219,11 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
+    public void onViewClickedListener() {
+        startAnim();
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         boolean isPortrait = true;
@@ -265,7 +270,8 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     protected void initView() {
-        mPublishVideoView.setTouchConsume(false);
+        //mPublishVideoView.setTouchConsume(false);
+        mPublishVideoView.setViewClickListener(this);
 
         updatePortraitViewStyle();
     }
