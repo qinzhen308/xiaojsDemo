@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -9,6 +10,7 @@ import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 
 /**
@@ -39,6 +41,7 @@ public class JsInvokeNativeInterface {
                 ((IDialogMethod)context).cancelProgress();
                 ToastUtil.showToast(context,"加入成功");
                 DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
+                context.startActivity(new Intent(context,MainActivity.class));
             }
 
             @Override
