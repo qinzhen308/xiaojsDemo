@@ -23,6 +23,7 @@
 
 package cn.xiaojs.xma.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -38,6 +39,8 @@ import android.widget.Toast;
 
 import com.meituan.android.walle.WalleChannelReader;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.File;
 
@@ -244,7 +247,8 @@ public class APPUtils {
         XiaojsConfig.mLoginUser = null;
         AccountDataManager.clearUserInfo(context);
         //取消友盟授权
-        UMShareAPI.get(context).release();
+//        UMShareAPI.get(context).deleteOauth((Activity) context, SHARE_MEDIA.WEIXIN,null);
+//        UMShareAPI.get(context).deleteOauth((Activity) context, SHARE_MEDIA.QQ,null);
 
         //jump login page
         Intent i = new Intent(context, LoginActivity.class);

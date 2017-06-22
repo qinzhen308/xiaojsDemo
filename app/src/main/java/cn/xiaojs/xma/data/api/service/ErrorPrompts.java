@@ -271,6 +271,8 @@ public class ErrorPrompts {
                     errorMessage = "该手机号已注册，请直接登录";
                 } else if (errorCode.equals(Errors.BAD_REQUEST)) {
                     errorMessage = "请求过于频繁，请稍后再试";
+                }else if(errorCode.equals(Errors.MOBILE_ALREADY_ASSOCIATED)){
+                    errorMessage = "该手机号码已被绑定";
                 } else {
                     errorMessage = "验证码发送失败";
                 }
@@ -313,6 +315,9 @@ public class ErrorPrompts {
             case APIType.GET_PRIVATE_HOME:
             case APIType.GET_LIBRARY_OVERVIEW:
                 errorMessage = "加载失败";
+                break;
+            case APIType.VALIDATE_CODE:
+                errorMessage = "发送失败";
                 break;
             default:
                 break;

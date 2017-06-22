@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.account;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -381,8 +382,33 @@ public class LoginActivity extends BaseActivity {
         if(!ThirdLoginUtil.checkInstalled(this,platform)){
             return;
         }
-        UMShareAPI.get(this).getPlatformInfo(this, platform ,umAuthListener);
+        //先取消授权，再登录
+        UMShareAPI.get(this).deleteOauth(this,platform,umLogoutListener);
     }
+
+    //取消授权
+    private UMAuthListener umLogoutListener = new UMAuthListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+            //取消授权开始的回调
+        }
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            UMShareAPI.get(LoginActivity.this).getPlatformInfo(LoginActivity.this, platform ,umAuthListener);
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            UMShareAPI.get(LoginActivity.this).getPlatformInfo(LoginActivity.this, platform ,umAuthListener);
+
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+
+        }
+    };
 
     private UMAuthListener umAuthListener = new UMAuthListener() {
         @Override

@@ -243,6 +243,9 @@ public class Errors {
     // Storage is almost full.
     public static final String NO_ENOUGH_QUOTA = "0xB0000001";
 
+    public static final String MOBILE_ALREADY_ASSOCIATED = "0x00000011";
+
+
 
     /**
      * 根据错误码判断是不是需要用户重新登陆
