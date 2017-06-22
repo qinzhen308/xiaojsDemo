@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.Toast;
 
 import com.kaola.qrcodescanner.R;
 
@@ -46,14 +47,16 @@ public class DecodeManager {
     }
 
     public void showCouldNotReadQrCodeFromPicture(Context context) {
-        new AlertDialog.Builder(context).setTitle(R.string.qr_code_notification)
-            .setMessage(R.string.qr_code_could_not_read_qr_code_from_picture)
-            .setPositiveButton(R.string.qc_code_close, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
+//        new AlertDialog.Builder(context).setTitle(R.string.qr_code_notification)
+//            .setMessage(R.string.qr_code_could_not_read_qr_code_from_picture)
+//            .setPositiveButton(R.string.qc_code_close, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            }).show();
+
+        Toast.makeText(context,"未能识别图中的二维码",Toast.LENGTH_LONG).show();
     }
 
     public interface OnRefreshCameraListener {
