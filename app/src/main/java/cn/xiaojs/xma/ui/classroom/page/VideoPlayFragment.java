@@ -82,6 +82,8 @@ public class VideoPlayFragment extends BaseFragment {
 
     private PanelAnimListener mPanelAnimListener;
 
+    private boolean palyActivity;
+
     @Override
     protected View getContentView() {
         return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_video_player, null);
@@ -92,6 +94,7 @@ public class VideoPlayFragment extends BaseFragment {
         Bundle data = getArguments();
         if (data != null) {
             mDoc = (LibDoc) data.getSerializable(Constants.KEY_LIB_DOC);
+            palyActivity = data.getBoolean(Constants.KEY_LAUNCH_ACTIVITY,false);
         }
 
         mViewWidth = getResources().getDisplayMetrics().widthPixels;
@@ -171,7 +174,11 @@ public class VideoPlayFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                getFragmentManager().popBackStackImmediate();
+                if (palyActivity) {
+                    getActivity().finish();
+                }else{
+                    getFragmentManager().popBackStackImmediate();
+                }
                 break;
             case R.id.play_pause_btn:
                 if (mPlaying) {

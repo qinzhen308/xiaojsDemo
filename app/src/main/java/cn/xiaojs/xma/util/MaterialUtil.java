@@ -2,6 +2,7 @@ package cn.xiaojs.xma.util;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Toast;
 
@@ -9,10 +10,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.common.PlayStreamingActivity;
 
 /**
@@ -54,23 +57,38 @@ public class MaterialUtil {
                 UIUtils.toImageViewActivity(activity, urls);
             }
 
-        }else if (Collaboration.isStreaming(mimeType)) {
+        } else if (Collaboration.isStreaming(mimeType)) {
 //
 //            Intent intent = new Intent(activity, PlayStreamingActivity.class);
 //            intent.putExtra(PlayStreamingActivity.EXTRA_KEY, bean.key);
 //
 //            activity.startActivity(intent);
 
-            String url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).append(".m3u8").toString();
+
+            String url = new StringBuilder(ApiManager.getLiveBucket())
+                    .append("/")
+                    .append(bean.key)
+                    .append(".m3u8")
+                    .toString();
 
             Uri data = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(data, mimeType);
-            activity.startActivity(intent);
+
+            List activities = activity.getPackageManager().queryIntentActivities(intent,
+                    PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (activities != null && activities.size() > 0) {
+                activity.startActivity(intent);
+            } else {
+                Intent i = new Intent(activity,PlayStreamingActivity.class);
+                i.putExtra(Constants.KEY_LIB_DOC, bean);
+                activity.startActivity(i);
+            }
 
         } else {
 
-            Toast.makeText(activity,"暂不支持打开此格式的文件",Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "暂不支持打开此格式的文件", Toast.LENGTH_SHORT).show();
 //            String url = new StringBuilder(ApiManager.getFileBucket()).append("/").append(bean.key).toString();
 //
 //            Uri data = Uri.parse(url);
