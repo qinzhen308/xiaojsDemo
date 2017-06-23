@@ -45,7 +45,10 @@ public class TipsHelper {
         if (Live.LiveSessionState.LIVE.equals(liveSessionState)) {
             Constants.User user = LiveCtlSessionManager.getInstance().getUser();
             if (user == Constants.User.STUDENT) {
-                setTips(R.string.cls_pending_class_stu_title, R.string.cls_pending_class_stu_desc);
+
+                setTips(R.string.student_living_back_to_talk_mode_title,
+                        R.string.student_living_back_to_talk_mode_sub);
+                //setTips(R.string.cls_pending_class_stu_title, R.string.cls_pending_class_stu_desc);
             }
         } else {
             setTipsByState(liveSessionState);
