@@ -95,6 +95,7 @@ public class EditTimetableActivity extends BaseActivity {
         if (cLesson == null)
             finish();
 
+        lessonStartTime=cLesson.schedule.getStart().getTime();
         nameView.setText(cLesson.title);
         timeView.setText(TimeUtil.format(cLesson.schedule.getStart(), TimeUtil.TIME_YYYY_MM_DD_HH_MM));
         durationView.setText(String.valueOf(cLesson.schedule.getDuration()));
