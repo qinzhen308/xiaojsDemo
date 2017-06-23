@@ -346,12 +346,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     private void showClasslessonTips(String state) {
 
-        if (Live.LiveSessionState.LIVE.equals(state)
-                && LiveCtlSessionManager.getInstance().getCtlSession().cls !=null
-                && !ClassroomBusiness.hasTeachingAbility()) {
-            mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
-                            R.string.student_living_back_to_talk_mode_sub);
-        }
+//        if (Live.LiveSessionState.LIVE.equals(state)
+//                && LiveCtlSessionManager.getInstance().getCtlSession().cls !=null
+//                && !ClassroomBusiness.hasTeachingAbility()) {
+//            mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
+//                            R.string.student_living_back_to_talk_mode_sub);
+//        }
 
     }
 
