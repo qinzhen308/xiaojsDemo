@@ -379,6 +379,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 mAgreeOpenCamera = new CommonDialog(mContext);
                 mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
                 mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
+                mAgreeOpenCamera.setCanceledOnTouchOutside(false);
 
                 mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
                     @Override
