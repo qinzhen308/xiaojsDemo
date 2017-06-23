@@ -202,6 +202,7 @@ public class PlayerTextureView extends BaseMediaView {
     @Override
     public void setPath(String path) {
         super.setPath(path);
+
         checkPlayerValid();
         mPlayer.setVideoPath(getPath());
         mPlayer.start();
@@ -302,7 +303,7 @@ public class PlayerTextureView extends BaseMediaView {
                     break;
                 case PLMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("MEDIA_INFO_VIDEO_ROTATION_CHANGED---------------------------------");
+                        Logger.d("MEDIA_INFO_VIDEO_ROTATION_CHANGED------------------------------");
                     }
                     break;
             }
@@ -312,6 +313,7 @@ public class PlayerTextureView extends BaseMediaView {
             }
             return false;
         }
+
     };
 
     private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {

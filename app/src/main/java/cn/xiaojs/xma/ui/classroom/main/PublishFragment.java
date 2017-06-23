@@ -68,7 +68,7 @@ import okhttp3.ResponseBody;
  *
  * ======================================================================================== */
 
-public class PublishFragment extends ClassroomLiveFragment {
+public class PublishFragment extends ClassroomLiveFragment implements LiveRecordView.Listener {
     private final static float PLAY_VIDEO_RATION = 16 / 9.0f;
 
     @BindView(R.id.tip_view)
@@ -219,6 +219,11 @@ public class PublishFragment extends ClassroomLiveFragment {
     }
 
     @Override
+    public void onViewClickedListener() {
+        startAnim();
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         boolean isPortrait = true;
@@ -265,7 +270,8 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     protected void initView() {
-        mPublishVideoView.setTouchConsume(false);
+        //mPublishVideoView.setTouchConsume(false);
+        mPublishVideoView.setViewClickListener(this);
 
         updatePortraitViewStyle();
     }
@@ -472,7 +478,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         String state = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.DELAY.equals(state)
                 || Live.LiveSessionState.LIVE.equals(state)
-                ||Live.LiveSessionState.INDIVIDUAL.equals(state)) {
+                || Live.LiveSessionState.INDIVIDUAL.equals(state)) {
             mSettingBtn.setVisibility(View.GONE);
         } else {
             mSettingBtn.setVisibility(View.VISIBLE);
@@ -524,12 +530,24 @@ public class PublishFragment extends ClassroomLiveFragment {
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
 
-                if (ClassroomBusiness.hasTeachingAbility()) {
-                    mCountTime = mTimeProgressHelper.getCountTime();
-                    mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
-                    mPlayVideoView.setVisibility(View.GONE);
+                if (Live.LiveSessionState.LIVE.equals(liveState) && Live.LiveSessionState.DELAY.equals(liveState)) {
+                    if (ClassroomBusiness.hasTeachingAbility()) {
+                        mCountTime = mTimeProgressHelper.getCountTime();
+                        mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
+                        mPlayVideoView.setVisibility(View.GONE);
+                    } else {
+                        exitCurrentFragment();
+                        //exitCurrentFragmentPeerToPeer();
+                    }
                 } else {
-                    exitCurrentFragment();
+                    if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+                        mCountTime = mTimeProgressHelper.getCountTime();
+                        mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
+                        mPlayVideoView.setVisibility(View.GONE);
+                    }else {
+                        //exitCurrentFragmentPeerToPeer();
+                        exitCurrentFragment();
+                    }
                 }
 
                 break;
@@ -709,7 +727,7 @@ public class PublishFragment extends ClassroomLiveFragment {
 
     @Override
     public void onRemindFinalization() {
-        Toast.makeText(mContext,R.string.remind_final_tips, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -987,6 +1005,23 @@ public class PublishFragment extends ClassroomLiveFragment {
         mHandKeyPressing = false;
     }
 
+
+    private void exitCurrentFragmentPeerToPeer() {
+        if (mAlreadyExitFragment) {
+            mHandKeyPressing = true;
+            return;
+        }
+
+        mAlreadyExitFragment = true;
+        Bundle data = new Bundle();
+        data.putInt(Constants.KEY_FROM, Constants.FROM_PUBLISH_FRAGMENT);
+        data.putString(Constants.KEY_PLAY_URL, "");
+        ClassroomController.getInstance().enterPlayFragment(data, true);
+
+        mHandKeyPressing = true;
+    }
+
+
     private void exitCurrentFragment() {
         if (mAlreadyExitFragment) {
             mHandKeyPressing = true;
@@ -998,6 +1033,7 @@ public class PublishFragment extends ClassroomLiveFragment {
         data.putInt(Constants.KEY_FROM, Constants.FROM_PUBLISH_FRAGMENT);
         switch (mPublishType) {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
+
                 data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:
@@ -1021,6 +1057,9 @@ public class PublishFragment extends ClassroomLiveFragment {
 
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
+
+                mPlayUrl = "";
+                data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
                 data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, mIndividualResponseBody);
                 break;
             default:

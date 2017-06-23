@@ -288,11 +288,78 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     }
 
+    /**
+     * 初始化课程直播
+     */
+    private void initCtlLive() {
+        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        mPlayUrl = mCtlSession.playUrl;
+        mPublishUrl = mCtlSession.publishUrl;
+
+        if (ClassroomBusiness.canIndividual(mCtlSession)) {
+            mIndividualStreamDuration = mCtlSession.finishOn;
+        }
+
+        mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
+        Bundle data = getArguments();
+        if (data != null) {
+            int from = data.getInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
+            if (from == Constants.FROM_PUBLISH_FRAGMENT) {
+                mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
+                mPlayUrl = data.getString(Constants.KEY_PLAY_URL, mPlayUrl);
+                mPublishUrl = data.getString(Constants.KEY_PUBLISH_URL, mPublishUrl);
+            }
+
+            mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
+        }
+
+        if (LiveCtlSessionManager.getInstance().getCtlSession().cls != null) {
+            mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, true);
+        } else {
+            mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
+        }
+
+
+        if (TextUtils.isEmpty(mPlayUrl)) {
+            mTipsHelper.setTipsByState(liveState);
+        } else {
+            playStream(mPlayUrl);
+        }
+
+        if (data != null) {
+            if (data.getBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, false)
+                    || data.getBoolean(Constants.KEY_SHOW_STANDLONG_LESSON_DELAY_TIPS, false)) {
+                //if (ClassroomBusiness.hasTeachingAbility()) {
+                mTipsHelper.setTips(R.string.living_back_to_talk_mode_title,
+                        R.string.living_back_to_talk_mode_sub);
+//                }else {
+//                    mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
+//                            R.string.student_living_back_to_talk_mode_sub);
+//                }
+
+            }
+        }
+
+        showClasslessonTips(liveState);
+
+    }
+
+    private void showClasslessonTips(String state) {
+
+        if (Live.LiveSessionState.LIVE.equals(state)
+                && LiveCtlSessionManager.getInstance().getCtlSession().cls !=null
+                && !ClassroomBusiness.hasTeachingAbility()) {
+            mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
+                            R.string.student_living_back_to_talk_mode_sub);
+        }
+
+    }
+
     private void updateSettingBtn() {
         String state = LiveCtlSessionManager.getInstance().getLiveState();
         if (Live.LiveSessionState.DELAY.equals(state)
                 || Live.LiveSessionState.LIVE.equals(state)
-                ||Live.LiveSessionState.INDIVIDUAL.equals(state)) {
+                || Live.LiveSessionState.INDIVIDUAL.equals(state)) {
             mSettingBtn.setVisibility(View.GONE);
         } else {
             mSettingBtn.setVisibility(View.VISIBLE);
@@ -647,7 +714,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             case StreamType.TYPE_STREAM_PLAY_INDIVIDUAL:
 
                 if (ClassroomBusiness.hasTeachingAbility() || ClassroomBusiness.isAdviserSession()) {
-                    //个人推流时，如果不是同学身份，此按钮要现实，因为老师/班主任可以强制尽心推流。
+                    //个人推流时，如果不是同学身份，此按钮要现实，因为主讲/班主任可以强制尽心推流。
                     mPlayPauseBtn.setVisibility(View.VISIBLE);
                 } else {
                     mPlayPauseBtn.setVisibility(View.INVISIBLE);
@@ -685,7 +752,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         switch (type) {
             case StreamType.TYPE_STREAM_PLAY:
 
-                if (LiveCtlSessionManager.getInstance().getCtlSession().cls != null && Live.LiveSessionState.LIVE.equals(liveState)) {
+                if (LiveCtlSessionManager.getInstance().getCtlSession().cls != null
+                        && Live.LiveSessionState.LIVE.equals(liveState)) {
                     mTimeProgressHelper.setTimeProgress(mCountTime, 0, liveState, mIndividualName, true);
                 }
 
@@ -700,7 +768,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     public void onRemindFinalization() {
-        Toast.makeText(mContext,R.string.remind_final_tips, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -737,6 +805,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
+
+
         mCountTime = mTimeProgressHelper.getCountTime();
         boolean autoCountTime = false;
 
@@ -745,7 +815,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             liveState = Live.LiveSessionState.PENDING_FOR_JOIN;
             autoCountTime = true;
 
-            if (syncState.timeline !=null){
+            if (syncState.timeline != null) {
                 mCountTime = syncState.timeline.startOn;
             }
 
@@ -768,6 +838,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             liveState = Live.LiveSessionState.SCHEDULED;
             autoCountTime = true;
             mCountTime = syncState.timeline != null ? syncState.timeline.startOn : 0;
+
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
+            liveState = Live.LiveSessionState.FINISHED;
+            autoCountTime = false;
+            mCountTime = 0;
         }
 
         setControllerBtnStyle(liveState);
@@ -883,61 +958,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     public void onStreamingQualityChanged(StreamingQuality streamingQuality) {
 
-        if (streamingQuality !=null) {
+        if (streamingQuality != null) {
             if (streamingQuality.quality == 1 || streamingQuality.quality == 2) {
                 Toast.makeText(mContext, R.string.liver_bad_net_tips, Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-    /**
-     * 初始化课程直播
-     */
-    private void initCtlLive() {
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-        mPlayUrl = mCtlSession.playUrl;
-        mPublishUrl = mCtlSession.publishUrl;
-
-        if (ClassroomBusiness.canIndividual(mCtlSession)) {
-            mIndividualStreamDuration = mCtlSession.finishOn;
-        }
-
-        mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
-        Bundle data = getArguments();
-        if (data != null) {
-            int from = data.getInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
-            if (from == Constants.FROM_PUBLISH_FRAGMENT) {
-                mCountTime = data.getLong(Constants.KEY_COUNT_TIME, mCountTime);
-                mPlayUrl = data.getString(Constants.KEY_PLAY_URL, mPlayUrl);
-                mPublishUrl = data.getString(Constants.KEY_PUBLISH_URL, mPublishUrl);
-            }
-
-            mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
-        }
-
-        if (LiveCtlSessionManager.getInstance().getCtlSession().cls != null) {
-            mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, true);
-        }else{
-            mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
-        }
-
-
-        if (TextUtils.isEmpty(mPlayUrl)) {
-            mTipsHelper.setTipsByState(liveState);
-        } else {
-            playStream(mPlayUrl);
-        }
-
-
-        if (data != null) {
-            if(data.getBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS,false)
-                    || data.getBoolean(Constants.KEY_SHOW_STANDLONG_LESSON_DELAY_TIPS,false)) {
-                mTipsHelper.setTips(R.string.living_back_to_talk_mode_title, R.string.living_back_to_talk_mode_sub);
-            }
-        }
-
-    }
-
 
     @Override
     protected void setControllerBtnStyle(String liveState) {

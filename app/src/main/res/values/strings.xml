@@ -915,5 +915,7 @@
     <string name="remote_assistant_session">远程助教</string>
     <string name="remind_final_tips">亲，还有5分就要下课呢，抓紧时间哟~</string>
     <string name="liver_bad_net_tips">直播者的网络状况很差，随时可能断线！</string>
+    <string name="student_living_back_to_talk_mode_title">无法观看直播视频</string>
+    <string name="student_living_back_to_talk_mode_sub">您可以进行文字交流</string>
 
 </resources>

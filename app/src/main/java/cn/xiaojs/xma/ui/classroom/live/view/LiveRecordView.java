@@ -23,7 +23,9 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.qiniu.android.dns.DnsManager;
@@ -63,7 +65,15 @@ import cn.xiaojs.xma.util.XjsUtils;
 public class LiveRecordView extends BaseMediaView implements
         SurfaceTextureCallback,
         AudioSourceCallback,
+        CameraPreviewFrameView.Listener,
         StreamingSessionListener {
+
+
+    public interface Listener {
+        void onViewClickedListener();
+    }
+
+
 
     private static final String TAG = "LiveRecordView";
     private static final int MSG_START_STREAMING = 0;
@@ -84,6 +94,7 @@ public class LiveRecordView extends BaseMediaView implements
     private FBO mFBO = new FBO();
 
     private StreamingStateChangedListener mOuterStreamingStateChangedListener;
+    private Listener listener;
 
     private boolean mMute;
     private int mQuality = Constants.QUALITY_STANDARD;
@@ -91,6 +102,9 @@ public class LiveRecordView extends BaseMediaView implements
     private int mCurrentCamFacingIndex;
     private boolean mIsReady;
     private Switcher mCameraSwitcher = new Switcher();
+
+    private int mCurrentZoom = 0;
+    private int mMaxZoom = 0;
 
     @Override
     protected void initHandler() {
@@ -155,7 +169,7 @@ public class LiveRecordView extends BaseMediaView implements
             case MSG_SWITCH_ORIENTATION_DELAY:
                 Object o = msg.obj;
                 if (o instanceof OnStreamOrientationListener) {
-                    ((OnStreamOrientationListener)o).onStreamOrientationChanged(msg.arg1);
+                    ((OnStreamOrientationListener) o).onStreamOrientationChanged(msg.arg1);
                 }
                 break;
             case MSG_SWITCH_RESOLUTION:
@@ -230,10 +244,15 @@ public class LiveRecordView extends BaseMediaView implements
 
         mMediaStreamingManager.prepare(mCameraStreamingSetting, mMicrophoneStreamingSetting, mProfile);
 
+        mPreviewFrameView.setListener(this);
         mMediaStreamingManager.setStreamingStateListener(new OnStreamingState());
         mMediaStreamingManager.setSurfaceTextureCallback(this);
         mMediaStreamingManager.setStreamingSessionListener(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
+    }
+
+    public void setViewClickListener(Listener listener) {
+        this.listener = listener;
     }
 
     public void setPublishUrl(String url) {
@@ -305,6 +324,9 @@ public class LiveRecordView extends BaseMediaView implements
                 case READY:
                     // start streaming when READY
                     mIsReady = true;
+
+                    mMaxZoom = mMediaStreamingManager.getMaxZoom();
+
                     if (mHandler != null) {
                         mHandler.removeCallbacksAndMessages(null);
                         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
@@ -564,6 +586,57 @@ public class LiveRecordView extends BaseMediaView implements
         } else {
             return CameraStreamingSetting.CAMERA_FACING_ID.CAMERA_FACING_BACK;
         }
+    }
+
+    protected void setFocusAreaIndicator() {
+//        if (mRotateLayout == null) {
+//            mRotateLayout = (RotateLayout) findViewById(R.id.focus_indicator_rotate_layout);
+//            mMediaStreamingManager.setFocusAreaIndicator(mRotateLayout,
+//                    mRotateLayout.findViewById(R.id.focus_indicator));
+//        }
+    }
+
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        if (XiaojsConfig.DEBUG) {
+            Log.i(TAG, "onSingleTapUp X:" + e.getX() + ",Y:" + e.getY());
+        }
+
+//        if (mIsReady) {
+//            setFocusAreaIndicator();
+//            mMediaStreamingManager.doSingleTapUp((int) e.getX(), (int) e.getY());
+//            return true;
+//        }
+        return false;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+
+        if (listener != null) {
+            listener.onViewClickedListener();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onZoomValueChanged(float factor) {
+
+        if (mIsReady && mMediaStreamingManager.isZoomSupported()) {
+            mCurrentZoom = (int) (mMaxZoom * factor);
+            mCurrentZoom = Math.min(mCurrentZoom, mMaxZoom);
+            mCurrentZoom = Math.max(0, mCurrentZoom);
+
+            if (XiaojsConfig.DEBUG) {
+                Log.d(TAG, "zoom ongoing, scale: " + mCurrentZoom + ",factor:" + factor + ",maxZoom:" + mMaxZoom);
+            }
+
+            mMediaStreamingManager.setZoomValue(mCurrentZoom);
+        }
+
+        return false;
     }
 
     @Override

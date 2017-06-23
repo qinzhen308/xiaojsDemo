@@ -53,6 +53,8 @@ public interface Constants {
     public final static String KEY_SHOW_CLASS_LESSON_TIPS = "key_show_class_lesson_tips";
     public final static String KEY_SHOW_STANDLONG_LESSON_DELAY_TIPS = "key_show_lesson_delay_tips";
 
+    public final static String KEY_LAUNCH_ACTIVITY = "l_activity";
+
     public final static int FROM_ACTIVITY = 0;
     public final static int FROM_PLAY_FRAGMENT = 1;
     public final static int FROM_PUBLISH_FRAGMENT = 2;

@@ -374,9 +374,15 @@ public class MineFragment extends BaseFragment {
     }
 
     private void setupBlurPortraitView(Bitmap portrait) {
-        mProfileCover.setVisibility(View.VISIBLE);
-        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 8, true);
-        mBlurPortraitView.setImageBitmap(blurBitmap);
+        if (mProfileCover != null) {
+            mProfileCover.setVisibility(View.VISIBLE);
+        }
+
+        if (mBlurPortraitView != null) {
+            Bitmap blurBitmap = FastBlur.smartBlur(portrait, 8, true);
+            mBlurPortraitView.setImageBitmap(blurBitmap);
+        }
+
     }
 
     private void editProfile() {

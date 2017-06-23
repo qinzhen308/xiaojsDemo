@@ -18,8 +18,6 @@ import cn.xiaojs.xma.ui.classroom.page.VideoPlayFragment;
 
 public class PlayStreamingActivity extends FragmentActivity{
 
-    public static final String EXTRA_KEY = "extra_key";
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +35,11 @@ public class PlayStreamingActivity extends FragmentActivity{
             // Create a new Fragment to be placed in the activity layout
             VideoPlayFragment playFragment = new VideoPlayFragment();
 
-            String key = getIntent().getStringExtra(EXTRA_KEY);
-            LibDoc doc = new LibDoc();
-            doc.key = key;
+            LibDoc doc = (LibDoc) getIntent().getSerializableExtra(Constants.KEY_LIB_DOC);
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.KEY_LIB_DOC, doc);
+            bundle.putBoolean(Constants.KEY_LAUNCH_ACTIVITY, true);
 
             playFragment.setArguments(bundle);
 

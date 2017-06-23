@@ -179,12 +179,46 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
         String vPs = LiveCtlSessionManager.getInstance().getPsType();
 
+//        if (Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState)) {//上课中或者拖堂
+//
+//            if (!mContactManagementMode
+//                    && mUser == Constants.UserMode.TEACHING
+//                    && (ClassroomBusiness.getUser(vPs, Constants.User.STUDENT) == Constants.User.LEAD)//上课中只有主讲才能主动发1对1
+//                    && (userInLesson == Constants.User.STUDENT || user == Constants.User.STUDENT)
+//                    && !isMyself
+//                    && isSupport
+//                    && online) {
+//                holder.video.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.video.setVisibility(View.INVISIBLE);
+//            }
+//
+//
+//        } else if(Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {//正在直播秀状态
+//
+//            if (!mContactManagementMode
+//                    && !isMyself
+//                    && isSupport
+//                    && online) {
+//
+//                holder.video.setVisibility(View.VISIBLE);
+//
+//            } else {
+//                holder.video.setVisibility(View.INVISIBLE);
+//            }
+//
+//        } else {
+//            holder.video.setVisibility(View.INVISIBLE);
+//        }
+
+
+
         //set video
         if (!mContactManagementMode
-                && mUser == Constants.UserMode.TEACHING
-                && (ClassroomBusiness.getUser(vPs, Constants.User.STUDENT) == Constants.User.LEAD)//只有主讲才能主动发1对1
-                && (userInLesson == Constants.User.STUDENT || user == Constants.User.STUDENT)
                 && (Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
+                && mUser == Constants.UserMode.TEACHING
+                && (ClassroomBusiness.getUser(vPs, Constants.User.STUDENT) == Constants.User.LEAD)//上课中只有主讲才能主动发1对1
+                && (userInLesson == Constants.User.STUDENT || user == Constants.User.STUDENT)
                 && !isMyself
                 && isSupport
                 && online) {
@@ -192,6 +226,10 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         } else {
             holder.video.setVisibility(View.INVISIBLE);
         }
+
+
+
+
         holder.talk.setVisibility(isMyself ? View.INVISIBLE : View.VISIBLE);
         holder.talk.setCount(attendee.unReadMsgCount);
 
