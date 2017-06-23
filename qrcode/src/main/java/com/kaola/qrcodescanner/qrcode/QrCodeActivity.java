@@ -111,8 +111,8 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
     }
 
     public Rect getPreviewRect() {
-        //return scanRect;
-        return mQrCodeFinderView.mFrameRect;
+        return scanRect;
+//        return mQrCodeFinderView.mFrameRect;
     }
 
     private void checkPermission() {
