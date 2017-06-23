@@ -189,13 +189,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
         } else {
 
-            if (!TextUtils.isEmpty(mCtlSession.titleOfPrimary)) {
-                title = mCtlSession.titleOfPrimary;//FIXME 这是啥？
-            } else {
-
-                if (mCtlSession.ctl != null) {
-                    title = mCtlSession.ctl.title;
-                }
+            if (mCtlSession.ctl != null) {
+                title = mCtlSession.ctl.title;
             }
         }
 
@@ -418,7 +413,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         @Override
         public void call(Object... args) {
 
-            if(XiaojsConfig.DEBUG) {
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("received close media....");
             }
 
@@ -430,7 +425,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         @Override
         public void call(Object... args) {
 
-            if(XiaojsConfig.DEBUG) {
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("received remind finalzation....");
             }
 
@@ -441,7 +436,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     private SocketManager.EventListener mReceivedStreamingQuality = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
-            if(XiaojsConfig.DEBUG) {
+            if (XiaojsConfig.DEBUG) {
                 Logger.d("received remind finalzation....");
             }
 
@@ -500,24 +495,24 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 media,
                 new SocketManager.IAckListener() {
 
-            @Override
-            public void call(Object... args) {
-                if (args != null && args.length > 0) {
-                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                    if (response != null) {
-                        if (response.result) {
-                            if (XiaojsConfig.DEBUG) {
-                                Toast.makeText(mContext, "close open peer to peer video success", Toast.LENGTH_LONG).show();
+                    @Override
+                    public void call(Object... args) {
+                        if (args != null && args.length > 0) {
+                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                            if (response != null) {
+                                if (response.result) {
+                                    if (XiaojsConfig.DEBUG) {
+                                        Toast.makeText(mContext, "close open peer to peer video success", Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    //String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
+                                    Toast.makeText(mContext, "关闭失败", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        } else {
-                            //String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
-                            Toast.makeText(mContext, "关闭失败", Toast.LENGTH_LONG).show();
+
                         }
                     }
-
-                }
-            }
-        });
+                });
     }
 
 
