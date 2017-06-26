@@ -190,9 +190,8 @@ public class ClassroomActivity extends FragmentActivity {
                 cancelProgress();
                 if (ctlSession != null) {
                     if (XiaojsConfig.DEBUG) {
-                        Log.i("aaa", "session: state=" + ctlSession.state + "   mode=" + ctlSession.mode + "   accessible="
+                        Logger.d("aaa", "session: state=" + ctlSession.state + "   mode=" + ctlSession.mode + "   accessible="
                                 + ctlSession.accessible + "   psType=" + ctlSession.psType);
-                        //Log.i("aaa", "session: entry=" + ctlSession.toString());
                     }
 
                     if (!ctlSession.accessible) {
@@ -334,8 +333,13 @@ public class ClassroomActivity extends FragmentActivity {
         SocketManager.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
         SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
         SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mSocketTimeoutListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION), mKickoutByUserListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH), mModeSwitchListener);
+        SocketManager.on(
+                Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION),
+                mKickoutByUserListener);
+        SocketManager.on(
+                Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH),
+                mModeSwitchListener);
+
         SocketManager.connect();
     }
 
