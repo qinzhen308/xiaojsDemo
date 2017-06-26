@@ -126,7 +126,7 @@ public class ShareUtil {
 
         final UMImage umImage=new UMImage(activity,imgBm);
         umImage.compressFormat= Bitmap.CompressFormat.PNG;
-        umImage.setThumb(new UMImage(activity,R.drawable.ic_launcher));
+        umImage.setThumb(new UMImage(activity,imgBm));
         umImage.setTitle(title);
         shareDld(activity, new ShareBtnListener() {
             @Override

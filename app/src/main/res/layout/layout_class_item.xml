@@ -34,7 +34,6 @@
         android:layout_below="@id/title_view"
         android:layout_marginLeft="@dimen/px40"
         android:layout_marginTop="@dimen/px16"
-        android:drawableLeft="@drawable/ic_class_member"
         android:text="0人"
         android:drawablePadding="@dimen/px16"
         android:textColor="@color/class_grey"

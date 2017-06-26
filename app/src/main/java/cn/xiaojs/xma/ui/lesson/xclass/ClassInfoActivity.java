@@ -18,7 +18,10 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
+import cn.xiaojs.xma.data.DataChangeListener;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.CLResponse;
@@ -399,6 +402,7 @@ public class ClassInfoActivity extends BaseActivity {
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(ClassInfoActivity.this, R.string.disband_success, Toast.LENGTH_SHORT).show();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
                 finish();
             }
 

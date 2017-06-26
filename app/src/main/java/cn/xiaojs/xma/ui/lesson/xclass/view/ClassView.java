@@ -152,9 +152,9 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
         }
 
         if(mData.enroll!=null){
-            memberView.setText(mData.enroll.current+"人");
+            memberView.setText("学生："+mData.enroll.current+"人");
         }else {
-            memberView.setText(0+"人");
+            memberView.setText("学生："+0+"人");
         }
         String teachers="班主任：";
         for(int i=0;i<mData.advisers.length;i++){

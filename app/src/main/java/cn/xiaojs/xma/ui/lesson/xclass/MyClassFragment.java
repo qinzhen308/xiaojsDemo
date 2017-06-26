@@ -17,6 +17,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.DataChangeHelper;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
 
@@ -43,7 +45,30 @@ public class MyClassFragment extends Fragment {
     protected int statePosition;
     protected int sourcePosition;
 
+    private SimpleDataChangeListener mDataChangeListener;
+    private boolean mDataChanged = false;
+
+
     private ClassAdapter classAdapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int type = registerDataChangeListenerType();
+        if (type == 0) {
+            return;
+        }
+
+        if (mDataChangeListener == null) {
+            mDataChangeListener = new SimpleDataChangeListener(type) {
+                @Override
+                public void onDataChange() {
+                    mDataChanged = true;
+                }
+            };
+        }
+        DataChangeHelper.getInstance().registerDataChangeListener(mDataChangeListener);
+    }
 
     @Nullable
     @Override
@@ -68,6 +93,24 @@ public class MyClassFragment extends Fragment {
         classAdapter.setButtonDesc(getString(R.string.want_to_create_class));
 
         listView.setAdapter(classAdapter);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mDataChanged) {
+            mDataChanged = false;
+            onDataChanged();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mDataChangeListener != null) {
+            DataChangeHelper.getInstance().unregisterDataChangeListener(mDataChangeListener);
+        }
     }
 
     @OnClick({R.id.course_filter,R.id.my_course_search})
@@ -120,5 +163,15 @@ public class MyClassFragment extends Fragment {
     public void refresh(){
         classAdapter.refresh();
     }
+
+    protected int registerDataChangeListenerType() {
+        return SimpleDataChangeListener.CREATE_CLASS_CHANGED;
+    }
+
+
+    protected void onDataChanged() {
+        refresh();
+    }
+
 
 }
