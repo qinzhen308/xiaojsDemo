@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,8 @@ import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Fee;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.DataPicker;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -77,6 +80,7 @@ public class LessonCreationActivity extends BaseActivity {
     private final static int HALF_HOUR = 30 * 60 * 1000; //30 minutes
 
     public final static String KEY_COMPETENCY = "key_competency";
+    public final static String EXTRA_NEED_TIP = "extra_need_tip";
 
     @BindView(R.id.status_fail_reason)
     TextView mStatusFailReason;
@@ -888,7 +892,12 @@ public class LessonCreationActivity extends BaseActivity {
                 cancelProgress();
                 Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
                 DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
-                setResultOnFinish();
+                if( mType == CourseConstant.TYPE_LESSON_CREATE&&getIntent().getBooleanExtra(EXTRA_NEED_TIP,false)){
+                    setResult(RESULT_OK);
+                    showSkipTip();
+                }else {
+                    setResultOnFinish();
+                }
             }
 
             @Override
@@ -916,6 +925,28 @@ public class LessonCreationActivity extends BaseActivity {
                 Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showSkipTip(){
+        CommonDialog dialog=new CommonDialog(this);
+        dialog.setDesc(getString(R.string.create_lesson_skip_tip));
+        dialog.setLefBtnText(R.string.create_lesson_skip_btn_back);
+        dialog.setRightBtnText(R.string.create_lesson_skip_btn_look);
+        dialog.setCancelable(false);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                ClassesListActivity.invoke(LessonCreationActivity.this,1);
+                finish();
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                finish();
+            }
+        });
+        dialog.show();
     }
 
     private void setResultOnFinish() {

@@ -321,7 +321,9 @@
         <activity android:name=".ui.lesson.xclass.StudentsListActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.ClassesListActivity"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            />
         <activity android:name=".ui.lesson.xclass.ImportStudentFormClassActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.EnrollSuccessActivity"/>

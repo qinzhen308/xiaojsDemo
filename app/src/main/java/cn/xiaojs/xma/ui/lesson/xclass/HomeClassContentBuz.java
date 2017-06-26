@@ -211,6 +211,7 @@ public class HomeClassContentBuz {
                         if (JudgementUtil.checkTeachingAbility(mContext)) {
                             //老师可以开课
                             Intent intent = new Intent(mContext, LessonCreationActivity.class);
+                            intent.putExtra(LessonCreationActivity.EXTRA_NEED_TIP,true);
                             mContext.startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
                         }
                         break;

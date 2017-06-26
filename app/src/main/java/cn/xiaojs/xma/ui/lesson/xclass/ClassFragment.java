@@ -138,6 +138,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
             case R.id.layout_creative_lesson:
                 if(JudgementUtil.checkTeachingAbility(mContext)){
                     Intent open = new Intent(mContext, LessonCreationActivity.class);
+                    open.putExtra(LessonCreationActivity.EXTRA_NEED_TIP,true);
                     mContext.startActivity(open);
                 }
                 break;

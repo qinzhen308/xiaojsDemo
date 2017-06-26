@@ -42,6 +42,7 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
     ViewPager tabPager;
     @BindView(R.id.add_btn)
     View addBtn;
+    private static final String EXTRA_TAB="extra_tab";
     private int curCheckedTabId;
 
 
@@ -52,8 +53,11 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classes_list);
         ButterKnife.bind(this);
-
         initView();
+        int tab=getIntent().getIntExtra(EXTRA_TAB,-1);
+        if(tab>0){
+            checkToTab(tab);
+        }
     }
 
     @OnClick({R.id.left_image, R.id.add_btn,R.id.tab_class,R.id.tab_lesson})
@@ -115,6 +119,18 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
 
             }
         });
+    }
+
+    private void checkToTab(int tab){
+        if(tab==0&&curCheckedTabId!=R.id.tab_class){
+            tabPager.setCurrentItem(0);
+            tabGroupLayout.check(R.id.tab_class);
+            curCheckedTabId=R.id.tab_class;
+        }else if(tab==1&&curCheckedTabId!=R.id.tab_lesson){
+            tabPager.setCurrentItem(1);
+            tabGroupLayout.check(R.id.tab_lesson);
+            curCheckedTabId=R.id.tab_lesson;
+        }
     }
 
 
@@ -229,5 +245,14 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                     break;
             }
         }
+    }
+
+
+    public static void invoke(Activity context,int tab){
+        Intent intent=new Intent(context,ClassesListActivity.class);
+        if(tab>=0){
+            intent.putExtra(EXTRA_TAB,tab);
+        }
+        context.startActivity(intent);
     }
 }
