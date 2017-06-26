@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.util.Date;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+
 /**
  * Created by maxiaobao on 2017/1/9.
  */
@@ -31,6 +33,7 @@ public class CtlSession implements Serializable {
     public String publishUrl;
     public String playUrl;
     public int streamMode;
+    public int streamType = Live.StreamType.NONE;
     public String claimedBy;
     public String titleOfPrimary;
 

@@ -346,12 +346,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     private void showClasslessonTips(String state) {
 
-//        if (Live.LiveSessionState.LIVE.equals(state)
-//                && LiveCtlSessionManager.getInstance().getCtlSession().cls !=null
-//                && !ClassroomBusiness.hasTeachingAbility()) {
-//            mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
-//                            R.string.student_living_back_to_talk_mode_sub);
-//        }
+        if (Live.LiveSessionState.LIVE.equals(state)
+                && LiveCtlSessionManager.getInstance().getCtlSession().cls !=null
+                && !ClassroomBusiness.hasTeachingAbility()
+                && TextUtils.isEmpty(mPlayUrl)) {
+            mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
+                            R.string.student_living_back_to_talk_mode_sub);
+        }
 
     }
 
@@ -379,8 +380,15 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         } else {
             if (ClassroomBusiness.canIndividual(mCtlSession)) {
                 //课前课后或者班课的课外时间
-                mPlayPauseBtn.setVisibility(View.VISIBLE);
-                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+                if ((mCtlSession.streamType == Live.StreamType.INDIVIDUAL || mCtlSession.streamType == Live.StreamType.LIVE)
+                        && !ClassroomBusiness.hasTeachingAbility()) {
+                    mPlayPauseBtn.setVisibility(View.INVISIBLE);
+                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+                } else {
+                    mPlayPauseBtn.setVisibility(View.VISIBLE);
+                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+                }
+
             } else {
                 if (mUserMode == Constants.UserMode.TEACHING) {
                     mPlayPauseBtn.setVisibility(View.VISIBLE);

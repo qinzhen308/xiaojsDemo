@@ -47,17 +47,31 @@ public class SocketManager {
     private static Handler mHandler;
     private static ConcurrentMap<String, ConcurrentLinkedQueue<EventListener>> mEventListeners;
 
-    public synchronized static void init(Context context, String ticket, String secret, boolean videoSupported, boolean audioSupported, boolean force) {
+    public synchronized static void init(Context context,
+                                         String ticket,
+                                         String secret,
+                                         boolean videoSupported,
+                                         boolean audioSupported,
+                                         boolean force) {
         initHandler();
         if (mSocket == null) {
             try {
                 String forceStr = force ? "true" : "false";
                 IO.Options opts = new IO.Options();
-                opts.query = "secret=" + secret + "&" + "avc={\"video\":" + videoSupported + ",\"audio\":" + audioSupported + "}"
-                        + "&" + "forcibly=" + forceStr;
+                opts.query = new StringBuilder("secret=")
+                        .append(secret)
+                        .append("&avc={\"video\":")
+                        .append(videoSupported)
+                        .append(",\"audio\":")
+                        .append(audioSupported)
+                        .append("}&forcibly=")
+                        .append(forceStr)
+                        .toString();
                 opts.timeout = TIME_OUT; //ms
                 opts.transports = new String[]{"websocket"};
+
                 mSocket = IO.socket(getClassroomSocketUrl(context, ticket), opts);
+
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -75,8 +89,10 @@ public class SocketManager {
     }
 
     public static String getClassroomSocketUrl(Context context, String ticket) {
-        String url = ApiManager.getXLSUrl(context) + "/" + ticket;
-        return url;
+        return new StringBuilder(ApiManager.getXLSUrl(context))
+                .append("/")
+                .append(ticket)
+                .toString();
     }
 
     public static void connect() {

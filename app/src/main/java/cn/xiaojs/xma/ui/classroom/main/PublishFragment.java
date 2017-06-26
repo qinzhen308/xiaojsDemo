@@ -1058,7 +1058,9 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
 
+                mCtlSession.streamType = Live.StreamType.NONE;
                 mPlayUrl = "";
+                mCtlSession.finishOn = 0;
                 data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
                 data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, mIndividualResponseBody);
                 break;
