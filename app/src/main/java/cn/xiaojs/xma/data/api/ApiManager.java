@@ -288,19 +288,10 @@ public class ApiManager {
      */
     public static String getShareLessonUrl(String lessonId) {
 
-        String baseUrl = XiaojsConfig.SHARE_BASE_URL;
-
-        String channel = XiaojsConfig.CHANNEL;
-
-        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
-            baseUrl = XiaojsConfig.TEST_BASE_URL;
-        }
-//        else if (channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
-//            baseUrl = XiaojsConfig.XAS_PRE_BASE_URL;
-//        }
+        String baseUrl = XiaojsConfig.SHARE_LESSON_BASE_URL;
 
         return new StringBuilder(baseUrl)
-                .append("/home/lesson?id=")
+                .append("/web/index.php?r=mobile/coursedetails&id=")
                 .append(lessonId)
                 .toString();
     }
