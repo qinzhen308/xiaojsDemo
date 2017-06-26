@@ -37,14 +37,6 @@
 
     </FrameLayout>
 
-    <!--本地视频播放-->
-    <FrameLayout
-            android:id="@+id/video_play_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-    </FrameLayout>
-
     <FrameLayout
             android:id="@+id/msg_input_layout"
             android:layout_width="match_parent"
@@ -56,6 +48,14 @@
             android:id="@+id/class_canlender_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <!--本地视频播放-->
+    <FrameLayout
+        android:id="@+id/video_play_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </FrameLayout>
 

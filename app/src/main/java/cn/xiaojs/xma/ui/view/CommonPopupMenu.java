@@ -47,6 +47,8 @@ public class CommonPopupMenu {
         mPopupWindow = new PopupWindow(mListView, width, ViewGroup.LayoutParams.WRAP_CONTENT);
         //mPopupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.bg_popup_menu));
         mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+
     }
 
     public void setWidth(int px){
