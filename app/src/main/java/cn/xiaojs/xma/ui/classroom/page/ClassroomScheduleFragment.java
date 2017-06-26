@@ -27,12 +27,15 @@ import cn.xiaojs.xma.common.pageload.stateview.AppLoadState2;
 import cn.xiaojs.xma.common.pageload.stateview.LoadStateListener;
 import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.live.LiveSchedule;
+import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.lesson.xclass.AbsClassScheduleFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
@@ -130,8 +133,12 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
                     //索引
                     int position = (int) object[0];
                     //数据
-                    CLesson data = (CLesson) object[1];
-                    // TODO: 2017/6/4  logic
+                    LiveSchedule data = (LiveSchedule) object[1];
+                    LibDoc doc=new LibDoc();
+                    doc.key=data.playback;
+                    doc.mimeType= Collaboration.StreamingTypes.HLS;
+                    exit();
+                    ClassroomController.getInstance().enterVideoPlayPage(doc);
                 }
             }
         });

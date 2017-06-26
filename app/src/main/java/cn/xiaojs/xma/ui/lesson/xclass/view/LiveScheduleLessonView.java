@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass.view;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -98,10 +99,10 @@ public class LiveScheduleLessonView extends RelativeLayout implements IViewModel
         tvLesson.setText(data.title);
 
 
-        if (false && Ctl.LiveLessonState.FINISHED.equals(data.state)) {
+        if (!TextUtils.isEmpty(data.playback)) {
             btnReplay.setVisibility(VISIBLE);
         } else {
-            btnReplay.setVisibility(GONE);
+            btnReplay.setVisibility(INVISIBLE);
         }
 
         tvState.setVisibility(GONE);

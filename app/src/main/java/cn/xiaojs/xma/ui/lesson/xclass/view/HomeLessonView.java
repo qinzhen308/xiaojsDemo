@@ -32,6 +32,7 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
@@ -371,12 +372,10 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             mEventCallback.onEvent(EventCallback.EVENT_1, position, mData);
         } else {
             //其余地方课表的逻辑
-            // TODO: 后续加上调用客户端里面播放器的逻辑 2017/6/16
-            String url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(mData.playback).append(".m3u8").toString();
-            Uri data = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(data, Collaboration.StreamingTypes.HLS);
-            getContext().startActivity(intent);
+            LibDoc doc=new LibDoc();
+            doc.key=mData.playback;
+            doc.mimeType= Collaboration.StreamingTypes.HLS;
+            MaterialUtil.openMaterial((Activity) getContext(),doc);
         }
     }
 
