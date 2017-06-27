@@ -73,7 +73,9 @@ public class TipsHelper {
             } else {
                 setTips(R.string.cls_break_title, R.string.cls_break_desc);
             }
-        } else if (Live.LiveSessionState.LIVE.equals(liveSessionState)) {
+        } else if (Live.LiveSessionState.LIVE.equals(liveSessionState)
+                || Live.LiveSessionState.INDIVIDUAL.equals(liveSessionState)
+                || LiveCtlSessionManager.getInstance().isIndividualing()) {
             hideTips();
         } else if (Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
             setTips(R.string.cls_finish_title, R.string.cls_not_on_class_desc);

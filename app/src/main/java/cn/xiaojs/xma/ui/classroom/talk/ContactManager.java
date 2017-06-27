@@ -16,10 +16,13 @@ package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -125,6 +128,11 @@ public class ContactManager {
     private SocketManager.EventListener mOnJoin = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.JOIN**");
+            }
+
             updateContactList(true, args);
         }
     };
@@ -135,6 +143,10 @@ public class ContactManager {
     private SocketManager.EventListener mOnLeave = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.LEAVE**");
+            }
             updateContactList(false, args);
         }
     };
@@ -143,6 +155,11 @@ public class ContactManager {
     private SocketManager.EventListener mSyncClassStateListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.SYNC_CLASS_STATE**");
+            }
+
             if (args != null && args.length > 0) {
                 SyncClassStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncClassStateResponse.class);
 

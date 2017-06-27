@@ -356,16 +356,16 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     }
 
-    private void updateSettingBtn() {
-        String state = LiveCtlSessionManager.getInstance().getLiveState();
-        if (Live.LiveSessionState.DELAY.equals(state)
-                || Live.LiveSessionState.LIVE.equals(state)
-                || Live.LiveSessionState.INDIVIDUAL.equals(state)) {
-            mSettingBtn.setVisibility(View.GONE);
-        } else {
-            mSettingBtn.setVisibility(View.VISIBLE);
-        }
-    }
+//    private void updateSettingBtn() {
+//        String state = LiveCtlSessionManager.getInstance().getLiveState();
+//        if (Live.LiveSessionState.DELAY.equals(state)
+//                || Live.LiveSessionState.LIVE.equals(state)
+//                || Live.LiveSessionState.INDIVIDUAL.equals(state)) {
+//            mSettingBtn.setVisibility(View.GONE);
+//        } else {
+//            mSettingBtn.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     private void updateTitle() {
         mLessonTitle.setText(getLessonTitle());
@@ -1000,7 +1000,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             }
         } else if (Live.LiveSessionState.DELAY.equals(liveState)) {
             mPlayPauseBtn.setVisibility(View.INVISIBLE);
-        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
+                || LiveCtlSessionManager.getInstance().isIndividualing()) {
             mPlayPauseBtn.setVisibility(View.VISIBLE);
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
         }
@@ -1066,7 +1067,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     cancelProgress();
                 }
             });
-        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
+                || LiveCtlSessionManager.getInstance().isIndividualing()) {
 
             cancelProgress();
             LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);

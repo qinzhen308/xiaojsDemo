@@ -62,6 +62,10 @@ public class LiveMenu extends PopupWindow {
 
 
         mClose.setVisibility(mIsTeacher ? View.VISIBLE : View.GONE);
+        if (!mIsTeacher) {
+            mClose.setVisibility(LiveCtlSessionManager.getInstance().isIndividualing() ? View.VISIBLE : View.GONE);
+        }
+
         mVideo.setVisibility(View.GONE);
         mAudio.setVisibility(View.GONE);
 

@@ -224,8 +224,9 @@ public class TalkManager {
         @Override
         public void call(final Object... args) {
 
+
             if (XiaojsConfig.DEBUG) {
-                Logger.d("received talk msg........");
+                Logger.d("Received event: **Su.EventType.TALK**");
             }
 
             if (args != null && args.length > 0) {
