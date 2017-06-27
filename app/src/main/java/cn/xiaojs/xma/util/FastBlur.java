@@ -7,6 +7,10 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
+
+import com.facebook.stetho.common.LogUtil;
+import com.orhanobut.logger.Logger;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -25,7 +29,7 @@ import android.renderscript.ScriptIntrinsicBlur;
 public class FastBlur {
     public static final int MAX_SIZE = 150 * 150;
 
-    public static Bitmap smartBlur(Bitmap oriBmp, int radius, boolean canReuseInBitmap) {
+    public static Bitmap smartBlur(Context context,Bitmap oriBmp, int radius, boolean canReuseInBitmap) {
         if (oriBmp == null) {
             return null;
         }
@@ -88,18 +92,17 @@ public class FastBlur {
         int hm = h - 1;
         int wh = w * h;
         int div = radius + radius + 1;
-
-        int r[] = new int[wh];
-        int g[] = new int[wh];
-        int b[] = new int[wh];
+        short r[] = new short[wh];
+        short g[] = new short[wh];
+        short b[] = new short[wh];
         int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
         int vmin[] = new int[Math.max(w, h)];
 
         int divsum = (div + 1) >> 1;
         divsum *= divsum;
-        int dv[] = new int[256 * divsum];
+        short dv[] = new short[256 * divsum];
         for (i = 0; i < 256 * divsum; i++) {
-            dv[i] = (i / divsum);
+            dv[i] = (short) (i / divsum);
         }
 
         yw = yi = 0;
@@ -115,6 +118,7 @@ public class FastBlur {
 
         for (y = 0; y < h; y++) {
             rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            //计算单位矩阵内 各颜色分量的色值和
             for (i = -radius; i <= radius; i++) {
                 p = pix[yi + Math.min(wm, Math.max(i, 0))];
                 sir = stack[i + radius];

@@ -27,6 +27,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -379,7 +381,7 @@ public class MineFragment extends BaseFragment {
         }
 
         if (mBlurPortraitView != null) {
-            Bitmap blurBitmap = FastBlur.smartBlur(portrait, 8, true);
+            Bitmap blurBitmap = FastBlur.smartBlur(getContext(),portrait, 8, true);
             mBlurPortraitView.setImageBitmap(blurBitmap);
         }
 

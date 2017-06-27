@@ -345,7 +345,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     private void setupBlurPortraitView(Bitmap portrait) {
         mProfileCover.setVisibility(View.VISIBLE);
-        Bitmap blurBitmap = FastBlur.smartBlur(portrait, 4, true);
+        Bitmap blurBitmap = FastBlur.smartBlur(this,portrait, 4, true);
         mBlurImgView.setImageBitmap(blurBitmap);
     }
 
