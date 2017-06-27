@@ -118,7 +118,7 @@ public class StudentsListActivity extends BaseActivity {
                         Intent i = new Intent(StudentsListActivity.this,
                                 ImportStudentFormClassActivity.class);
                         i.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
-                        startActivity(i);
+                        startActivityForResult(i,ImportStudentFormClassActivity.CODE_ADD_STUDENTS_BATCH);
                         break;
                 }
 
@@ -134,6 +134,7 @@ public class StudentsListActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case ImportStudentFormClassActivity.CODE_ADD_STUDENTS_BATCH:
                 case REQUEST_ADD_STUDENT_CODE:
                     //通过EXTRA_STUDENTS，可以获取到新添加的学生
                     //data.getParcelableArrayListExtra(ManualAddStudentActivity.EXTRA_STUDENTS);
