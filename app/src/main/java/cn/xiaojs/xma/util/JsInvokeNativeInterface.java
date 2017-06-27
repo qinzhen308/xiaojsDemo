@@ -6,12 +6,16 @@ import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
+import okhttp3.ResponseBody;
 
 /**
  * Created by Paul Z on 2017/6/9.
@@ -35,11 +39,19 @@ public class JsInvokeNativeInterface {
             return;
         }
         ((IDialogMethod)context).showProgress(true);
-        LessonDataManager.joinClass(context, classid, new APIServiceCallback() {
+        LessonDataManager.joinClass(context, classid, new APIServiceCallback<ResponseBody>() {
             @Override
-            public void onSuccess(Object object) {
+            public void onSuccess(ResponseBody object) {
                 ((IDialogMethod)context).cancelProgress();
-                ToastUtil.showToast(context,"加入成功");
+
+                JoinResponse joinResponse = getJoinResponse(object);
+                if (joinResponse == null) {
+                    ToastUtil.showToast(context,"加入成功");
+                }else {
+                    //此班是需要申请验证才能加入的班
+                    ToastUtil.showToast(context,"你已经申请加入，等待确认");
+                }
+
                 DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
                 context.startActivity(new Intent(context,MainActivity.class));
             }
@@ -51,6 +63,19 @@ public class JsInvokeNativeInterface {
             }
         });
 
+    }
+
+
+    private JoinResponse getJoinResponse(ResponseBody body) {
+        JoinResponse response = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = body.string();
+            response = mapper.readValue(json, JoinResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
 

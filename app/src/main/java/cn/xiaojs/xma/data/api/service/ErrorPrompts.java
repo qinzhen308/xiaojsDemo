@@ -23,7 +23,7 @@ public class ErrorPrompts {
 
     public static String getErrorMessage(int apiType, String errorCode) {
 
-        if (TextUtils.isEmpty(errorCode)){
+        if (TextUtils.isEmpty(errorCode)) {
             return "请求失败";
         }
 
@@ -41,11 +41,12 @@ public class ErrorPrompts {
         switch (apiType) {
             case APIType.JOIN_CLASS:
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
-                    errorMessage = "你已申请加入班";
+                    errorMessage = "你已经是该班级成员了";
+                } else if (errorCode.equals(Errors.PENDING_FOR_OPEN_ACK)) {
+                    errorMessage = "你已经申请加入，等待确认";
                 } else {
                     errorMessage = "加入班失败";
                 }
-
                 break;
             case APIType.HIDE_LESSON:
                 errorMessage = "删除失败";
@@ -53,7 +54,7 @@ public class ErrorPrompts {
             case APIType.SHARE_DOCUMENTS:
                 if (errorCode.equals(Errors.DOC_ALREADY_EXISTS)) {
                     errorMessage = "您分享的资料,有的已在该班级中存在了";
-                }else {
+                } else {
                     errorMessage = "分享到班级失败";
                 }
 
@@ -61,7 +62,7 @@ public class ErrorPrompts {
             case APIType.SHARE_DOCUMENT:
                 if (errorCode.equals(Errors.DOC_NOT_FOUND)) {
                     errorMessage = "您分享的资料已在该班级中存在了";
-                }else {
+                } else {
                     errorMessage = "分享到班级失败";
                 }
                 break;
@@ -71,7 +72,7 @@ public class ErrorPrompts {
             case APIType.REQUEST_VERIFICATION:
                 if (errorCode.equals(Errors.INVALID_OPERATION)) {
                     errorMessage = "您要认证的号码已认证或者正在审核中";
-                }else{
+                } else {
                     errorMessage = "提交认证失败";
                 }
                 break;
@@ -232,7 +233,7 @@ public class ErrorPrompts {
                     errorMessage = "您不能上架该课";
                 } else if (errorCode.equals(Errors.OPERATION_TIMEOUT)) {
                     errorMessage = "课已过期，不能上架";
-                }else {
+                } else {
                     errorMessage = "操作失败";
                 }
 
@@ -271,7 +272,7 @@ public class ErrorPrompts {
                     errorMessage = "该手机号已注册，请直接登录";
                 } else if (errorCode.equals(Errors.BAD_REQUEST)) {
                     errorMessage = "请求过于频繁，请稍后再试";
-                }else if(errorCode.equals(Errors.MOBILE_ALREADY_ASSOCIATED)){
+                } else if (errorCode.equals(Errors.MOBILE_ALREADY_ASSOCIATED)) {
                     errorMessage = "该手机号码已被绑定";
                 } else {
                     errorMessage = "验证码发送失败";

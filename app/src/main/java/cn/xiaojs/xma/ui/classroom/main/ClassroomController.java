@@ -390,7 +390,7 @@ public class ClassroomController {
                     .beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, 0)
                     .add(R.id.play_mode_layout, fragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -420,7 +420,7 @@ public class ClassroomController {
                     .beginTransaction()
                     //.addToBackStack("publish_fragment")
                     .add(R.id.publish_mode_layout, fragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
