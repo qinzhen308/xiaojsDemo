@@ -39,6 +39,7 @@ import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.CriteriaStudents;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
@@ -53,6 +54,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.ctl.Students;
 import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
@@ -591,6 +593,11 @@ public class LessonDataManager {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.addClassStudent(classId, enrollParams);
 
+    }
+
+    public static void getClasses(Context context, CriteriaStudents criteria, APIServiceCallback<Students> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClasses(criteria);
     }
 
 

@@ -41,6 +41,7 @@ import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.CriteriaStudents;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
@@ -57,6 +58,7 @@ import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.ctl.Students;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -366,6 +368,17 @@ public class LessonRequest extends ServiceRequest {
         Call<CollectionPage<StudentEnroll>> call = getService().getClassStudents(classes,
                 criteriaJsonstr, paginationJsonstr);
         enqueueRequest(APIType.GET_CLASS_STUDENTS, call);
+    }
+
+    public void getClasses(CriteriaStudents criteria) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+        }
+        Call<Students> call = getService().getClasses(criteriaJsonstr);
+        enqueueRequest(APIType.GET_CLASS_STUDENTS_JOIN, call);
     }
 
     public void addClassStudent(String classId, ClassEnrollParams enrollParams) {

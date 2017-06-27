@@ -186,5 +186,6 @@ public class APIType {
     public static final int GET_LIVE_SCHEDULE = 113;
     public static final int DELETE_CLASS_LESSON = 114;
     public static final int CANCEL_CLASS_LESSON = 115;
+    public static final int GET_CLASS_STUDENTS_JOIN = 116;
 
 }

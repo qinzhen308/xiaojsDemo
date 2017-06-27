@@ -66,6 +66,7 @@ import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -392,6 +393,10 @@ public interface XiaojsService {
     @PATCH("/v1/ctl/classes/{classes}/students")
     Call<ResponseBody> addClassStudent(@Path("classes") String classes,
                                        @Body ClassEnrollParams enrollParams);
+
+    //get Class Students
+    @GET("/v1/ctl/owner/classes/{criteria}")
+    Call<Students> getClasses(@Path("criteria") String criteria);
 
     //Remove Class Student
     @HTTP(method = "DELETE", path = "/v1/ctl/classes/{classes}/students", hasBody = true)
