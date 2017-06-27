@@ -53,6 +53,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
 
@@ -617,7 +618,7 @@ public class LessonDataManager {
      * @param classid
      * @param callback
      */
-    public static void joinClass(Context context, String classid, APIServiceCallback callback) {
+    public static void joinClass(Context context, String classid, APIServiceCallback<ResponseBody> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.joinClass(classid);
 

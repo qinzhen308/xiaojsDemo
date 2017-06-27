@@ -236,6 +236,8 @@ public class Errors {
     //Media already opened.
     public static final String MEDIA_ALREADY_OPENED = "0x30000013";
 
+    public static final String PENDING_FOR_OPEN_ACK = "0x30000014";
+
     //endregion
 
 
