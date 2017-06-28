@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
+import com.squareup.haha.perflib.Main;
 
 
 import java.util.ArrayList;
@@ -32,11 +33,17 @@ import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
 
+import cn.xiaojs.xma.ui.base.IntentFlags;
+import cn.xiaojs.xma.ui.base.XiaojsActions;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassFragment;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 
@@ -51,7 +58,7 @@ import cn.xiaojs.xma.util.ToastUtil;
 import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
 import static cn.xiaojs.xma.util.MessageUitl.ACTION_NEW_PUSH;
 
-public class MainActivity extends BaseTabActivity {
+public class MainActivity extends BaseTabActivity implements XiaojsActions , IUpdateMethod{
 
     public static final String KEY_POSITION = "key_position";
 
@@ -120,6 +127,8 @@ public class MainActivity extends BaseTabActivity {
                 if (position >= 0) {
                     setTabSelected(position);
                 }
+                //回到这个页面后，再去其他页面
+                doAction(intent.getAction(),intent);
             }
         }
     }
@@ -337,6 +346,18 @@ public class MainActivity extends BaseTabActivity {
         }
     }
 
+    @Override
+    public void updateData(boolean justNative) {
+        ClassFragment fragment=(ClassFragment) getFragment(0);
+        fragment.updateData();
+    }
+
+    @Override
+    public void updateItem(int position, Object obj, Object... others) {
+
+    }
+
+
 //    @Override
 //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //
@@ -407,5 +428,50 @@ public class MainActivity extends BaseTabActivity {
     }
 
 
+    /**
+     * 利用这个activity的singletask模式清理栈，再根据action跳到对应页面
+     * @param context
+     * @param action
+     * @param datas 这种方式传值，虽然通用，但可读性差
+     */
+    public static void invokeWithAction(Context context,String action,String... datas){
+        Intent intent=new Intent(context, MainActivity.class);
+        if(!TextUtils.isEmpty(action)){
+            intent.setAction(action);
+        }
+        if(datas!=null){
+            for(int i=0;i<datas.length;i++){
+                intent.putExtra(IntentFlags.EXTRA_COMMON_KEY+i,datas[i]);
+            }
+        }
+        context.startActivity(intent);
+    }
+
+
+
+    @Override
+    public void doAction(String action, Intent intent) {
+        if(TextUtils.isEmpty(action))return;
+        switch (action){
+            case ACTION_TO_MY_CLASSES:
+                ClassesListActivity.invoke(this,0);
+                break;
+            case ACTION_TO_MY_LESSONS:
+                ClassesListActivity.invoke(this,0);
+                break;
+            case ACTION_TO_CLASSROOM:
+                String ticket=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+0);
+                if (TextUtils.isEmpty(ticket)) {
+                    Toast.makeText(this,"进入教室失败",Toast.LENGTH_SHORT).show();
+                }
+
+                Intent i = new Intent();
+                i.putExtra(Constants.KEY_TICKET, ticket);
+                i.setClass(this, ClassroomActivity.class);
+                this.startActivity(i);
+                break;
+        }
+
+    }
 
 }

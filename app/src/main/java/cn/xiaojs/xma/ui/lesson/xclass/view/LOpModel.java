@@ -155,10 +155,10 @@ public class LOpModel {
                 modifyLesson(context,data);
                 break;
             case OP_PRIVATE:
-//                cancelPublish(context,data);
+                cancelPublish(context,data);
                 break;
             case OP_PUBLIC:
-//                publish(context,data);
+                publish(context,data);
                 break;
             case OP_PUBLISH:
                 //上架
@@ -538,18 +538,19 @@ public class LOpModel {
     }
 
     //发布到主页
-    private void publish(final Activity context, final TeachLesson bean) {
-        if (bean.getPublish().accessible) {
+    private void publish(final Activity context, final CLesson bean) {
+        if (bean.accessible) {
             cancelPublish(context,bean);
             return;
         }
         showProgress(context);
-        LessonDataManager.requestToggleAccessLesson(context, bean.getId(), true, new APIServiceCallback() {
+        LessonDataManager.requestToggleAccessLesson(context, bean.id, true, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress(context);
-                bean.getPublish().accessible = true;
+                bean.accessible = true;
                 ToastUtil.showToast(context, R.string.lesson_publish_tip);
+                updateData(context,true);
             }
 
             @Override
@@ -561,7 +562,7 @@ public class LOpModel {
     }
 
     //取消发布
-    private void cancelPublish(final Activity context, final TeachLesson bean) {
+    private void cancelPublish(final Activity context, final CLesson bean) {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.cancel_publish);
         dialog.setDesc(R.string.cancel_publish_tip);
@@ -578,12 +579,13 @@ public class LOpModel {
                 dialog.dismiss();
 
                 showProgress(context);
-                LessonDataManager.requestToggleAccessLesson(context, bean.getId(), false, new APIServiceCallback() {
+                LessonDataManager.requestToggleAccessLesson(context, bean.id, false, new APIServiceCallback() {
                     @Override
                     public void onSuccess(Object object) {
                         cancelProgress(context);
-                        bean.getPublish().accessible = false;
+                        bean.accessible = false;
                         ToastUtil.showToast(context, R.string.course_state_cancel);
+                        updateData(context,true);
                     }
 
                     @Override
