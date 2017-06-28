@@ -222,13 +222,22 @@ public class MessageFragment extends BaseFragment {
                     holder.contentView.setVisibility(View.GONE);
                 }
             } else {
-                Notification notify = notifications.get(0);
-                holder.timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
-                holder.contentView.setText(notify.body);
-                holder.iconView.setCount(category.count);
+                if (notifications != null && notifications.size() > 0) {
+                    Notification notify = notifications.get(0);
+                    holder.timeView.setText(TimeUtil.getTimeByNow(notify.createdOn));
+                    holder.contentView.setText(notify.body);
+                    holder.iconView.setCount(category.count);
 
-                holder.timeView.setVisibility(View.VISIBLE);
-                holder.contentView.setVisibility(View.VISIBLE);
+                    holder.timeView.setVisibility(View.VISIBLE);
+                    holder.contentView.setVisibility(View.VISIBLE);
+                }else {
+                    holder.timeView.setText("");
+                    holder.contentView.setText("");
+                    holder.iconView.setCount(0);
+
+                    holder.timeView.setVisibility(View.GONE);
+                    holder.contentView.setVisibility(View.GONE);
+                }
 
             }
 
