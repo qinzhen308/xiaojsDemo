@@ -20,6 +20,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -265,6 +266,12 @@ public class ContactManager {
 
     private void sort(ArrayList<Attendee> attendees) {
         if (attendees != null) {
+
+            //FIXME 去除重复的联系人，这是为了解决接口的BUG。
+            HashSet<Attendee> tempSet = new HashSet<>(attendees);
+            attendees.clear();
+            attendees.addAll(tempSet);
+
             Collections.sort(attendees, mAttendsComparator);
             int rightOffset = attendees.size() - 1;
             for (int i = attendees.size() - 1; i >= 0; i--) {
