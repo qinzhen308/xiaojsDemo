@@ -11,6 +11,7 @@ import cn.xiaojs.xma.model.Schedule;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CheckLesson {
+    public String id;
     public Schedule schedule;
     //public CLessonTeach teaching;
 }

@@ -199,7 +199,9 @@ public class EditTimetableActivity extends BaseActivity {
 
                 CheckLesson checkLesson = new CheckLesson();
                 checkLesson.schedule = schedule;
-
+                if(cLesson!=null){
+                    checkLesson.id=cLesson.id;
+                }
                 CheckOverlapParams overlapParams = new CheckOverlapParams();
                 overlapParams.classes = classId;
                 overlapParams.lessons = new ArrayList<>(1);
