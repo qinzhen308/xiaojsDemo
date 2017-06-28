@@ -497,8 +497,8 @@ public class ClassroomController {
     public void showExitClassroomDialog() {
         if (mExitDialog == null) {
             mExitDialog = new CommonDialog(mContext);
-            mExitDialog.setTitle(R.string.exit_classroom);
-            mExitDialog.setDesc(R.string.exit_classroom_tips);
+            mExitDialog.setTitle(R.string.tips);
+            mExitDialog.setDesc(R.string.exit_classroom);
             mExitDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {

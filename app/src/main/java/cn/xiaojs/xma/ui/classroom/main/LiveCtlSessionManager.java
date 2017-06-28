@@ -29,6 +29,8 @@ public class LiveCtlSessionManager {
 
     private static LiveCtlSessionManager mInstance;
 
+    private boolean individualing = false;
+
     public static synchronized LiveCtlSessionManager getInstance() {
         if (mInstance == null) {
             mInstance = new LiveCtlSessionManager();
@@ -50,7 +52,15 @@ public class LiveCtlSessionManager {
     public synchronized void updateCtlSessionState(String liveState) {
         if (mCtlSession != null && !TextUtils.isEmpty(liveState)) {
             mCtlSession.state = liveState;
+
+
+            if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)) {
+                individualing = true;
+            }else {
+                individualing = false;
+            }
         }
+
     }
 
     public synchronized void updateCtlSessionMode(int mode) {
@@ -121,6 +131,10 @@ public class LiveCtlSessionManager {
 
     public String getTicket() {
         return mTicket;
+    }
+
+    public boolean isIndividualing() {
+        return individualing;
     }
 
     public Constants.UserMode getUserMode() {

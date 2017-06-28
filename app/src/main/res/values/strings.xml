@@ -920,5 +920,14 @@
     <string name="create_lesson_skip_tip">创建成功，现在可以到“我的-我的班课”中查看我的课啦~</string>
     <string name="create_lesson_skip_btn_back">返回首页</string>
     <string name="create_lesson_skip_btn_look">去查看</string>
+    <string name="seend_one_to_one_ok">发送视频邀请成功</string>
+    <string name="has_send_one_to_noe_tips">已经发送视频邀请，请等待对方回应</string>
+    <string name="send_one_to_one_offline_tips">发送视频邀请失败，对方已离线</string>
+    <string name="send_one_to_one_failed">发送视频邀请失败</string>
+    <string name="user_refuse_one_to_one_tips">对方拒绝您的视频邀请</string>
+    <string name="failed_one2one_network_issue">因网络出现问题，您邀请失败</string>
+    <string name="failed_one2one_privacy">因对方的隐私问题，已拒绝您的邀请</string>
+    <string name="failed_one2one">邀请失败</string>
+    <string name="success_one2one">对方已接受您的视频邀请</string>
 
 </resources>

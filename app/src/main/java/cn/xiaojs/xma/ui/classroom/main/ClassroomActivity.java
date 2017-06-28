@@ -373,6 +373,11 @@ public class ClassroomActivity extends FragmentActivity {
     private SocketManager.EventListener mKickoutByUserListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION**");
+            }
+
             Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
             finish();
         }
@@ -381,6 +386,13 @@ public class ClassroomActivity extends FragmentActivity {
     private SocketManager.EventListener mModeSwitchListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.CLASS_MODE_SWITCH**");
+            }
+
+
             //解析并更新session mode
             if (args != null && args.length > 0) {
                 ModeSwitcher switcher = ClassroomBusiness.parseSocketBean(args[0], ModeSwitcher.class);

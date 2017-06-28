@@ -135,7 +135,8 @@ public class TimeProgressHelper {
             return TYPE_LIVE_FINISH;
         } else if (Live.LiveSessionState.DELAY.equals(state)) {
             return TYPE_LIVE_DELAY;
-        } else if (Live.LiveSessionState.INDIVIDUAL.equals(state)) {
+        } else if (Live.LiveSessionState.INDIVIDUAL.equals(state)
+                || LiveCtlSessionManager.getInstance().isIndividualing()) {
             return TYPE_LIVE_INDIVIDUAL;
         } else if (Live.LiveSessionState.IDLE.equals(state)) {//班级特有
             return TYPE_LIVE_IDLE;

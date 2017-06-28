@@ -18,6 +18,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.orhanobut.logger.Logger;
+
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -26,7 +28,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.api.service.ServiceCache;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -224,10 +229,21 @@ public class SocketManager {
                     final IAckListener listener = (IAckListener) args[args.length - 1];
                     JSONObject[] data = null;
                     if (args.length > 1) {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("socket send event:" + event + ", send data blew:");
+                        }
+
                         data = new JSONObject[args.length - 1];
                         for (int i = 0; i < args.length - 1; i++) {
                             data[i] = ClassroomBusiness.wrapSocketBean(args[i]);
+
+                            if (XiaojsConfig.DEBUG) {
+                                Logger.d("data" + i + ":" +ServiceRequest.objectToJsonString(args[i]));
+                            }
+
                         }
+
                         mSocket.emit(event, data, new Ack() {
                             @Override
                             public void call(final Object... response) {
@@ -243,6 +259,11 @@ public class SocketManager {
                             }
                         });
                     } else {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("socket send event:" + event + ", send data is empty");
+                        }
+
                         mSocket.emit(event, new Ack() {
                             @Override
                             public void call(final Object... response) {
@@ -259,6 +280,11 @@ public class SocketManager {
                         });
                     }
                 } else {
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("socket send event:" + event + ", send data args");
+                    }
+
                     mSocket.emit(event, args);
                 }
             }

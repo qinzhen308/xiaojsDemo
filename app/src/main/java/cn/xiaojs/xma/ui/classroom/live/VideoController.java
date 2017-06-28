@@ -19,11 +19,13 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -334,6 +336,11 @@ public abstract class VideoController implements StreamConfirmCallback {
     private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.STREAMING_STARTED**");
+            }
+
             onStreamingStarted(args);
         }
     };
@@ -341,6 +348,9 @@ public abstract class VideoController implements StreamConfirmCallback {
     private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.STREAMING_STOPPED**");
+            }
             onStreamingStopped(args);
         }
     };
@@ -348,6 +358,9 @@ public abstract class VideoController implements StreamConfirmCallback {
     private SocketManager.EventListener mStreamReclaimedListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.CLAIM_STREAMING**");
+            }
             onStreamingReclaimed(args);
         }
     };
@@ -355,6 +368,9 @@ public abstract class VideoController implements StreamConfirmCallback {
     private SocketManager.EventListener mStreamStopByExpirationListener = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.STOP_STREAM_BY_EXPIRATION**");
+            }
             onStreamingStoppedByExpired(args);
         }
     };

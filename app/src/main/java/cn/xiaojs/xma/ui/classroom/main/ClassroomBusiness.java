@@ -145,6 +145,11 @@ public class ClassroomBusiness {
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState) ||
                 Live.LiveSessionState.IDLE.equals(liveState)) {
+
+            if(LiveCtlSessionManager.getInstance().isIndividualing()) {
+                return false;
+            }
+
             return true;
         }
         return false;
@@ -172,7 +177,7 @@ public class ClassroomBusiness {
 
 
             if (XiaojsConfig.DEBUG) {
-                Logger.d("socket event info: " + result);
+                Logger.d("socket callback: " + result);
             }
 
 

@@ -238,6 +238,8 @@ public class Errors {
 
     public static final String PENDING_FOR_OPEN_ACK = "0x30000014";
 
+    public static final String NOT_ON_LIVE = "0x30000016";
+
     //endregion
 
 

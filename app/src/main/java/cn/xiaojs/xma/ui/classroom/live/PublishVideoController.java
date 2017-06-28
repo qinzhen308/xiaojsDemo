@@ -17,13 +17,17 @@ package cn.xiaojs.xma.ui.classroom.live;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -261,11 +265,30 @@ public class PublishVideoController extends VideoController {
     private SocketManager.EventListener mReceiveFeedback = new SocketManager.EventListener() {
         @Override
         public void call(final Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Received event: **Su.EventType.MEDIA_FEEDBACK**");
+            }
+
             if (args != null && args.length > 0) {
                 MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
-                if (response != null && response.playUrl != null) {
-                    mPlayStreamUrl = response.playUrl;
-                    playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, response.playUrl);
+                if (response != null) {
+                    if (Live.MediaStatus.READY == response.status && !TextUtils.isEmpty(response.playUrl)) {
+
+                        Toast.makeText(mContext, R.string.success_one2one,Toast.LENGTH_SHORT).show();
+
+                        mPlayStreamUrl = response.playUrl;
+                        playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, response.playUrl);
+                    }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == response.status) {
+                        Toast.makeText(mContext, R.string.user_refuse_one_to_one_tips,Toast.LENGTH_SHORT).show();
+                    }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == response.status) {
+                        Toast.makeText(mContext, R.string.failed_one2one_network_issue,Toast.LENGTH_SHORT).show();
+                    }else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY== response.status) {
+                        Toast.makeText(mContext, R.string.failed_one2one_privacy,Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(mContext, R.string.failed_one2one,Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         }
