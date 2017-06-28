@@ -6,10 +6,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.haha.perflib.Main;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.base.IntentFlags;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
@@ -53,15 +57,13 @@ public class EnrollSuccessActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_image:
-                finish();
+                MainActivity.invokeWithAction(this,null);
                 break;
             case R.id.enter_btn:
                 enterClass(ticket);
-                finish();
                 break;
             case R.id.look_btn:
                 enterMyLesson();
-                finish();
                 break;
         }
     }
@@ -69,18 +71,10 @@ public class EnrollSuccessActivity extends BaseActivity {
 
     //进入教室
     private void enterClass(String ticket) {
-
-        if (TextUtils.isEmpty(ticket)) {
-            Toast.makeText(this,"进入教室失败",Toast.LENGTH_SHORT).show();
-        }
-
-        Intent i = new Intent();
-        i.putExtra(Constants.KEY_TICKET, ticket);
-        i.setClass(this, ClassroomActivity.class);
-        this.startActivity(i);
+        MainActivity.invokeWithAction(this, MainActivity.ACTION_TO_CLASSROOM,ticket);
     }
 
     private void enterMyLesson() {
-        startActivity(new Intent(this,ClassesListActivity.class));
+        MainActivity.invokeWithAction(this,MainActivity.ACTION_TO_MY_CLASSES);
     }
 }

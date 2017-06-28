@@ -50,7 +50,6 @@ public class FastBlur {
     }
 
     public static Bitmap doBlur(Context context, Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
-
         if (Build.VERSION.SDK_INT > 16 && context != null) {
             Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
@@ -118,7 +117,6 @@ public class FastBlur {
 
         for (y = 0; y < h; y++) {
             rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            //计算单位矩阵内 各颜色分量的色值和
             for (i = -radius; i <= radius; i++) {
                 p = pix[yi + Math.min(wm, Math.max(i, 0))];
                 sir = stack[i + radius];
@@ -126,9 +124,9 @@ public class FastBlur {
                 sir[1] = (p & 0x00ff00) >> 8;
                 sir[2] = (p & 0x0000ff);
                 rbs = r1 - Math.abs(i);
-                rsum += sir[0] * rbs;
-                gsum += sir[1] * rbs;
-                bsum += sir[2] * rbs;
+                rsum += checkRgb(sir[0] * rbs);
+                gsum += checkRgb(sir[1] * rbs);
+                bsum += checkRgb(sir[2] * rbs);
                 if (i > 0) {
                     rinsum += sir[0];
                     ginsum += sir[1];
@@ -142,7 +140,6 @@ public class FastBlur {
             stackpointer = radius;
 
             for (x = 0; x < w; x++) {
-
                 r[yi] = dv[rsum];
                 g[yi] = dv[gsum];
                 b[yi] = dv[bsum];
@@ -204,9 +201,9 @@ public class FastBlur {
 
                 rbs = r1 - Math.abs(i);
 
-                rsum += r[yi] * rbs;
-                gsum += g[yi] * rbs;
-                bsum += b[yi] * rbs;
+                rsum += checkRgb(r[yi] * rbs);
+                gsum += checkRgb(g[yi] * rbs);
+                bsum += checkRgb(b[yi] * rbs);
 
                 if (i > 0) {
                     rinsum += sir[0];
@@ -274,5 +271,9 @@ public class FastBlur {
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
         return (bitmap);
+    }
+
+    private static int checkRgb(int c){
+        return c;
     }
 }

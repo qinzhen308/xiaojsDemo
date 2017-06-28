@@ -101,7 +101,7 @@ public class EditTimetableActivity extends BaseActivity {
         durationView.setText(String.valueOf(cLesson.schedule.getDuration()));
 
         //FIXME Clesson 没有返回是否播放字段
-        //recordView.setChecked(cLesson.);
+        recordView.setChecked(cLesson.recordable);
 
 
     }
@@ -199,7 +199,9 @@ public class EditTimetableActivity extends BaseActivity {
 
                 CheckLesson checkLesson = new CheckLesson();
                 checkLesson.schedule = schedule;
-
+                if(cLesson!=null){
+                    checkLesson.id=cLesson.id;
+                }
                 CheckOverlapParams overlapParams = new CheckOverlapParams();
                 overlapParams.classes = classId;
                 overlapParams.lessons = new ArrayList<>(1);

@@ -34,6 +34,7 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.JudgementUtil;
@@ -42,7 +43,7 @@ import cn.xiaojs.xma.util.JudgementUtil;
  * Created by Paul Z on 2017/5/19.
  */
 
-public class ClassFragment extends BaseFragment implements View.OnClickListener{
+public class ClassFragment extends BaseFragment implements View.OnClickListener , IUpdateMethod{
     @BindView(R.id.home_root)
     FrameLayout homeRoot;
     @BindView(R.id.layout_content_empty)
@@ -341,5 +342,22 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener{
         }else if(layoutNormal!=null&&contentBuz!=null){//以后创建时的回调
             contentBuz.update();
         }
+    }
+
+    @Override
+    public void updateData(boolean justNative) {
+        if(contentBuz==null)return;
+        if(justNative){
+            contentBuz.mAdapter.notifyDataSetChanged();
+        }else {
+            updateData();
+        }
+    }
+
+    @Override
+    public void updateItem(int position, Object obj, Object... others) {
+        if(contentBuz==null)return;
+        //未实现精准刷新，直接重新加载
+        updateData();
     }
 }
