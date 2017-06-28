@@ -53,6 +53,8 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import okhttp3.ResponseBody;
 
+import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -507,6 +509,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
     @Override
     public void onStreamStopped(int type, Object extra) {
+
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         setControllerBtnStyle(liveState);
         mTipsHelper.setTipsByStateOnStrop(liveState);
@@ -519,6 +522,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
 
+
                 if (Live.LiveSessionState.LIVE.equals(liveState)
                         && Live.LiveSessionState.DELAY.equals(liveState)) {
 
@@ -527,8 +531,14 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                         mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
                         mPlayVideoView.setVisibility(View.GONE);
                     } else {
-                        exitCurrentFragment();
-                        //exitCurrentFragmentPeerToPeer();
+
+                        if (extra != null && STREAM_MEDIA_CLOSED.equals((String)extra)) {
+                            exitCurrentFragmentPeerToPeer();
+                        }else {
+                            mPlayUrl = "";
+                            LiveCtlSessionManager.getInstance().getCtlSession().playUrl = "";
+                            exitCurrentFragment();
+                        }
                     }
                 } else {
                     if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
@@ -538,8 +548,13 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                         //mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
                         mPlayVideoView.setVisibility(View.GONE);
                     }else {
-                        //exitCurrentFragmentPeerToPeer();
-                        exitCurrentFragment();
+                        if (extra != null && STREAM_MEDIA_CLOSED.equals((String)extra)) {
+                            exitCurrentFragmentPeerToPeer();
+                        }else {
+                            mPlayUrl = "";
+                            LiveCtlSessionManager.getInstance().getCtlSession().playUrl = "";
+                            exitCurrentFragment();
+                        }
                     }
                 }
 
@@ -1011,7 +1026,8 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         mAlreadyExitFragment = true;
         Bundle data = new Bundle();
         data.putInt(Constants.KEY_FROM, Constants.FROM_PUBLISH_FRAGMENT);
-        data.putString(Constants.KEY_PLAY_URL, "");
+        data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
+
         ClassroomController.getInstance().enterPlayFragment(data, true);
 
         mHandKeyPressing = true;
@@ -1019,6 +1035,9 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
 
     private void exitCurrentFragment() {
+
+        LiveCtlSessionManager.getInstance().setOne2one(false);
+
         if (mAlreadyExitFragment) {
             mHandKeyPressing = true;
             return;
@@ -1030,6 +1049,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         switch (mPublishType) {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
 
+                mPlayUrl = "";
                 data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:

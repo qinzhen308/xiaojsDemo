@@ -109,6 +109,7 @@ public class ClassroomActivity extends FragmentActivity {
 
         //register network
         registerNetworkReceiver();
+
     }
 
     @Override
@@ -194,18 +195,18 @@ public class ClassroomActivity extends FragmentActivity {
                                 + ctlSession.accessible + "   psType=" + ctlSession.psType);
                     }
 
-                    if (!ctlSession.accessible) {
-                        checkForceKickOut(ctlSession, netWorkChanged);
-                    } else {
+//                    if (!ctlSession.accessible) {
+//                        checkForceKickOut(ctlSession, netWorkChanged);
+//                    } else {
                         onBootSessionSucc(false, ctlSession, netWorkChanged);
-                    }
+                    //}
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 if (XiaojsConfig.DEBUG) {
-                    Log.i("aaa", "BootSession fail");
+                    Logger.d("boot session error");
                 }
                 cancelProgress();
                 showContinueConnectClassroom(errorMessage);
@@ -219,6 +220,9 @@ public class ClassroomActivity extends FragmentActivity {
         }
 
         mEmptyTips.setVisibility(showEmptyTips ? View.VISIBLE : View.GONE);
+
+
+        showContinueConnectClassroom(null);
     }
 
     /**
@@ -251,7 +255,7 @@ public class ClassroomActivity extends FragmentActivity {
             SocketManager.init(ClassroomActivity.this, mTicket, ctlSession.secret, true, true, forceConnect);
             mSocket = SocketManager.getSocket();
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-            mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
+            //mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
             SocketManager.reListener();
             SocketManager.connect();
         }
@@ -262,7 +266,20 @@ public class ClassroomActivity extends FragmentActivity {
         TalkManager.getInstance().init(ClassroomActivity.this, mTicket);
 
         //init fragment
-        if (ClassroomController.getInstance().getStackFragment() == null) {
+
+        ClassroomLiveFragment liveFragment = ClassroomController.getInstance().getStackFragment();
+
+        if (liveFragment == null) {
+            initFragment(mCtlSession);
+        } else if (liveFragment instanceof PlayFragment) {
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(liveFragment)
+                    .commit();
+
+            ClassroomController.getInstance().setStackFragment(null);
+
             initFragment(mCtlSession);
         }
     }
@@ -308,7 +325,7 @@ public class ClassroomActivity extends FragmentActivity {
         SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
         mSocket = SocketManager.getSocket();
         mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-        mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
+        //mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
 
         //listener again
         if (SocketManager.hasEventListeners()) {
@@ -341,17 +358,25 @@ public class ClassroomActivity extends FragmentActivity {
                 mModeSwitchListener);
 
         SocketManager.connect();
+
+        //showProgress(false);
+
     }
 
     private SocketManager.EventListener mOnConnect = new SocketManager.EventListener() {
         @Override
         public void call(Object... args) {
             if (!mSktConnected) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
-                }
+                //if (XiaojsConfig.DEBUG) {
+                Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
+                // }
             }
             cancelProgress();
+
+            if (mContinueConnectDialog != null && mContinueConnectDialog.isShowing()) {
+                mContinueConnectDialog.dismiss();
+            }
+
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mSktConnected = true;
 
@@ -364,8 +389,41 @@ public class ClassroomActivity extends FragmentActivity {
         @Override
         public void call(Object... args) {
             mSktConnected = false;
+            cancelProgress();
+            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
+            mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
+
             if (XiaojsConfig.DEBUG) {
                 Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private SocketManager.EventListener mOnConnectError = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+            mSktConnected = false;
+            cancelProgress();
+            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
+            mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
+
+            // if (XiaojsConfig.DEBUG) {
+            Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
+            // }
+        }
+    };
+
+    private SocketManager.EventListener mSocketTimeoutListener = new SocketManager.EventListener() {
+        @Override
+        public void call(Object... args) {
+
+            mSktConnected = false;
+            cancelProgress();
+            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
+            mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("socket connect time out...");
             }
         }
     };
@@ -402,25 +460,6 @@ public class ClassroomActivity extends FragmentActivity {
         }
     };
 
-    private SocketManager.EventListener mOnConnectError = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            mSktConnected = false;
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    private SocketManager.EventListener mSocketTimeoutListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(ClassroomActivity.this, "socket connect time out", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -428,14 +467,16 @@ public class ClassroomActivity extends FragmentActivity {
                 switch (msg.what) {
                     case MSG_SOCKET_TIME_OUT:
                         //socket time out
-                        if (!mSktConnected && mSocketRetryCount++ < RETRY_COUNT) {
-                            //reconnect
-                            Logger.i("socket reconnecting!");
-                            initData(false, false);
-                        } else {
-                            cancelProgress();
-                            showContinueConnectClassroom(null);
-                        }
+//                        if (!mSktConnected && mSocketRetryCount++ < RETRY_COUNT) {
+//                            //reconnect
+//                            if (XiaojsConfig.DEBUG) {
+//                                Logger.i("socket reconnecting now!");
+//                            }
+//                            initData(true, false);
+//                        } else {
+                        cancelProgress();
+                        showContinueConnectClassroom(null);
+                        //}
                         break;
                 }
             }
@@ -480,6 +521,7 @@ public class ClassroomActivity extends FragmentActivity {
             } else {
                 mContinueConnectDialog.setDesc(errorTips);
             }
+            mContinueConnectDialog.setCancelable(false);
             mContinueConnectDialog.setLefBtnText(R.string.cr_live_connect_fail_exit);
             mContinueConnectDialog.setRightBtnText(R.string.cr_live_connect_fail_continue);
             mContinueConnectDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
@@ -487,7 +529,7 @@ public class ClassroomActivity extends FragmentActivity {
                 public void onClick() {
                     mContinueConnectDialog.dismiss();
                     mSocketRetryCount = 0;
-                    initData(true, false);
+                    initData(true, true);
                 }
             });
 
@@ -499,6 +541,8 @@ public class ClassroomActivity extends FragmentActivity {
             });
         }
 
+
+        ClassroomController.getInstance().enterPlayFragment(null, true);
         mContinueConnectDialog.show();
     }
 
@@ -562,22 +606,21 @@ public class ClassroomActivity extends FragmentActivity {
                 mNetworkState = ClassroomBusiness.NETWORK_WIFI;
                 if (mNetworkDisconnected) {
                     mNetworkDisconnected = false;
-                    setNoNetworkTips(false);
-                    //initData(true, true);
-                    SocketManager.reListener();
-                    SocketManager.connect();
+//                    setNoNetworkTips(false);
+//                    SocketManager.reListener();
+//                    SocketManager.connect();
                 }
             } else if (mobileNet) {
                 // mobile network
                 mNetworkState = ClassroomBusiness.NETWORK_OTHER;
                 if (mNetworkDisconnected) {
                     mNetworkDisconnected = false;
-                    setNoNetworkTips(false);
-                    //initData(true, true);
-                    SocketManager.reListener();
-                    SocketManager.connect();
+                    //setNoNetworkTips(false);
+                    //SocketManager.reListener();
+                    //SocketManager.connect();
                 }
             }
         }
     }
+
 }

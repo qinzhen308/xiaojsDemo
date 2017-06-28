@@ -64,7 +64,6 @@
             android:id="@+id/no_net_work_tips"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/socket_error_connect"
             android:textColor="@color/font_dark_gray"
             android:textSize="@dimen/font_28px"
             android:gravity="center"

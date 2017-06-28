@@ -69,6 +69,8 @@ public class ClassroomController {
     public static int MODE_FRAGMENT_PLAY_TALK = 0; //播放端交流模式
     public static int MODE_FRAGMENT_PLAY_FULL_SCREEN = 1; //播放全屏模式
 
+    public static final String ACTION_PLAY_URL_EMPTY = "action_purl_empty";
+
     private List<BackPressListener> mBackPressListeners;
     private List<SocketManager.OnSocketListener> mOnSocketListeners;
     private boolean mSocketConnected = false;
