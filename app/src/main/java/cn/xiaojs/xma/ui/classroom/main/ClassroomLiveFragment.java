@@ -67,6 +67,8 @@ import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 
+import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
+
 public abstract class ClassroomLiveFragment extends BaseFragment implements
         OnSettingChangedListener,
         OnStreamChangeListener,
@@ -391,7 +393,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 mAgreeOpenCamera = new CommonDialog(mContext);
                 mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
                 mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
-                mAgreeOpenCamera.setCanceledOnTouchOutside(false);
+                mAgreeOpenCamera.setCancelable(false);
 
                 mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
                     @Override
@@ -430,7 +432,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 Logger.d("Received event: **Su.EventType.MEDIA_ABORTED**");
             }
 
-            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, null);
+            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
         }
     };
 
@@ -441,8 +443,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             if (XiaojsConfig.DEBUG) {
                 Logger.d("Received event: **Su.EventType.CLOSE_MEDIA**");
             }
+            LiveCtlSessionManager.getInstance().setOne2one(false);
 
-            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, null);
+            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
         }
     };
 
@@ -504,15 +507,21 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                             if (XiaojsConfig.DEBUG) {
                                 Toast.makeText(mContext, R.string.seend_one_to_one_ok, Toast.LENGTH_LONG).show();
                             }
+
+                            LiveCtlSessionManager.getInstance().setOne2one(true);
+
                         } else if (Errors.MEDIA_ALREADY_OPENED.equals(response.ec)) {
                             String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
                             Toast.makeText(mContext, tips, Toast.LENGTH_LONG).show();
+                            LiveCtlSessionManager.getInstance().setOne2one(false);
                         } else if (Errors.PENDING_FOR_OPEN_ACK.equals(response.ec)) {
                             Toast.makeText(mContext, R.string.has_send_one_to_noe_tips, Toast.LENGTH_LONG).show();
                         } else if (Errors.NOT_ON_LIVE.equals(response.ec)) {
                             Toast.makeText(mContext, R.string.send_one_to_one_offline_tips, Toast.LENGTH_LONG).show();
+                            LiveCtlSessionManager.getInstance().setOne2one(false);
                         } else {
                             Toast.makeText(mContext, R.string.send_one_to_one_failed, Toast.LENGTH_LONG).show();
+                            LiveCtlSessionManager.getInstance().setOne2one(false);
                         }
                     }
                 }
@@ -521,6 +530,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     }
 
     protected void sendCloseMedia() {
+
+        LiveCtlSessionManager.getInstance().setOne2one(false);
 
         OpenMedia media = new OpenMedia();
         media.to = peerAccountId;
@@ -550,6 +561,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
 
     protected void sendRefuseMedia() {
+
+        LiveCtlSessionManager.getInstance().setOne2one(false);
 
         MediaFeedback media = new MediaFeedback();
         media.status = Live.MediaStatus.FAILED_DUE_TO_DENIED;

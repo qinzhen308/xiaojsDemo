@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
@@ -29,7 +30,11 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.model.ctl.FinishClassResponse;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -52,6 +57,8 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import okhttp3.ResponseBody;
+
+import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -507,6 +514,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
     @Override
     public void onStreamStopped(int type, Object extra) {
+
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         setControllerBtnStyle(liveState);
         mTipsHelper.setTipsByStateOnStrop(liveState);
@@ -519,6 +527,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
 
+
                 if (Live.LiveSessionState.LIVE.equals(liveState)
                         && Live.LiveSessionState.DELAY.equals(liveState)) {
 
@@ -527,8 +536,14 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                         mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
                         mPlayVideoView.setVisibility(View.GONE);
                     } else {
-                        exitCurrentFragment();
-                        //exitCurrentFragmentPeerToPeer();
+
+                        if (extra != null && STREAM_MEDIA_CLOSED.equals((String)extra)) {
+                            exitCurrentFragmentPeerToPeer();
+                        }else {
+                            mPlayUrl = "";
+                            LiveCtlSessionManager.getInstance().getCtlSession().playUrl = "";
+                            exitCurrentFragment();
+                        }
                     }
                 } else {
                     if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
@@ -538,8 +553,13 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                         //mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
                         mPlayVideoView.setVisibility(View.GONE);
                     }else {
-                        //exitCurrentFragmentPeerToPeer();
-                        exitCurrentFragment();
+                        if (extra != null && STREAM_MEDIA_CLOSED.equals((String)extra)) {
+                            exitCurrentFragmentPeerToPeer();
+                        }else {
+                            mPlayUrl = "";
+                            LiveCtlSessionManager.getInstance().getCtlSession().playUrl = "";
+                            exitCurrentFragment();
+                        }
                     }
                 }
 
@@ -951,6 +971,17 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             @Override
             public void onSuccess(ResponseBody object) {
                 cancelProgress();
+
+                if (object != null) {
+                    FinishClassResponse response = getFinishClassResponse(object);
+                    if (response!= null) {
+                        LiveCtlSessionManager.getInstance().mFinishClassResponse = response;
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("csOfCurrent:"+ response.csOfCurrent);
+                        }
+                    }
+                }
+
                 LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.FINISHED);
                 if (withFragment) {
                     exitCurrentFragment();
@@ -964,6 +995,18 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 cancelProgress();
             }
         });
+    }
+
+    private FinishClassResponse getFinishClassResponse(ResponseBody body) {
+        FinishClassResponse response = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = body.string();
+            response = mapper.readValue(json, FinishClassResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     private void showFinishDialog() {
@@ -1011,7 +1054,8 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         mAlreadyExitFragment = true;
         Bundle data = new Bundle();
         data.putInt(Constants.KEY_FROM, Constants.FROM_PUBLISH_FRAGMENT);
-        data.putString(Constants.KEY_PLAY_URL, "");
+        data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
+
         ClassroomController.getInstance().enterPlayFragment(data, true);
 
         mHandKeyPressing = true;
@@ -1019,6 +1063,9 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
 
     private void exitCurrentFragment() {
+
+        LiveCtlSessionManager.getInstance().setOne2one(false);
+
         if (mAlreadyExitFragment) {
             mHandKeyPressing = true;
             return;
@@ -1030,6 +1077,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         switch (mPublishType) {
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
 
+                mPlayUrl = "";
                 data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH:

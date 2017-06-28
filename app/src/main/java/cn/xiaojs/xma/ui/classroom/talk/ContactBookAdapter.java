@@ -346,6 +346,8 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                                 if (mOnAttendItemClick != null) {
                                     if (attendee.xa == 0) {
                                         Toast.makeText(mContext, R.string.offline_peer_to_peer_tips, Toast.LENGTH_SHORT).show();
+                                    } else if (LiveCtlSessionManager.getInstance().isOne2one()){
+                                        Toast.makeText(mContext, "您正在1对1视频～", Toast.LENGTH_SHORT).show();
                                     } else {
                                         mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);
                                     }

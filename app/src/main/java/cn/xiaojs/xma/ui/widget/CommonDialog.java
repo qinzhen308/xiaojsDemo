@@ -73,13 +73,13 @@ public class CommonDialog extends Dialog {
         mDesc = (TextView) findViewById(R.id.common_dialog_desc);
         mContainer = (FrameLayout) findViewById(R.id.common_dialog_container);
 
-        FrameLayout rootLay = (FrameLayout) findViewById(R.id.common_dialog_root);
-        rootLay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+//        FrameLayout rootLay = (FrameLayout) findViewById(R.id.common_dialog_root);
+//        rootLay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dismiss();
+//            }
+//        });
         mNormal = (RelativeLayout) findViewById(R.id.common_dialog_normal_wrapper);
         mLeftButton = (Button) findViewById(R.id.left_btn);
         mRightButton = (Button) findViewById(R.id.right_btn);
