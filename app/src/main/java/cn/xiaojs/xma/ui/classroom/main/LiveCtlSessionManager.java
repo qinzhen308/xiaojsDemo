@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.classroom.main;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 
 public class LiveCtlSessionManager {
@@ -31,6 +32,8 @@ public class LiveCtlSessionManager {
 
     private boolean individualing = false;
     private boolean one2one = false;
+
+    public FinishClassResponse mFinishClassResponse;
 
     public static synchronized LiveCtlSessionManager getInstance() {
         if (mInstance == null) {

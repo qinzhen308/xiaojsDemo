@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
@@ -29,7 +30,11 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.model.ctl.FinishClassResponse;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -966,6 +971,17 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             @Override
             public void onSuccess(ResponseBody object) {
                 cancelProgress();
+
+                if (object != null) {
+                    FinishClassResponse response = getFinishClassResponse(object);
+                    if (response!= null) {
+                        LiveCtlSessionManager.getInstance().mFinishClassResponse = response;
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("csOfCurrent:"+ response.csOfCurrent);
+                        }
+                    }
+                }
+
                 LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.FINISHED);
                 if (withFragment) {
                     exitCurrentFragment();
@@ -979,6 +995,18 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 cancelProgress();
             }
         });
+    }
+
+    private FinishClassResponse getFinishClassResponse(ResponseBody body) {
+        FinishClassResponse response = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = body.string();
+            response = mapper.readValue(json, FinishClassResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     private void showFinishDialog() {

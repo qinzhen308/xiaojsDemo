@@ -31,6 +31,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
@@ -43,6 +44,7 @@ import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -141,21 +143,47 @@ public class PublishVideoController extends VideoController {
                                 });
                     } else {
                         //send stopped stream
-                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                                new SocketManager.IAckListener() {
-                                    @Override
-                                    public void call(Object... args) {
-                                        if (args != null && args.length > 0) {
-                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                            if (response.result) {
-                                                mNeedStreamRePublishing = true;
-                                                if (mStreamChangeListener != null) {
-                                                    mStreamChangeListener.onStreamStopped(type, null);
+
+                        FinishClassResponse response = LiveCtlSessionManager.getInstance().mFinishClassResponse;
+                        if (response !=null && !TextUtils.isEmpty(response.csOfCurrent)) {
+                            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),response,
+                                    new SocketManager.IAckListener() {
+                                        @Override
+                                        public void call(Object... args) {
+
+                                            LiveCtlSessionManager.getInstance().mFinishClassResponse = null;
+
+                                            if (args != null && args.length > 0) {
+                                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                                if (response.result) {
+                                                    mNeedStreamRePublishing = true;
+                                                    if (mStreamChangeListener != null) {
+                                                        mStreamChangeListener.onStreamStopped(type, null);
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                });
+                                    });
+                            LiveCtlSessionManager.getInstance().mFinishClassResponse = null;
+                        } else {
+                            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
+                                    new SocketManager.IAckListener() {
+                                        @Override
+                                        public void call(Object... args) {
+                                            if (args != null && args.length > 0) {
+                                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                                if (response.result) {
+                                                    mNeedStreamRePublishing = true;
+                                                    if (mStreamChangeListener != null) {
+                                                        mStreamChangeListener.onStreamStopped(type, null);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                        }
+
+
                     }
 
 
