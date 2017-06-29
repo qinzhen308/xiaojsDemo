@@ -58,7 +58,7 @@ public class TimeProgressHelper {
         mLiveShowTv = (TextView) timeStatusBar.findViewById(R.id.live_show);
         CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
         //TODO get duration
-        mLessonDuration = session.ctl != null ? session.ctl.duration : 0;
+        mLessonDuration = (session !=null && session.ctl != null) ? session.ctl.duration : 0;
 
         mHandler = new Handler(mContext.getMainLooper()) {
             @Override

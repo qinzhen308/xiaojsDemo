@@ -1104,6 +1104,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         data.putString(Constants.KEY_PUBLISH_URL, publishUrl);
         data.putString(Constants.KEY_PLAY_URL, playUrl);
         data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
+
+        if (streamType == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+            mCountTime = mTimeProgressHelper.getCountTime();
+        }
+
         data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
         XjsUtils.hideIMM(mContext, mContent.getWindowToken());
         ClassroomController.getInstance().enterPublishFragment(data, true);

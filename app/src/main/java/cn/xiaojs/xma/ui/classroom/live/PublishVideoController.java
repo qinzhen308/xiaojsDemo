@@ -362,6 +362,12 @@ public class PublishVideoController extends VideoController {
                 mStreamPublishing = false;
                 mPublishView.pause();
                 mPublishView.setVisibility(View.GONE);
+
+                if (mPlayView.getVisibility() == View.VISIBLE) {
+                    mPlayView.pause();
+                    mPlayView.setVisibility(View.GONE);
+                }
+
             }
         }
     }

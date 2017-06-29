@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.haha.perflib.Main;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;

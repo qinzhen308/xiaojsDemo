@@ -161,11 +161,11 @@ public class CreateTimetableActivity extends BaseActivity {
             return;
         }
 
-        if (Integer.parseInt(durationStr) < MIN_CLASS_LESSON_DURATION) {
-            String tips = String.format(getString(R.string.class_lesson_duration_must_be_more_than), MIN_CLASS_LESSON_DURATION);
-            Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (Integer.parseInt(durationStr) < MIN_CLASS_LESSON_DURATION) {
+//            String tips = String.format(getString(R.string.class_lesson_duration_must_be_more_than), MIN_CLASS_LESSON_DURATION);
+//            Toast.makeText(this, tips, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
 
         //此处判断时间是否有冲突
