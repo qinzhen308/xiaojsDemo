@@ -65,6 +65,7 @@ public class ClassroomActivity extends FragmentActivity {
     private final static int REQUEST_PERMISSION = 1000;
 
     private final static int MSG_SOCKET_TIME_OUT = 0;
+    private final static int SOCKET_CONNECT_TIMEOUT = 1;
 
     //socket time out
     private final static int SOCKET_TIME_OUT = 5 * 1000; //10s
@@ -198,7 +199,7 @@ public class ClassroomActivity extends FragmentActivity {
 //                    if (!ctlSession.accessible) {
 //                        checkForceKickOut(ctlSession, netWorkChanged);
 //                    } else {
-                        onBootSessionSucc(false, ctlSession, netWorkChanged);
+                    onBootSessionSucc(false, ctlSession, netWorkChanged);
                     //}
                 }
             }
@@ -330,8 +331,16 @@ public class ClassroomActivity extends FragmentActivity {
         //listener again
         if (SocketManager.hasEventListeners()) {
             SocketManager.reListener();
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("reListener..********************************..");
+            }
+
         } else {
             listenSocket();
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("listenSocket..*****************************..");
+            }
         }
     }
 
@@ -359,7 +368,11 @@ public class ClassroomActivity extends FragmentActivity {
 
         SocketManager.connect();
 
-        //showProgress(false);
+        showProgress(false);
+        if (mHandler != null) {
+            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
+            mHandler.sendEmptyMessageDelayed(SOCKET_CONNECT_TIMEOUT, 20 * 1000);
+        }
 
     }
 
@@ -378,6 +391,7 @@ public class ClassroomActivity extends FragmentActivity {
             }
 
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
+            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
             mSktConnected = true;
 
             ContactManager.getInstance().getAttendees(ClassroomActivity.this, null);
@@ -390,6 +404,7 @@ public class ClassroomActivity extends FragmentActivity {
         public void call(Object... args) {
             mSktConnected = false;
             cancelProgress();
+            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
 
@@ -404,6 +419,7 @@ public class ClassroomActivity extends FragmentActivity {
         public void call(Object... args) {
             mSktConnected = false;
             cancelProgress();
+            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
 
@@ -419,6 +435,7 @@ public class ClassroomActivity extends FragmentActivity {
 
             mSktConnected = false;
             cancelProgress();
+            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
             mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
             mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
 
@@ -477,6 +494,13 @@ public class ClassroomActivity extends FragmentActivity {
                         cancelProgress();
                         showContinueConnectClassroom(null);
                         //}
+                        break;
+                    case SOCKET_CONNECT_TIMEOUT:
+                        cancelProgress();
+                        if (!mSktConnected) {
+                            showContinueConnectClassroom(null);
+                        }
+
                         break;
                 }
             }

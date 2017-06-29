@@ -169,6 +169,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
      * 是否是竖屏
      */
     protected boolean isPortrait() {
+        if (getActivity() == null)
+            return false;
+
         return getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     }
 

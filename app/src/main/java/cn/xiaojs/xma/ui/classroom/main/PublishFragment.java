@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -77,6 +80,7 @@ import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSE
 
 public class PublishFragment extends ClassroomLiveFragment implements LiveRecordView.Listener {
     private final static float PLAY_VIDEO_RATION = 16 / 9.0f;
+    public static final int MSG_WHAT_EXIT_PUBLISH = 0x4;
 
     @BindView(R.id.tip_view)
     View mTipView;
@@ -170,6 +174,15 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 playOrPauseLesson();
                 break;
             case R.id.setting_btn:
+                String currentState = LiveCtlSessionManager.getInstance().getLiveState();
+                if (Live.LiveSessionState.LIVE.equals(currentState)
+                        || Live.LiveSessionState.DELAY.equals(currentState)) {
+
+                    Toast.makeText(mContext,"上课中，设置不可用",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 if (isPortrait()) {
                     mClassroomController.openSetting(this, SheetFragment.SHEET_GRAVITY_BOTTOM, mSlideViewHeight, this);
                 } else {
@@ -515,7 +528,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     @Override
     public void onStreamStopped(int type, Object extra) {
 
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         setControllerBtnStyle(liveState);
         mTipsHelper.setTipsByStateOnStrop(liveState);
 
@@ -524,12 +537,21 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 mCountTime = mTimeProgressHelper.getCountTime();
                 mTimeProgressHelper.setTimeProgress(mCountTime, liveState, false);
 
+                if (extra != null
+                        && extra instanceof String
+                        && VideoController.STREAM_EXPIRED.equals((String) extra)) {
+
+                    if (exitHandler != null) {
+                        exitHandler.removeMessages(MSG_WHAT_EXIT_PUBLISH);
+                        exitHandler.sendEmptyMessageDelayed(MSG_WHAT_EXIT_PUBLISH,2*1000);
+                    }
+                }
+
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER:
 
-
                 if (Live.LiveSessionState.LIVE.equals(liveState)
-                        && Live.LiveSessionState.DELAY.equals(liveState)) {
+                        || Live.LiveSessionState.DELAY.equals(liveState)) {
 
                     if (ClassroomBusiness.hasTeachingAbility()) {
                         mCountTime = mTimeProgressHelper.getCountTime();
@@ -576,7 +598,12 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                     LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
                     exitCurrentFragment();
                 }
-
+                break;
+            case StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER:
+                if (exitHandler != null) {
+                    exitHandler.removeMessages(MSG_WHAT_EXIT_PUBLISH);
+                    exitHandler.sendEmptyMessageDelayed(MSG_WHAT_EXIT_PUBLISH,2*1000);
+                }
                 break;
         }
 
@@ -774,7 +801,13 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 || LiveCtlSessionManager.getInstance().isIndividualing()) {
             //pause and exit
             pauseIndividual(true);
-        } else {
+        } else if((Live.LiveSessionState.LIVE.equals(liveState)
+                || Live.LiveSessionState.IDLE.equals(liveState)
+                || Live.LiveSessionState.FINISHED.equals(liveState)
+                || Live.LiveSessionState.SCHEDULED.equals(liveState))
+                && mPublishType == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+            exitCurrentFragmentPeerToPeer();
+        }else {
             exitCurrentFragment();
         }
     }
@@ -1158,8 +1191,11 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             params.bottomMargin = 0;
             params.removeRule(RelativeLayout.ABOVE);
             mPublishCameraSwitcher.setVisibility(View.GONE);
+            mPlayVideoView.setBackgroundColor(Color.BLACK);
             //mClosePlayFullScreenImg.setVisibility(View.VISIBLE);
         } else {
+            mPlayVideoView.setBackgroundColor(Color.TRANSPARENT);
+
             mPublishCameraSwitcher.setVisibility(View.VISIBLE);
             //mClosePlayFullScreenImg.setVisibility(View.GONE);
             mNormalVideoWidth = videoW;
@@ -1235,4 +1271,19 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     public void onTalkItemClick() {
         startAnim();
     }
+
+
+    private Handler exitHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_WHAT_EXIT_PUBLISH:
+                    exitCurrentFragment();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
 }

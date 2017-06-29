@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
-import com.squareup.haha.perflib.Main;
 
 
 import java.util.ArrayList;
