@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
@@ -179,7 +181,16 @@ public class CreateClassActivity extends BaseActivity {
         }
 
         notVerifyBtn.setChecked(true);
-
+        verifyGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if(checkedId==R.id.need_verify){
+                    AnalyticEvents.onEvent(CreateClassActivity.this,39);
+                }else if(checkedId==R.id.not_verify){
+                    AnalyticEvents.onEvent(CreateClassActivity.this,40);
+                }
+            }
+        });
 
     }
 

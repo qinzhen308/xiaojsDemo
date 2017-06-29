@@ -17,6 +17,7 @@ import butterknife.BindView;
 
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.xf_foundation.platform.NotificationTemplate;
 import cn.xiaojs.xma.data.NotificationDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -112,9 +113,21 @@ public class MessageFragment extends BaseFragment {
                 });
     }
 
+    private void analyticClick(NotificationCategory category){
+        if (category.name.equalsIgnoreCase(NotificationTemplate.INVITATION_NOTIFICATION)) {
+            AnalyticEvents.onEvent(getActivity(),27);
+        } else if (category.name.equalsIgnoreCase(NotificationTemplate.FOLLOW_NOTIFICATION)) {
+            AnalyticEvents.onEvent(getActivity(),25);
+        }else if (category.name.equalsIgnoreCase(NotificationTemplate.CTL_NOTIFICATION)) {
+            AnalyticEvents.onEvent(getActivity(),26);
+        }else if (category.name.equalsIgnoreCase(NotificationTemplate.PLATFORM_NOTIFICATION)) {
+            AnalyticEvents.onEvent(getActivity(),24);
+        }
+    }
+
 
     private void enterCategoryList(NotificationCategory category) {
-
+        analyticClick(category);
         Intent intent = new Intent(mContext, NotificationCategoryListActivity.class);
         intent.putExtra(NotificationConstant.KEY_NOTIFICATION_CATEGORY_ID, category.id);
         intent.putExtra(NotificationConstant.KEY_NOTIFICATION_TITLE, category.remarks);

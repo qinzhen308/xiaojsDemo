@@ -35,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -172,6 +173,7 @@ public class HomeClassContentBuz {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_scan2:
+                AnalyticEvents.onEvent(mContext,35);
                 if (PermissionUtil.isOverMarshmallow() && ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     mContext.requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
                 } else {
@@ -179,9 +181,12 @@ public class HomeClassContentBuz {
                 }
                 break;
             case R.id.s_root:
+                AnalyticEvents.onEvent(mContext,2);
                 mContext.startActivityForResult(new Intent(mContext,SearchActivity.class),100);
+
                 break;
             case R.id.btn_add:
+                AnalyticEvents.onEvent(mContext,1);
                 showMenu(btnAdd);
                 break;
             case R.id.btn_today:
@@ -203,11 +208,13 @@ public class HomeClassContentBuz {
 
                 switch (i) {
                     case 1:
+                        AnalyticEvents.onEvent(mContext,34);
                         if (JudgementUtil.checkTeachingAbility(mContext)) {
                             mContext.startActivity(new Intent(mContext, CreateClassActivity.class));
                         }
                         break;
                     case 0:
+                        AnalyticEvents.onEvent(mContext,33);
                         if (JudgementUtil.checkTeachingAbility(mContext)) {
                             //老师可以开课
                             Intent intent = new Intent(mContext, LessonCreationActivity.class);

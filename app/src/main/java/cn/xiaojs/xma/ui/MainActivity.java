@@ -26,6 +26,7 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
@@ -146,6 +147,13 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
     protected void onTabClick(int position) {
         judgeDoubleClick(position);
         super.onTabClick(position);
+        if(position==0){
+            AnalyticEvents.onEvent(this,3);
+        }else if(position==1){
+            AnalyticEvents.onEvent(this,4);
+        }else if(position==2){
+            AnalyticEvents.onEvent(this,5);
+        }
     }
 
     private final void judgeDoubleClick(int position){

@@ -24,6 +24,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -1069,6 +1070,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             });
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
                 || LiveCtlSessionManager.getInstance().isIndividualing()) {
+//            AnalyticEvents.onEvent(getActivity(),41);
 
             cancelProgress();
             LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);

@@ -44,6 +44,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.data.OtherDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.QRCodeData;
@@ -151,20 +152,22 @@ public class ShareQrcodeActivity extends BaseActivity {
         if(bm!=null){
             ShareUtil.shareByUmeng(this,  bm, "");
         }
-//        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
-//            Bitmap shareBitmap = BitmapFactory.decodeResource(getResources(),
-//                    R.drawable.xjs_app_qrcode);
-//
-//            ShareUtil.shareImage(this, shareBitmap, XiaojsConfig.APP_QRCODE_URL, getString(R.string.client_download_qrcode));
-//        } else if (qrcodeType == CLASS_QRCODE) {
-//            ShareUtil.shareByUmeng(this,  imgUrl, getString(R.string.client_download_qrcode));
-//        }
+        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
+            AnalyticEvents.onEvent(this,29);
+        } else if (qrcodeType == CLASS_QRCODE) {
+
+        }
 
 
     }
 
 
     private void savePicture() {
+        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
+            AnalyticEvents.onEvent(this,28);
+        } else if (qrcodeType == CLASS_QRCODE) {
+
+        }
         layQrcode.setDrawingCacheEnabled(true);
         Bitmap bm=layQrcode.getDrawingCache();
         bm=bm.createBitmap(bm);
