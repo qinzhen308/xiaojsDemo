@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -210,10 +211,11 @@ public class LessonCreationActivity extends BaseActivity {
                 selectLessonStartTime();
                 break;
             case R.id.optional_info:
+                AnalyticEvents.onEvent(this,20);
                 enterOptionalInfoPage();
                 break;
             case R.id.on_shelves:
-
+                AnalyticEvents.onEvent(this,21);
                 if (mType == CourseConstant.TYPE_LESSON_EDIT) {
                     Toast.makeText(mContext, "您不能编辑此项", Toast.LENGTH_SHORT).show();
                     return;
@@ -232,7 +234,14 @@ public class LessonCreationActivity extends BaseActivity {
 
                 break;
             case R.id.playback_btn:
+                v.setSelected(!v.isSelected() ? true : false);
+                AnalyticEvents.onEvent(this,23);
+
+                break;
             case R.id.publish_personal_page:
+                v.setSelected(!v.isSelected() ? true : false);
+                AnalyticEvents.onEvent(this,22);
+                break;
             case R.id.publish_to_circle:
                 v.setSelected(!v.isSelected() ? true : false);
                 break;
@@ -277,7 +286,9 @@ public class LessonCreationActivity extends BaseActivity {
                     //mChargeLayout.setVisibility(View.VISIBLE);
                     mStuCountLayout.setVisibility(View.VISIBLE);
                     mStuCountDivide.setVisibility(View.VISIBLE);
+                    AnalyticEvents.onEvent(LessonCreationActivity.this,18);
                 } else if (checkedId == R.id.no_mandatory_btn) {
+                    AnalyticEvents.onEvent(LessonCreationActivity.this,19);
                     //mChargeLayout.setVisibility(View.GONE);
                     mStuCountLayout.setVisibility(View.GONE);
                     mStuCountDivide.setVisibility(View.GONE);

@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
@@ -100,9 +101,11 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
         Intent intent=null;
         switch (view.getId()) {
             case R.id.op_schedule_view:
+                AnalyticEvents.onEvent(getContext(),37);
                 ClassScheduleActivity.invoke(getContext(),mData.id,mData.title,isTeaching());
                 break;
             case R.id.op_data_view:
+                AnalyticEvents.onEvent(getContext(),38);
                 intent = new Intent(getContext(), ClassMaterialActivity.class);
 //                intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
                 intent.putExtra(ClassMaterialActivity.EXTRA_ID, mData.id);
@@ -113,6 +116,7 @@ public class ClassView extends RelativeLayout implements IViewModel<PrivateClass
             case R.id.op_more_view:
                 break;
             case R.id.op_room_view:
+                AnalyticEvents.onEvent(getContext(),36);
                 intent=new Intent(getContext(),ClassroomActivity.class);
                 intent.putExtra(Constants.KEY_TICKET,mData.ticket);
                 getContext().startActivity(intent);

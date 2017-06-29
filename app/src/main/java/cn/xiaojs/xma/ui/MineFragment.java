@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -168,6 +169,7 @@ public class MineFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
+                AnalyticEvents.onEvent(getActivity(),9);
                 startActivity(new Intent(mContext, ClassesListActivity.class));
                 //startActivity(new Intent(mContext, TeachLessonActivity.class));
                 break;
@@ -175,15 +177,17 @@ public class MineFragment extends BaseFragment {
 //                startActivity(new Intent(mContext, EnrollLessonActivity.class));
 //                break;
             case R.id.my_document_layout:
+                AnalyticEvents.onEvent(getActivity(),10);
                 startActivity(new Intent(mContext, MaterialActivity.class).putExtra(MaterialActivity.KEY_IS_MINE,true));
                 break;
 //            case R.id.my_favorites_layout:
 //                break;
             case R.id.my_contact_layout:
+                AnalyticEvents.onEvent(getActivity(),11);
                 startActivity(new Intent(mContext, ContactActivity.class));
                 break;
             case R.id.teach_ability_layout:
-
+                AnalyticEvents.onEvent(getActivity(),12);
                 Intent intent = new Intent();
                 intent.setClass(mContext, SubjectSelectorActivity.class);
                 intent.putExtra(SubjectSelectorActivity.EXTRA_NORMAL, 1);
@@ -192,6 +196,7 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
                 break;
             case R.id.name_auth_layout:
+                AnalyticEvents.onEvent(getActivity(),13);
                 if (AccountDataManager.isTeacher(mContext)) {
                     startActivity(new Intent(mContext, CertificationActivity.class));
                 }else{
@@ -219,9 +224,12 @@ public class MineFragment extends BaseFragment {
 
                 break;
             case R.id.settings_layout:
+                AnalyticEvents.onEvent(getActivity(),14);
+
                 startActivity(new Intent(mContext, SettingsActivity.class));
                 break;
             case R.id.person_home:
+                AnalyticEvents.onEvent(getActivity(),7);
                 startActivity(new Intent(mContext, PersonHomeActivity.class).putExtra(PersonalBusiness.KEY_IS_MYSELF,true));
                 break;
             case R.id.portrait:
@@ -232,9 +240,12 @@ public class MineFragment extends BaseFragment {
                 startActivity(new Intent(mContext, MyOrderActivity.class));
                 break;
             case R.id.message_entrance:
+                AnalyticEvents.onEvent(getActivity(),8);
                 enterMessage();
                 break;
             case R.id.qrcode_layout:
+                AnalyticEvents.onEvent(getActivity(),15);
+
                 Intent qrIntent = new Intent(mContext, ShareQrcodeActivity.class);
                 qrIntent.putExtra(ShareQrcodeActivity.EXTRA_QRCODE_TYPE,
                         ShareQrcodeActivity.CLIENT_DOWNLOAD_QRCODE);

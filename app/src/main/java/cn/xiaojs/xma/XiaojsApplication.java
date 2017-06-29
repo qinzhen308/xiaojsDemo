@@ -69,15 +69,18 @@ public class XiaojsApplication extends Application {
 
 
         //umeng release版本时，才加入统计
+        MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(getApplicationContext(),
+                XiaojsConfig.UMENG_APPKEY,
+                XiaojsConfig.CHANNEL,
+                MobclickAgent.EScenarioType.E_UM_NORMAL,
+                false);
         if (APPUtils.isProEvn()) {
-            MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(getApplicationContext(),
-                    XiaojsConfig.UMENG_APPKEY,
-                    XiaojsConfig.CHANNEL,
-                    MobclickAgent.EScenarioType.E_UM_NORMAL,
-                    false);
-            MobclickAgent.startWithConfigure(config);
+            MobclickAgent.setDebugMode(false);
+        }else {
+            MobclickAgent.setDebugMode(true);
         }
-        
+        MobclickAgent.startWithConfigure(config);
+
         //init xiaojs utils
         XjsUtils.init(this);
 

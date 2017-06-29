@@ -22,6 +22,7 @@ import com.bumptech.glide.signature.StringSignature;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -109,6 +110,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 finish();
                 break;
             case R.id.add_cover:
+                AnalyticEvents.onEvent(this,30);
                 i = new Intent(this, CropImageMainActivity.class);
                 i.putExtra(CropImagePath.CROP_IMAGE_WIDTH, COURSE_COVER_WIDTH);
                 i.putExtra(CropImagePath.CROP_IMAGE_HEIGHT, COURSE_COVER_HEIGHT);
@@ -122,11 +124,13 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 startActivityForResult(i, ADD_COVER);
                 break;
             case R.id.live_lesson_brief:
+                AnalyticEvents.onEvent(this,31);
                 i = new Intent(this, LiveLessonBriefActivity.class);
                 i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, LESSON_BRIEF);
                 break;
             case R.id.live_lesson_label:
+                AnalyticEvents.onEvent(this,32);
                 i = new Intent(this, LiveLessonLabelActivity.class);
                 i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, LESSON_LABEL);

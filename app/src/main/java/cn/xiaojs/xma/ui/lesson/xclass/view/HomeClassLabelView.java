@@ -11,6 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 
@@ -60,6 +61,7 @@ public class HomeClassLabelView extends LinearLayout implements IViewModel<Class
 
     @OnClick(R.id.tv_all)
     public void onViewClicked() {
+        AnalyticEvents.onEvent(getContext(),6);
         getContext().startActivity(new Intent(getContext(),ClassesListActivity.class));
     }
 }

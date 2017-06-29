@@ -33,6 +33,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -203,6 +206,7 @@ public class HomeFragment extends BaseFragment {
                 break;
             case R.id.iv_write_dynamic:
                 startActivityForResult(new Intent(getActivity(), PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
+                AnalyticEvents.onEvent(getActivity(),16);
                 break;
         }
     }

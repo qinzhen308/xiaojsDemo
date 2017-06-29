@@ -15,6 +15,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -88,6 +89,7 @@ public class TeachingSubjectFragment extends BaseFragment implements TeachingSub
                 }
                 break;
             case R.id.search_subject:
+                AnalyticEvents.onEvent(getActivity(),17);
 //                startActivity(new Intent(getActivity(),TeachingSubjectSearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),mSearchSubjectEdt,"search_bar").toBundle());
                 getActivity().startActivityForResult(new Intent(getActivity(),TeachingSubjectSearchActivity.class),100);
                 break;
