@@ -477,6 +477,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 String ticket=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+0);
                 if (TextUtils.isEmpty(ticket)) {
                     Toast.makeText(this,"进入教室失败",Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 Intent i = new Intent();

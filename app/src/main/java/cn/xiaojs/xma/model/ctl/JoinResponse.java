@@ -10,5 +10,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JoinResponse {
     public String id;
+    public String ticket;
     public boolean payment;
 }

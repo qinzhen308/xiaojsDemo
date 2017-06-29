@@ -8,6 +8,7 @@ import android.webkit.WebView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
@@ -15,6 +16,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import okhttp3.ResponseBody;
 
 /**
@@ -45,15 +47,20 @@ public class JsInvokeNativeInterface {
                 ((IDialogMethod)context).cancelProgress();
 
                 JoinResponse joinResponse = getJoinResponse(object);
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
                 if (joinResponse == null) {
                     ToastUtil.showToast(context,"加入成功");
-                }else {
+                    context.startActivity(new Intent(context,MainActivity.class));
+                }else if(!TextUtils.isEmpty(joinResponse.id)){
                     //此班是需要申请验证才能加入的班
                     ToastUtil.showToast(context,"你已经申请加入，等待确认");
+                    context.startActivity(new Intent(context,MainActivity.class));
+                }else if(!TextUtils.isEmpty(joinResponse.ticket)){
+                    showTipDialog(context,joinResponse.ticket);
+                }else {
+                    ToastUtil.showToast(context,"加入成功");
+                    context.startActivity(new Intent(context,MainActivity.class));
                 }
-
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
-                context.startActivity(new Intent(context,MainActivity.class));
             }
 
             @Override
@@ -62,8 +69,8 @@ public class JsInvokeNativeInterface {
                 ToastUtil.showToast(context,errorMessage);
             }
         });
-
     }
+
 
 
     private JoinResponse getJoinResponse(ResponseBody body) {
@@ -78,5 +85,24 @@ public class JsInvokeNativeInterface {
         return response;
     }
 
+    private void showTipDialog(final Activity context, final String ticket){
+        CommonDialog dialog=new CommonDialog(context);
+        dialog.setDesc(R.string.join_class_suc_tip);
+        dialog.setLefBtnText(R.string.into_cls);
+        dialog.setRightBtnText(R.string.into_my_classes);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                MainActivity.invokeWithAction(context,MainActivity.ACTION_TO_MY_CLASSES);
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                MainActivity.invokeWithAction(context,MainActivity.ACTION_TO_CLASSROOM,ticket);
+            }
+        });
+        dialog.show();
+    }
 
 }

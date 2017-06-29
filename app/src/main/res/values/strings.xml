@@ -929,5 +929,7 @@
     <string name="failed_one2one_privacy">因对方的隐私问题，已拒绝您的邀请</string>
     <string name="failed_one2one">邀请失败</string>
     <string name="success_one2one">对方已接受您的视频邀请</string>
+    <string name="join_class_suc_tip">你已经成功加入该班级，现在可以去与班级成员互动交流啦~</string>
+    <string name="into_my_classes">查看我的班</string>
 
 </resources>
