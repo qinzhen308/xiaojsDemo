@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
 import com.squareup.haha.perflib.Main;
+import com.umeng.analytics.MobclickAgent;
 
 
 import java.util.ArrayList;
@@ -141,6 +142,11 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
 //        if (fragment != null && fragment instanceof NotificationFragment) {
 //            ((NotificationFragment) fragment).notifyConversation();
 //        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override

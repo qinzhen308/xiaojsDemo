@@ -1,9 +1,11 @@
 package cn.xiaojs.xma;
 
 import com.facebook.stetho.Stetho;
+import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 
 import cn.xiaojs.xma.XiaojsApplication;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 
 /**
  * Created by maxiaobao on 2016/11/30.
@@ -24,6 +26,7 @@ public class DebugApplication extends XiaojsApplication {
 
         LeakCanary.install(this);
 
+        Logger.d("----deviceinfo---"+AnalyticEvents.getDeviceInfo(this));
 
     }
 }
