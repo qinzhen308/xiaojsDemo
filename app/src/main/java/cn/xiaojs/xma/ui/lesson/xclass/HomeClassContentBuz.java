@@ -138,6 +138,11 @@ public class HomeClassContentBuz {
 //                    doRequest(year,month,day);
                     tvTopDate.setText(ScheduleUtil.getDateYM_Ch(year,month,day));
                 }
+                if(todayYear==year&&todayMonth==month&&todayDay==day){
+                    btnToday.setVisibility(View.GONE);
+                }else {
+                    btnToday.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -154,11 +159,11 @@ public class HomeClassContentBuz {
                     Logger.d("----qz----calendar---onMonthChange---"+year+"年"+(month+1)+"月"+day);
                 }
                 prepareRequestMonth();
-                if(todayYear==year&&todayMonth==month){
-                    btnToday.setVisibility(View.GONE);
-                }else {
-                    btnToday.setVisibility(View.VISIBLE);
-                }
+//                if(todayYear==year&&todayMonth==month){
+//                    btnToday.setVisibility(View.GONE);
+//                }else {
+//                    btnToday.setVisibility(View.VISIBLE);
+//                }
             }
         });
 
