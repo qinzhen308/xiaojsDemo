@@ -931,5 +931,7 @@
     <string name="success_one2one">对方已接受您的视频邀请</string>
     <string name="join_class_suc_tip">你已经成功加入该班级，现在可以去与班级成员互动交流啦~</string>
     <string name="into_my_classes">查看我的班</string>
+    <string name="add_class_verification_msg2">验证消息</string>
+    <string name="add_class_verify_msg_tip">班主任需要验证您的身份，请输入您的验证信息</string>
 
 </resources>

@@ -87,6 +87,7 @@
                 style="@style/LiveLessonItem">
 
             <TextView
+                android:id="@+id/label1"
                     style="@style/LiveLessonCreateTitle"
                     android:text="@string/live_lesson_name"/>
 
@@ -108,7 +109,8 @@
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonCreateTitle"
+                android:id="@+id/label2"
+                style="@style/LiveLessonCreateTitle"
                     android:text="@string/subject_category"/>
 
             <TextView
@@ -126,7 +128,8 @@
                 android:orientation="vertical">
 
             <TextView
-                    style="@style/LiveLessonCreateTitle"
+                android:id="@+id/label3"
+                style="@style/LiveLessonCreateTitle"
                     android:layout_width="wrap_content"
                     android:text="@string/student_need_enroll_or_not"/>
 
@@ -174,7 +177,8 @@
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonCreateTitle"
+                android:id="@+id/label4"
+                style="@style/LiveLessonCreateTitle"
                     android:text="@string/lesson_people_limit"/>
 
             <cn.xiaojs.xma.ui.widget.EditTextDel
@@ -354,6 +358,7 @@
                 style="@style/LiveLessonItem">
 
             <TextView
+                android:id="@+id/label5"
                     style="@style/LiveLessonTitle"
                     android:text="@string/lesson_start_time"/>
 
@@ -372,7 +377,8 @@
                 style="@style/LiveLessonItem">
 
             <TextView
-                    style="@style/LiveLessonTitle"
+                android:id="@+id/label6"
+                style="@style/LiveLessonTitle"
                     android:text="@string/lesson_duration"/>
 
             <cn.xiaojs.xma.ui.widget.EditTextDel
@@ -427,6 +433,7 @@
                 android:orientation="vertical">
 
             <TextView
+                android:id="@+id/label7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/px25"

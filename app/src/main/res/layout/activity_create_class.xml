@@ -31,8 +31,10 @@
                     style="@style/LiveLessonItem">
 
                 <TextView
+                    android:id="@+id/label_class"
                         style="@style/LiveLessonCreateTitle"
-                        android:text="@string/live_class_name"/>
+                        android:text="@string/live_class_name"
+                    />
 
                 <cn.xiaojs.xma.ui.widget.EditTextDel
                         android:id="@+id/class_name"
@@ -50,7 +52,8 @@
                     style="@style/LiveLessonItem">
 
                 <TextView
-                        style="@style/LiveLessonCreateTitle"
+                    android:id="@+id/label_teacher"
+                    style="@style/LiveLessonCreateTitle"
                         android:text="@string/head_teacher"/>
 
                 <TextView
@@ -74,7 +77,8 @@
                     android:orientation="vertical">
 
                 <TextView
-                        android:layout_width="match_parent"
+                    android:id="@+id/label_add_verify"
+                    android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/px25"
                         android:paddingBottom="@dimen/px28"

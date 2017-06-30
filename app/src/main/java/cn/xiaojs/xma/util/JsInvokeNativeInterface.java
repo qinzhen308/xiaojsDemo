@@ -3,8 +3,13 @@ package cn.xiaojs.xma.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,6 +45,17 @@ public class JsInvokeNativeInterface {
             ToastUtil.showToast(context,"classid 无效");
             return;
         }
+        // TODO: 2017/6/30 需要h5传值
+        boolean needVerify=false;
+        if(needVerify){
+            showVerifyMsgDialog(classid);
+        }else {
+            doJoinRequest(classid,null);
+        }
+
+    }
+
+    private void doJoinRequest(String classid,String msg){
         ((IDialogMethod)context).showProgress(true);
         LessonDataManager.joinClass(context, classid, new APIServiceCallback<ResponseBody>() {
             @Override
@@ -56,7 +72,7 @@ public class JsInvokeNativeInterface {
                     ToastUtil.showToast(context,"你已经申请加入，等待确认");
                     context.startActivity(new Intent(context,MainActivity.class));
                 }else if(!TextUtils.isEmpty(joinResponse.ticket)){
-                    showTipDialog(context,joinResponse.ticket);
+                    showTipDialog(joinResponse.ticket);
                 }else {
                     ToastUtil.showToast(context,"加入成功");
                     context.startActivity(new Intent(context,MainActivity.class));
@@ -85,7 +101,7 @@ public class JsInvokeNativeInterface {
         return response;
     }
 
-    private void showTipDialog(final Activity context, final String ticket){
+    private void showTipDialog( final String ticket){
         CommonDialog dialog=new CommonDialog(context);
         dialog.setDesc(R.string.join_class_suc_tip);
         dialog.setLefBtnText(R.string.into_cls);
@@ -100,6 +116,38 @@ public class JsInvokeNativeInterface {
             @Override
             public void onClick() {
                 MainActivity.invokeWithAction(context,MainActivity.ACTION_TO_CLASSROOM,ticket);
+            }
+        });
+        dialog.show();
+    }
+
+
+    private void showVerifyMsgDialog(final String classid){
+        final CommonDialog dialog=new CommonDialog(context);
+        dialog.setDesc(R.string.add_class_verification_msg2);
+        final EditText editText=new EditText(context);
+        editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        editText.setHint(R.string.add_class_verify_msg_tip);
+        editText.setLines(4);
+        editText.setTextColor(context.getResources().getColor(R.color.font_black));
+        editText.setBackgroundResource(R.drawable.common_search_bg);
+        editText.setGravity(Gravity.LEFT|Gravity.TOP);
+        int padding=context.getResources().getDimensionPixelSize(R.dimen.px10);
+        editText.setPadding(padding,padding,padding,padding);
+        editText.setHintTextColor(context.getResources().getColor(R.color.font_gray));
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_PX,context.getResources().getDimensionPixelSize(R.dimen.font_28px));
+        dialog.setCustomView(editText);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                doJoinRequest(classid,editText.getText().toString().trim());
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
             }
         });
         dialog.show();
