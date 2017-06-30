@@ -2,22 +2,13 @@ package cn.xiaojs.xma.data.api.socket;
 
 import android.content.Context;
 
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nullable;
+import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
-import cn.xiaojs.xma.data.api.service.ServiceRequest;
-import cn.xiaojs.xma.model.socket.EventOption;
-import cn.xiaojs.xma.model.socket.EventRequest;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okhttp3.logging.HttpLoggingInterceptor;
-import okio.ByteString;
+import io.socket.client.Ack;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 /**
  * Created by maxiaobao on 2017/6/7.
@@ -25,85 +16,71 @@ import okio.ByteString;
 
 public class SocketManager {
 
-    private WebSocket webSocket;
+    private volatile static SocketManager socketManager;
 
-    public void init() {
+    private Context context;
 
-        Request request = new Request.Builder()
-                .url("")
-                .build();
+    private Socket socket;
+    private String ticket;
+    private IO.Options options;
+    private String url;
 
-        OkHttpClient okHttpClient = createOkhttp();
-        webSocket = okHttpClient.newWebSocket(request, new SocketListener());
+    public static SocketManager getSocketManager(Context context) {
+        if (socketManager == null) {
 
+            synchronized(SocketManager.class) {
+                if (socketManager == null) {
+                    socketManager = new SocketManager(context);
+                }
+            }
+        }
+        return socketManager;
     }
 
-    public void send(EventRequest request) {
-
-        String jsonText = ServiceRequest.objectToJsonString(request);
-        webSocket.send(jsonText);
+    private SocketManager(Context context) {
+        this.context = context.getApplicationContext();
     }
 
-    private OkHttpClient createOkhttp() {
+    public void connect(String url, String ticket, IO.Options options) throws Exception{
 
-        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
-        if (XiaojsConfig.DEBUG) {
-            logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
+        socket = IO.socket(url,options);
+        socket.connect();
+    }
 
-            logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+    public void disConnect() {
+        if (socket != null) {
+            socket.off();
+            socket.close();
+        }
+    }
+
+
+    public void emit(final String event, Object data, Ack ack) {
+
+        if (socket == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the socket is null,so emit failed...");
+            }
+
+            ack.call();
+            return;
         }
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .addInterceptor(logInterceptor)
-                .addNetworkInterceptor(logInterceptor)
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS);
-
-        return builder.build();
+        if (data == null) {
+            socket.emit(event,ack);
+        }else {
+            socket.emit(event,data,ack);
+        }
 
     }
 
-    private String getSocketUrl(Context context, String ticket) {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String getClassroomUrl(Context context, String ticket) {
         return new StringBuilder(ApiManager.getXLSUrl(context))
                 .append("/")
                 .append(ticket)
                 .toString();
-    }
-
-
-    private class SocketListener extends WebSocketListener {
-
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            super.onOpen(webSocket, response);
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            super.onMessage(webSocket, text);
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            super.onMessage(webSocket, bytes);
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            super.onClosing(webSocket, code, reason);
-        }
-
-        @Override
-        public void onClosed(WebSocket webSocket, int code, String reason) {
-            super.onClosed(webSocket, code, reason);
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            super.onFailure(webSocket, t, response);
-        }
     }
 
 
