@@ -207,6 +207,18 @@ public class ContactManager {
 
         Attendee attendee = ClassroomBusiness.parseSocketBean(args[0], Attendee.class);
         if (attendee != null && mLiveCollection != null) {
+
+            if (join) {
+                mLiveCollection.current ++;
+            }else {
+
+                mLiveCollection.current --;
+                if (mLiveCollection.current <0) {
+                    mLiveCollection.current = 0;
+                }
+            }
+
+
             if (mLiveCollection.attendees == null) {
                 mLiveCollection.attendees = new ArrayList<Attendee>();
             }
