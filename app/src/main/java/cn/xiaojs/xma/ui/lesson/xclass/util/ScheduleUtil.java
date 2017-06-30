@@ -329,4 +329,26 @@ public class ScheduleUtil {
         }
         return null;
     }
+
+
+    /**
+     *
+     * @return 0:相等  1:前者大于后者  -1:后者大于前者
+     */
+    public static int compare(int y1,int m1,int d1,int y2,int m2,int d2){
+        Calendar calendar1=Calendar.getInstance(Locale.CHINA);
+        calendar1.setTime(new Date(0));
+        calendar1.set(y1,m1,d1);
+        Calendar calendar2=Calendar.getInstance(Locale.CHINA);
+        calendar2.setTime(new Date(0));
+        calendar2.set(y2,m2,d2);
+        long delta=calendar1.getTimeInMillis()-calendar2.getTimeInMillis();
+        if(delta==0){
+            return 0;
+        }else if(delta>0){
+            return 1;
+        }else {
+            return -1;
+        }
+    }
 }

@@ -251,6 +251,7 @@ public class LessonCreationOptionalInfoActivity extends BaseActivity implements 
                 } else {
                     //upload cover to server and set lesson cover url
                     //mLesson.setCover(coverUrl);
+                    if(resultCode!=RESULT_OK)return;
                     if (data != null) {
                         final String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
                         final Context c = LessonCreationOptionalInfoActivity.this;

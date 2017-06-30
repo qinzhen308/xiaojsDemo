@@ -196,7 +196,7 @@ public class LessonScheduleActivity extends BaseActivity implements IUpdateMetho
             int ye=Integer.valueOf(strings[0]);
 
             if(mo==m){
-                if(todayYear>ye||todayMonth>mo||todayDay>da){//今天之前
+                if(ScheduleUtil.compare(todayYear,todayMonth,todayDay,ye,mo,da)>0){//今天之前
                     colors.put(date,c_gray);//灰色
                 }else {
                     colors.put(date,c_red);//红色

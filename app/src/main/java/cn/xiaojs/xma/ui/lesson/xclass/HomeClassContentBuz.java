@@ -308,7 +308,7 @@ public class HomeClassContentBuz {
 
                         if(mo==m){
                             hashSet.add(da);
-                            if(todayYear>ye||todayMonth>mo||todayDay>da){//今天之前
+                            if(ScheduleUtil.compare(todayYear,todayMonth,todayDay,ye,mo,da)>0){//今天之前
                                 colors.put(object.calendar.get(i).date,c_gray);//灰色
                             }else {
                                 colors.put(object.calendar.get(i).date,c_red);//红色
