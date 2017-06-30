@@ -360,11 +360,6 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         mContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
         postHideAnim();
 
-
-        if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER
-                && Live.LiveSessionState.FINISHED.equals(liveState)) {
-            mTimeProgressHelper.mFullScreenTimeInfoTv.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -1082,7 +1077,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 @Override
                 public void onClick() {
                     mFinishDialog.dismiss();
-                    finishClass(false);
+                    finishClass(true);
                 }
             });
         }
