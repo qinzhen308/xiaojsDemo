@@ -856,7 +856,7 @@
     <string name="lesson_op_look">查看详情</string>
     <string name="lesson_op_database">资料库</string>
     <string name="lesson_op_enter">进入教室</string>
-    <string name="lesson_op_look_apply">查看报名页</string>
+    <string name="lesson_op_look_apply">报名页</string>
     <string name="lesson_op_schedule">课表</string>
     <string name="lesson_op_class_info">班级信息</string>
     <string name="lesson_op_agree_invite">同意邀请</string>

@@ -77,18 +77,20 @@ public class StudentsListActivity extends BaseActivity {
     }
 
     private void initView() {
-
         boolean verify = getIntent().getBooleanExtra(ClassInfoActivity.EXTRA_VERI,false);
-
+        adapter = new StudentsListAdapter(this,
+                listView);
         if (teaching ) {
+            listView.enableLeftSwipe(true);
             setRightText(R.string.add);
             if (verify) {
                 verLayout.setVisibility(View.VISIBLE);
             }
+        }else {
+            listView.enableLeftSwipe(false);
         }
 
-        adapter = new StudentsListAdapter(this,
-                listView);
+
         listView.setAdapter(adapter);
     }
 
@@ -208,9 +210,14 @@ public class StudentsListActivity extends BaseActivity {
 
         }
 
+        public void enableLeftSwipe(boolean enable){
+            leftSwipe=enable;
+        }
+
+        private boolean leftSwipe=true;
         @Override
         protected boolean leftSwipe() {
-            return true;
+            return leftSwipe;
         }
 
         @Override

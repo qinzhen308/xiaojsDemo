@@ -14,6 +14,7 @@ package cn.xiaojs.xma.util;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -24,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.StringSignature;
 import com.orhanobut.logger.Logger;
+
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 
 public class ExpandGlide {
     private int mPlaceHoldResId;
@@ -77,6 +80,7 @@ public class ExpandGlide {
 
             @Override
             protected void onPostExecute(Bitmap bitmap) {
+                if(mContext==null||(mContext instanceof Activity&& ((Activity) mContext).isFinishing()))return;
                 if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
                 } else {
