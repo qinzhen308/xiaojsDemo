@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
@@ -161,6 +162,9 @@ public class ContactFragment extends SheetFragment implements
                 }
                 break;
             case OnAttendItemClick.ACTION_OPEN_CAMERA:
+
+                AnalyticEvents.onEvent(mContext,59);
+
                 if (target != null) {
                     Intent intent = new Intent();
                     intent.putExtra(Constants.KEY_TALK_ATTEND, attendee);

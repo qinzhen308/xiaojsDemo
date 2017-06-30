@@ -23,6 +23,7 @@ import android.widget.TextView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class TimeProgressHelper {
@@ -41,6 +42,7 @@ public class TimeProgressHelper {
     private final static int TYPE_LIVE_INDIVIDUAL = 6;
     private final static int TYPE_LIVE_IDLE = 7;
     private final static int TYPE_LIVE_PENDING_LIVE = 8;
+    private final static int TYPE_LIVE_ONE2ONE = 9;
 
     private long mLessonDuration;
     private long mCountTime = 0;
@@ -58,7 +60,7 @@ public class TimeProgressHelper {
         mLiveShowTv = (TextView) timeStatusBar.findViewById(R.id.live_show);
         CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
         //TODO get duration
-        mLessonDuration = (session !=null && session.ctl != null) ? session.ctl.duration : 0;
+        mLessonDuration = (session != null && session.ctl != null) ? session.ctl.duration : 0;
 
         mHandler = new Handler(mContext.getMainLooper()) {
             @Override
@@ -93,6 +95,7 @@ public class TimeProgressHelper {
     public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, boolean play) {
         setTimeProgress(countTime, individualDuration, liveState, extra, null, play);
     }
+
 
     public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, String originState, boolean play) {
         if (mHandler == null) {
@@ -251,6 +254,7 @@ public class TimeProgressHelper {
                                 mTitleBarTimeInfoTv.setText(simpleTime + "/" + total);
                             }
                             break;
+
                     }
                     break;
             }

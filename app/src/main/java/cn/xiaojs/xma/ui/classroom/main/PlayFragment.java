@@ -195,10 +195,15 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 }
                 break;
             case R.id.open_docs_btn:
+                AnalyticEvents.onEvent(mContext,42);
                 mClassroomController.openDocument(this, mCtlSession);
                 break;
             case R.id.talk_open_contact_btn:
             case R.id.fc_open_contact_btn:
+
+                int eventCode = v.getId() == R.id.talk_open_contact_btn ? 43: 48;
+                AnalyticEvents.onEvent(mContext,eventCode);
+
                 if (isPortrait() || v.getId() == R.id.talk_open_contact_btn) {
                     mClassroomController.openContact(this, mCtlSession, SheetFragment.SHEET_GRAVITY_BOTTOM, mSlideViewHeight);
                 } else {
@@ -206,6 +211,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 }
                 break;
             case R.id.talk_send_txt_btn:
+                AnalyticEvents.onEvent(mContext,44);
                 mClassroomController.openInputText(this, MSG_MODE_INPUT);
                 break;
             case R.id.talk_send_other_btn:
@@ -215,28 +221,34 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 break;
             case R.id.enter_full_screen:
                 //enter full screen
+                AnalyticEvents.onEvent(mContext,46);
                 enterFullScreen();
                 break;
             case R.id.play_layout:
                 startAnim();
                 break;
             case R.id.fc_land_portrait_btn:
+                AnalyticEvents.onEvent(mContext,47);
                 toggleLandPortrait();
                 break;
             case R.id.fc_screenshot_land_btn:
             case R.id.fc_screenshot_portrait_btn:
+                AnalyticEvents.onEvent(mContext,51);
                 //ClassroomController.getInstance().enterPhotoDoodleByBitmap(null);
                 mVideoController.takeVideoFrame(this);
                 break;
             case R.id.fc_hide_show_talk_btn:
+                AnalyticEvents.onEvent(mContext,49);
                 showHideTalk();
                 break;
             case R.id.fc_open_talk_btn:
+                AnalyticEvents.onEvent(mContext,50);
                 mClassroomController.openInputText(this, FULL_SCREEN_MODE_INPUT);
                 break;
             case R.id.play_video:
                 break;
             case R.id.class_canlender://日历课表
+                AnalyticEvents.onEvent(mContext,45);
                 mClassroomController.enterClassCanlenderFragment(this);
                 break;
             default:
@@ -1033,6 +1045,9 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (ClassroomBusiness.canIndividual(mCtlSession)) {
+
+            AnalyticEvents.onEvent(mContext,41);
+
             individualPublishStream();
         } else if (Live.LiveSessionState.RESET.equals(liveState)) {
             showProgress(true);
