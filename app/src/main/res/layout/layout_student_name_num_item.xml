@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="王海"
+        android:ems="6"
         android:textColor="@color/font_black"
         android:textSize="@dimen/font_32px" />
 
