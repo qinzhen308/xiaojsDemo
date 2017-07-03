@@ -14,6 +14,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.ui.account.ForgetPasswordStepOneActivity;
 import cn.xiaojs.xma.ui.account.LoginActivity;
 import cn.xiaojs.xma.ui.account.ModifyPasswordActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -64,9 +65,9 @@ public class SettingsActivity extends BaseActivity {
         infoView.setText(infoStr);
 
         mDataCacheTv.setText(DataManager.getLocalDataCache(this));
-        if(AccountPref.getThirdPartFlag(this)){//三方登录进来，隐藏掉
-            accountSafe.setVisibility(View.GONE);
-        }
+//        if(AccountPref.getThirdPartFlag(this)){//三方登录进来，隐藏掉
+//            accountSafe.setVisibility(View.GONE);
+//        }
     }
 
     @OnClick({R.id.left_view, R.id.exit_login, R.id.message_notify_set,
@@ -82,7 +83,8 @@ public class SettingsActivity extends BaseActivity {
             case R.id.message_notify_set:
                 break;
             case R.id.account_safe:
-                startActivity(new Intent(this, ModifyPasswordActivity.class));
+//                startActivity(new Intent(this, ModifyPasswordActivity.class));
+                startActivity(new Intent(this, ForgetPasswordStepOneActivity.class).putExtra(ForgetPasswordStepOneActivity.EXTRA_IS_MODIFY,true));
                 break;
             case R.id.clear_cache_layout:
                 DataManager.clearbyUser(mContext);
@@ -98,4 +100,5 @@ public class SettingsActivity extends BaseActivity {
                 break;
         }
     }
+
 }

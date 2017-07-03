@@ -13,11 +13,15 @@ import android.widget.EditText;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
@@ -29,6 +33,9 @@ import okhttp3.ResponseBody;
  */
 
 public class JsInvokeNativeInterface {
+    public static final String TYPE_JION_CLASS="";
+
+
     Activity context;
     WebView tagView;
 
@@ -39,14 +46,11 @@ public class JsInvokeNativeInterface {
     }
 
 
-    @JavascriptInterface
-    public void xjsclasshome(String classid){
+    public void xjsclasshome(String classid,boolean needVerify){
         if(TextUtils.isEmpty(classid)){
             ToastUtil.showToast(context,"classid 无效");
             return;
         }
-        // TODO: 2017/6/30 需要h5传值
-        boolean needVerify=false;
         if(needVerify){
             showVerifyMsgDialog(classid);
         }else {
@@ -55,9 +59,35 @@ public class JsInvokeNativeInterface {
 
     }
 
+    /**
+     * js调java的统一接口
+     * @param params  json格式，e.g. {"type":"for do something", "data":"for do something with params"}
+     */
+    @JavascriptInterface
+    public void jsInvokeNative(String params){
+        if(TextUtils.isEmpty(params)){
+            ToastUtil.showToast(context,"参数错误");
+            return;
+        }
+        try {
+            JSONObject object=new JSONObject(params);
+            if(TYPE_JION_CLASS.equals(object.getString("type"))){
+                JSONObject data=object.optJSONObject("data");
+                String id=data.optString("id");
+                int needJoin=data.optInt("join");
+                xjsclasshome(id,needJoin==1);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            ToastUtil.showToast(context,"参数解析失败");
+        }
+    }
+
     private void doJoinRequest(String classid,String msg){
         ((IDialogMethod)context).showProgress(true);
-        LessonDataManager.joinClass(context, classid, new APIServiceCallback<ResponseBody>() {
+        JoinClassParams params=new JoinClassParams();
+        params.remarks=msg;
+        LessonDataManager.joinClass(context, classid,params, new APIServiceCallback<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody object) {
                 ((IDialogMethod)context).cancelProgress();

@@ -41,6 +41,7 @@ import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.CriteriaStudents;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
+import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.LessonSchedule;
@@ -625,9 +626,9 @@ public class LessonDataManager {
      * @param classid
      * @param callback
      */
-    public static void joinClass(Context context, String classid, APIServiceCallback<ResponseBody> callback) {
+    public static void joinClass(Context context, String classid, JoinClassParams joinClassParams, APIServiceCallback<ResponseBody> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.joinClass(classid);
+        lessonRequest.joinClass(classid,joinClassParams);
 
     }
 
