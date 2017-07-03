@@ -5,26 +5,19 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
 
-import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
-import cn.xiaojs.xma.data.api.CollaRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.APIEntity;
-import cn.xiaojs.xma.model.ClaimCompetency;
-import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.CompetencyParams;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.LiveLesson;
-import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.model.VerifyCode;
 import cn.xiaojs.xma.util.APPUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import org.junit.Test;
@@ -71,7 +64,7 @@ public class ExampleInstrumentedTest {
         //testCenterData(appContext);
         //testGetData(appContext);
         //testToggleLesson(appContext);
-        //testT(appContext);
+        testT(appContext);
 
 
 //        String json = "{\"1482891322185\":\"xiao peng you\"}";
@@ -93,9 +86,9 @@ public class ExampleInstrumentedTest {
 //
 //        System.out.println(datew);
 
-        String j = "{\"contactGroups\":{\"1489549386880\":\"ML噢\"}}";
-        ObjectMapper o = new ObjectMapper();
-        Model m = o.readValue(j, Model.class);
+//        String j = "{\"contactGroups\":{\"1489549386880\":\"ML噢\"}}";
+//        ObjectMapper o = new ObjectMapper();
+//        Model m = o.readValue(j, Model.class);
 
 
     }
@@ -155,18 +148,18 @@ public class ExampleInstrumentedTest {
     private void testT(Context context){
 
 
-        CollaRequest collaRequest = new CollaRequest(context, new APIServiceCallback<TokenPair[]>() {
-            @Override
-            public void onSuccess(TokenPair[] pairs) {
-                TokenPair tokenPair = pairs[0];
-                System.out.println("key:"+tokenPair.key+", token:"+tokenPair.token);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        CollaRequest collaRequest = new CollaRequest(context, new APIServiceCallback<TokenPair[]>() {
+//            @Override
+//            public void onSuccess(TokenPair[] pairs) {
+//                TokenPair tokenPair = pairs[0];
+//                System.out.println("key:"+tokenPair.key+", token:"+tokenPair.token);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
 //        SecurityManager.requestHavePrivilege(context, new APIServiceCallback<Privilege[]>() {
 //            @Override

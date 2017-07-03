@@ -86,4 +86,9 @@ public class Su {
 
     }
 
+
+    public static String getEventSignature(int eventCategory, int eventType) {
+        return eventCategory + ":" + eventType;
+    }
+
 }

@@ -8,6 +8,8 @@ import android.text.TextUtils;
 
 public class Errors {
 
+    public static final String UNKNOWN_ERROR = "-1";
+
     // Error not specified.
     public static final String NO_ERROR = "OK";
 

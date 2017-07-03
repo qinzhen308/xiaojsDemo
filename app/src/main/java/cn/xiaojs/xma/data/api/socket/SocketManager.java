@@ -9,6 +9,7 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 /**
  * Created by maxiaobao on 2017/6/7.
@@ -41,7 +42,7 @@ public class SocketManager {
         this.context = context.getApplicationContext();
     }
 
-    public void connect(String url, String ticket, IO.Options options) throws Exception{
+    public void connect(String url, IO.Options options) throws Exception{
 
         socket = IO.socket(url,options);
         socket.connect();
@@ -54,12 +55,16 @@ public class SocketManager {
         }
     }
 
+    public boolean connected() {
+        return socket == null? false : socket.connected();
+    }
+
 
     public void emit(final String event, Object data, Ack ack) {
 
         if (socket == null) {
             if (XiaojsConfig.DEBUG) {
-                Logger.d("the socket is null,so emit failed...");
+                Logger.d("the socket is null or not connect,so emit failed...");
             }
 
             ack.call();
@@ -72,6 +77,16 @@ public class SocketManager {
             socket.emit(event,data,ack);
         }
 
+    }
+
+    public void on(final String event, Emitter.Listener listener) {
+        if (socket == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the socket is null or not connect,so on listener failed...");
+            }
+            return;
+        }
+        socket.on(event, listener);
     }
 
 
