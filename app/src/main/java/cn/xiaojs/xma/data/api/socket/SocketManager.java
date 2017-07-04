@@ -89,13 +89,12 @@ public class SocketManager {
         socket.on(event, listener);
     }
 
+    public void off(String event) {
+        socket.off(event);
+    }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String getClassroomUrl(Context context, String ticket) {
-        return new StringBuilder(ApiManager.getXLSUrl(context))
-                .append("/")
-                .append(ticket)
-                .toString();
+    public void off() {
+        socket.off();
     }
 
 
