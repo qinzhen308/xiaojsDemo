@@ -18,6 +18,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -441,15 +442,18 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     public List<LOpModel> classLessonOperate() {
         List<LOpModel> list = new ArrayList<>();
         if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
+            if(mData.schedule.getStart().getTime()-System.currentTimeMillis()> 5*60*1000){
+                list.add(new LOpModel(LOpModel.OP_EDIT));
+            }
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//上课中
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)) {//已完课
             list.add(new LOpModel(LOpModel.OP_DELETE));
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)) {//已取消
             list.add(new LOpModel(LOpModel.OP_DELETE));
@@ -457,7 +461,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         }else {//其余状态，班课除了上面的几个状态，其余的就是待开课前的状态（排课中）
             list.add(new LOpModel(LOpModel.OP_EDIT));
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
+            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         }
         return list;

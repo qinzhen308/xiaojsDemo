@@ -520,7 +520,7 @@ public class LOpModel {
             name = bean.teacher.getBasic().getName();
         }
 
-        String shareUrl = ApiManager.getShareLessonUrl(bean.id);
+        String shareUrl = ApiManager.getShareLessonUrl(bean.id,bean.type);
 
         ShareUtil.show((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }

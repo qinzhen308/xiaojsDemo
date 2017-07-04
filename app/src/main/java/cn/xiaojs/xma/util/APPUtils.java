@@ -63,11 +63,11 @@ public class APPUtils {
      * @return
      */
     public static boolean isProEvn() {
-
-        if (XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
-                || XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
-            return false;
-        }
+//
+//        if (XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
+//                || XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
+//            return false;
+//        }
 
         return true;
     }
@@ -83,8 +83,8 @@ public class APPUtils {
             channel = XiaojsConfig.CHANNEL_ENV_DEVTEST;
         }
 
-        return channel;
-        //return "pro";
+//        return channel;
+        return "pro";
     }
 
     public static boolean isBackgroundThread(){

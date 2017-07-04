@@ -33,6 +33,7 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -603,7 +604,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
             name = bean.getTeacher().getBasic().getName();
         }
 
-        String shareUrl = ApiManager.getShareLessonUrl(bean.getId());
+        String shareUrl = ApiManager.getShareLessonUrl(bean.getId(), Account.TypeName.STAND_ALONE_LESSON);
 
         ShareUtil.show((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }

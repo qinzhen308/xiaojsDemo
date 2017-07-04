@@ -25,7 +25,7 @@ public class ScanQrcodeActivity extends QrCodeActivity {
     private final String urlSuffix = "/1";
     private String urlPrefix;
 
-    private final String IDENTIFICATION_CLASS_CODE="r=mobile/classhome";
+    private final String IDENTIFICATION_CLASS_CODE="web/mobile/classhome/";
 
 
     @Override

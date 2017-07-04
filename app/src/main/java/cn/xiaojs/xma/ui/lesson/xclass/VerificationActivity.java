@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -77,10 +78,10 @@ public class VerificationActivity extends BaseActivity {
 
             holder.timeView.setText(TimeUtil.format(bean.createdOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
             // TODO: 2017/6/30 差字段
-            if(true){
+            if(TextUtils.isEmpty(bean.remarks)){
                 holder.tvVerifyMsg.setText(R.string.request_join_class);
             }else {
-                holder.tvVerifyMsg.setText("");
+                holder.tvVerifyMsg.setText(bean.remarks);
             }
 
             if (Platform.JoinClassState.PENDING_FOR_ACCEPTANCE.equals(bean.state)) {

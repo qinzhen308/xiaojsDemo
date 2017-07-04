@@ -47,7 +47,8 @@ public class XiaojsConfig {
     //分享URL
     public static final String SHARE_BASE_URL = "http://www.xiaojs.cn";
     //分享课（公开课和班课）
-    public static final String SHARE_LESSON_BASE_URL = "http://wxtest.xiaojs.cn";
+//    public static final String SHARE_LESSON_BASE_URL = "http://wxtest.xiaojs.cn";
+    public static final String SHARE_LESSON_BASE_URL = "http://wx.xiaojs.cn";
 
     //七牛存储空间
     // 华东:存储空间列表(图片和文档存储)Bucket (files) CDN 加速域名

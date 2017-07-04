@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -33,7 +35,7 @@ import okhttp3.ResponseBody;
  */
 
 public class JsInvokeNativeInterface {
-    public static final String TYPE_JION_CLASS="";
+    public static final String TYPE_JION_CLASS="classhome";
 
 
     Activity context;
@@ -69,6 +71,9 @@ public class JsInvokeNativeInterface {
             ToastUtil.showToast(context,"参数错误");
             return;
         }
+        if(params.startsWith("\"")&&params.endsWith("\"")){
+            params=params.substring(1,params.length()-1);
+        }
         try {
             JSONObject object=new JSONObject(params);
             if(TYPE_JION_CLASS.equals(object.getString("type"))){
@@ -82,6 +87,7 @@ public class JsInvokeNativeInterface {
             ToastUtil.showToast(context,"参数解析失败");
         }
     }
+
 
     private void doJoinRequest(String classid,String msg){
         ((IDialogMethod)context).showProgress(true);
@@ -154,7 +160,7 @@ public class JsInvokeNativeInterface {
 
     private void showVerifyMsgDialog(final String classid){
         final CommonDialog dialog=new CommonDialog(context);
-        dialog.setDesc(R.string.add_class_verification_msg2);
+        dialog.setTitle(R.string.add_class_verification_msg2);
         final EditText editText=new EditText(context);
         editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
         editText.setHint(R.string.add_class_verify_msg_tip);

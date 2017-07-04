@@ -161,7 +161,7 @@ public class LessonHomeActivity extends BaseActivity {
                     return;
                 }
 
-                String shareUrl = ApiManager.getShareLessonUrl(mLessonDetail.getId());
+                String shareUrl = ApiManager.getShareLessonUrl(mLessonDetail.getId(),mLessonDetail.getTypeName());
 
                 String startTime = TimeUtil.format(mLessonDetail.getSchedule().getStart().getTime(),
                         TimeUtil.TIME_YYYY_MM_DD_HH_MM);

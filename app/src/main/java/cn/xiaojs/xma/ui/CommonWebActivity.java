@@ -2,12 +2,17 @@ package cn.xiaojs.xma.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -62,11 +67,37 @@ public class CommonWebActivity extends BaseActivity {
         WebSettings webSettings=contentView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         contentView.addJavascriptInterface(new JsInvokeNativeInterface(this,contentView),"android");
+        contentView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                Logger.d("---qz----"+consoleMessage.message());
+                return super.onConsoleMessage(consoleMessage);
+            }
+        });
+        contentView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
     }
 
     private void loadContent() {
         String url=getIntent().getStringExtra(EXTRA_URL);
         contentView.loadUrl(url);
+    }
+
+    @Override
+    protected void onDestroy() {
+        contentView.clearHistory();
+        contentView.clearCache(true);
+        contentView.clearFormData();
+        super.onDestroy();
     }
 
     private void showError() {

@@ -12,6 +12,9 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
 import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.data.api.service.OtherService;
@@ -286,13 +289,23 @@ public class ApiManager {
      * @param lessonId
      * @return
      */
-    public static String getShareLessonUrl(String lessonId) {
+    public static String getShareLessonUrl(String lessonId,String type) {
 
         String baseUrl = XiaojsConfig.SHARE_LESSON_BASE_URL;
-
+        String typeParam="";
+        if(Account.TypeName.STAND_ALONE_LESSON.equals(type)){//公开课
+            typeParam="coursedetails";
+        }else if(Account.TypeName.CLASS_LESSON.equals(type)){
+            typeParam="classhome";
+        }else {//班课
+            typeParam="coursedetails";
+        }
         return new StringBuilder(baseUrl)
-                .append("/web/index.php?r=mobile/coursedetails&id=")
+                .append("/web/mobile/")
+                .append(typeParam)
+                .append("/")
                 .append(lessonId)
+                .append(".html")
                 .toString();
     }
 
