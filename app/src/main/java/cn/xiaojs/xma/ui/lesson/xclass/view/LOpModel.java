@@ -519,7 +519,7 @@ public class LOpModel {
 
         String shareUrl = ApiManager.getShareLessonUrl(bean.id,bean.type);
 
-        ShareUtil.show((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
+        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
     }
 
     //报名注册
