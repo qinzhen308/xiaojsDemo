@@ -606,7 +606,7 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
 
         String shareUrl = ApiManager.getShareLessonUrl(bean.getId(), Account.TypeName.STAND_ALONE_LESSON);
 
-        ShareUtil.show((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
+        ShareUtil.shareUrlByUmeng((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //报名注册

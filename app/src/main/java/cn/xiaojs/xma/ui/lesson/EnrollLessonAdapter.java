@@ -439,7 +439,7 @@ EnrollLessonAdapter extends AbsSwipeAdapter<EnrolledLesson, EnrollLessonAdapter.
 
         String shareUrl = ApiManager.getShareLessonUrl(bean.getId(), Account.TypeName.STAND_ALONE_LESSON);
 
-        ShareUtil.show((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
+        ShareUtil.shareUrlByUmeng((Activity) mContext, bean.getTitle(), new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     static class Holder extends BaseHolder {

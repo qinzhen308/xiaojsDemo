@@ -933,5 +933,13 @@
     <string name="into_my_classes">查看我的班</string>
     <string name="add_class_verification_msg2">验证消息</string>
     <string name="add_class_verify_msg_tip">班主任需要验证您的身份，请输入您的验证信息</string>
+    <string name="create_class_exit_tip">您开的班未点“完成”，将不能生效，确定要退出吗？</string>
+    <string name="create_class_exit_tip2">您开的班资料未填写完，确定要退出吗？</string>
+    <string name="create_lesson_exit_tip">您开的课未点“完成”，将不能生效，确定要退出吗？</string>
+    <string name="create_lesson_exit_tip2">您开的课资料未填写完，确定要退出吗？</string>
+    <string name="exit">退出</string>
+    <string name="countine_input">继续填写</string>
+    <string name="exit_with_finish">完成并退出</string>
+    <string name="cant_join_yourself_class">不能加入自己创建的班</string>
 
 </resources>

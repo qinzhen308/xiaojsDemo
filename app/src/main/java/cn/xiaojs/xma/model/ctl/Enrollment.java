@@ -3,16 +3,14 @@ package cn.xiaojs.xma.model.ctl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.util.List;
-
 /**
- * Created by Paul Z on 2017/6/27.
+ * Created by Paul Z on 2017/7/5.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CriteriaStudents {
-    public String[] roles;
-    public CriteriaStudentsDoc[] docs;
-
+public class Enrollment {
+    public String _id;
+    public String state;
+//    public CriteriaStudentsDoc doc;
 
 }

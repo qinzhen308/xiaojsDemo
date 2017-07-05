@@ -446,14 +446,14 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
                 list.add(new LOpModel(LOpModel.OP_EDIT));
             }
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
-            list.add(new LOpModel(LOpModel.OP_SHARE));
+//            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//上课中
-            list.add(new LOpModel(LOpModel.OP_SHARE));
+//            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)) {//已完课
             list.add(new LOpModel(LOpModel.OP_DELETE));
-            list.add(new LOpModel(LOpModel.OP_SHARE));
+//            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)) {//已取消
             list.add(new LOpModel(LOpModel.OP_DELETE));
@@ -461,7 +461,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         }else {//其余状态，班课除了上面的几个状态，其余的就是待开课前的状态（排课中）
             list.add(new LOpModel(LOpModel.OP_EDIT));
             list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
-            list.add(new LOpModel(LOpModel.OP_SHARE));
+//            list.add(new LOpModel(LOpModel.OP_SHARE));
             list.add(new LOpModel(LOpModel.OP_ENTER));
         }
         return list;

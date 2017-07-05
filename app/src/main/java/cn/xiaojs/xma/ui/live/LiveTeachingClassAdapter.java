@@ -535,7 +535,7 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
 
         String shareUrl = ApiManager.getShareLessonUrl(bean.id, Account.TypeName.STAND_ALONE_LESSON);
 
-        ShareUtil.show((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
+        ShareUtil.shareUrlByUmeng((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //报名注册

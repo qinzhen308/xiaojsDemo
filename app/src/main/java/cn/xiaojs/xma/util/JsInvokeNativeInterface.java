@@ -17,14 +17,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.AbsStudent;
+import cn.xiaojs.xma.model.ctl.CriteriaStudents;
+import cn.xiaojs.xma.model.ctl.CriteriaStudentsDoc;
 import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
+import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -50,7 +56,7 @@ public class JsInvokeNativeInterface {
 
     public void xjsclasshome(String classid,boolean needVerify){
         if(TextUtils.isEmpty(classid)){
-            ToastUtil.showToast(context,"classid 无效");
+            showToastOnUiThread("classid 无效");
             return;
         }
         if(needVerify){
@@ -68,57 +74,58 @@ public class JsInvokeNativeInterface {
     @JavascriptInterface
     public void jsInvokeNative(String params){
         if(TextUtils.isEmpty(params)){
-            ToastUtil.showToast(context,"参数错误");
+            showToastOnUiThread("参数错误");
             return;
-        }
-        if(params.startsWith("\"")&&params.endsWith("\"")){
-            params=params.substring(1,params.length()-1);
         }
         try {
             JSONObject object=new JSONObject(params);
-            if(TYPE_JION_CLASS.equals(object.getString("type"))){
+            if(TYPE_JION_CLASS.equals(object.optString("type"))){
                 JSONObject data=object.optJSONObject("data");
                 String id=data.optString("id");
                 int needJoin=data.optInt("join");
-                xjsclasshome(id,needJoin==1);
+                String ownerID=object.optString("ownerID");
+                if(AccountDataManager.getAccountID(context).equals(ownerID)){
+                    showToastOnUiThread(R.string.cant_join_yourself_class);
+                }else {
+                    checkJoinState(id,needJoin==1);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            ToastUtil.showToast(context,"参数解析失败");
+            showToastOnUiThread("参数解析失败");
         }
     }
 
 
     private void doJoinRequest(String classid,String msg){
-        ((IDialogMethod)context).showProgress(true);
+        showDialogOnUiThread();
         JoinClassParams params=new JoinClassParams();
         params.remarks=msg;
         LessonDataManager.joinClass(context, classid,params, new APIServiceCallback<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody object) {
-                ((IDialogMethod)context).cancelProgress();
-
+                cancelDialogOnUiThread();
                 JoinResponse joinResponse = getJoinResponse(object);
                 DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
                 if (joinResponse == null) {
-                    ToastUtil.showToast(context,"加入成功");
+                    showToastOnUiThread("加入成功");
                     context.startActivity(new Intent(context,MainActivity.class));
                 }else if(!TextUtils.isEmpty(joinResponse.id)){
                     //此班是需要申请验证才能加入的班
-                    ToastUtil.showToast(context,"你已经申请加入，等待确认");
+                    showToastOnUiThread("您已提交申请，请等待班主任确认");
                     context.startActivity(new Intent(context,MainActivity.class));
                 }else if(!TextUtils.isEmpty(joinResponse.ticket)){
                     showTipDialog(joinResponse.ticket);
                 }else {
-                    ToastUtil.showToast(context,"加入成功");
+                    showToastOnUiThread("加入成功");
                     context.startActivity(new Intent(context,MainActivity.class));
                 }
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                ((IDialogMethod)context).cancelProgress();
-                ToastUtil.showToast(context,errorMessage);
+                cancelDialogOnUiThread();
+                showToastOnUiThread(errorMessage);
             }
         });
     }
@@ -189,4 +196,73 @@ public class JsInvokeNativeInterface {
         dialog.show();
     }
 
+
+    private void checkJoinState(final String classid,final boolean needVerify){
+        showDialogOnUiThread();
+        CriteriaStudents criteria=new CriteriaStudents();
+        criteria.roles=new String[]{"ClassStudent"};
+        CriteriaStudentsDoc doc=new CriteriaStudentsDoc();
+        doc.id=classid;
+        doc.subtype="PrivateClass";
+        criteria.docs=new CriteriaStudentsDoc[]{doc};
+        LessonDataManager.getClasses(context,criteria , new APIServiceCallback<Students>() {
+            @Override
+            public void onSuccess(Students object) {
+                cancelDialogOnUiThread();
+                if(object!=null){
+                    if(!ArrayUtil.isEmpty(object.classes)){
+                        showToastOnUiThread("您已是该班成员");
+                    }else if(!ArrayUtil.isEmpty(object.enrollments)){
+                        showToastOnUiThread("您已提交申请，请等待班主任确认");
+                    }else {
+                        xjsclasshome(classid,needVerify);
+                    }
+                }else {
+                    showToastOnUiThread("解析失败");
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelDialogOnUiThread();
+                showToastOnUiThread(errorMessage);
+            }
+        });
+    }
+
+    private void showToastOnUiThread(final String msg){
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtil.showToast(context,msg);
+            }
+        });
+    }
+
+    private void showToastOnUiThread(final int msg){
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtil.showToast(context,msg);
+            }
+        });
+    }
+
+    private void showDialogOnUiThread(){
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((IDialogMethod)context).showProgress(true);
+            }
+        });
+    }
+
+    private void cancelDialogOnUiThread(){
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((IDialogMethod)context).cancelProgress();
+            }
+        });
+    }
 }

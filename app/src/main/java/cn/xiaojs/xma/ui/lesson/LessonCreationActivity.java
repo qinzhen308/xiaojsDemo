@@ -185,7 +185,9 @@ public class LessonCreationActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
-                finish();
+                if(wannaExit()){
+                    finish();
+                }
                 break;
             case R.id.lesson_creation_tips_close:
                 closeCourCreateTips();
@@ -927,12 +929,12 @@ public class LessonCreationActivity extends BaseActivity {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
                 DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
                 if (mType == CourseConstant.TYPE_LESSON_CREATE && getIntent().getBooleanExtra(EXTRA_NEED_TIP, false)) {
                     setResult(RESULT_OK);
                     showSkipTip();
                 } else {
+                    Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
                     setResultOnFinish();
                 }
             }
@@ -1016,5 +1018,102 @@ public class LessonCreationActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if(!wannaExit())return;
+        super.onBackPressed();
+    }
 
+    private boolean wannaExit(){
+        if(mType != CourseConstant.TYPE_LESSON_CREATE){
+            return true;
+        }
+        int status=checkExit();
+        if(status<0)return true;
+
+        final CommonDialog dialog=new CommonDialog(this);
+        if(status==0){
+            dialog.setDesc(getString(R.string.create_lesson_exit_tip2));
+            dialog.setLefBtnText(R.string.exit);
+            dialog.setRightBtnText(R.string.countine_input);
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+        }else if(status==1){
+            dialog.setDesc(R.string.create_lesson_exit_tip);
+            dialog.setLefBtnText(R.string.exit);
+            dialog.setRightBtnText(R.string.exit_with_finish);
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    createOrEditLiveLesson();
+                }
+            });
+        }
+        dialog.show();
+        return false;
+    }
+
+    /**
+     *
+     * @return -1:没输入，直接退出   0：输入了，但不完整  1：输入了且完整
+     */
+    private int checkExit() {
+        int shouldTipCount=0;
+        int max=4;
+        try {
+            String name = mLessonNameEdt.getText().toString();
+            if (!TextUtils.isEmpty(name)&&name.length() <= MAX_LESSON_CHAR) {
+                shouldTipCount++;
+            }
+
+            if (!TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
+                shouldTipCount++;
+            }
+
+            String startTime = mLessonStartTimeTv.getText().toString().trim();
+            if (!TextUtils.isEmpty(startTime)&&mLessonStartTime > System.currentTimeMillis()) {
+                shouldTipCount++;
+            }
+
+            String durationStr = mLessonDurationEdt.getText().toString().trim();
+            if (!TextUtils.isEmpty(durationStr)&&Integer.parseInt(durationStr) <= MAX_LESSON_DURATION) {
+                shouldTipCount++;
+            }
+
+            if (mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn) {
+                max=5;
+                String limitPeople = mLessonStuCount.getText().toString().trim();
+                if (!TextUtils.isEmpty(limitPeople)) {
+                    int limit = TextUtils.isEmpty(limitPeople) ? 0 : Integer.parseInt(limitPeople);
+                    if (limit > 0) {
+                        shouldTipCount++;
+                    }
+                }
+            }else {
+                max=4;
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+        return shouldTipCount<=0?-1:(shouldTipCount>=max?1:0);
+    }
 }

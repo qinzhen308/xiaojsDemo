@@ -166,7 +166,7 @@ public class LessonHomeActivity extends BaseActivity {
                 String startTime = TimeUtil.format(mLessonDetail.getSchedule().getStart().getTime(),
                         TimeUtil.TIME_YYYY_MM_DD_HH_MM);
 
-                ShareUtil.show(LessonHomeActivity.this,
+                ShareUtil.shareUrlByUmeng(LessonHomeActivity.this,
                         mLessonDetail.getTitle(),
                         new StringBuilder(startTime).append("\r\n").append(mLessonDetail.getTeacher().getBasic().getName()).toString(),
                         shareUrl);

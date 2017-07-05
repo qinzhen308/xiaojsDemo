@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Paul Z on 2017/6/27.
@@ -14,5 +13,7 @@ import java.util.List;
 public class Students {
     public ArrayList<StudentInClass> classes;
     public ArrayList<StudentInPL> lessons;
+
+    public ArrayList<Enrollment> enrollments;
 
 }

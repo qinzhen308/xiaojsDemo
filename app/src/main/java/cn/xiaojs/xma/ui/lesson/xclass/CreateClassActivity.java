@@ -32,6 +32,7 @@ import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -465,6 +466,42 @@ public class CreateClassActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    private boolean wannaExit(){
+
+        int status=checkExit();
+        if(status<0)return true;
+
+        final CommonDialog dialog=new CommonDialog(this);
+        dialog.setTitle(R.string.create_class_exit_tip2);
+        dialog.setLefBtnText(R.string.exit);
+        dialog.setRightBtnText(R.string.countine_input);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener(){
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener(){
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        return false;
+    }
+
+    private int checkExit(){
+        int tipCount=0;
+        String name = classNameEdt.getText().toString().trim();
+        if (!TextUtils.isEmpty(name)&&name.length() <= MAX_CLASS_CHAR) {
+            tipCount++;
+        }
+        return tipCount>=1?1:-1;
+
     }
 
 

@@ -23,7 +23,6 @@
 
 package cn.xiaojs.xma.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -31,25 +30,19 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
-import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.meituan.android.walle.WalleChannelReader;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.UMShareConfig;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.File;
 
-import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.ui.account.LoginActivity;
 
 /**
@@ -63,11 +56,11 @@ public class APPUtils {
      * @return
      */
     public static boolean isProEvn() {
-//
-//        if (XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
-//                || XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
-//            return false;
-//        }
+
+        if (XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
+                || XiaojsConfig.CHANNEL.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
+            return false;
+        }
 
         return true;
     }
@@ -83,8 +76,8 @@ public class APPUtils {
             channel = XiaojsConfig.CHANNEL_ENV_DEVTEST;
         }
 
-//        return channel;
-        return "pro";
+        return channel;
+//        return "pro";
     }
 
     public static boolean isBackgroundThread(){
