@@ -2,7 +2,10 @@ package cn.xiaojs.xma.data.api.socket;
 
 import android.content.Context;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
+
+import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -78,7 +81,9 @@ public class SocketManager {
         if (data == null) {
             socket.emit(event,ack);
         }else {
-            socket.emit(event,data,ack);
+            JSONObject[] jsonObjects = new JSONObject[1];
+            jsonObjects[0] = wrapSocketBean(data);
+            socket.emit(event,jsonObjects,ack);
         }
 
     }
@@ -103,5 +108,21 @@ public class SocketManager {
 
 
 
+    private JSONObject wrapSocketBean(Object obj) {
+        JSONObject data = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String sendJson = mapper.writeValueAsString(obj);
+            if (sendJson == null) {
+                return null;
+            }
+            data = new JSONObject(sendJson);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return data;
+    }
 
 }

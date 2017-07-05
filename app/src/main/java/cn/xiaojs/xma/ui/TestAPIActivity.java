@@ -34,11 +34,8 @@ import cn.xiaojs.xma.model.GetLessonsResponse;
 import cn.xiaojs.xma.model.LessonDetail;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.VerifyCode;
-import cn.xiaojs.xma.model.socket.EventResponse;
-import cn.xiaojs.xma.model.socket.room.ClaimReponse;
-import cn.xiaojs.xma.data.api.EventEmitor;
+
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
-import io.socket.client.IO;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;

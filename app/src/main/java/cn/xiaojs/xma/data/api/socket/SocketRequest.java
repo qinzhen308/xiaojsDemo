@@ -16,6 +16,7 @@ import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import io.socket.client.Ack;
+import retrofit2.Call;
 
 /**
  * Created by maxiaobao on 2017/6/30.
@@ -59,7 +60,7 @@ public class SocketRequest<T extends EventResponse> {
     }
 
 
-    public void emit(final String event, Object data) {
+    public void emit(final String event, Object data, final Class<T> valueType) {
 
         this.event = event;
 
@@ -85,7 +86,7 @@ public class SocketRequest<T extends EventResponse> {
                 try {
                     T response = null;
                     if (args != null && args.length > 0) {
-                        response = parseSocketResponse(args[0]);
+                        response = parseSocketResponse(args[0], valueType);
                         if (response != null && response.result) {
 
                             if (XiaojsConfig.DEBUG) {
@@ -133,7 +134,7 @@ public class SocketRequest<T extends EventResponse> {
     }
 
 
-    private T parseSocketResponse(Object obj) {
+    private T parseSocketResponse(Object obj, Class<T> valueType) {
         if (obj == null) {
             return null;
         }
@@ -153,8 +154,7 @@ public class SocketRequest<T extends EventResponse> {
             }
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(result, new TypeReference<T>() {
-            });
+            return mapper.readValue(result,valueType);
         } catch (Exception e) {
             e.printStackTrace();
         }

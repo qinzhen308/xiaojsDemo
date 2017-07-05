@@ -51,7 +51,7 @@ public class EventManager {
         StreamMode smode = new StreamMode();
         smode.mode = streamMode;
 
-        socketRequest.emit(event, smode);
+        socketRequest.emit(event, smode, ClaimReponse.class);
 
     }
 
@@ -67,7 +67,7 @@ public class EventManager {
 
         String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
                 Su.EventType.STREAMING_STARTED);
-        socketRequest.emit(event, null);
+        socketRequest.emit(event, null, EventResponse.class);
 
     }
 
@@ -91,7 +91,7 @@ public class EventManager {
 
         String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
                 Su.EventType.STREAMING_STOPPED);
-        socketRequest.emit(event, current);
+        socketRequest.emit(event, current, StreamStoppedResponse.class);
     }
 
 }
