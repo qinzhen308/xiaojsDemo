@@ -31,7 +31,9 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
+import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
@@ -47,6 +49,7 @@ import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class PublishVideoController extends VideoController {
@@ -246,22 +249,55 @@ public class PublishVideoController extends VideoController {
                     break;
                 }
 
-                int eventType = mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL || mPublishType == StreamType.TYPE_STREAM_PUBLISH ?
-                        Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
-                FeedbackStatus fbStatus = new FeedbackStatus();
-                fbStatus.status = Live.MediaStatus.READY;
-                SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.IAckListener() {
-                    @Override
-                    public void call(final Object... args) {
-                        if (args != null && args.length > 0) {
-                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                            if (response != null && response.result) {
-                                if (mStreamChangeListener != null) {
-                                    mStreamChangeListener.onStreamStarted(mPublishType, mPublishStreamUrl, null);
-                                    //FIXME 设置打开后，需要将下面代码打开
-                                    //muteOrUnmute();
+                if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL
+                        || mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
+
+                    ClassroomEngine.getRoomEngine().startStreaming(new EventCallback<EventResponse>() {
+                        @Override
+                        public void onSuccess(EventResponse response) {
+                            if (mStreamChangeListener != null) {
+                                mStreamChangeListener.onStreamStarted(mPublishType, mPublishStreamUrl, null);
+                                //FIXME 设置打开后，需要将下面代码打开
+                                //muteOrUnmute();
+                            }
+                            mStreamPublishing = true;
+                        }
+
+                        @Override
+                        public void onFailed(String errorCode, String errorMessage) {
+                            if (!mPausePublishByToggleResolution) {
+                                pausePublishStream(mPublishType);
+                            }
+
+                            mPausePublishByToggleResolution = false;
+                        }
+                    });
+                }else {
+
+                    //FIXME
+                    int eventType = mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL || mPublishType == StreamType.TYPE_STREAM_PUBLISH ?
+                            Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
+                    FeedbackStatus fbStatus = new FeedbackStatus();
+                    fbStatus.status = Live.MediaStatus.READY;
+                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.IAckListener() {
+                        @Override
+                        public void call(final Object... args) {
+                            if (args != null && args.length > 0) {
+                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
+                                if (response != null && response.result) {
+                                    if (mStreamChangeListener != null) {
+                                        mStreamChangeListener.onStreamStarted(mPublishType, mPublishStreamUrl, null);
+                                        //FIXME 设置打开后，需要将下面代码打开
+                                        //muteOrUnmute();
+                                    }
+                                    mStreamPublishing = true;
+                                } else {
+                                    if (!mPausePublishByToggleResolution) {
+                                        pausePublishStream(mPublishType);
+                                    }
+
+                                    mPausePublishByToggleResolution = false;
                                 }
-                                mStreamPublishing = true;
                             } else {
                                 if (!mPausePublishByToggleResolution) {
                                     pausePublishStream(mPublishType);
@@ -269,15 +305,9 @@ public class PublishVideoController extends VideoController {
 
                                 mPausePublishByToggleResolution = false;
                             }
-                        } else {
-                            if (!mPausePublishByToggleResolution) {
-                                pausePublishStream(mPublishType);
-                            }
-
-                            mPausePublishByToggleResolution = false;
                         }
-                    }
-                });
+                    });
+                }
                 break;
 
             case IOERROR:

@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.data.api.socket;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
@@ -31,7 +32,7 @@ public class SocketRequest<T extends EventResponse> {
     private EventCallback<T> callback;
     private String event;
 
-    private Handler handler = new Handler() {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -154,7 +155,7 @@ public class SocketRequest<T extends EventResponse> {
             }
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(result,valueType);
+            return mapper.readValue(result, valueType);
         } catch (Exception e) {
             e.printStackTrace();
         }

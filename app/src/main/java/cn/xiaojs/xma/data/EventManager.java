@@ -12,6 +12,7 @@ import cn.xiaojs.xma.data.api.socket.SocketRequest;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.CSCurrent;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
+import cn.xiaojs.xma.model.socket.room.Feedback;
 import cn.xiaojs.xma.model.socket.room.StreamMode;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 
@@ -94,57 +95,24 @@ public class EventManager {
         socketRequest.emit(event, current, StreamStoppedResponse.class);
     }
 
+    /**
+     * Signals the video talk streaming has started or failed to start.
+     * @param context
+     * @param mediaStatus
+     * @param callback
+     */
+    public static void mediaFeedback(Context context,int mediaStatus,
+                                        EventCallback<EventResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        Feedback feedback = new Feedback();
+        feedback.status = mediaStatus;
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.MEDIA_FEEDBACK);
+        socketRequest.emit(event, feedback, EventResponse.class);
+    }
+
 }
-
-   // public static class EventReceiver{
-
-//        private SocketListen socketListen;
-//
-//        public EventReceiver(SocketManager socketManager) {
-//            this.socketListen = new SocketListen(socketManager);
-//            onBaseEvent();
-//        }
-//
-//        private void onBaseEvent() {
-//            socketListen.on(
-//                    Su.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA),
-//                    closeMediaObserver);
-//        }
-//
-//        public <T> void addOnEvent(int eventCategory, int eventType, Observer<T> observer) {
-//            socketListen.on(Su.getEventSignature(eventCategory,eventType), observer);
-//        }
-//
-//        public void removeOnEvent(int eventCategory, int eventType) {
-//            socketListen.off(Su.getEventSignature(eventCategory,eventType));
-//        }
-//
-//        public void removeAllOnEvent() {
-//            socketListen.off();
-//        }
-//
-//        private Observer<CloseMediaReceive> closeMediaObserver = new Observer<CloseMediaReceive>() {
-//            @Override
-//            public void onSubscribe(@NonNull Disposable d) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(@NonNull CloseMediaReceive closeMediaReceive) {
-//
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete() {
-//
-//            }
-//        };
-//
-//
-//    }
-//}

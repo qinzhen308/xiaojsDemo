@@ -66,4 +66,21 @@ public class RoomRequest {
             }
         });
     }
+
+    public void mediaFeedback(int mediaStatus,
+                                     final EventCallback<EventResponse> callback) {
+
+        EventManager.mediaFeedback(context, mediaStatus, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                callback.onFailed(errorCode,errorMessage);
+            }
+        });
+
+    }
 }
