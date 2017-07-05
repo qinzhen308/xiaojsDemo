@@ -1,7 +1,5 @@
 package cn.xiaojs.xma.data.api.socket;
 
-import cn.xiaojs.xma.model.socket.EventResponse;
-
 /**
  * Created by maxiaobao on 2017/6/30.
  */
@@ -9,6 +7,6 @@ import cn.xiaojs.xma.model.socket.EventResponse;
 public interface EventCallback<T> {
 
     void onSuccess(T t);
-    void onFailed(String errorCode, EventResponse response);
+    void onFailed(String errorCode, String errorMessage);
 
 }

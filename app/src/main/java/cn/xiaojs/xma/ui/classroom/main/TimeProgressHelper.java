@@ -24,6 +24,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.util.TimeUtil;
 
 public class TimeProgressHelper {
@@ -126,6 +127,10 @@ public class TimeProgressHelper {
             return TYPE_LIVE_INDIVIDUAL;
         }
 
+        if (ClassroomEngine.getRoomEngine().getRoomSession().liveShow) {
+            return TYPE_LIVE_INDIVIDUAL;
+        }
+
         if (Live.LiveSessionState.SCHEDULED.equals(state)) {
             return TYPE_LIVE_PENDING;
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)) {
@@ -138,10 +143,15 @@ public class TimeProgressHelper {
             return TYPE_LIVE_FINISH;
         } else if (Live.LiveSessionState.DELAY.equals(state)) {
             return TYPE_LIVE_DELAY;
-        } else if (Live.LiveSessionState.INDIVIDUAL.equals(state)
-                || LiveCtlSessionManager.getInstance().isIndividualing()) {
-            return TYPE_LIVE_INDIVIDUAL;
-        } else if (Live.LiveSessionState.IDLE.equals(state)) {//班级特有
+        }
+
+//        else if (Live.LiveSessionState.INDIVIDUAL.equals(state)
+//                || LiveCtlSessionManager.getInstance().isIndividualing()) {
+//            return TYPE_LIVE_INDIVIDUAL;
+//        }
+
+
+        else if (Live.LiveSessionState.IDLE.equals(state)) {//班级特有
             return TYPE_LIVE_IDLE;
         } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(state)) {//班级特有
             return TYPE_LIVE_PENDING_LIVE;

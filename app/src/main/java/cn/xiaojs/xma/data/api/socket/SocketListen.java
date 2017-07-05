@@ -11,24 +11,39 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import io.socket.emitter.Emitter;
 
 /**
  * Created by maxiaobao on 2017/7/2.
  */
 
-public class SocketListen {
+public class SocketListen<T> {
 
     private SocketManager socketManager;
+    private MessageCallback<T> callback;
+    private String event;
 
-    public SocketListen(SocketManager socketManager) {
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (callback !=null) {
+                callback.onMessage(event, (T)msg.obj);
+            }
+        }
+    };
+
+
+    public SocketListen(SocketManager socketManager, MessageCallback<T> callback) {
         this.socketManager = socketManager;
+        this.callback = callback;
     }
 
-    public <T> void on(String event, final Observer<T> observer) {
+    public void on(final String event) {
+
+        this.event = event;
+
         if (socketManager == null) {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the socket is null,so listen event failed...");
@@ -45,10 +60,15 @@ public class SocketListen {
                     newMsg = parseSocketResponse(args[0]);
                 }
 
-                if (observer != null) {
-                    Observable.just(newMsg)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(observer);
+                if (XiaojsConfig.DEBUG) {
+                    String data = newMsg==null? "null" : ServiceRequest.objectToJsonString(newMsg);
+                    Logger.d("received event:%s, with data:%s" + data);
+                }
+
+                if (handler != null) {
+                    Message message = new Message();
+                    message.obj = newMsg;
+                    handler.sendMessage(message);
                 }
             }
         });

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
+import cn.xiaojs.xma.data.api.service.ErrorPrompts;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import io.socket.client.Ack;
@@ -27,6 +28,7 @@ public class SocketRequest<T extends EventResponse> {
 
     private SocketManager socketManager;
     private EventCallback<T> callback;
+    private String event;
 
     private Handler handler = new Handler() {
         @Override
@@ -42,7 +44,8 @@ public class SocketRequest<T extends EventResponse> {
                     if (callback != null) {
                         T response = (T) msg.obj;
                         String errorCode = response == null ? Errors.UNKNOWN_ERROR : response.ec;
-                        callback.onFailed(errorCode, (T) msg.obj);
+                        String errorMessage = ErrorPrompts.getErrorMessage(event, errorCode);
+                        callback.onFailed(errorCode, errorMessage);
                     }
 
                     break;
@@ -57,6 +60,8 @@ public class SocketRequest<T extends EventResponse> {
 
 
     public void emit(final String event, Object data) {
+
+        this.event = event;
 
         if (XiaojsConfig.DEBUG) {
             String dataStr = data == null ? "null" : ServiceRequest.objectToJsonString(data);
@@ -108,7 +113,6 @@ public class SocketRequest<T extends EventResponse> {
                     }
 
                     if (handler != null) {
-
                         Message message = new Message();
                         message.what = MSG_FAILED;
                         message.obj = response;

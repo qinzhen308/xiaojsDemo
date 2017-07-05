@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.model.Error;
 
 /**
@@ -17,6 +18,28 @@ public class ErrorPrompts {
                 || errorCode.equals(Errors.NO_ERROR)
                 || errorCode.equals(Errors.SERVER_ERROR)
                 || errorCode.equals(Errors.ILLEGAL_CALL));
+
+    }
+
+    public static String getErrorMessage(String event, String errorCode) {
+        if (TextUtils.isEmpty(errorCode)
+                || TextUtils.isEmpty(event)) {
+            return "请求失败";
+        }
+        String errorMessage = "请求失败";
+
+        if (Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.CLAIM_STREAMING).equals(event)) {
+            if (Errors.STREAM_ALREADY_CLAIMED.equals(errorCode)) {
+                errorMessage= "您已经正在直播秀";
+            } else if (Errors.SOMEBODY_ALREADY_CLAIMED.equals(errorCode)) {
+                errorMessage= "操作失败，其他用户正在直播秀";
+            } else {
+                errorMessage= "开启直播秀失败";
+            }
+        }
+
+        return errorMessage;
 
     }
 

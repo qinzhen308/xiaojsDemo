@@ -122,20 +122,6 @@ public class ClassroomBusiness {
                 || userInLesson == Constants.User.REMOTE_ASSISTANT;
     }
 
-    /**
-     * 是否能个人推流
-     */
-    public static boolean canIndividual(CtlSession session) {
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
-
-//        if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
-//                Live.LiveSessionState.FINISHED.equals(liveState) ||
-//                Live.LiveSessionState.IDLE.equals(liveState)) {
-//            return true;
-//        }
-//        return false;
-        return canIndividualByState(liveState);
-    }
 
     /**
      * 是否能个人推流
@@ -145,11 +131,6 @@ public class ClassroomBusiness {
         if (Live.LiveSessionState.SCHEDULED.equals(liveState) ||
                 Live.LiveSessionState.FINISHED.equals(liveState) ||
                 Live.LiveSessionState.IDLE.equals(liveState)) {
-
-            if(LiveCtlSessionManager.getInstance().isIndividualing()) {
-                return false;
-            }
-
             return true;
         }
         return false;

@@ -40,9 +40,12 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
@@ -64,6 +67,7 @@ import cn.xiaojs.xma.ui.classroom.talk.ExitPeerTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnTalkItemClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 
@@ -95,8 +99,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected TimeProgressHelper mTimeProgressHelper;
 
     protected long mCountTime;
-    protected long mIndividualStreamDuration;
-    protected String mOriginSteamState;
     protected String mIndividualName;
     protected StreamingResponse mIndividualResponseBody;
 
@@ -314,35 +316,19 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
      */
     protected void individualPublishStream() {
         showProgress(true);
-        StreamingMode streamMode = new StreamingMode();
-        streamMode.mode = Live.StreamMode.AV;
-        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLAIM_STREAMING), streamMode, new SocketManager.IAckListener() {
-            @Override
-            public void call(final Object... args) {
-                cancelProgress();
-                if (args != null && args.length > 0) {
-                    String oldLiveSate = LiveCtlSessionManager.getInstance().getLiveState();
-                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                    boolean needPublish = false;
-                    if (response.result) {
-                        mIndividualResponseBody = response;
-                        needPublish = true;
-                    } else {
-                        if (Errors.STREAM_ALREADY_CLAIMED.equals(response.ec)) {
-                            needPublish = true;
-                        }
-                    }
+        ClassroomEngine.getRoomEngine().claimStream(Live.StreamMode.AV,
+                new EventCallback<ClaimReponse>() {
 
-                    if (needPublish) {
-                        mOriginSteamState = oldLiveSate;
-                        mIndividualStreamDuration = mIndividualResponseBody != null ? mIndividualResponseBody.finishOn : 0;
-                        onIndividualPublishCallback(mIndividualResponseBody);
-                    }
-                } else {
-                    if (XiaojsConfig.DEBUG) {
-                        Toast.makeText(mContext, "claim streaming fail", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            @Override
+            public void onSuccess(ClaimReponse claimReponse) {
+                cancelProgress();
+                onIndividualPublishCallback();
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -761,7 +747,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
     }
 
-    protected void onIndividualPublishCallback(StreamingResponse response) {
+    protected void onIndividualPublishCallback() {
 
     }
 

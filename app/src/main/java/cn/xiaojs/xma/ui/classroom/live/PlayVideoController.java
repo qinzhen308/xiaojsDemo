@@ -29,6 +29,7 @@ import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 
 public class PlayVideoController extends VideoController {
 
@@ -121,12 +122,12 @@ public class PlayVideoController extends VideoController {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 int type = StreamType.TYPE_STREAM_PLAY;
-                String state = LiveCtlSessionManager.getInstance().getLiveState();
+                String state = ClassroomEngine.getRoomEngine().getLiveState();
                 if (Live.LiveSessionState.LIVE.equals(state)
                         || Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)
                         || Live.LiveSessionState.PENDING_FOR_LIVE.equals(state)) {
                     type = StreamType.TYPE_STREAM_PLAY;
-                } else if (ClassroomBusiness.canIndividual(LiveCtlSessionManager.getInstance().getCtlSession())) {
+                } else if (ClassroomBusiness.canIndividualByState(state)) {
                     type = StreamType.TYPE_STREAM_PLAY_INDIVIDUAL;
                 }
                 playStream(type, startedNotify.RTMPPlayUrl, startedNotify.finishOn);

@@ -153,47 +153,49 @@ public class TestAPIActivity extends Activity {
     public void testCache() {
 
 
-        String ticket = "2d518d2be219874f8a6bde464faba5b3c54de27101714972e79397ca5e4a84e4d74068124620fa2d72b9fa033b85a9d23ed25a3b47c380cc28e2f576d7ceac50";
-        String secret = "9811f5b7db45971b7cda2d81f0ada513ddc7c8f0507d4c58df29ba75cd73ca842ef4ada36977b5a368393367cac5168dc39dd0991d598a3cae150e1abd5dcabedd33977e33bdf316f9ec8f9c33d8e7005868f8e843bae086af27d6bda4b44e9a2d148510157b1183eb4b8bbfd72bcb7547b4822e51d756494bcc011193ea9187caa9a1913bdb5d8ae4f9550b7bc88a08bc165df0114e347c272555b383081d35d6a000cb41a0996f7e9db8e2797c62ae017fdf63b023508828f390482319050b7cdc8f96f1bd6167fe01274b26013e4c63c0e8e4c15f964dc3af2eb2d90695e52a84039c87bc1aa5683dd365059b6e084dbf2089079f9af1e3e6096b3c91e589271436687dbe5a96007a9c2a74a05dc2da9a545baa6cc2b52bc62685fe5b302e";
-        String url = SocketManager.getClassroomUrl(this,ticket);
+        //HelloWordStateMachine.makeHelloWorld();
 
-        String forceStr =  "true";
-        IO.Options opts = new IO.Options();
-        opts.query = new StringBuilder("secret=")
-                .append(secret)
-                .append("&avc={\"video\":")
-                .append(true)
-                .append(",\"audio\":")
-                .append(true)
-                .append("}&forcibly=")
-                .append(forceStr)
-                .toString();
-        //opts.timeout = TIME_OUT; //ms
-        opts.transports = new String[]{"websocket"};
-
-
-        try {
-            SocketManager.getSocketManager(this).connect(url,opts);
-
-            EventEmitor.claimStreaming(this, Live.StreamMode.AV,
-                    new EventCallback<ClaimReponse>() {
-                        @Override
-                        public void onSuccess(ClaimReponse claimReponse) {
-
-                            imageView.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onFailed(String errorCode, EventResponse response) {
-
-                            imageView.setVisibility(View.GONE);
-                        }
-                    });
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String ticket = "2d518d2be219874f8a6bde464faba5b3c54de27101714972e79397ca5e4a84e4d74068124620fa2d72b9fa033b85a9d23ed25a3b47c380cc28e2f576d7ceac50";
+//        String secret = "9811f5b7db45971b7cda2d81f0ada513ddc7c8f0507d4c58df29ba75cd73ca842ef4ada36977b5a368393367cac5168dc39dd0991d598a3cae150e1abd5dcabedd33977e33bdf316f9ec8f9c33d8e7005868f8e843bae086af27d6bda4b44e9a2d148510157b1183eb4b8bbfd72bcb7547b4822e51d756494bcc011193ea9187caa9a1913bdb5d8ae4f9550b7bc88a08bc165df0114e347c272555b383081d35d6a000cb41a0996f7e9db8e2797c62ae017fdf63b023508828f390482319050b7cdc8f96f1bd6167fe01274b26013e4c63c0e8e4c15f964dc3af2eb2d90695e52a84039c87bc1aa5683dd365059b6e084dbf2089079f9af1e3e6096b3c91e589271436687dbe5a96007a9c2a74a05dc2da9a545baa6cc2b52bc62685fe5b302e";
+//        String url = SocketManager.getClassroomUrl(this,ticket);
+//
+//        String forceStr =  "true";
+//        IO.Options opts = new IO.Options();
+//        opts.query = new StringBuilder("secret=")
+//                .append(secret)
+//                .append("&avc={\"video\":")
+//                .append(true)
+//                .append(",\"audio\":")
+//                .append(true)
+//                .append("}&forcibly=")
+//                .append(forceStr)
+//                .toString();
+//        //opts.timeout = TIME_OUT; //ms
+//        opts.transports = new String[]{"websocket"};
+//
+//
+//        try {
+//            SocketManager.getSocketManager(this).connect(url,opts);
+//
+//            EventEmitor.claimStreaming(this, Live.StreamMode.AV,
+//                    new EventCallback<ClaimReponse>() {
+//                        @Override
+//                        public void onSuccess(ClaimReponse claimReponse) {
+//
+//                            imageView.setVisibility(View.GONE);
+//                        }
+//
+//                        @Override
+//                        public void onFailed(String errorCode, EventResponse response) {
+//
+//                            imageView.setVisibility(View.GONE);
+//                        }
+//                    });
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 //        String ticket = "e5339de8e921dce21724bd35234287469a97a18a85d98255cfd81277928e11dbeddeeab6469add1ffa596f3fdea3a68ce574686981b9180d6f8b4c4507845d45";
 //

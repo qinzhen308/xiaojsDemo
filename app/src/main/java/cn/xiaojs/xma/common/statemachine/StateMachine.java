@@ -1,5 +1,3 @@
-package cn.xiaojs.xma.common.statemachine;
-
 /**
  * Copyright (C) 2009 The Android Open Source Project
  *
@@ -7,7 +5,7 @@ package cn.xiaojs.xma.common.statemachine;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +14,7 @@ package cn.xiaojs.xma.common.statemachine;
  * limitations under the License.
  */
 
+package cn.xiaojs.xma.common.statemachine;
 
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -25,8 +24,10 @@ import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -1185,7 +1186,6 @@ public class StateMachine {
             if (stateInfo == null || stateInfo.active) {
                 return;
             }
-
             boolean isParent = mStateInfo.values().stream()
                     .filter(new Predicate<StateInfo>() {
                         @Override
@@ -1595,7 +1595,7 @@ public class StateMachine {
      * in MessageQueue#enqueMessage if sent directly or if sent using
      * StateMachine#sendMessage the message will just be ignored.
      *
-     * @return A Message object from the global pool
+     * @return  A Message object from the global pool
      */
     public final Message obtainMessage() {
         return Message.obtain(mSmHandler);
@@ -1610,7 +1610,7 @@ public class StateMachine {
      * StateMachine#sendMessage the message will just be ignored.
      *
      * @param what is the assigned to Message.what.
-     * @return A Message object from the global pool
+     * @return  A Message object from the global pool
      */
     public final Message obtainMessage(int what) {
         return Message.obtain(mSmHandler, what);
@@ -1627,7 +1627,7 @@ public class StateMachine {
      *
      * @param what is the assigned to Message.what.
      * @param obj is assigned to Message.obj.
-     * @return A Message object from the global pool
+     * @return  A Message object from the global pool
      */
     public final Message obtainMessage(int what, Object obj) {
         return Message.obtain(mSmHandler, what, obj);
@@ -1644,7 +1644,7 @@ public class StateMachine {
      *
      * @param what  is assigned to Message.what
      * @param arg1  is assigned to Message.arg1
-     * @return A Message object from the global pool
+     * @return  A Message object from the global pool
      */
     public final Message obtainMessage(int what, int arg1) {
         // use this obtain so we don't match the obtain(h, what, Object) method
@@ -1663,7 +1663,7 @@ public class StateMachine {
      * @param what  is assigned to Message.what
      * @param arg1  is assigned to Message.arg1
      * @param arg2  is assigned to Message.arg2
-     * @return A Message object from the global pool
+     * @return  A Message object from the global pool
      */
     public final Message obtainMessage(int what, int arg1, int arg2) {
         return Message.obtain(mSmHandler, what, arg1, arg2);
@@ -1682,7 +1682,7 @@ public class StateMachine {
      * @param arg1  is assigned to Message.arg1
      * @param arg2  is assigned to Message.arg2
      * @param obj is assigned to Message.obj
-     * @return A Message object from the global pool
+     * @return  A Message object from the global pool
      */
     public final Message obtainMessage(int what, int arg1, int arg2, Object obj) {
         return Message.obtain(mSmHandler, what, arg1, arg2, obj);

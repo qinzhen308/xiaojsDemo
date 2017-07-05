@@ -42,6 +42,10 @@ import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.ClassroomType;
+import cn.xiaojs.xma.ui.classroom2.RoomSession;
+import cn.xiaojs.xma.ui.classroom2.SessionListener;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import io.socket.client.Socket;
@@ -61,55 +65,33 @@ import io.socket.client.Socket;
  *
  * ======================================================================================== */
 
-public class ClassroomActivity extends FragmentActivity {
+public class ClassroomActivity extends FragmentActivity implements SessionListener{
     private final static int REQUEST_PERMISSION = 1000;
 
-    private final static int MSG_SOCKET_TIME_OUT = 0;
-    private final static int SOCKET_CONNECT_TIMEOUT = 1;
-
-    //socket time out
-    private final static int SOCKET_TIME_OUT = 5 * 1000; //10s
-    //socket retry count after time out
-    private final static int RETRY_COUNT = 3;
-
     private ProgressHUD mProgress;
-    private NetworkChangedBReceiver mNetworkChangedBReceiver;
-
     private CommonDialog mKickOutDialog;
     private CommonDialog mContinueConnectDialog;
 
-    private Socket mSocket;
-    private Boolean mSktConnected = false;
-
-    private String mTicket = "";
-    private CtlSession mCtlSession;
-    private int mAppType = Platform.AppType.UNKNOWN;
-
-    //socket retry count
-    private int mSocketRetryCount = 0;
-
-    private TextView mEmptyTips;
-    private int mNetworkState = ClassroomBusiness.NETWORK_NONE;
-    //private boolean mNeedInitStream; //init stream after socket connected
-    private boolean mNetworkDisconnected = false;
+    private ClassroomEngine classroomEngine;
+    private String ticket;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classroom);
 
-        //init params
-        initParams();
+        ticket = getIntent().getStringExtra(Constants.KEY_TICKET);
+        classroomEngine = ClassroomEngine.getEngine(this,this);
+
+        ClassroomController.init(this);
+
         //init data
-        initData(true, false);
+        initData();
 
         //grant permission
         String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
                 Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
         PermissionGen.needPermission(this, REQUEST_PERMISSION, permissions);
-
-        //register network
-        registerNetworkReceiver();
 
     }
 
@@ -117,19 +99,14 @@ public class ClassroomActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        disConnectIO();
-        unregisterNetworkReceiver();
-
         //release
         ClassroomController.getInstance().release();
         LiveCtlSessionManager.getInstance().release();
         ContactManager.getInstance().release();
         TalkManager.getInstance().release();
 
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
-        }
+        classroomEngine.destoryEngine();
+
     }
 
     @Override
@@ -167,111 +144,50 @@ public class ClassroomActivity extends FragmentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private void initParams() {
-        mTicket = getIntent().getStringExtra(Constants.KEY_TICKET);
-        //init controller;
-        ClassroomController.init(this);
-    }
 
     /**
      * 初始化, 启动bootSession
      */
-    private void initData(boolean showProgress, final boolean netWorkChanged) {
-        if (ClassroomBusiness.getCurrentNetwork(this) == ClassroomBusiness.NETWORK_NONE) {
-            //TODO, show tips view
-            setNoNetworkTips(true);
-            return;
-        }
+    private void initData() {
+//        if (ClassroomBusiness.getCurrentNetwork(this) == ClassroomBusiness.NETWORK_NONE) {
+//            return;
+//        }
 
-        if (showProgress) {
-            showProgress(true);
-        }
-        LiveManager.bootSession(this, mTicket, new APIServiceCallback<CtlSession>() {
-            @Override
-            public void onSuccess(CtlSession ctlSession) {
-                cancelProgress();
-                if (ctlSession != null) {
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("aaa", "session: state=" + ctlSession.state + "   mode=" + ctlSession.mode + "   accessible="
-                                + ctlSession.accessible + "   psType=" + ctlSession.psType);
-                    }
-
-//                    if (!ctlSession.accessible) {
-//                        checkForceKickOut(ctlSession, netWorkChanged);
-//                    } else {
-                    onBootSessionSucc(false, ctlSession, netWorkChanged);
-                    //}
-                }
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("boot session error");
-                }
-                cancelProgress();
-                showContinueConnectClassroom(errorMessage);
-            }
-        });
+        showProgress(true);
+        classroomEngine.init(ticket);
     }
 
-    private void setNoNetworkTips(boolean showEmptyTips) {
-        if (mEmptyTips == null) {
-            mEmptyTips = (TextView) findViewById(R.id.no_net_work_tips);
-        }
-
-        mEmptyTips.setVisibility(showEmptyTips ? View.VISIBLE : View.GONE);
 
 
-        showContinueConnectClassroom(null);
-    }
+    private void onSucc() {
 
-    /**
-     * boot session 成功回调后的逻辑处理
-     *
-     * @param forceConnect 是否强制链接
-     * @param ctlSession   课程session
-     */
-    private void onBootSessionSucc(final boolean forceConnect, final CtlSession ctlSession, final boolean networkChanged) {
-        if (Live.LiveSessionState.CANCELLED.equals(ctlSession.state)) {
+        String state = classroomEngine.getLiveState();
+        if (Live.LiveSessionState.CANCELLED.equals(state)) {
             Toast.makeText(this, R.string.forbidden_enter_class_for_cancel, Toast.LENGTH_SHORT).show();
-            //TODO
-            //finish();
+            //退出教室
+            finish();
         }
 
-        mCtlSession = ctlSession;
-        mAppType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
+        CtlSession ctlSession = classroomEngine.getRoomSession().ctlSession;
+        int appType = ctlSession.connected != null ? ctlSession.connected.app : Platform.AppType.UNKNOWN;
         //二维码扫描进入教室，需要更新ticket.
         if (!TextUtils.isEmpty(ctlSession.ticket)) {
-            mTicket = ctlSession.ticket;
+            //TODO 要更新ticket？
+            ticket = ctlSession.ticket;
         }
+        //FIXME 先保证不出错，之后要干掉LiveCtlSessionManager
+        LiveCtlSessionManager.getInstance().init(ctlSession,ticket);
 
-        //init socket
-        if (!networkChanged) {
-            //初始化socket并连接。
-            initSocketIO(mTicket, ctlSession.secret, forceConnect);
-        } else {
-            //重制并重新初始化和连接socket
-            SocketManager.close();
-            SocketManager.init(ClassroomActivity.this, mTicket, ctlSession.secret, true, true, forceConnect);
-            mSocket = SocketManager.getSocket();
-            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-            //mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
-            SocketManager.reListener();
-            SocketManager.connect();
-        }
 
-        //init global data
-        LiveCtlSessionManager.getInstance().init(ctlSession, mTicket);
         ContactManager.getInstance().init();
-        TalkManager.getInstance().init(ClassroomActivity.this, mTicket);
+        TalkManager.getInstance().init(ClassroomActivity.this, ticket);
 
         //init fragment
 
         ClassroomLiveFragment liveFragment = ClassroomController.getInstance().getStackFragment();
 
         if (liveFragment == null) {
-            initFragment(mCtlSession);
+            initFragment(ctlSession);
         } else if (liveFragment instanceof PlayFragment) {
 
             getSupportFragmentManager()
@@ -281,7 +197,7 @@ public class ClassroomActivity extends FragmentActivity {
 
             ClassroomController.getInstance().setStackFragment(null);
 
-            initFragment(mCtlSession);
+            initFragment(ctlSession);
         }
     }
 
@@ -295,7 +211,8 @@ public class ClassroomActivity extends FragmentActivity {
 
             Bundle data = new Bundle();
 
-            boolean isPrivateClass = mCtlSession.cls != null;
+            ClassroomType cType = classroomEngine.getClassroomType();
+            boolean isPrivateClass = cType == ClassroomType.ClassLesson? true : false;
             if (isPrivateClass) {
                 data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
                 data.putString(Constants.KEY_PUBLISH_URL, ctlSession.publishUrl);
@@ -314,210 +231,38 @@ public class ClassroomActivity extends FragmentActivity {
         }
     }
 
-    private void initSocketIO(String ticket, String secret, boolean force) {
-        //off listener
-        if (SocketManager.hasEventListeners()) {
-            SocketManager.off(false);
-        } else {
-            SocketManager.off();
-        }
 
-        SocketManager.close();
-        SocketManager.init(ClassroomActivity.this, ticket, secret, true, true, force);
-        mSocket = SocketManager.getSocket();
-        mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-        //mHandler.sendEmptyMessageDelayed(MSG_SOCKET_TIME_OUT, SOCKET_TIME_OUT);
-
-        //listener again
-        if (SocketManager.hasEventListeners()) {
-            SocketManager.reListener();
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("reListener..********************************..");
-            }
-
-        } else {
-            listenSocket();
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("listenSocket..*****************************..");
-            }
-        }
-    }
-
-    private void disConnectIO() {
-        //off all
-        SocketManager.off();
-        SocketManager.close();
-    }
-
-    private void listenSocket() {
-        if (mSocket == null) {
-            return;
-        }
-
-        SocketManager.on(Socket.EVENT_CONNECT, mOnConnect);
-        SocketManager.on(Socket.EVENT_DISCONNECT, mOnDisconnect);
-        SocketManager.on(Socket.EVENT_CONNECT_ERROR, mOnConnectError);
-        SocketManager.on(Socket.EVENT_CONNECT_TIMEOUT, mSocketTimeoutListener);
-        SocketManager.on(
-                Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION),
-                mKickoutByUserListener);
-        SocketManager.on(
-                Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH),
-                mModeSwitchListener);
-
-        SocketManager.connect();
-
-        showProgress(false);
-        if (mHandler != null) {
-            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
-            mHandler.sendEmptyMessageDelayed(SOCKET_CONNECT_TIMEOUT, 20 * 1000);
-        }
-
-    }
-
-    private SocketManager.EventListener mOnConnect = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (!mSktConnected) {
-                //if (XiaojsConfig.DEBUG) {
-                Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
-                // }
-            }
-            cancelProgress();
-
-            if (mContinueConnectDialog != null && mContinueConnectDialog.isShowing()) {
-                mContinueConnectDialog.dismiss();
-            }
-
-            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
-            mSktConnected = true;
-
-            ContactManager.getInstance().getAttendees(ClassroomActivity.this, null);
-            ClassroomController.getInstance().notifySocketConnectChanged(true);
-        }
-    };
-
-    private SocketManager.EventListener mOnDisconnect = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            mSktConnected = false;
-            cancelProgress();
-            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
-            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-            mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
-
-            if (XiaojsConfig.DEBUG) {
-                Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    private SocketManager.EventListener mOnConnectError = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            mSktConnected = false;
-            cancelProgress();
-            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
-            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-            mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
-
-            // if (XiaojsConfig.DEBUG) {
-            Toast.makeText(ClassroomActivity.this, R.string.socket_error_connect, Toast.LENGTH_LONG).show();
-            // }
-        }
-    };
-
-    private SocketManager.EventListener mSocketTimeoutListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            mSktConnected = false;
-            cancelProgress();
-            mHandler.removeMessages(SOCKET_CONNECT_TIMEOUT);
-            mHandler.removeMessages(MSG_SOCKET_TIME_OUT);
-            mHandler.sendEmptyMessage(MSG_SOCKET_TIME_OUT);
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("socket connect time out...");
-            }
-        }
-    };
-
-    private SocketManager.EventListener mKickoutByUserListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION**");
-            }
-
-            Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
-            finish();
-        }
-    };
-
-    private SocketManager.EventListener mModeSwitchListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.CLASS_MODE_SWITCH**");
-            }
-
-
-            //解析并更新session mode
-            if (args != null && args.length > 0) {
-                ModeSwitcher switcher = ClassroomBusiness.parseSocketBean(args[0], ModeSwitcher.class);
-                LiveCtlSessionManager.getInstance().updateCtlSessionMode(switcher.to);
-            }
-
-        }
-    };
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg != null) {
-                switch (msg.what) {
-                    case MSG_SOCKET_TIME_OUT:
-                        //socket time out
-//                        if (!mSktConnected && mSocketRetryCount++ < RETRY_COUNT) {
-//                            //reconnect
-//                            if (XiaojsConfig.DEBUG) {
-//                                Logger.i("socket reconnecting now!");
-//                            }
-//                            initData(true, false);
-//                        } else {
-                        cancelProgress();
-                        showContinueConnectClassroom(null);
-                        //}
-                        break;
-                    case SOCKET_CONNECT_TIMEOUT:
-                        cancelProgress();
-                        if (!mSktConnected) {
-                            showContinueConnectClassroom(null);
-                        }
-
-                        break;
-                }
-            }
-        }
-    };
-
-    private void registerNetworkReceiver() {
-        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        mNetworkChangedBReceiver = new NetworkChangedBReceiver();
-        registerReceiver(mNetworkChangedBReceiver, filter);
-    }
-
-    private void unregisterNetworkReceiver() {
-        if (mNetworkChangedBReceiver != null) {
-            unregisterReceiver(mNetworkChangedBReceiver);
-        }
-    }
+//    private SocketManager.EventListener mKickoutByUserListener = new SocketManager.EventListener() {
+//        @Override
+//        public void call(Object... args) {
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("Received event: **Su.EventType.KICKOUT_DUE_TO_NEW_CONNECTION**");
+//            }
+//
+//            Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
+//            finish();
+//        }
+//    };
+//
+//    private SocketManager.EventListener mModeSwitchListener = new SocketManager.EventListener() {
+//        @Override
+//        public void call(Object... args) {
+//
+//
+//            if (XiaojsConfig.DEBUG) {
+//                Logger.d("Received event: **Su.EventType.CLASS_MODE_SWITCH**");
+//            }
+//
+//
+//            //解析并更新session mode
+//            if (args != null && args.length > 0) {
+//                ModeSwitcher switcher = ClassroomBusiness.parseSocketBean(args[0], ModeSwitcher.class);
+//                LiveCtlSessionManager.getInstance().updateCtlSessionMode(switcher.to);
+//            }
+//
+//        }
+//    };
 
     public void showProgress(boolean cancellable) {
         if (mProgress == null) {
@@ -536,7 +281,7 @@ public class ClassroomActivity extends FragmentActivity {
     /**
      * 是否继续连接教室
      */
-    private void showContinueConnectClassroom(String errorTips) {
+    private void showConnectClassroom(String errorTips) {
         if (mContinueConnectDialog == null) {
             mContinueConnectDialog = new CommonDialog(this);
             mContinueConnectDialog.setTitle(R.string.cr_live_connect_fail_title);
@@ -552,8 +297,7 @@ public class ClassroomActivity extends FragmentActivity {
                 @Override
                 public void onClick() {
                     mContinueConnectDialog.dismiss();
-                    mSocketRetryCount = 0;
-                    initData(true, true);
+                    initData();
                 }
             });
 
@@ -584,7 +328,7 @@ public class ClassroomActivity extends FragmentActivity {
                 public void onClick() {
                     //强制登录
                     mKickOutDialog.dismiss();
-                    onBootSessionSucc(true, ctlSession, netWorkChanged);
+                    onSucc();
                 }
             });
 
@@ -601,50 +345,31 @@ public class ClassroomActivity extends FragmentActivity {
         mKickOutDialog.show();
     }
 
-    /**
-     * 网络切换监听
-     */
-    public class NetworkChangedBReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(final Context context, Intent intent) {
-            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mobileInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-            NetworkInfo wifiInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            NetworkInfo activeInfo = manager.getActiveNetworkInfo();
+    @Override
+    public void connectSuccess() {
 
-            boolean mobileNet = mobileInfo == null ? false : mobileInfo.isConnected();
-            boolean wifiNet = wifiInfo == null ? false : wifiInfo.isConnected();
-            String activeNet = activeInfo == null ? "null" : activeInfo.getTypeName();
+        cancelProgress();
+        if (mContinueConnectDialog != null && mContinueConnectDialog.isShowing()) {
+            mContinueConnectDialog.dismiss();
+        }
+        Toast.makeText(ClassroomActivity.this, R.string.socket_connect, Toast.LENGTH_LONG).show();
+        onSucc();
+        //TODO 连接成功后，需要获取联系人数据
+        //ContactManager.getInstance().getAttendees(ClassroomActivity.this, null);
+    }
 
-            if (activeInfo == null) {
-                // have no active network
-                mSktConnected = false;
-                mNetworkState = ClassroomBusiness.NETWORK_NONE;
-                ClassroomController.getInstance().notifySocketConnectChanged(false);
+    @Override
+    public void connectFailed(String errorCode, String errorMessage) {
+        cancelProgress();
+        showConnectClassroom(null);
 
-                //disconnect all socket
-                mNetworkDisconnected = true;
-                SocketManager.off(false);
-            } else if (wifiNet) {
-                // wifi network
-                mNetworkState = ClassroomBusiness.NETWORK_WIFI;
-                if (mNetworkDisconnected) {
-                    mNetworkDisconnected = false;
-//                    setNoNetworkTips(false);
-//                    SocketManager.reListener();
-//                    SocketManager.connect();
-                }
-            } else if (mobileNet) {
-                // mobile network
-                mNetworkState = ClassroomBusiness.NETWORK_OTHER;
-                if (mNetworkDisconnected) {
-                    mNetworkDisconnected = false;
-                    //setNoNetworkTips(false);
-                    //SocketManager.reListener();
-                    //SocketManager.connect();
-                }
-            }
+        if (XiaojsConfig.DEBUG) {
+            Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
         }
     }
 
+    @Override
+    public void networkStateChanged(int state) {
+        //TODO
+    }
 }

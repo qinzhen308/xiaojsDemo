@@ -58,6 +58,7 @@ import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
@@ -309,16 +310,17 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     protected void initData() {
         Bundle data = getArguments();
         mCountTime = ClassroomBusiness.getCountTimeByCtlSession();
+        mPublishUrl = ClassroomEngine.getRoomEngine().getPublishUrl();
+        mPlayUrl = ClassroomEngine.getRoomEngine().getPlayUrl();
+
+
         if (data != null) {
             mPublishType = data.getInt(Constants.KEY_PUBLISH_TYPE, StreamType.TYPE_STREAM_PUBLISH);
-            mPublishUrl = data.getString(Constants.KEY_PUBLISH_URL, "");
-            mPlayUrl = data.getString(Constants.KEY_PLAY_URL, "");
 
             //get individual info
-            mOriginSteamState = data.getString(Constants.KEY_BEFORE_LIVE_STATE, "");
-            mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
-            mIndividualStreamDuration = data.getLong(Constants.KEY_INDIVIDUAL_DURATION, 0);
-            mIndividualName = data.getString(Constants.KEY_INDIVIDUAL_NAME, "");
+            //mIndividualResponseBody = (StreamingResponse) data.getSerializable(Constants.KEY_INDIVIDUAL_RESPONSE);
+            //mIndividualStreamDuration = data.getLong(Constants.KEY_INDIVIDUAL_DURATION, 0);
+            //mIndividualName = data.getString(Constants.KEY_INDIVIDUAL_NAME, "");
 
             //get count time
             int from = data.getInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
@@ -353,7 +355,8 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 break;
         }
 
-        mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, mOriginSteamState, false);
+        //FIXME time
+        //mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, mOriginSteamState, false);
 
         setControllerBtnStyle(liveState);
 
@@ -418,14 +421,11 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     }
 
     @Override
-    protected void onIndividualPublishCallback(StreamingResponse response) {
-        if (response == null) {
-            return;
-        }
+    protected void onIndividualPublishCallback() {
 
-        LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.INDIVIDUAL);
         setControllerBtnStyle(Live.LiveSessionState.INDIVIDUAL);
-        mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, response.publishUrl);
+        String publishUrl = ClassroomEngine.getRoomEngine().getPublishUrl();
+        mVideoController.publishStream(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, publishUrl);
     }
 
     @Override
@@ -524,11 +524,12 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 mTimeProgressHelper.setTimeProgress(mCountTime, liveState);
                 break;
             case StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL:
-                try {
-                    mIndividualStreamDuration = (long) extra;
-                } catch (Exception e) {
-                }
-                mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, mOriginSteamState, true);
+                //FIXME timedeal
+//                try {
+//                    mIndividualStreamDuration = (long) extra;
+//                } catch (Exception e) {
+//                }
+//                mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, mOriginSteamState, true);
                 break;
         }
 
@@ -607,11 +608,9 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 //mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
                 if (extra instanceof String && VideoController.STREAM_EXPIRED.equals((String) extra)) {
                     Toast.makeText(mContext, R.string.cr_individual_end, Toast.LENGTH_SHORT).show();
-                    LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
                     mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
                     mPlayPauseBtn.setVisibility(View.VISIBLE);
                 } else {
-                    LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
                     exitCurrentFragment();
                 }
                 break;
@@ -917,7 +916,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             //pause and exit
             mHandKeyPressing = true;
             pauseIndividual(true);
-        } else if (ClassroomBusiness.canIndividual(mCtlSession)) {
+        } else if (ClassroomBusiness.canIndividualByState(liveState)) {
             individualPublishStream();
         }
     }
@@ -928,7 +927,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             return;
         }
 
-        if (ClassroomBusiness.canIndividual(mCtlSession)) {
+        if (ClassroomBusiness.canIndividualByState(liveState)) {
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             mPlayPauseBtn.setVisibility(View.VISIBLE);
             mFinishBtn.setVisibility(View.INVISIBLE);
@@ -1091,7 +1090,6 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     }
 
     private void pauseIndividual(boolean withExitFragment) {
-        LiveCtlSessionManager.getInstance().updateCtlSessionState(mOriginSteamState);
         if (withExitFragment) {
             mVideoController.setCancelPublish(true);
             exitCurrentFragment();
@@ -1167,7 +1165,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 mPlayUrl = "";
                 mCtlSession.finishOn = 0;
                 data.putString(Constants.KEY_PLAY_URL, mPlayUrl);
-                data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, mIndividualResponseBody);
+                //data.putSerializable(Constants.KEY_INDIVIDUAL_RESPONSE, mIndividualResponseBody);
                 break;
             default:
                 break;

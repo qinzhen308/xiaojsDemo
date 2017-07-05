@@ -42,11 +42,15 @@ public class SocketManager {
         this.context = context.getApplicationContext();
     }
 
-    public void connect(String url, IO.Options options) throws Exception{
-
+    public void initSocket(String url, IO.Options options) throws Exception{
         socket = IO.socket(url,options);
+    }
+
+    public void connect() throws Exception{
         socket.connect();
     }
+
+
 
     public void disConnect() {
         if (socket != null) {
