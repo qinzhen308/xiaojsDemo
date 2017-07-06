@@ -906,7 +906,7 @@
     <string name="living_back_to_talk_mode_title">学生看不到你的视频</string>
     <string name="living_back_to_talk_mode_sub">你可以和学生进行文字交流</string>
     <string name="offline_peer_to_peer_tips">该学生已下线，不能1对1视频哦～</string>
-    <string name="upload_support_error_tips">暂不支持此文件格式,目前只支持上传图片、PPT、视频文件</string>
+    <string name="upload_support_error_tips">暂不支持此文件格式,目前只支持上传图片、PPT、WROD、PDF、视频文件</string>
     <string name="live_occur_exception">抱歉，直播出现异常</string>
     <string name="teacher">老师</string>
     <string name="manager_session">机构管理</string>

@@ -373,7 +373,11 @@ public class MaterialActivity extends BaseActivity {
         int i=name.lastIndexOf(".");
         if(i>0){
             int type=FileUtil.getFileTypeBySuffix(name.substring(i+1,name.length()));
-            if(type!=FileUtil.PPT&&type!=FileUtil.PICTURE&&type!=FileUtil.VIDEO){
+            if(type!=FileUtil.PPT
+                    && type!=FileUtil.PICTURE
+                    && type!=FileUtil.VIDEO
+                    && type!=FileUtil.DOC
+                    && type!=FileUtil.PDF){
                 ToastUtil.showToast(getApplicationContext(),getString(R.string.upload_support_error_tips));
                 return;
             }
