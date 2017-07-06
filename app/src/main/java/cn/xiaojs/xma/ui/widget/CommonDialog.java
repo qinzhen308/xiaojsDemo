@@ -216,6 +216,9 @@ public class CommonDialog extends Dialog {
         descStr = desc;
     }
 
+
+
+
     public interface OnClickListener {
         void onClick();
     }

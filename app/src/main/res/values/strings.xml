@@ -941,5 +941,6 @@
     <string name="countine_input">继续填写</string>
     <string name="exit_with_finish">完成并退出</string>
     <string name="cant_join_yourself_class">不能加入自己创建的班</string>
+    <string name="go_to_authorization">去授权</string>
 
 </resources>

@@ -3,20 +3,26 @@ package cn.xiaojs.xma.ui;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
+import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +31,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
 import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
@@ -49,6 +56,7 @@ import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
+import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
 import cn.xiaojs.xma.util.MessageUitl;
@@ -484,6 +492,18 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 break;
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults, new PermissionHelper.Response() {
+            @Override
+            public void next() {
+                AnalyticEvents.onEvent(MainActivity.this,2);
+                startActivityForResult(new Intent(MainActivity.this,SearchActivity.class),100);
+            }
+        });
     }
 
 }

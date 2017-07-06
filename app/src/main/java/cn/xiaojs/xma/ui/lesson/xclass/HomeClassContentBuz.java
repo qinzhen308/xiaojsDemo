@@ -49,6 +49,7 @@ import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassFooterModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
@@ -369,6 +370,7 @@ public class HomeClassContentBuz {
             classLabel.hasData=true;
             mAdapter.getList().addAll(list);
         }
+        mAdapter.getList().add(new ClassFooterModel());
         mAdapter.getList().add(lastEmptyModel);
         if(XiaojsConfig.DEBUG)
             Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));
