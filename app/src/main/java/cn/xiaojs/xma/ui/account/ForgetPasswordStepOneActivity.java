@@ -119,7 +119,7 @@ public class ForgetPasswordStepOneActivity extends BaseActivity {
                     if (!APPUtils.isProEvn()) {
                         mVerifyCodeEdt.setText(String.valueOf(object.getCode()));
                     }
-
+                    Toast.makeText(getApplicationContext(), R.string.captcha_send_success, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

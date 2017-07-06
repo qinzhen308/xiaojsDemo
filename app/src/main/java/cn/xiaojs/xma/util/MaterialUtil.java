@@ -44,7 +44,7 @@ public class MaterialUtil {
             intent.setDataAndType(data, mimeType);
             activity.startActivity(intent);
 
-        } else if (Collaboration.isPPT(mimeType)) {
+        } else if (Collaboration.isPPT(mimeType)||Collaboration.isPDF(mimeType)||Collaboration.isDoc(mimeType)) {
 
             //LibDoc.ExportImg[] imgs = bean.exported.images;
             ArrayList<LibDoc.ExportImg> imgs = getSortImgs(bean.exported.images);
@@ -111,7 +111,7 @@ public class MaterialUtil {
             for (LibDoc.ExportImg exportImg : imgs) {
                 //get index
                 String[] args = exportImg.name.split("-");
-                exportImg.index = Integer.parseInt(args[3]);
+                exportImg.index = Integer.parseInt(args[args.length-2]);
 
                 sortImgs.add(exportImg);
             }

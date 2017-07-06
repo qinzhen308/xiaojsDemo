@@ -369,8 +369,11 @@ public class HomeClassContentBuz {
         if(!ArrayUtil.isEmpty(list)){
             classLabel.hasData=true;
             mAdapter.getList().addAll(list);
+            if(list.size()==4){
+                mAdapter.getList().add(new ClassFooterModel());
+            }
         }
-        mAdapter.getList().add(new ClassFooterModel());
+
         mAdapter.getList().add(lastEmptyModel);
         if(XiaojsConfig.DEBUG)
             Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));

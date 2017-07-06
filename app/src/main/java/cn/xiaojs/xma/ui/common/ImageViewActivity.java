@@ -315,11 +315,12 @@ public class ImageViewActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            if (mList != null && mList.size() > 1) {
-                return Integer.MAX_VALUE;
-            } else {
-                return mList == null ? 0 : mList.size();
-            }
+//            if (mList != null && mList.size() > 1) {
+//                return Integer.MAX_VALUE;
+//            } else {
+//                return mList == null ? 0 : mList.size();
+//            }
+            return mList == null ? 0 : mList.size();
         }
 
         @Override

@@ -154,6 +154,7 @@ public class RegisterActivity extends BaseActivity {
                     if (!APPUtils.isProEvn()) {
                         mRegVerifyEdit.setText(String.valueOf(object.getCode()));
                     }
+                    Toast.makeText(mContext, R.string.captcha_send_success, Toast.LENGTH_SHORT).show();
 
                 }
 
