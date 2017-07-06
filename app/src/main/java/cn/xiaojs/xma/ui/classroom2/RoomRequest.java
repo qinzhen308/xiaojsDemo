@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2;
 
 import android.content.Context;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.EventManager;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.socket.EventResponse;
@@ -51,12 +52,16 @@ public class RoomRequest {
         });
     }
 
-    public void stopStreaming(String csOfCurrent,
+    public void stopStreaming(final int streamType,
+                              String csOfCurrent,
                               final EventCallback<StreamStoppedResponse> callback) {
 
         EventManager.streamingStopped(context, csOfCurrent, new EventCallback<StreamStoppedResponse>() {
             @Override
             public void onSuccess(StreamStoppedResponse streamStoppedResponse) {
+                if (streamType == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL) {
+                    stateMachine.stopLiveShow();
+                }
                 callback.onSuccess(streamStoppedResponse);
             }
 
@@ -68,7 +73,7 @@ public class RoomRequest {
     }
 
     public void mediaFeedback(int mediaStatus,
-                                     final EventCallback<EventResponse> callback) {
+                              final EventCallback<EventResponse> callback) {
 
         EventManager.mediaFeedback(context, mediaStatus, new EventCallback<EventResponse>() {
             @Override
@@ -78,7 +83,7 @@ public class RoomRequest {
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
-                callback.onFailed(errorCode,errorMessage);
+                callback.onFailed(errorCode, errorMessage);
             }
         });
 

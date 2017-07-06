@@ -34,6 +34,9 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
+import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
+import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
@@ -49,10 +52,12 @@ import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class PublishVideoController extends VideoController {
+public class PublishVideoController extends VideoController implements EventListener {
 
     private int loadingSize = 36;
     private int loadingDesc = 20;
@@ -125,7 +130,7 @@ public class PublishVideoController extends VideoController {
             } else {
                 if (mStreamPublishing) {
 
-                    if (type == StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER) {
+                    if (type == CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER) {
                         //TODO 学生关闭一对一流后，需要通知老师端，老师端1对1窗口要关闭
 //                        OpenMedia media = new OpenMedia();
 //                        media.to = AccountDataManager.getAccountID(mContext);
@@ -146,49 +151,29 @@ public class PublishVideoController extends VideoController {
                                 });
                     } else {
                         //send stopped stream
+                        String csofCurrent = ClassroomEngine.getRoomEngine().getCsOfCurrent();
+                        ClassroomEngine.getRoomEngine().stopStreaming(type,csofCurrent,
+                                new EventCallback<StreamStoppedResponse>() {
+                            @Override
+                            public void onSuccess(StreamStoppedResponse streamStoppedResponse) {
 
-                        FinishClassResponse response = LiveCtlSessionManager.getInstance().mFinishClassResponse;
-                        if (response !=null && !TextUtils.isEmpty(response.csOfCurrent)) {
-                            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),response,
-                                    new SocketManager.IAckListener() {
-                                        @Override
-                                        public void call(Object... args) {
+                                ClassroomEngine.getRoomEngine().setCsOfCurrent(null);
 
-                                            LiveCtlSessionManager.getInstance().mFinishClassResponse = null;
+                                mNeedStreamRePublishing = true;
+                                if (mStreamChangeListener != null) {
+                                    mStreamChangeListener.onStreamStopped(type, null);
+                                }
+                            }
 
-                                            if (args != null && args.length > 0) {
-                                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                                if (response.result) {
-                                                    mNeedStreamRePublishing = true;
-                                                    if (mStreamChangeListener != null) {
-                                                        mStreamChangeListener.onStreamStopped(type, null);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
-                            LiveCtlSessionManager.getInstance().mFinishClassResponse = null;
-                        } else {
-                            SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.STREAMING_STOPPED),
-                                    new SocketManager.IAckListener() {
-                                        @Override
-                                        public void call(Object... args) {
-                                            if (args != null && args.length > 0) {
-                                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                                if (response.result) {
-                                                    mNeedStreamRePublishing = true;
-                                                    if (mStreamChangeListener != null) {
-                                                        mStreamChangeListener.onStreamStopped(type, null);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
-                        }
+                            @Override
+                            public void onFailed(String errorCode, String errorMessage) {
 
-
+                                if (XiaojsConfig.DEBUG) {
+                                    Logger.d("stop streaming failed");
+                                }
+                            }
+                        });
                     }
-
 
                 } else {
                     if (mStreamChangeListener != null) {
@@ -249,8 +234,8 @@ public class PublishVideoController extends VideoController {
                     break;
                 }
 
-                if (mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL
-                        || mPublishType == StreamType.TYPE_STREAM_PUBLISH) {
+                if (mPublishType == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL
+                        || mPublishType == CTLConstant.StreamingType.PUBLISH_LIVE) {
 
                     ClassroomEngine.getRoomEngine().startStreaming(new EventCallback<EventResponse>() {
                         @Override
@@ -270,40 +255,35 @@ public class PublishVideoController extends VideoController {
                             }
 
                             mPausePublishByToggleResolution = false;
+
+                            if (XiaojsConfig.DEBUG) {
+                                Logger.d("发送 startStreaming event 失败");
+                            }
                         }
                     });
                 }else {
 
-                    //FIXME
-                    int eventType = mPublishType == StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL || mPublishType == StreamType.TYPE_STREAM_PUBLISH ?
-                            Su.EventType.STREAMING_STARTED : Su.EventType.MEDIA_FEEDBACK;
-                    FeedbackStatus fbStatus = new FeedbackStatus();
-                    fbStatus.status = Live.MediaStatus.READY;
-                    SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, eventType), fbStatus, new SocketManager.IAckListener() {
+                    ClassroomEngine.getRoomEngine().mediaFeedback(Live.MediaStatus.READY, new EventCallback<EventResponse>() {
                         @Override
-                        public void call(final Object... args) {
-                            if (args != null && args.length > 0) {
-                                StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                if (response != null && response.result) {
-                                    if (mStreamChangeListener != null) {
-                                        mStreamChangeListener.onStreamStarted(mPublishType, mPublishStreamUrl, null);
-                                        //FIXME 设置打开后，需要将下面代码打开
-                                        //muteOrUnmute();
-                                    }
-                                    mStreamPublishing = true;
-                                } else {
-                                    if (!mPausePublishByToggleResolution) {
-                                        pausePublishStream(mPublishType);
-                                    }
+                        public void onSuccess(EventResponse response) {
+                            if (mStreamChangeListener != null) {
+                                mStreamChangeListener.onStreamStarted(mPublishType, mPublishStreamUrl, null);
+                                //FIXME 设置打开后，需要将下面代码打开
+                                //muteOrUnmute();
+                            }
+                            mStreamPublishing = true;
+                        }
 
-                                    mPausePublishByToggleResolution = false;
-                                }
-                            } else {
-                                if (!mPausePublishByToggleResolution) {
-                                    pausePublishStream(mPublishType);
-                                }
+                        @Override
+                        public void onFailed(String errorCode, String errorMessage) {
+                            if (!mPausePublishByToggleResolution) {
+                                pausePublishStream(mPublishType);
+                            }
 
-                                mPausePublishByToggleResolution = false;
+                            mPausePublishByToggleResolution = false;
+
+                            if (XiaojsConfig.DEBUG) {
+                                Logger.d("发送 mediaFeedback event 失败");
                             }
                         }
                     });
@@ -336,7 +316,7 @@ public class PublishVideoController extends VideoController {
                         Toast.makeText(mContext, R.string.success_one2one,Toast.LENGTH_SHORT).show();
 
                         mPlayStreamUrl = response.playUrl;
-                        playStream(StreamType.TYPE_STREAM_PLAY_PEER_TO_PEER, response.playUrl);
+                        playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, response.playUrl);
                     }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == response.status) {
                         Toast.makeText(mContext, R.string.user_refuse_one_to_one_tips,Toast.LENGTH_SHORT).show();
                     }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == response.status) {
@@ -352,6 +332,64 @@ public class PublishVideoController extends VideoController {
         }
     };
 
+
+    @Override
+    public void receivedEvent(String event, Object object) {
+        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED)
+                .equals(event)) {
+
+            if (object == null) {
+                return;
+            }
+
+            StreamStartReceive receive = (StreamStartReceive) object;
+
+            mPlayStreamUrl = receive.RTMPPlayUrl;
+            mExtraData = receive.finishOn;
+
+
+            int type = Live.StreamType.INDIVIDUAL == receive.streamType?
+                    CTLConstant.StreamingType.PLAY_INDIVIDUAL : CTLConstant.StreamingType.PLAY_LIVE;
+            //FIXME 1对1流的类型是什么？
+            playStream(type, receive.RTMPPlayUrl, receive.finishOn);
+
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED).equals(event)) {
+
+            if (object == null) {
+                return;
+            }
+
+            StreamStopReceive receive = (StreamStopReceive) object;
+            if (receive.streamType == Live.StreamType.INDIVIDUAL) {
+                //老师端的推流将学生端的个人推流，强制挤掉。
+                if (mStreamChangeListener != null) {
+                    mStreamChangeListener.onStreamStopped(CTLConstant.StreamingType.PUBLISH_INDIVIDUAL, null);
+                }
+            } else {
+                pausePlayStream(mPlayType);
+            }
+
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event) {
+
+        } else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION).equals(event)) {
+            if (object == null) {
+                return;
+            }
+
+            if (mStreamChangeListener != null) {
+                mStreamChangeListener.onStreamStopped(mPublishType, STREAM_EXPIRED);
+            }
+            mStreamPublishing = false;
+            mPublishView.pause();
+            mPublishView.setVisibility(View.GONE);
+
+            if (mPlayView.getVisibility() == View.VISIBLE) {
+                mPlayView.pause();
+                mPlayView.setVisibility(View.GONE);
+            }
+        }
+    }
+
     @Override
     protected void onStreamingStarted(Object... args) {
         if (args != null && args.length > 0) {
@@ -359,7 +397,7 @@ public class PublishVideoController extends VideoController {
             if (startedNotify != null) {
                 mPlayStreamUrl = startedNotify.RTMPPlayUrl;
                 mExtraData = startedNotify.finishOn;
-                playStream(StreamType.TYPE_STREAM_PLAY_INDIVIDUAL, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
+                playStream(CTLConstant.StreamingType.PLAY_INDIVIDUAL, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
             }
         }
     }
@@ -372,7 +410,7 @@ public class PublishVideoController extends VideoController {
                 if (notify.streamType == Live.StreamType.INDIVIDUAL) {
                     //老师端的推流将学生端的个人推流，强制挤掉。
                     if (mStreamChangeListener != null) {
-                        mStreamChangeListener.onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_INDIVIDUAL, null);
+                        mStreamChangeListener.onStreamStopped(CTLConstant.StreamingType.PUBLISH_INDIVIDUAL, null);
                     }
                 } else {
                     pausePlayStream(mPlayType);

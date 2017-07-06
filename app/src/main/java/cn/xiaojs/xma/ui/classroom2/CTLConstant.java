@@ -36,4 +36,14 @@ public class CTLConstant {
         public static final int TYPE_WIFI= 1;                     //Wi-Fi状态
         public static final int TYPE_MOBILE= 2;                   //gprs/2/3/4/5G
     }
+
+    public static class StreamingType {
+        public static final int PLAY_LIVE= 1;                     //播放流
+        public static final int PUBLISH_LIVE= 2;                  //直播推流
+        public static final int PLAY_PEER_TO_PEER= 3;             //一对一播放流
+        public static final int PUBLISH_PEER_TO_PEER= 4;          //一对一推送流
+        public static final int PLAY_INDIVIDUAL= 5;               //播放直播秀流
+        public static final int PUBLISH_INDIVIDUAL= 6;            //直播秀推流
+        public static final int RECLAIMED_INDIVIDUAL= 7;          //个人推流(回收)
+    }
 }

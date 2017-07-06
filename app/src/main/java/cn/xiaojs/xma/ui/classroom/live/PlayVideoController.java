@@ -22,16 +22,20 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
+import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.EventListener;
 
-public class PlayVideoController extends VideoController {
+public class PlayVideoController extends VideoController implements EventListener{
 
     public PlayVideoController(Context context, View root, OnStreamChangeListener listener) {
         super(context, root, listener);
@@ -117,18 +121,51 @@ public class PlayVideoController extends VideoController {
     }
 
     @Override
+    public void receivedEvent(String event, Object object) {
+
+        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED)
+                .equals(event)) {
+
+            if (object == null) {
+                return;
+            }
+
+            StreamStartReceive receive = (StreamStartReceive) object;
+
+            int type = Live.StreamType.INDIVIDUAL == receive.streamType?
+                    CTLConstant.StreamingType.PLAY_INDIVIDUAL : CTLConstant.StreamingType.PLAY_LIVE;
+            //FIXME 1对1流的类型是什么？
+            playStream(type, receive.RTMPPlayUrl, receive.finishOn);
+
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED).equals(event)) {
+
+            if (object == null) {
+                return;
+            }
+            pausePlayStream(mPlayType);
+        }
+//        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event)
+//                || Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION).equals(event)) {
+//            if (object == null) {
+//                return;
+//            }
+//            pausePublishStream(mPublishType);
+//        }
+    }
+
+    @Override
     protected void onStreamingStarted(Object... args) {
         if (args != null && args.length > 0) {
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
-                int type = StreamType.TYPE_STREAM_PLAY;
+                int type = CTLConstant.StreamingType.PLAY_LIVE;
                 String state = ClassroomEngine.getRoomEngine().getLiveState();
                 if (Live.LiveSessionState.LIVE.equals(state)
                         || Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)
                         || Live.LiveSessionState.PENDING_FOR_LIVE.equals(state)) {
-                    type = StreamType.TYPE_STREAM_PLAY;
+                    type = CTLConstant.StreamingType.PLAY_LIVE;
                 } else if (ClassroomBusiness.canIndividualByState(state)) {
-                    type = StreamType.TYPE_STREAM_PLAY_INDIVIDUAL;
+                    type = CTLConstant.StreamingType.PLAY_INDIVIDUAL;
                 }
                 playStream(type, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
             }

@@ -3,6 +3,9 @@ package cn.xiaojs.xma.ui.classroom2;
 import android.content.Context;
 import android.os.Message;
 
+import com.orhanobut.logger.Logger;
+
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.statemachine.State;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
@@ -54,6 +57,10 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         return getSession().ctlSession.state;
     }
 
+    @Override
+    protected String getTitle() {
+        return getSession().ctlSession.ctl.title;
+    }
 
     private State getStateBySession(String sessionState) {
         State state = defaultState;
@@ -78,7 +85,6 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     //
     // 处理event事件
     //
-    @Override
     protected void closeMedia(CloseMediaReceive message) {
 
     }
@@ -161,6 +167,21 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     }
 
     class FinishedState extends State {
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("enter FinishedState...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("exit FinishedState...");
+            }
+        }
+
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
@@ -169,13 +190,11 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
                     transitionTo(liveShowState);
                     return HANDLED;
-                case StandloneChannel.STOP_LIVE_SHOW:                      //停止直播秀
-                    return HANDLED;
                 case StandloneChannel.START_PLAY_LIVE_SHOW:                //开始播放直播秀
                     return HANDLED;
                 case StandloneChannel.STOP_PLAY_LIVE_SHOW:                 //结束播放直播秀
+                    //do nothing
                     return HANDLED;
-
             }
             return NOT_HANDLED;
         }
@@ -189,17 +208,31 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         @Override
         public void enter() {
             getSession().liveShow = true;
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("enter LiveShowState...");
+            }
         }
 
         @Override
         public void exit() {
             getSession().liveShow = false;
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("exit LiveShowState...");
+            }
         }
 
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
                 case StandloneChannel.STOP_LIVE_SHOW:                      //停止直播秀
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("LiveShowState: received STOP_LIVE_SHOW");
+                    }
+                    RoomSession session = getSession();
+                    session.ctlSession.publishUrl = "";
+                    session.ctlSession.finishOn = 0;
                     //回到之前状态
                     transitionTo(getStateBySession(getLiveState()));
                     return HANDLED;

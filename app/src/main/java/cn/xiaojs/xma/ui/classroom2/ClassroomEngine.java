@@ -124,6 +124,18 @@ public class ClassroomEngine {
         return stateMachine.getLiveMode();
     }
 
+    public String getCsOfCurrent() {
+        return getRoomSession().csOfCurrent;
+    }
+
+    public void setCsOfCurrent(String csOfCurrent) {
+        getRoomSession().csOfCurrent = csOfCurrent;
+    }
+
+    public String getRoomTitle() {
+        return stateMachine.getTitle();
+    }
+
     /**
      * 请求开始直播秀
      * @param mode
@@ -150,10 +162,22 @@ public class ClassroomEngine {
      * @param csOfCurrent
      * @param callback
      */
-    public void stopStreaming(String csOfCurrent,
+    public void stopStreaming(int streamType, String csOfCurrent,
                               final EventCallback<StreamStoppedResponse> callback) {
         if (roomRequest != null) {
-            roomRequest.stopStreaming(csOfCurrent, callback);
+            roomRequest.stopStreaming(streamType, csOfCurrent, callback);
+        }
+    }
+
+    /**
+     * 一对一推流时候，推流成功后发送的socket事件
+     * @param mediaStatus
+     * @param callback
+     */
+    public void mediaFeedback(int mediaStatus,
+                              final EventCallback<EventResponse> callback) {
+        if (roomRequest != null) {
+            roomRequest.mediaFeedback(mediaStatus, callback);
         }
     }
 

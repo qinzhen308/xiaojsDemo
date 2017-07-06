@@ -50,13 +50,11 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingMode;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamChangeListener;
-import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
 import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom.page.OnSettingChangedListener;
@@ -67,7 +65,9 @@ import cn.xiaojs.xma.ui.classroom.talk.ExitPeerTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnTalkItemClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
+import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
 
@@ -87,7 +87,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected final static int ANIM_HIDE_TIMEOUT = 3500; //s
     protected final static int BTN_PRESS_INTERVAL = 1000; //ms
 
-    protected CtlSession mCtlSession;
     protected String mTicket;
     protected Constants.UserMode mUserMode = Constants.UserMode.PARTICIPANT;
 
@@ -114,8 +113,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected int mSlideViewHeight;
 
     protected Handler mHandler;
+    protected CtlSession mCtlSession;
 
     private String peerAccountId;
+
 
     @Override
     public void onAttach(Context context) {
@@ -150,7 +151,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         }
 
         mHandler = new Handler();
-        mCtlSession = LiveCtlSessionManager.getInstance().getCtlSession();
+        mCtlSession = ClassroomEngine.getRoomEngine().getRoomSession().ctlSession;
         mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
         mTicket = LiveCtlSessionManager.getInstance().getTicket();
 
@@ -186,25 +187,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     }
 
     protected String getLessonTitle() {
-        String title = "";
-
-        if (mCtlSession.cls != null) {
-
-            if (mCtlSession.ctl != null) {
-                title = mCtlSession.ctl.title;
-            } else {
-                title = mCtlSession.cls.title;
-            }
-
-        } else {
-
-            if (mCtlSession.ctl != null) {
-                title = mCtlSession.ctl.title;
-            }
-        }
-
-
-        return title;
+        return ClassroomEngine.getRoomEngine().getRoomTitle();
     }
 
     protected FadeAnimListener getAnimListener(String name) {
@@ -421,7 +404,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 Logger.d("Received event: **Su.EventType.MEDIA_ABORTED**");
             }
 
-            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
         }
     };
 
@@ -434,7 +417,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             }
             LiveCtlSessionManager.getInstance().setOne2one(false);
 
-            onStreamStopped(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
         }
     };
 
