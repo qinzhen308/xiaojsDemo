@@ -3,6 +3,7 @@ package cn.xiaojs.xma.common.permissiongen;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
@@ -98,6 +99,13 @@ public class PermissionGen {
         executeMethod(activity, executeMethod);
     }
 
+    private static void doExecuteRationale(Object activity, int requestCode) {
+        Method executeMethod = PermissionUtil.findMethodWithRequestCode(activity.getClass(),
+                PermissionRationale.class, requestCode);
+
+        executeMethod(activity, executeMethod);
+    }
+
     private static void executeMethod(Object activity, Method executeMethod) {
         if (executeMethod != null) {
             try {
@@ -126,15 +134,23 @@ public class PermissionGen {
 
     private static void requestResult(Object obj, int requestCode, String[] permissions,
                                       int[] grantResults) {
+        boolean hasNaverAskAgain=false;
         List<String> deniedPermissions = new ArrayList<>();
         for (int i = 0; i < grantResults.length; i++) {
             if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 deniedPermissions.add(permissions[i]);
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(obj instanceof Activity?(Activity) obj:((Fragment)obj).getActivity(), permissions[i])) {
+                    hasNaverAskAgain=true;
+                }
             }
         }
 
         if (deniedPermissions.size() > 0) {
-            doExecuteFail(obj, requestCode);
+            if(hasNaverAskAgain){
+                doExecuteRationale(obj, requestCode);
+            }else {
+                doExecuteFail(obj, requestCode);
+            }
         } else {
             doExecuteSuccess(obj, requestCode);
         }

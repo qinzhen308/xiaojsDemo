@@ -20,6 +20,7 @@ package cn.xiaojs.xma.ui.base;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -29,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
@@ -189,4 +191,11 @@ public abstract class BaseFragment extends Fragment {
     protected void onDataChanged() {
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
+    }
+
 }

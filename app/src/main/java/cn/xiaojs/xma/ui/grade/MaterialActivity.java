@@ -27,6 +27,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -46,6 +47,8 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
@@ -340,10 +343,17 @@ public class MaterialActivity extends BaseActivity {
         }
     }
 
+
     @Keep
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)
     public void accessExternalStorageSuccess() {
         addToLibrary(queryFileFromDataBase());
+    }
+
+    @Keep
+    @PermissionRationale(requestCode = REQUEST_PERMISSION)
+    public void accessExternalStorageRationale() {
+        PermissionHelper.showRationaleDialog(this);
     }
 
     private File queryFileFromDataBase() {

@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
+import android.support.annotation.Keep;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import java.net.URI;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -538,6 +540,16 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         if (mDialog != null) {
             mDialog.cancel();
         }
+    }
+
+    @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGalleryRationale() {
+        PermissionHelper.showRationaleDialog(this);
+    }
+
+    @PermissionFail(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void getCameraRationale() {
+        PermissionHelper.showRationaleDialog(this);
     }
 
     /**

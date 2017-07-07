@@ -19,6 +19,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -40,6 +41,10 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -425,7 +430,8 @@ public class LiveFragment extends BaseFragment {
                     case 0:
                         if (PermissionUtil.isOverMarshmallow()
                                 && ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+//                            requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+                            PermissionGen.needPermission(LiveFragment.this,MainActivity.PERMISSION_CODE,Manifest.permission.CAMERA);
 
                         } else {
                             startActivity(new Intent(mContext, ScanQrcodeActivity.class));
@@ -469,23 +475,15 @@ public class LiveFragment extends BaseFragment {
         menu.show(targetView, offset);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MainActivity.PERMISSION_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    @Keep
+    @PermissionSuccess(requestCode = MainActivity.PERMISSION_CODE)
+    public void accessCameraSuccess() {
+        startActivity(new Intent(mContext, ScanQrcodeActivity.class));
+    }
 
-                    startActivity(new Intent(mContext, ScanQrcodeActivity.class));
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-        }
+    @Keep
+    @PermissionRationale(requestCode = MainActivity.PERMISSION_CODE)
+    public void accessCameraRationale() {
+        PermissionHelper.showRationaleDialog(this);
     }
 }

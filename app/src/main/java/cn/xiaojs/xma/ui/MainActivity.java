@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,8 @@ import cn.xiaojs.xma.XiaojsConfig;
 
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
@@ -494,16 +497,17 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionHelper.onRequestPermissionsResult(this, requestCode, permissions, grantResults, new PermissionHelper.Response() {
-            @Override
-            public void next() {
-                AnalyticEvents.onEvent(MainActivity.this,2);
-                startActivityForResult(new Intent(MainActivity.this,SearchActivity.class),100);
-            }
-        });
+    @Keep
+    @PermissionSuccess(requestCode = MainActivity.PERMISSION_CODE)
+    public void requestCameraSuccess() {
+        AnalyticEvents.onEvent(this,2);
+        startActivity(new Intent(this, ScanQrcodeActivity.class));
+    }
+
+    @Keep
+    @PermissionRationale(requestCode = MainActivity.PERMISSION_CODE)
+    public void requestCameraRationale() {
+        PermissionHelper.showRationaleDialog(this);
     }
 
 }

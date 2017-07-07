@@ -36,6 +36,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -181,7 +182,9 @@ public class HomeClassContentBuz {
             case R.id.btn_scan2:
                 AnalyticEvents.onEvent(mContext,35);
                 if (PermissionUtil.isOverMarshmallow() && ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    mContext.requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+//                    mContext.requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+                    PermissionGen.needPermission(mContext ,MainActivity.PERMISSION_CODE,Manifest.permission.CAMERA);
+
                 } else {
                     mContext.startActivity(new Intent(mContext, ScanQrcodeActivity.class));
                 }

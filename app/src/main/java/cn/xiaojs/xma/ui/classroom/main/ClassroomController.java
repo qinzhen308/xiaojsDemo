@@ -349,7 +349,7 @@ public class ClassroomController {
                 || mimeType.startsWith(Collaboration.VideoMimeTypes.ALL)) {
             enterVideoPlayPage(doc);
         } else if (mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
-                || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
+                || mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)||Collaboration.isDoc(mimeType)||Collaboration.isPDF(mimeType)) {
             ArrayList<LibDoc.ExportImg> images = MaterialUtil.getSortImgs(doc.exported != null ? doc.exported.images : null);
             if (images != null) {
                 ArrayList<String> imgUrls = new ArrayList<String>();
