@@ -236,15 +236,15 @@ public abstract class ClassroomStateMachine extends StateMachine {
     //
     private void monitEvent() {
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA, cmCallback);
+                Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA, CloseMediaReceive.class,cmCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED, stpCallback);
+                Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED, StreamStopReceive.class,stpCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED, staCallback);
+                Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED, StreamStartReceive.class,staCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED, reCallback);
+                Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED, ReclaimedReceive.class,reCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION, ssbeCallback);
+                Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class,ssbeCallback);
     }
 
     private void clearEventListeners() {

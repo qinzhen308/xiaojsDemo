@@ -26,11 +26,12 @@ public class EventManager {
     public static <T> void onEvent(Context context,
                                    int eventCategory,
                                    int eventType,
+                                   final Class<T> valueType,
                                    MessageCallback<T> callback) {
 
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketListen socketListen = new SocketListen(socketManager,callback);
-        socketListen.on(Su.getEventSignature(eventCategory,eventType));
+        socketListen.on(Su.getEventSignature(eventCategory,eventType),valueType);
     }
 
 

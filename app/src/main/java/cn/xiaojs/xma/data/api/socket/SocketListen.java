@@ -40,7 +40,7 @@ public class SocketListen<T> {
         this.callback = callback;
     }
 
-    public void on(final String event) {
+    public void on(final String event,final Class<T> valueType) {
 
         this.event = event;
 
@@ -57,12 +57,12 @@ public class SocketListen<T> {
 
                 T newMsg =null;
                 if (args != null && args.length > 0) {
-                    newMsg = parseSocketResponse(args[0]);
+                    newMsg = parseSocketResponse(args[0],valueType);
                 }
 
                 if (XiaojsConfig.DEBUG) {
                     String data = newMsg==null? "null" : ServiceRequest.objectToJsonString(newMsg);
-                    Logger.d("received event:%s, with data:%s" + data);
+                    Logger.d("received event:%s, with data:%s",event,data);
                 }
 
                 if (handler != null) {
@@ -96,7 +96,7 @@ public class SocketListen<T> {
         socketManager.off();
     }
 
-    private <T> T parseSocketResponse(Object obj) {
+    private T parseSocketResponse(Object obj, final Class<T> valueType) {
         if (obj == null) {
             return null;
         }
@@ -116,8 +116,7 @@ public class SocketListen<T> {
             }
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(result, new TypeReference<T>() {
-            });
+            return mapper.readValue(result, valueType);
         } catch (Exception e) {
             e.printStackTrace();
         }

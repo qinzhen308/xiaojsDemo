@@ -67,7 +67,17 @@ public class PublishVideoController extends VideoController implements EventList
         listenerSocket();
         loadingSize = context.getResources().getDimensionPixelSize(R.dimen.px36);
         loadingDesc = context.getResources().getDimensionPixelSize(R.dimen.font_20px);
+
+        ClassroomEngine.getRoomEngine().addEvenListener(this);
+
     }
+
+    @Override
+    public void onDestroy() {
+        ClassroomEngine.getRoomEngine().removeEvenListener(this);
+        super.onDestroy();
+    }
+
 
     @Override
     protected void init(View root) {
@@ -369,7 +379,11 @@ public class PublishVideoController extends VideoController implements EventList
                 pausePlayStream(mPlayType);
             }
 
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event) {
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event)) {
+            if (object == null) {
+                return;
+            }
+            pausePublishStream(mPublishType);
 
         } else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION).equals(event)) {
             if (object == null) {

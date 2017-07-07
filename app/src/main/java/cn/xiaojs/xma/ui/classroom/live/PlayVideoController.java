@@ -40,6 +40,14 @@ public class PlayVideoController extends VideoController implements EventListene
     public PlayVideoController(Context context, View root, OnStreamChangeListener listener) {
         super(context, root, listener);
         listenerSocket();
+
+        ClassroomEngine.getRoomEngine().addEvenListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        ClassroomEngine.getRoomEngine().removeEvenListener(this);
+        super.onDestroy();
     }
 
     @Override
