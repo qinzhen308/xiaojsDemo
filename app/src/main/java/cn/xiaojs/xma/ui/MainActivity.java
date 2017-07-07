@@ -1,29 +1,16 @@
 package cn.xiaojs.xma.ui;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.Settings;
 import android.support.annotation.Keep;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
-import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +22,6 @@ import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
-import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;

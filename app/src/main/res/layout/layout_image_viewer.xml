@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="正在加载..."
-            android:textSize="@dimen/font_26px"
-            android:textColor="@color/font_white"
-            android:layout_gravity="center"
-            />
+        android:id="@+id/load_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="正在加载..."
+        android:textColor="@color/font_white"
+        android:textSize="@dimen/font_26px" />
+
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/hurge_image_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <cn.xiaojs.xma.ui.widget.scaleimage.PhotoView
-            android:id="@+id/drag_image_viewer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:src="@android:color/transparent"/>
+        android:id="@+id/drag_image_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:src="@android:color/transparent" />
 
 </FrameLayout>

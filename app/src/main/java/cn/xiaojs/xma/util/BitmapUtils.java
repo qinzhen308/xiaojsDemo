@@ -19,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -604,6 +605,22 @@ public class BitmapUtils {
         }
 
         // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + savedPath)));
+        return true;
+    }
+
+    public static boolean copyImgFileToGallery(Context context,File file){
+        File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        if(!fileDir.exists()){
+            fileDir.mkdirs();
+        }
+
+        String fileName = new StringBuilder("xjs_download_")
+                .append(System.currentTimeMillis())
+                .append("_")
+                .append(file.getName())
+                .toString();
+        String savedPath=fileDir+"/"+fileName;
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + savedPath)));
         return true;
     }

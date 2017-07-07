@@ -14,7 +14,11 @@ package cn.xiaojs.xma.util;
  *
  * ======================================================================================== */
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -89,6 +93,24 @@ public class CacheUtil {
         sb.append(time);
         sb.append(SUFFIX_JPG);
         return BitmapUtils.saveImage(bitmap,sb.toString(),DEFAULT_QUALITY,false);
+    }
+
+    public static String copyImgFileToGallery(Context context, File file){
+        String savedPath="";
+        try {
+            String fileDir = mkdirs(getAppCacheRoot()+IMAGE_DOWNLOAD_DIR);
+            String fileName = new StringBuilder()
+                    .append(System.currentTimeMillis())
+                    .append("_")
+                    .append(file.getName())
+                    .toString();
+            savedPath=fileDir+"/"+fileName;
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + savedPath)));
+        }catch (Exception e){
+
+        }
+
+        return savedPath;
     }
 
 }
