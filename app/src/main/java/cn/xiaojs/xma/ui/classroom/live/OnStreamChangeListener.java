@@ -37,8 +37,6 @@ public interface OnStreamChangeListener {
 
     public void onStreamException(StreamingState errorCode, int type, Object extra);
 
-    public void onRemindFinalization();
-
     public void onStreamingQualityChanged(StreamingQuality streamingQuality);
 
 

@@ -17,19 +17,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -38,14 +35,17 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
+import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
+import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
+import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.EmbedTalkFragment;
 import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
 import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
@@ -55,11 +55,12 @@ import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.ClassroomType;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.XjsUtils;
 import okhttp3.ResponseBody;
+
+import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -76,7 +77,7 @@ import okhttp3.ResponseBody;
  *
  * ======================================================================================== */
 
-public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkListener {
+public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkListener, EventListener {
     public final static int MSG_MODE_INPUT = 1;
     public final static int FULL_SCREEN_MODE_INPUT = 2;
 
@@ -174,6 +175,19 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
+    public void onDestroyView() {
+        classroomEngine.removeEvenListener(this);
+        super.onDestroyView();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        classroomEngine.addEvenListener(this);
+        return view;
+    }
+
+    @Override
     protected View getContentView() {
         return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_play, null);
     }
@@ -198,28 +212,28 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 }
                 break;
             case R.id.open_docs_btn:
-                AnalyticEvents.onEvent(mContext,42);
+                AnalyticEvents.onEvent(mContext, 42);
                 mClassroomController.openDocument(this,
-                        ClassroomEngine.getRoomEngine().getRoomSession().ctlSession);
+                        ClassroomEngine.getEngine().getCtlSession());
                 break;
             case R.id.talk_open_contact_btn:
             case R.id.fc_open_contact_btn:
 
-                int eventCode = v.getId() == R.id.talk_open_contact_btn ? 43: 48;
-                AnalyticEvents.onEvent(mContext,eventCode);
+                int eventCode = v.getId() == R.id.talk_open_contact_btn ? 43 : 48;
+                AnalyticEvents.onEvent(mContext, eventCode);
 
                 if (isPortrait() || v.getId() == R.id.talk_open_contact_btn) {
                     mClassroomController.openContact(this,
-                            ClassroomEngine.getRoomEngine().getRoomSession().ctlSession,
+                            ClassroomEngine.getEngine().getCtlSession(),
                             SheetFragment.SHEET_GRAVITY_BOTTOM, mSlideViewHeight);
                 } else {
                     mClassroomController.openContact(this,
-                            ClassroomEngine.getRoomEngine().getRoomSession().ctlSession,
+                            ClassroomEngine.getEngine().getCtlSession(),
                             SheetFragment.SHEET_GRAVITY_RIGHT, mSlideViewWidth);
                 }
                 break;
             case R.id.talk_send_txt_btn:
-                AnalyticEvents.onEvent(mContext,44);
+                AnalyticEvents.onEvent(mContext, 44);
                 mClassroomController.openInputText(this, MSG_MODE_INPUT);
                 break;
             case R.id.talk_send_other_btn:
@@ -229,34 +243,34 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 break;
             case R.id.enter_full_screen:
                 //enter full screen
-                AnalyticEvents.onEvent(mContext,46);
+                AnalyticEvents.onEvent(mContext, 46);
                 enterFullScreen();
                 break;
             case R.id.play_layout:
                 startAnim();
                 break;
             case R.id.fc_land_portrait_btn:
-                AnalyticEvents.onEvent(mContext,47);
+                AnalyticEvents.onEvent(mContext, 47);
                 toggleLandPortrait();
                 break;
             case R.id.fc_screenshot_land_btn:
             case R.id.fc_screenshot_portrait_btn:
-                AnalyticEvents.onEvent(mContext,51);
+                AnalyticEvents.onEvent(mContext, 51);
                 //ClassroomController.getInstance().enterPhotoDoodleByBitmap(null);
                 mVideoController.takeVideoFrame(this);
                 break;
             case R.id.fc_hide_show_talk_btn:
-                AnalyticEvents.onEvent(mContext,49);
+                AnalyticEvents.onEvent(mContext, 49);
                 showHideTalk();
                 break;
             case R.id.fc_open_talk_btn:
-                AnalyticEvents.onEvent(mContext,50);
+                AnalyticEvents.onEvent(mContext, 50);
                 mClassroomController.openInputText(this, FULL_SCREEN_MODE_INPUT);
                 break;
             case R.id.play_video:
                 break;
             case R.id.class_canlender://日历课表
-                AnalyticEvents.onEvent(mContext,45);
+                AnalyticEvents.onEvent(mContext, 45);
                 mClassroomController.enterClassCanlenderFragment(this);
                 break;
             default:
@@ -289,7 +303,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
 
         //判断教室类型，如果为PrivateClass,需要显示教学日历
-        if (ClassroomEngine.getRoomEngine().getClassroomType() == ClassroomType.ClassLesson) {
+        if (ClassroomEngine.getEngine().getClassroomType() == ClassroomType.ClassLesson) {
             mCanlenderBtn.setVisibility(View.VISIBLE);
         }
     }
@@ -300,7 +314,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mLessonTitle.setText(getLessonTitle());
         initCtlLive();
 
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         updateViewStyleByLiveState(liveState);
 
         mTalkOpenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
@@ -313,12 +327,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
      */
     private void initCtlLive() {
 
-        CtlSession ctlSession = ClassroomEngine.getRoomEngine().getRoomSession().ctlSession;
-
-        mPlayUrl = ctlSession.playUrl;
-        mPublishUrl = ctlSession.publishUrl;
-
-        String liveState = ClassroomEngine.getRoomEngine().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         if (ClassroomBusiness.canIndividualByState(liveState)) {
             //FIXME time
             //mIndividualStreamDuration = mCtlSession.finishOn;
@@ -345,10 +354,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 //        }
 
 
-        if (TextUtils.isEmpty(mPlayUrl)) {
+        if (TextUtils.isEmpty(mCtlSession.playUrl)) {
             mTipsHelper.setTipsByState(liveState);
         } else {
-            playStream(mPlayUrl);
+            playStream(mCtlSession.playUrl);
         }
 
         if (data != null) {
@@ -372,56 +381,35 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     private void showClasslessonTips(String state) {
 
         if (Live.LiveSessionState.LIVE.equals(state)
-                && LiveCtlSessionManager.getInstance().getCtlSession().cls !=null
-                && !ClassroomBusiness.hasTeachingAbility()
-                && TextUtils.isEmpty(mPlayUrl)) {
+                && LiveCtlSessionManager.getInstance().getCtlSession().cls != null
+                && !classroomEngine.hasTeachingAbility()
+                && TextUtils.isEmpty(mCtlSession.playUrl)) {
             mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
-                            R.string.student_living_back_to_talk_mode_sub);
+                    R.string.student_living_back_to_talk_mode_sub);
         }
 
     }
 
-//    private void updateSettingBtn() {
-//        String state = LiveCtlSessionManager.getInstance().getLiveState();
-//        if (Live.LiveSessionState.DELAY.equals(state)
-//                || Live.LiveSessionState.LIVE.equals(state)
-//                || Live.LiveSessionState.INDIVIDUAL.equals(state)) {
-//            mSettingBtn.setVisibility(View.GONE);
-//        } else {
-//            mSettingBtn.setVisibility(View.VISIBLE);
-//        }
-//    }
-
-    private void updateTitle() {
-        mLessonTitle.setText(getLessonTitle());
-    }
-
 
     private void updateViewStyleByLiveState(String liveState) {
-        int mode = ClassroomEngine.getRoomEngine().getLiveMode();
-        if (Constants.PREVIEW_MODE == mode) {
-            //预览模式, 不能有任何操作
-            mPlayPauseBtn.setVisibility(View.INVISIBLE);
-        } else {
-            if (ClassroomBusiness.canIndividualByState(liveState)) {
-                //课前课后或者班课的课外时间
-                CtlSession ctlSession = ClassroomEngine.getRoomEngine().getRoomSession().ctlSession;
-                if ((ctlSession.streamType == Live.StreamType.INDIVIDUAL
-                        || ctlSession.streamType == Live.StreamType.LIVE)
-                        && !ClassroomBusiness.hasTeachingAbility()) {
-                    mPlayPauseBtn.setVisibility(View.INVISIBLE);
-                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
-                } else {
-                    mPlayPauseBtn.setVisibility(View.VISIBLE);
-                    mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
-                }
-
+        if (classroomEngine.canIndividualByState()) {
+            //课前课后或者班课的课外时间
+            CtlSession ctlSession = classroomEngine.getCtlSession();
+            if ((ctlSession.streamType == Live.StreamType.INDIVIDUAL
+                    || ctlSession.streamType == Live.StreamType.LIVE)
+                    && !classroomEngine.hasTeachingAbility()) {
+                mPlayPauseBtn.setVisibility(View.INVISIBLE);
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             } else {
-                if (mUserMode == Constants.UserMode.TEACHING) {
-                    mPlayPauseBtn.setVisibility(View.VISIBLE);
-                } else {
-                    mPlayPauseBtn.setVisibility(View.INVISIBLE);
-                }
+                mPlayPauseBtn.setVisibility(View.VISIBLE);
+                mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
+            }
+
+        } else {
+            if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
+                mPlayPauseBtn.setVisibility(View.VISIBLE);
+            } else {
+                mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -623,8 +611,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
-    protected void onPeerPublishCallback(OpenMediaNotify openMediaNotify) {
-        startPublishFragment(openMediaNotify.publishUrl, mPlayUrl, CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER);
+    protected void onPeerPublishCallback(OpenMediaReceive openMediaNotify) {
+        startPublishFragment(openMediaNotify.publishUrl, mCtlSession.playUrl, CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER);
     }
 
 
@@ -679,7 +667,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                                 int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
                                 int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
 
-                                CtlSession ctlSession = ClassroomEngine.getRoomEngine().getRoomSession().ctlSession;
+                                CtlSession ctlSession = classroomEngine.getCtlSession();
 
                                 if (isPortrait()) {
                                     ClassroomController.getInstance().openSlideTalk(this, attendee, ctlSession, size);
@@ -709,6 +697,150 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     }
 
+
+    @Override
+    public void receivedEvent(String event, Object object) {
+        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION).equals(event)) {
+            Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
+        } else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA).equals(event)){
+
+            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+
+        }else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED).equals(event)) {
+            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA).equals(event)) {
+            if (object == null) {
+                return;
+            }
+
+            OpenMediaReceive receive = (OpenMediaReceive) object;
+            showOpenMediaDlg(receive);
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY).equals(event)) {
+
+            if (object == null) {
+                return;
+            }
+            StreamQualityChangedReceive receive = (StreamQualityChangedReceive) object;
+            if (receive.quality == 1 || receive.quality == 2) {
+                Toast.makeText(mContext, R.string.liver_bad_net_tips, Toast.LENGTH_SHORT).show();
+            }
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE).equals(event)) {
+            if (object == null) {
+                return;
+            }
+
+            SyncStateReceive receive = (SyncStateReceive) object;
+            handleSyncState(receive);
+
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE).equals(event)) {
+
+
+            //FIXME 处理班
+//            mCtlSession.cls.state = syncState.to;
+//
+//            if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
+//                mCtlSession.ctl = null;
+//
+//                updateTitle();
+//                mTipsHelper.setTipsByState(syncState.to);
+//                //FIXME 总是时间，应该显示为0；
+//                mTimeProgressHelper.reloadLessonDuration();
+//                mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
+//                setControllerBtnStyle(syncState.to);
+//
+//                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
+//                mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
+//
+//
+//            } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
+//                //班中当前课的信息
+//
+//                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
+//                //mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
+//
+//                if (syncState.current != null) {
+//
+//                    if (mCtlSession.ctl == null || !mCtlSession.ctl.id.equals(syncState.current.id)) {
+//                        CtlSession.Ctl newCtl = new CtlSession.Ctl();
+//                        newCtl.title = syncState.current.title;
+//                        newCtl.id = syncState.current.id;
+//                        newCtl.subtype = syncState.current.typeName;
+//                        newCtl.duration = syncState.current.schedule.duration;
+//                        //newCtl.startedOn = syncState.current.schedule.start.toGMTString();
+//
+//                        mCtlSession.ctl = newCtl;
+//
+//                        updateTitle();
+//                        mTimeProgressHelper.reloadLessonDuration();
+//                    }
+//                }
+//            }
+//
+//            if (syncState.volatiles != null && syncState.volatiles.length > 0) {
+//
+//                String mid = AccountDataManager.getAccountID(mContext);
+//                if (!TextUtils.isEmpty(mid)) {
+//                    for (SyncClassStateResponse.Volatiles volatil : syncState.volatiles) {
+//
+//                        if (mid.equals(volatil.accountId)) {
+//                            if (XiaojsConfig.DEBUG) {
+//                                Logger.d("============my pstyp changed=========");
+//                            }
+//
+//                            LiveCtlSessionManager.getInstance().getCtlSession().psTypeInLesson = volatil.psType;
+//
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//
+//            }
+        }
+    }
+
+    private void handleSyncState(SyncStateReceive syncState) {
+        mCountTime = mTimeProgressHelper.getCountTime();
+        boolean autoCountTime = false;
+
+        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
+            autoCountTime = true;
+
+            if (syncState.timeline != null) {
+                mCountTime = syncState.timeline.startOn;
+            }
+
+        } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))
+                || (Live.LiveSessionState.RESET.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))) {
+            autoCountTime = true;
+            mCountTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.RESET.equals(syncState.to)) {
+            autoCountTime = false;
+            mCountTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
+            autoCountTime = false;
+            mCountTime = 0;
+        } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
+
+        } else if (Live.LiveSessionState.NONE.equals(syncState.from) && Live.LiveSessionState.SCHEDULED.equals(syncState.to)) {
+            autoCountTime = true;
+            mCountTime = syncState.timeline != null ? syncState.timeline.startOn : 0;
+
+        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
+            autoCountTime = false;
+            mCountTime = 0;
+        }
+
+        setControllerBtnStyle(syncState.to);
+        mTimeProgressHelper.setTimeProgress(mCountTime, syncState.to, autoCountTime);
+
+//        if (mTipsHelper != null) {
+//            mTipsHelper.hideTips();
+//        }
+
+        mTipsHelper.setTipsByState(syncState.to);
+    }
+
     @Override
     public void playStream(String url) {
         int type = CTLConstant.StreamingType.PLAY_LIVE;
@@ -728,7 +860,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     public void onStreamStarted(int type, String streamUrl, Object extra) {
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         mCountTime = mTimeProgressHelper.getCountTime();
-        mPlayUrl = streamUrl;
         switch (type) {
             case CTLConstant.StreamingType.PLAY_PEER_TO_PEER:
             case CTLConstant.StreamingType.PLAY_LIVE:
@@ -736,7 +867,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 break;
             case CTLConstant.StreamingType.PLAY_INDIVIDUAL:
 
-                if (ClassroomBusiness.hasTeachingAbility() || ClassroomBusiness.isAdviserSession()) {
+                if (classroomEngine.canForceIndividual()) {
                     //个人推流时，如果不是同学身份，此按钮要现实，因为主讲/班主任可以强制尽心推流。
                     mPlayPauseBtn.setVisibility(View.VISIBLE);
                 } else {
@@ -790,11 +921,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     }
 
     @Override
-    public void onRemindFinalization() {
-        Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onStreamException(StreamingState errorCode, int type, Object extra) {
 
     }
@@ -829,54 +955,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     protected void onSyncStateChanged(SyncStateResponse syncState) {
 
-
-        mCountTime = mTimeProgressHelper.getCountTime();
-        boolean autoCountTime = false;
-
-        String liveState = null;
-        if (Live.LiveSessionState.SCHEDULED.equals(syncState.from) && Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.to)) {
-            liveState = Live.LiveSessionState.PENDING_FOR_JOIN;
-            autoCountTime = true;
-
-            if (syncState.timeline != null) {
-                mCountTime = syncState.timeline.startOn;
-            }
-
-        } else if ((Live.LiveSessionState.PENDING_FOR_JOIN.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))
-                || (Live.LiveSessionState.RESET.equals(syncState.from) && Live.LiveSessionState.LIVE.equals(syncState.to))) {
-            liveState = Live.LiveSessionState.LIVE;
-            autoCountTime = true;
-            mCountTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
-        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.RESET.equals(syncState.to)) {
-            liveState = Live.LiveSessionState.RESET;
-            autoCountTime = false;
-            mCountTime = syncState.timeline != null ? syncState.timeline.hasTaken : 0;
-        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.DELAY.equals(syncState.to)) {
-            liveState = Live.LiveSessionState.DELAY;
-            autoCountTime = false;
-            mCountTime = 0;
-        } else if (Live.LiveSessionState.DELAY.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
-            liveState = Live.LiveSessionState.FINISHED;
-        } else if (Live.LiveSessionState.NONE.equals(syncState.from) && Live.LiveSessionState.SCHEDULED.equals(syncState.to)) {
-            liveState = Live.LiveSessionState.SCHEDULED;
-            autoCountTime = true;
-            mCountTime = syncState.timeline != null ? syncState.timeline.startOn : 0;
-
-        } else if (Live.LiveSessionState.LIVE.equals(syncState.from) && Live.LiveSessionState.FINISHED.equals(syncState.to)) {
-            liveState = Live.LiveSessionState.FINISHED;
-            autoCountTime = false;
-            mCountTime = 0;
-        }
-
-        setControllerBtnStyle(liveState);
-        LiveCtlSessionManager.getInstance().updateCtlSessionState(liveState);
-        mTimeProgressHelper.setTimeProgress(mCountTime, liveState, autoCountTime);
-
-//        if (mTipsHelper != null) {
-//            mTipsHelper.hideTips();
-//        }
-
-        mTipsHelper.setTipsByState(liveState);
     }
 
     @Override
@@ -884,98 +962,11 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         //TODO 同步班状态
         //TODO 是否要加入班的PEND_FOR_LIVE ？
 
-//        if (syncState == null)
-//            return;
-//
-//        if (XiaojsConfig.DEBUG) {
-//            Logger.d("-----------------------onSyncClassStateChanged---------------------------");
-//        }
-//
-//
-//        //班课状态发生变化
-//
-//        mCtlSession.cls.state = syncState.to;
-//
-//
-//        if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
-//            mCtlSession.ctl = null;
-//
-//            updateTitle();
-//            mTipsHelper.setTipsByState(syncState.to);
-//            //FIXME 总是时间，应该显示为0；
-//            mTimeProgressHelper.reloadLessonDuration();
-//            mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
-//            setControllerBtnStyle(syncState.to);
-//
-//            //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
-//            mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
-//
-//
-//        } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
-//            //班中当前课的信息
-//
-//            //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
-//            //mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
-//
-//            if (syncState.current != null) {
-//
-//                if (mCtlSession.ctl == null || !mCtlSession.ctl.id.equals(syncState.current.id)) {
-//                    CtlSession.Ctl newCtl = new CtlSession.Ctl();
-//                    newCtl.title = syncState.current.title;
-//                    newCtl.id = syncState.current.id;
-//                    newCtl.subtype = syncState.current.typeName;
-//                    newCtl.duration = syncState.current.schedule.duration;
-//                    //newCtl.startedOn = syncState.current.schedule.start.toGMTString();
-//
-//                    mCtlSession.ctl = newCtl;
-//
-//                    updateTitle();
-//                    mTimeProgressHelper.reloadLessonDuration();
-//
-//
-//                    //                   mTipsHelper.setTipsByState(syncState.to);
-////
-////                    mTimeProgressHelper.reloadLessonDuration();
-////                    long sep = (syncState.current.schedule.start.getTime()-System.currentTimeMillis()) / 1000;
-////
-////                    if (XiaojsConfig.DEBUG) {
-////                        Logger.d("======the sep is " + sep);
-////                    }
-////
-////                    if ( sep > 5* 60) {//大于5分钟, 修改班课小状态
-////                        mCtlSession.state = Live.LiveSessionState.SCHEDULED;
-////                    }else if (sep > 0) {
-////                        mCtlSession.state = Live.LiveSessionState.PENDING_FOR_JOIN;
-////                    }
-////
-////                    mTimeProgressHelper.setTimeProgress(sep, syncState.to);
-////                    //setControllerBtnStyle(syncState.to);
-////                    updateControllerBtnForClassLesson(syncState.to,sep);
-//                }
-//            }
-//        }
-//
-//
-//        if (syncState.volatiles != null && syncState.volatiles.length > 0) {
-//
-//            String mid = AccountDataManager.getAccountID(mContext);
-//            if (!TextUtils.isEmpty(mid)) {
-//                for (SyncClassStateResponse.Volatiles volatil : syncState.volatiles) {
-//
-//                    if (mid.equals(volatil.accountId)) {
-//                        if (XiaojsConfig.DEBUG) {
-//                            Logger.d("============my pstyp changed=========");
-//                        }
-//
-//                        LiveCtlSessionManager.getInstance().getCtlSession().psTypeInLesson = volatil.psType;
-//
-//                        break;
-//                    }
-//                }
-//            }
-//
-//
-//        }
+        if (syncState == null)
+            return;
+
+        //班课状态发生变化
+
 
     }
 
@@ -1001,14 +992,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState)
                 || Live.LiveSessionState.RESET.equals(liveState)
                 || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {
-            if (mUserMode == Constants.UserMode.TEACHING) {
+            if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
             } else {
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
             }
         } else if (Live.LiveSessionState.LIVE.equals(liveState)) {
-            if (mUserMode == Constants.UserMode.TEACHING) {
+            if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
             } else {
@@ -1017,7 +1008,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         } else if (Live.LiveSessionState.DELAY.equals(liveState)) {
             mPlayPauseBtn.setVisibility(View.INVISIBLE);
         } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
-                || LiveCtlSessionManager.getInstance().isIndividualing()) {
+                || classroomEngine.liveShow()) {
             mPlayPauseBtn.setVisibility(View.VISIBLE);
             mPlayPauseBtn.setImageResource(R.drawable.ic_cr_pause);
         }
@@ -1041,37 +1032,40 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         }
         mPlayOrPausePressTime = System.currentTimeMillis();
 
-        String liveState = ClassroomEngine.getRoomEngine().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         if (ClassroomBusiness.canIndividualByState(liveState)) {
-            AnalyticEvents.onEvent(mContext,41);
+            AnalyticEvents.onEvent(mContext, 41);
             individualPublishStream();
         } else if (Live.LiveSessionState.RESET.equals(liveState)) {
             showProgress(true);
-            LiveManager.resumeClass(mContext, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+
+
+            classroomEngine.resumeClass(mTicket, new APIServiceCallback<ClassResponse>() {
                 @Override
-                public void onSuccess(ClassResponse response) {
+                public void onSuccess(ClassResponse object) {
                     cancelProgress();
-                    CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
-                    LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
-                    startPublishFragment(response != null ? response.publishUrl : null, null, CTLConstant.StreamingType.PUBLISH_LIVE);
+                    startPublishFragment(object != null ?
+                            object.publishUrl : null, null, CTLConstant.StreamingType.PUBLISH_LIVE);
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     cancelProgress();
+                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
+
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
                 Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {//公开课在教室内没有pending_for_live状态，班才有
             showProgress(true);
-            LiveManager.beginClass(mContext, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ResponseBody>() {
+
+            classroomEngine.beginClass(mTicket, new APIServiceCallback<ClassResponse>() {
                 @Override
-                public void onSuccess(ResponseBody object) {
+                public void onSuccess(ClassResponse response) {
                     cancelProgress();
-                    long countTime = ClassroomBusiness.getCountTimeByCtlSession();
-                    ClassResponse response = ApiManager.getClassResponse(object);
-                    LiveCtlSessionManager.getInstance().updateCtlSessionState(Live.LiveSessionState.LIVE);
-                    startPublishFragment(response != null ? response.publishUrl : null, null, CTLConstant.StreamingType.PUBLISH_LIVE);
+                    startPublishFragment(response != null ? response.publishUrl : null,
+                            null,
+                            CTLConstant.StreamingType.PUBLISH_LIVE);
                 }
 
                 @Override
@@ -1079,8 +1073,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     cancelProgress();
                 }
             });
-        } else if (Live.LiveSessionState.INDIVIDUAL.equals(liveState)
-                || LiveCtlSessionManager.getInstance().isIndividualing()) {
+
+        } else if (classroomEngine.liveShow()) {
 //            AnalyticEvents.onEvent(getActivity(),41);
 
             cancelProgress();
@@ -1091,8 +1085,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 || Live.LiveSessionState.DELAY.equals(liveState)) {
             cancelProgress();
             //进入播放端
-            CtlSession ctlSession = ClassroomEngine.getRoomEngine().getRoomSession().ctlSession;
-            Constants.UserMode mode = ClassroomBusiness.getUserByCtlSession(ctlSession);
+            Constants.UserMode mode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
             if (mode == Constants.UserMode.TEACHING) {
                 //teacher-->live, delay
                 Bundle data = new Bundle();
@@ -1101,7 +1094,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
                 data.putSerializable(Constants.KEY_PUBLISH_TYPE, CTLConstant.StreamingType.PUBLISH_LIVE);
                 //班课中，由于没有暂停上课，再次进入直播是，需要传之前的播放URL
-                data.putString(Constants.KEY_PUBLISH_URL, mPublishUrl);
+                //data.putString(Constants.KEY_PUBLISH_URL, mCtlSession.publishUrl);
                 ClassroomController.getInstance().enterPublishFragment(data, true);
             }
         } else {

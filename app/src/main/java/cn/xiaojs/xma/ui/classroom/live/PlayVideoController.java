@@ -41,12 +41,12 @@ public class PlayVideoController extends VideoController implements EventListene
         super(context, root, listener);
         listenerSocket();
 
-        ClassroomEngine.getRoomEngine().addEvenListener(this);
+        ClassroomEngine.getEngine().addEvenListener(this);
     }
 
     @Override
     public void onDestroy() {
-        ClassroomEngine.getRoomEngine().removeEvenListener(this);
+        ClassroomEngine.getEngine().removeEvenListener(this);
         super.onDestroy();
     }
 
@@ -167,7 +167,7 @@ public class PlayVideoController extends VideoController implements EventListene
             StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
             if (startedNotify != null) {
                 int type = CTLConstant.StreamingType.PLAY_LIVE;
-                String state = ClassroomEngine.getRoomEngine().getLiveState();
+                String state = ClassroomEngine.getEngine().getLiveState();
                 if (Live.LiveSessionState.LIVE.equals(state)
                         || Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)
                         || Live.LiveSessionState.PENDING_FOR_LIVE.equals(state)) {

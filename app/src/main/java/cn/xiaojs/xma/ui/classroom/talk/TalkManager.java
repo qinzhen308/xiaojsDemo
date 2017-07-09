@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
@@ -30,19 +31,22 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
-import cn.xiaojs.xma.ui.classroom.bean.TalkBean;
-import cn.xiaojs.xma.ui.classroom.bean.TalkResponse;
+import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.EventListener;
 
-public class TalkManager {
+public class TalkManager implements EventListener {
     public final static int TYPE_FULL_SCREEN_MUlTI_TAlk = 1 << 1; //全屏模式下的教室交流
     public final static int TYPE_MSG_MUlTI_TAlk = 1 << 2; //消息模式下的教室交流
     //public final static int TYPE_MULTI_TALK = TYPE_MSG_MUlTI_TAlk | TYPE_FULL_SCREEN_MUlTI_TAlk;
@@ -77,10 +81,12 @@ public class TalkManager {
         mOnTalkMsgReceiveListeners = new ArrayList<OnTalkMsgReceived>();
         mPeerTalkUnreadMsgCountMap = new HashMap<String, Integer>();
         mReceivedTalkMsg = new ArrayList<TalkItem>();
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK), mOnReceiveTalk);
     }
 
     public void init(Context context, String ticket) {
+
+        ClassroomEngine.getEngine().addEvenListener(this);
+
         mTicket = ticket;
         mMyAccountId = AccountDataManager.getAccountID(context);
     }
@@ -105,13 +111,9 @@ public class TalkManager {
     }
 
     public AbsChatAdapter getChatAdapter(Context context, int type, String accountId, PullToRefreshListView listView) {
-        if (!ClassroomController.getInstance().isSocketConnected()) {
-            return null;
-        }
-
         AbsChatAdapter adapter = getAdapter(type, accountId);
         LiveCriteria lveCriteria = new LiveCriteria();
-        String ticket = LiveCtlSessionManager.getInstance().getTicket();
+        String ticket = ClassroomEngine.getEngine().getTicket();
         if (adapter == null) {
             lveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
             switch (type) {
@@ -170,6 +172,9 @@ public class TalkManager {
     }
 
     public void release() {
+
+        ClassroomEngine.getEngine().removeEvenListener(this);
+
         if (mMsgMultiTalkAdapter != null) {
             mMsgMultiTalkAdapter.release();
             mMsgMultiTalkAdapter = null;
@@ -217,24 +222,23 @@ public class TalkManager {
         mInstance = null;
     }
 
+
     /**
      * 接收到消息
      */
-    private SocketManager.EventListener mOnReceiveTalk = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
+    @Override
+    public void receivedEvent(String event, Object object) {
 
+        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK).equals(event)) {
+            if (object == null)
+                return;
 
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.TALK**");
-            }
-
-            if (args != null && args.length > 0) {
-                //TODO fix同一条消息多次回调?
-                handleReceivedMsg(args);
-            }
+            Talk talk = (Talk) object;
+            //TODO fix同一条消息多次回调?
+            handleReceivedMsg(talk);
         }
-    };
+    }
+
 
     public void registerMsgReceiveListener(OnTalkMsgReceived listener) {
         if (listener != null && mOnTalkMsgReceiveListeners != null) {
@@ -259,27 +263,24 @@ public class TalkManager {
     /**
      * 更新消息列表
      */
-    private void handleReceivedMsg(Object... args) {
-        if (args == null || args.length == 0) {
-            return;
-        }
+    private void handleReceivedMsg(Talk talk) {
+
 
         try {
-            TalkBean receiveBean = ClassroomBusiness.parseSocketBean(args[0], TalkBean.class);
-            if (receiveBean == null) {
+            if (talk == null) {
                 return;
             }
 
             TalkItem talkItem = new TalkItem();
-            talkItem.time = receiveBean.time;
+            talkItem.time = talk.time;
             talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
             talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
-            talkItem.body.text = receiveBean.body.text;
-            talkItem.body.contentType = receiveBean.body.contentType;
-            talkItem.from.accountId = receiveBean.from;
-            talkItem.from.name = ClassroomBusiness.getNameByAccountId(receiveBean.from);
+            talkItem.body.text = talk.body.text;
+            talkItem.body.contentType = talk.body.contentType;
+            talkItem.from.accountId = talk.from;
+            talkItem.from.name = ClassroomBusiness.getNameByAccountId(talk.from);
 
-            String account = receiveBean.to != null ? receiveBean.to : receiveBean.from;
+            String account = talk.to != null ? talk.to : talk.from;
             int type = addTalkItemToAdapter(talkItem, account);
             //update unread msg count
             updateUnreadCount(type, talkItem);
@@ -388,42 +389,41 @@ public class TalkManager {
         talkItem.time = sendTime;
 
         //send socket info
-        final TalkBean talkBean = new TalkBean();
+        final Talk talkBean = new Talk();
         talkBean.from = mMyAccountId;
-        talkBean.body = new TalkBean.TalkContent();
+        talkBean.body = new Talk.TalkContent();
         talkBean.body.text = text;
         talkBean.body.contentType = contentType;
         talkBean.time = sendTime;
         talkBean.to = to;
 
         if (talkBean != null) {
-            String event = Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.TALK);
-            SocketManager.emit(event, talkBean, new SocketManager.IAckListener() {
-                @Override
-                public void call(final Object... args) {
-                    // 处理消息发送的回调信息
-                    if (args == null || args.length == 0) {
-                        return;
-                    }
 
+            ClassroomEngine.getEngine().sendTalk(talkBean, new EventCallback<TalkResponse>() {
+                @Override
+                public void onSuccess(TalkResponse talkResponse) {
                     try {
-                        TalkResponse talkResponse = ClassroomBusiness.parseSocketBean(args[0], TalkResponse.class);
-                        if (talkResponse != null && talkResponse.result) {
-                            //TODO 现在服务器返回消息的时间是是使用的本地时间戳，如果服务器返回的消息时间戳和本地不一样，需要更新本地的时间
-                            //talkItem.time = talkResponse.time;
-                            int type = addTalkItemToAdapter(talkItem, talkBean.to);
-                            if (type == TYPE_MSG_MUlTI_TAlk || type == TYPE_FULL_SCREEN_MUlTI_TAlk) {
-                                notifyMsgChanged(false, talkType, talkItem);
-                            } else {
-                                notifyMsgChanged(false, type, talkItem);
-                            }
+
+                        //TODO 现在服务器返回消息的时间是是使用的本地时间戳，如果服务器返回的消息时间戳和本地不一样，需要更新本地的时间
+                        //talkItem.time = talkResponse.time;
+                        int type = addTalkItemToAdapter(talkItem, talkBean.to);
+                        if (type == TYPE_MSG_MUlTI_TAlk || type == TYPE_FULL_SCREEN_MUlTI_TAlk) {
+                            notifyMsgChanged(false, talkType, talkItem);
                         } else {
-                            //TODO send failure
-                            //Toast.makeText()
+                            notifyMsgChanged(false, type, talkItem);
                         }
                     } catch (Exception e) {
 
                     }
+                }
+
+                @Override
+                public void onFailed(String errorCode, String errorMessage) {
+
+                    Toast.makeText(ClassroomEngine.getEngine().getContext(),
+                            "发送消息失败",
+                            Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
@@ -545,7 +545,6 @@ public class TalkManager {
 
     /**
      * 如果消息过多，不建议考虑遍历集合中所有元素，建议维护一个变量值，考虑使用增量变化
-     * @return
      */
     public int getPeerTalkUnreadMsgCount() {
         LiveCollection<Attendee> collection = ContactManager.getInstance().getAttendees();

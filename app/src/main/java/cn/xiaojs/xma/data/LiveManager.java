@@ -9,6 +9,7 @@ import cn.xiaojs.xma.data.api.LiveRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
@@ -117,7 +118,7 @@ public class LiveManager {
     public static void beginClass(Context context,
                                   String ticket,
                                   int mode,
-                                  APIServiceCallback<ResponseBody> callback) {
+                                  APIServiceCallback<ClassResponse> callback) {
 
         ClassMode classMode = new ClassMode();
         classMode.mode = mode;

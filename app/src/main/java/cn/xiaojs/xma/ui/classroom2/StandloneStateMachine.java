@@ -2,12 +2,16 @@ package cn.xiaojs.xma.ui.classroom2;
 
 import android.content.Context;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.statemachine.State;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant.StandloneChannel;
 
@@ -28,7 +32,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     private State liveShowState = new LiveShowState();
 
     public StandloneStateMachine(Context context, RoomSession session) {
-        super(context,"StandloneStateMachine", session);
+        super(context, "StandloneStateMachine", session);
         initStateTree();
         initialState();
     }
@@ -37,9 +41,9 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         addState(defaultState);
         addState(scheduledState, defaultState);
         addState(pending4JoinState, defaultState);
-        addState(finishState,defaultState);
-        addState(liveState,defaultState);
-        addState(liveShowState,defaultState);
+        addState(finishState, defaultState);
+        addState(liveState, defaultState);
+        addState(liveShowState, defaultState);
         addState(delayedState, liveState);
         addState(restState, liveState);
 
@@ -62,19 +66,63 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         return getSession().ctlSession.ctl.title;
     }
 
+
+    @Override
+    protected boolean canForceIndividual() {
+        return hasTeachingAbility();
+    }
+
+    @Override
+    protected boolean canIndividualByState() {
+        String state = getLiveState();
+        if (Live.LiveSessionState.SCHEDULED.equals(state) ||
+                Live.LiveSessionState.FINISHED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public CTLConstant.UserIdentity getIdentity() {
+        CtlSession session = getSession().ctlSession;
+        String psType = session.psType;
+        return getUserIdentity(psType);
+    }
+
+
+    @Override
+    protected CTLConstant.UserIdentity getIdentityInLesson() {
+        return CTLConstant.UserIdentity.NONE;
+    }
+
+
+    @Override
+    public boolean hasTeachingAbility() {
+        CTLConstant.UserIdentity identity = getIdentity();
+        return identity == CTLConstant.UserIdentity.LEAD
+                || identity == CTLConstant.UserIdentity.ASSISTANT
+                || identity == CTLConstant.UserIdentity.REMOTE_ASSISTANT;
+
+    }
+
+    @Override
+    protected void switchStateWhenReceiveSyncState(String state) {
+        transitionTo(getStateBySession(state));
+    }
+
     private State getStateBySession(String sessionState) {
         State state = defaultState;
         if (Live.LiveSessionState.SCHEDULED.equals(sessionState)) {
             state = scheduledState;
-        }else if(Live.LiveSessionState.PENDING_FOR_JOIN.equals(sessionState)) {
+        } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(sessionState)) {
             state = pending4JoinState;
-        }else if(Live.LiveSessionState.LIVE.equals(sessionState)) {
+        } else if (Live.LiveSessionState.LIVE.equals(sessionState)) {
             state = liveState;
-        }else if(Live.LiveSessionState.FINISHED.equals(sessionState)) {
+        } else if (Live.LiveSessionState.FINISHED.equals(sessionState)) {
             state = finishState;
-        }else if(Live.LiveSessionState.RESET.equals(sessionState)) {
+        } else if (Live.LiveSessionState.RESET.equals(sessionState)) {
             state = restState;
-        }else if(Live.LiveSessionState.DELAY.equals(sessionState)) {
+        } else if (Live.LiveSessionState.DELAY.equals(sessionState)) {
             state = delayedState;
         }
 
@@ -106,49 +154,97 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     class ScheduledState extends State {
 
         @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ScheduledState enter...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ScheduledState exit...");
+            }
+        }
+
+        @Override
         public boolean processMessage(Message msg) {
 
             switch (msg.what) {
                 case StandloneChannel.JOIN_AVAILABLE:                      //进入pending for jion状态
+                    transitionTo(pending4JoinState);
                     return true;
+                case StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
+                    ClaimReponse claimReponse = (ClaimReponse) msg.obj;
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = claimReponse.publishUrl;
+                    ctlSession.finishOn = claimReponse.finishOn;
+                    transitionTo(liveShowState);
+                    return HANDLED;
+                case StandloneChannel.START_PLAY_LIVE_SHOW:                //开始播放直播秀
+                    //transitionTo(liveShowState);
+                    return HANDLED;
+                case StandloneChannel.STOP_PLAY_LIVE_SHOW:                 //结束播放直播秀
+                    //do nothing
+                    return HANDLED;
             }
 
-            //TODO 进入直播秀状态
             return NOT_HANDLED;
         }
     }
 
-    class Pending4JoinState extends State{
+    class Pending4JoinState extends State {
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
                 case StandloneChannel.START_LESSON:                        //开始上课
+                    ClassResponse response = (ClassResponse) msg.obj;
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = response.publishUrl;
+                    ctlSession.state = Live.LiveSessionState.LIVE;
+                    transitionTo(liveState);
                     return HANDLED;
             }
             return NOT_HANDLED;
         }
     }
 
-    class LiveState extends State{
+    class LiveState extends State {
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
                 case StandloneChannel.DELAY_LESSON:                       //拖堂
                     return HANDLED;
-                case StandloneChannel.RESET_LESSON:                       //课间休息
+                case StandloneChannel.PAUSE_LESSON:                       //课间休息
+                {
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.state = Live.LiveSessionState.RESET;
+                    ctlSession.publishUrl = null;
+                    transitionTo(restState);
                     return HANDLED;
+                }
                 case StandloneChannel.FINISH_LESSON:                      //下课
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = null;
+                    ctlSession.state = Live.LiveSessionState.FINISHED;
+                    //TODO 处理csOfCurrent
+                    transitionTo(finishState);
                     return HANDLED;
             }
             return NOT_HANDLED;
         }
     }
 
-    class DelayedState extends State{
+    class DelayedState extends State {
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
-                case StandloneChannel.START_LESSON:                        //开始上课
+                case StandloneChannel.FINISH_LESSON:                        //下课
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = null;
+                    ctlSession.state = Live.LiveSessionState.FINISHED;
+                    //TODO 处理csOfCurrent
+                    transitionTo(finishState);
                     return HANDLED;
             }
             return NOT_HANDLED;
@@ -159,7 +255,12 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
-                case StandloneChannel.START_LESSON:                        //开始上课
+                case StandloneChannel.RESUME_LESSON:                        //恢复上课
+                    ClassResponse response = (ClassResponse) msg.obj;
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = response.publishUrl;
+                    ctlSession.state = Live.LiveSessionState.LIVE;
+                    transitionTo(liveState);
                     return HANDLED;
             }
             return NOT_HANDLED;
@@ -185,9 +286,11 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
-                case StandloneChannel.START_LESSON:                        //开始上课
-                    return HANDLED;
                 case StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
+                    ClaimReponse claimReponse = (ClaimReponse) msg.obj;
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = claimReponse.publishUrl;
+                    ctlSession.finishOn = claimReponse.finishOn;
                     transitionTo(liveShowState);
                     return HANDLED;
                 case StandloneChannel.START_PLAY_LIVE_SHOW:                //开始播放直播秀

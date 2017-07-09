@@ -46,6 +46,8 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
+import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
@@ -88,7 +90,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     protected final static int BTN_PRESS_INTERVAL = 1000; //ms
 
     protected String mTicket;
-    protected Constants.UserMode mUserMode = Constants.UserMode.PARTICIPANT;
 
     protected ClassroomController mClassroomController;
     protected VideoController mVideoController;
@@ -106,16 +107,15 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
     private CommonDialog mAgreeOpenCamera;
 
-    protected String mPlayUrl;
-    protected String mPublishUrl;
-
     protected int mSlideViewWidth;
     protected int mSlideViewHeight;
 
     protected Handler mHandler;
+    protected ClassroomEngine classroomEngine;
     protected CtlSession mCtlSession;
 
     private String peerAccountId;
+
 
 
     @Override
@@ -151,9 +151,9 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         }
 
         mHandler = new Handler();
-        mCtlSession = ClassroomEngine.getRoomEngine().getRoomSession().ctlSession;
-        mUserMode = ClassroomBusiness.getUserByCtlSession(mCtlSession);
-        mTicket = LiveCtlSessionManager.getInstance().getTicket();
+        classroomEngine = ClassroomEngine.getEngine();
+        mCtlSession = classroomEngine.getCtlSession();
+        mTicket = classroomEngine.getTicket();
 
         mClassroomController = ClassroomController.getInstance();
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
@@ -187,7 +187,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     }
 
     protected String getLessonTitle() {
-        return ClassroomEngine.getRoomEngine().getRoomTitle();
+        return ClassroomEngine.getEngine().getRoomTitle();
     }
 
     protected FadeAnimListener getAnimListener(String name) {
@@ -299,7 +299,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
      */
     protected void individualPublishStream() {
         showProgress(true);
-        ClassroomEngine.getRoomEngine().claimStream(Live.StreamMode.AV,
+        ClassroomEngine.getEngine().claimStream(Live.StreamMode.AV,
                 new EventCallback<ClaimReponse>() {
 
             @Override
@@ -314,6 +314,36 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showOpenMediaDlg(final OpenMediaReceive receive) {
+        if (mAgreeOpenCamera == null) {
+            mAgreeOpenCamera = new CommonDialog(mContext);
+            mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
+            mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
+            mAgreeOpenCamera.setCancelable(false);
+
+            mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mAgreeOpenCamera.dismiss();
+                    onPeerPublishCallback(receive);
+
+                }
+            });
+
+            mAgreeOpenCamera.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mAgreeOpenCamera.dismiss();
+                    //mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+                    //发送拒绝事件
+                    sendRefuseMedia();
+                }
+            });
+        }
+
+        mAgreeOpenCamera.show();
     }
 
     private SocketManager.EventListener mSyncStateListener = new SocketManager.EventListener() {
@@ -361,37 +391,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 Logger.d("Received event: **Su.EventType.OPEN_MEDIA**");
             }
 
-            if (mAgreeOpenCamera == null) {
-                mAgreeOpenCamera = new CommonDialog(mContext);
-                mAgreeOpenCamera.setTitle(R.string.open_camera_tips);
-                mAgreeOpenCamera.setDesc(R.string.agree_open_camera);
-                mAgreeOpenCamera.setCancelable(false);
 
-                mAgreeOpenCamera.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        mAgreeOpenCamera.dismiss();
-                        if (args != null && args.length > 0) {
-                            OpenMediaNotify openMediaNotify = ClassroomBusiness.parseSocketBean(args[0], OpenMediaNotify.class);
-                            if (openMediaNotify != null) {
-                                onPeerPublishCallback(openMediaNotify);
-                            }
-                        }
-                    }
-                });
-
-                mAgreeOpenCamera.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        mAgreeOpenCamera.dismiss();
-                        //mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-                        //发送拒绝事件
-                        sendRefuseMedia();
-                    }
-                });
-            }
-
-            mAgreeOpenCamera.show();
         }
     };
 
@@ -415,7 +415,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             if (XiaojsConfig.DEBUG) {
                 Logger.d("Received event: **Su.EventType.CLOSE_MEDIA**");
             }
-            LiveCtlSessionManager.getInstance().setOne2one(false);
 
             onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
         }
@@ -429,7 +428,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 Logger.d("Received event: **Su.EventType.REMIND_FINALIZATION**");
             }
 
-            onRemindFinalization();
         }
     };
 
@@ -464,104 +462,71 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
         //FIXME 需要验证状态、权限和身份
 
-        OpenMedia openMedia = new OpenMedia();
-        openMedia.to = accountId;
-        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.OPEN_MEDIA), openMedia, new SocketManager.IAckListener() {
+        classroomEngine.openMedia(accountId, new EventCallback<EventResponse>() {
             @Override
-            public void call(final Object... args) {
-                if (args != null && args.length > 0) {
-                    StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                    if (response != null) {
-                        if (response.result) {
+            public void onSuccess(EventResponse response) {
+                peerAccountId = accountId;
 
-                            peerAccountId = accountId;
-
-                            if (XiaojsConfig.DEBUG) {
-                                Toast.makeText(mContext, R.string.seend_one_to_one_ok, Toast.LENGTH_LONG).show();
-                            }
-
-                            LiveCtlSessionManager.getInstance().setOne2one(true);
-
-                        } else if (Errors.MEDIA_ALREADY_OPENED.equals(response.ec)) {
-                            String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
-                            Toast.makeText(mContext, tips, Toast.LENGTH_LONG).show();
-                            LiveCtlSessionManager.getInstance().setOne2one(false);
-                        } else if (Errors.PENDING_FOR_OPEN_ACK.equals(response.ec)) {
-                            Toast.makeText(mContext, R.string.has_send_one_to_noe_tips, Toast.LENGTH_LONG).show();
-                        } else if (Errors.NOT_ON_LIVE.equals(response.ec)) {
-                            Toast.makeText(mContext, R.string.send_one_to_one_offline_tips, Toast.LENGTH_LONG).show();
-                            LiveCtlSessionManager.getInstance().setOne2one(false);
-                        } else {
-                            Toast.makeText(mContext, R.string.send_one_to_one_failed, Toast.LENGTH_LONG).show();
-                            LiveCtlSessionManager.getInstance().setOne2one(false);
-                        }
-                    }
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, R.string.seend_one_to_one_ok, Toast.LENGTH_LONG).show();
                 }
+
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+                if (Errors.MEDIA_ALREADY_OPENED.equals(errorCode)) {
+                    String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
+                    Toast.makeText(mContext, tips, Toast.LENGTH_LONG).show();
+                } else if (Errors.PENDING_FOR_OPEN_ACK.equals(errorCode)) {
+                    Toast.makeText(mContext, R.string.has_send_one_to_noe_tips, Toast.LENGTH_LONG).show();
+                } else if (Errors.NOT_ON_LIVE.equals(errorCode)) {
+                    Toast.makeText(mContext, R.string.send_one_to_one_offline_tips, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mContext, R.string.send_one_to_one_failed, Toast.LENGTH_LONG).show();
+                }
+
+
             }
         });
     }
 
     protected void sendCloseMedia() {
 
-        LiveCtlSessionManager.getInstance().setOne2one(false);
 
-        OpenMedia media = new OpenMedia();
-        media.to = peerAccountId;
-        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA),
-                media,
-                new SocketManager.IAckListener() {
+        classroomEngine.closeMedia(peerAccountId, new EventCallback<CloseMediaResponse>() {
+            @Override
+            public void onSuccess(CloseMediaResponse closeMediaResponse) {
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "close open peer to peer video success", Toast.LENGTH_LONG).show();
+                }
+            }
 
-                    @Override
-                    public void call(Object... args) {
-                        if (args != null && args.length > 0) {
-                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                            if (response != null) {
-                                if (response.result) {
-                                    if (XiaojsConfig.DEBUG) {
-                                        Toast.makeText(mContext, "close open peer to peer video success", Toast.LENGTH_LONG).show();
-                                    }
-                                } else {
-                                    //String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
-                                    Toast.makeText(mContext, "关闭失败", Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                        }
-                    }
-                });
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                Toast.makeText(mContext, "关闭失败", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
     protected void sendRefuseMedia() {
+        classroomEngine.mediaFeedback(Live.MediaStatus.FAILED_DUE_TO_DENIED, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "你已拒绝", Toast.LENGTH_LONG).show();
+                }
+            }
 
-        LiveCtlSessionManager.getInstance().setOne2one(false);
-
-        MediaFeedback media = new MediaFeedback();
-        media.status = Live.MediaStatus.FAILED_DUE_TO_DENIED;
-        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.MEDIA_FEEDBACK),
-                media,
-                new SocketManager.IAckListener() {
-
-                    @Override
-                    public void call(Object... args) {
-                        if (args != null && args.length > 0) {
-                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                            if (response != null) {
-                                if (response.result) {
-                                    if (XiaojsConfig.DEBUG) {
-                                        Toast.makeText(mContext, "你已拒绝", Toast.LENGTH_LONG).show();
-                                    }
-                                } else {
-                                    //String tips = mContext.getString(R.string.cr_peer_live_occupy_tips, ClassroomBusiness.getNameByAccountId(accountId));
-                                    if (XiaojsConfig.DEBUG) {
-                                        Toast.makeText(mContext, "拒绝失败", Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                });
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                if (XiaojsConfig.DEBUG) {
+                    Toast.makeText(mContext, "拒绝失败", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
 
@@ -734,7 +699,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
     }
 
-    protected void onPeerPublishCallback(OpenMediaNotify openMediaNotify) {
+    protected void onPeerPublishCallback(OpenMediaReceive openMediaNotify) {
 
     }
 

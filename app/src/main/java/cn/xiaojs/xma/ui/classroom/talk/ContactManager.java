@@ -34,9 +34,11 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.util.XjsUtils;
 
-public class ContactManager {
+public class ContactManager implements EventListener{
     public final static int ACTION_JOIN = 1 << 1;
     public final static int ACTION_LEAVE = 1 << 2;
     public final static int ACTION_PSTYPE_CHANGE = 1 << 3;
@@ -64,12 +66,16 @@ public class ContactManager {
     }
 
     public void init() {
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN), mOnJoin);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE), mOnLeave);
+
+        ClassroomEngine.getEngine().addEvenListener(this);
+
         SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE), mSyncClassStateListener);
     }
 
     public void release() {
+
+        ClassroomEngine.getEngine().removeEvenListener(this);
+
         if (mLiveCollection != null) {
             if (mLiveCollection.attendees != null) {
                 mLiveCollection.attendees.clear();
@@ -89,7 +95,7 @@ public class ContactManager {
 
     public synchronized void getAttendees(Context context, final OnGetAttendsCallback callback) {
         if (mLiveCollection == null) {
-            String ticket = LiveCtlSessionManager.getInstance().getTicket();
+            String ticket = ClassroomEngine.getEngine().getTicket();
             LiveManager.getAttendees(context, ticket, new APIServiceCallback<LiveCollection<Attendee>>() {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
@@ -123,34 +129,15 @@ public class ContactManager {
         return mLiveCollection;
     }
 
-    /**
-     * 加入事件
-     */
-    private SocketManager.EventListener mOnJoin = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
 
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.JOIN**");
-            }
-
-            updateContactList(true, args);
+    @Override
+    public void receivedEvent(String event, Object object) {
+        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN).equals(event)) {
+            updateContactList(true, (Attendee)object);
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE).equals(event)) {
+            updateContactList(false, (Attendee)object);
         }
-    };
-
-    /**
-     * 退出事件
-     */
-    private SocketManager.EventListener mOnLeave = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.LEAVE**");
-            }
-            updateContactList(false, args);
-        }
-    };
+    }
 
 
     private SocketManager.EventListener mSyncClassStateListener = new SocketManager.EventListener() {
@@ -200,12 +187,8 @@ public class ContactManager {
     /**
      * 更新联系人列表
      */
-    private void updateContactList(boolean join, Object... args) {
-        if (args == null || args.length == 0) {
-            return;
-        }
+    private void updateContactList(boolean join, Attendee attendee) {
 
-        Attendee attendee = ClassroomBusiness.parseSocketBean(args[0], Attendee.class);
         if (attendee != null && mLiveCollection != null) {
 
             if (join) {

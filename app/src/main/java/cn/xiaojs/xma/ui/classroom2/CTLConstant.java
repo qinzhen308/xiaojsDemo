@@ -23,27 +23,59 @@ public class CTLConstant {
         public static final int STOP_LIVE_SHOW = 0x005;           //结束直播秀
         public static final int START_PLAY_LIVE_SHOW = 0x006;     //开始播放直播秀
         public static final int STOP_PLAY_LIVE_SHOW = 0x007;      //结束播放直播秀
+
+        public static final int RESUME_LESSON = 0x1002;          //恢复上课
     }
 
     public static class StandloneChannel extends BaseChannel{
         public static final int DELAY_LESSON = 0x1001;             //课拖堂
-        public static final int RESET_LESSON = 0x1002;             //课间休息
+        public static final int PAUSE_LESSON = 0x1002;             //课间休息
+
 
     }
 
     public static class NetworkType {
-        public static final int TYPE_NONE= -1;                    //没网
-        public static final int TYPE_WIFI= 1;                     //Wi-Fi状态
-        public static final int TYPE_MOBILE= 2;                   //gprs/2/3/4/5G
+        public static final int TYPE_NONE= -1;                     //没网
+        public static final int TYPE_WIFI= 1;                      //Wi-Fi状态
+        public static final int TYPE_MOBILE= 2;                    //gprs/2/3/4/5G
     }
 
     public static class StreamingType {
-        public static final int PLAY_LIVE= 1;                     //播放流
-        public static final int PUBLISH_LIVE= 2;                  //直播推流
-        public static final int PLAY_PEER_TO_PEER= 3;             //一对一播放流
-        public static final int PUBLISH_PEER_TO_PEER= 4;          //一对一推送流
-        public static final int PLAY_INDIVIDUAL= 5;               //播放直播秀流
-        public static final int PUBLISH_INDIVIDUAL= 6;            //直播秀推流
-        public static final int RECLAIMED_INDIVIDUAL= 7;          //个人推流(回收)
+        public static final int PLAY_LIVE= 1;                      //播放流
+        public static final int PUBLISH_LIVE= 2;                   //直播推流
+        public static final int PLAY_PEER_TO_PEER= 3;              //一对一播放流
+        public static final int PUBLISH_PEER_TO_PEER= 4;           //一对一推送流
+        public static final int PLAY_INDIVIDUAL= 5;                //播放直播秀流
+        public static final int PUBLISH_INDIVIDUAL= 6;             //直播秀推流
+        public static final int RECLAIMED_INDIVIDUAL= 7;           //个人推流(回收)
     }
+
+
+    /**
+     * 用户身份
+     */
+    public enum UserIdentity {
+        NONE("None"),                                              //无效身份
+        ADVISER("AdviserSession"),                                 //班主任
+        LEAD("LeadSession"),                                       //主讲
+        TEACHER2("TeacherSession"),                                //老师
+        ASSISTANT("AssistantSession"),                             //助教
+        REMOTE_ASSISTANT("RemoteAssistantSession"),                //远程助教
+        STUDENT("StudentSession"),                                 //学生
+        MANAGER("ManagerSession"),                                 //监管
+        AUDITOR("AuditorSession"),                                 //旁听
+        ADMINISTRATOR("AdministrationSession");                    //管理员
+
+        private final String text;
+
+        UserIdentity(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
 }

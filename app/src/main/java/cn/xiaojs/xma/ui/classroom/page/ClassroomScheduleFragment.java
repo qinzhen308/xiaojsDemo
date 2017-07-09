@@ -37,6 +37,7 @@ import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.lesson.xclass.AbsClassScheduleFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
@@ -171,7 +172,7 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
         Pagination pagination = new Pagination();
         pagination.setMaxNumOfObjectsPerPage(10);
 
-        LiveManager.getLiveSchedule(getActivity(), LiveCtlSessionManager.getInstance().getTicket(), criteria, pagination, dataPageLoader);
+        LiveManager.getLiveSchedule(getActivity(), ClassroomEngine.getEngine().getTicket(), criteria, pagination, dataPageLoader);
     }
 
 

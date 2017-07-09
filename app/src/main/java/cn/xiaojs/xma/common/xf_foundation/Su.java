@@ -36,6 +36,10 @@ public class Su {
     }
 
     public class EventType {//参考su.js
+
+
+        public static final int PRIMARY_SET = 610003;
+
         //教室交流
         public static final int TALK = 690001;
         //绘制
@@ -70,8 +74,14 @@ public class Su {
         public static final int MEDIA_FEEDBACK = 670018;
         public static final int MEDIA_ABORTED = 670019;
 
+
+
+
         //教室踢人事件
-        public static final int KICKOUT_DUE_TO_NEW_CONNECTION = 600108;
+        public static final int KICK_OUT_BY_CONSTRAINT = 600108;
+        public static final int KICK_OUT_BY_LOGOUT = 600109;
+
+
         public static final int STREAM_RECLAIMED = 600110;
         public static final int STOP_STREAM_BY_EXPIRATION = 600111;
 
@@ -82,6 +92,7 @@ public class Su {
 
 
         public static final int REMIND_FINALIZATION = 600114;
+        public static final int MEDIA_DEVICES_REFRESHED = 670020;
         public static final int REFRESH_STREAMING_QUALITY = 670025;
 
     }

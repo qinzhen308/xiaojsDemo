@@ -65,7 +65,7 @@
     <string name="mobile_network_desc">是否使用手机流量进行小教室直播</string>
     <string name="mobile_kick_out_desc">您已经在其它客户端进入教室，是否强制进入?</string>
     <string name="mobile_kick_out_cancel">取消强制进入，教室无法使用</string>
-    <string name="mobile_kick_out_tips">您账号已经在其它客户端登录了教室</string>
+    <string name="mobile_kick_out_tips">您账号已经在其它%1$s登录了教室</string>
     <string name="mobile_network_forbid">停止使用</string>
     <string name="mobile_network_allow">继续使用</string>
     <string name="lead_teacher">主讲</string>

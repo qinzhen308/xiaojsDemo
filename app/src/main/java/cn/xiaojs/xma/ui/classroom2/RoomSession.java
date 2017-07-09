@@ -9,12 +9,14 @@ import cn.xiaojs.xma.model.live.CtlSession;
 
 public class RoomSession {
 
-    public ClassroomType classroomType;       //当前教室类型，是班级还是公开课等
-    public boolean liveShow;                  //是否在直播秀
-    public boolean playLiveShow;              //是否在播放直播秀
-    public String csOfCurrent;
+    protected String ticket;
+    protected ClassroomType classroomType;       //当前教室类型，是班级还是公开课等
+    protected boolean liveShow;                  //是否在直播秀
+    protected boolean playLiveShow;              //是否在播放直播秀
+    protected boolean one2one;
+    protected String csOfCurrent;
 
-    public CtlSession ctlSession;             //当前教室的状态值
+    protected CtlSession ctlSession;             //当前教室的状态值
 
     public RoomSession(CtlSession session) {
         ctlSession = session;

@@ -12,6 +12,7 @@ import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
@@ -73,7 +74,7 @@ public class LiveRequest extends ServiceRequest{
 
     public void beginClass(String ticket, ClassMode mode) {
 
-        Call<ResponseBody> call = getLiveService().beginClass(ticket, mode);
+        Call<ClassResponse> call = getLiveService().beginClass(ticket, mode);
         enqueueRequest(APIType.BEGIN_CLASS, call);
     }
 

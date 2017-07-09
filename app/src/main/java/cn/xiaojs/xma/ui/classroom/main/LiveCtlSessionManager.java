@@ -22,8 +22,6 @@ import cn.xiaojs.xma.model.live.CtlSession;
 
 public class LiveCtlSessionManager {
     private CtlSession mCtlSession;
-    private Constants.User mUser;
-    private Constants.User mUserInLesson;
     private Constants.UserMode mUserMode;
     private String mTicket = "";
     private Constants.ClassroomType mClassroomType;
@@ -45,8 +43,6 @@ public class LiveCtlSessionManager {
 
     public void init(CtlSession ctlSession, String ticket) {
         mCtlSession = ctlSession;
-        mUser = ClassroomBusiness.getUser(ctlSession.psType, Constants.User.STUDENT);
-        mUserInLesson = ClassroomBusiness.getUser(ctlSession.psTypeInLesson, Constants.User.NONE);
         mUserMode = ClassroomBusiness.getUserByCtlSession(ctlSession);
         mTicket = ticket;
         mClassroomType = ctlSession.cls == null ?
@@ -133,21 +129,6 @@ public class LiveCtlSessionManager {
         return "";
     }
 
-    public String getTicket() {
-        return mTicket;
-    }
-
-    public boolean isIndividualing() {
-        return individualing;
-    }
-
-    public boolean isOne2one() {
-        return one2one;
-    }
-
-    public void setOne2one(boolean one) {
-        this.one2one = one;
-    }
 
     public Constants.UserMode getUserMode() {
         return mUserMode != null ? mUserMode : ClassroomBusiness.getUserByCtlSession(mCtlSession);
@@ -157,18 +138,8 @@ public class LiveCtlSessionManager {
         return mClassroomType;
     }
 
-    public Constants.User getUser() {
-        return mUser;
-    }
-
-    public Constants.User getUserInLesson() {
-        mUserInLesson = ClassroomBusiness.getUser(mCtlSession.psTypeInLesson, Constants.User.NONE);
-        return mUserInLesson;
-    }
-
     public void release() {
         mCtlSession = null;
-        mUser = null;
         mTicket = null;
         mInstance = null;
     }

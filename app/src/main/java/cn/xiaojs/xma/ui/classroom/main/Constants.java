@@ -88,32 +88,6 @@ public interface Constants {
 
     public final static float VIDEO_VIEW_RATIO = 4 / 3.0f;
 
-    /**
-     * 客户端用户
-     */
-    public static enum User {
-        NONE("None"),                                  //无效身份
-        ADVISER("AdviserSession"),                     //班主任
-        LEAD("LeadSession"),                           //主讲
-        TEACHER2("TeacherSession"),                   //老师
-        ASSISTANT("AssistantSession"),                 //助教
-        REMOTE_ASSISTANT("RemoteAssistantSession"),    //远程助教
-        STUDENT("StudentSession"),                     //学生
-        MANAGER("ManagerSession"),                     //监管
-        AUDITOR("AuditorSession"),                     //旁听
-        ADMINISTRATOR("AdministrationSession");        //管理员
-
-        private final String text;
-
-        private User(final String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return text;
-        }
-    }
 
     /**
      * 客户端用户

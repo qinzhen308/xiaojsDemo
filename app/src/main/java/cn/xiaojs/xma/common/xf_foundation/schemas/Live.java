@@ -78,4 +78,14 @@ public class Live {
 
     }
 
+    /**
+     * @summary Defines the classroom modes.
+     */
+    public class ClassroomMode {
+        public static final int TEACHING =1;
+        public static final int PARTICIPANT = 2;
+        public static final int MEDIA = 3;                                // Not supported right now
+        public static final int PREVIEW = 4;
+    }
+
 }

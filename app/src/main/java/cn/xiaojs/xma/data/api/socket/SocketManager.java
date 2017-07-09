@@ -99,11 +99,17 @@ public class SocketManager {
     }
 
     public void off(String event) {
-        socket.off(event);
+        if (socket != null) {
+            socket.off(event);
+        }
+
     }
 
     public void off() {
-        socket.off();
+        if (socket != null) {
+            socket.off();
+        }
+
     }
 
 

@@ -35,6 +35,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.util.Base64;
 import cn.xiaojs.xma.util.BitmapUtils;
 
@@ -45,41 +46,13 @@ public class ClassroomBusiness {
     private static final String BASE64_JPEG_HEADER = "data:image/jpeg;base64,";
 
 
-    public static boolean isAdviserSession() {
-        String ps = LiveCtlSessionManager.getInstance().getCtlSession().psType;
-        if (Constants.User.ADVISER == getUser(ps, Constants.User.STUDENT)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 获取用户身份
-     */
-    public static Constants.User getUser(String psType, Constants.User defaultUser) {
-        Constants.User user = defaultUser;
-        if ("LeadSession".equals(psType)) {
-            user = Constants.User.LEAD;
-        } else if ("TeacherSession".equals(psType)) {
-            user = Constants.User.TEACHER2;
-        } else if ("AssistantSession".equals(psType)) {
-            user = Constants.User.ASSISTANT;
-        } else if ("RemoteAssistantSession".equals(psType)) {
-            user = Constants.User.REMOTE_ASSISTANT;
-        } else if ("StudentSession".equals(psType)) {
-            user = Constants.User.STUDENT;
-        } else if ("ManagerSession".equals(psType)) {
-            user = Constants.User.MANAGER;
-        } else if ("AuditorSession".equals(psType)) {
-            user = Constants.User.AUDITOR;
-        } else if ("AuditorSession".equals(psType)) {
-            user = Constants.User.ADMINISTRATOR;
-        } else if ("AdviserSession".equals(psType)) {
-            user = Constants.User.ADVISER;
-        }
-
-        return user;
-    }
+//    public static boolean isAdviserSession() {
+//        String ps = LiveCtlSessionManager.getInstance().getCtlSession().psType;
+//        if (Constants.User.ADVISER == getUser(ps, Constants.User.STUDENT)) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     //用户场景模式：预览、参与者等模式
     public static Constants.UserMode getUserByCtlSession(CtlSession session) {
@@ -88,7 +61,7 @@ public class ClassroomBusiness {
         }
 
         Constants.UserMode mode = Constants.UserMode.PARTICIPANT;
-        if (hasTeachingAbility()) {
+        if (ClassroomEngine.getEngine().hasTeachingAbility()) {
             mode = Constants.UserMode.TEACHING;
             if (Constants.PREVIEW_MODE == session.mode) {
                 mode = Constants.UserMode.PREVIEW;
@@ -106,21 +79,21 @@ public class ClassroomBusiness {
     /**
      * 是否具有教学能力
      */
-    public static boolean hasTeachingAbility() {
-
-        if (XiaojsConfig.DEBUG) {
-            Logger.d("hasTeachingAbility---------------------");
-        }
-
-        Constants.User user = LiveCtlSessionManager.getInstance().getUser();
-        Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
-        return user == Constants.User.LEAD
-                || user == Constants.User.ASSISTANT
-                || user == Constants.User.REMOTE_ASSISTANT
-                || userInLesson == Constants.User.LEAD
-                || userInLesson == Constants.User.ASSISTANT
-                || userInLesson == Constants.User.REMOTE_ASSISTANT;
-    }
+//    public static boolean hasTeachingAbility() {
+//
+//        if (XiaojsConfig.DEBUG) {
+//            Logger.d("hasTeachingAbility---------------------");
+//        }
+//
+//        Constants.User user = LiveCtlSessionManager.getInstance().getUser();
+//        Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
+//        return user == Constants.User.LEAD
+//                || user == Constants.User.ASSISTANT
+//                || user == Constants.User.REMOTE_ASSISTANT
+//                || userInLesson == Constants.User.LEAD
+//                || userInLesson == Constants.User.ASSISTANT
+//                || userInLesson == Constants.User.REMOTE_ASSISTANT;
+//    }
 
 
     /**

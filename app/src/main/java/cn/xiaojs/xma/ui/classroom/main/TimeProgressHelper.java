@@ -126,7 +126,7 @@ public class TimeProgressHelper {
             return TYPE_LIVE_INDIVIDUAL;
         }
 
-        if (ClassroomEngine.getRoomEngine().getRoomSession().liveShow) {
+        if (ClassroomEngine.getEngine().liveShow()) {
             return TYPE_LIVE_INDIVIDUAL;
         }
 

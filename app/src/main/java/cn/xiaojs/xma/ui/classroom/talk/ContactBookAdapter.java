@@ -41,6 +41,8 @@ import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
+import cn.xiaojs.xma.ui.classroom2.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 
@@ -166,25 +168,25 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             holder.checkbox.setVisibility(View.GONE);
         }
 
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = ClassroomEngine.getEngine().getLiveState();
         boolean isMyself = ClassroomBusiness.isMyself(mContext, attendee.accountId);
         boolean isSupport = (attendee.avc != null && attendee.avc.video != null && attendee.avc.audio != null)
                 ? (attendee.avc.video.supported && attendee.avc.audio.supported) : true;
         boolean online = attendee.xa == 0 ? false : true;
 
 
-        Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
-        Constants.User userInLesson = ClassroomBusiness.getUser(attendee.psTypeInLesson, Constants.User.NONE);
+        ClassroomEngine classroomEngine = ClassroomEngine.getEngine();
 
+        CTLConstant.UserIdentity user = classroomEngine.getUserIdentity(attendee.psType);
+        CTLConstant.UserIdentity userInLesson = classroomEngine.getUserIdentity(attendee.psTypeInLesson);
 
-        String vPs = LiveCtlSessionManager.getInstance().getPsType();
 
         if (Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState)) {//上课中或者拖堂
 
             if (!mContactManagementMode
                     && mUser == Constants.UserMode.TEACHING
-                    && (ClassroomBusiness.getUser(vPs, Constants.User.STUDENT) == Constants.User.LEAD)//上课中只有主讲才能主动发1对1
-                    && (userInLesson == Constants.User.STUDENT || user == Constants.User.STUDENT)
+                    && (classroomEngine.getIdentity() == CTLConstant.UserIdentity.LEAD)//上课中只有主讲才能主动发1对1
+                    && (userInLesson == CTLConstant.UserIdentity.STUDENT || user == CTLConstant.UserIdentity.STUDENT)
                     && !isMyself
                     && isSupport
                     && online) {
@@ -194,8 +196,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             }
 
 
-        } else if(Live.LiveSessionState.INDIVIDUAL.equals(liveState)
-                || LiveCtlSessionManager.getInstance().isIndividualing()) {//正在直播秀状态
+        } else if(ClassroomEngine.getEngine().liveShow()) {//正在直播秀状态
 
             if (!mContactManagementMode
                     && !isMyself
@@ -214,34 +215,19 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
 
 
-        //set video
-//        if (!mContactManagementMode
-//                && (Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
-//                && mUser == Constants.UserMode.TEACHING
-//                && (ClassroomBusiness.getUser(vPs, Constants.User.STUDENT) == Constants.User.LEAD)//上课中只有主讲才能主动发1对1
-//                && (userInLesson == Constants.User.STUDENT || user == Constants.User.STUDENT)
-//                && !isMyself
-//                && isSupport
-//                && online) {
-//            holder.video.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.video.setVisibility(View.INVISIBLE);
-//        }
-
-
 
 
         holder.talk.setVisibility(isMyself ? View.INVISIBLE : View.VISIBLE);
         holder.talk.setCount(attendee.unReadMsgCount);
 
 
-        if (userInLesson == Constants.User.NONE) {
+        if (userInLesson == CTLConstant.UserIdentity.NONE) {
 
             bindUserView(holder.label, user);
             holder.labelSecond.setText("");
             holder.labelSecond.setVisibility(View.GONE);
 
-            if (user == Constants.User.STUDENT) {
+            if (user == CTLConstant.UserIdentity.STUDENT) {
                 holder.label.setVisibility(View.GONE);
             } else {
                 holder.label.setVisibility(View.VISIBLE);
@@ -253,8 +239,8 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
             bindUserView(holder.labelSecond, user);
             holder.labelSecond.setVisibility(View.VISIBLE);
 
-            if (userInLesson == Constants.User.STUDENT
-                    || userInLesson == Constants.User.NONE) {
+            if (userInLesson == CTLConstant.UserIdentity.STUDENT
+                    || userInLesson == CTLConstant.UserIdentity.NONE) {
 
                 holder.label.setVisibility(View.GONE);
             } else {
@@ -265,7 +251,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
 
     }
 
-    private void bindUserView(TextView v, Constants.User user) {
+    private void bindUserView(TextView v, CTLConstant.UserIdentity user) {
         switch (user) {
             case LEAD:
                 v.setText(R.string.lead_teacher);
@@ -327,13 +313,13 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                 String liveState = LiveCtlSessionManager.getInstance().getLiveState();
                 Attendee attendee = mAttendeeList.get(pos);
                 if (mOnAttendItemClick != null) {
-                    Constants.User user = ClassroomBusiness.getUser(attendee.psType, Constants.User.STUDENT);
+                    CTLConstant.UserIdentity user = ClassroomEngine.getEngine().getUserIdentity(attendee.psType);
                         switch (v.getId()) {
                             case R.id.talk:
                                 //enter chat
                                 if ((Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState))
-                                        && user == Constants.User.STUDENT
-                                        && LiveCtlSessionManager.getInstance().getUser() == Constants.User.STUDENT) {
+                                        && user == CTLConstant.UserIdentity.STUDENT
+                                        && ClassroomEngine.getEngine().getIdentity() == CTLConstant.UserIdentity.STUDENT) {
                                     //Toast
                                     Toast.makeText(mContext, R.string.cr_live_forbid_talk, Toast.LENGTH_SHORT).show();
                                 }else {
@@ -346,7 +332,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                                 if (mOnAttendItemClick != null) {
                                     if (attendee.xa == 0) {
                                         Toast.makeText(mContext, R.string.offline_peer_to_peer_tips, Toast.LENGTH_SHORT).show();
-                                    } else if (LiveCtlSessionManager.getInstance().isOne2one()){
+                                    } else if (ClassroomEngine.getEngine().one2one()){
                                         Toast.makeText(mContext, "您正在1对1视频～", Toast.LENGTH_SHORT).show();
                                     } else {
                                         mOnAttendItemClick.onItemClick(OnAttendItemClick.ACTION_OPEN_CAMERA, attendee);

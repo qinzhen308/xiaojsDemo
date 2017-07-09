@@ -27,6 +27,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomPopupWindowLayout;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 
 public class LiveMenu extends PopupWindow {
 
@@ -63,7 +64,7 @@ public class LiveMenu extends PopupWindow {
 
         mClose.setVisibility(mIsTeacher ? View.VISIBLE : View.GONE);
         if (!mIsTeacher) {
-            mClose.setVisibility(LiveCtlSessionManager.getInstance().isIndividualing() ? View.VISIBLE : View.GONE);
+            mClose.setVisibility(ClassroomEngine.getEngine().liveShow() ? View.VISIBLE : View.GONE);
         }
 
         mVideo.setVisibility(View.GONE);

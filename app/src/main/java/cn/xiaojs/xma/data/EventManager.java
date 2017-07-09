@@ -12,9 +12,15 @@ import cn.xiaojs.xma.data.api.socket.SocketRequest;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.CSCurrent;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
+import cn.xiaojs.xma.model.socket.room.CloseMedia;
+import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.Feedback;
 import cn.xiaojs.xma.model.socket.room.StreamMode;
+import cn.xiaojs.xma.model.socket.room.StreamQuality;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
+import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 
 
 /**
@@ -115,5 +121,98 @@ public class EventManager {
                 Su.EventType.MEDIA_FEEDBACK);
         socketRequest.emit(event, feedback, EventResponse.class);
     }
+
+
+    /**
+     * Signals that an established peer-to-peer video talk must be closed.
+     * @param context
+     * @param to
+     * @param callback
+     */
+    public static void closeMedia(Context context,String to,
+                                     EventCallback<CloseMediaResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<CloseMediaResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        CloseMedia closeMedia = null;
+        if (!TextUtils.isEmpty(to)) {
+            closeMedia = new CloseMedia();
+            closeMedia.to = to;
+        }
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.CLOSE_MEDIA);
+        socketRequest.emit(event, closeMedia, CloseMediaResponse.class);
+    }
+
+
+    /**
+     * Requests to establish peer-to-peer video talk with an attendant.
+     * @param context
+     * @param to
+     * @param callback
+     */
+    public static void openMedia(Context context,String to,
+                                  EventCallback<EventResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        OpenMedia openMedia = null;
+        if (!TextUtils.isEmpty(to)) {
+            openMedia = new OpenMedia();
+            openMedia.to = to;
+        }
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.OPEN_MEDIA);
+        socketRequest.emit(event, openMedia, EventResponse.class);
+    }
+
+    /**
+     * Refreshes the live streaming or the on-live-side networking quality.
+     * @param context
+     * @param quality
+     * @param callback
+     */
+    public static void streamQuality(Context context,int quality,
+                                 EventCallback<EventResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        StreamQuality streamQuality = new StreamQuality();
+        streamQuality.quality = quality;
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.REFRESH_STREAMING_QUALITY);
+        socketRequest.emit(event, streamQuality, EventResponse.class);
+    }
+
+    /**
+     * Talks to specific attendees in the class.
+     * @param context
+     * @param talk
+     * @param callback
+     */
+    public static void sendTalk(Context context,Talk talk,
+                                     EventCallback<TalkResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<TalkResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.TALK);
+        socketRequest.emit(event, talk, TalkResponse.class);
+    }
+
+
+
+
+
+
+
+
 
 }

@@ -19,8 +19,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.ui.classroom2.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 
 public class TipsHelper {
     private View mTipView;
@@ -38,13 +42,14 @@ public class TipsHelper {
     }
 
     public void setTips(int resTitleId, int resDescId) {
+
         setTips(resTitleId <= 0 ? "" : mContext.getString(resTitleId), resDescId <= 0 ? "" : mContext.getString(resDescId));
     }
 
     public void setTipsByStateOnStrop(String liveSessionState) {
         if (Live.LiveSessionState.LIVE.equals(liveSessionState)) {
-            Constants.User user = LiveCtlSessionManager.getInstance().getUser();
-            if (user == Constants.User.STUDENT) {
+            CTLConstant.UserIdentity user = ClassroomEngine.getEngine().getIdentity();
+            if (user == CTLConstant.UserIdentity.STUDENT) {
 
                 setTips(R.string.student_living_back_to_talk_mode_title,
                         R.string.student_living_back_to_talk_mode_sub);
@@ -56,29 +61,32 @@ public class TipsHelper {
     }
 
     public void setTipsByState(String liveSessionState) {
-        Constants.User user = LiveCtlSessionManager.getInstance().getUser();
-        Constants.User userInLesson = LiveCtlSessionManager.getInstance().getUserInLesson();
+
+        Logger.d("setTipsByState-----------------------------------------");
+
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)
                 || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveSessionState)) {
-            if (ClassroomBusiness.hasTeachingAbility()) {
+            if (ClassroomEngine.getEngine().hasTeachingAbility()) {
                 setTips(R.string.cls_pending_class_title, R.string.cls_pending_class_desc);
             } else {
                 setTips(R.string.cls_pending_class_stu_title, R.string.cls_pending_class_stu_desc);
             }
         } else if (Live.LiveSessionState.RESET.equals(liveSessionState)) {
-            if (ClassroomBusiness.hasTeachingAbility()) {
+            if (ClassroomEngine.getEngine().hasTeachingAbility()) {
                 setTips(R.string.cls_break_title, R.string.cls_break_desc_teacher);
             } else {
                 setTips(R.string.cls_break_title, R.string.cls_break_desc);
             }
         } else if (Live.LiveSessionState.LIVE.equals(liveSessionState)
                 || Live.LiveSessionState.INDIVIDUAL.equals(liveSessionState)
-                || LiveCtlSessionManager.getInstance().isIndividualing()) {
+                || ClassroomEngine.getEngine().liveShow()) {
+            Logger.d("setTipsByState-----------------------------------------1");
             hideTips();
         } else if (Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
             setTips(R.string.cls_finish_title, R.string.cls_not_on_class_desc);
+            Logger.d("setTipsByState-----------------------------------------2");
         } else if (Live.LiveSessionState.IDLE.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_lesson_title, R.string.cls_not_on_class_desc);
         }

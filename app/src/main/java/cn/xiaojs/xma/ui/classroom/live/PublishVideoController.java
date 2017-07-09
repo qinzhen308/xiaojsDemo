@@ -34,6 +34,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
@@ -68,13 +69,13 @@ public class PublishVideoController extends VideoController implements EventList
         loadingSize = context.getResources().getDimensionPixelSize(R.dimen.px36);
         loadingDesc = context.getResources().getDimensionPixelSize(R.dimen.font_20px);
 
-        ClassroomEngine.getRoomEngine().addEvenListener(this);
+        ClassroomEngine.getEngine().addEvenListener(this);
 
     }
 
     @Override
     public void onDestroy() {
-        ClassroomEngine.getRoomEngine().removeEvenListener(this);
+        ClassroomEngine.getEngine().removeEvenListener(this);
         super.onDestroy();
     }
 
@@ -93,7 +94,7 @@ public class PublishVideoController extends VideoController implements EventList
 
     @Override
     protected void listenerSocket() {
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
+
     }
 
     @Override
@@ -161,13 +162,13 @@ public class PublishVideoController extends VideoController implements EventList
                                 });
                     } else {
                         //send stopped stream
-                        String csofCurrent = ClassroomEngine.getRoomEngine().getCsOfCurrent();
-                        ClassroomEngine.getRoomEngine().stopStreaming(type,csofCurrent,
+                        String csofCurrent = ClassroomEngine.getEngine().getCsOfCurrent();
+                        ClassroomEngine.getEngine().stopStreaming(type,csofCurrent,
                                 new EventCallback<StreamStoppedResponse>() {
                             @Override
                             public void onSuccess(StreamStoppedResponse streamStoppedResponse) {
 
-                                ClassroomEngine.getRoomEngine().setCsOfCurrent(null);
+                                ClassroomEngine.getEngine().setCsOfCurrent(null);
 
                                 mNeedStreamRePublishing = true;
                                 if (mStreamChangeListener != null) {
@@ -247,7 +248,7 @@ public class PublishVideoController extends VideoController implements EventList
                 if (mPublishType == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL
                         || mPublishType == CTLConstant.StreamingType.PUBLISH_LIVE) {
 
-                    ClassroomEngine.getRoomEngine().startStreaming(new EventCallback<EventResponse>() {
+                    ClassroomEngine.getEngine().startStreaming(new EventCallback<EventResponse>() {
                         @Override
                         public void onSuccess(EventResponse response) {
                             if (mStreamChangeListener != null) {
@@ -273,7 +274,7 @@ public class PublishVideoController extends VideoController implements EventList
                     });
                 }else {
 
-                    ClassroomEngine.getRoomEngine().mediaFeedback(Live.MediaStatus.READY, new EventCallback<EventResponse>() {
+                    ClassroomEngine.getEngine().mediaFeedback(Live.MediaStatus.READY, new EventCallback<EventResponse>() {
                         @Override
                         public void onSuccess(EventResponse response) {
                             if (mStreamChangeListener != null) {
@@ -309,39 +310,6 @@ public class PublishVideoController extends VideoController implements EventList
                 break;
         }
     }
-
-    private SocketManager.EventListener mReceiveFeedback = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.MEDIA_FEEDBACK**");
-            }
-
-            if (args != null && args.length > 0) {
-                MediaFeedback response = ClassroomBusiness.parseSocketBean(args[0], MediaFeedback.class);
-                if (response != null) {
-                    if (Live.MediaStatus.READY == response.status && !TextUtils.isEmpty(response.playUrl)) {
-
-                        Toast.makeText(mContext, R.string.success_one2one,Toast.LENGTH_SHORT).show();
-
-                        mPlayStreamUrl = response.playUrl;
-                        playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, response.playUrl);
-                    }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == response.status) {
-                        Toast.makeText(mContext, R.string.user_refuse_one_to_one_tips,Toast.LENGTH_SHORT).show();
-                    }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == response.status) {
-                        Toast.makeText(mContext, R.string.failed_one2one_network_issue,Toast.LENGTH_SHORT).show();
-                    }else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY== response.status) {
-                        Toast.makeText(mContext, R.string.failed_one2one_privacy,Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(mContext, R.string.failed_one2one,Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            }
-        }
-    };
-
 
     @Override
     public void receivedEvent(String event, Object object) {
@@ -400,6 +368,25 @@ public class PublishVideoController extends VideoController implements EventList
             if (mPlayView.getVisibility() == View.VISIBLE) {
                 mPlayView.pause();
                 mPlayView.setVisibility(View.GONE);
+            }
+        } else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK).equals(event)) {
+
+            if (object == null) {
+                return;
+            }
+            MediaFeedbackReceive receive = (MediaFeedbackReceive) object;
+            if (Live.MediaStatus.READY == receive.status && !TextUtils.isEmpty(receive.playUrl)) {
+                Toast.makeText(mContext, R.string.success_one2one,Toast.LENGTH_SHORT).show();
+                mPlayStreamUrl = receive.playUrl;
+                playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, receive.playUrl);
+            }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == receive.status) {
+                Toast.makeText(mContext, R.string.user_refuse_one_to_one_tips,Toast.LENGTH_SHORT).show();
+            }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == receive.status) {
+                Toast.makeText(mContext, R.string.failed_one2one_network_issue,Toast.LENGTH_SHORT).show();
+            }else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY== receive.status) {
+                Toast.makeText(mContext, R.string.failed_one2one_privacy,Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(mContext, R.string.failed_one2one,Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -492,7 +479,5 @@ public class PublishVideoController extends VideoController implements EventList
     @Override
     protected void offSocketListener() {
         super.offSocketListener();
-
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK), mReceiveFeedback);
     }
 }

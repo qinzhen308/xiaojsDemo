@@ -44,6 +44,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.HandwritingPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
+import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.util.CacheUtil;
 
 public class WhiteboardController implements EraserPop.EraserChangeListener,
@@ -92,7 +93,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     private boolean mSavingWhiteboard = false;
     private AsyncTask mSaveTask;
 
-    private Constants.User mUser = Constants.User.LEAD;
+    private CTLConstant.UserIdentity mUser = CTLConstant.UserIdentity.LEAD;
     private int mAppType = Platform.AppType.UNKNOWN;
 
     private WhiteboardCollection mCurrWhiteboardColl;
@@ -103,7 +104,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     private int mCount;
 
-    public WhiteboardController(Context context, View root, Constants.User client, int appType) {
+    public WhiteboardController(Context context, View root, CTLConstant.UserIdentity client, int appType) {
         mContext = context;
         mUser = client;
         mAppType = appType;
@@ -547,7 +548,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     public void onSwitchWhiteboardCollection(WhiteboardCollection wbColl) {
         if (wbColl != null && wbColl != mOldWhiteboardColl) {
             mCurrWhiteboardColl = wbColl;
-            if (mUser == Constants.User.STUDENT) {
+            if (mUser == CTLConstant.UserIdentity.STUDENT) {
                 if (wbColl.isLive()) {
                     if (isWebApp(mAppType)) {
                         //onResumeVideo();
@@ -586,7 +587,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
      * 是否是同步的白板
      */
     public boolean isSyncWhiteboard() {
-        return (mUser == Constants.User.STUDENT)
+        return (mUser == CTLConstant.UserIdentity.STUDENT)
                 && mCurrWhiteboardColl != null && mCurrWhiteboardColl.isLive();
     }
 

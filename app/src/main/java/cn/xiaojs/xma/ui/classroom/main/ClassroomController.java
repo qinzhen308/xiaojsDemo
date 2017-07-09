@@ -564,13 +564,6 @@ public class ClassroomController {
     }
 
     /**
-     * socket是否连接上了
-     */
-    public boolean isSocketConnected() {
-        return mSocketConnected;
-    }
-
-    /**
      * 退出栈中的fragment
      */
     public void exitStackFragment() {

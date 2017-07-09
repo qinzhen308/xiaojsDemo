@@ -3,6 +3,7 @@ package cn.xiaojs.xma.data.api.service;
 import java.util.List;
 
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardItem;
@@ -56,7 +57,7 @@ public interface LiveService {
 
     //Begin Class
     @PATCH("/v1/live/{ticket}/begin")
-    Call<ResponseBody> beginClass(@Path("ticket") String ticket, @Body ClassMode mode);
+    Call<ClassResponse> beginClass(@Path("ticket") String ticket, @Body ClassMode mode);
 
     //Close Board
     @PATCH("/v1/live/{ticket}/boards/{board}")

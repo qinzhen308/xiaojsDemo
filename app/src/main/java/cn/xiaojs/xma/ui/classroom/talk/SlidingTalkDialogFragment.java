@@ -21,6 +21,7 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 
@@ -78,7 +79,7 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
             mAttendee = (Attendee) data.getSerializable(Constants.KEY_TALK_ATTEND);
         }
 
-        mTicket = LiveCtlSessionManager.getInstance().getTicket();
+        mTicket = ClassroomEngine.getEngine().getTicket();
     }
 
     @Override
