@@ -27,8 +27,6 @@ import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
@@ -38,14 +36,12 @@ import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
-import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
-import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.EmbedTalkFragment;
 import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
 import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
@@ -171,7 +167,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     public void onResume() {
         super.onResume();
-        //updateSettingBtn();
     }
 
     @Override
