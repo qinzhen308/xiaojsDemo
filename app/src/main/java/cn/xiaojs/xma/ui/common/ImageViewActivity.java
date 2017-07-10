@@ -273,7 +273,7 @@ public class ImageViewActivity extends BaseActivity {
                                 Point point = BitmapUtils.getImageSize(resource.getPath());
                                 int screenH = ScreenUtils.getScreenHeight(ImageViewActivity.this);
                                 int screenW = ScreenUtils.getScreenWidth(ImageViewActivity.this);
-                                if (point.x > screenW * 2 || point.y > screenH * 2) {
+                                if (point.x > screenW * 2 || point.y > screenH * 2||point.y>2500||point.x>2500) {
                                     imageView.setVisibility(View.GONE);
                                     hugeImageView.setVisibility(View.VISIBLE);
 //                                    if(point.x>point.y){
@@ -281,8 +281,15 @@ public class ImageViewActivity extends BaseActivity {
 //                                    }else {
 //                                        hugeImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_0);
 //                                    }
-                                    hugeImageView.setImage(ImageSource.uri(resource.getPath()),new ImageViewState(1,new PointF(0,0),
-                                            point.x>point.y?SubsamplingScaleImageView.ORIENTATION_90:SubsamplingScaleImageView.ORIENTATION_0));
+                                    float scale=1;
+                                    int tagH=point.x>point.y?point.x:point.y;
+                                    if(screenH<tagH){
+                                        scale=screenH/(float)tagH;
+                                    }
+                                    hugeImageView.setImage(ImageSource.uri(resource.getPath()),new ImageViewState(
+                                            scale,
+                                            new PointF(0,0),
+                                            point.x>point.y?SubsamplingScaleImageView.ORIENTATION_0:SubsamplingScaleImageView.ORIENTATION_0));
                                     hugeImageView.setOnLongClickListener(new View.OnLongClickListener() {
                                         @Override
                                         public boolean onLongClick(View v) {

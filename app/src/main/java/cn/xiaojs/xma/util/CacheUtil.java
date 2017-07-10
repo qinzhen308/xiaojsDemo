@@ -102,7 +102,7 @@ public class CacheUtil {
             String fileName = new StringBuilder()
                     .append(System.currentTimeMillis())
                     .append("_")
-                    .append(file.getName())
+                    .append(".png")
                     .toString();
             savedPath=fileDir+"/"+fileName;
             context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + savedPath)));
