@@ -946,5 +946,7 @@
     <string name="permission_rationale_tip">您已禁止小教室访问该功能的权限，需要开启对应权限才可使用该功能哦~</string>
     <string name="permission_rationale_camera_tip">您已禁止小教室访问相机权限，需要开启相机权限才可使用该功能哦~</string>
     <string name="permission_rationale_storage_tip">您已禁止小教室存储权限，需要开启存储权限才可使用该功能哦~</string>
+    <string name="permission_rationale_camera_audio_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用该功能哦~</string>
+    <string name="permission_rationale_camera_audio_room_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用教室内直播功能哦~</string>
 
 </resources>

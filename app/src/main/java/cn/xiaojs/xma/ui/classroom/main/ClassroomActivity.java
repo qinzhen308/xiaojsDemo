@@ -123,7 +123,7 @@ public class ClassroomActivity extends FragmentActivity {
     @Keep
     @PermissionRationale(requestCode = REQUEST_PERMISSION)
     public void requestCameraRationale() {
-        PermissionHelper.showRationaleDialog(this);
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_camera_audio_room_tip));
     }
 
     @Override
