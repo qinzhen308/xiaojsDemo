@@ -353,7 +353,7 @@ public class MaterialActivity extends BaseActivity {
     @Keep
     @PermissionRationale(requestCode = REQUEST_PERMISSION)
     public void accessExternalStorageRationale() {
-        PermissionHelper.showRationaleDialog(this);
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_storage_tip));
     }
 
     private File queryFileFromDataBase() {

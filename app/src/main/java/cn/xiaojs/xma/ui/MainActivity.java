@@ -493,7 +493,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
     @Keep
     @PermissionRationale(requestCode = MainActivity.PERMISSION_CODE)
     public void requestCameraRationale() {
-        PermissionHelper.showRationaleDialog(this);
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_camera_tip));
+
     }
 
 }
