@@ -383,7 +383,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         if (Live.LiveSessionState.LIVE.equals(state)
                 && classroomEngine.getClassroomType() == ClassroomType.ClassLesson
                 && !classroomEngine.hasTeachingAbility()
-                && TextUtils.isEmpty(mCtlSession.playUrl)) {
+                && TextUtils.isEmpty(classroomEngine.getCtlSession().playUrl)) {
             mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
                     R.string.student_living_back_to_talk_mode_sub);
         }
