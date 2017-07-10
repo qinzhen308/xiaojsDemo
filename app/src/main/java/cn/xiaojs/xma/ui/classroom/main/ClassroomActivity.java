@@ -111,8 +111,7 @@ public class ClassroomActivity extends FragmentActivity {
         initData(true, false);
 
         //grant permission
-        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
-                Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
+        String[] permissions = {Manifest.permission.CAMERA , Manifest.permission.RECORD_AUDIO};
         PermissionGen.needPermission(this, REQUEST_PERMISSION, permissions);
 
         //register network

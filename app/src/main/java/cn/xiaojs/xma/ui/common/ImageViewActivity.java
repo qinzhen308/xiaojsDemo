@@ -283,7 +283,7 @@ public class ImageViewActivity extends BaseActivity {
 //                                    }
                                     float scale=1f;
                                     if(screenH<point.y||screenW<point.x){
-                                        scale=0.9f*(point.x/(float)screenW);
+                                        scale=0.9f*screenW/(float)point.x;
                                     }
                                     hugeImageView.setImage(ImageSource.uri(resource.getPath()),new ImageViewState(
                                             scale,

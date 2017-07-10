@@ -204,8 +204,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 break;
             case R.id.play_pause_btn:
 
-                String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
-                        Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
+                String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
 
                 PermissionGen.needPermission(this, REQUEST_PERMISSION, permissions);
 
