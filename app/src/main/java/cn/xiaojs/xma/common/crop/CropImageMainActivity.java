@@ -545,11 +545,12 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
     public void getGalleryRationale() {
         PermissionHelper.showRationaleDialog(this);
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_storage_tip));
     }
 
     @PermissionFail(requestCode = REQUEST_CAMERA_PERMISSION)
     public void getCameraRationale() {
-        PermissionHelper.showRationaleDialog(this);
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_camera_tip));
     }
 
     /**

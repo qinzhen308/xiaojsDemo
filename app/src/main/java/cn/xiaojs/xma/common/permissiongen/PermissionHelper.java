@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -60,12 +61,20 @@ public class PermissionHelper {
     }
 
     public static void showRationaleDialog(Fragment fragment){
-        showRationaleDialog(fragment.getActivity());
+        showRationaleDialog(fragment,null);
     }
 
     public static void showRationaleDialog(final Activity activity){
+        showRationaleDialog(activity,null);
+    }
+
+    public static void showRationaleDialog(Fragment fragment,String tips){
+        showRationaleDialog(fragment.getActivity(),tips);
+    }
+
+    public static void showRationaleDialog(final Activity activity,String tips){
         final CommonDialog dialog=new CommonDialog(activity);
-        dialog.setDesc("您已拒绝使用该功能的权限，如果需要，请到应用管理授权该功能");
+        dialog.setDesc(TextUtils.isEmpty(tips)?activity.getString(R.string.permission_rationale_tip):tips);
         dialog.setRightBtnText(R.string.go_to_authorization);
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override

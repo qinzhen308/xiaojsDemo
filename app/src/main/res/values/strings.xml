@@ -943,5 +943,8 @@
     <string name="cant_join_yourself_class">不能加入自己创建的班</string>
     <string name="go_to_authorization">去授权</string>
     <string name="captcha_send_success">发送成功</string>
+    <string name="permission_rationale_tip">您已禁止小教室访问该功能的权限，需要开启对应权限才可使用该功能哦~</string>
+    <string name="permission_rationale_camera_tip">您已禁止小教室访问相机权限，需要开启相机权限才可使用该功能哦~</string>
+    <string name="permission_rationale_storage_tip">您已禁止小教室存储权限，需要开启存储权限才可使用该功能哦~</string>
 
 </resources>
