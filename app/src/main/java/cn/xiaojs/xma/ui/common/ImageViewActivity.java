@@ -281,10 +281,9 @@ public class ImageViewActivity extends BaseActivity {
 //                                    }else {
 //                                        hugeImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_0);
 //                                    }
-                                    float scale=1;
-                                    int tagH=point.x>point.y?point.x:point.y;
-                                    if(screenH<tagH){
-                                        scale=screenH/(float)tagH;
+                                    float scale=1f;
+                                    if(screenH<point.y||screenW<point.x){
+                                        scale=0.9f*(point.x/(float)screenW);
                                     }
                                     hugeImageView.setImage(ImageSource.uri(resource.getPath()),new ImageViewState(
                                             scale,
