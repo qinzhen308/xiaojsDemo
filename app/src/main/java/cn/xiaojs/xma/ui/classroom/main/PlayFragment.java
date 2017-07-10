@@ -303,7 +303,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
 
         //判断教室类型，如果为PrivateClass,需要显示教学日历
-        if (ClassroomEngine.getEngine().getClassroomType() == ClassroomType.ClassLesson) {
+        if (classroomEngine.getClassroomType() == ClassroomType.ClassLesson) {
             mCanlenderBtn.setVisibility(View.VISIBLE);
         }
     }
