@@ -214,6 +214,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         public boolean processMessage(Message msg) {
             switch (msg.what) {
                 case StandloneChannel.DELAY_LESSON:                       //拖堂
+                    transitionTo(delayedState);
                     return HANDLED;
                 case StandloneChannel.PAUSE_LESSON:                       //课间休息
                 {

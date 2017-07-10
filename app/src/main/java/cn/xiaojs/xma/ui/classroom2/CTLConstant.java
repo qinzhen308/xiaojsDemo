@@ -34,6 +34,12 @@ public class CTLConstant {
 
     }
 
+    public static class ClassChannel extends BaseChannel{
+        public static final int DELAY_LESSON = 0x200001;             //课拖堂
+        public static final int ENTER_PENDING_4_LIVE_SATE = 0x200002;//进入peng4live状态
+
+    }
+
     public static class NetworkType {
         public static final int TYPE_NONE= -1;                     //没网
         public static final int TYPE_WIFI= 1;                      //Wi-Fi状态

@@ -66,6 +66,10 @@ public abstract class ClassroomStateMachine extends StateMachine {
         quitNow();
     }
 
+    protected Context getContext() {
+        return context;
+    }
+
     public RoomSession getSession() {
         return this.roomSession;
     }
@@ -206,6 +210,10 @@ public abstract class ClassroomStateMachine extends StateMachine {
     }
 
     protected void switchStateWhenReceiveSyncState(String state) {
+
+    }
+
+    protected void dealReceiveSyncClassState(SyncClassStateReceive message) {
 
     }
 
@@ -438,7 +446,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
             return;
         }
 
-        //TODO
+        dealReceiveSyncClassState(message);
 
         notifyEvent(event, message);
     }

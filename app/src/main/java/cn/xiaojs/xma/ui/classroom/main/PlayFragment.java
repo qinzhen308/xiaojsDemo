@@ -17,16 +17,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
@@ -35,6 +38,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
+import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
@@ -729,69 +733,42 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE).equals(event)) {
 
+            if (object == null)
+                return;
 
-            //FIXME 处理班
-//            mCtlSession.cls.state = syncState.to;
-//
-//            if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
-//                mCtlSession.ctl = null;
-//
-//                updateTitle();
-//                mTipsHelper.setTipsByState(syncState.to);
-//                //FIXME 总是时间，应该显示为0；
-//                mTimeProgressHelper.reloadLessonDuration();
-//                mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
-//                setControllerBtnStyle(syncState.to);
-//
-//                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
-//                mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
-//
-//
-//            } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
-//                //班中当前课的信息
-//
-//                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
-//                //mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
-//
-//                if (syncState.current != null) {
-//
-//                    if (mCtlSession.ctl == null || !mCtlSession.ctl.id.equals(syncState.current.id)) {
-//                        CtlSession.Ctl newCtl = new CtlSession.Ctl();
-//                        newCtl.title = syncState.current.title;
-//                        newCtl.id = syncState.current.id;
-//                        newCtl.subtype = syncState.current.typeName;
-//                        newCtl.duration = syncState.current.schedule.duration;
-//                        //newCtl.startedOn = syncState.current.schedule.start.toGMTString();
-//
-//                        mCtlSession.ctl = newCtl;
-//
-//                        updateTitle();
-//                        mTimeProgressHelper.reloadLessonDuration();
-//                    }
-//                }
-//            }
-//
-//            if (syncState.volatiles != null && syncState.volatiles.length > 0) {
-//
-//                String mid = AccountDataManager.getAccountID(mContext);
-//                if (!TextUtils.isEmpty(mid)) {
-//                    for (SyncClassStateResponse.Volatiles volatil : syncState.volatiles) {
-//
-//                        if (mid.equals(volatil.accountId)) {
-//                            if (XiaojsConfig.DEBUG) {
-//                                Logger.d("============my pstyp changed=========");
-//                            }
-//
-//                            LiveCtlSessionManager.getInstance().getCtlSession().psTypeInLesson = volatil.psType;
-//
-//                            break;
-//                        }
-//                    }
-//                }
-//
-//
-//            }
+            SyncClassStateReceive syncState = (SyncClassStateReceive) object;
+
+            if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
+
+                updateTitle();
+                mTipsHelper.setTipsByState(syncState.to);
+                //FIXME 总是时间，应该显示为0；
+                mTimeProgressHelper.reloadLessonDuration();
+                mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
+                setControllerBtnStyle(syncState.to);
+
+                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
+                mVideoController.pausePlayStream(CTLConstant.StreamingType.PLAY_LIVE);
+
+
+            } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
+                //班中当前课的信息
+
+                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
+                //mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
+
+                if (syncState.current != null) {
+                    if (mCtlSession.ctl == null || !mCtlSession.ctl.id.equals(syncState.current.id)) {
+                        updateTitle();
+                        mTimeProgressHelper.reloadLessonDuration();
+                    }
+                }
+            }
         }
+    }
+
+    private void updateTitle() {
+        mLessonTitle.setText(getLessonTitle());
     }
 
     private void handleSyncState(SyncStateReceive syncState) {
