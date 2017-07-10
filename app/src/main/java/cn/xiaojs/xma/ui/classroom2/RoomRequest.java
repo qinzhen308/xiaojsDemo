@@ -2,6 +2,8 @@ package cn.xiaojs.xma.ui.classroom2;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
+
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.EventManager;
 import cn.xiaojs.xma.data.LiveManager;
@@ -84,8 +86,11 @@ public class RoomRequest {
     protected void mediaFeedback(int mediaStatus,
                               final EventCallback<EventResponse> callback) {
 
-        if (mediaStatus == Live.MediaStatus.FAILED_DUE_TO_DENIED) {
+        if (mediaStatus == Live.MediaStatus.READY) {
+            stateMachine.getSession().one2one = true;
+        } else {
             stateMachine.getSession().ctlSession.publishUrl = null;
+            stateMachine.getSession().one2one = false;
         }
 
         EventManager.mediaFeedback(context, mediaStatus, new EventCallback<EventResponse>() {

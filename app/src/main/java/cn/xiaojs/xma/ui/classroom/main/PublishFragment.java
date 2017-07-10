@@ -33,13 +33,10 @@ import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
-import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
@@ -184,7 +181,6 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                     Toast.makeText(mContext, "上课中，设置不可用", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
 
                 if (isPortrait()) {
                     mClassroomController.openSetting(this, SheetFragment.SHEET_GRAVITY_BOTTOM, mSlideViewHeight, this);
@@ -335,7 +331,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             mFullScreenTalkPresenter.switchFullMultiTalk();
         }
 
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         switch (mPublishType) {
             case CTLConstant.StreamingType.PUBLISH_LIVE:
                 if (Live.LiveSessionState.LIVE.equals(liveState)) {
@@ -666,7 +662,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         }
 
         mTipsHelper.hideTips();
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         switch (type) {
             case CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER:
             case CTLConstant.StreamingType.PUBLISH_LIVE:
@@ -861,6 +857,12 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             return;
         }
 
+        Logger.d("----------------------1");
+        if (classroomEngine.one2one()) {
+            Logger.d("----------------------2");
+            sendCloseMedia();
+        }
+
         mHandKeyPressing = true;
         String liveState = classroomEngine.getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == CTLConstant.StreamingType.PUBLISH_LIVE) {
@@ -942,6 +944,12 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         mPlayOrPausePressTime = System.currentTimeMillis();
 
         mTipsHelper.hideTips();
+
+        //如果存在1对1 需要发送closemedia给服务器
+        if (classroomEngine.one2one()) {
+            sendCloseMedia();
+        }
+
 
         if (classroomEngine.liveShow()) {
             pauseIndividual(true);
@@ -1158,6 +1166,9 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
 
     private void exitCurrentFragmentPeerToPeer() {
+
+        classroomEngine.setOne2one(false);
+
         if (mAlreadyExitFragment) {
             mHandKeyPressing = true;
             return;
@@ -1253,7 +1264,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             public void onVideoClose() {
                 if (classroomEngine.hasTeachingAbility()
                         || classroomEngine.liveShow()
-                        || Live.LiveSessionState.INDIVIDUAL.equals(LiveCtlSessionManager.getInstance().getLiveState())) {
+                        || Live.LiveSessionState.INDIVIDUAL.equals(classroomEngine.getLiveState())) {
                     mVideoController.pausePlayStream(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER);
                     sendCloseMedia();
                 } else {

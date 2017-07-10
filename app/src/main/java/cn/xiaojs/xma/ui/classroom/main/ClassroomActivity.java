@@ -212,7 +212,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     private void connectSocket(String ticket, String secret) {
         String url = getClassroomUrl(ticket);
 
-        handler.sendEmptyMessageDelayed(MSG_CONNECT_TIMEOUT, 20 * 1000);
+        handler.sendEmptyMessageDelayed(MSG_CONNECT_TIMEOUT, 10 * 1000);
 
         try {
             socketManager.initSocket(url, buildOptions(secret));

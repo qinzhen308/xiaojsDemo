@@ -179,8 +179,8 @@ public class ClassroomEngine {
     public boolean one2one() {
         return stateMachine.getSession().one2one;
     }
-    public boolean setOne2one(boolean one2one) {
-        return stateMachine.getSession().one2one = one2one;
+    public void setOne2one(boolean one2one) {
+        stateMachine.getSession().one2one = one2one;
     }
     public String getTicket() {
         return stateMachine.getSession().ticket;
@@ -255,7 +255,7 @@ public class ClassroomEngine {
      */
     public void mediaFeedback(int mediaStatus,
                               final EventCallback<EventResponse> callback) {
-        stateMachine.getSession().one2one = false;
+
 
         if (roomRequest != null) {
             roomRequest.mediaFeedback(mediaStatus, callback);

@@ -381,7 +381,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     private void showClasslessonTips(String state) {
 
         if (Live.LiveSessionState.LIVE.equals(state)
-                && LiveCtlSessionManager.getInstance().getCtlSession().cls != null
+                && classroomEngine.getClassroomType() == ClassroomType.ClassLesson
                 && !classroomEngine.hasTeachingAbility()
                 && TextUtils.isEmpty(mCtlSession.playUrl)) {
             mTipsHelper.setTips(R.string.student_living_back_to_talk_mode_title,
@@ -844,7 +844,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     public void playStream(String url) {
         int type = CTLConstant.StreamingType.PLAY_LIVE;
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState)
                 || Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState)
                 || Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {
@@ -858,7 +858,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     public void onStreamStarted(int type, String streamUrl, Object extra) {
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         mCountTime = mTimeProgressHelper.getCountTime();
         switch (type) {
             case CTLConstant.StreamingType.PLAY_PEER_TO_PEER:
@@ -897,7 +897,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     public void onStreamStopped(int type, Object extra) {
         //updateViewStyleByLiveState();
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         mCountTime = mTimeProgressHelper.getCountTime();
         mTimeProgressHelper.setTimeProgress(mCountTime, 0, liveState, mIndividualName, false);
 
@@ -906,7 +906,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         switch (type) {
             case CTLConstant.StreamingType.PLAY_LIVE:
 
-                if (LiveCtlSessionManager.getInstance().getCtlSession().cls != null
+                if (classroomEngine.getClassroomType() == ClassroomType.ClassLesson
                         && Live.LiveSessionState.LIVE.equals(liveState)) {
                     mTimeProgressHelper.setTimeProgress(mCountTime, 0, liveState, mIndividualName, true);
                 }
@@ -1020,7 +1020,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             return;
         }
 
-        String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+        String liveState = classroomEngine.getLiveState();
         setControllerBtnStyle(liveState);
     }
 

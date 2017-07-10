@@ -3,6 +3,8 @@ package cn.xiaojs.xma.ui.classroom2;
 import android.content.Context;
 import android.os.Message;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -420,6 +422,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         }
 
         getSession().ctlSession.publishUrl = message.publishUrl;
+        getSession().one2one = true;
         notifyEvent(event, message);
     }
 
