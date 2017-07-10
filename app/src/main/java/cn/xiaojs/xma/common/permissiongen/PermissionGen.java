@@ -18,6 +18,7 @@ public class PermissionGen {
     private String[] mPermissions;
     private int mRequestCode;
     private Object object;
+    Object[] methodParams;
 
     private PermissionGen(Object object) {
         this.object = object;
@@ -29,6 +30,10 @@ public class PermissionGen {
 
     public static PermissionGen with(Fragment fragment) {
         return new PermissionGen(fragment);
+    }
+    public PermissionGen params(Object... methodArr) {
+        methodParams=methodArr;
+        return this;
     }
 
     public PermissionGen permissions(String[] permissions) {
@@ -43,7 +48,7 @@ public class PermissionGen {
 
     @TargetApi(value = PermissionUtil.Build_VERSION_CODES_M)
     public void request() {
-        requestPermissions(object, mRequestCode, mPermissions);
+        requestPermissions(object, mRequestCode, mPermissions,methodParams);
     }
 
     public static void needPermission(Activity activity, int requestCode, String[] permissions) {
@@ -63,9 +68,9 @@ public class PermissionGen {
     }
 
     @TargetApi(value = PermissionUtil.Build_VERSION_CODES_M)
-    private static void requestPermissions(Object object, int requestCode, String[] permissions) {
+    private static void requestPermissions(Object object, int requestCode, String[] permissions,Object... arr) {
         if (!PermissionUtil.isOverMarshmallow()) {
-            doExecuteSuccess(object, requestCode);
+            doExecuteSuccess(object, requestCode,arr);
             return;
         }
         List<String> deniedPermissions = PermissionUtil.findDeniedPermissions(PermissionUtil.getActivity(object), permissions);
@@ -78,18 +83,17 @@ public class PermissionGen {
             } else {
                 throw new IllegalArgumentException(object.getClass().getName() + " is not supported");
             }
-
         } else {
-            doExecuteSuccess(object, requestCode);
+            doExecuteSuccess(object, requestCode,arr);
         }
     }
 
 
-    private static void doExecuteSuccess(Object activity, int requestCode) {
+    private static void doExecuteSuccess(Object activity, int requestCode,Object... arr) {
         Method executeMethod = PermissionUtil.findMethodWithRequestCode(activity.getClass(),
                 PermissionSuccess.class, requestCode);
 
-        executeMethod(activity, executeMethod);
+        executeMethod(activity, executeMethod,arr);
     }
 
     private static void doExecuteFail(Object activity, int requestCode) {
@@ -106,13 +110,13 @@ public class PermissionGen {
         executeMethod(activity, executeMethod);
     }
 
-    private static void executeMethod(Object activity, Method executeMethod) {
+    private static void executeMethod(Object activity, Method executeMethod,Object... arr) {
         if (executeMethod != null) {
             try {
                 if (!executeMethod.isAccessible()) {
                     executeMethod.setAccessible(true);
                 }
-                Object[] arr = null;
+//                Object[] arr = null;
                 executeMethod.invoke(activity, arr);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -133,7 +137,7 @@ public class PermissionGen {
     }
 
     private static void requestResult(Object obj, int requestCode, String[] permissions,
-                                      int[] grantResults) {
+                                      int[] grantResults,String... arr) {
         boolean hasNaverAskAgain=false;
         List<String> deniedPermissions = new ArrayList<>();
         for (int i = 0; i < grantResults.length; i++) {
@@ -155,4 +159,7 @@ public class PermissionGen {
             doExecuteSuccess(obj, requestCode);
         }
     }
+
+
+
 }

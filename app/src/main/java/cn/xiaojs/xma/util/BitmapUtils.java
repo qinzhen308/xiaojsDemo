@@ -21,6 +21,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -609,7 +610,19 @@ public class BitmapUtils {
         return true;
     }
 
-    public static boolean copyImgFileToGallery(Context context,File file){
+    public static String savePngImageToGallery(Context context, Bitmap bmp) {
+        // 首先保存图片
+        File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String destPath = fileDir + "/xiaojs_" + System.currentTimeMillis()+".png";
+        String savedPath = savePngImage(bmp, destPath, 100, false, true);
+        if(!TextUtils.isEmpty(savedPath)){
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + destPath)));
+            return savedPath;
+        }
+        return null;
+    }
+
+    public static String copyImgFileToGallery(Context context,File file){
         File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         if(!fileDir.exists()){
             fileDir.mkdirs();
@@ -617,12 +630,32 @@ public class BitmapUtils {
 
         String fileName = new StringBuilder("xjs_download_")
                 .append(System.currentTimeMillis())
-                .append("_")
-                .append(file.getName())
+                .append(".png")
                 .toString();
         String savedPath=fileDir+"/"+fileName;
+        try {
+            int bytesum = 0;
+            int byteread = 0;
+            if (file.exists()) { //文件存在时
+                InputStream inStream = new FileInputStream(file); //读入原文件
+                FileOutputStream fs = new FileOutputStream(savedPath);
+                byte[] buffer = new byte[1444];
+                int length;
+                while ( (byteread = inStream.read(buffer)) != -1) {
+                    bytesum += byteread; //字节数 文件大小
+                    System.out.println(bytesum);
+                    fs.write(buffer, 0, byteread);
+                }
+                inStream.close();
+            }
+        }
+        catch (Exception e) {
+            System.out.println("复制单个文件操作出错");
+            e.printStackTrace();
+
+        }
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + savedPath)));
-        return true;
+        return savedPath;
     }
 
     public static boolean saveImageToGallery(Context context, Bitmap bmp, File fileDir, String fileName, int quality, boolean updateTime) {

@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -10,14 +11,18 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
@@ -28,6 +33,7 @@ import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -38,7 +44,13 @@ import cn.jpush.im.android.api.callback.ProgressUpdateCallback;
 import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.enums.ContentType;
 import cn.jpush.im.android.api.model.Conversation;
+import cn.xiaojs.xma.Manifest;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -55,6 +67,9 @@ import retrofit2.http.FieldMap;
 
 
 public class ImageViewActivity extends BaseActivity {
+    private static final int PERMISSION_SAVE_HUGE_IMAGE=110;
+    private static final int PERMISSION_SAVE_NORMAL_IMAGE=111;
+
     public static final String IMAGE_POSITION_KEY = "imagePositionKey";
     public static final String IMAGE_PATH_KEY = "imagePathKey";
 
@@ -78,6 +93,7 @@ public class ImageViewActivity extends BaseActivity {
     private static final String POSITION = "position";
     private static final int PICTURE_PATH_LOADED = 0x2000;
     private static final int DOWNLOAD_ORIGIN_IMAGE_SUCCEED = 1;
+    private static final int SAVE_SUCCEED = 12;
     private cn.jpush.im.android.api.model.Message mMsg;
 
     //存放图片消息的ID
@@ -322,19 +338,10 @@ public class ImageViewActivity extends BaseActivity {
                     dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                         @Override
                         public void onItemClick(int position) {
-                            Drawable drawable = imageView.getDrawable();
-                            if (drawable instanceof BitmapDrawable) {
-                                final Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                                Logger.i("bitmap = " + bitmap);
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        String path = CacheUtil.downloadImage(bitmap);
-                                        Message msg = Message.obtain();
-                                        msg.obj = path;
-                                        handler.sendMessage(msg);
-                                    }
-                                }).start();
+                            if(PermissionUtil.isOverMarshmallow()&& ActivityCompat.checkSelfPermission(ImageViewActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED ){
+                                PermissionGen.needPermission(ImageViewActivity.this,PERMISSION_SAVE_NORMAL_IMAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            }else {
+                                doSaveNormalImage(imageView.getDrawable());
                             }
                         }
                     });
@@ -405,6 +412,9 @@ public class ImageViewActivity extends BaseActivity {
                         mPager.getAdapter().notifyDataSetChanged();
                     }
                     break;
+                case SAVE_SUCCEED:
+                    ToastUtil.showToast(getApplicationContext(),"保存图片到"+msg.obj);
+                    break;
             }
         }
     };
@@ -422,19 +432,71 @@ public class ImageViewActivity extends BaseActivity {
         dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
             @Override
             public void onItemClick(int position) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String path=CacheUtil.copyImgFileToGallery(ImageViewActivity.this,file);
-                        if(!TextUtils.isEmpty(path)){
-                            Message msg = Message.obtain();
-                            msg.obj = path;
-                            handler.sendMessage(msg);
-                        }
-                    }
-                }).start();
+                if(PermissionUtil.isOverMarshmallow()&& ActivityCompat.checkSelfPermission(ImageViewActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED ){
+                    PermissionGen.needPermission(ImageViewActivity.this,PERMISSION_SAVE_HUGE_IMAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }else {
+                    doSaveHugeImage(file);
+                }
             }
         });
         dialog.show();
     }
+
+
+    void doSaveNormalImage(Drawable drawable){
+        if (drawable instanceof BitmapDrawable) {
+            final Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            Logger.i("bitmap = " + bitmap);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this,bitmap);
+                    Message msg = Message.obtain();
+                    msg.obj = path;
+                    msg.what=SAVE_SUCCEED;
+                    handler.sendMessage(msg);
+                }
+            }).start();
+        }else if(drawable instanceof GlideBitmapDrawable){
+            final Bitmap bitmap = ((GlideBitmapDrawable) drawable).getBitmap();
+            Logger.i("bitmap = " + bitmap);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this,bitmap);
+                    Message msg = Message.obtain();
+                    msg.obj = path;
+                    msg.what=SAVE_SUCCEED;
+                    handler.sendMessage(msg);
+                }
+            }).start();
+        }
+    }
+
+
+    void doSaveHugeImage(final File file){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String path=BitmapUtils.copyImgFileToGallery(ImageViewActivity.this,file);
+                if(!TextUtils.isEmpty(path)){
+                    Message msg = Message.obtain();
+                    msg.obj = path;
+                    msg.what=SAVE_SUCCEED;
+                    handler.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+
+    @PermissionRationale(requestCode = PERMISSION_SAVE_NORMAL_IMAGE)
+    void normalRationale(){
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_storage_tip));
+    }
+
+    @PermissionRationale(requestCode = PERMISSION_SAVE_HUGE_IMAGE)
+    void hugeRationale(){
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_storage_tip));
+    }
+
 }
