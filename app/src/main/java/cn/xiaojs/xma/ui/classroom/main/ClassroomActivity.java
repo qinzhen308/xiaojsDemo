@@ -11,6 +11,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -29,12 +31,15 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.bean.ModeSwitcher;
 import cn.xiaojs.xma.ui.classroom.live.StreamType;
 import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
@@ -45,6 +50,8 @@ import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import io.socket.client.Socket;
+
+import static cn.xiaojs.xma.ui.MainActivity.PERMISSION_CODE;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -111,6 +118,18 @@ public class ClassroomActivity extends FragmentActivity {
         //register network
         registerNetworkReceiver();
 
+    }
+
+    @Keep
+    @PermissionRationale(requestCode = REQUEST_PERMISSION)
+    public void requestCameraRationale() {
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_camera_audio_room_tip));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
     }
 
     @Override

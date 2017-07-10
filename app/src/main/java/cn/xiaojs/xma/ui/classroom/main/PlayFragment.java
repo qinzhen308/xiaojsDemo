@@ -1,10 +1,12 @@
 package cn.xiaojs.xma.ui.classroom.main;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -26,6 +28,10 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.crop.CropImagePath;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -76,6 +82,10 @@ import okhttp3.ResponseBody;
 public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkListener {
     public final static int MSG_MODE_INPUT = 1;
     public final static int FULL_SCREEN_MODE_INPUT = 2;
+
+    public final static int REQUEST_PERMISSION = 3;
+
+
 
     @BindView(R.id.tip_view)
     View mTipView;
@@ -175,6 +185,14 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_play, null);
     }
 
+
+    @Keep
+    @PermissionRationale(requestCode = REQUEST_PERMISSION)
+    public void requestCameraRationale() {
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_camera_audio_tip));
+    }
+
+
     @OnClick({R.id.back_btn, R.id.play_pause_btn, R.id.setting_btn, R.id.open_docs_btn, R.id.talk_open_contact_btn,
             R.id.talk_send_txt_btn, R.id.talk_send_other_btn, R.id.talk_share_btn, R.id.enter_full_screen, R.id.play_layout,
             R.id.fc_land_portrait_btn, R.id.fc_screenshot_land_btn, R.id.fc_screenshot_portrait_btn, R.id.fc_open_contact_btn,
@@ -185,7 +203,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 handOnBackPressed();
                 break;
             case R.id.play_pause_btn:
-                playOrPauseLesson();
+
+                String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
+                        Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
+
+                PermissionGen.needPermission(this, REQUEST_PERMISSION, permissions);
+
+                //playOrPauseLesson();
                 break;
             case R.id.setting_btn:
                 if (isPortrait()) {
@@ -1030,7 +1054,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         setControllerBtnStyle(liveState);
     }
 
-
+    @Keep
+    @PermissionSuccess(requestCode = REQUEST_PERMISSION)
     private void playOrPauseLesson() {
         if (!ClassroomController.getInstance().isSocketConnected()) {
             Toast.makeText(mContext, R.string.cr_connecting, Toast.LENGTH_SHORT).show();
@@ -1045,7 +1070,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         String liveState = LiveCtlSessionManager.getInstance().getLiveState();
         if (ClassroomBusiness.canIndividual(mCtlSession)) {
-
             AnalyticEvents.onEvent(mContext,41);
 
             individualPublishStream();
@@ -1067,6 +1091,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             });
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveState) ||
                 Live.LiveSessionState.PENDING_FOR_LIVE.equals(liveState)) {//公开课在教室内没有pending_for_live状态，班才有
+
             showProgress(true);
             LiveManager.beginClass(mContext, mTicket, Live.StreamMode.MUTE, new APIServiceCallback<ResponseBody>() {
                 @Override
