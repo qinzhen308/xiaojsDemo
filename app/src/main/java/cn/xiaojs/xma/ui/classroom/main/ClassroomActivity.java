@@ -33,6 +33,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
@@ -49,6 +50,8 @@ import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.ToastUtil;
 import io.socket.client.Socket;
 
 import static cn.xiaojs.xma.ui.MainActivity.PERMISSION_CODE;
@@ -226,6 +229,11 @@ public class ClassroomActivity extends FragmentActivity {
             public void onFailure(String errorCode, String errorMessage) {
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("boot session error");
+                }
+                if(Errors.ACCESS_VIOLATION.equals(errorCode)){
+                    ToastUtil.showToast(getApplicationContext(),errorMessage);
+                    finish();
+                    return;
                 }
                 cancelProgress();
                 showContinueConnectClassroom(errorMessage);
@@ -584,7 +592,6 @@ public class ClassroomActivity extends FragmentActivity {
         }
 
 
-        ClassroomController.getInstance().enterPlayFragment(null, true);
         mContinueConnectDialog.show();
     }
 
