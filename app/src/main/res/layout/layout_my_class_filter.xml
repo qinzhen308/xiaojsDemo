@@ -1,78 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:background="@color/white"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <TextView
-            android:text="类型"
-            android:layout_marginTop="@dimen/px30"
-            android:layout_marginLeft="@dimen/px30"
-            android:textSize="@dimen/px28"
-            android:textColor="@color/font_black"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/tv_group1_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginTop="@dimen/px30"
+        android:text="类型"
+        android:textColor="@color/font_black"
+        android:textSize="@dimen/px28"
+        android:textStyle="bold" />
 
     <cn.xiaojs.xma.ui.widget.AdapterGirdView
-            android:id="@+id/course_filter_time_grid"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
-            android:horizontalSpacing="@dimen/px14"
-            android:verticalSpacing="@dimen/px14"
-            android:layout_marginTop="@dimen/px40"
-            android:listSelector="@android:color/transparent"
-            android:numColumns="4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/course_filter_time_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginTop="@dimen/px40"
+        android:horizontalSpacing="@dimen/px14"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="4"
+        android:verticalSpacing="@dimen/px14" />
 
     <TextView
-            android:text="上课时间"
-            android:layout_marginTop="@dimen/px40"
-            android:layout_marginLeft="@dimen/px30"
-            android:textSize="@dimen/px28"
-            android:textColor="@color/font_black"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/tv_group2_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginTop="@dimen/px40"
+        android:text="上课时间"
+        android:textColor="@color/font_black"
+        android:textSize="@dimen/px28"
+        android:textStyle="bold" />
 
     <cn.xiaojs.xma.ui.widget.AdapterGirdView
-            android:id="@+id/course_filter_state_grid"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
-            android:layout_marginTop="@dimen/px40"
-            android:numColumns="4"
-            android:horizontalSpacing="@dimen/px14"
-            android:verticalSpacing="@dimen/px14"
-            android:listSelector="@android:color/transparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/course_filter_state_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginTop="@dimen/px40"
+        android:horizontalSpacing="@dimen/px14"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="4"
+        android:verticalSpacing="@dimen/px14" />
 
     <cn.xiaojs.xma.ui.widget.AdapterGirdView
-            android:id="@+id/course_filter_source_grid"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_marginRight="@dimen/px30"
-            android:layout_marginTop="@dimen/px30"
-            android:numColumns="4"
-            android:horizontalSpacing="@dimen/px14"
-            android:verticalSpacing="@dimen/px14"
-            android:listSelector="@android:color/transparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/course_filter_source_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginTop="@dimen/px30"
+        android:horizontalSpacing="@dimen/px14"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="4"
+        android:verticalSpacing="@dimen/px14" />
 
     <Button
-            android:id="@+id/course_filter_ok"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/big_submit_btn_selector"
-            android:paddingBottom="@dimen/px25"
-            android:paddingTop="@dimen/px25"
-            android:text="@string/ok"
-            android:textSize="@dimen/font_30px"
-            android:textColor="@color/white"
-            android:layout_marginRight="@dimen/px40"
-            android:layout_marginLeft="@dimen/px40"
-            android:layout_marginTop="@dimen/px90"
-            android:layout_marginBottom="@dimen/px90"/>
+        android:id="@+id/course_filter_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/px90"
+        android:layout_marginLeft="@dimen/px40"
+        android:layout_marginRight="@dimen/px40"
+        android:layout_marginTop="@dimen/px90"
+        android:background="@drawable/big_submit_btn_selector"
+        android:paddingBottom="@dimen/px25"
+        android:paddingTop="@dimen/px25"
+        android:text="@string/ok"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_30px" />
 </LinearLayout>
