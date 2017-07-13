@@ -182,9 +182,10 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             case R.id.setting_btn:
                 String currentState = classroomEngine.getLiveState();
                 if (Live.LiveSessionState.LIVE.equals(currentState)
-                        || Live.LiveSessionState.DELAY.equals(currentState)) {
+                        || Live.LiveSessionState.DELAY.equals(currentState)
+                        || classroomEngine.liveShow()) {
 
-                    Toast.makeText(mContext, "上课中，设置不可用", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "直播中，设置不可用", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -800,10 +801,6 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             return;
         }
 
-        if (classroomEngine.one2one()) {
-            sendCloseMedia();
-        }
-
         mHandKeyPressing = true;
         String liveState = classroomEngine.getLiveState();
         if (Live.LiveSessionState.LIVE.equals(liveState) && mPublishType == CTLConstant.StreamingType.PUBLISH_LIVE) {
@@ -811,18 +808,38 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 //exitCurrentFragment();
                 showBackDlgForClasslesson();
             } else {
+
+                if (classroomEngine.one2one()) {
+                    sendCloseMedia();
+                }
+
                 pauseClass(true);
             }
         } else if (classroomEngine.liveShow()) {
             //pause and exit
+
+            if (classroomEngine.one2one()) {
+                sendCloseMedia();
+            }
+
             pauseIndividual(true);
         } else if ((Live.LiveSessionState.LIVE.equals(liveState)
                 || Live.LiveSessionState.IDLE.equals(liveState)
                 || Live.LiveSessionState.FINISHED.equals(liveState)
                 || Live.LiveSessionState.SCHEDULED.equals(liveState))
                 && mPublishType == CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER) {
+
+            if (classroomEngine.one2one()) {
+                sendCloseMedia();
+            }
+
             exitCurrentFragmentPeerToPeer();
         } else {
+
+            if (classroomEngine.one2one()) {
+                sendCloseMedia();
+            }
+
             exitCurrentFragment();
         }
     }
@@ -844,6 +861,10 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             @Override
             public void onClick() {
                 dialog.dismiss();
+
+                if (classroomEngine.one2one()) {
+                    sendCloseMedia();
+                }
 
                 exitCurrentFragment();
             }

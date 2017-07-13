@@ -198,22 +198,23 @@ public abstract class ClassroomStateMachine extends StateMachine {
     /**
      * 开始播放直播秀
      */
-    public void startPlayLiveShow() {
-        sendMessage(CTLConstant.BaseChannel.START_PLAY_LIVE_SHOW);
-    }
+//    public void startPlayLiveShow() {
+//        sendMessage(CTLConstant.BaseChannel.START_PLAY_LIVE_SHOW);
+//    }
 
     /**
      * 停止播放直播秀
      */
-    public void stopPlayLiveShow() {
-        sendMessage(CTLConstant.BaseChannel.STOP_PLAY_LIVE_SHOW);
-    }
+//    public void stopPlayLiveShow() {
+//        sendMessage(CTLConstant.BaseChannel.STOP_PLAY_LIVE_SHOW);
+//    }
 
     protected void switchStateWhenReceiveSyncState(String state) {
 
         if(Live.LiveSessionState.FINISHED.equals(state)) {
             getSession().ctlSession.publishUrl = null;
             getSession().ctlSession.playUrl = null;
+            getSession().ctlSession.streamType = Live.StreamType.NONE;
         }
 
 
@@ -270,18 +271,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
         CtlSession ctlSession = roomSession.ctlSession;
         ctlSession.playUrl = null;
 
-
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
 
             ctlSession.finishOn = 0;
             ctlSession.streamType = Live.StreamType.NONE;
             ctlSession.claimedBy = null;
 
-            //FIXME del?
-            stopPlayLiveShow();
         } else if (message.streamType == Live.StreamType.LIVE) {
-            //FIXME del? 处理上课的推流
-            finishLesson(null);
+
         }
 
         notifyEvent(event, message);
@@ -304,8 +301,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
             roomSession.individualStreamDuration = message.finishOn;
 
-            //FIXME del?
-            startPlayLiveShow();
         } else if (message.streamType == Live.StreamType.LIVE) {
 
         }
@@ -342,7 +337,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
             stopLiveShow();
         }else if (message.streamType == Live.StreamType.LIVE) {
-            //TODO 处理上课的推流
             finishLesson(null);
         }
 

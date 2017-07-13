@@ -486,13 +486,13 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     private void info(String info) {
-        if (XiaojsConfig.DEBUG) {
+        //if (XiaojsConfig.DEBUG) { //Fuck bug
             Message msg = Message.obtain();
             msg.obj = info;
             if (mHandler != null) {
                 mHandler.sendMessage(msg);
             }
-        }
+        //}
     }
 
     @Override

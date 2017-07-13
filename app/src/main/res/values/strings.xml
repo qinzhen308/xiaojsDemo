@@ -916,8 +916,8 @@
     <string name="remote_assistant_session">远程助教</string>
     <string name="remind_final_tips">亲，还有5分就要下课呢，抓紧时间哟~</string>
     <string name="liver_bad_net_tips">直播者的网络状况很差，随时可能断线！</string>
-    <string name="student_living_back_to_talk_mode_title">无法观看直播视频</string>
-    <string name="student_living_back_to_talk_mode_sub">您可以进行文字交流</string>
+    <string name="student_living_back_to_talk_mode_title">老师处于交流模式</string>
+    <string name="student_living_back_to_talk_mode_sub">无法观看直播视频，您可以进行文字交流</string>
     <string name="create_lesson_skip_tip">创建成功，现在可以到“我的-我的班课”中查看我的课啦~</string>
     <string name="create_lesson_skip_btn_back">返回首页</string>
     <string name="create_lesson_skip_btn_look">去查看</string>

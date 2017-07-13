@@ -424,20 +424,24 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
 
     private void updateViewStyleByLiveState(String liveState) {
+
         if (classroomEngine.canIndividualByState()) {
             //课前课后或者班课的课外时间
             CtlSession ctlSession = classroomEngine.getCtlSession();
             if ((ctlSession.streamType == Live.StreamType.INDIVIDUAL
                     || ctlSession.streamType == Live.StreamType.LIVE)
                     && !classroomEngine.canForceIndividual()) {
+
                 mPlayPauseBtn.setVisibility(View.INVISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             } else {
+
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
                 mPlayPauseBtn.setImageResource(R.drawable.ic_cr_publish_stream);
             }
 
         } else {
+
             if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
                 mPlayPauseBtn.setVisibility(View.VISIBLE);
             } else {

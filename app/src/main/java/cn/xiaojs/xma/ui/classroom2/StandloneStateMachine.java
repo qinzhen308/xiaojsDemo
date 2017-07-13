@@ -182,12 +182,6 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                     ctlSession.finishOn = claimReponse.finishOn;
                     transitionTo(liveShowState);
                     return HANDLED;
-                case StandloneChannel.START_PLAY_LIVE_SHOW:                //开始播放直播秀
-                    //transitionTo(liveShowState);
-                    return HANDLED;
-                case StandloneChannel.STOP_PLAY_LIVE_SHOW:                 //结束播放直播秀
-                    //do nothing
-                    return HANDLED;
             }
 
             return NOT_HANDLED;
@@ -232,6 +226,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                     //如果下课，相应的1对1播放地址也要重制为空
                     ctlSession.playUrl = "";
                     ctlSession.state = Live.LiveSessionState.FINISHED;
+                    ctlSession.streamType = Live.StreamType.NONE;
                     //TODO 处理csOfCurrent
                     transitionTo(finishState);
                     return HANDLED;
@@ -250,6 +245,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                     //如果下课，相应的1对1播放地址也要重制为空
                     ctlSession.playUrl = "";
                     ctlSession.state = Live.LiveSessionState.FINISHED;
+                    ctlSession.streamType = Live.StreamType.NONE;
 
                     //TODO 处理csOfCurrent
                     transitionTo(finishState);
@@ -300,11 +296,6 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                     ctlSession.publishUrl = claimReponse.publishUrl;
                     ctlSession.finishOn = claimReponse.finishOn;
                     transitionTo(liveShowState);
-                    return HANDLED;
-                case StandloneChannel.START_PLAY_LIVE_SHOW:                //开始播放直播秀
-                    return HANDLED;
-                case StandloneChannel.STOP_PLAY_LIVE_SHOW:                 //结束播放直播秀
-                    //do nothing
                     return HANDLED;
             }
             return NOT_HANDLED;
