@@ -1,348 +1,323 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
 
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:background="@color/main_bg"
-            android:layout_above="@+id/sub_btn">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sub_btn"
+        android:background="@color/main_bg"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
         <LinearLayout
-                android:id="@+id/lesson_creation_tips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/px28"
-                android:background="#ebf0f7"
-                android:visibility="gone">
+            android:id="@+id/lesson_creation_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ebf0f7"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px28"
+            android:visibility="gone">
 
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px16"
-                    android:src="@drawable/ic_tips"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px16"
+                android:src="@drawable/ic_tips" />
 
             <TextView
-                    android:layout_weight="1"
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:text="@string/lesson_creation_tips"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/font_dark_gray"/>
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px20"
+                android:paddingTop="@dimen/px16"
+                android:text="@string/lesson_creation_tips"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_26px" />
 
             <ImageView
-                    android:id="@+id/lesson_creation_tips_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px26"
-                    android:paddingRight="@dimen/px26"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:src="@drawable/ic_edit_text_del"/>
+                android:id="@+id/lesson_creation_tips_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px26"
+                android:paddingRight="@dimen/px26"
+                android:paddingTop="@dimen/px16"
+                android:src="@drawable/ic_edit_text_del" />
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/status_fail_reason_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/px32"
-                android:paddingRight="@dimen/px32"
-                android:paddingTop="@dimen/px40"
-                android:visibility="gone"
-                android:paddingBottom="@dimen/px40">
+            android:id="@+id/status_fail_reason_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/px40"
+            android:paddingLeft="@dimen/px32"
+            android:paddingRight="@dimen/px32"
+            android:paddingTop="@dimen/px40"
+            android:visibility="gone">
 
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_state_fail_msg_tips"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_state_fail_msg_tips" />
 
             <TextView
-                    android:id="@+id/status_fail_reason"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/px14"
-                    android:textColor="@color/font_error_red"/>
+                android:id="@+id/status_fail_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px14"
+                android:gravity="center_vertical"
+                android:textColor="@color/font_error_red" />
         </LinearLayout>
 
         <View
-                android:id="@+id/place_hold_area"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/px32"/>
+            android:id="@+id/place_hold_area"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px32" />
 
         <!--课名称-->
-        <LinearLayout
-                style="@style/LiveLessonItem">
+        <LinearLayout style="@style/LiveLessonItem">
 
             <TextView
                 android:id="@+id/label1"
-                    style="@style/LiveLessonCreateTitle"
-                    android:text="@string/live_lesson_name"/>
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/live_lesson_name" />
 
             <cn.xiaojs.xma.ui.widget.EditTextDel
-                    android:id="@+id/live_lesson_name"
-                    style="@style/LiveLessonCreateEdt"
-                    android:layout_marginLeft="@dimen/px40"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:maxLines="2"
-                    android:hint="@string/live_lesson_name_hint"/>
+                android:id="@+id/live_lesson_name"
+                style="@style/LiveLessonCreateEdt"
+                android:layout_width="0dp"
+                android:layout_marginLeft="@dimen/px40"
+                android:layout_weight="1"
+                android:hint="@string/live_lesson_name_hint"
+                android:maxLines="2" />
         </LinearLayout>
 
 
         <!--学科类目-->
-        <include layout="@layout/layout_horizontal_line"/>
+        <include layout="@layout/layout_horizontal_line" />
 
-        <LinearLayout
-                style="@style/LiveLessonItem">
+        <LinearLayout style="@style/LiveLessonItem">
 
             <TextView
                 android:id="@+id/label2"
                 style="@style/LiveLessonCreateTitle"
-                    android:text="@string/subject_category"/>
+                android:text="@string/subject_category" />
 
             <TextView
-                    android:id="@+id/lesson_subject"
-                    style="@style/LiveLessonRightEntrance"
-                    android:hint="@string/please_select"/>
+                android:id="@+id/lesson_subject"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/please_select" />
         </LinearLayout>
 
 
         <!--报名方式-->
         <LinearLayout
-                android:layout_marginTop="@dimen/px32"
-                style="@style/LiveLessonItem"
-                android:visibility="visible"
-                android:orientation="vertical">
+            style="@style/LiveLessonItem"
+            android:layout_marginTop="@dimen/px32"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/label3"
                 style="@style/LiveLessonCreateTitle"
-                    android:layout_width="wrap_content"
-                    android:text="@string/student_need_enroll_or_not"/>
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/student_need_enroll_or_not" />
 
-            <RadioGroup
-                    android:id="@+id/mandatory_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginBottom="@dimen/px54">
-
-                <RadioButton
-                        android:id="@+id/mandatory_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/enroll_mandatory"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_dark_gray"
-                        android:drawablePadding="@dimen/px14"
-                        android:button="@drawable/single_check_selector"/>
-
-                <RadioButton
-                        android:id="@+id/no_mandatory_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_need_enroll"
-                        android:textSize="@dimen/font_28px"
-                        android:textColor="@color/font_dark_gray"
-                        android:drawablePadding="@dimen/px14"
-                        android:button="@drawable/single_check_selector"
-                        android:layout_marginLeft="@dimen/px219"/>
-
-            </RadioGroup>
+            <ToggleButton
+                android:id="@+id/veri_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/toggle_btn_selector"
+                android:textOff=""
+                android:textOn="" />
 
         </LinearLayout>
 
 
         <!--学生人数-->
         <include
-                android:id="@+id/stu_count_divide"
-                layout="@layout/layout_horizontal_line"/>
+            android:id="@+id/stu_count_divide"
+            layout="@layout/layout_horizontal_line" />
 
         <LinearLayout
-                android:id="@+id/stu_count_layout"
-                style="@style/LiveLessonItem">
+            android:id="@+id/stu_count_layout"
+            style="@style/LiveLessonItem">
 
             <TextView
                 android:id="@+id/label4"
                 style="@style/LiveLessonCreateTitle"
-                    android:text="@string/lesson_people_limit"/>
+                android:text="@string/lesson_people_limit" />
 
             <cn.xiaojs.xma.ui.widget.EditTextDel
-                    android:id="@+id/lesson_stu_count"
-                    android:gravity="right"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:background="@null"
-                    android:hint="@string/please_set"
-                    android:textColorHint="@color/subject_selected_blue"
-                    android:textColor="@color/font_create_lesson_content"
-                    android:layout_marginRight="@dimen/px20"
-                    style="@style/LessonText"
-                    android:inputType="number"
-                    android:maxLength="9"
-                    android:layout_height="wrap_content"/>
+                android:id="@+id/lesson_stu_count"
+                style="@style/LessonText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="right"
+                android:hint="@string/please_set"
+                android:inputType="number"
+                android:maxLength="9"
+                android:textColor="@color/font_create_lesson_content"
+                android:textColorHint="@color/subject_selected_blue" />
 
             <TextView
-                    android:gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/person"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/font_black"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@string/person"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_26px" />
         </LinearLayout>
 
         <include
-                android:visibility="gone"
-                layout="@layout/layout_horizontal_line"/>
+            layout="@layout/layout_horizontal_line"
+            android:visibility="gone" />
 
         <!--教学形式-->
 
         <LinearLayout
-                style="@style/LiveLessonItem"
-                android:visibility="gone">
+            style="@style/LiveLessonItem"
+            android:visibility="gone">
 
             <TextView
-                    style="@style/LiveLessonCreateTitle"
-                    android:text="@string/teach_form"/>
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/teach_form" />
 
             <TextView
-                    android:id="@+id/teach_form"
-                    style="@style/LiveLessonRightEntrance"
-                    android:hint="@string/please_select"/>
+                android:id="@+id/teach_form"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/please_select" />
         </LinearLayout>
 
 
         <!--收费-->
         <LinearLayout
-                android:id="@+id/charge_layout"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+            android:id="@+id/charge_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <include layout="@layout/layout_horizontal_line"/>
+            <include layout="@layout/layout_horizontal_line" />
 
             <LinearLayout
-                    style="@style/LiveLessonItem"
-                    android:paddingTop="@dimen/px30"
-                    android:paddingBottom="@dimen/px30"
-                    android:orientation="horizontal">
+                style="@style/LiveLessonItem"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/px30"
+                android:paddingTop="@dimen/px30">
 
                 <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/charge"/>
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/charge" />
 
 
                 <ToggleButton
-                        android:id="@+id/charge_way_switcher"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/toggle_btn_selector"
-                        android:textOff=""
-                        android:textOn=""/>
+                    android:id="@+id/charge_way_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_btn_selector"
+                    android:textOff=""
+                    android:textOn="" />
 
             </LinearLayout>
 
             <!--按直播总价，按课时-->
             <LinearLayout
-                    android:id="@+id/charge_way"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/px20"
-                    android:paddingBottom="@dimen/px40"
-                    android:paddingLeft="@dimen/px72">
+                android:id="@+id/charge_way"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/px40"
+                android:paddingLeft="@dimen/px72"
+                android:paddingTop="@dimen/px20">
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
-                            android:id="@+id/by_total_price_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/single_check_selector"
-                            android:drawablePadding="@dimen/px25"
-                            android:text="@string/by_live_total_price"/>
+                        android:id="@+id/by_total_price_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/single_check_selector"
+                        android:drawablePadding="@dimen/px25"
+                        android:text="@string/by_live_total_price" />
 
                     <EditText
-                            android:id="@+id/by_total_price"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:minWidth="@dimen/px300"
-                            android:textSize="@dimen/font_28px"
-                            android:paddingTop="@dimen/px15"
-                            android:paddingBottom="@dimen/px15"
-                            android:paddingLeft="@dimen/px10"
-                            android:paddingRight="@dimen/px10"
-                            android:background="@drawable/common_edittext_bg"
-                            android:layout_marginLeft="@dimen/px10"
-                            android:layout_marginRight="@dimen/px10"
-                            android:inputType="numberDecimal"
-                            android:maxLength="10"/>
+                        android:id="@+id/by_total_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_marginRight="@dimen/px10"
+                        android:background="@drawable/common_edittext_bg"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10"
+                        android:minWidth="@dimen/px300"
+                        android:paddingBottom="@dimen/px15"
+                        android:paddingLeft="@dimen/px10"
+                        android:paddingRight="@dimen/px10"
+                        android:paddingTop="@dimen/px15"
+                        android:textSize="@dimen/font_28px" />
 
                     <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/unit_price"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unit_price" />
                 </LinearLayout>
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/px20"
-                        android:gravity="center_vertical"
-                        android:visibility="gone">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px20"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
-                            android:id="@+id/by_duration_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/single_check_selector"
-                            android:layout_gravity="center_vertical"
-                            android:drawablePadding="@dimen/px25"
-                            android:text="@string/by_live_duration"/>
+                        android:id="@+id/by_duration_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:drawableLeft="@drawable/single_check_selector"
+                        android:drawablePadding="@dimen/px25"
+                        android:text="@string/by_live_duration" />
 
                     <EditText
-                            android:id="@+id/by_duration"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:minWidth="@dimen/px300"
-                            android:textSize="@dimen/font_28px"
-                            android:paddingTop="@dimen/px15"
-                            android:paddingBottom="@dimen/px15"
-                            android:paddingLeft="@dimen/px10"
-                            android:paddingRight="@dimen/px10"
-                            android:background="@drawable/common_edittext_bg"
-                            android:layout_marginLeft="@dimen/px10"
-                            android:layout_marginRight="@dimen/px10"
-                            android:maxLength="10"
-                            android:inputType="numberDecimal"/>
+                        android:id="@+id/by_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/px10"
+                        android:layout_marginRight="@dimen/px10"
+                        android:background="@drawable/common_edittext_bg"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10"
+                        android:minWidth="@dimen/px300"
+                        android:paddingBottom="@dimen/px15"
+                        android:paddingLeft="@dimen/px10"
+                        android:paddingRight="@dimen/px10"
+                        android:paddingTop="@dimen/px15"
+                        android:textSize="@dimen/font_28px" />
 
                     <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/unit_price_by_hour"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unit_price_by_hour" />
                 </LinearLayout>
 
 
@@ -354,204 +329,202 @@
 
         <!--上课时间-->
         <LinearLayout
-                android:layout_marginTop="@dimen/px32"
-                style="@style/LiveLessonItem">
+            style="@style/LiveLessonItem"
+            android:layout_marginTop="@dimen/px32">
 
             <TextView
                 android:id="@+id/label5"
-                    style="@style/LiveLessonTitle"
-                    android:text="@string/lesson_start_time"/>
+                style="@style/LiveLessonTitle"
+                android:text="@string/lesson_start_time" />
 
             <TextView
-                    android:id="@+id/lesson_start_time"
-                    style="@style/LiveLessonRightEntrance"
-                    android:hint="@string/please_select"/>
+                android:id="@+id/lesson_start_time"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/please_select" />
 
         </LinearLayout>
 
-        <include
-                layout="@layout/layout_horizontal_line"/>
+        <include layout="@layout/layout_horizontal_line" />
 
         <!--上课时长-->
-        <LinearLayout
-                style="@style/LiveLessonItem">
+        <LinearLayout style="@style/LiveLessonItem">
 
             <TextView
                 android:id="@+id/label6"
                 style="@style/LiveLessonTitle"
-                    android:text="@string/lesson_duration"/>
+                android:text="@string/lesson_duration" />
 
             <cn.xiaojs.xma.ui.widget.EditTextDel
-                    android:id="@+id/lesson_duration"
-                    android:gravity="right"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:background="@null"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/please_set"
-                    android:textColor="@color/font_create_lesson_content"
-                    android:textColorHint="@color/subject_selected_blue"
-                    style="@style/LessonText"
-                    android:inputType="number"
-                    android:maxLength="3"
-                    android:layout_marginRight="@dimen/px20"/>
+                android:id="@+id/lesson_duration"
+                style="@style/LessonText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="right"
+                android:hint="@string/please_set"
+                android:inputType="number"
+                android:maxLength="3"
+                android:textColor="@color/font_create_lesson_content"
+                android:textColorHint="@color/subject_selected_blue" />
 
             <TextView
-                    android:gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/minute"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_26px"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@string/minute"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_26px" />
 
         </LinearLayout>
 
         <!--选填信息-->
         <LinearLayout
-                android:layout_marginTop="@dimen/px32"
-                style="@style/LiveLessonItem">
+            style="@style/LiveLessonItem"
+            android:layout_marginTop="@dimen/px32">
 
             <TextView
-                    style="@style/LiveLessonTitle"
-                    android:text="@string/optional_info"/>
+                style="@style/LiveLessonTitle"
+                android:text="@string/optional_info" />
 
             <TextView
-                    android:id="@+id/optional_info"
-                    style="@style/LiveLessonRightEntrance"
-                    android:hint="@string/optional_info_tips"/>
+                android:id="@+id/optional_info"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/optional_info_tips" />
 
         </LinearLayout>
 
         <LinearLayout
-                android:layout_marginTop="@dimen/px32"
-                android:paddingLeft="@dimen/px28"
-                android:paddingRight="@dimen/px26"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px32"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/px28"
+            android:paddingRight="@dimen/px26">
 
             <TextView
                 android:id="@+id/label7"
-                    android:layout_width="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/px28"
+                android:paddingTop="@dimen/px25"
+                android:text="@string/other_settings" />
+
+            <LinearLayout
+                android:id="@+id/on_shelves_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px22"
+                android:paddingTop="@dimen/px16">
+
+                <TextView
+                    android:id="@+id/on_shelves"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px25"
-                    android:paddingBottom="@dimen/px28"
-                    android:text="@string/other_settings"
-                    android:background="@color/white"/>
-
-            <LinearLayout
-                    android:id="@+id/on_shelves_layout"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/px22"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:layout_height="wrap_content">
+                    android:drawableLeft="@drawable/multi_check_selector"
+                    android:drawablePadding="@dimen/px28"
+                    android:text="@string/on_shelves" />
 
                 <TextView
-                        android:id="@+id/on_shelves"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/multi_check_selector"
-                        android:drawablePadding="@dimen/px28"
-                        android:text="@string/on_shelves"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_24px"
-                        android:paddingLeft="@dimen/px64"
-                        android:text="@string/on_shelves_tips"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px64"
+                    android:text="@string/on_shelves_tips"
+                    android:textColor="@color/font_gray"
+                    android:textSize="@dimen/font_24px" />
 
             </LinearLayout>
 
             <LinearLayout
-                    android:id="@+id/publish_personal_page_layout"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/px22"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:layout_height="wrap_content">
+                android:id="@+id/publish_personal_page_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px22"
+                android:paddingTop="@dimen/px16">
 
                 <TextView
-                        android:id="@+id/publish_personal_page"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/multi_check_selector"
-                        android:drawablePadding="@dimen/px28"
-                        android:text="@string/publish_personal_page"/>
+                    android:id="@+id/publish_personal_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/multi_check_selector"
+                    android:drawablePadding="@dimen/px28"
+                    android:text="@string/publish_personal_page" />
 
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_24px"
-                        android:paddingLeft="@dimen/px64"
-                        android:text="@string/publish_personal_page_tips"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px64"
+                    android:text="@string/publish_personal_page_tips"
+                    android:textColor="@color/font_gray"
+                    android:textSize="@dimen/font_24px" />
 
             </LinearLayout>
 
             <LinearLayout
-                    android:id="@+id/playback_layout"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/px22"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:layout_height="wrap_content">
+                android:id="@+id/playback_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px22"
+                android:paddingTop="@dimen/px16">
 
                 <TextView
-                        android:id="@+id/playback_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/multi_check_selector"
-                        android:drawablePadding="@dimen/px28"
-                        android:text="@string/living_paly_back"/>
+                    android:id="@+id/playback_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/multi_check_selector"
+                    android:drawablePadding="@dimen/px28"
+                    android:text="@string/living_paly_back" />
 
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_gray"
-                        android:textSize="@dimen/font_24px"
-                        android:paddingLeft="@dimen/px64"
-                        android:text="@string/living_paly_back_tips"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/px64"
+                    android:text="@string/living_paly_back_tips"
+                    android:textColor="@color/font_gray"
+                    android:textSize="@dimen/font_24px" />
 
             </LinearLayout>
 
             <TextView
-                    android:id="@+id/publish_to_circle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/multi_check_selector"
-                    android:drawablePadding="@dimen/px25"
-                    android:paddingLeft="@dimen/px22"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:textSize="@dimen/font_28px"
-                    android:text="@string/publish_to_circle"
-                    android:visibility="gone"/>
+                android:id="@+id/publish_to_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/multi_check_selector"
+                android:drawablePadding="@dimen/px25"
+                android:paddingBottom="@dimen/px16"
+                android:paddingLeft="@dimen/px22"
+                android:paddingTop="@dimen/px16"
+                android:text="@string/publish_to_circle"
+                android:textSize="@dimen/font_28px"
+                android:visibility="gone" />
 
             <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/px35"></View>
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px35"></View>
 
         </LinearLayout>
 
         <Button
-                android:id="@+id/sub_btn"
-                android:layout_alignParentBottom="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px86"
-                android:layout_marginBottom="@dimen/px80"
-                android:layout_marginLeft="@dimen/px56"
-                android:layout_marginRight="@dimen/px56"
-                android:text="@string/finish"
-                style="@style/BigSubmitBtn"/>
+            android:id="@+id/sub_btn"
+            style="@style/BigSubmitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/px80"
+            android:layout_marginLeft="@dimen/px56"
+            android:layout_marginRight="@dimen/px56"
+            android:layout_marginTop="@dimen/px86"
+            android:text="@string/finish" />
 
     </LinearLayout>
 </ScrollView>

@@ -1,16 +1,22 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.app.ActivityCompat;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -18,6 +24,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
@@ -32,6 +40,7 @@ import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.common.ImageViewActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -61,10 +70,10 @@ public class CreateClassActivity extends BaseActivity {
     EditTextDel classNameEdt;
     @BindView(R.id.teacher_name)
     TextView teacherNameView;
-    @BindView(R.id.verify_group)
-    RadioGroup verifyGroupView;
-    @BindView(R.id.not_verify)
-    RadioButton notVerifyBtn;
+    @BindView(R.id.veri_switcher)
+    ToggleButton veriSwitcher;
+    @BindView(R.id.public_switcher)
+    ToggleButton publicSwitcher;
 
     @BindView(R.id.student_num_tips)
     TextView studentTipsView;
@@ -176,8 +185,8 @@ public class CreateClassActivity extends BaseActivity {
     private void initView() {
 
         labelClass.setText(StringUtil.getSpecialString(labelClass.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
-        labelAddVerify.setText(StringUtil.getSpecialString(labelAddVerify.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
-        labelTeacher.setText(StringUtil.getSpecialString(labelTeacher.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
+//        labelAddVerify.setText(StringUtil.getSpecialString(labelAddVerify.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
+//        labelTeacher.setText(StringUtil.getSpecialString(labelTeacher.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
 
         tipsContentView.setText(R.string.class_create_tips);
 
@@ -192,18 +201,54 @@ public class CreateClassActivity extends BaseActivity {
             teacherNameView.setText(name);
         }
 
-        notVerifyBtn.setChecked(true);
-        verifyGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        veriSwitcher.setChecked(true);
+        publicSwitcher.setChecked(false);
+        veriSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if (checkedId == R.id.need_verify) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
                     AnalyticEvents.onEvent(CreateClassActivity.this, 39);
-                } else if (checkedId == R.id.not_verify) {
+                } else {
                     AnalyticEvents.onEvent(CreateClassActivity.this, 40);
                 }
             }
         });
+        publicSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    showSetPublicTip();
+                } else {
+                }
+            }
+        });
 
+    }
+
+    private void showSetPublicTip(){
+        ListBottomDialog dialog = new ListBottomDialog(this);
+        dialog.setTopTitle(R.string.set_public_tip);
+        String[] items = new String[]{"设为公开"};
+        dialog.setItems(items);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+
+            }
+        });
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                publicSwitcher.setChecked(false);
+            }
+        });
+        dialog.setOnCloseListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publicSwitcher.setChecked(false);
+            }
+        });
+        dialog.show();
     }
 
     private void closeCourCreateTips() {
@@ -303,8 +348,8 @@ public class CreateClassActivity extends BaseActivity {
         ClassParams params = new ClassParams();
 
         params.title = name;
-        params.join = verifyGroupView.getCheckedRadioButtonId() == R.id.need_verify ?
-                Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
+        params.join = veriSwitcher.isChecked()? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
+        params.accessible = publicSwitcher.isChecked();
         params.lessons = classLessons;
 
         ClassEnroll classEnroll = null;

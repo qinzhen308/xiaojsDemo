@@ -804,6 +804,7 @@
     <string name="live_class_name">班级名称</string>
     <string name="head_teacher">班主任</string>
     <string name="join_type">加入班级是否需要验证</string>
+    <string name="class_need_public">班级是否公开</string>
     <string name="need_confirm">需要确认</string>
     <string name="no_verification_required">无需验证</string>
     <string name="time_table">课表</string>
@@ -948,5 +949,6 @@
     <string name="permission_rationale_storage_tip">您已禁止小教室存储权限，需要开启存储权限才可使用该功能哦~</string>
     <string name="permission_rationale_camera_audio_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用该功能哦~</string>
     <string name="permission_rationale_camera_audio_room_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用教室内直播功能哦~</string>
+    <string name="set_public_tip">班级设为公开后，所有人可见，学生可通过搜索班级关键词找到该班</string>
 
 </resources>

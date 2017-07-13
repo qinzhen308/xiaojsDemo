@@ -74,54 +74,61 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/label_add_verify"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/px25"
                         android:paddingBottom="@dimen/px28"
                         android:text="@string/join_type"
                         android:background="@color/white"/>
 
-                <RadioGroup
-                        android:id="@+id/verify_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/px22"
-                        android:paddingBottom="@dimen/px28"
-                        android:orientation="horizontal"
-                        android:gravity="center_horizontal"
-                        >
-
-                    <RadioButton
-                            android:id="@+id/need_verify"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/px22"
-                            android:paddingTop="@dimen/px16"
-                            android:paddingBottom="@dimen/px16"
-                            android:textSize="@dimen/font_28px"
-                            android:textColor="@color/font_dark_gray"
-                            android:text="@string/need_confirm"
-                            android:button="@drawable/single_check_selector"/>
-
-                    <RadioButton
-                            android:id="@+id/not_verify"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/px22"
-                            android:paddingTop="@dimen/px16"
-                            android:paddingBottom="@dimen/px16"
-                            android:textSize="@dimen/font_28px"
-                            android:textColor="@color/font_dark_gray"
-                            android:text="@string/no_verification_required"
-                            android:layout_marginLeft="@dimen/px219"
-                            android:button="@drawable/single_check_selector"/>
-                </RadioGroup>
+                <ToggleButton
+                    android:id="@+id/veri_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_btn_selector"
+                    android:textOff=""
+                    android:textOn=""/>
 
             </LinearLayout>
+
+            <include layout="@layout/layout_horizontal_line"/>
+
+            <!--加入班级是否需要验证-->
+            <LinearLayout
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px26"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_public"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px25"
+                    android:paddingBottom="@dimen/px28"
+                    android:text="@string/class_need_public"
+                    android:background="@color/white"/>
+
+                <ToggleButton
+                    android:id="@+id/public_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_btn_selector"
+                    android:textOff=""
+                    android:textOn=""/>
+
+            </LinearLayout>
+
+
 
             <!--课表-->
             <LinearLayout

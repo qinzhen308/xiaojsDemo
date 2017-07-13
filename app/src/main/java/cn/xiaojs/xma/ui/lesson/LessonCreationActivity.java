@@ -10,6 +10,7 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -128,16 +129,13 @@ public class LessonCreationActivity extends BaseActivity {
     @BindView(R.id.publish_to_circle)
     TextView mPublishToCircleTv;
 
-    @BindView(R.id.mandatory_layout)
-    RadioGroup mandatoryGroupView;
+    @BindView(R.id.veri_switcher)
+    ToggleButton veriSwitcher;
 
     @BindView(R.id.playback_btn)
     TextView playbackBtn;
 
-    @BindView(R.id.mandatory_btn)
-    RadioButton mandatoryBtn;
-    @BindView(R.id.no_mandatory_btn)
-    RadioButton noMandatoryBtn;
+
     @BindView(R.id.label1)
     TextView label1;
     @BindView(R.id.label2)
@@ -293,17 +291,15 @@ public class LessonCreationActivity extends BaseActivity {
         mChargeWaySwitcher.setEnabled(false);
         mLessonNameEdt.setForbidEnterChar(true);
 
-
-        mandatoryGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        veriSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-
-                if (checkedId == R.id.mandatory_btn) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
                     //mChargeLayout.setVisibility(View.VISIBLE);
                     mStuCountLayout.setVisibility(View.VISIBLE);
                     mStuCountDivide.setVisibility(View.VISIBLE);
                     AnalyticEvents.onEvent(LessonCreationActivity.this, 18);
-                } else if (checkedId == R.id.no_mandatory_btn) {
+                } else {
                     AnalyticEvents.onEvent(LessonCreationActivity.this, 19);
                     //mChargeLayout.setVisibility(View.GONE);
                     mStuCountLayout.setVisibility(View.GONE);
@@ -311,7 +307,7 @@ public class LessonCreationActivity extends BaseActivity {
                 }
             }
         });
-
+        veriSwitcher.setChecked(true);
     }
 
     private void closeCourCreateTips() {
@@ -394,11 +390,7 @@ public class LessonCreationActivity extends BaseActivity {
         if (enroll != null) {
             mLessonStuCount.setText(String.valueOf(enroll.max));
             //mEnrollSwitcher.setChecked(enroll.mandatory);
-            if (enroll.mandatory) {
-                mandatoryBtn.setChecked(true);
-            } else {
-                noMandatoryBtn.setChecked(true);
-            }
+            veriSwitcher.setChecked(enroll.mandatory);
 
         }
 
@@ -472,19 +464,17 @@ public class LessonCreationActivity extends BaseActivity {
     private void mustInputSymbol() {
         label1.setText(StringUtil.getSpecialString(label1.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
         label2.setText(StringUtil.getSpecialString(label2.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
-        label3.setText(StringUtil.getSpecialString(label3.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+//        label3.setText(StringUtil.getSpecialString(label3.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
         label4.setText(StringUtil.getSpecialString(label4.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
         label5.setText(StringUtil.getSpecialString(label5.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
         label6.setText(StringUtil.getSpecialString(label6.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
-        label7.setText(StringUtil.getSpecialString(label7.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+//        label7.setText(StringUtil.getSpecialString(label7.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
 
     }
 
     private void initView() {
         mustInputSymbol();
         //mEnrollSwitcher.setChecked(true);
-        mandatoryBtn.setChecked(true);
-
         mChargeWaySwitcher.setChecked(false);
         mChargeWayLayout.setVisibility(View.GONE);
 
@@ -718,7 +708,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         Enroll enroll = new Enroll();
         enroll.max = limit;
-        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn ? true : false;//mEnrollSwitcher.isChecked();
+        enroll.mandatory = veriSwitcher.isChecked();//mEnrollSwitcher.isChecked();
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
         Fee fee = new Fee();
@@ -769,7 +759,7 @@ public class LessonCreationActivity extends BaseActivity {
                 return false;
             }*/
 
-            if (mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn) {
+            if (veriSwitcher.isChecked()) {
                 String limitPeople = mLessonStuCount.getText().toString().trim();
                 if (TextUtils.isEmpty(limitPeople)) {
                     Toast.makeText(mContext, R.string.lesson_people_empty, Toast.LENGTH_SHORT).show();
@@ -852,7 +842,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         int limitPeople = TextUtils.isEmpty(studentNum) ? 0 : Integer.parseInt(studentNum);
         enroll.max = limitPeople;
-        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn ? true : false;//mEnrollSwitcher.isChecked();
+        enroll.mandatory = veriSwitcher.isChecked();//mEnrollSwitcher.isChecked();
         if (!enroll.mandatory) {
             enroll.max = 9999999;
         }
@@ -1099,7 +1089,7 @@ public class LessonCreationActivity extends BaseActivity {
                 shouldTipCount++;
             }
 
-            if (mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn) {
+            if (veriSwitcher.isChecked()) {
                 max=5;
                 String limitPeople = mLessonStuCount.getText().toString().trim();
                 if (!TextUtils.isEmpty(limitPeople)) {
