@@ -1,8 +1,11 @@
 package cn.xiaojs.xma.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
@@ -41,6 +44,13 @@ public class ScanQrcodeActivity extends QrCodeActivity {
             Logger.d("decode data:" + data);
         }
 
+        if(!TextUtils.isEmpty(data)&&!URLUtil.isHttpUrl(data)&&!URLUtil.isHttpsUrl(data)){//认为是纯文本
+            //直接显示
+            CommonWebActivity.invoke(this,"",data);
+            finish();
+            return;
+        }
+
         //要判断是不是教室的URL http://192.168.100.3/live/590ad80c25558febef0f6957/1
         String key = checkAndParseKey(data);
         if (!TextUtils.isEmpty(key)) {
@@ -58,6 +68,11 @@ public class ScanQrcodeActivity extends QrCodeActivity {
                 url=data+"?app=android";
             }
             CommonWebActivity.invoke(this,"",url);
+            finish();
+        }else if(URLUtil.isHttpUrl(data)||URLUtil.isHttpsUrl(data)){
+            Intent intent=new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(data));
+            startActivity(Intent.createChooser(intent,"请选择浏览器打开链接："+data));
             finish();
         }else {
             Toast.makeText(this, R.string.Invalid_calss_qrcode_tips, Toast.LENGTH_SHORT).show();
