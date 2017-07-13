@@ -21,6 +21,7 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.widget.BottomSheet;
@@ -141,6 +142,33 @@ public class ShareUtil {
                     case R.id.tv_qq:
                         //QQ
                         new ShareAction(activity).setPlatform(SHARE_MEDIA.QQ).withMedia(umImage).share();
+                        break;
+                }
+
+            }
+        });
+    }
+
+    public static void shareUrlByUmeng(final Activity activity, final String title, final String message,final String url) {
+
+        final UMWeb web=new UMWeb(url);
+        UMImage umImage=new UMImage(activity,R.drawable.ic_share_avator);
+        web.setThumb(umImage);
+        web.setTitle(title);
+        web.setDescription(message);
+        shareDld(activity, new ShareBtnListener() {
+            @Override
+            public void onClickListener(View v) {
+                switch (v.getId()) {
+                    case R.id.tv_wechat:
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.WEIXIN).withMedia(web).share();
+                        break;
+                    case R.id.tv_fcircle:
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).withMedia(web).share();
+                        break;
+                    case R.id.tv_qq:
+                        //QQ
+                        new ShareAction(activity).setPlatform(SHARE_MEDIA.QQ).withMedia(web).share();
                         break;
                 }
 

@@ -2,24 +2,38 @@ package cn.xiaojs.xma.ui.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.ImageViewState;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -30,7 +44,13 @@ import cn.jpush.im.android.api.callback.ProgressUpdateCallback;
 import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.enums.ContentType;
 import cn.jpush.im.android.api.model.Conversation;
+import cn.xiaojs.xma.Manifest;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -39,11 +59,17 @@ import cn.xiaojs.xma.ui.widget.banner.PointIndicateView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoViewAttacher;
 import cn.xiaojs.xma.ui.widget.scaleimage.ScaleViewPager;
+import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.CacheUtil;
+import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.ToastUtil;
+import retrofit2.http.FieldMap;
 
 
 public class ImageViewActivity extends BaseActivity {
+    private static final int PERMISSION_SAVE_HUGE_IMAGE=110;
+    private static final int PERMISSION_SAVE_NORMAL_IMAGE=111;
+
     public static final String IMAGE_POSITION_KEY = "imagePositionKey";
     public static final String IMAGE_PATH_KEY = "imagePathKey";
 
@@ -67,11 +93,13 @@ public class ImageViewActivity extends BaseActivity {
     private static final String POSITION = "position";
     private static final int PICTURE_PATH_LOADED = 0x2000;
     private static final int DOWNLOAD_ORIGIN_IMAGE_SUCCEED = 1;
+    private static final int SAVE_SUCCEED = 12;
     private cn.jpush.im.android.api.model.Message mMsg;
 
     //存放图片消息的ID
     private List<Integer> mMsgIdList = new ArrayList<Integer>();
     private int mOriginPosition;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_image_viewer);
@@ -106,8 +134,8 @@ public class ImageViewActivity extends BaseActivity {
         });
         Intent intent = getIntent();
         if (intent != null) {
-            mFromChat = intent.getBooleanExtra(IMAGE_FROM_CHAT,false);
-            if (mFromChat){
+            mFromChat = intent.getBooleanExtra(IMAGE_FROM_CHAT, false);
+            if (mFromChat) {
                 String targetAppKey = intent.getStringExtra(CHAT_APP_KEY);
                 mMessageId = intent.getIntExtra(CHAT_MESSAGE_ID, 0);
                 long groupId = intent.getLongExtra(CHAT_GROUP_ID, 0);
@@ -126,7 +154,7 @@ public class ImageViewActivity extends BaseActivity {
                         handler.sendEmptyMessage(PICTURE_PATH_LOADED);
                     }
                 }).start();
-            }else {
+            } else {
                 mPathList = intent.getStringArrayListExtra(IMAGE_PATH_KEY);
                 int position = intent.getIntExtra(IMAGE_POSITION_KEY, 0);
                 if (mPathList != null && mPathList.size() != 0) {
@@ -184,13 +212,13 @@ public class ImageViewActivity extends BaseActivity {
         }
     }
 
-    private void showImages(int position){
+    private void showImages(int position) {
         ImagePagerAdapter adapter = new ImagePagerAdapter(this,
                 mPathList);
         mPager.setAdapter(adapter);
 //        pointContent.setViewPager(mPager, mPathList.size(), position,
 //                true, null);
-        pageNumView.setViewPager(mPager,mPathList.size(),position);
+        pageNumView.setViewPager(mPager, mPathList.size(), position);
     }
 
     /**
@@ -201,9 +229,9 @@ public class ImageViewActivity extends BaseActivity {
         mMsgIdList = this.getIntent().getIntegerArrayListExtra(CHAT_MSG_LIST_ID);
         cn.jpush.im.android.api.model.Message msg;
         ImageContent ic;
-        for (int i = 0 ; i < mMsgIdList.size() ; i++) {
+        for (int i = 0; i < mMsgIdList.size(); i++) {
             int msgID = mMsgIdList.get(i);
-            if (msgID == mMessageId){
+            if (msgID == mMessageId) {
                 mOriginPosition = i;
             }
             msg = mConv.getMessage(msgID);
@@ -230,26 +258,74 @@ public class ImageViewActivity extends BaseActivity {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
+        public Object instantiateItem(final ViewGroup container, final int position) {
             View view = LayoutInflater.from(mContext).inflate(
                     R.layout.layout_image_viewer, null);
-            final PhotoView imageView = (PhotoView) view
-                    .findViewById(R.id.drag_image_viewer);
+            final View loadState = view.findViewById(R.id.load_state);
+            final PhotoView imageView = (PhotoView) view.findViewById(R.id.drag_image_viewer);
+            final SubsamplingScaleImageView hugeImageView = (SubsamplingScaleImageView) view.findViewById(R.id.hurge_image_viewer);
 
-            if (mFromChat){
+            if (mFromChat) {
                 Glide.with(mContext)
                         .load(new File(mList.get(position % mList.size())))
                         .asBitmap()
                         //.placeholder(R.drawable.ic_home_picture)
                         .error(R.drawable.ic_home_picture)
                         .into(imageView);
-            }else {
+            } else {
+//                Glide.with(mContext)
+//                        .load(Social.getDrawing(mList.get(position % mList.size()),false))
+//                        //.placeholder(R.drawable.ic_home_picture)
+//                        .fitCenter()
+//                        .error(R.drawable.ic_home_picture)
+//                        .into(imageView);
                 Glide.with(mContext)
-                        .load(Social.getDrawing(mList.get(position % mList.size()),false))
+                        .load(Social.getDrawing(mList.get(position % mList.size()), false))
                         //.placeholder(R.drawable.ic_home_picture)
-                        .fitCenter()
-                        .error(R.drawable.ic_home_picture)
-                        .into(imageView);
+                        .downloadOnly(new SimpleTarget<File>() {
+                            @Override
+                            public void onResourceReady(final File resource, GlideAnimation<? super File> glideAnimation) {
+                                Logger.d("----glide imageviewer-----path=" + resource.getPath());
+                                Point point = BitmapUtils.getImageSize(resource.getPath());
+                                int screenH = ScreenUtils.getScreenHeight(ImageViewActivity.this);
+                                int screenW = ScreenUtils.getScreenWidth(ImageViewActivity.this);
+                                if (point.x > screenW * 2 || point.y > screenH * 2||point.y>2500||point.x>2500) {
+                                    imageView.setVisibility(View.GONE);
+                                    hugeImageView.setVisibility(View.VISIBLE);
+//                                    if(point.x>point.y){
+//                                        hugeImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_90);
+//                                    }else {
+//                                        hugeImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_0);
+//                                    }
+                                    float scale=1f;
+                                    if(screenH<point.y||screenW<point.x){
+                                        scale=0.9f*screenW/(float)point.x;
+                                    }
+                                    hugeImageView.setImage(ImageSource.uri(resource.getPath()),new ImageViewState(
+                                            scale,
+                                            new PointF(0,0),
+                                            point.x>point.y?SubsamplingScaleImageView.ORIENTATION_0:SubsamplingScaleImageView.ORIENTATION_0));
+                                    hugeImageView.setOnLongClickListener(new View.OnLongClickListener() {
+                                        @Override
+                                        public boolean onLongClick(View v) {
+                                            saveHugeImage(resource);
+                                            return true;
+                                        }
+                                    });
+                                    loadState.setVisibility(View.GONE);
+                                } else {
+                                    imageView.setVisibility(View.VISIBLE);
+                                    hugeImageView.setVisibility(View.GONE);
+                                    Glide.with(mContext)
+                                            .load(Social.getDrawing(mList.get(position % mList.size()), false))
+                                            //.placeholder(R.drawable.ic_home_picture)
+                                            .fitCenter()
+                                            .error(R.drawable.ic_home_picture)
+                                            .into(imageView);
+                                }
+                            }
+                        });
+
             }
 
             imageView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -262,19 +338,10 @@ public class ImageViewActivity extends BaseActivity {
                     dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                         @Override
                         public void onItemClick(int position) {
-                            Drawable drawable = imageView.getDrawable();
-                            if (drawable instanceof BitmapDrawable) {
-                                final Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                                Logger.i("bitmap = " + bitmap);
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        String path = CacheUtil.downloadImage(bitmap);
-                                        Message msg = Message.obtain();
-                                        msg.obj = path;
-                                        handler.sendMessage(msg);
-                                    }
-                                }).start();
+                            if(PermissionUtil.isOverMarshmallow()&& ActivityCompat.checkSelfPermission(ImageViewActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED ){
+                                PermissionGen.needPermission(ImageViewActivity.this,PERMISSION_SAVE_NORMAL_IMAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            }else {
+                                doSaveNormalImage(imageView.getDrawable());
                             }
                         }
                     });
@@ -299,9 +366,9 @@ public class ImageViewActivity extends BaseActivity {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.obj == null) {
-                    ToastUtil.showToast(getApplicationContext(),"下载失败!");
-                }else {
-                    ToastUtil.showToast(getApplicationContext(),"下载成功!保存路径为:" + msg.obj.toString());
+                    ToastUtil.showToast(getApplicationContext(), "下载失败!");
+                } else {
+                    ToastUtil.showToast(getApplicationContext(), "下载成功!保存路径为:" + msg.obj.toString());
                 }
             }
         };
@@ -315,11 +382,12 @@ public class ImageViewActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            if (mList != null && mList.size() > 1) {
-                return Integer.MAX_VALUE;
-            } else {
-                return mList == null ? 0 : mList.size();
-            }
+//            if (mList != null && mList.size() > 1) {
+//                return Integer.MAX_VALUE;
+//            } else {
+//                return mList == null ? 0 : mList.size();
+//            }
+            return mList == null ? 0 : mList.size();
         }
 
         @Override
@@ -339,10 +407,13 @@ public class ImageViewActivity extends BaseActivity {
                     break;
                 case DOWNLOAD_ORIGIN_IMAGE_SUCCEED:
                     Bundle bundle = msg.getData();
-                    if (bundle != null){
+                    if (bundle != null) {
                         mPathList.set(bundle.getInt(POSITION), bundle.getString("path"));
                         mPager.getAdapter().notifyDataSetChanged();
                     }
+                    break;
+                case SAVE_SUCCEED:
+                    ToastUtil.showToast(getApplicationContext(),"保存图片到"+msg.obj);
                     break;
             }
         }
@@ -353,4 +424,79 @@ public class ImageViewActivity extends BaseActivity {
         super.onBackPressed();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
+
+    private void saveHugeImage(final File file){
+        ListBottomDialog dialog = new ListBottomDialog(this);
+        String[] items = new String[]{"保存图片"};
+        dialog.setItems(items);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                if(PermissionUtil.isOverMarshmallow()&& ActivityCompat.checkSelfPermission(ImageViewActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED ){
+                    PermissionGen.needPermission(ImageViewActivity.this,PERMISSION_SAVE_HUGE_IMAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }else {
+                    doSaveHugeImage(file);
+                }
+            }
+        });
+        dialog.show();
+    }
+
+
+    void doSaveNormalImage(Drawable drawable){
+        if (drawable instanceof BitmapDrawable) {
+            final Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            Logger.i("bitmap = " + bitmap);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this,bitmap);
+                    Message msg = Message.obtain();
+                    msg.obj = path;
+                    msg.what=SAVE_SUCCEED;
+                    handler.sendMessage(msg);
+                }
+            }).start();
+        }else if(drawable instanceof GlideBitmapDrawable){
+            final Bitmap bitmap = ((GlideBitmapDrawable) drawable).getBitmap();
+            Logger.i("bitmap = " + bitmap);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this,bitmap);
+                    Message msg = Message.obtain();
+                    msg.obj = path;
+                    msg.what=SAVE_SUCCEED;
+                    handler.sendMessage(msg);
+                }
+            }).start();
+        }
+    }
+
+
+    void doSaveHugeImage(final File file){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String path=BitmapUtils.copyImgFileToGallery(ImageViewActivity.this,file);
+                if(!TextUtils.isEmpty(path)){
+                    Message msg = Message.obtain();
+                    msg.obj = path;
+                    msg.what=SAVE_SUCCEED;
+                    handler.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+
+    @PermissionRationale(requestCode = PERMISSION_SAVE_NORMAL_IMAGE)
+    void normalRationale(){
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_storage_tip));
+    }
+
+    @PermissionRationale(requestCode = PERMISSION_SAVE_HUGE_IMAGE)
+    void hugeRationale(){
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_storage_tip));
+    }
+
 }

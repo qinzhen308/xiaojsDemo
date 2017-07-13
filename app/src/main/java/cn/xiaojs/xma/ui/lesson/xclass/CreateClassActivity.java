@@ -32,10 +32,11 @@ import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.message.ChooseClassActivity;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.util.StringUtil;
 
 /**
  * Created by maxiaobao on 2017/5/17.
@@ -70,15 +71,22 @@ public class CreateClassActivity extends BaseActivity {
     @BindView(R.id.time_table_tips)
     TextView timetableTipsView;
 
+    @BindView(R.id.label_class)
+    TextView labelClass;
+    @BindView(R.id.label_teacher)
+    TextView labelTeacher;
+    @BindView(R.id.label_add_verify)
+    TextView labelAddVerify;
 
     public static ArrayList<ClassLesson> classLessons;
+
     private ArrayList<StudentEnroll> enrollStudents;
     private ArrayList<EnrollImport> enrollImports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        classLessons=new ArrayList<>();
+        classLessons = new ArrayList<>();
     }
 
     public static void addClassLesson(ClassLesson lesson) {
@@ -96,7 +104,7 @@ public class CreateClassActivity extends BaseActivity {
     public static void removeClassLesson(ClassLesson lesson) {
         if (lesson == null) return;
 
-        if (classLessons != null && classLessons.size()>0) {
+        if (classLessons != null && classLessons.size() > 0) {
             classLessons.remove(lesson);
         }
     }
@@ -167,6 +175,10 @@ public class CreateClassActivity extends BaseActivity {
 
     private void initView() {
 
+        labelClass.setText(StringUtil.getSpecialString(labelClass.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
+        labelAddVerify.setText(StringUtil.getSpecialString(labelAddVerify.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
+        labelTeacher.setText(StringUtil.getSpecialString(labelTeacher.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
+
         tipsContentView.setText(R.string.class_create_tips);
 
         classNameEdt.setHint(getString(R.string.live_lesson_name_hint, MAX_CLASS_CHAR));
@@ -184,10 +196,10 @@ public class CreateClassActivity extends BaseActivity {
         verifyGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if(checkedId==R.id.need_verify){
-                    AnalyticEvents.onEvent(CreateClassActivity.this,39);
-                }else if(checkedId==R.id.not_verify){
-                    AnalyticEvents.onEvent(CreateClassActivity.this,40);
+                if (checkedId == R.id.need_verify) {
+                    AnalyticEvents.onEvent(CreateClassActivity.this, 39);
+                } else if (checkedId == R.id.not_verify) {
+                    AnalyticEvents.onEvent(CreateClassActivity.this, 40);
                 }
             }
         });
@@ -215,7 +227,7 @@ public class CreateClassActivity extends BaseActivity {
                 switch (position) {
                     case 0://手动添加
 
-                        if (enrollImports !=null && enrollImports.size() > 0) {
+                        if (enrollImports != null && enrollImports.size() > 0) {
                             showOverlayTips(false);
                         } else {
                             enterStudentPage();
@@ -236,9 +248,9 @@ public class CreateClassActivity extends BaseActivity {
 
                         break;
                     case 1://从已有班级中添加
-                        if (enrollStudents !=null && enrollStudents.size()>0) {
+                        if (enrollStudents != null && enrollStudents.size() > 0) {
                             showOverlayTips(true);
-                        }else {
+                        } else {
                             enterImportPage();
                         }
 
@@ -256,17 +268,17 @@ public class CreateClassActivity extends BaseActivity {
         if (classLessons != null && classLessons.size() > 0) {
             timetableTipsView.setText(getString(R.string.number_lesson, classLessons.size()));
 
-        } else{
+        } else {
             timetableTipsView.setText("");
             //timetableTipsView.setHint(R.string.arrange_class);
         }
 
         if (enrollStudents != null && enrollStudents.size() > 0) {
             studentTipsView.setText(getString(R.string.number_student, enrollStudents.size()));
-        } else if (enrollImports != null && enrollImports.size() > 0){
+        } else if (enrollImports != null && enrollImports.size() > 0) {
             studentTipsView.setText(getString(R.string.import_class_students_count, enrollImports.size()));
             //studentTipsView.setHint(R.string.please_select);
-        }else {
+        } else {
             studentTipsView.setText("");
         }
     }
@@ -297,10 +309,10 @@ public class CreateClassActivity extends BaseActivity {
 
         ClassEnroll classEnroll = null;
         if (enrollStudents != null && enrollStudents.size() > 0) {
-            for(StudentEnroll e:enrollStudents){
-                if(!TextUtils.isEmpty(e.id)){
-                    e.name="";
-                    e.mobile="";
+            for (StudentEnroll e : enrollStudents) {
+                if (!TextUtils.isEmpty(e.id)) {
+                    e.name = "";
+                    e.mobile = "";
                 }
             }
 
@@ -311,7 +323,7 @@ public class CreateClassActivity extends BaseActivity {
             classEnroll.students = enrollStudents;
         }
 
-        if((enrollImports != null && enrollImports.size() > 0)){
+        if ((enrollImports != null && enrollImports.size() > 0)) {
 
             if (classEnroll == null) {
                 classEnroll = new ClassEnroll();
@@ -353,7 +365,7 @@ public class CreateClassActivity extends BaseActivity {
         //dialog.setTitle(R.string.disband_class);
         if (imports) {
             dialog.setDesc(R.string.overlay_students_tips);
-        }else {
+        } else {
             dialog.setDesc(R.string.overlay_import_tips);
         }
         dialog.setRightBtnText(R.string.go_on);
@@ -370,7 +382,7 @@ public class CreateClassActivity extends BaseActivity {
                 dialog.cancel();
                 if (imports) {
                     enterImportPage();
-                }else {
+                } else {
                     enterStudentPage();
                 }
             }
@@ -411,9 +423,9 @@ public class CreateClassActivity extends BaseActivity {
                 case REQUEST_MANUAL_STUDENTS_CODE:
                     if (data != null) {
                         enrollStudents = data.getParcelableArrayListExtra(ManualAddStudentActivity.EXTRA_STUDENTS);
-                        if (enrollStudents !=null) {
+                        if (enrollStudents != null) {
                             //清空导入班级的学生
-                            if(enrollImports !=null) {
+                            if (enrollImports != null) {
                                 enrollImports.clear();
                                 enrollImports = null;
                             }
@@ -423,7 +435,7 @@ public class CreateClassActivity extends BaseActivity {
                 case REQUEST_IMPORT_STUDENTS_CODE:
                     if (data != null) {
                         enrollImports = data.getParcelableArrayListExtra(ImportStudentFormClassActivity.EXTRA_IMPORTS);
-                        if (enrollImports !=null) {
+                        if (enrollImports != null) {
                             //清空手动加入的学生
                             if (enrollStudents != null) {
                                 enrollStudents.clear();
@@ -443,7 +455,7 @@ public class CreateClassActivity extends BaseActivity {
                             enrollStudents.add(studentEnroll);
 
                             //清空导入班级的学生
-                            if(enrollImports !=null) {
+                            if (enrollImports != null) {
                                 enrollImports.clear();
                                 enrollImports = null;
                             }
@@ -454,6 +466,42 @@ public class CreateClassActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    private boolean wannaExit(){
+
+        int status=checkExit();
+        if(status<0)return true;
+
+        final CommonDialog dialog=new CommonDialog(this);
+        dialog.setTitle(R.string.create_class_exit_tip2);
+        dialog.setLefBtnText(R.string.exit);
+        dialog.setRightBtnText(R.string.countine_input);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener(){
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener(){
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        return false;
+    }
+
+    private int checkExit(){
+        int tipCount=0;
+        String name = classNameEdt.getText().toString().trim();
+        if (!TextUtils.isEmpty(name)&&name.length() <= MAX_CLASS_CHAR) {
+            tipCount++;
+        }
+        return tipCount>=1?1:-1;
+
     }
 
 

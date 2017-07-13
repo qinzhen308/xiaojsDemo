@@ -1,11 +1,13 @@
 package cn.xiaojs.xma.ui.account;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,8 @@ import cn.xiaojs.xma.util.XjsUtils;
 public class ForgetPasswordStepOneActivity extends BaseActivity {
     private final static int MSG_RE_SEND = 0;
     private final int SMS_GETTING_TIME_OUT = 60;
+    public final static int REQUEST_CODE = 1020;
+    public final static String EXTRA_IS_MODIFY = "extra_is_modify";
 
     @BindView(R.id.phone_num)
     EditTextDel mPhoneNumEdt;
@@ -47,14 +51,28 @@ public class ForgetPasswordStepOneActivity extends BaseActivity {
     EditTextDel mVerifyCodeEdt;
     @BindView(R.id.get_verify_code)
     TextView mGetVerifyCodeTv;
+    @BindView(R.id.lesson_creation_tips)
+    LinearLayout lessonCreationTips;
 
     private int mCurrVerifyTime = 0;
+    boolean isModify = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        isModify = getIntent().getBooleanExtra(EXTRA_IS_MODIFY, false);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void addViewContent() {
-        setMiddleTitle(R.string.forget_password);
 
         addView(R.layout.activity_forget_pwd_step_one);
+        if (isModify) {
+            setMiddleTitle(R.string.account_safe);
+            lessonCreationTips.setVisibility(View.GONE);
+        } else {
+            setMiddleTitle(R.string.forget_password);
+        }
     }
 
     @OnClick({R.id.left_image, R.id.enter_next, R.id.get_verify_code})
@@ -101,7 +119,7 @@ public class ForgetPasswordStepOneActivity extends BaseActivity {
                     if (!APPUtils.isProEvn()) {
                         mVerifyCodeEdt.setText(String.valueOf(object.getCode()));
                     }
-
+                    Toast.makeText(getApplicationContext(), R.string.captcha_send_success, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -154,13 +172,15 @@ public class ForgetPasswordStepOneActivity extends BaseActivity {
                     Intent intent = new Intent(ForgetPasswordStepOneActivity.this, ForgetPasswordStepTwoActivity.class);
                     intent.putExtra(ForgetPasswordStepTwoActivity.KEY_MOBILE, phoneNum);
                     intent.putExtra(ForgetPasswordStepTwoActivity.KEY_CODE, code);
-
+                    if (isModify) {
+                        intent.putExtra(EXTRA_IS_MODIFY, isModify);
+                    }
                     startActivity(intent);
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-                    Toast.makeText(ForgetPasswordStepOneActivity.this, R.string.verify_error , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ForgetPasswordStepOneActivity.this, R.string.verify_error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {

@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.lesson;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,6 +49,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.DataPicker;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -138,6 +138,20 @@ public class LessonCreationActivity extends BaseActivity {
     RadioButton mandatoryBtn;
     @BindView(R.id.no_mandatory_btn)
     RadioButton noMandatoryBtn;
+    @BindView(R.id.label1)
+    TextView label1;
+    @BindView(R.id.label2)
+    TextView label2;
+    @BindView(R.id.label3)
+    TextView label3;
+    @BindView(R.id.label4)
+    TextView label4;
+    @BindView(R.id.label5)
+    TextView label5;
+    @BindView(R.id.label6)
+    TextView label6;
+    @BindView(R.id.label7)
+    TextView label7;
 
 
     private boolean mEnrollWayOpen = false;
@@ -167,11 +181,13 @@ public class LessonCreationActivity extends BaseActivity {
     @OnClick({R.id.left_image, R.id.lesson_creation_tips_close, R.id.lesson_subject, R.id.teach_form,
             R.id.charge_way_switcher, R.id.by_total_price_title,
             R.id.by_duration_title, R.id.lesson_start_time, R.id.optional_info, R.id.sub_btn,
-            R.id.on_shelves, R.id.publish_personal_page, R.id.publish_to_circle,R.id.playback_btn})
+            R.id.on_shelves, R.id.publish_personal_page, R.id.publish_to_circle, R.id.playback_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
-                finish();
+                if(wannaExit()){
+                    finish();
+                }
                 break;
             case R.id.lesson_creation_tips_close:
                 closeCourCreateTips();
@@ -211,11 +227,11 @@ public class LessonCreationActivity extends BaseActivity {
                 selectLessonStartTime();
                 break;
             case R.id.optional_info:
-                AnalyticEvents.onEvent(this,20);
+                AnalyticEvents.onEvent(this, 20);
                 enterOptionalInfoPage();
                 break;
             case R.id.on_shelves:
-                AnalyticEvents.onEvent(this,21);
+                AnalyticEvents.onEvent(this, 21);
                 if (mType == CourseConstant.TYPE_LESSON_EDIT) {
                     Toast.makeText(mContext, "您不能编辑此项", Toast.LENGTH_SHORT).show();
                     return;
@@ -235,12 +251,12 @@ public class LessonCreationActivity extends BaseActivity {
                 break;
             case R.id.playback_btn:
                 v.setSelected(!v.isSelected() ? true : false);
-                AnalyticEvents.onEvent(this,23);
+                AnalyticEvents.onEvent(this, 23);
 
                 break;
             case R.id.publish_personal_page:
                 v.setSelected(!v.isSelected() ? true : false);
-                AnalyticEvents.onEvent(this,22);
+                AnalyticEvents.onEvent(this, 22);
                 break;
             case R.id.publish_to_circle:
                 v.setSelected(!v.isSelected() ? true : false);
@@ -286,9 +302,9 @@ public class LessonCreationActivity extends BaseActivity {
                     //mChargeLayout.setVisibility(View.VISIBLE);
                     mStuCountLayout.setVisibility(View.VISIBLE);
                     mStuCountDivide.setVisibility(View.VISIBLE);
-                    AnalyticEvents.onEvent(LessonCreationActivity.this,18);
+                    AnalyticEvents.onEvent(LessonCreationActivity.this, 18);
                 } else if (checkedId == R.id.no_mandatory_btn) {
-                    AnalyticEvents.onEvent(LessonCreationActivity.this,19);
+                    AnalyticEvents.onEvent(LessonCreationActivity.this, 19);
                     //mChargeLayout.setVisibility(View.GONE);
                     mStuCountLayout.setVisibility(View.GONE);
                     mStuCountDivide.setVisibility(View.GONE);
@@ -380,7 +396,7 @@ public class LessonCreationActivity extends BaseActivity {
             //mEnrollSwitcher.setChecked(enroll.mandatory);
             if (enroll.mandatory) {
                 mandatoryBtn.setChecked(true);
-            }else {
+            } else {
                 noMandatoryBtn.setChecked(true);
             }
 
@@ -453,7 +469,19 @@ public class LessonCreationActivity extends BaseActivity {
         mLessonOptionalInfo.setPromotion(lessonDetail.getPromotion());
     }
 
+    private void mustInputSymbol() {
+        label1.setText(StringUtil.getSpecialString(label1.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+        label2.setText(StringUtil.getSpecialString(label2.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+        label3.setText(StringUtil.getSpecialString(label3.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+        label4.setText(StringUtil.getSpecialString(label4.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+        label5.setText(StringUtil.getSpecialString(label5.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+        label6.setText(StringUtil.getSpecialString(label6.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+        label7.setText(StringUtil.getSpecialString(label7.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
+
+    }
+
     private void initView() {
+        mustInputSymbol();
         //mEnrollSwitcher.setChecked(true);
         mandatoryBtn.setChecked(true);
 
@@ -690,7 +718,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         Enroll enroll = new Enroll();
         enroll.max = limit;
-        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn? true: false;//mEnrollSwitcher.isChecked();
+        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn ? true : false;//mEnrollSwitcher.isChecked();
         Schedule sch = new Schedule();
         sch.setStart(new Date(mLessonStartTime));
         Fee fee = new Fee();
@@ -824,7 +852,7 @@ public class LessonCreationActivity extends BaseActivity {
 
         int limitPeople = TextUtils.isEmpty(studentNum) ? 0 : Integer.parseInt(studentNum);
         enroll.max = limitPeople;
-        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn? true: false;//mEnrollSwitcher.isChecked();
+        enroll.mandatory = mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn ? true : false;//mEnrollSwitcher.isChecked();
         if (!enroll.mandatory) {
             enroll.max = 9999999;
         }
@@ -901,12 +929,12 @@ public class LessonCreationActivity extends BaseActivity {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress();
-                Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
                 DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.LESSON_CREATION_CHANGED);
-                if( mType == CourseConstant.TYPE_LESSON_CREATE&&getIntent().getBooleanExtra(EXTRA_NEED_TIP,false)){
+                if (mType == CourseConstant.TYPE_LESSON_CREATE && getIntent().getBooleanExtra(EXTRA_NEED_TIP, false)) {
                     setResult(RESULT_OK);
                     showSkipTip();
-                }else {
+                } else {
+                    Toast.makeText(mContext, R.string.lesson_creation_success, Toast.LENGTH_SHORT).show();
                     setResultOnFinish();
                 }
             }
@@ -938,8 +966,8 @@ public class LessonCreationActivity extends BaseActivity {
         });
     }
 
-    private void showSkipTip(){
-        CommonDialog dialog=new CommonDialog(this);
+    private void showSkipTip() {
+        CommonDialog dialog = new CommonDialog(this);
         dialog.setDesc(getString(R.string.create_lesson_skip_tip));
         dialog.setLefBtnText(R.string.create_lesson_skip_btn_back);
         dialog.setRightBtnText(R.string.create_lesson_skip_btn_look);
@@ -947,7 +975,7 @@ public class LessonCreationActivity extends BaseActivity {
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
-                ClassesListActivity.invoke(LessonCreationActivity.this,1);
+                ClassesListActivity.invoke(LessonCreationActivity.this, 1);
                 finish();
             }
         });
@@ -990,4 +1018,102 @@ public class LessonCreationActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if(!wannaExit())return;
+        super.onBackPressed();
+    }
+
+    private boolean wannaExit(){
+        if(mType != CourseConstant.TYPE_LESSON_CREATE){
+            return true;
+        }
+        int status=checkExit();
+        if(status<0)return true;
+
+        final CommonDialog dialog=new CommonDialog(this);
+        if(status==0){
+            dialog.setDesc(getString(R.string.create_lesson_exit_tip2));
+            dialog.setLefBtnText(R.string.exit);
+            dialog.setRightBtnText(R.string.countine_input);
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                }
+            });
+        }else if(status==1){
+            dialog.setDesc(R.string.create_lesson_exit_tip);
+            dialog.setLefBtnText(R.string.exit);
+            dialog.setRightBtnText(R.string.exit_with_finish);
+            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            dialog.setOnRightClickListener(new CommonDialog.OnClickListener(){
+                @Override
+                public void onClick() {
+                    dialog.dismiss();
+                    createOrEditLiveLesson();
+                }
+            });
+        }
+        dialog.show();
+        return false;
+    }
+
+    /**
+     *
+     * @return -1:没输入，直接退出   0：输入了，但不完整  1：输入了且完整
+     */
+    private int checkExit() {
+        int shouldTipCount=0;
+        int max=4;
+        try {
+            String name = mLessonNameEdt.getText().toString();
+            if (!TextUtils.isEmpty(name)&&name.length() <= MAX_LESSON_CHAR) {
+                shouldTipCount++;
+            }
+
+            if (!TextUtils.isEmpty(mLessonSubjectTv.getText().toString().trim())) {
+                shouldTipCount++;
+            }
+
+            String startTime = mLessonStartTimeTv.getText().toString().trim();
+            if (!TextUtils.isEmpty(startTime)&&mLessonStartTime > System.currentTimeMillis()) {
+                shouldTipCount++;
+            }
+
+            String durationStr = mLessonDurationEdt.getText().toString().trim();
+            if (!TextUtils.isEmpty(durationStr)&&Integer.parseInt(durationStr) <= MAX_LESSON_DURATION) {
+                shouldTipCount++;
+            }
+
+            if (mandatoryGroupView.getCheckedRadioButtonId() == R.id.mandatory_btn) {
+                max=5;
+                String limitPeople = mLessonStuCount.getText().toString().trim();
+                if (!TextUtils.isEmpty(limitPeople)) {
+                    int limit = TextUtils.isEmpty(limitPeople) ? 0 : Integer.parseInt(limitPeople);
+                    if (limit > 0) {
+                        shouldTipCount++;
+                    }
+                }
+            }else {
+                max=4;
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+        return shouldTipCount<=0?-1:(shouldTipCount>=max?1:0);
+    }
 }

@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <!--<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -137,7 +137,9 @@
         <activity
                 android:name=".ui.lesson.xclass.SearchClassActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.lesson.LessonCreationActivity"/>
+        <activity android:name=".ui.lesson.LessonCreationActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
                 android:name=".ui.lesson.TeachingSubjectActivity"
                 android:screenOrientation="portrait"
@@ -305,7 +307,7 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.common.PlayStreamingActivity"/>
         <activity android:name=".ui.lesson.xclass.CreateClassActivity"
-                  android:windowSoftInputMode="stateAlwaysHidden"
+                  android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.xclass.CreateTimetableActivity"
                   android:windowSoftInputMode="stateAlwaysHidden"

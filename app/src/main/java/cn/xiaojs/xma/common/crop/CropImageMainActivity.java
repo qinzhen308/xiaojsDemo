@@ -15,6 +15,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
+import android.support.annotation.Keep;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ import java.net.URI;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -540,6 +543,17 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
         }
     }
 
+    @PermissionFail(requestCode = REQUEST_GALLERY_PERMISSION)
+    public void getGalleryRationale() {
+        PermissionHelper.showRationaleDialog(this);
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_storage_tip));
+    }
+
+    @PermissionFail(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void getCameraRationale() {
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_camera_tip));
+    }
+
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
@@ -594,8 +608,11 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     }
 
     private void enterCamera() {
+        File file=new File(CropImagePath.UPLOAD_IMAGE_PATH);
+        Uri uri=FileProvider.getUriForFile(this,"cn.xiaojs.xma.fileprovider",file);
         Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(CropImagePath.UPLOAD_IMAGE_PATH)));
+        intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent1.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         startActivityForResult(intent1, CropImagePath.TAKE_PHOTO);
     }
 

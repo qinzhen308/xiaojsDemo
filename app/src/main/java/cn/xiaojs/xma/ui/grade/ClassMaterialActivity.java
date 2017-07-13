@@ -46,6 +46,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
@@ -202,6 +203,12 @@ public class ClassMaterialActivity extends BaseActivity {
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)
     public void accessExternalStorageSuccess() {
         addToLibrary(queryFileFromDataBase());
+    }
+
+    @Keep
+    @PermissionSuccess(requestCode = REQUEST_PERMISSION)
+    public void accessExternalStorageRationale(){
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_storage_tip));
     }
 
     private File queryFileFromDataBase() {

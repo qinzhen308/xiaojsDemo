@@ -1681,7 +1681,22 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (mBackgroundBmp != null) {
             Bitmap bmp = Bitmap.createBitmap(mDoodleBitmap.getWidth(), mDoodleBitmap.getHeight(), Bitmap.Config.ARGB_4444);
             Canvas c = new Canvas(bmp);
+            int offsetX = 0;
+            int offsetY = 0;
+            switch (mBackgroundScaleType) {
+                case BG_SCALE_TYPE_FIT_CENTER:
+                    offsetX = (mBlackboardWidth - mDesBackgroundRect.width()) / 2;
+                    offsetY = (mBlackboardHeight - mDesBackgroundRect.height()) / 2;
+                    break;
+                case BG_SCALE_TYPE_FIT_XY:
+
+                    break;
+            }
+            c.drawColor(BG_COLOR);
+            c.save();
+            c.translate(offsetX, offsetY);
             c.drawBitmap(mBackgroundBmp, mSrcBackgroundRect, mDesBackgroundRect, null);
+            c.restore();
             c.drawBitmap(mDoodleBitmap, 0, 0, null);
             return bmp;
         } else {
@@ -1692,6 +1707,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             return bmp;
         }
     }
+
 
     public WhiteboardLayer getLayer() {
         return mLayer;

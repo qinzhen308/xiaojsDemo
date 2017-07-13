@@ -36,6 +36,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -49,6 +50,7 @@ import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassFooterModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
@@ -138,6 +140,11 @@ public class HomeClassContentBuz {
 //                    doRequest(year,month,day);
                     tvTopDate.setText(ScheduleUtil.getDateYM_Ch(year,month,day));
                 }
+                if(todayYear==year&&todayMonth==month&&todayDay==day){
+                    btnToday.setVisibility(View.GONE);
+                }else {
+                    btnToday.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -154,11 +161,11 @@ public class HomeClassContentBuz {
                     Logger.d("----qz----calendar---onMonthChange---"+year+"年"+(month+1)+"月"+day);
                 }
                 prepareRequestMonth();
-                if(todayYear==year&&todayMonth==month){
-                    btnToday.setVisibility(View.GONE);
-                }else {
-                    btnToday.setVisibility(View.VISIBLE);
-                }
+//                if(todayYear==year&&todayMonth==month){
+//                    btnToday.setVisibility(View.GONE);
+//                }else {
+//                    btnToday.setVisibility(View.VISIBLE);
+//                }
             }
         });
 
@@ -175,7 +182,9 @@ public class HomeClassContentBuz {
             case R.id.btn_scan2:
                 AnalyticEvents.onEvent(mContext,35);
                 if (PermissionUtil.isOverMarshmallow() && ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    mContext.requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+//                    mContext.requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+                    PermissionGen.needPermission(mContext ,MainActivity.PERMISSION_CODE,Manifest.permission.CAMERA);
+
                 } else {
                     mContext.startActivity(new Intent(mContext, ScanQrcodeActivity.class));
                 }
@@ -363,7 +372,11 @@ public class HomeClassContentBuz {
         if(!ArrayUtil.isEmpty(list)){
             classLabel.hasData=true;
             mAdapter.getList().addAll(list);
+            if(list.size()==4){
+                mAdapter.getList().add(new ClassFooterModel());
+            }
         }
+
         mAdapter.getList().add(lastEmptyModel);
         if(XiaojsConfig.DEBUG)
             Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));

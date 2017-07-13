@@ -12,11 +12,13 @@ import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.live.LiveSchedule;
+import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassFooterModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassFooterView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
@@ -38,6 +40,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int VIEW_TYPE_HOME_CLASS =4;
     public static final int VIEW_TYPE_NATIVE_LESSON=5;
     public static final int VIEW_TYPE_LIVE_SCHEDULE_LESSON=6;
+    //首页热门班级等于4个时，底部有"更多"按钮
+    public static final int VIEW_TYPE_HOME_CLASS_FOOTER=7;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
     private List<?> mList;
@@ -76,6 +80,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder=new CommonHolder(new NativeLessonView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_LIVE_SCHEDULE_LESSON){
             holder=new CommonHolder(new LiveScheduleLessonView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_HOME_CLASS_FOOTER){
+            holder=new CommonHolder(new HomeClassFooterView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -117,6 +123,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_HOME_LESSON;
         }else if(o instanceof LiveSchedule){
             return VIEW_TYPE_LIVE_SCHEDULE_LESSON;
+        }else if(o instanceof ClassFooterModel){
+            return VIEW_TYPE_HOME_CLASS_FOOTER;
         }
         return VIEW_TYPE_HOME_CLASS;
     }

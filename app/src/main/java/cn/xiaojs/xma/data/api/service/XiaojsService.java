@@ -51,6 +51,7 @@ import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
@@ -404,7 +405,7 @@ public interface XiaojsService {
 
     //Join Class
     @POST("/v1/ctl/classes/{classes}/students/join")
-    Call<ResponseBody> joinClass(@Path("classes") String classes);
+    Call<ResponseBody> joinClass(@Path("classes") String classes, @Body JoinClassParams joinClassParams);
 
     //Review Join Class
     @PATCH("/v1/ctl/cls/students/{joinId}/review")

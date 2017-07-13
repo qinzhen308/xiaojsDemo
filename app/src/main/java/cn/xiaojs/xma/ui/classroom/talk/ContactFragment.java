@@ -144,6 +144,11 @@ public class ContactFragment extends SheetFragment implements
             liveCollection.attendees.add(0, mySelf);
         }
         int total = liveCollection.attendees != null ? liveCollection.attendees.size() : 0;
+
+        if (liveCollection.current > total) {
+            total = liveCollection.current;
+        }
+
         mContactTitleTv.setText(Html.fromHtml(mContext.getString(R.string.cr_room_numbers, liveCollection.current, total)));
     }
 
@@ -197,6 +202,11 @@ public class ContactFragment extends SheetFragment implements
                     }
                 }
             }
+
+            if (current > total) {
+                total = current;
+            }
+
             mContactTitleTv.setText(Html.fromHtml(mContext.getString(R.string.cr_room_numbers, current, total)));
         }
 

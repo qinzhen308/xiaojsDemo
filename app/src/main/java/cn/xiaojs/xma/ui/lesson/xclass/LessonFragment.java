@@ -137,6 +137,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
 
     private void filter() {
         MyClassFilterDialog dialog = new MyClassFilterDialog(context, false);
+        dialog.setGroup2Title(R.string.course_state);
         dialog.setTimeSelection(group1Position);
         dialog.setStateSelection(group2Position);
         dialog.setGroup1(getResources().getStringArray(R.array.lesson_filter_type)).setGroup2(getResources().getStringArray(R.array.lesson_filter_state));

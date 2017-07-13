@@ -20,6 +20,7 @@ package cn.xiaojs.xma.ui.base;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
@@ -312,5 +314,11 @@ public abstract class BaseActivity extends FragmentActivity implements IDialogMe
      */
     protected void onDataChanged() {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
     }
 }

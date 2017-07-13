@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 
 import cn.xiaojs.xma.common.permissiongen.PermissionFail;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 
 import java.lang.annotation.Annotation;
@@ -60,6 +61,8 @@ final public class PermissionUtil {
       return requestCode == m.getAnnotation(PermissionFail.class).requestCode();
     } else if(clazz.equals(PermissionSuccess.class)){
       return requestCode == m.getAnnotation(PermissionSuccess.class).requestCode();
+    }else if(clazz.equals(PermissionRationale.class)){
+      return requestCode == m.getAnnotation(PermissionRationale.class).requestCode();
     } else {
       return false;
     }

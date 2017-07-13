@@ -14,6 +14,8 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -30,6 +32,9 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
@@ -50,6 +55,9 @@ import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.ui.classroom2.RoomSession;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+
+import cn.xiaojs.xma.util.ToastUtil;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -118,6 +126,18 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         socketManager = SocketManager.getSocketManager(this);
         //init data
         initData();
+    }
+
+    @Keep
+    @PermissionRationale(requestCode = REQUEST_PERMISSION)
+    public void requestCameraRationale() {
+        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_camera_audio_room_tip));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
     }
 
     @Override
@@ -259,8 +279,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         registeNetwork();
 
         //grant permission
-        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.CAPTURE_AUDIO_OUTPUT,
-                Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS};
+        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
         PermissionGen.needPermission(this, REQUEST_PERMISSION, permissions);
 
         //二维码扫描进入教室，需要更新ticket.

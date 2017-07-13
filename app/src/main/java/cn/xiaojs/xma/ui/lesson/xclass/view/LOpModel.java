@@ -236,9 +236,6 @@ public class LOpModel {
         context.startActivity(intent);
     }
 
-    public static void share(Activity context){
-        ShareUtil.show(context,"标题test","test内容","https//baidu.com");
-    }
 
     public static void enterSchedule(Activity context,String classId,String title,boolean teaching){
         ClassScheduleActivity.invoke(context,classId,title,teaching);
@@ -516,13 +513,13 @@ public class LOpModel {
                 TimeUtil.TIME_YYYY_MM_DD_HH_MM);
 
         String name = "";
-        if (bean.teacher != null && bean.teacher.getBasic() != null) {
-            name = bean.teacher.getBasic().getName();
+        if (bean.teacher != null ) {
+            name = bean.teacher.name;
         }
 
-        String shareUrl = ApiManager.getShareLessonUrl(bean.id);
+        String shareUrl = ApiManager.getShareLessonUrl(bean.id,bean.type);
 
-        ShareUtil.show((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
+        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
     }
 
     //报名注册

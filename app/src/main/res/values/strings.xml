@@ -907,7 +907,7 @@
     <string name="living_back_to_talk_mode_title">当前为交流模式</string>
     <string name="living_back_to_talk_mode_sub">学生看不到你的视频,你可以和学生进行文字交流</string>
     <string name="offline_peer_to_peer_tips">该学生已下线，不能1对1视频哦～</string>
-    <string name="upload_support_error_tips">暂不支持此文件格式,目前只支持上传图片、PPT、视频文件</string>
+    <string name="upload_support_error_tips">暂不支持此文件格式,目前只支持上传图片、PPT、WROD、PDF、视频文件</string>
     <string name="live_occur_exception">抱歉，直播出现异常</string>
     <string name="teacher">老师</string>
     <string name="manager_session">机构管理</string>
@@ -932,5 +932,22 @@
     <string name="success_one2one">对方已接受您的视频邀请</string>
     <string name="join_class_suc_tip">你已经成功加入该班级，现在可以去与班级成员互动交流啦~</string>
     <string name="into_my_classes">查看我的班</string>
+    <string name="add_class_verification_msg2">验证消息</string>
+    <string name="add_class_verify_msg_tip">班主任需要验证您的身份，请输入您的验证信息</string>
+    <string name="create_class_exit_tip">您开的班未点“完成”，将不能生效，确定要退出吗？</string>
+    <string name="create_class_exit_tip2">您开的班资料未填写完，确定要退出吗？</string>
+    <string name="create_lesson_exit_tip">您开的课未点“完成”，将不能生效，确定要退出吗？</string>
+    <string name="create_lesson_exit_tip2">您开的课资料未填写完，确定要退出吗？</string>
+    <string name="exit">退出</string>
+    <string name="countine_input">继续填写</string>
+    <string name="exit_with_finish">完成并退出</string>
+    <string name="cant_join_yourself_class">不能加入自己创建的班</string>
+    <string name="go_to_authorization">去授权</string>
+    <string name="captcha_send_success">发送成功</string>
+    <string name="permission_rationale_tip">您已禁止小教室访问该功能的权限，需要开启对应权限才可使用该功能哦~</string>
+    <string name="permission_rationale_camera_tip">您已禁止小教室访问相机权限，需要开启相机权限才可使用该功能哦~</string>
+    <string name="permission_rationale_storage_tip">您已禁止小教室存储权限，需要开启存储权限才可使用该功能哦~</string>
+    <string name="permission_rationale_camera_audio_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用该功能哦~</string>
+    <string name="permission_rationale_camera_audio_room_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用教室内直播功能哦~</string>
 
 </resources>

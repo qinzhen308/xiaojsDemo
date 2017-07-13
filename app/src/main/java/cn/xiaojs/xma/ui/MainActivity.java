@@ -1,21 +1,15 @@
 package cn.xiaojs.xma.ui;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
+import android.support.annotation.Keep;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.kaola.qrcodescanner.qrcode.QrCodeActivity;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -25,7 +19,9 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
 import cn.xiaojs.xma.analytics.AnalyticEvents;
-import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
@@ -49,6 +45,7 @@ import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
+import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
 import cn.xiaojs.xma.util.MessageUitl;
@@ -483,6 +480,20 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 this.startActivity(i);
                 break;
         }
+
+    }
+
+    @Keep
+    @PermissionSuccess(requestCode = MainActivity.PERMISSION_CODE)
+    public void requestCameraSuccess() {
+        AnalyticEvents.onEvent(this,2);
+        startActivity(new Intent(this, ScanQrcodeActivity.class));
+    }
+
+    @Keep
+    @PermissionRationale(requestCode = MainActivity.PERMISSION_CODE)
+    public void requestCameraRationale() {
+        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_camera_tip));
 
     }
 

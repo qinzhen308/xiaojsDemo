@@ -123,6 +123,26 @@ public class Collaboration {
         return false;
 
     }
+    public static boolean isDoc(String mimeType) {
+        if (TextUtils.isEmpty(mimeType)) return false;
+
+        if (mimeType.equals(OfficeMimeTypes.DOC) || mimeType.equals(OfficeMimeTypes.DOCX)) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public static boolean isPDF(String mimeType) {
+        if (TextUtils.isEmpty(mimeType)) return false;
+
+        if (mimeType.equals(ApplicationMimeTypes.PDF) ) {
+            return true;
+        }
+        return false;
+
+    }
 
     public static boolean isStreaming(String mimeType) {
         if (TextUtils.isEmpty(mimeType)) return false;

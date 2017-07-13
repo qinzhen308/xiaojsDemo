@@ -18,6 +18,7 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -532,9 +533,9 @@ public class LiveTeachingClassAdapter extends CanInScrollviewListView.Adapter {
             name = bean.teacher.getBasic().getName();
         }
 
-        String shareUrl = ApiManager.getShareLessonUrl(bean.id);
+        String shareUrl = ApiManager.getShareLessonUrl(bean.id, Account.TypeName.STAND_ALONE_LESSON);
 
-        ShareUtil.show((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
+        ShareUtil.shareUrlByUmeng((Activity) mContext, bean.title, new StringBuilder(startTime).append("\r\n").append(name).toString(), shareUrl);
     }
 
     //报名注册

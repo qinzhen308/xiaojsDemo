@@ -42,6 +42,7 @@ import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.CriteriaStudents;
+import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
@@ -397,8 +398,8 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.JOIN_LESSON, call);
     }
 
-    public void joinClass(String classid) {
-        Call<ResponseBody> call = getService().joinClass(classid);
+    public void joinClass(String classid, JoinClassParams joinClassParams) {
+        Call<ResponseBody> call = getService().joinClass(classid,joinClassParams);
         enqueueRequest(APIType.JOIN_CLASS, call);
     }
 

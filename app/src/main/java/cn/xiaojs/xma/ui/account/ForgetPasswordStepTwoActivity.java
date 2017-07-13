@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.account;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -13,6 +14,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.SecurityManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 
@@ -40,6 +42,13 @@ public class ForgetPasswordStepTwoActivity extends BaseActivity {
     public final static String KEY_CODE = "key_code";
     private long mPhoneNum;
     private int mCode;
+    private boolean isModify=false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        isModify=getIntent().getBooleanExtra(ForgetPasswordStepOneActivity.EXTRA_IS_MODIFY,false);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void addViewContent() {
@@ -110,16 +119,26 @@ public class ForgetPasswordStepTwoActivity extends BaseActivity {
         SecurityManager.resetPassword(this, mPhoneNum, newPwd, mCode, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
-                Toast.makeText(ForgetPasswordStepTwoActivity.this, R.string.set_new_pwd_succ, Toast.LENGTH_SHORT).show();
-                finish();
-                Intent intent = new Intent(ForgetPasswordStepTwoActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if(isModify){
+                    Toast.makeText(ForgetPasswordStepTwoActivity.this, R.string.modify_pwd_succ, Toast.LENGTH_SHORT).show();
+                    MainActivity.invokeWithAction(ForgetPasswordStepTwoActivity.this,null);
+                }else {
+                    Toast.makeText(ForgetPasswordStepTwoActivity.this, R.string.set_new_pwd_succ, Toast.LENGTH_SHORT).show();
+                    finish();
+                    Intent intent = new Intent(ForgetPasswordStepTwoActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                Toast.makeText(ForgetPasswordStepTwoActivity.this, R.string.set_new_pwd_error, Toast.LENGTH_SHORT).show();
+                if(isModify) {
+                    Toast.makeText(ForgetPasswordStepTwoActivity.this, R.string.modify_pwd_fail, Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(ForgetPasswordStepTwoActivity.this, R.string.set_new_pwd_error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

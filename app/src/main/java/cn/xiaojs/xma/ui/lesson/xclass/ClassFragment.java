@@ -1,13 +1,20 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.TransitionDrawable;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
+import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewStub;
@@ -23,6 +30,11 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
+import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
@@ -121,9 +133,10 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener 
             case R.id.btn_scan:
                 if (PermissionUtil.isOverMarshmallow()
                         && ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+                    PermissionGen.needPermission(mContext ,MainActivity.PERMISSION_CODE,Manifest.permission.CAMERA);
 
                 } else {
+                    AnalyticEvents.onEvent(getActivity(),2);
                     startActivity(new Intent(mContext, ScanQrcodeActivity.class));
                 }
                 break;
@@ -152,7 +165,6 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener 
                 break;
         }
     }
-
 
 
     @Override
@@ -360,4 +372,6 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener 
         //未实现精准刷新，直接重新加载
         updateData();
     }
+
+
 }

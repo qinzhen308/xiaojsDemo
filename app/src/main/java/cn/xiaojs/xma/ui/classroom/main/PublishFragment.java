@@ -371,7 +371,6 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         mContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
         postHideAnim();
 
-
         if (mPublishType == CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER
                 && Live.LiveSessionState.FINISHED.equals(liveState)) {
             mTimeProgressHelper.mFullScreenTimeInfoTv.setVisibility(View.GONE);
