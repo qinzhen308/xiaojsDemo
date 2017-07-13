@@ -23,6 +23,8 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -46,7 +48,6 @@ import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.ClassroomType;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.ui.classroom2.RoomSession;
-import cn.xiaojs.xma.ui.classroom2.SessionListener;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import io.socket.client.IO;
@@ -97,7 +98,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                     break;
                 case MSG_CONNECT_ERROR:       //连接教室失败
                 case MSG_CONNECT_TIMEOUT:     //连接教室超时
-                    offSocket();
+
                     connectFailed("-1", "");
                     break;
                 case MSG_NETWORK_CHANGED:     //网络状态改变
@@ -126,14 +127,25 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         reset();
 
         //release
-        ClassroomController.getInstance().release();
-        LiveCtlSessionManager.getInstance().release();
-        ContactManager.getInstance().release();
-        TalkManager.getInstance().release();
+        if (ClassroomController.getInstance() != null) {
+            ClassroomController.getInstance().release();
+        }
+        if (ContactManager.getInstance() != null) {
+            ContactManager.getInstance().release();
+        }
+
+        if (TalkManager.getInstance() != null) {
+            TalkManager.getInstance().release();
+        }
+
 
         if (classroomEngine != null) {
             classroomEngine.destoryEngine();
         }
+
+        disConnectSocket();
+        socketManager = null;
+
 
     }
 
@@ -143,7 +155,6 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         }
 
         unRegisteNetwork();
-        offSocket();
     }
 
     @Override
@@ -153,8 +164,6 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        //FIXME 处理崩溃
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -170,7 +179,9 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 }
             }
             int backStackEntryCount = fragmentManager.getBackStackEntryCount();
-            if (backStackEntryCount < 1) {
+
+            if (backStackEntryCount < 1 && ClassroomController.getInstance() != null) {
+
                 if (ClassroomController.getInstance().getStackFragment() != null) {
                     ClassroomController.getInstance().onActivityBackPressed(backStackEntryCount);
                 } else {
@@ -196,26 +207,38 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
             @Override
             public void onSuccess(CtlSession session) {
 
-                tempSession = session;
-                //连接socket
-                connectSocket(ticket, session.secret);
+                try {
+                    tempSession = session;
+                    //连接socket
+
+                    connectSocket(ticket, session.secret, !session.accessible);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    handler.removeMessages(MSG_CONNECT_TIMEOUT);
+                    handler.removeMessages(MSG_CONNECT_ERROR);
+                    handler.sendEmptyMessage(MSG_CONNECT_ERROR);
+                }
+
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                //TODO
+                cancelProgress();
+                showConnectClassroom(errorMessage);
             }
         });
     }
 
 
-    private void connectSocket(String ticket, String secret) {
+    private void connectSocket(String ticket, String secret, boolean force) {
         String url = getClassroomUrl(ticket);
 
         handler.sendEmptyMessageDelayed(MSG_CONNECT_TIMEOUT, 10 * 1000);
 
         try {
-            socketManager.initSocket(url, buildOptions(secret));
+            socketManager.initSocket(url, buildOptions(secret, force));
             socketManager.on(Socket.EVENT_CONNECT, connectListener);
             socketManager.on(Socket.EVENT_DISCONNECT, disConnectListener);
             socketManager.on(Socket.EVENT_CONNECT_ERROR, errorListener);
@@ -223,7 +246,6 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
             socketManager.connect();
         } catch (Exception e) {
             e.printStackTrace();
-
             handler.removeMessages(MSG_CONNECT_TIMEOUT);
             handler.removeMessages(MSG_CONNECT_ERROR);
             handler.sendEmptyMessage(MSG_CONNECT_ERROR);
@@ -248,7 +270,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         }
 
         classroomEngine = ClassroomEngine.getEngine();
-        classroomEngine.init(this,ticket,new RoomSession(tempSession));
+        classroomEngine.init(this, ticket, new RoomSession(tempSession));
         classroomEngine.addEvenListener(this);
 
         String state = classroomEngine.getLiveState();
@@ -261,9 +283,6 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         CtlSession ctlSession = classroomEngine.getCtlSession();
 
         ClassroomController.init(this);
-
-        //FIXME 先保证不出错，之后要干掉LiveCtlSessionManager
-        LiveCtlSessionManager.getInstance().init(ctlSession, ticket);
 
 
         ContactManager.getInstance().init();
@@ -291,8 +310,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
     private void initFragment(CtlSession ctlSession) {
         //Fragment fragment = null;
-        Constants.UserMode mode = ClassroomBusiness.getUserByCtlSession(ctlSession);
-        if (mode == Constants.UserMode.TEACHING &&
+        if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
                 (Live.LiveSessionState.DELAY.equals(ctlSession.state) ||
                         Live.LiveSessionState.LIVE.equals(ctlSession.state))) {
             //teacher-->live, delay
@@ -369,7 +387,10 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 .toString();
     }
 
-    private IO.Options buildOptions(String secret) {
+    private IO.Options buildOptions(String secret, boolean force) {
+
+        String forceStr = force ? "true" : "false";
+
         IO.Options opts = new IO.Options();
         opts.query = new StringBuilder("secret=")
                 .append(secret)
@@ -378,8 +399,13 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 .append(",\"audio\":")
                 .append(true)
                 .append("}&forcibly=")
-                .append("true")
+                .append(forceStr)
                 .toString();
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("IO.Options query: " + opts.query);
+        }
+
         opts.timeout = 20 * 1000; //ms
         opts.transports = new String[]{"websocket"};
 
@@ -412,6 +438,13 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 @Override
                 public void onClick() {
                     mContinueConnectDialog.dismiss();
+
+                    ClassroomController classroomController = ClassroomController.getInstance();
+                    if (classroomController != null) {
+                        classroomController.exitWhenReConnect();
+                    }
+
+
                     initData();
                 }
             });
@@ -458,9 +491,9 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         mKickOutDialog.show();
     }
 
-    private void offSocket() {
+    private void disConnectSocket() {
         if (socketManager != null) {
-            socketManager.off();
+            socketManager.disConnect();
         }
     }
 
@@ -568,6 +601,13 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
     public void connectFailed(String errorCode, String errorMessage) {
         cancelProgress();
+
+        ClassroomController classroomController = ClassroomController.getInstance();
+        if (classroomController != null) {
+            classroomController.enterPlayFragment(null,true);
+        }
+
+        disConnectSocket();
         showConnectClassroom(null);
 
         if (XiaojsConfig.DEBUG) {

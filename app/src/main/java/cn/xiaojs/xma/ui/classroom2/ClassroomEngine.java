@@ -190,6 +190,9 @@ public class ClassroomEngine {
         return stateMachine.getSession().liveShow;
     }
 
+    public long getIndividualStreamDuration() {
+        return  stateMachine.getSession().individualStreamDuration;
+    }
 
 
     /**

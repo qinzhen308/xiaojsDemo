@@ -24,9 +24,9 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomPopupWindowLayout;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 
 public class LiveMenu extends PopupWindow {
@@ -53,7 +53,7 @@ public class LiveMenu extends PopupWindow {
 
     private void init(Context context, int gravity) {
         mContext = context;
-        mIsTeacher = LiveCtlSessionManager.getInstance().getUserMode() == Constants.UserMode.TEACHING;
+        mIsTeacher = ClassroomEngine.getEngine().getLiveMode() == Live.ClassroomMode.TEACHING;
         mRootView = LayoutInflater.from(mContext).inflate(R.layout.layout_live_menu, null);
         mScale = (ImageView) mRootView.findViewById(R.id.live_menu_scale);
         mAudio = (ImageView) mRootView.findViewById(R.id.live_menu_audio);

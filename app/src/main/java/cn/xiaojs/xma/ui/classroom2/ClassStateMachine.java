@@ -3,12 +3,12 @@ package cn.xiaojs.xma.ui.classroom2;
 import android.content.Context;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.statemachine.State;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.ClassResponse;
@@ -16,7 +16,6 @@ import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 
 /**
  * Created by maxiaobao on 2017/7/4.
@@ -25,14 +24,13 @@ import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 
 public class ClassStateMachine extends ClassroomStateMachine{
 
-    private State defaultState = new DefaultState();
     private State idleState = new IdleState();
     private State pending4LiveState = new Pending4LiveState();
+    private State scheduledState = new ScheduledState();
+    private State pending4JoinState = new Pending4JoinState();
     private State liveState = new LiveState();
     private State liveShowState = new LiveShowState();
 
-    private State pending4JoinState = new Pending4JoinState();
-    private State delayedState = new DelayedState();
 
 
 
@@ -45,12 +43,10 @@ public class ClassStateMachine extends ClassroomStateMachine{
     public void initStateTree() {
         addState(idleState);
         addState(pending4LiveState, idleState);
+        addState(scheduledState, idleState);
         addState(pending4JoinState,idleState);
         addState(liveShowState, idleState);
         addState(liveState, idleState);
-        addState(delayedState,liveState);
-
-
     }
 
     public void initialState() {
@@ -89,7 +85,9 @@ public class ClassStateMachine extends ClassroomStateMachine{
     protected boolean canIndividualByState() {
 
         String state = getLiveState();
-        if (Live.LiveSessionState.IDLE.equals(state)) {
+        if (Live.LiveSessionState.IDLE.equals(state)
+                || Live.LiveSessionState.SCHEDULED.equals(state)
+                || Live.LiveSessionState.FINISHED.equals(state)) {
             return true;
         }
 
@@ -124,6 +122,7 @@ public class ClassStateMachine extends ClassroomStateMachine{
 
     @Override
     protected void switchStateWhenReceiveSyncState(String state) {
+        super.switchStateWhenReceiveSyncState(state);
         transitionTo(getStateBySession(state));
     }
 
@@ -131,6 +130,10 @@ public class ClassStateMachine extends ClassroomStateMachine{
     protected void dealReceiveSyncClassState(SyncClassStateReceive syncState) {
         if (syncState == null)
             return;
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("SyncClassState...................");
+        }
 
         CtlSession ctlSession = getSession().ctlSession;
         ctlSession.cls.state = syncState.to;
@@ -170,12 +173,12 @@ public class ClassStateMachine extends ClassroomStateMachine{
         }
 
 
-        transitionTo(getStateBySession(getLiveState()));
+        transitionTo(getStateBySession(syncState.to));
 
     }
 
     private State getStateBySession(String sessionState) {
-        State state = defaultState;
+        State state = idleState;
         if (Live.LiveSessionState.IDLE.equals(sessionState)) {
             state = idleState;
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(sessionState)) {
@@ -184,8 +187,8 @@ public class ClassStateMachine extends ClassroomStateMachine{
             state = pending4LiveState;
         } else if (Live.LiveSessionState.LIVE.equals(sessionState)) {
             state = liveState;
-        } else if (Live.LiveSessionState.DELAY.equals(sessionState)) {
-            state = delayedState;
+        } else if (Live.LiveSessionState.SCHEDULED.equals(sessionState)) {
+            state = scheduledState;
         }
         return state;
     }
@@ -195,15 +198,21 @@ public class ClassStateMachine extends ClassroomStateMachine{
     //
     // 定义状态类
     //
-    class DefaultState extends State {
+    class IdleState extends State {
 
         @Override
-        public boolean processMessage(Message msg) {
-            return NOT_HANDLED;
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("enter IdleState...");
+            }
         }
-    }
 
-    class IdleState extends State {
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("eixt IdleState...");
+            }
+        }
 
         @Override
         public boolean processMessage(Message msg) {
@@ -211,6 +220,12 @@ public class ClassStateMachine extends ClassroomStateMachine{
             switch (msg.what) {
                 case CTLConstant.ClassChannel.ENTER_PENDING_4_LIVE_SATE:           //进入pending for live状态
                     transitionTo(pending4LiveState);
+                    return true;
+                case CTLConstant.ClassChannel.ENTER_SCHEDULED:                     //schdeule
+                    transitionTo(scheduledState);
+                    return true;
+                case CTLConstant.ClassChannel.JOIN_AVAILABLE:                      //进入pending for join
+                    transitionTo(pending4JoinState);
                     return true;
                 case CTLConstant.ClassChannel.START_LIVE_SHOW:                     //开始直播秀
                     ClaimReponse claimReponse = (ClaimReponse) msg.obj;
@@ -230,10 +245,69 @@ public class ClassStateMachine extends ClassroomStateMachine{
     class Pending4LiveState extends State {
 
         @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("enter Pending4LiveState...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("eixt Pending4LiveState...");
+            }
+        }
+
+        @Override
         public boolean processMessage(Message msg) {
 
             switch (msg.what) {
                 case CTLConstant.ClassChannel.JOIN_AVAILABLE:                      //进入pending for join状态
+                    transitionTo(pending4JoinState);
+                    return true;
+                case CTLConstant.ClassChannel.START_LIVE_SHOW:                     //开始直播秀
+                {
+                    ClaimReponse claimReponse = (ClaimReponse) msg.obj;
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = claimReponse.publishUrl;
+                    ctlSession.finishOn = claimReponse.finishOn;
+                    transitionTo(liveShowState);
+                    return HANDLED;
+                }
+                case CTLConstant.StandloneChannel.START_LESSON:                        //开始上课
+                    ClassResponse response = (ClassResponse) msg.obj;
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = response.publishUrl;
+                    ctlSession.state = Live.LiveSessionState.LIVE;
+                    transitionTo(liveState);
+                    return HANDLED;
+            }
+
+            return NOT_HANDLED;
+        }
+    }
+
+    class ScheduledState extends State {
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("enter ScheduledState...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("exit ScheduledState...");
+            }
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+
+            switch (msg.what) {
+                case CTLConstant.ClassChannel.JOIN_AVAILABLE:                      //进入pending for jion状态
                     transitionTo(pending4JoinState);
                     return true;
                 case CTLConstant.ClassChannel.START_LIVE_SHOW:                     //开始直播秀
@@ -249,17 +323,64 @@ public class ClassStateMachine extends ClassroomStateMachine{
         }
     }
 
-    class LiveState extends State {
+
+    class Pending4JoinState extends State {
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("enter Pending4JoinState...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("eixt Pending4JoinState...");
+            }
+        }
 
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
-                case CTLConstant.ClassChannel.DELAY_LESSON:                       //拖堂
-                    transitionTo(delayedState);
+                case CTLConstant.StandloneChannel.START_LESSON:                        //开始上课
+                    ClassResponse response = (ClassResponse) msg.obj;
+                    CtlSession ctlSession = getSession().ctlSession;
+                    ctlSession.publishUrl = response.publishUrl;
+                    ctlSession.state = Live.LiveSessionState.LIVE;
+                    transitionTo(liveState);
                     return HANDLED;
+            }
+            return NOT_HANDLED;
+        }
+    }
+
+
+    class LiveState extends State {
+
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("enter LiveState...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("eixt LiveState...");
+            }
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            switch (msg.what) {
                 case CTLConstant.ClassChannel.FINISH_LESSON:                      //下课
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = null;
+                    //如果下课，相应的1对1播放地址也要重制为空
+                    ctlSession.playUrl = "";
                     //TODO 处理csOfCurrent
                     //TODO 回到Pending4Live、IDLE。。。。。
                     transitionTo(getStateBySession(getLiveState()));
@@ -301,41 +422,10 @@ public class ClassStateMachine extends ClassroomStateMachine{
                     }
                     RoomSession session = getSession();
                     session.ctlSession.publishUrl = "";
+                    //如果停止直播秀，相应的1对1播放地址也要重制为空
+                    session.ctlSession.playUrl = "";
                     session.ctlSession.finishOn = 0;
                     //回到之前状态
-                    transitionTo(getStateBySession(getLiveState()));
-                    return HANDLED;
-            }
-            return NOT_HANDLED;
-        }
-    }
-
-
-    class Pending4JoinState extends State {
-        @Override
-        public boolean processMessage(Message msg) {
-            switch (msg.what) {
-                case CTLConstant.StandloneChannel.START_LESSON:                        //开始上课
-                    ClassResponse response = (ClassResponse) msg.obj;
-                    CtlSession ctlSession = getSession().ctlSession;
-                    ctlSession.publishUrl = response.publishUrl;
-                    ctlSession.state = Live.LiveSessionState.LIVE;
-                    transitionTo(liveState);
-                    return HANDLED;
-            }
-            return NOT_HANDLED;
-        }
-    }
-
-    class DelayedState extends State {
-        @Override
-        public boolean processMessage(Message msg) {
-            switch (msg.what) {
-                case CTLConstant.StandloneChannel.FINISH_LESSON:                        //下课
-                    CtlSession ctlSession = getSession().ctlSession;
-                    ctlSession.publishUrl = null;
-                    //TODO 处理csOfCurrent
-                    //TODO 回到Pending4Live、IDLE。。。。。
                     transitionTo(getStateBySession(getLiveState()));
                     return HANDLED;
             }

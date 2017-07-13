@@ -25,7 +25,8 @@ import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.ClassroomType;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -59,7 +60,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
     private CommonDialog mDelDocDialog;
     private String mMyAccountId;
     private String mLessonId;
-    private Constants.ClassroomType mClassroomType;
+    private ClassroomType mClassroomType;
 
     public DocumentAdapter(Context context, PullToRefreshSwipeListView listView,String lessonId, String ownerId, String type, List<LibDoc> data) {
         super(context, listView, data);
@@ -101,7 +102,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         drawSize = mContext.getResources().getDimensionPixelSize(R.dimen.px40);
         mMyAccountId = AccountDataManager.getAccountID(mContext);
 
-        mClassroomType = LiveCtlSessionManager.getInstance().getClassroomType();
+        mClassroomType = ClassroomEngine.getEngine().getClassroomType();
     }
 
     public List<LibDoc> getData() {
@@ -254,7 +255,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
                     ShareResource shareResource = new ShareResource();
                     shareResource.targetId = mLessonId;
 
-                    String subtype = Constants.ClassroomType.PrivateClass.equals(mClassroomType)?
+                    String subtype = ClassroomType.ClassLesson == mClassroomType ?
                             Collaboration.SubType.PRIVATE_CLASS : Collaboration.SubType.STANDA_LONE_LESSON;
 
                     shareResource.subtype = subtype;

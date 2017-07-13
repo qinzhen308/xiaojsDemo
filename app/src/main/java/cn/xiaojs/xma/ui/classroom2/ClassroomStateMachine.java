@@ -211,6 +211,12 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     protected void switchStateWhenReceiveSyncState(String state) {
 
+        if(Live.LiveSessionState.FINISHED.equals(state)) {
+            getSession().ctlSession.publishUrl = null;
+            getSession().ctlSession.playUrl = null;
+        }
+
+
     }
 
     protected void dealReceiveSyncClassState(SyncClassStateReceive message) {
@@ -256,6 +262,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
     }
 
     protected void streamStopped(String event, StreamStopReceive message){
+        Logger.d("receive streamStopped*********************************");
         if (message == null) {
             return;
         }
@@ -270,9 +277,11 @@ public abstract class ClassroomStateMachine extends StateMachine {
             ctlSession.streamType = Live.StreamType.NONE;
             ctlSession.claimedBy = null;
 
+            //FIXME del?
             stopPlayLiveShow();
         } else if (message.streamType == Live.StreamType.LIVE) {
-            //TODO 处理上课的推流
+            //FIXME del? 处理上课的推流
+            finishLesson(null);
         }
 
         notifyEvent(event, message);
@@ -292,9 +301,13 @@ public abstract class ClassroomStateMachine extends StateMachine {
         ctlSession.claimedBy = message.claimedBy;
 
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
+
+            roomSession.individualStreamDuration = message.finishOn;
+
+            //FIXME del?
             startPlayLiveShow();
         } else if (message.streamType == Live.StreamType.LIVE) {
-            //TODO 处理上课的推流
+
         }
 
         notifyEvent(event, message);
@@ -330,6 +343,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
             stopLiveShow();
         }else if (message.streamType == Live.StreamType.LIVE) {
             //TODO 处理上课的推流
+            finishLesson(null);
         }
 
         notifyEvent(event, message);
@@ -417,8 +431,10 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
         if (message.status == Live.MediaStatus.READY) {
             getSession().ctlSession.playUrl = message.playUrl;
+            getSession().one2one = true;
         }else {
             getSession().ctlSession.playUrl = null;
+            getSession().one2one = false;
         }
 
         notifyEvent(event, message);

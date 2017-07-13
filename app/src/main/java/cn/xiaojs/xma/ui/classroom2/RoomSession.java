@@ -16,6 +16,8 @@ public class RoomSession {
     protected boolean one2one;
     protected String csOfCurrent;
 
+    protected long individualStreamDuration;     //直播秀时间
+
     protected CtlSession ctlSession;             //当前教室的状态值
 
     public RoomSession(CtlSession session) {

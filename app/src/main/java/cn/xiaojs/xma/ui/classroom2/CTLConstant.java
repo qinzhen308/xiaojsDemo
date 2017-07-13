@@ -35,8 +35,8 @@ public class CTLConstant {
     }
 
     public static class ClassChannel extends BaseChannel{
-        public static final int DELAY_LESSON = 0x200001;             //课拖堂
-        public static final int ENTER_PENDING_4_LIVE_SATE = 0x200002;//进入peng4live状态
+        public static final int ENTER_PENDING_4_LIVE_SATE = 0x200001;//进入peng4live状态
+        public static final int ENTER_SCHEDULED = 0x200002;          //进入scheduled状态
 
     }
 

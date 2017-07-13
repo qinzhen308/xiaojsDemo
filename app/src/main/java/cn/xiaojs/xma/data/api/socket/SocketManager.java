@@ -58,7 +58,8 @@ public class SocketManager {
     public void disConnect() {
         if (socket != null) {
             socket.off();
-            socket.close();
+            socket.disconnect();
+            socket = null;
         }
     }
 

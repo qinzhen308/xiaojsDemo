@@ -53,6 +53,7 @@ import cn.xiaojs.xma.ui.classroom.talk.ContactFragment;
 import cn.xiaojs.xma.ui.classroom.talk.SlideTalkFragment;
 import cn.xiaojs.xma.ui.classroom.talk.SlidingTalkDialogFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.MaterialUtil;
@@ -365,6 +366,16 @@ public class ClassroomController {
         }
     }
 
+
+    public void exitWhenReConnect() {
+        if (mCurrStackFragment instanceof PlayFragment) {
+            ((ClassroomActivity) mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(mCurrStackFragment)
+                    .commit();
+        }
+    }
+
     /**
      * 进入播放fragment
      */
@@ -431,7 +442,7 @@ public class ClassroomController {
      */
     public void enterClassCanlenderFragment(Fragment target) {
 
-        String classId = LiveCtlSessionManager.getInstance().getCtlSession().cls.id;
+        String classId = ClassroomEngine.getEngine().getCtlSession().cls.id;
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.KEY_CLASS_ID, classId);
@@ -530,48 +541,6 @@ public class ClassroomController {
     public void unregisterBackPressListener(BackPressListener listener) {
         if (listener != null) {
             mBackPressListeners.remove(listener);
-        }
-    }
-
-    /**
-     * 注册socket的连接监听器
-     */
-    public void registerSocketConnectListener(SocketManager.OnSocketListener listener) {
-        if (listener != null) {
-            mOnSocketListeners.add(listener);
-        }
-    }
-
-    /**
-     * 解注socket的连接监听器
-     */
-    public void unregisterSocketConnectListener(SocketManager.OnSocketListener listener) {
-        if (listener != null) {
-            mOnSocketListeners.remove(listener);
-        }
-    }
-
-    /**
-     * 通知socket连接变换
-     */
-    public void notifySocketConnectChanged(boolean connected) {
-        mSocketConnected = connected;
-        if (mOnSocketListeners != null) {
-            for (SocketManager.OnSocketListener listener : mOnSocketListeners) {
-                listener.onSocketConnectChanged(connected);
-            }
-        }
-    }
-
-    /**
-     * 退出栈中的fragment
-     */
-    public void exitStackFragment() {
-        if (mCurrStackFragment != null) {
-            ((ClassroomActivity) mContext).getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(mCurrStackFragment)
-                    .commit();
         }
     }
 

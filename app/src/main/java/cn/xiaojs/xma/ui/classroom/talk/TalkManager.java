@@ -39,10 +39,6 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
-import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
 

@@ -25,12 +25,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
@@ -151,60 +146,12 @@ public class PlayVideoController extends VideoController implements EventListene
                 return;
             }
             pausePlayStream(mPlayType);
-        }
-//        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event)
-//                || Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION).equals(event)) {
-//            if (object == null) {
-//                return;
-//            }
-//            pausePublishStream(mPublishType);
-//        }
-    }
-
-    @Override
-    protected void onStreamingStarted(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
-            if (startedNotify != null) {
-                int type = CTLConstant.StreamingType.PLAY_LIVE;
-                String state = ClassroomEngine.getEngine().getLiveState();
-                if (Live.LiveSessionState.LIVE.equals(state)
-                        || Live.LiveSessionState.PENDING_FOR_JOIN.equals(state)
-                        || Live.LiveSessionState.PENDING_FOR_LIVE.equals(state)) {
-                    type = CTLConstant.StreamingType.PLAY_LIVE;
-                } else if (ClassroomBusiness.canIndividualByState(state)) {
-                    type = CTLConstant.StreamingType.PLAY_INDIVIDUAL;
-                }
-                playStream(type, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event)
+                || Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION).equals(event)) {
+            if (object == null) {
+                return;
             }
-        }
-    }
-
-    @Override
-    protected void onStreamingStopped(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
-            if (notify != null) {
-                pausePlayStream(mPlayType);
-            }
-        }
-    }
-
-    protected void onStreamingStoppedByExpired(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingExpirationNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingExpirationNotify.class);
-            if (notify != null) {
-                pausePublishStream(mPublishType);
-            }
-        }
-    }
-
-    protected void onStreamingReclaimed(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
-            if (notify != null) {
-                pausePublishStream(mPublishType);
-            }
+            pausePublishStream(mPublishType);
         }
     }
 

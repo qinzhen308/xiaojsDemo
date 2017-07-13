@@ -37,6 +37,7 @@ public class RoomRequest {
         EventManager.claimStreaming(context, mode, new EventCallback<ClaimReponse>() {
             @Override
             public void onSuccess(ClaimReponse claimReponse) {
+                stateMachine.getSession().individualStreamDuration = claimReponse.finishOn;
                 stateMachine.startLiveShow(claimReponse);
                 callback.onSuccess(claimReponse);
             }
@@ -67,6 +68,7 @@ public class RoomRequest {
                               final EventCallback<StreamStoppedResponse> callback) {
 
         if (streamType == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL) {
+            stateMachine.getSession().individualStreamDuration = 0;
             stateMachine.stopLiveShow();
         }
 

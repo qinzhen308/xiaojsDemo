@@ -17,11 +17,8 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 
@@ -57,8 +54,8 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
     @BindView(R.id.msg_send)
     TextView mSendBtn;
 
-    private Constants.UserMode mUserMode;
-    private String mTicket;
+    //private Constants.UserMode mUserMode;
+    //private String mTicket;
 
     private TalkPresenter mTalkPresenter;
     private Attendee mAttendee;
@@ -74,12 +71,12 @@ public class SlidingTalkDialogFragment extends SheetFragment implements View.OnC
         if (data != null) {
             CtlSession session = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
             if (session != null) {
-                mUserMode = ClassroomBusiness.getUserByCtlSession(session);
+                //mUserMode = ClassroomBusiness.getUserByCtlSession(session);
             }
             mAttendee = (Attendee) data.getSerializable(Constants.KEY_TALK_ATTEND);
         }
 
-        mTicket = ClassroomEngine.getEngine().getTicket();
+       // mTicket = ClassroomEngine.getEngine().getTicket();
     }
 
     @Override

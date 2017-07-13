@@ -116,6 +116,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
     private String peerAccountId;
 
+    protected long individualStreamDuration;
+
 
 
     @Override
@@ -125,7 +127,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         TalkManager.getInstance().registerMsgReceiveListener(this);
         ClassroomController.getInstance().setStackFragment(this);
         ClassroomController.getInstance().registerBackPressListener(this);
-        ClassroomController.getInstance().registerSocketConnectListener(this);
     }
 
     @Override
@@ -135,7 +136,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         ClassroomController.getInstance().setStackFragment(null);
         ClassroomController.getInstance().unregisterBackPressListener(this);
         TalkManager.getInstance().unregisterMsgReceiveListener(this);
-        ClassroomController.getInstance().unregisterSocketConnectListener(this);
     }
 
     @Override
@@ -158,14 +158,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         mClassroomController = ClassroomController.getInstance();
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
-
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE), mSyncClassStateListener);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION), mReceivedRemind);
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY), mReceivedStreamingQuality);
     }
 
     /**
@@ -346,107 +338,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         mAgreeOpenCamera.show();
     }
 
-    private SocketManager.EventListener mSyncStateListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.SYNC_STATE**");
-            }
-
-            if (args != null && args.length > 0) {
-                SyncStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncStateResponse.class);
-                if (syncState != null) {
-                    onSyncStateChanged(syncState);
-                }
-            }
-        }
-    };
-
-    private SocketManager.EventListener mSyncClassStateListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.SYNC_CLASS_STATE**");
-            }
-
-            if (args != null && args.length > 0) {
-                SyncClassStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncClassStateResponse.class);
-                if (syncState != null) {
-                    onSyncClassStateChanged(syncState);
-                }
-            }
-        }
-    };
-
-    /**
-     * 一对一
-     */
-    private SocketManager.EventListener mReceiveOpenMedia = new SocketManager.EventListener() {
-        @Override
-        public void call(final Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.OPEN_MEDIA**");
-            }
-
-
-        }
-    };
-
-
-    private SocketManager.EventListener mReceiveMediaAborted = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.MEDIA_ABORTED**");
-            }
-
-            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
-        }
-    };
-
-    private SocketManager.EventListener mReceiveMediaClosed = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.CLOSE_MEDIA**");
-            }
-
-            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
-        }
-    };
-
-    private SocketManager.EventListener mReceivedRemind = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.REMIND_FINALIZATION**");
-            }
-
-        }
-    };
-
-    private SocketManager.EventListener mReceivedStreamingQuality = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.REFRESH_STREAMING_QUALITY**");
-            }
-
-            if (args != null && args.length > 0) {
-                StreamingQuality streamingQuality = ClassroomBusiness.parseSocketBean(args[0],
-                        StreamingQuality.class);
-
-                onStreamingQualityChanged(streamingQuality);
-            }
-
-        }
-    };
 
     /**
      * 申请打开学生视频
@@ -641,13 +532,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             mFullScreenTalkPresenter.release();
         }
 
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE), mSyncStateListener);
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE), mSyncClassStateListener);
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA), mReceiveOpenMedia);
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED), mReceiveMediaAborted);
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA), mReceiveMediaClosed);
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION), mReceivedRemind);
-        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY), mReceivedStreamingQuality);
     }
 
     /**
@@ -683,9 +567,6 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
     protected abstract void initData();
 
-    protected abstract void onSyncStateChanged(SyncStateResponse syncState);
-
-    protected abstract void onSyncClassStateChanged(SyncClassStateResponse syncState);
 
     public void playStream(String url) {
 

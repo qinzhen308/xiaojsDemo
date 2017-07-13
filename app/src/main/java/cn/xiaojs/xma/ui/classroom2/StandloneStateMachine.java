@@ -107,6 +107,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
 
     @Override
     protected void switchStateWhenReceiveSyncState(String state) {
+        super.switchStateWhenReceiveSyncState(state);
         transitionTo(getStateBySession(state));
     }
 
@@ -221,12 +222,15 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.state = Live.LiveSessionState.RESET;
                     ctlSession.publishUrl = null;
+                    ctlSession.playUrl = null;
                     transitionTo(restState);
                     return HANDLED;
                 }
                 case StandloneChannel.FINISH_LESSON:                      //下课
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = null;
+                    //如果下课，相应的1对1播放地址也要重制为空
+                    ctlSession.playUrl = "";
                     ctlSession.state = Live.LiveSessionState.FINISHED;
                     //TODO 处理csOfCurrent
                     transitionTo(finishState);
@@ -243,7 +247,10 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case StandloneChannel.FINISH_LESSON:                        //下课
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = null;
+                    //如果下课，相应的1对1播放地址也要重制为空
+                    ctlSession.playUrl = "";
                     ctlSession.state = Live.LiveSessionState.FINISHED;
+
                     //TODO 处理csOfCurrent
                     transitionTo(finishState);
                     return HANDLED;
@@ -336,6 +343,8 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                     }
                     RoomSession session = getSession();
                     session.ctlSession.publishUrl = "";
+                    //如果停止直播秀，相应的1对1播放地址也要重制为空
+                    session.ctlSession.playUrl = "";
                     session.ctlSession.finishOn = 0;
                     //回到之前状态
                     transitionTo(getStateBySession(getLiveState()));
@@ -344,4 +353,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
             return NOT_HANDLED;
         }
     }
+
+
+
 }

@@ -20,6 +20,8 @@ import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -58,7 +60,7 @@ public class TimeProgressHelper {
         mTitleBarTimeInfoTv = timeInfoView;
         mFullScreenTimeInfoTv = (TextView) timeStatusBar.findViewById(R.id.count_down_time);
         mLiveShowTv = (TextView) timeStatusBar.findViewById(R.id.live_show);
-        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        CtlSession session = ClassroomEngine.getEngine().getCtlSession();
         //TODO get duration
         mLessonDuration = (session != null && session.ctl != null) ? session.ctl.duration : 0;
 
@@ -79,20 +81,23 @@ public class TimeProgressHelper {
 
 
     public void reloadLessonDuration() {
-        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        CtlSession session = ClassroomEngine.getEngine().getCtlSession();
         mLessonDuration = session.ctl != null ? session.ctl.duration : 0;
     }
 
 
     public void setTimeProgress(long countTime, String liveState) {
+        Logger.d("*****************************f3");
         setTimeProgress(countTime, 0, liveState, null, null, true);
     }
 
     public void setTimeProgress(long countTime, String liveState, boolean play) {
+        Logger.d("*****************************f2");
         setTimeProgress(countTime, 0, liveState, null, null, play);
     }
 
     public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, boolean play) {
+        Logger.d("*****************************f1");
         setTimeProgress(countTime, individualDuration, liveState, extra, null, play);
     }
 
@@ -101,6 +106,9 @@ public class TimeProgressHelper {
         if (mHandler == null) {
             return;
         }
+
+        Logger.d("time progress set:individualDuration:"+ individualDuration);
+
 
         int type = getTypeByState(liveState, individualDuration);
         mLiveShowTv.setVisibility(type == TYPE_LIVE_INDIVIDUAL ? View.VISIBLE : View.GONE);

@@ -103,11 +103,6 @@ public abstract class VideoController implements StreamConfirmCallback{
 
         onResume();
 
-        //监听流开始或暂停
-//        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
-//        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
-//        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLAIM_STREAMING), mStreamReclaimedListener);
-//        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION), mStreamStopByExpirationListener);
     }
 
 
@@ -167,10 +162,6 @@ public abstract class VideoController implements StreamConfirmCallback{
     }
 
     protected void offSocketListener() {
-//        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED), mStreamingStartedListener);
-//        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED), mStreamingStoppedListener);
-//        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLAIM_STREAMING), mStreamReclaimedListener);
-//        SocketManager.off(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION), mStreamStopByExpirationListener);
     }
 
     /**
@@ -335,56 +326,6 @@ public abstract class VideoController implements StreamConfirmCallback{
             mHandler.removeCallbacksAndMessages(null);
         }
     }
-
-    private SocketManager.EventListener mStreamingStartedListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.STREAMING_STARTED**");
-            }
-
-            onStreamingStarted(args);
-        }
-    };
-
-    private SocketManager.EventListener mStreamingStoppedListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.STREAMING_STOPPED**");
-            }
-            onStreamingStopped(args);
-        }
-    };
-
-    private SocketManager.EventListener mStreamReclaimedListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.CLAIM_STREAMING**");
-            }
-            onStreamingReclaimed(args);
-        }
-    };
-
-    private SocketManager.EventListener mStreamStopByExpirationListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.STOP_STREAM_BY_EXPIRATION**");
-            }
-            onStreamingStoppedByExpired(args);
-        }
-    };
-
-    protected abstract void onStreamingStarted(Object... args);
-
-    protected abstract void onStreamingStopped(Object... args);
-
-    protected abstract void onStreamingStoppedByExpired(Object... args);
-
-    protected abstract void onStreamingReclaimed(Object... args);
 
     /**
      * @return 是否是流在使用，播放流和推送流

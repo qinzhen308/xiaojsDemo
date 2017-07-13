@@ -20,15 +20,15 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.AdapterWrapper;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
-import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.ClassroomType;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -79,7 +79,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
     private String mLessonId;
     private String mMyAccountId;
 
-    private Constants.ClassroomType mClassroomType;
+    private ClassroomType mClassroomType;
 
     @Override
     protected View getContentView() {
@@ -133,7 +133,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
 
     private void initData() {
 
-        mClassroomType = LiveCtlSessionManager.getInstance().getClassroomType();
+        mClassroomType = ClassroomEngine.getEngine().getClassroomType();
 
         mTempData = new ArrayList<LibDoc>();
         Bundle data = null;
@@ -141,7 +141,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
             //mLessonId = getArguments().getString(Constants.KEY_LESSON_ID);
             CtlSession session = (CtlSession) data.getSerializable(Constants.KEY_CTL_SESSION);
 
-            if (mClassroomType == Constants.ClassroomType.PrivateClass) {
+            if (mClassroomType == ClassroomType.ClassLesson) {
                 mLessonId = session != null && session.cls != null ? session.cls.id : "";
             } else {
                 mLessonId = session != null && session.ctl != null ? session.ctl.id : "";
@@ -181,7 +181,7 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         mClassDocumentTv.setTextColor(getResources().getColor(R.color.font_white));
 
         if (mClassDocumentAdapter == null) {
-            if (mClassroomType == Constants.ClassroomType.PrivateClass) {
+            if (mClassroomType == ClassroomType.ClassLesson) {
                 mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.PRIVATE_CLASS);
             } else {
                 mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.STANDA_LONE_LESSON);

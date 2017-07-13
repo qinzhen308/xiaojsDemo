@@ -23,7 +23,6 @@ import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 

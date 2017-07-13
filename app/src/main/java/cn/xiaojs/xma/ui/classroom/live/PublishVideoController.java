@@ -30,29 +30,21 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
-import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
-import cn.xiaojs.xma.ui.classroom.bean.FeedbackStatus;
-import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
-import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingExpirationNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingNotify;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStartedNotify;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingStoppedNotify;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
-import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
@@ -145,21 +137,31 @@ public class PublishVideoController extends VideoController implements EventList
                         //TODO 学生关闭一对一流后，需要通知老师端，老师端1对1窗口要关闭
 //                        OpenMedia media = new OpenMedia();
 //                        media.to = AccountDataManager.getAccountID(mContext);
-                        SocketManager.emit(Event.getEventSignature(Su.EventCategory.CLASSROOM, Su.EventType.CLOSE_MEDIA),
-                                new SocketManager.IAckListener() {
-                                    @Override
-                                    public void call(Object... args) {
-                                        if (args != null && args.length > 0) {
-                                            StreamingResponse response = ClassroomBusiness.parseSocketBean(args[0], StreamingResponse.class);
-                                            if (response.result) {
-                                                mNeedStreamRePublishing = true;
-                                                if (mStreamChangeListener != null) {
-                                                    mStreamChangeListener.onStreamStopped(type, null);
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
+
+                        ClassroomEngine.getEngine().closeMedia(null, new EventCallback<CloseMediaResponse>() {
+                            @Override
+                            public void onSuccess(CloseMediaResponse closeMediaResponse) {
+                                mNeedStreamRePublishing = true;
+                                if (mStreamChangeListener != null) {
+                                    mStreamChangeListener.onStreamStopped(type, null);
+                                }
+                            }
+
+                            @Override
+                            public void onFailed(String errorCode, String errorMessage) {
+
+                                if (XiaojsConfig.DEBUG) {
+                                    Logger.d("close media failed");
+                                }
+
+                                //失败了也要执行退出操作
+                                mNeedStreamRePublishing = true;
+                                if (mStreamChangeListener != null) {
+                                    mStreamChangeListener.onStreamStopped(type, null);
+                                }
+
+                            }
+                        });
                     } else {
                         //send stopped stream
                         String csofCurrent = ClassroomEngine.getEngine().getCsOfCurrent();
@@ -333,17 +335,23 @@ public class PublishVideoController extends VideoController implements EventList
 
         } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED).equals(event)) {
 
+            Logger.d("STREAMING_STOPPED************************你妈");
             if (object == null) {
                 return;
             }
 
+            Logger.d("STREAMING_STOPPED********************************000");
+
             StreamStopReceive receive = (StreamStopReceive) object;
             if (receive.streamType == Live.StreamType.INDIVIDUAL) {
+
+                Logger.d("STREAMING_STOPPED********************************0001");
                 //老师端的推流将学生端的个人推流，强制挤掉。
                 if (mStreamChangeListener != null) {
                     mStreamChangeListener.onStreamStopped(CTLConstant.StreamingType.PUBLISH_INDIVIDUAL, null);
                 }
             } else {
+                Logger.d("STREAMING_STOPPED********************************0002");
                 pausePlayStream(mPlayType);
             }
 
@@ -391,64 +399,6 @@ public class PublishVideoController extends VideoController implements EventList
         }
     }
 
-    @Override
-    protected void onStreamingStarted(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingStartedNotify startedNotify = ClassroomBusiness.parseSocketBean(args[0], StreamingStartedNotify.class);
-            if (startedNotify != null) {
-                mPlayStreamUrl = startedNotify.RTMPPlayUrl;
-                mExtraData = startedNotify.finishOn;
-                playStream(CTLConstant.StreamingType.PLAY_INDIVIDUAL, startedNotify.RTMPPlayUrl, startedNotify.finishOn);
-            }
-        }
-    }
-
-    @Override
-    protected void onStreamingStopped(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingStoppedNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingStoppedNotify.class);
-            if (notify != null) {
-                if (notify.streamType == Live.StreamType.INDIVIDUAL) {
-                    //老师端的推流将学生端的个人推流，强制挤掉。
-                    if (mStreamChangeListener != null) {
-                        mStreamChangeListener.onStreamStopped(CTLConstant.StreamingType.PUBLISH_INDIVIDUAL, null);
-                    }
-                } else {
-                    pausePlayStream(mPlayType);
-                }
-            }
-        }
-    }
-
-    protected void onStreamingStoppedByExpired(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingExpirationNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingExpirationNotify.class);
-            if (notify != null) {
-                //pausePublishStream(mPublishType);
-                if (mStreamChangeListener != null) {
-                    mStreamChangeListener.onStreamStopped(mPublishType, STREAM_EXPIRED);
-                }
-                mStreamPublishing = false;
-                mPublishView.pause();
-                mPublishView.setVisibility(View.GONE);
-
-                if (mPlayView.getVisibility() == View.VISIBLE) {
-                    mPlayView.pause();
-                    mPlayView.setVisibility(View.GONE);
-                }
-
-            }
-        }
-    }
-
-    protected void onStreamingReclaimed(Object... args) {
-        if (args != null && args.length > 0) {
-            StreamingNotify notify = ClassroomBusiness.parseSocketBean(args[0], StreamingNotify.class);
-            if (notify != null) {
-                pausePublishStream(mPublishType);
-            }
-        }
-    }
 
     @Override
     public void openOrCloseCamera() {

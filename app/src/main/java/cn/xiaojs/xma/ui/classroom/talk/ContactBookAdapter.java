@@ -30,17 +30,11 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.internal.ListenerClass;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -54,7 +48,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
     private LiveCollection<Attendee> mLiveCollection;
     private ArrayList<Attendee> mAttendeeList;
     private int mOffset;
-    private Constants.UserMode mUser;
+    private int mUser;
     private ColorMatrixColorFilter mGrayFilter;
     private ColorMatrixColorFilter mNormalFilter;
     private int mSize = 90;
@@ -63,7 +57,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         mContext = context;
         mChoiceList = new ArrayList<String>();
         mOffset = context.getResources().getDimensionPixelOffset(R.dimen.px5);
-        mUser = LiveCtlSessionManager.getInstance().getUserMode();
+        mUser = ClassroomEngine.getEngine().getLiveMode();
         mSize = mContext.getResources().getDimensionPixelSize(R.dimen.px90);
 
         initColorFilter();
@@ -184,7 +178,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
         if (Live.LiveSessionState.LIVE.equals(liveState) || Live.LiveSessionState.DELAY.equals(liveState)) {//上课中或者拖堂
 
             if (!mContactManagementMode
-                    && mUser == Constants.UserMode.TEACHING
+                    && mUser == Live.ClassroomMode.TEACHING
                     && (classroomEngine.getIdentity() == CTLConstant.UserIdentity.LEAD)//上课中只有主讲才能主动发1对1
                     && (userInLesson == CTLConstant.UserIdentity.STUDENT || user == CTLConstant.UserIdentity.STUDENT)
                     && !isMyself
@@ -310,7 +304,7 @@ public class ContactBookAdapter extends BaseAdapter implements View.OnClickListe
                     mChoiceList.add(choice);
                 }
             } else {
-                String liveState = LiveCtlSessionManager.getInstance().getLiveState();
+                String liveState = ClassroomEngine.getEngine().getLiveState();
                 Attendee attendee = mAttendeeList.get(pos);
                 if (mOnAttendItemClick != null) {
                     CTLConstant.UserIdentity user = ClassroomEngine.getEngine().getUserIdentity(attendee.psType);

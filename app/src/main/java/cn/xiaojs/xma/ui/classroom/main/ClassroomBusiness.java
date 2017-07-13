@@ -238,7 +238,7 @@ public class ClassroomBusiness {
 
     public static long getCountTimeByCtlSession() {
         long countTime = 0;
-        CtlSession session = LiveCtlSessionManager.getInstance().getCtlSession();
+        CtlSession session = ClassroomEngine.getEngine().getCtlSession();
         if (Live.LiveSessionState.LIVE.equals(session.state)) {
             //autoCountTime = true;
             if (session.ctl != null) {
