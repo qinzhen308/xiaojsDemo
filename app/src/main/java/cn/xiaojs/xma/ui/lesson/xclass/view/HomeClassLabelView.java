@@ -13,7 +13,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.ClassLabelModel;
 
 /**
  * Created by Paul Z on 2017/5/23.

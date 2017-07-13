@@ -27,6 +27,7 @@ public class ScheduleUtil {
     public static final String simpleYM_ChFormatStr="yyyy年MM月";
     public static final String simpleHMFormatStr="HH:mm";
     public static final String simpleYMDHMSFormatStr="yyyy-MM-dd HH:mm:ss";
+    public static final String simpleYMDHMFormatStr="yyyy-MM-dd HH:mm";
     public static final SimpleDateFormat simpleYMDFormat=new SimpleDateFormat(simpleYMDFormatStr, Locale.CHINA);
     public static final SimpleDateFormat simpleUTCFormat=new SimpleDateFormat(simpleUTCFormatStr);
     public static final SimpleDateFormat simpleMDFormat=new SimpleDateFormat(simpleMDFormatStr,Locale.CHINA);
@@ -34,6 +35,7 @@ public class ScheduleUtil {
     public static final SimpleDateFormat simpleYMFormat=new SimpleDateFormat(simpleYMFormatStr,Locale.CHINA);
     public static final SimpleDateFormat simpleYM_ChFormat=new SimpleDateFormat(simpleYM_ChFormatStr,Locale.CHINA);
     public static final SimpleDateFormat simpleYMDHMSFormat=new SimpleDateFormat(simpleYMDHMSFormatStr,Locale.CHINA);
+    public static final SimpleDateFormat simpleYMDHMFormat=new SimpleDateFormat(simpleYMDHMFormatStr,Locale.CHINA);
 
     public final static long DAY=3600*24*1000;
 
@@ -185,6 +187,12 @@ public class ScheduleUtil {
     }
     public static String getDateYMDHMS(long date){
         return simpleYMDHMSFormat.format(new Date(date));
+    }
+    public static String getDateYMDHM(Date date){
+        return simpleYMDHMFormat.format(date);
+    }
+    public static String getDateYMDHM(long date){
+        return simpleYMDHMFormat.format(new Date(date));
     }
 
 

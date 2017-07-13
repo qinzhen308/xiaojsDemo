@@ -16,7 +16,9 @@ package cn.xiaojs.xma.util;
 
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
@@ -59,5 +61,22 @@ public class StringUtil {
 
         return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
 
+    }
+
+    public static SpannableString setHighlightText(String source,String tagText,int color){
+        if(TextUtils.isEmpty(source))return new SpannableString("");
+        SpannableString ss=new SpannableString(source);
+        if(TextUtils.isEmpty(tagText))return ss;
+        int index=0;
+        int tagLength=tagText.length();
+        while (index>=0&&index<source.length()) {
+            index=source.indexOf(tagText,index);
+            if(index<0){
+                break;
+            }
+            ss.setSpan(new ForegroundColorSpan(color),index,index+tagLength,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            index=index+tagLength;
+        }
+        return ss;
     }
 }

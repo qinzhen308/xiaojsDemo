@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/px148"
+    android:paddingLeft="@dimen/px31"
+    android:background="@color/white"
+    android:layout_marginBottom="@dimen/px2"
+    >
+
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/px80"
+        android:layout_height="@dimen/px80"
+        android:scaleType="fitXY"
+        android:layout_toRightOf="@id/tv_label"
+        android:layout_centerVertical="true"
+        android:src="@drawable/default_avatar" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_avatar"
+        android:layout_marginLeft="@dimen/px20"
+        android:text="我的标题"
+        android:layout_toRightOf="@+id/iv_avatar"
+        android:textColor="@color/font_black"
+        android:textSize="@dimen/font_34px" />
+
+
+    <TextView
+        android:id="@+id/tv_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/px10"
+        android:layout_alignTop="@+id/tv_title"
+        android:layout_alignBottom="@+id/tv_title"
+        android:layout_marginTop="@dimen/px3"
+        android:layout_marginBottom="@dimen/px3"
+        android:paddingLeft="@dimen/px6"
+        android:paddingRight="@dimen/px8"
+        android:gravity="center"
+        android:background="@drawable/bg_search_label_orange"
+        android:text="个人"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_24px" />
+
+
+
+    <TextView
+        android:id="@+id/tv_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="@dimen/px10"
+        android:layout_marginLeft="@dimen/px20"
+        android:text="131****1231"
+        android:layout_toRightOf="@+id/iv_avatar"
+        android:textColor="@color/common_text"
+        android:textSize="@dimen/font_26px" />
+
+    <TextView
+        android:id="@+id/tv_fans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="@dimen/px10"
+        android:layout_marginLeft="@dimen/px30"
+        android:text="粉丝 55"
+        android:layout_toRightOf="@+id/tv_tel"
+        android:textColor="@color/common_text"
+        android:textSize="@dimen/font_26px" />
+
+
+    <TextView
+        android:id="@+id/btn_follow"
+        android:layout_width="@dimen/px110"
+        android:layout_height="@dimen/px50"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/px10"
+        android:paddingRight="@dimen/px10"
+        android:textSize="@dimen/font_24px"
+        android:layout_marginRight="@dimen/px29"
+        />
+
+
+
+</RelativeLayout>

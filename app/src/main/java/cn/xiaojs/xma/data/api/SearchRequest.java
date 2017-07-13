@@ -8,10 +8,12 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionPageData;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.search.LessonInfo;
 import cn.xiaojs.xma.model.search.SearchResponse;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Query;
@@ -44,5 +46,10 @@ public class SearchRequest extends ServiceRequest{
     public void searchAccountsOrLessons(String key, String size) {
         Call<SearchResponse> call = getService().searchAccountsOrLessons(key, size);
         enqueueRequest(APIType.SEARCH_ACCOUNT_OR_LESSON, call);
+    }
+
+    public void search(String type, String keyword,int page,int limit) {
+        Call<CollectionResult<SearchResultV2>> call = getService().search(type, keyword,keyword,page,limit,true,true,true,false);
+        enqueueRequest(APIType.SEARCH_SEARCH, call);
     }
 }

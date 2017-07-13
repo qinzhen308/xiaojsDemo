@@ -82,6 +82,7 @@ import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.search.LessonInfo;
 import cn.xiaojs.xma.model.search.SearchResponse;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
@@ -543,6 +544,18 @@ public interface XiaojsService {
     //Search Accounts & Lessons
     @GET("/v1/search/integrate")
     Call<SearchResponse> searchAccountsOrLessons(@Query("key") String key, @Query("size") String size);
+
+    //Search things.
+    @GET("/v1/search/{query}/{text}")
+    Call<CollectionResult<SearchResultV2>> search(@Path("query") String type,
+                                                  @Path("text") String keyword,
+                                                  @Query("key") String key,
+                                                  @Query("page") int page,
+                                                  @Query("limit") int limit,
+                                                  @Query("name") boolean name,
+                                                  @Query("mobile") boolean mobile,
+                                                  @Query("title") boolean title,
+                                                  @Query("tag") boolean tag);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

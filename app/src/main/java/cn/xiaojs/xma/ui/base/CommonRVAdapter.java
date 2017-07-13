@@ -1,54 +1,45 @@
-package cn.xiaojs.xma.ui.lesson.xclass;
+package cn.xiaojs.xma.ui.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.List;
 
 import cn.xiaojs.xma.common.pageload.EventCallback;
-import cn.xiaojs.xma.model.ctl.CLesson;
-import cn.xiaojs.xma.model.ctl.ClassLesson;
-import cn.xiaojs.xma.model.live.LiveSchedule;
-import cn.xiaojs.xma.ui.lesson.xclass.model.ClassFooterModel;
-import cn.xiaojs.xma.ui.lesson.xclass.model.ClassLabelModel;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
-import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
-import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassFooterView;
-import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
-import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
-import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
-import cn.xiaojs.xma.ui.lesson.xclass.view.LiveScheduleLessonView;
-import cn.xiaojs.xma.ui.lesson.xclass.view.NativeLessonView;
+import cn.xiaojs.xma.ui.search.view.SRClassView;
+import cn.xiaojs.xma.ui.search.view.SRLiveLessonView;
+import cn.xiaojs.xma.ui.search.view.SROrganizationView;
+import cn.xiaojs.xma.ui.search.view.SRPersonView;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/22.
+ * 设计思路：
+ * 可以使所有列表都用这个adapter，作为一个只做 "视图模型--数据模型或指定类型" 的适配器。
+ * 具体bind逻辑在视图模型中通过实现IViewMode来处理。
+ * 还可以考虑实现插入其他adapter，从而对本适配器进行扩展 (未实现，后续思路)
  *
- * 
  */
+public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    public static final int VIEW_TYPE_SEARCH_RESULT_PERSON =1;
+    public static final int VIEW_TYPE_SEARCH_RESULT_CLASS =2;
+    public static final int VIEW_TYPE_SEARCH_RESULT_ORGANIZATION =3;
+    public static final int VIEW_TYPE_SEARCH_RESULT_LIVE_LESSON=4;
 
-public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    public static final int VIEW_TYPE_HOME_LESSON_LABEL =1;
-    public static final int VIEW_TYPE_HOME_LESSON=2;
-    public static final int VIEW_TYPE_HOME_CLASS_LABEL=3;
-    public static final int VIEW_TYPE_HOME_CLASS =4;
-    public static final int VIEW_TYPE_NATIVE_LESSON=5;
-    public static final int VIEW_TYPE_LIVE_SCHEDULE_LESSON=6;
-    //首页热门班级等于4个时，底部有"更多"按钮
-    public static final int VIEW_TYPE_HOME_CLASS_FOOTER=7;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
     private List<?> mList;
     private RecyclerView mRecyclerView;
     RecyclerViewScrollHelper scrollHelper;
 
-    public HomeClassAdapter(RecyclerView recyclerView){
+    public CommonRVAdapter(RecyclerView recyclerView){
         mRecyclerView=recyclerView;
         scrollHelper=new RecyclerViewScrollHelper();
         scrollHelper.bind(recyclerView);
@@ -67,66 +58,55 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder=null;
-        if(viewType== VIEW_TYPE_HOME_LESSON_LABEL){
-            holder=new CommonHolder(new HomeLessonLabelView(parent.getContext()));
-        }else if(viewType==VIEW_TYPE_HOME_LESSON){
-            holder=new CommonHolder(new HomeLessonView(parent.getContext()));
-
-        }else if(viewType==VIEW_TYPE_HOME_CLASS_LABEL){
-            holder=new CommonHolder(new HomeClassLabelView(parent.getContext()));
-        }else if(viewType== VIEW_TYPE_HOME_CLASS){
-            holder=new CommonHolder(new ClassView(parent.getContext()));
-        }else if(viewType== VIEW_TYPE_NATIVE_LESSON){
-            holder=new CommonHolder(new NativeLessonView(parent.getContext()));
-        }else if(viewType== VIEW_TYPE_LIVE_SCHEDULE_LESSON){
-            holder=new CommonHolder(new LiveScheduleLessonView(parent.getContext()));
-        }else if(viewType== VIEW_TYPE_HOME_CLASS_FOOTER){
-            holder=new CommonHolder(new HomeClassFooterView(parent.getContext()));
+        if(viewType== VIEW_TYPE_SEARCH_RESULT_PERSON){
+            holder=new CommonHolder(new SRPersonView(parent.getContext()));
+        }else if(viewType==VIEW_TYPE_SEARCH_RESULT_CLASS){
+            holder=new CommonHolder(new SRClassView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_SEARCH_RESULT_ORGANIZATION){
+            holder=new CommonHolder(new SROrganizationView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_SEARCH_RESULT_LIVE_LESSON){
+            holder=new CommonHolder(new SRLiveLessonView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
             holder=new LastEmpterHolder(v);
         }
-        Logger.d("----qz---- w="+parent.getWidth()+",h="+parent.getHeight()+"--------type="+viewType);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        Logger.d("----qz---- "+position);
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(),ClassScheduleActivity.class));
-//            }
-//        });
         if(holder.itemView instanceof IViewModel){
             ((IViewModel) holder.itemView).bindData(position,getItem(position));
-        }
-        if(holder.itemView instanceof LiveScheduleLessonView&&mEventCallback!=null){
-            ((LiveScheduleLessonView) holder.itemView).setCallback(mEventCallback);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
         Object o=getItem(position);
-        if(o instanceof ClassLesson){
-            return VIEW_TYPE_NATIVE_LESSON;
+        if(o instanceof SearchResultV2){
+            int viewtype=-1;
+            switch (((SearchResultV2)o).getType()){
+                case Collaboration.SubType.PERSON:
+                    viewtype=VIEW_TYPE_SEARCH_RESULT_PERSON;
+                    break;
+                case Collaboration.SubType.ORGANIZATION:
+                    viewtype=VIEW_TYPE_SEARCH_RESULT_ORGANIZATION;
+                    break;
+                case Collaboration.SubType.PRIVATE_CLASS:
+                    viewtype=VIEW_TYPE_SEARCH_RESULT_CLASS;
+                    break;
+                case Collaboration.SubType.STANDA_LONE_LESSON:
+                    viewtype=VIEW_TYPE_SEARCH_RESULT_LIVE_LESSON;
+                    break;
+            }
+            return viewtype;
         }else if(o instanceof LastEmptyModel){
             return VIEW_TYPE_LAST_EMPTY;
-        }else if(o instanceof ClassLabelModel){
-            return VIEW_TYPE_HOME_CLASS_LABEL;
         }else if(o instanceof LessonLabelModel){
-            return VIEW_TYPE_HOME_LESSON_LABEL;
-        }else if(o instanceof CLesson){
-            return VIEW_TYPE_HOME_LESSON;
-        }else if(o instanceof LiveSchedule){
-            return VIEW_TYPE_LIVE_SCHEDULE_LESSON;
-        }else if(o instanceof ClassFooterModel){
-            return VIEW_TYPE_HOME_CLASS_FOOTER;
+            return VIEW_TYPE_SEARCH_RESULT_PERSON;
         }
-        return VIEW_TYPE_HOME_CLASS;
+        return -1;
     }
 
     private Object getItem(int position){

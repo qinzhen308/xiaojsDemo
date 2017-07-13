@@ -3,17 +3,13 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.ClassLabelModel;
 
 /**
  * Created by Paul Z on 2017/7/6.

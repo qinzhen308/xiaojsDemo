@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.EventCallback;
@@ -32,15 +31,14 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.LiveCtlSessionManager;
 import cn.xiaojs.xma.ui.lesson.xclass.AbsClassScheduleFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.util.ArrayUtil;
 

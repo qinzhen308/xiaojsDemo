@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.jeek.calendar.widget.calendar.CalendarUtils;
 import com.jeek.calendar.widget.calendar.HintBoxPool;
-import com.jeek.calendar.widget.calendar.OnCalendarClickListener;
 import com.jeek.calendar.widget.calendar.OnScheduleChangeListener;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleLayout;
 import com.jeek.calendar.widget.calendar.schedule.ScheduleRecyclerView;
@@ -21,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.BindColor;
@@ -29,15 +27,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleOptions;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 

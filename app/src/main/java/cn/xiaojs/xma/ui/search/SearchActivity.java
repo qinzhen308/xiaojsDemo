@@ -12,89 +12,88 @@ package cn.xiaojs.xma.ui.search;
  * Date:2016/12/12
  * Desc:搜索个人、机构、课
  *
+ * modify:Paul Z
+ * date:2017/7/13
+ *
  * ======================================================================================== */
 
-import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.IdRes;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.pageload.DataPageLoader;
+import cn.xiaojs.xma.common.pageload.stateview.AppLoadState2;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStateListener;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
+import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
-import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SearchManager;
-import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.search.AccountInfo;
-import cn.xiaojs.xma.model.search.AccountSearch;
-import cn.xiaojs.xma.model.search.LessonInfo;
-import cn.xiaojs.xma.model.search.LessonSearch;
-import cn.xiaojs.xma.model.search.PersonOriSearch;
-import cn.xiaojs.xma.model.search.SearchResponse;
-import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.model.CollectionResult;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.lesson.CourseConstant;
-import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
-import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
-import cn.xiaojs.xma.ui.widget.RoundedImageView;
-import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.ui.base.CommonRVAdapter;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 public class SearchActivity extends BaseActivity {
 
-    @BindView(R.id.search_lesson_list)
-    CanInScrollviewListView mLesson;
-    @BindView(R.id.search_people_list)
-    CanInScrollviewListView mPeople;
-    @BindView(R.id.search_ori_list)
-    CanInScrollviewListView mOri;
     @BindView(R.id.search_input)
     EditText mInput;
+    @BindView(R.id.search_ok)
+    TextView searchOk;
+    @BindView(R.id.tab1)
+    RadioButton tab1;
+    @BindView(R.id.tab2)
+    RadioButton tab2;
+    @BindView(R.id.tab3)
+    RadioButton tab3;
+    @BindView(R.id.tab4)
+    RadioButton tab4;
+    @BindView(R.id.tab5)
+    RadioButton tab5;
+    @BindView(R.id.tab6)
+    RadioButton tab6;
+    @BindView(R.id.tab_bar)
+    RadioGroup tabBar;
+    @BindView(R.id.recyclerview)
+    RecyclerView recyclerview;
 
-//    @BindView(R.id.search_organization_head)
-//    ImageView mOrganizationHead;
-//    @BindView(R.id.search_organization_name)
-//    TextView mOrganizationName;
-//    @BindView(R.id.search_organization_level)
-//    TextView mOrganizationLevel;
+    CommonRVAdapter mAdapter;
+    private final static int BEGIN_SEARCH=0xff;
+    private final static int MAX_PER_PAGE=10;
 
-    @BindView(R.id.search_lesson_list_wrapper)
-    View mLessonWrapper;
-    @BindView(R.id.search_people_list_wrapper)
-    View mPeopleWrapper;
-    @BindView(R.id.search_organization_list_wrapper)
-    View mOrganizationWrapper;
+    String typeName=Social.SearchType.ALL;
+    String keywords;
 
-    @BindView(R.id.search_category)
-    View mCategory;
-    @BindView(R.id.search_empty)
-    View mEmpty;
+    DataPageLoader<SearchResultV2,CollectionResult<SearchResultV2>> dataPageLoader;
+    LoadStatusViewDecoratee stateView;
 
-    @BindView(R.id.search_lesson_more)
-    View mLessonMore;
-    @BindView(R.id.search_people_more)
-    View mPeopleMore;
-    @BindView(R.id.search_organization_more)
-    View mOrganizationMore;
 
-    private AccountInfo mOrganization;
-
-    private final int MAX_LESSON = 3;
-    private final int MAX_PEOPLE = 3;
-    private final int MAX_ORGANIZATION = 3;
-
-    private SearchLessonAdapter mLessonAdapter;
-    private SearchPeopleAdapter mPeopleAdapter;
-    private SearchOrganizationAdapter mOrganizationAdapter;
     @Override
     protected void addViewContent() {
-        addView(R.layout.activity_global_search);
+        addView(R.layout.activity_global_search_v2);
+        recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mAdapter=new CommonRVAdapter(recyclerview);
+        recyclerview.setAdapter(mAdapter);
         needHeader(false);
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,332 +108,129 @@ public class SearchActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //search();
                 toSearch();
             }
         });
+
+        tabBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId){
+                    case R.id.tab1:
+                        typeName= Social.SearchType.ALL;
+                        break;
+                    case R.id.tab2:
+                        typeName= Social.SearchType.LESSON;
+                        break;
+                    case R.id.tab3:
+                        typeName= Social.SearchType.LESSON;
+
+                        break;
+                    case R.id.tab4:
+                        typeName= Social.SearchType.CLASS;
+                        break;
+                    case R.id.tab5:
+                        typeName= Social.SearchType.PERSON;
+                        break;
+                    case R.id.tab6:
+                        typeName= Social.SearchType.ORGANIZATION;
+                        break;
+                }
+                dataPageLoader.refresh();
+            }
+        });
+
+        stateView=new LoadStatusViewDecoratee(new AppLoadState2(this,(ViewGroup) findViewById(R.id.load_state_container)));
+        initPageLoad();
     }
 
-    @OnClick({R.id.search_lesson_more, R.id.search_people_more, R.id.search_organization_more,
-            R.id.search_ok})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.search_ok:
-                finish();
-                break;
-            case R.id.search_lesson_more:
-                Intent lesson = new Intent(this,SearchListActivity.class);
-                lesson.putExtra(SearchConstant.KEY_SEARCH_TYPE,Social.SearchType.LESSON);
-                lesson.putExtra(SearchConstant.KEY_SEARCH_KEY,mInput.getText().toString());
-                startActivity(lesson);
-                break;
-            case R.id.search_people_more:
-                Intent people = new Intent(this,SearchListActivity.class);
-                people.putExtra(SearchConstant.KEY_SEARCH_TYPE,Social.SearchType.PERSON);
-                people.putExtra(SearchConstant.KEY_SEARCH_KEY,mInput.getText().toString());
-                startActivity(people);
-                break;
-            case R.id.search_organization_more:
-                Intent organization = new Intent(this,SearchListActivity.class);
-                organization.putExtra(SearchConstant.KEY_SEARCH_TYPE,Social.SearchType.ORGANIZATION);
-                organization.putExtra(SearchConstant.KEY_SEARCH_KEY,mInput.getText().toString());
-                startActivity(organization);
-                break;
-//            case R.id.search_organization_result:
-//                if (mOrganization != null){
-//                    //follow(mOrganization._id,null);
-//                    if (mOrganization != null){
-//                        SearchBusiness.goPersonal(SearchActivity.this,mOrganization);
-//                    }
-//                }
-//                break;
-        }
+    private void initPageLoad(){
+        dataPageLoader=new DataPageLoader<SearchResultV2,CollectionResult<SearchResultV2>>() {
+            PageChangeInRecyclerView pageChangeInRecyclerView;
+            @Override
+            public void onRequst(int page) {
+                stateView.change(LoadStateListener.STATE_LOADING,"");
+                searchRequest(page);
+            }
+
+            @Override
+            public List<SearchResultV2> adaptData(CollectionResult<SearchResultV2> object) {
+                if(object==null)return new ArrayList<>();
+                return object.results;
+            }
+
+            @Override
+            public void onSuccess(List<SearchResultV2> curPage, List<SearchResultV2> all) {
+                pageChangeInRecyclerView.completeLoading();
+                getIntent().putExtra("extra_search_keywords",keywords);
+                if(ArrayUtil.isEmpty(all)){
+                    stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
+                    bindData(new ArrayList<SearchResultV2>());
+                }else {
+                    stateView.change(LoadStateListener.STATE_NORMAL,"");
+                    bindData(all);
+                }
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                pageChangeInRecyclerView.completeLoading();
+                stateView.change(LoadStateListener.STATE_LOADING_ERROR,"");
+                bindData(new ArrayList<SearchResultV2>());
+            }
+
+            @Override
+            public void prepare() {
+                pageChangeInRecyclerView=new PageChangeInRecyclerView(recyclerview,this);
+            }
+        };
     }
 
     private void toSearch() {
+        handler.removeMessages(BEGIN_SEARCH);
         String query = mInput.getText().toString();
-        if (TextUtils.isEmpty(query)){
-            mCategory.setVisibility(View.GONE);
-            mEmpty.setVisibility(View.GONE);
-            return;
+        Message msg=new Message();
+        msg.what=BEGIN_SEARCH;
+        msg.obj=query;
+        handler.sendMessageDelayed(msg,300);
+    }
+
+    @OnClick({R.id.back, R.id.search_ok})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            case R.id.search_ok:
+                finish();
+                break;
         }
-
-        SearchManager.searchAccountsOrLessons(this,
-                query,
-                "4",
-                new APIServiceCallback<SearchResponse>() {
-
-            @Override
-            public void onSuccess(SearchResponse object) {
-
-                updateDisplay(object);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                updateDisplay(null);
-            }
-
-        });
     }
 
 
-    private void updateDisplay(SearchResponse searchResponse) {
-        if (searchResponse == null || searchResponse.total == 0) {
-            mLessonWrapper.setVisibility(View.GONE);
-            mPeopleWrapper.setVisibility(View.GONE);
-            mOrganizationWrapper.setVisibility(View.GONE);
-            mCategory.setVisibility(View.GONE);
-            mEmpty.setVisibility(View.VISIBLE);
-            return;
-        }
-        mCategory.setVisibility(View.VISIBLE);
-        mEmpty.setVisibility(View.GONE);
-
-
-        reset();
-
-        LessonSearch lessonSearch = searchResponse.results.lesson;
-        if (lessonSearch !=null && lessonSearch.doc_count > 0) {
-            final List<LessonInfo> lessonInfoList = lessonSearch.docs;
-            if (lessonInfoList != null && lessonInfoList.size() > 0) {
-                mLessonWrapper.setVisibility(View.VISIBLE);
-                if (lessonInfoList.size() <= MAX_LESSON) {
-                    mLessonMore.setVisibility(View.GONE);
-                } else {
-                    mLessonMore.setVisibility(View.VISIBLE);
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if(XiaojsConfig.DEBUG){
+                Logger.d("qz--handleMessage---what="+msg.what+"---key="+msg.obj);
+            }
+            if(msg.what==BEGIN_SEARCH){
+                String key=msg.obj.toString();
+                if(!TextUtils.isEmpty(key)){
+                    keywords=key;
+                    dataPageLoader.refresh();
                 }
-                mLesson.setNeedDivider(true);
-                if (mLessonAdapter == null) {
-                    mLessonAdapter = new SearchLessonAdapter(this, lessonInfoList, MAX_LESSON);
-                    mLesson.setAdapter(mLessonAdapter);
-                } else {
-                    mLessonAdapter.setData(lessonInfoList);
-                    mLessonAdapter.notifyDataSetChanged();
-                }
-
-                mLesson.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-
-                        LessonInfo lessonInfo = lessonInfoList.get(position);
-
-                        if (lessonInfo != null) {
-                            SearchBusiness.goLessonHome(SearchActivity.this, lessonInfo);
-                        }
-
-                    }
-                });
-
-            } else {
-                mLessonWrapper.setVisibility(View.GONE);
             }
         }
+    };
 
-        PersonOriSearch personSearch = searchResponse.results.person;
-        if (personSearch !=null && personSearch.doc_count > 0) {
-
-            final List<AccountInfo> personInfoList = personSearch.docs;
-            if (personInfoList != null && personInfoList.size() > 0) {
-                mPeopleWrapper.setVisibility(View.VISIBLE);
-                if (personInfoList.size() <= MAX_PEOPLE) {
-                    mPeopleMore.setVisibility(View.GONE);
-                } else {
-                    mPeopleMore.setVisibility(View.VISIBLE);
-                }
-                mPeople.setNeedDivider(true);
-                if (mPeopleAdapter == null) {
-                    mPeopleAdapter = new SearchPeopleAdapter(this, personInfoList, MAX_PEOPLE);
-                    mPeople.setAdapter(mPeopleAdapter);
-                } else {
-                    mPeopleAdapter.setData(personInfoList);
-                    mPeopleAdapter.notifyDataSetChanged();
-                }
-                mPeople.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        AccountInfo search = personInfoList.get(position);
-                        if (search != null) {
-                            SearchBusiness.goPersonal(SearchActivity.this, search);
-                        }
-                        //follow(search._id,search._source.basic.getName());
-                    }
-                });
-            } else {
-                mPeopleWrapper.setVisibility(View.GONE);
-            }
-        }
-
-        PersonOriSearch oriSearch = searchResponse.results.organization;
-        if (oriSearch !=null && oriSearch.doc_count > 0) {
-            final List<AccountInfo> oriInfoList = oriSearch.docs;
-            if (oriInfoList != null && oriInfoList.size() > 0) {
-                mOrganizationWrapper.setVisibility(View.VISIBLE);
-//                if (oriInfoList.size() <= MAX_ORGANIZATION) {
-//                    mOrganizationMore.setVisibility(View.GONE);
-//                } else {
-//                    mOrganizationMore.setVisibility(View.VISIBLE);
-//                }
-//                mOrganization = oriInfoList.get(0);
-//                mOrganizationName.setText(mOrganization.basic.getName());
-
-                if (oriInfoList.size() <= MAX_ORGANIZATION) {
-                    mOrganizationMore.setVisibility(View.GONE);
-                } else {
-                    mOrganizationMore.setVisibility(View.VISIBLE);
-                }
-                mOri.setNeedDivider(true);
-                if (mOrganizationAdapter == null) {
-                    mOrganizationAdapter = new SearchOrganizationAdapter(this, oriInfoList, MAX_PEOPLE);
-                    mOri.setAdapter(mOrganizationAdapter);
-                } else {
-                    mOrganizationAdapter.setData(oriInfoList);
-                    mOrganizationAdapter.notifyDataSetChanged();
-                }
-                mOri.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        AccountInfo search = oriInfoList.get(position);
-                        if (search != null) {
-                            SearchBusiness.goPersonal(SearchActivity.this, search);
-                        }
-                        //follow(search._id,search._source.basic.getName());
-                    }
-                });
-
-            } else {
-                mOrganizationWrapper.setVisibility(View.GONE);
-            }
-        }
-
+    private void searchRequest(int page){
+        if(TextUtils.isEmpty(keywords))return;
+        SearchManager.search(this,typeName,keywords,page,MAX_PER_PAGE,dataPageLoader);
     }
 
-    private void reset() {
-        mLessonWrapper.setVisibility(View.GONE);
-        mOrganizationWrapper.setVisibility(View.GONE);
-        mPeopleWrapper.setVisibility(View.GONE);
+    private void bindData(List<SearchResultV2> data){
+        mAdapter.setList(data);
+        mAdapter.notifyDataSetChanged();
     }
-
-
-//////////////////////////////////old search////////////////////////////////////////////////////////
-
-//    private void search() {
-//        String query = mInput.getText().toString();
-//        if (TextUtils.isEmpty(query)){
-//            mCategory.setVisibility(View.GONE);
-//            mEmpty.setVisibility(View.GONE);
-//            return;
-//        }
-//        SearchManager.searchAccounts(this, query, new APIServiceCallback<ArrayList<AccountSearch>>() {
-//            @Override
-//            public void onSuccess(ArrayList<AccountSearch> object) {
-//                updateDisplay(object);
-//            }
-//
-//            @Override
-//            public void onFailure(String errorCode, String errorMessage) {
-//                updateDisplay( null);
-//            }
-//        });
-//    }
-//
-//    private void updateDisplay(ArrayList<AccountSearch> result) {
-//        if (result == null || result.size() == 0){
-//            mLessonWrapper.setVisibility(View.GONE);
-//            mPeopleWrapper.setVisibility(View.GONE);
-//            mOrganizationWrapper.setVisibility(View.GONE);
-//            mCategory.setVisibility(View.GONE);
-//            mEmpty.setVisibility(View.VISIBLE);
-//            return;
-//        }
-//        mCategory.setVisibility(View.VISIBLE);
-//        mEmpty.setVisibility(View.GONE);
-//        List<AccountSearch> lessons = SearchBusiness.getSearchResultByType(result, Social.SearchType.LESSON);
-//        final List<AccountSearch> people = SearchBusiness.getSearchResultByType(result, Social.SearchType.PERSON);
-//        List<AccountSearch> organization = SearchBusiness.getSearchResultByType(result, Social.SearchType.ORGANIZATION);
-//
-//        if (lessons != null && lessons.size() > 0) {
-//            mLessonWrapper.setVisibility(View.VISIBLE);
-//            if (lessons.size() <= MAX_LESSON){
-//                mLessonMore.setVisibility(View.GONE);
-//            }else {
-//                mLessonMore.setVisibility(View.VISIBLE);
-//            }
-//            mLesson.setNeedDivider(true);
-//            if (mLessonAdapter == null){
-//                mLessonAdapter = new SearchLessonAdapter(this, lessons, MAX_LESSON);
-//                mLesson.setAdapter(mLessonAdapter);
-//            }else {
-//                mLessonAdapter.setData(lessons);
-//                mLessonAdapter.notifyDataSetChanged();
-//            }
-//        } else {
-//            mLessonWrapper.setVisibility(View.GONE);
-//        }
-//
-//        if (people != null && people.size() > 0) {
-//            mPeopleWrapper.setVisibility(View.VISIBLE);
-//            if (people.size() <= MAX_PEOPLE){
-//                mPeopleMore.setVisibility(View.GONE);
-//            }else {
-//                mPeopleMore.setVisibility(View.VISIBLE);
-//            }
-//            mPeople.setNeedDivider(true);
-//            if (mPeopleAdapter == null){
-//                mPeopleAdapter = new SearchPeopleAdapter(this, people,MAX_PEOPLE);
-//                mPeople.setAdapter(mPeopleAdapter);
-//            }else {
-//                mPeopleAdapter.setData(people);
-//                mPeopleAdapter.notifyDataSetChanged();
-//            }
-//            mPeople.setOnItemClickListener(new CanInScrollviewListView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(View view, int position) {
-//                    AccountSearch search = people.get(position);
-//                    if (search != null){
-//                        SearchBusiness.goPersonal(SearchActivity.this,search);
-//                    }
-//                    //follow(search._id,search._source.basic.getName());
-//                }
-//            });
-//        } else {
-//            mPeopleWrapper.setVisibility(View.GONE);
-//        }
-//
-//        if (organization != null && organization.size() > 0) {
-//            mOrganizationWrapper.setVisibility(View.VISIBLE);
-//            if (organization.size() <= MAX_ORGANIZATION){
-//                mOrganizationMore.setVisibility(View.GONE);
-//            }else {
-//                mOrganizationMore.setVisibility(View.VISIBLE);
-//            }
-//            mOrganization = organization.get(0);
-//            mOrganizationName.setText(mOrganization._source.basic.getName());
-//        } else {
-//            mOrganizationWrapper.setVisibility(View.GONE);
-//        }
-//    }
-//
-//    private void follow(final String id, final String alias){
-//        SocialManager.followContact(SearchActivity.this, id, Social.ContactGroup.FRIENDS, new APIServiceCallback<Relation>() {
-//            @Override
-//            public void onSuccess(Relation object) {
-//                ToastUtil.showToast(SearchActivity.this,R.string.followed);
-//                if (TextUtils.isEmpty(alias)){
-//                    return;
-//                }
-//
-//                Contact contact = new Contact();
-//                contact.alias = alias;
-//                contact.account = id;
-//
-//                DataManager.addContact(SearchActivity.this,Social.ContactGroup.FRIENDS,contact);
-//            }
-//
-//            @Override
-//            public void onFailure(String errorCode, String errorMessage) {
-//                ToastUtil.showToast(SearchActivity.this,errorMessage);
-//            }
-//        });
-//    }
 }

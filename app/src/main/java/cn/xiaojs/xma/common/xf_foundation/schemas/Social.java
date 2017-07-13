@@ -218,6 +218,9 @@ public class Social {
         public static final String PERSON = "Person";
         public static final String LESSON = "Lesson";
         public static final String ORGANIZATION = "Organization";
+        public static final String CLASS = "class";
+        public static final String ALL = "all";
+        public static final String COURSE = "course";
     }
 
     public static class Relationship{
