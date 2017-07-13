@@ -85,10 +85,13 @@ public class UIUtils {
         }
     }
 
-    public static void toImageViewActivity(Activity context, ArrayList<String> photos){
+    public static void toImageViewActivity(Activity context, ArrayList<String> photos,String title){
         if (photos != null && photos.size() > 0){
             Intent intent = new Intent(context, ImageViewActivity.class);
             intent.putExtra(ImageViewActivity.IMAGE_PATH_KEY,photos);
+            if(title!=null){
+                intent.putExtra(ImageViewActivity.IMAGE_TITLE_KEY,title);
+            }
             context.startActivity(intent);
             context.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
