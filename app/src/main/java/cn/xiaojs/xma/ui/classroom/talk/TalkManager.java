@@ -15,6 +15,9 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -232,6 +235,53 @@ public class TalkManager implements EventListener {
             Talk talk = (Talk) object;
             //TODO fix同一条消息多次回调?
             handleReceivedMsg(talk);
+//            Message message = new Message();
+//            message.obj = talk;
+//            receivedHandler.sendMessageDelayed(message,24);
+        }
+    }
+
+    private Handler receivedHandler  = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            //handleReceivedMsg((Talk) msg.obj);
+
+
+        }
+    };
+
+    /**
+     * 更新消息列表
+     */
+    private void handleReceivedMsg(Talk talk) {
+
+        try {
+            if (talk == null) {
+                return;
+            }
+
+            TalkItem talkItem = new TalkItem();
+            talkItem.time = talk.time;
+            talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
+            talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
+            talkItem.body.text = talk.body.text;
+            talkItem.body.contentType = talk.body.contentType;
+            talkItem.from.accountId = talk.from;
+            talkItem.from.name = ClassroomBusiness.getNameByAccountId(talk.from);
+
+            String account = talk.to != null ? talk.to : talk.from;
+            int type = addTalkItemToAdapter(talkItem, account);
+            //update unread msg count
+            updateUnreadCount(type, talkItem);
+            //notify msg change
+
+            receivedHandler.sendEmptyMessageDelayed();
+
+
+            notifyMsgChanged(true, type, talkItem);
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
     }
 
@@ -253,38 +303,6 @@ public class TalkManager implements EventListener {
             for (OnTalkMsgReceived listener : mOnTalkMsgReceiveListeners) {
                 listener.onMsgChanged(receive, criteria, talkItem);
             }
-        }
-    }
-
-    /**
-     * 更新消息列表
-     */
-    private void handleReceivedMsg(Talk talk) {
-
-
-        try {
-            if (talk == null) {
-                return;
-            }
-
-            TalkItem talkItem = new TalkItem();
-            talkItem.time = talk.time;
-            talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
-            talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
-            talkItem.body.text = talk.body.text;
-            talkItem.body.contentType = talk.body.contentType;
-            talkItem.from.accountId = talk.from;
-            talkItem.from.name = ClassroomBusiness.getNameByAccountId(talk.from);
-
-            String account = talk.to != null ? talk.to : talk.from;
-            int type = addTalkItemToAdapter(talkItem, account);
-            //update unread msg count
-            updateUnreadCount(type, talkItem);
-            //notify msg change
-            notifyMsgChanged(true, type, talkItem);
-        } catch (Exception e) {
-
-            e.printStackTrace();
         }
     }
 
@@ -395,6 +413,9 @@ public class TalkManager implements EventListener {
 
         if (talkBean != null) {
 
+//            for (int i=0; i<100000; i++) {
+//                talkBean.body.text = text + i;
+
             ClassroomEngine.getEngine().sendTalk(talkBean, new EventCallback<TalkResponse>() {
                 @Override
                 public void onSuccess(TalkResponse talkResponse) {
@@ -423,6 +444,8 @@ public class TalkManager implements EventListener {
                 }
             });
         }
+
+      //  }
     }
 
     private int addTalkItemToAdapter(TalkItem talkItem, String accountId) {
