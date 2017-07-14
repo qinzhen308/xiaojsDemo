@@ -15,6 +15,9 @@ package cn.xiaojs.xma.ui.classroom.talk;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -235,32 +238,18 @@ public class TalkManager implements EventListener {
         }
     }
 
+    private Handler receivedHandler  = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            notifyMsgChanged(true, msg.arg1, (TalkItem) msg.obj);
 
-    public void registerMsgReceiveListener(OnTalkMsgReceived listener) {
-        if (listener != null && mOnTalkMsgReceiveListeners != null) {
-            mOnTalkMsgReceiveListeners.add(listener);
         }
-    }
-
-    public void unregisterMsgReceiveListener(OnTalkMsgReceived listener) {
-        if (listener != null && mOnTalkMsgReceiveListeners != null) {
-            mOnTalkMsgReceiveListeners.remove(listener);
-        }
-    }
-
-    public void notifyMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
-        if (mOnTalkMsgReceiveListeners != null) {
-            for (OnTalkMsgReceived listener : mOnTalkMsgReceiveListeners) {
-                listener.onMsgChanged(receive, criteria, talkItem);
-            }
-        }
-    }
+    };
 
     /**
      * 更新消息列表
      */
     private void handleReceivedMsg(Talk talk) {
-
 
         try {
             if (talk == null) {
@@ -281,10 +270,37 @@ public class TalkManager implements EventListener {
             //update unread msg count
             updateUnreadCount(type, talkItem);
             //notify msg change
-            notifyMsgChanged(true, type, talkItem);
+
+
+            Message message = new Message();
+            message.arg1 = type;
+            message.obj = talkItem;
+            receivedHandler.sendMessageDelayed(message,24);
+
         } catch (Exception e) {
 
             e.printStackTrace();
+        }
+    }
+
+
+    public void registerMsgReceiveListener(OnTalkMsgReceived listener) {
+        if (listener != null && mOnTalkMsgReceiveListeners != null) {
+            mOnTalkMsgReceiveListeners.add(listener);
+        }
+    }
+
+    public void unregisterMsgReceiveListener(OnTalkMsgReceived listener) {
+        if (listener != null && mOnTalkMsgReceiveListeners != null) {
+            mOnTalkMsgReceiveListeners.remove(listener);
+        }
+    }
+
+    public void notifyMsgChanged(boolean receive, int criteria, TalkItem talkItem) {
+        if (mOnTalkMsgReceiveListeners != null) {
+            for (OnTalkMsgReceived listener : mOnTalkMsgReceiveListeners) {
+                listener.onMsgChanged(receive, criteria, talkItem);
+            }
         }
     }
 
@@ -395,6 +411,9 @@ public class TalkManager implements EventListener {
 
         if (talkBean != null) {
 
+//            for (int i=0; i<100000; i++) {
+//                talkBean.body.text = text + i;
+
             ClassroomEngine.getEngine().sendTalk(talkBean, new EventCallback<TalkResponse>() {
                 @Override
                 public void onSuccess(TalkResponse talkResponse) {
@@ -423,6 +442,8 @@ public class TalkManager implements EventListener {
                 }
             });
         }
+
+      //  }
     }
 
     private int addTalkItemToAdapter(TalkItem talkItem, String accountId) {
