@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.common;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,18 +15,21 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -33,45 +37,40 @@ import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.DownloadCompletionCallback;
 import cn.jpush.im.android.api.callback.ProgressUpdateCallback;
 import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.enums.ContentType;
 import cn.jpush.im.android.api.model.Conversation;
-import cn.xiaojs.xma.Manifest;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
-import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.banner.PageNumView;
-import cn.xiaojs.xma.ui.widget.banner.PointIndicateView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoViewAttacher;
 import cn.xiaojs.xma.ui.widget.scaleimage.ScaleViewPager;
 import cn.xiaojs.xma.util.BitmapUtils;
-import cn.xiaojs.xma.util.CacheUtil;
-import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.ToastUtil;
-import retrofit2.http.FieldMap;
 
 
 public class ImageViewActivity extends BaseActivity {
-    private static final int PERMISSION_SAVE_HUGE_IMAGE=110;
-    private static final int PERMISSION_SAVE_NORMAL_IMAGE=111;
+    private static final int PERMISSION_SAVE_HUGE_IMAGE = 110;
+    private static final int PERMISSION_SAVE_NORMAL_IMAGE = 111;
 
     public static final String IMAGE_POSITION_KEY = "imagePositionKey";
     public static final String IMAGE_PATH_KEY = "imagePathKey";
+    public static final String IMAGE_TITLE_KEY = "imageTitleKey";
 
     //如果是从聊天跳转的话，需要传以下参数
     public static final String IMAGE_FROM_CHAT = "image_from_chat";//是否从聊天跳转
@@ -100,6 +99,11 @@ public class ImageViewActivity extends BaseActivity {
     private List<Integer> mMsgIdList = new ArrayList<Integer>();
     private int mOriginPosition;
 
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_image_viewer);
@@ -111,6 +115,8 @@ public class ImageViewActivity extends BaseActivity {
         //pointContent = (PointIndicateView) findViewById(R.id.image_pager_points);
         pageNumView = (PageNumView) findViewById(R.id.text_pager_points);
         mPager = (ScaleViewPager) findViewById(R.id.image_view_pager);
+        String title=getIntent().getStringExtra(IMAGE_TITLE_KEY);
+        tvTitle.setText(title==null?"":title);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -198,7 +204,7 @@ public class ImageViewActivity extends BaseActivity {
                     @Override
                     public void onComplete(int status, String desc, File file) {
                         if (status == 0) {
-                            android.os.Message msg = handler.obtainMessage();
+                            Message msg = handler.obtainMessage();
                             msg.what = DOWNLOAD_ORIGIN_IMAGE_SUCCEED;
                             Bundle bundle = new Bundle();
                             bundle.putString("path", file.getAbsolutePath());
@@ -246,6 +252,12 @@ public class ImageViewActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.iv_back)
+    public void pageBack() {
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
     private class ImagePagerAdapter extends PagerAdapter {
         private Context mContext;
         private List<String> mList;
@@ -289,7 +301,7 @@ public class ImageViewActivity extends BaseActivity {
                                 Point point = BitmapUtils.getImageSize(resource.getPath());
                                 int screenH = ScreenUtils.getScreenHeight(ImageViewActivity.this);
                                 int screenW = ScreenUtils.getScreenWidth(ImageViewActivity.this);
-                                if (point.x > screenW * 2 || point.y > screenH * 2||point.y>2500||point.x>2500) {
+                                if (point.x > screenW * 2 || point.y > screenH * 2 || point.y > 2500 || point.x > 2500) {
                                     imageView.setVisibility(View.GONE);
                                     hugeImageView.setVisibility(View.VISIBLE);
 //                                    if(point.x>point.y){
@@ -297,19 +309,25 @@ public class ImageViewActivity extends BaseActivity {
 //                                    }else {
 //                                        hugeImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_0);
 //                                    }
-                                    float scale=1f;
-                                    if(screenH<point.y||screenW<point.x){
-                                        scale=0.9f*screenW/(float)point.x;
+                                    float scale = 1f;
+                                    if (screenH < point.y || screenW < point.x) {
+                                        scale = 0.9f * screenW / (float) point.x;
                                     }
-                                    hugeImageView.setImage(ImageSource.uri(resource.getPath()),new ImageViewState(
+                                    hugeImageView.setImage(ImageSource.uri(resource.getPath()), new ImageViewState(
                                             scale,
-                                            new PointF(0,0),
-                                            point.x>point.y?SubsamplingScaleImageView.ORIENTATION_0:SubsamplingScaleImageView.ORIENTATION_0));
+                                            new PointF(0, 0),
+                                            point.x > point.y ? SubsamplingScaleImageView.ORIENTATION_0 : SubsamplingScaleImageView.ORIENTATION_0));
                                     hugeImageView.setOnLongClickListener(new View.OnLongClickListener() {
                                         @Override
                                         public boolean onLongClick(View v) {
                                             saveHugeImage(resource);
                                             return true;
+                                        }
+                                    });
+                                    hugeImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                           showTitleBar();
                                         }
                                     });
                                     loadState.setVisibility(View.GONE);
@@ -338,9 +356,9 @@ public class ImageViewActivity extends BaseActivity {
                     dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
                         @Override
                         public void onItemClick(int position) {
-                            if(PermissionUtil.isOverMarshmallow()&& ActivityCompat.checkSelfPermission(ImageViewActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED ){
-                                PermissionGen.needPermission(ImageViewActivity.this,PERMISSION_SAVE_NORMAL_IMAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                            }else {
+                            if (PermissionUtil.isOverMarshmallow() && ActivityCompat.checkSelfPermission(ImageViewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                PermissionGen.needPermission(ImageViewActivity.this, PERMISSION_SAVE_NORMAL_IMAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            } else {
                                 doSaveNormalImage(imageView.getDrawable());
                             }
                         }
@@ -354,8 +372,7 @@ public class ImageViewActivity extends BaseActivity {
             imageView.setClickListener(new PhotoViewAttacher.onClickListener() {
                 @Override
                 public void onClick() {
-                    finish();
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    showTitleBar();
                 }
             });
             ((ViewPager) container).addView(view, 0);
@@ -399,7 +416,7 @@ public class ImageViewActivity extends BaseActivity {
     private Handler handler = new Handler() {
 
         @Override
-        public void handleMessage(android.os.Message msg) {
+        public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case PICTURE_PATH_LOADED:
@@ -413,7 +430,7 @@ public class ImageViewActivity extends BaseActivity {
                     }
                     break;
                 case SAVE_SUCCEED:
-                    ToastUtil.showToast(getApplicationContext(),"保存图片到"+msg.obj);
+                    ToastUtil.showToast(getApplicationContext(), "保存图片到" + msg.obj);
                     break;
             }
         }
@@ -425,16 +442,16 @@ public class ImageViewActivity extends BaseActivity {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    private void saveHugeImage(final File file){
+    private void saveHugeImage(final File file) {
         ListBottomDialog dialog = new ListBottomDialog(this);
         String[] items = new String[]{"保存图片"};
         dialog.setItems(items);
         dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
             @Override
             public void onItemClick(int position) {
-                if(PermissionUtil.isOverMarshmallow()&& ActivityCompat.checkSelfPermission(ImageViewActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED ){
-                    PermissionGen.needPermission(ImageViewActivity.this,PERMISSION_SAVE_HUGE_IMAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                }else {
+                if (PermissionUtil.isOverMarshmallow() && ActivityCompat.checkSelfPermission(ImageViewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    PermissionGen.needPermission(ImageViewActivity.this, PERMISSION_SAVE_HUGE_IMAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                } else {
                     doSaveHugeImage(file);
                 }
             }
@@ -443,30 +460,30 @@ public class ImageViewActivity extends BaseActivity {
     }
 
 
-    void doSaveNormalImage(Drawable drawable){
+    void doSaveNormalImage(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             final Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
             Logger.i("bitmap = " + bitmap);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this,bitmap);
+                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this, bitmap);
                     Message msg = Message.obtain();
                     msg.obj = path;
-                    msg.what=SAVE_SUCCEED;
+                    msg.what = SAVE_SUCCEED;
                     handler.sendMessage(msg);
                 }
             }).start();
-        }else if(drawable instanceof GlideBitmapDrawable){
+        } else if (drawable instanceof GlideBitmapDrawable) {
             final Bitmap bitmap = ((GlideBitmapDrawable) drawable).getBitmap();
             Logger.i("bitmap = " + bitmap);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this,bitmap);
+                    String path = BitmapUtils.savePngImageToGallery(ImageViewActivity.this, bitmap);
                     Message msg = Message.obtain();
                     msg.obj = path;
-                    msg.what=SAVE_SUCCEED;
+                    msg.what = SAVE_SUCCEED;
                     handler.sendMessage(msg);
                 }
             }).start();
@@ -474,15 +491,15 @@ public class ImageViewActivity extends BaseActivity {
     }
 
 
-    void doSaveHugeImage(final File file){
+    void doSaveHugeImage(final File file) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String path=BitmapUtils.copyImgFileToGallery(ImageViewActivity.this,file);
-                if(!TextUtils.isEmpty(path)){
+                String path = BitmapUtils.copyImgFileToGallery(ImageViewActivity.this, file);
+                if (!TextUtils.isEmpty(path)) {
                     Message msg = Message.obtain();
                     msg.obj = path;
-                    msg.what=SAVE_SUCCEED;
+                    msg.what = SAVE_SUCCEED;
                     handler.sendMessage(msg);
                 }
             }
@@ -490,13 +507,83 @@ public class ImageViewActivity extends BaseActivity {
     }
 
     @PermissionRationale(requestCode = PERMISSION_SAVE_NORMAL_IMAGE)
-    void normalRationale(){
-        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_storage_tip));
+    void normalRationale() {
+        PermissionHelper.showRationaleDialog(this, getString(R.string.permission_rationale_storage_tip));
     }
 
     @PermissionRationale(requestCode = PERMISSION_SAVE_HUGE_IMAGE)
-    void hugeRationale(){
-        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_storage_tip));
+    void hugeRationale() {
+        PermissionHelper.showRationaleDialog(this, getString(R.string.permission_rationale_storage_tip));
+    }
+
+
+    Animation animFade;
+    Animation animShow;
+
+    private void showTitleBar() {
+
+        if(titleBar.getVisibility()==View.VISIBLE){
+            setHideAnimation(titleBar);
+        }else {
+            setShowAnimation(titleBar);
+        }
+
+    }
+
+    public  void setHideAnimation(final View view) {
+
+        if (null != animFade) {
+            animFade.cancel();
+        }
+        // 监听动画结束的操作
+        animFade = new AlphaAnimation(1.0f, 0.0f);
+        animFade.setDuration(500);
+//        animFade.setFillAfter(true);
+        animFade.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.clearAnimation();
+        view.startAnimation(animFade);
+    }
+
+    public  void setShowAnimation(final View view) {
+
+        if (null != animShow) {
+            animShow.cancel();
+        }
+        animShow = new AlphaAnimation(0.0f, 1.0f);
+        animShow.setDuration(500);
+//        animShow.setFillAfter(true);
+        animShow.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.clearAnimation();
+        view.startAnimation(animShow);
     }
 
 }

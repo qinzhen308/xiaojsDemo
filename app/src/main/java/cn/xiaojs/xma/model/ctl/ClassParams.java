@@ -15,6 +15,7 @@ public class ClassParams {
     public String title;
     public String[] advisers;
     public int join;
+    public boolean accessible;
     public ClassEnroll enroll;
     public List<ClassLesson> lessons;
 

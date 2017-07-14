@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import cn.xiaojs.xma.data.api.SearchRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPageData;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.search.LessonInfo;
 import cn.xiaojs.xma.model.search.SearchResponse;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import okhttp3.ResponseBody;
 
 /**
@@ -106,6 +108,21 @@ public class SearchManager {
 
         SearchRequest searchRequest = new SearchRequest(context,callback);
         searchRequest.searchAccountsOrLessons(key, size);
+
+    }
+
+    /**
+     * Search search.
+     */
+    public static void search(Context context,
+                                               String type,
+                                               String keyword,
+                                               int page,
+                                               int limit,
+                                               APIServiceCallback<CollectionResult<SearchResultV2>> callback) {
+
+        SearchRequest searchRequest = new SearchRequest(context,callback);
+        searchRequest.search(type, keyword,page,limit);
 
     }
 

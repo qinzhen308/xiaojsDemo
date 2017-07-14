@@ -15,6 +15,8 @@ package cn.xiaojs.xma.ui.widget;
  * ======================================================================================== */
 
 import android.content.Context;
+import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +30,11 @@ public class ListBottomDialog extends BottomSheet {
 
     private ListView mList;
     private TextView mCancel;
+    private TextView mTitle;
     private String[] mItems;
     private OnItemClick listener;
+
+    private String title;
 
     public ListBottomDialog(Context context) {
         super(context);
@@ -64,11 +69,21 @@ public class ListBottomDialog extends BottomSheet {
         if (mItems != null) {
             View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_base_bottom, null);
             mList = (ListView) v.findViewById(R.id.base_bottom_dialog_list);
+            mTitle = (TextView) v.findViewById(R.id.dialog_title);
+            if(TextUtils.isEmpty(title)){
+                mTitle.setVisibility(View.GONE);
+            }else {
+                mTitle.setVisibility(View.VISIBLE);
+                mTitle.setText(title);
+            }
             mCancel = (TextView) v.findViewById(R.id.base_bottom_dialog_cancel);
             mCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dismiss();
+                    if(onCloseListener!=null){
+                        onCloseListener.onClick(mCancel);
+                    }
                 }
             });
             mList.setAdapter(new ItemAdapter());
@@ -111,7 +126,20 @@ public class ListBottomDialog extends BottomSheet {
         }
     }
 
+    public void setTopTitle(String title){
+        this.title=title;
+    }
+
+    public void setTopTitle(@StringRes int textRes){
+        this.title=getContext().getResources().getString(textRes);
+    }
+
     public interface OnItemClick{
         void onItemClick(int position);
+    }
+
+    View.OnClickListener onCloseListener;
+    public void setOnCloseListener(View.OnClickListener onCloseListener){
+        this.onCloseListener=onCloseListener;
     }
 }

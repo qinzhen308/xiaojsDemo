@@ -3,8 +3,12 @@ package cn.xiaojs.xma.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.text.Html;
 import android.view.View;
 import android.webkit.ConsoleMessage;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -12,6 +16,7 @@ import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
@@ -89,7 +94,15 @@ public class CommonWebActivity extends BaseActivity {
 
     private void loadContent() {
         String url=getIntent().getStringExtra(EXTRA_URL);
-        contentView.loadUrl(url);
+        if(URLUtil.isHttpsUrl(url)||URLUtil.isHttpUrl(url)){
+            contentView.loadUrl(url);
+        }else {
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN){
+                contentView.loadData(Html.escapeHtml(url),"text/html; charset=UTF-8", null);
+            }else {
+                contentView.loadData(url,"text/html", "UTF-8");
+            }
+        }
     }
 
     @Override

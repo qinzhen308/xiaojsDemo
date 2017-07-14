@@ -33,7 +33,7 @@ public class MaterialUtil {
             ArrayList<String> urls = new ArrayList<>(1);
             urls.add(bean.key);
 
-            UIUtils.toImageViewActivity(activity, urls);
+            UIUtils.toImageViewActivity(activity, urls,bean.name);
 
         } else if (Collaboration.isVideo(mimeType)) {
 
@@ -54,7 +54,7 @@ public class MaterialUtil {
                 for (LibDoc.ExportImg img : imgs) {
                     urls.add(img.name);
                 }
-                UIUtils.toImageViewActivity(activity, urls);
+                UIUtils.toImageViewActivity(activity, urls,bean.name);
             }
 
         } else if (Collaboration.isStreaming(mimeType)) {

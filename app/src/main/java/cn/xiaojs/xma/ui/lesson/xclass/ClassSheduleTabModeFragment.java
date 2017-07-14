@@ -1,27 +1,18 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
-import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
@@ -32,8 +23,8 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.ScheduleOptions;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.LastEmptyModel;
-import cn.xiaojs.xma.ui.lesson.xclass.Model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ClassFilterHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;

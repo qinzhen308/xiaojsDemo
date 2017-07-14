@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px90"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/px30"
+            android:src="@drawable/back_arrow"
+            android:visibility="gone" />
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_weight="1"
+            android:background="@drawable/grey_conner_bg"
+            android:drawableLeft="@drawable/ic_search"
+            android:gravity="center_vertical"
+            android:hint="@string/home_search_hint"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/px15"
+            android:paddingLeft="@dimen/px10"
+            android:paddingRight="@dimen/px10"
+            android:paddingTop="@dimen/px15"
+            android:singleLine="true"
+            android:textSize="@dimen/font_28px" />
+
+        <TextView
+            android:id="@+id/search_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:text="@string/cancel"
+            android:textColor="@drawable/orange_click_text_selector" />
+
+    </LinearLayout>
+
+    <View style="@style/DividerHorizontal" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:scrollbars="none">
+
+        <RadioGroup
+            android:id="@+id/tab_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px78"
+            android:checkedButton="@+id/tab1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/tab1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="综合"
+                android:textColor="@color/selector_btn_orange_black"
+                android:textSize="@dimen/font_28px" />
+
+            <RadioButton
+                android:id="@+id/tab2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:button="@null"
+                android:drawableBottom="@color/main_orange"
+                android:gravity="center"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="公开课"
+                android:textColor="@color/selector_btn_orange_black"
+                android:textSize="@dimen/font_28px"
+
+                />
+
+            <RadioButton
+                android:id="@+id/tab3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:button="@null"
+                android:drawableBottom="@color/main_orange"
+                android:gravity="center"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="录播课程"
+                android:textColor="@color/selector_btn_orange_black"
+                android:textSize="@dimen/font_28px"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/tab4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:button="@null"
+                android:drawableBottom="@color/main_orange"
+                android:gravity="center"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="班"
+                android:textColor="@color/selector_btn_orange_black"
+                android:textSize="@dimen/font_28px" />
+
+            <RadioButton
+                android:id="@+id/tab5"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:button="@null"
+                android:drawableBottom="@color/main_orange"
+                android:gravity="center"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="个人"
+                android:textColor="@color/selector_btn_orange_black"
+                android:textSize="@dimen/font_28px" />
+
+            <RadioButton
+                android:id="@+id/tab6"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:button="@null"
+                android:drawableBottom="@color/main_orange"
+                android:gravity="center"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="机构"
+                android:textColor="@color/selector_btn_orange_black"
+                android:textSize="@dimen/font_28px" />
+
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+    <View style="@style/DividerHorizontal" />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/load_state_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+
+</LinearLayout>
+
+
+
+
