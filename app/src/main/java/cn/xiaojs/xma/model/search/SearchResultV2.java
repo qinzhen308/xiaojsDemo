@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model.search;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.Date;
+
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.account.Stats;
@@ -22,10 +24,11 @@ public class SearchResultV2 {
 
     public String mobile;
     public String title;
+    public Date createdOn;
     public String _title;
     public Account teacher;
 //    public Account[] assistants;
-//    public Account[] advisers;
+    public Account[] advisers;
 
     public Schedule schedule;
 
