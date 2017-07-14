@@ -8,7 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputFilter;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -86,6 +90,8 @@ public class CreateClassActivity extends BaseActivity {
     TextView labelTeacher;
     @BindView(R.id.label_add_verify)
     TextView labelAddVerify;
+    @BindView(R.id.label_public)
+    TextView labelPublic;
 
     public static ArrayList<ClassLesson> classLessons;
 
@@ -217,8 +223,14 @@ public class CreateClassActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    showSetPublicTip();
+//                    showSetPublicTip();
+                    String a=getString(R.string.class_need_public);
+                    SpannableString spannableString=new SpannableString(a+"\n"+getString(R.string.set_public_tip2));
+                    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.common_text)),a.length()+1,spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f),a.length()+1,spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    labelPublic.setText(spannableString);
                 } else {
+                    labelPublic.setText(R.string.class_need_public);
                 }
             }
         });

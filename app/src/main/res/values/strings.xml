@@ -951,5 +951,6 @@
     <string name="permission_rationale_camera_audio_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用该功能哦~</string>
     <string name="permission_rationale_camera_audio_room_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用教室内直播功能哦~</string>
     <string name="set_public_tip">班级设为公开后，所有人可见，学生可通过搜索班级关键词找到该班</string>
+    <string name="set_public_tip2">学生可以通过搜索班级关键词找到该班</string>
 
 </resources>

@@ -93,7 +93,7 @@ public class SRPersonView extends RelativeLayout implements IViewModel<SearchRes
                 .into(ivAvatar);
 
         if(mData.basic!=null){
-            tvTitle.setText(StringUtil.setHighlightText(mData.basic.getName(),tag,heightlightColor));
+            tvTitle.setText(StringUtil.setHighlightText2(mData.basic.getName(),mData._name,heightlightColor));
         }else {
             tvTitle.setText("");
         }

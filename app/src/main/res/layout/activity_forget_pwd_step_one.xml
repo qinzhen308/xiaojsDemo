@@ -60,7 +60,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:textColorHint="@color/font_light_gray"
-                android:textColor="@color/font_dark_gray"
+                android:textColor="@color/common_text_enable_style"
                 android:textSize="@dimen/font_28px"
                 android:layout_marginRight="@dimen/px34"
                 android:layout_toRightOf="@+id/phone_title"

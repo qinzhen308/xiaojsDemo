@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.RegisterDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.VerifyCode;
@@ -55,7 +56,7 @@ public class ForgetPasswordStepOneActivity extends BaseActivity {
     LinearLayout lessonCreationTips;
 
     private int mCurrVerifyTime = 0;
-    boolean isModify = false;
+    boolean isModify = false;//是否修改密码进来的
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +71,11 @@ public class ForgetPasswordStepOneActivity extends BaseActivity {
         if (isModify) {
             setMiddleTitle(R.string.account_safe);
             lessonCreationTips.setVisibility(View.GONE);
+            mPhoneNumEdt.setEnabled(false);
+            mPhoneNumEdt.setText(AccountDataManager.getPhone(this));
         } else {
             setMiddleTitle(R.string.forget_password);
+            mPhoneNumEdt.setEnabled(true);
         }
     }
 

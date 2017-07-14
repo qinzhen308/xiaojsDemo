@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="@dimen/font_26px"
+        android:background="@color/white"
         android:textColor="@color/common_text"
         android:padding="@dimen/px30"
         android:layout_marginBottom="@dimen/px2"

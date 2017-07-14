@@ -136,7 +136,9 @@ public class SearchActivity extends BaseActivity {
                         typeName= Social.SearchType.ORGANIZATION;
                         break;
                 }
-                dataPageLoader.refresh();
+                if(!TextUtils.isEmpty(keywords)){
+                    dataPageLoader.refresh();
+                }
             }
         });
 
@@ -216,7 +218,10 @@ public class SearchActivity extends BaseActivity {
             }
             if(msg.what==BEGIN_SEARCH){
                 String key=msg.obj.toString();
-                if(!TextUtils.isEmpty(key)){
+                if(TextUtils.isEmpty(key)){
+                    keywords=key;
+                    bindData(new ArrayList<SearchResultV2>());
+                }else {
                     keywords=key;
                     dataPageLoader.refresh();
                 }
@@ -225,7 +230,9 @@ public class SearchActivity extends BaseActivity {
     };
 
     private void searchRequest(int page){
-        if(TextUtils.isEmpty(keywords))return;
+        if(TextUtils.isEmpty(keywords)){
+            return;
+        }
         SearchManager.search(this,typeName,keywords,page,MAX_PER_PAGE,dataPageLoader);
     }
 
