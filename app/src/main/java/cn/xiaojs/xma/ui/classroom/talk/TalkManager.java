@@ -235,17 +235,13 @@ public class TalkManager implements EventListener {
             Talk talk = (Talk) object;
             //TODO fix同一条消息多次回调?
             handleReceivedMsg(talk);
-//            Message message = new Message();
-//            message.obj = talk;
-//            receivedHandler.sendMessageDelayed(message,24);
         }
     }
 
     private Handler receivedHandler  = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(Message msg) {
-            //handleReceivedMsg((Talk) msg.obj);
-
+            notifyMsgChanged(true, msg.arg1, (TalkItem) msg.obj);
 
         }
     };
@@ -275,10 +271,12 @@ public class TalkManager implements EventListener {
             updateUnreadCount(type, talkItem);
             //notify msg change
 
-            receivedHandler.sendEmptyMessageDelayed();
 
+            Message message = new Message();
+            message.arg1 = type;
+            message.obj = talkItem;
+            receivedHandler.sendMessageDelayed(message,24);
 
-            notifyMsgChanged(true, type, talkItem);
         } catch (Exception e) {
 
             e.printStackTrace();
