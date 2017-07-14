@@ -178,6 +178,30 @@
 
         </LinearLayout>
 
+        <include
+            layout="@layout/layout_horizontal_line"/>
+
+        <!--班级是否公开-->
+        <LinearLayout
+            android:id="@+id/public_layout"
+            style="@style/LiveLessonItem"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/class_need_public"
+                android:layout_weight="1.0"/>
+
+            <ToggleButton
+                android:id="@+id/public_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/toggle_btn_selector"
+                android:textOff=""
+                android:textOn=""/>
+
+        </LinearLayout>
+
         <Button
                 android:id="@+id/enter_btn"
                 android:layout_alignParentBottom="true"

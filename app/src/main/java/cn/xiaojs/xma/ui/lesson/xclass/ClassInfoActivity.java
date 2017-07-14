@@ -25,6 +25,7 @@ import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.CLResponse;
+import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
@@ -66,6 +67,10 @@ public class ClassInfoActivity extends BaseActivity {
     LinearLayout verLayout;
     @BindView(R.id.veri_switcher)
     ToggleButton toggleButton;
+    @BindView(R.id.public_layout)
+    LinearLayout publicLayout;
+    @BindView(R.id.public_switcher)
+    ToggleButton publicSwitcher;
     @BindView(R.id.num_lesson)
     TextView numLessonView;
 
@@ -90,7 +95,7 @@ public class ClassInfoActivity extends BaseActivity {
 
     @OnClick({R.id.left_image, R.id.enter_btn,R.id.teacher_name,
             R.id.lay_time_table, R.id.lay_material,
-            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay, R.id.veri_switcher, R.id.right_image})
+            R.id.lay_student, R.id.lay_qrcode, R.id.name_lay, R.id.veri_switcher, R.id.public_switcher, R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -138,6 +143,10 @@ public class ClassInfoActivity extends BaseActivity {
                 //是否需要验证
                 boolean checked = ((ToggleButton) v).isChecked();
                 modifyVerify(checked);
+                break;
+            case R.id.public_switcher:
+                //是否需要验证
+                modifyPublish(((ToggleButton) v).isChecked());
                 break;
             case R.id.right_image:
                 if(Ctl.ClassState.IDLE.equals(classInfo.state) &&AccountDataManager.getAccountID(this).equals(classInfo.owner!=null?classInfo.owner.getId():"")){
@@ -240,6 +249,9 @@ public class ClassInfoActivity extends BaseActivity {
                     true : false;
 
             toggleButton.setChecked(verify);
+
+            publicLayout.setVisibility(View.VISIBLE);
+            publicSwitcher.setChecked(classInfo.publish!=null&&classInfo.publish.accessible);
         }
 
 
@@ -439,6 +451,36 @@ public class ClassInfoActivity extends BaseActivity {
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
                 toggleButton.setChecked(!verify);
+                Toast.makeText(ClassInfoActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+
+    private void modifyPublish(final boolean isPublish) {
+
+        Publish publishParam=new Publish();
+        publishParam.accessible = isPublish;
+
+        showProgress(true);
+        LessonDataManager.modifyClass(this, classId, publishParam, new APIServiceCallback<CLResponse>() {
+            @Override
+            public void onSuccess(CLResponse object) {
+                cancelProgress();
+                publicSwitcher.setChecked(isPublish);
+                Toast.makeText(ClassInfoActivity.this,
+                        R.string.lesson_edit_success,
+                        Toast.LENGTH_SHORT)
+                        .show();
+
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                toggleButton.setChecked(!isPublish);
                 Toast.makeText(ClassInfoActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
 
             }

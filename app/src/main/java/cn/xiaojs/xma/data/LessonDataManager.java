@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 
+import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
@@ -560,6 +561,14 @@ public class LessonDataManager {
     public static void modifyClass(Context context,
                                    String classid,
                                    ModifyModeParam params,
+                                   APIServiceCallback<CLResponse> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.modifyClass(classid, params);
+    }
+
+    public static void modifyClass(Context context,
+                                   String classid,
+                                   Publish params,
                                    APIServiceCallback<CLResponse> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClass(classid, params);
