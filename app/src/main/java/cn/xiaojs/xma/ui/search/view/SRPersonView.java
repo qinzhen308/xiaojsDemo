@@ -98,7 +98,8 @@ public class SRPersonView extends RelativeLayout implements IViewModel<SearchRes
             tvTitle.setText("");
         }
         String phone=mData.mobile.substring(0,4)+"****"+mData.mobile.substring(mData.mobile.length()-3,mData.mobile.length());
-        tvTel.setText(StringUtil.setHighlightText(phone,tag,heightlightColor));
+        tvTel.setText(phone);
+//        tvTel.setText(StringUtil.setHighlightText(phone,tag,heightlightColor));
         tvFans.setText("粉丝 "+(mData.stats==null?0:mData.stats.fans));
 
         setOnClickListener(new OnClickListener() {

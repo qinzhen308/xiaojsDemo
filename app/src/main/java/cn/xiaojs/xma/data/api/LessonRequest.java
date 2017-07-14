@@ -32,6 +32,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.Map;
 
+import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.account.DealAck;
 
@@ -347,6 +348,10 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void modifyClass(String classid, ModifyClassParams params) {
+        Call<CLResponse> call = getService().modifyClass(classid, params);
+        enqueueRequest(APIType.MODIFY_CLASS, call);
+    }
+    public void modifyClass(String classid, Publish params) {
         Call<CLResponse> call = getService().modifyClass(classid, params);
         enqueueRequest(APIType.MODIFY_CLASS, call);
     }

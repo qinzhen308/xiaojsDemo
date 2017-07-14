@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.util.Date;
 
+import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.account.Account;
 
 /**
@@ -26,4 +27,6 @@ public class ClassInfo implements Serializable{
     public String id;
     public ClassJoin join;
     public String state;
+
+    public Publish publish;
 }
