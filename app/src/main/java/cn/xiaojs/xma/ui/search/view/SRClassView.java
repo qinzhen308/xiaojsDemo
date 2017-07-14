@@ -23,6 +23,7 @@ import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.StringUtil;
 
 /**
@@ -70,12 +71,13 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
     public void bindData(int position, SearchResultV2 data) {
         mData = data;
         String tag=((Activity)getContext()).getIntent().getStringExtra("extra_search_keywords");
-        if(mData.teacher!=null){
+        if(!ArrayUtil.isEmpty(mData.advisers)&&mData.advisers[0]!=null){
             tvName.setVisibility(VISIBLE);
             ivAvatar.setVisibility(VISIBLE);
-            tvName.setText(StringUtil.setHighlightText2(mData.teacher.name,mData._name,heightlightColor));
+            tvName.setText(mData.advisers[0].name);
+//            tvName.setText(StringUtil.setHighlightText2(mData.advisers[0].name,mData._name,heightlightColor));
             Glide.with(getContext())
-                    .load(Account.getAvatar(data.teacher.getId(), 300))
+                    .load(Account.getAvatar(mData.advisers[0].getId(), 300))
                     .bitmapTransform(circleTransform)
                     .placeholder(R.drawable.default_avatar_grey)
                     .error(R.drawable.default_avatar_grey)
@@ -86,11 +88,17 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
         }
 
         tvTitle.setText(StringUtil.setHighlightText2(mData.title,mData._title,heightlightColor));
-        tvDate.setText("创建时间 "+ScheduleUtil.getDateYMD(new Date()));
+        tvDate.setText("创建时间 "+ScheduleUtil.getDateYMD(mData.createdOn));
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonWebActivity.invoke(getContext(),"", ApiManager.getShareLessonUrl(mData.id,Account.TypeName.CLASS_LESSON));
+                String url=ApiManager.getShareLessonUrl(mData.id,Account.TypeName.CLASS_LESSON);
+                if(url.contains("?")){
+                    url+="&app=android";
+                }else {
+                    url+="?app=android";
+                }
+                CommonWebActivity.invoke(getContext(),"",url);
             }
         });
     }
