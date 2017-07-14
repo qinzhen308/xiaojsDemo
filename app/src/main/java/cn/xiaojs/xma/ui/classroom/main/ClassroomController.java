@@ -92,7 +92,9 @@ public class ClassroomController {
     }
 
     public synchronized static void init(Context context) {
-        mInstance = new ClassroomController(context);
+        if (mInstance == null) {
+            mInstance = new ClassroomController(context);
+        }
     }
 
     public void release() {

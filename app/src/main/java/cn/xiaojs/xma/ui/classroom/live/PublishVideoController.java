@@ -302,7 +302,7 @@ public class PublishVideoController extends VideoController implements EventList
                     });
                 }
                 break;
-
+            case OPEN_CAMERA_FAIL:
             case IOERROR:
             case INVALID_STREAMING_URL:
             case AUDIO_RECORDING_FAIL:

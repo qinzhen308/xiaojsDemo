@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,6 +33,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -150,6 +153,8 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     private boolean mHandKeyPressing = false;
     private boolean mAlreadyExitFragment = false;
     private long mPlayOrPausePressTime = 0;
+
+    private CommonDialog noPermissionDlg;
 
     @Override
     protected View getContentView() {
@@ -736,6 +741,11 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
                 break;
             case CTLConstant.StreamingType.PUBLISH_INDIVIDUAL:
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("onStreamStopped*********PUBLISH_INDIVIDUAL********ffff***************");
+                }
+
                 //mIndividualStreamDuration = mTimeProgressHelper.getIndividualStreamDuration();
                 //mTimeProgressHelper.setTimeProgress(mCountTime, mIndividualStreamDuration, liveState, mIndividualName, false);
                 if (extra instanceof String && VideoController.STREAM_EXPIRED.equals((String) extra)) {
@@ -758,7 +768,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     }
 
     @Override
-    public void onStreamException(StreamingState errorCode, int type, Object extra) {
+    public void onStreamException(final StreamingState errorCode, final int type, Object extra) {
 
 
         if (getActivity() != null) {
@@ -766,9 +776,14 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 @Override
                 public void run() {
                     try {
-                        //FIXME
-                        Toast.makeText(mContext, R.string.live_occur_exception, Toast.LENGTH_SHORT).show();
-                        //exitCurrentFragment();
+
+                        if (errorCode == StreamingState.OPEN_CAMERA_FAIL) {
+                            showNoCameraPermissDlg(type);
+                        }else {
+                            Toast.makeText(mContext, R.string.live_occur_exception, Toast.LENGTH_SHORT).show();
+                            exitCurrentFragment();
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -776,6 +791,54 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             });
         }
 
+
+    }
+
+    public void showNoCameraPermissDlg(final int type) {
+
+        if (noPermissionDlg == null) {
+            noPermissionDlg =new CommonDialog(mContext);
+            noPermissionDlg.setDesc(getString(R.string.permission_rationale_camera_audio_tip));
+            noPermissionDlg.setRightBtnText(R.string.go_to_authorization);
+            noPermissionDlg.setCancelable(false);
+        }
+
+        noPermissionDlg.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                //引导用户至设置页手动授权
+                noPermissionDlg.dismiss();
+
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+
+                if (type == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL) {
+                    pauseIndividual(true);
+                }
+
+            }
+        });
+        noPermissionDlg.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                noPermissionDlg.dismiss();
+
+                Toast.makeText(mContext, "没有允许相机或麦克风权限，您无法直播", Toast.LENGTH_SHORT).show();
+
+                if (type == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL) {
+                    pauseIndividual(true);
+                }
+
+
+
+            }
+        });
+
+        if (!noPermissionDlg.isShowing()) {
+            noPermissionDlg.show();
+        }
 
     }
 

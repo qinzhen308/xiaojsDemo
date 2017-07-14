@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Keep;
@@ -1033,10 +1034,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Keep
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)
     private void playOrPauseLesson() {
-
         if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
             return;
         }
+
         mPlayOrPausePressTime = System.currentTimeMillis();
 
         String liveState = classroomEngine.getLiveState();

@@ -263,7 +263,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
     }
 
     protected void streamStopped(String event, StreamStopReceive message){
-        Logger.d("receive streamStopped*********************************");
         if (message == null) {
             return;
         }

@@ -403,6 +403,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * 摄像机打开失败，需要提示
                  * */
                 case OPEN_CAMERA_FAIL:
+
                     Log.e(TAG, "Open Camera Fail. id:" + extra);
                     info("OPEN_CAMERA_FAIL");
                     break;
@@ -746,6 +747,8 @@ public class LiveRecordView extends BaseMediaView implements
                 .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
                 .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
                 .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
+
+        mProfile.setAdaptiveBitrateEnable(true);
     }
 
     private void stopStreaming() {

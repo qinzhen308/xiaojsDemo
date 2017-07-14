@@ -80,10 +80,14 @@ import io.socket.emitter.Emitter;
 public class ClassroomActivity extends FragmentActivity implements EventListener {
     private final static int REQUEST_PERMISSION = 1000;
 
+    private final int MAX_CONNECT_COUNT = 3;
+    private final int MAX_CONNECT_TIME = 5 * 1000; //ms
+
     private final int MSG_CONNECT_SUCCESS = 1;
     private final int MSG_CONNECT_ERROR = 2;
     private final int MSG_CONNECT_TIMEOUT = 3;
     private final int MSG_NETWORK_CHANGED = 4;
+
 
     private ProgressHUD mProgress;
     private CommonDialog mKickOutDialog;
@@ -95,6 +99,8 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     private SocketManager socketManager;
     private NetworkChangedReceiver networkChangedReceiver;
     private CtlSession tempSession;
+
+    private int connectCount = 0;
 
 
     private Handler handler = new Handler() {
@@ -131,13 +137,13 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     @Keep
     @PermissionRationale(requestCode = REQUEST_PERMISSION)
     public void requestCameraRationale() {
-        PermissionHelper.showRationaleDialog(this,getString(R.string.permission_rationale_camera_audio_room_tip));
+        PermissionHelper.showRationaleDialog(this, getString(R.string.permission_rationale_camera_audio_room_tip));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
     @Override
@@ -170,11 +176,14 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     }
 
     private void reset() {
+
         if (classroomEngine != null) {
             classroomEngine.removeEvenListener(this);
         }
 
         unRegisteNetwork();
+
+        tempSession = null;
     }
 
     @Override
@@ -229,9 +238,16 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
                 try {
                     tempSession = session;
-                    //连接socket
 
-                    connectSocket(ticket, session.secret, !session.accessible);
+
+                    if (session.accessible) {
+                        //连接socket
+                        connectSocket(ticket, session.secret, false);
+                    }else {
+                        //询问用户是否强制进入
+                        checkForceKickOut(session.secret);
+                    }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -251,11 +267,45 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         });
     }
 
+    /**
+     * 检测是否需要强制踢出
+     */
+    private void checkForceKickOut(final String secret) {
+        if (mKickOutDialog == null) {
+            mKickOutDialog = new CommonDialog(this);
+            mKickOutDialog.setDesc(R.string.mobile_kick_out_desc);
+            mKickOutDialog.setLefBtnText(R.string.cancel);
+            mKickOutDialog.setRightBtnText(R.string.ok);
+            mKickOutDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    //强制登录
+                    mKickOutDialog.dismiss();
+                    connectSocket(ticket, secret, true);
+                }
+            });
+
+            mKickOutDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    mKickOutDialog.dismiss();
+                    Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_cancel, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        }
+
+        if (!mKickOutDialog.isShowing()) {
+            mKickOutDialog.show();
+        }
+
+    }
+
 
     private void connectSocket(String ticket, String secret, boolean force) {
         String url = getClassroomUrl(ticket);
-
-        handler.sendEmptyMessageDelayed(MSG_CONNECT_TIMEOUT, 10 * 1000);
+        connectCount++;
+        handler.sendEmptyMessageDelayed(MSG_CONNECT_TIMEOUT, MAX_CONNECT_TIME);
 
         try {
             socketManager.initSocket(url, buildOptions(secret, force));
@@ -275,6 +325,11 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
 
     private void onSucc() {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("onSucc-----init-----");
+        }
+
 
         registeNetwork();
 
@@ -302,8 +357,6 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         CtlSession ctlSession = classroomEngine.getCtlSession();
 
         ClassroomController.init(this);
-
-
         ContactManager.getInstance().init();
         TalkManager.getInstance().init(ClassroomActivity.this, ticket);
         ContactManager.getInstance().getAttendees(ClassroomActivity.this, null);
@@ -458,13 +511,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 public void onClick() {
                     mContinueConnectDialog.dismiss();
 
-                    ClassroomController classroomController = ClassroomController.getInstance();
-                    if (classroomController != null) {
-                        classroomController.exitWhenReConnect();
-                    }
-
-
-                    initData();
+                    toReconnect(true);
                 }
             });
 
@@ -479,36 +526,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         mContinueConnectDialog.show();
     }
 
-    /**
-     * 检测是否需要强制踢出
-     */
-    private void checkForceKickOut(final CtlSession ctlSession, final boolean netWorkChanged) {
-        if (mKickOutDialog == null) {
-            mKickOutDialog = new CommonDialog(this);
-            mKickOutDialog.setDesc(R.string.mobile_kick_out_desc);
-            mKickOutDialog.setLefBtnText(R.string.cancel);
-            mKickOutDialog.setRightBtnText(R.string.ok);
-            mKickOutDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    //强制登录
-                    mKickOutDialog.dismiss();
-                    //onSucc();
-                }
-            });
 
-            mKickOutDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    mKickOutDialog.dismiss();
-                    Toast.makeText(ClassroomActivity.this, R.string.mobile_kick_out_cancel, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
-        }
-
-        mKickOutDialog.show();
-    }
 
     private void disConnectSocket() {
         if (socketManager != null) {
@@ -608,6 +626,21 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         }
     };
 
+    private void toReconnect(boolean overall) {
+
+        if (overall || tempSession == null) {
+            ClassroomController classroomController = ClassroomController.getInstance();
+            if (classroomController != null) {
+                classroomController.exitWhenReConnect();
+            }
+            initData();
+        } else {
+            connectSocket(ticket, tempSession.secret, !tempSession.accessible);
+        }
+
+
+    }
+
 
     public void connectSuccess() {
         cancelProgress();
@@ -619,19 +652,43 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     }
 
     public void connectFailed(String errorCode, String errorMessage) {
-        cancelProgress();
 
         ClassroomController classroomController = ClassroomController.getInstance();
         if (classroomController != null) {
-            classroomController.enterPlayFragment(null,true);
+            classroomController.enterPlayFragment(null, true);
         }
 
         disConnectSocket();
-        showConnectClassroom(null);
 
         if (XiaojsConfig.DEBUG) {
-            Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
+            Logger.d("connect classroom failed, current reconnect count: %d", connectCount);
         }
+
+
+        if (connectCount > MAX_CONNECT_COUNT) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("reconnect count is equals max count,so show failed for user");
+            }
+            if (XiaojsConfig.DEBUG) {
+                Toast.makeText(ClassroomActivity.this, R.string.socket_disconnect, Toast.LENGTH_LONG).show();
+            }
+
+            //显示断开连接弹框
+            connectCount = 0;
+            cancelProgress();
+            showConnectClassroom(null);
+        } else {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("reconnect count is < max count,so auto reconnect");
+            }
+
+            //直接重试连接
+            toReconnect(false);
+        }
+
+
     }
 
     public void networkStateChanged(int state) {

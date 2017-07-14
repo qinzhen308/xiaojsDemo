@@ -29,10 +29,8 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
-import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -65,10 +63,7 @@ public class ContactManager implements EventListener{
     }
 
     public void init() {
-
         ClassroomEngine.getEngine().addEvenListener(this);
-
-        SocketManager.on(Event.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE), mSyncClassStateListener);
     }
 
     public void release() {
@@ -135,52 +130,45 @@ public class ContactManager implements EventListener{
             updateContactList(true, (Attendee)object);
         } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE).equals(event)) {
             updateContactList(false, (Attendee)object);
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE).equals(event)) {
+            if (object == null)
+                return;
+
+            SyncClassStateReceive receive = (SyncClassStateReceive) object;
+            handleSyncClassState(receive);
         }
     }
 
+    private void handleSyncClassState(SyncClassStateReceive syncState) {
+        if (syncState != null && syncState.volatiles != null && syncState.volatiles.length > 0) {
 
-    private SocketManager.EventListener mSyncClassStateListener = new SocketManager.EventListener() {
-        @Override
-        public void call(Object... args) {
+            if (mLiveCollection != null && mLiveCollection.attendees != null) {
 
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("Received event: **Su.EventType.SYNC_CLASS_STATE**");
-            }
+                for (Attendee attendee : mLiveCollection.attendees) {
 
-            if (args != null && args.length > 0) {
-                SyncClassStateResponse syncState = ClassroomBusiness.parseSocketBean(args[0], SyncClassStateResponse.class);
+                    for (SyncClassStateResponse.Volatiles volatiles : syncState.volatiles) {
 
-                if (syncState != null && syncState.volatiles != null && syncState.volatiles.length > 0) {
-
-                    if (mLiveCollection != null && mLiveCollection.attendees != null) {
-
-                        for (Attendee attendee : mLiveCollection.attendees) {
-
-                            for (SyncClassStateResponse.Volatiles volatiles : syncState.volatiles) {
-
-                                if (attendee.accountId.equals(volatiles.accountId)) {
+                        if (attendee.accountId.equals(volatiles.accountId)) {
 //                                    if (TextUtils.isEmpty(volatiles.psType)) {
 //                                        attendee.psType = LiveCtlSessionManager.getInstance().getCtlSession().psType;
 //                                    }else {
-                                    attendee.psTypeInLesson = volatiles.psType;
-                                    //}
+                            attendee.psTypeInLesson = volatiles.psType;
+                            //}
 
 
-                                    break;
-                                }
-
-                            }
-
-
+                            break;
                         }
 
                     }
 
-                    notifyAttendChanged(mLiveCollection.attendees, ACTION_PSTYPE_CHANGE);
+
                 }
+
             }
+
+            notifyAttendChanged(mLiveCollection.attendees, ACTION_PSTYPE_CHANGE);
         }
-    };
+    }
 
 
     /**
