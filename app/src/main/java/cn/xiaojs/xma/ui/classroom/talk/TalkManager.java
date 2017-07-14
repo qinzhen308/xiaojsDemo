@@ -410,10 +410,6 @@ public class TalkManager implements EventListener {
         talkBean.to = to;
 
         if (talkBean != null) {
-
-//            for (int i=0; i<100000; i++) {
-//                talkBean.body.text = text + i;
-
             ClassroomEngine.getEngine().sendTalk(talkBean, new EventCallback<TalkResponse>() {
                 @Override
                 public void onSuccess(TalkResponse talkResponse) {
@@ -442,8 +438,6 @@ public class TalkManager implements EventListener {
                 }
             });
         }
-
-      //  }
     }
 
     private int addTalkItemToAdapter(TalkItem talkItem, String accountId) {
