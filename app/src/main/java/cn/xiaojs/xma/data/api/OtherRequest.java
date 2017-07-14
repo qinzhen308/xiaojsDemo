@@ -10,6 +10,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.QRCodeData;
+import cn.xiaojs.xma.util.APPUtils;
 import retrofit2.Call;
 
 /**
@@ -27,11 +28,17 @@ public class OtherRequest extends ServiceRequest{
 //        QRImgRequst requst=new QRImgRequst();
 //        requst.code=classid;
 //        requst.size=size;
+        String baseUrl = null;
+        if(APPUtils.isProEvn()){
+            baseUrl = XiaojsConfig.SHARE_LESSON_BASE_URL;
+        }else {
+            baseUrl=XiaojsConfig.SHARE_LESSON_TEST_BASE_URL;
+        }
         Map<String ,String > map=new HashMap<>();
         map.put("code",classid);
         map.put("size",size);
         map.put("type","classhome");
-        Call<QRCodeData> call = getApiManager().createOtherService(XiaojsConfig.SHARE_LESSON_BASE_URL).getQRImg(map);
+        Call<QRCodeData> call = getApiManager().createOtherService(baseUrl).getQRImg(map);
         enqueueRequest(APIType.GET_ACCOUNT_ACTIVITIES,call);
     }
 

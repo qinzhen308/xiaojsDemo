@@ -22,6 +22,7 @@ import cn.xiaojs.xma.data.api.service.XiaojsService;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.util.APPUtils;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -291,7 +292,12 @@ public class ApiManager {
      */
     public static String getShareLessonUrl(String lessonId,String type) {
 
-        String baseUrl = XiaojsConfig.SHARE_LESSON_BASE_URL;
+        String baseUrl = null;
+        if(APPUtils.isProEvn()){
+            baseUrl = XiaojsConfig.SHARE_LESSON_BASE_URL;
+        }else {
+            baseUrl=XiaojsConfig.SHARE_LESSON_TEST_BASE_URL;
+        }
         String typeParam="";
         if(Account.TypeName.STAND_ALONE_LESSON.equals(type)){//公开课
             typeParam="coursedetails";

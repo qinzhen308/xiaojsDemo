@@ -138,7 +138,7 @@
     <string name="creative_lesson">开公开课</string>
     <string name="creative_lesson_tip">单节课，学生通过搜索该课报名，进入教室上课</string>
     <!--<string name="creative_lesson_tip">只能开设单节课，学生能够通过搜索报名，进入教室上课</string>-->
-    <string name="search_global_tip">课/个人/机构</string>
+    <string name="search_global_tip">课/班/个人/机构</string>
     <string name="search_tip1">输入你要找的班课名称，老师或者机构\n报名你要学的班课，开始学习</string>
 
 
@@ -218,7 +218,7 @@
     <string name="sale_promotion">促销</string>
     <string name="input_tips"><![CDATA[<font color="#cc0000">%1$d</font>]]>/%2$d字</string>
 
-    <string name="home_search_hint">课/个人/机构</string>
+    <string name="home_search_hint">课/班/个人/机构</string>
     <string name="course_of_learn">我报的班</string>
     <string name="course_of_teach">我授的课</string>
     <string name="my_course">我的课</string>
