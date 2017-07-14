@@ -24,8 +24,8 @@ public class SearchResultV2 {
     public String title;
     public String _title;
     public Account teacher;
-    public Account[] assistants;
-    public Account[] advisers;
+//    public Account[] assistants;
+//    public Account[] advisers;
 
     public Schedule schedule;
 

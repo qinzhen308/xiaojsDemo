@@ -91,7 +91,7 @@ public class SROrganizationView extends RelativeLayout implements IViewModel<Sea
                 .into(ivAvatar);
 
         if(mData.basic!=null){
-            tvTitle.setText(StringUtil.setHighlightText(mData.basic.getName(),tag,heightlightColor));
+            tvTitle.setText(StringUtil.setHighlightText2(mData.basic.getName(),mData._name,heightlightColor));
         }else {
             tvTitle.setText("");
         }
@@ -122,7 +122,7 @@ public class SROrganizationView extends RelativeLayout implements IViewModel<Sea
             v.setText("已关注");
             v.setTextColor(c_common_text);
             v.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            v.setBackgroundResource(R.drawable.white_stoke_bg);
+            v.setBackgroundResource(R.drawable.gray_stoke_bg);
             v.setEnabled(false);
         }
     }

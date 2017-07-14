@@ -73,7 +73,7 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
         if(mData.teacher!=null){
             tvName.setVisibility(VISIBLE);
             ivAvatar.setVisibility(VISIBLE);
-            tvName.setText(StringUtil.setHighlightText(mData.teacher.name,tag,heightlightColor));
+            tvName.setText(StringUtil.setHighlightText2(mData.teacher.name,mData._name,heightlightColor));
             Glide.with(getContext())
                     .load(Account.getAvatar(data.teacher.getId(), 300))
                     .bitmapTransform(circleTransform)
@@ -85,7 +85,7 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
             ivAvatar.setVisibility(INVISIBLE);
         }
 
-        tvTitle.setText(StringUtil.setHighlightText(mData.title,tag,heightlightColor));
+        tvTitle.setText(StringUtil.setHighlightText2(mData.title,mData._title,heightlightColor));
         tvDate.setText("创建时间 "+ScheduleUtil.getDateYMD(new Date()));
         setOnClickListener(new OnClickListener() {
             @Override
