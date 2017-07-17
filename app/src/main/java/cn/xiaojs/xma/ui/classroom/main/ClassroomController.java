@@ -86,7 +86,7 @@ public class ClassroomController {
 
 
     private ClassroomController(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
         mBackPressListeners = new ArrayList<BackPressListener>();
         mOnSocketListeners = new ArrayList<SocketManager.OnSocketListener>();
     }
@@ -106,7 +106,10 @@ public class ClassroomController {
         mOnSocketListeners = null;
     }
 
-    public static synchronized ClassroomController getInstance() {
+    public static synchronized ClassroomController getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new ClassroomController(context);
+        }
         return mInstance;
     }
 

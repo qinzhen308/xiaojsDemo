@@ -153,8 +153,8 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         reset();
 
         //release
-        if (ClassroomController.getInstance() != null) {
-            ClassroomController.getInstance().release();
+        if (ClassroomController.getInstance(this) != null) {
+            ClassroomController.getInstance(this).release();
         }
         if (ContactManager.getInstance() != null) {
             ContactManager.getInstance().release();
@@ -209,12 +209,12 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
             }
             int backStackEntryCount = fragmentManager.getBackStackEntryCount();
 
-            if (backStackEntryCount < 1 && ClassroomController.getInstance() != null) {
+            if (backStackEntryCount < 1 && ClassroomController.getInstance(this) != null) {
 
-                if (ClassroomController.getInstance().getStackFragment() != null) {
-                    ClassroomController.getInstance().onActivityBackPressed(backStackEntryCount);
+                if (ClassroomController.getInstance(this).getStackFragment() != null) {
+                    ClassroomController.getInstance(this).onActivityBackPressed(backStackEntryCount);
                 } else {
-                    ClassroomController.getInstance().showExitClassroomDialog();
+                    ClassroomController.getInstance(this).showExitClassroomDialog();
                 }
                 return false;
             }
@@ -363,7 +363,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
         //init fragment
 
-        ClassroomLiveFragment liveFragment = ClassroomController.getInstance().getStackFragment();
+        ClassroomLiveFragment liveFragment = ClassroomController.getInstance(this).getStackFragment();
 
         if (liveFragment == null) {
             initFragment(ctlSession);
@@ -374,7 +374,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                     .remove(liveFragment)
                     .commit();
 
-            ClassroomController.getInstance().setStackFragment(null);
+            ClassroomController.getInstance(this).setStackFragment(null);
 
             initFragment(ctlSession);
         }
@@ -394,18 +394,18 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
             if (isPrivateClass) {
                 data.putBoolean(Constants.KEY_SHOW_CLASS_LESSON_TIPS, true);
                 data.putString(Constants.KEY_PUBLISH_URL, ctlSession.publishUrl);
-                ClassroomController.getInstance().enterPlayFragment(data, false);
+                ClassroomController.getInstance(this).enterPlayFragment(data, false);
 
             } else {
                 data.putInt(Constants.KEY_FROM, Constants.FROM_ACTIVITY);
                 data.putSerializable(Constants.KEY_PUBLISH_TYPE, CTLConstant.StreamingType.PUBLISH_LIVE);
                 data.putString(Constants.KEY_PUBLISH_URL, ctlSession.publishUrl);
-                ClassroomController.getInstance().enterPublishFragment(data, false);
+                ClassroomController.getInstance(this).enterPublishFragment(data, false);
             }
 
 
         } else {
-            ClassroomController.getInstance().enterPlayFragment(null, false);
+            ClassroomController.getInstance(this).enterPlayFragment(null, false);
         }
     }
 
@@ -629,7 +629,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     private void toReconnect(boolean overall) {
 
         if (overall || tempSession == null) {
-            ClassroomController classroomController = ClassroomController.getInstance();
+            ClassroomController classroomController = ClassroomController.getInstance(this);
             if (classroomController != null) {
                 classroomController.exitWhenReConnect();
             }
@@ -653,7 +653,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
     public void connectFailed(String errorCode, String errorMessage) {
 
-        ClassroomController classroomController = ClassroomController.getInstance();
+        ClassroomController classroomController = ClassroomController.getInstance(this);
         if (classroomController != null) {
             classroomController.enterPlayFragment(null, true);
         }

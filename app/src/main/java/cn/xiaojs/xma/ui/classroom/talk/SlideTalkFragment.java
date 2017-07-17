@@ -126,7 +126,7 @@ public class SlideTalkFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.open_input:
-                ClassroomController.getInstance().openInputText(this, 0);
+                ClassroomController.getInstance(mContext).openInputText(this, 0);
                 break;
             case R.id.msg_send:
 

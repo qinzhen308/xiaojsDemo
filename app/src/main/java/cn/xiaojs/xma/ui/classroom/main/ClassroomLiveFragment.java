@@ -125,16 +125,16 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         super.onAttach(context);
 
         TalkManager.getInstance().registerMsgReceiveListener(this);
-        ClassroomController.getInstance().setStackFragment(this);
-        ClassroomController.getInstance().registerBackPressListener(this);
+        ClassroomController.getInstance(context).setStackFragment(this);
+        ClassroomController.getInstance(context).registerBackPressListener(this);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
 
-        ClassroomController.getInstance().setStackFragment(null);
-        ClassroomController.getInstance().unregisterBackPressListener(this);
+        ClassroomController.getInstance(mContext).setStackFragment(null);
+        ClassroomController.getInstance(mContext).unregisterBackPressListener(this);
         TalkManager.getInstance().unregisterMsgReceiveListener(this);
     }
 
@@ -155,7 +155,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         mCtlSession = classroomEngine.getCtlSession();
         mTicket = classroomEngine.getTicket();
 
-        mClassroomController = ClassroomController.getInstance();
+        mClassroomController = ClassroomController.getInstance(mContext);
         mFadeAnimListeners = new HashMap<String, FadeAnimListener>();
         mViewPropertyAnimators = new ArrayList<ViewPropertyAnimator>();
     }
@@ -480,7 +480,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
 
     @Override
     public void onFrameCaptured(Bitmap bitmap) {
-        ClassroomController.getInstance().enterPhotoDoodleByBitmap(bitmap, this);
+        ClassroomController.getInstance(mContext).enterPhotoDoodleByBitmap(bitmap, this);
     }
 
     @Override
