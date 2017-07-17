@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -377,7 +378,7 @@ public class ClassroomController {
             ((ClassroomActivity) mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .remove(mCurrStackFragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -385,10 +386,10 @@ public class ClassroomController {
      * 进入播放fragment
      */
     public void enterPlayFragment(Bundle data, boolean needExitCurr) {
+
         if (mCurrStackFragment instanceof PlayFragment) {
             return;
         }
-
         if (mContext instanceof FragmentActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
             if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -396,6 +397,7 @@ public class ClassroomController {
             }
 
             if (needExitCurr && mCurrStackFragment instanceof PublishFragment) {
+
                 ((ClassroomActivity) mContext).getSupportFragmentManager()
                         .beginTransaction()
                         .remove(mCurrStackFragment)
