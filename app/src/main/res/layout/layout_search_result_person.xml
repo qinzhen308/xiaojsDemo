@@ -23,6 +23,9 @@
         android:layout_alignTop="@id/iv_avatar"
         android:layout_marginLeft="@dimen/px20"
         android:text="我的标题"
+        android:maxLines="1"
+        android:layout_toLeftOf="@+id/btn_follow"
+        android:layout_marginRight="@dimen/px5"
         android:layout_toRightOf="@+id/iv_avatar"
         android:textColor="@color/font_black"
         android:textSize="@dimen/font_34px" />

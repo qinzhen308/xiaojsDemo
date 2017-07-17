@@ -88,7 +88,12 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
         }
 
         tvTitle.setText(StringUtil.setHighlightText2(mData.title,mData._title,heightlightColor));
-        tvDate.setText("创建时间 "+ScheduleUtil.getDateYMD(mData.createdOn));
+        if(mData.createdOn==null){
+            tvDate.setVisibility(INVISIBLE);
+        }else {
+            tvDate.setVisibility(VISIBLE);
+            tvDate.setText("创建时间 "+ScheduleUtil.getDateYMD(mData.createdOn));
+        }
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
