@@ -430,7 +430,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 ((ClassroomActivity) mContext).getSupportFragmentManager()
                         .beginTransaction()
                         .remove(fragment)
-                        .commit();
+                        .commitAllowingStateLoss();
             }
 
 

@@ -126,7 +126,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.document_layout, documentFragment)
                 .addToBackStack("doc")
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /**
@@ -144,7 +144,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.fc_slide_talk_layout, fragment)
                 .addToBackStack("slide_talk")
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /**
@@ -268,7 +268,7 @@ public class ClassroomController {
                     .beginTransaction()
                     .add(R.id.photo_doodle_layout, fragment)
                     .addToBackStack("photo_doodle")
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -324,7 +324,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.video_play_layout, videoPlayFragment)
                 .addToBackStack("video_player")
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     public void exitVideoPlayPage() {
@@ -377,7 +377,7 @@ public class ClassroomController {
             ((ClassroomActivity) mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .remove(mCurrStackFragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -399,7 +399,7 @@ public class ClassroomController {
                 ((ClassroomActivity) mContext).getSupportFragmentManager()
                         .beginTransaction()
                         .remove(mCurrStackFragment)
-                        .commit();
+                        .commitAllowingStateLoss();
             }
 
             PlayFragment fragment = new PlayFragment();
@@ -430,7 +430,7 @@ public class ClassroomController {
                 ((ClassroomActivity) mContext).getSupportFragmentManager()
                         .beginTransaction()
                         .remove(mCurrStackFragment)
-                        .commit();
+                        .commitAllowingStateLoss();
             }
             PublishFragment fragment = new PublishFragment();
             fragment.setArguments(data);
@@ -458,7 +458,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.class_canlender_layout, scheduleFragment)
                 .addToBackStack("canlender_layout")
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /**

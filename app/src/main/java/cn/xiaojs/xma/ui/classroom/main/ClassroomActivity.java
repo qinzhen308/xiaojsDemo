@@ -372,7 +372,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
             getSupportFragmentManager()
                     .beginTransaction()
                     .remove(liveFragment)
-                    .commit();
+                    .commitAllowingStateLoss();
 
             ClassroomController.getInstance(this).setStackFragment(null);
 
