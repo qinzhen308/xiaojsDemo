@@ -1074,6 +1074,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 @Override
                 public void onSuccess(ClassResponse response) {
                     cancelProgress();
+                    mTimeProgressHelper.resetTime();
                     startPublishFragment(response != null ? response.publishUrl : null,
                             null,
                             CTLConstant.StreamingType.PUBLISH_LIVE);
