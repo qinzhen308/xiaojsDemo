@@ -86,7 +86,7 @@ public class ClassroomController {
 
 
     private ClassroomController(Context context) {
-        mContext = context.getApplicationContext();
+        mContext = context;
         mBackPressListeners = new ArrayList<BackPressListener>();
         mOnSocketListeners = new ArrayList<SocketManager.OnSocketListener>();
     }
@@ -126,7 +126,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.document_layout, documentFragment)
                 .addToBackStack("doc")
-                .commitAllowingStateLoss();
+                .commit();
     }
 
     /**
@@ -144,7 +144,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.fc_slide_talk_layout, fragment)
                 .addToBackStack("slide_talk")
-                .commitAllowingStateLoss();
+                .commit();
     }
 
     /**
@@ -268,7 +268,7 @@ public class ClassroomController {
                     .beginTransaction()
                     .add(R.id.photo_doodle_layout, fragment)
                     .addToBackStack("photo_doodle")
-                    .commitAllowingStateLoss();
+                    .commit();
         }
     }
 
@@ -324,7 +324,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.video_play_layout, videoPlayFragment)
                 .addToBackStack("video_player")
-                .commitAllowingStateLoss();
+                .commit();
     }
 
     public void exitVideoPlayPage() {
@@ -377,7 +377,7 @@ public class ClassroomController {
             ((ClassroomActivity) mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .remove(mCurrStackFragment)
-                    .commitAllowingStateLoss();
+                    .commit();
         }
     }
 
@@ -458,7 +458,7 @@ public class ClassroomController {
                 .beginTransaction()
                 .add(R.id.class_canlender_layout, scheduleFragment)
                 .addToBackStack("canlender_layout")
-                .commitAllowingStateLoss();
+                .commit();
     }
 
     /**

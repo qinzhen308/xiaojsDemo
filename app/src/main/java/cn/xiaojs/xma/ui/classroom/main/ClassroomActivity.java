@@ -239,7 +239,6 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 try {
                     tempSession = session;
 
-
                     if (session.accessible) {
                         //连接socket
                         connectSocket(ticket, session.secret, false);
@@ -303,19 +302,34 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
 
     private void connectSocket(String ticket, String secret, boolean force) {
+        Logger.d("connectSocket--------------1");
         String url = getClassroomUrl(ticket);
+        Logger.d("connectSocket--------------2");
         connectCount++;
+        Logger.d("connectSocket--------------3");
         handler.sendEmptyMessageDelayed(MSG_CONNECT_TIMEOUT, MAX_CONNECT_TIME);
+        Logger.d("connectSocket--------------4");
 
         try {
+
+            Logger.d("connectSocket--------------5");
+
             socketManager.initSocket(url, buildOptions(secret, force));
+            Logger.d("connectSocket--------------6");
+
             socketManager.on(Socket.EVENT_CONNECT, connectListener);
+            Logger.d("connectSocket--------------7");
             socketManager.on(Socket.EVENT_DISCONNECT, disConnectListener);
+            Logger.d("connectSocket--------------8");
             socketManager.on(Socket.EVENT_CONNECT_ERROR, errorListener);
+            Logger.d("connectSocket--------------9");
             socketManager.on(Socket.EVENT_CONNECT_TIMEOUT, timeoutListener);
+            Logger.d("connectSocket--------------10");
             socketManager.connect();
+            Logger.d("connectSocket--------------11");
         } catch (Exception e) {
             e.printStackTrace();
+            Logger.d("connectSocket--------------12");
             handler.removeMessages(MSG_CONNECT_TIMEOUT);
             handler.removeMessages(MSG_CONNECT_ERROR);
             handler.sendEmptyMessage(MSG_CONNECT_ERROR);
@@ -629,12 +643,17 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     private void toReconnect(boolean overall) {
 
         if (overall || tempSession == null) {
+
+            Logger.d("--------toReconnect-------1");
+
             ClassroomController classroomController = ClassroomController.getInstance(this);
             if (classroomController != null) {
                 classroomController.exitWhenReConnect();
             }
             initData();
         } else {
+
+            Logger.d("--------toReconnect-------2");
             connectSocket(ticket, tempSession.secret, !tempSession.accessible);
         }
 
@@ -643,6 +662,11 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
 
     public void connectSuccess() {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("connectSuccess---------");
+        }
+
         cancelProgress();
         if (mContinueConnectDialog != null && mContinueConnectDialog.isShowing()) {
             mContinueConnectDialog.dismiss();
@@ -652,6 +676,10 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     }
 
     public void connectFailed(String errorCode, String errorMessage) {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("connectFailed---------");
+        }
 
         ClassroomController classroomController = ClassroomController.getInstance(this);
         if (classroomController != null) {

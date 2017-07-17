@@ -124,7 +124,8 @@ public class ClassroomEngine {
     }
 
     public CtlSession getCtlSession() {
-        return stateMachine.getSession().ctlSession;
+        RoomSession roomSession = stateMachine.getSession();
+        return roomSession.ctlSession;
     }
 
     public String getPublishUrl() {
