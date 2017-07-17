@@ -86,19 +86,23 @@ public class StringUtil {
         if(TextUtils.isEmpty(source))return new SpannableString("");
         SpannableString ss=new SpannableString(source);
         if(TextUtils.isEmpty(tagText))return ss;
-        int index=0;
-        int tagLength=tagText.length();
-        int tempLength=0;
-        int offset=0;
-        while (index>=0&&index<tagLength) {
-            index=tagText.indexOf(prefix,index);
-            if(index<0){
-                break;
+        try {
+            int index=0;
+            int tagLength=tagText.length();
+            int tempLength=0;
+            int offset=0;
+            while (index>=0&&index<tagLength) {
+                index=tagText.indexOf(prefix,index);
+                if(index<0){
+                    break;
+                }
+                tempLength=tagText.indexOf(suffix,index)-index-prefix.length();
+                ss.setSpan(new ForegroundColorSpan(color),index-offset,index+tempLength-offset,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                offset+=prefix.length()+suffix.length();
+                index=index+tempLength+prefix.length()+suffix.length();
             }
-            tempLength=tagText.indexOf(suffix,index)-index-prefix.length();
-            ss.setSpan(new ForegroundColorSpan(color),index-offset,index+tempLength-offset,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            offset=prefix.length()+suffix.length();
-            index=index+tempLength+offset;
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return ss;
     }
