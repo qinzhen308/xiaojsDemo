@@ -448,8 +448,14 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 case ClassroomController.REQUEST_INPUT:
                     String content = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
                     if (mFullScreenTalkPresenter != null && !TextUtils.isEmpty(content)) {
-                        mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
-                        mDiscussionListView.setVisibility(View.VISIBLE);
+                        if (mHideShowTalkBtn != null) {
+                            mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
+                        }
+
+                        if (mDiscussionListView != null) {
+                            mDiscussionListView.setVisibility(View.VISIBLE);
+                        }
+
                         String peekAccount = TalkManager.getInstance().getPeekTalkingAccount();
                         if (TextUtils.isEmpty(peekAccount)) {
                             TalkManager.getInstance().sendText(content);

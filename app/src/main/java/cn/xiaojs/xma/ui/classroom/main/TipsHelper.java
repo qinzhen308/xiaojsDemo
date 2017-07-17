@@ -62,8 +62,6 @@ public class TipsHelper {
 
     public void setTipsByState(String liveSessionState) {
 
-        Logger.d("setTipsByState-----------------------------------------");
-
         if (Live.LiveSessionState.SCHEDULED.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_title, R.string.cls_not_on_class_desc);
         } else if (Live.LiveSessionState.PENDING_FOR_JOIN.equals(liveSessionState)
@@ -82,11 +80,9 @@ public class TipsHelper {
         } else if (Live.LiveSessionState.LIVE.equals(liveSessionState)
                 || Live.LiveSessionState.INDIVIDUAL.equals(liveSessionState)
                 || ClassroomEngine.getEngine().liveShow()) {
-            Logger.d("setTipsByState-----------------------------------------1");
             hideTips();
         } else if (Live.LiveSessionState.FINISHED.equals(liveSessionState)) {
             setTips(R.string.cls_finish_title, R.string.cls_not_on_class_desc);
-            Logger.d("setTipsByState-----------------------------------------2");
         } else if (Live.LiveSessionState.IDLE.equals(liveSessionState)) {
             setTips(R.string.cls_not_on_class_lesson_title, R.string.cls_not_on_class_desc);
         }

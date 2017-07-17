@@ -437,6 +437,13 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     }
 
     public void showProgress(boolean cancellable) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (isDestroyed()) {
+                return;
+            }
+        }
+
         if (mProgress == null) {
             mProgress = ProgressHUD.create(this);
         }
