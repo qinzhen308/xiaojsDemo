@@ -210,7 +210,7 @@ public class TalkPresenter implements
                 protected void onPostExecute(Bitmap bmp) {
                     //enter video edit fragment
                     cancelProgress();
-                    ClassroomController.getInstance().enterPhotoDoodleByBitmap(bmp, TalkPresenter.this);
+                    ClassroomController.getInstance(mContext).enterPhotoDoodleByBitmap(bmp, TalkPresenter.this);
                 }
             }.execute(key);
         }

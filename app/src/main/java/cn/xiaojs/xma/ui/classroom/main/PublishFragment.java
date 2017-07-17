@@ -448,8 +448,14 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 case ClassroomController.REQUEST_INPUT:
                     String content = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
                     if (mFullScreenTalkPresenter != null && !TextUtils.isEmpty(content)) {
-                        mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
-                        mDiscussionListView.setVisibility(View.VISIBLE);
+                        if (mHideShowTalkBtn != null) {
+                            mHideShowTalkBtn.setImageResource(R.drawable.ic_cr_hide_talk);
+                        }
+
+                        if (mDiscussionListView != null) {
+                            mDiscussionListView.setVisibility(View.VISIBLE);
+                        }
+
                         String peekAccount = TalkManager.getInstance().getPeekTalkingAccount();
                         if (TextUtils.isEmpty(peekAccount)) {
                             TalkManager.getInstance().sendText(content);
@@ -472,9 +478,9 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                             int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
                             int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
                             if (isPortrait()) {
-                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, size);
+                                ClassroomController.getInstance(mContext).openSlideTalk(this, attendee, mCtlSession, size);
                             } else {
-                                ClassroomController.getInstance().openSlideTalk(this, attendee, mCtlSession, gravity, size);
+                                ClassroomController.getInstance(mContext).openSlideTalk(this, attendee, mCtlSession, gravity, size);
                             }
                             break;
                         case OnAttendItemClick.ACTION_OPEN_CAMERA:
@@ -1214,7 +1220,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
         data.putString(Constants.KEY_PLAY_URL, mCtlSession.playUrl);
 
-        ClassroomController.getInstance().enterPlayFragment(data, true);
+        ClassroomController.getInstance(mContext).enterPlayFragment(data, true);
 
         mHandKeyPressing = true;
     }
@@ -1260,7 +1266,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
             default:
                 break;
         }
-        ClassroomController.getInstance().enterPlayFragment(data, true);
+        ClassroomController.getInstance(mContext).enterPlayFragment(data, true);
 
         mHandKeyPressing = true;
     }

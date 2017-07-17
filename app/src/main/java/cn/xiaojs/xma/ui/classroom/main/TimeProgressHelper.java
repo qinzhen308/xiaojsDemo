@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
@@ -87,17 +88,14 @@ public class TimeProgressHelper {
 
 
     public void setTimeProgress(long countTime, String liveState) {
-        Logger.d("*****************************f3");
         setTimeProgress(countTime, 0, liveState, null, null, true);
     }
 
     public void setTimeProgress(long countTime, String liveState, boolean play) {
-        Logger.d("*****************************f2");
         setTimeProgress(countTime, 0, liveState, null, null, play);
     }
 
     public void setTimeProgress(long countTime, long individualDuration, String liveState, Object extra, boolean play) {
-        Logger.d("*****************************f1");
         setTimeProgress(countTime, individualDuration, liveState, extra, null, play);
     }
 
@@ -107,8 +105,9 @@ public class TimeProgressHelper {
             return;
         }
 
-        Logger.d("time progress set:individualDuration:"+ individualDuration);
-
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("time progress set:individualDuration:"+ individualDuration);
+        }
 
         int type = getTypeByState(liveState, individualDuration);
         mLiveShowTv.setVisibility(type == TYPE_LIVE_INDIVIDUAL ? View.VISIBLE : View.GONE);
@@ -280,6 +279,9 @@ public class TimeProgressHelper {
 
     public long getCountTime() {
         return mCountTime;
+    }
+    public void resetTime() {
+        mCountTime = 0;
     }
 
     public long getIndividualStreamDuration() {

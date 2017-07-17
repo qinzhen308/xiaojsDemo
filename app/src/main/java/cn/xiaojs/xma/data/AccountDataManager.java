@@ -64,6 +64,10 @@ public class AccountDataManager {
             XiaojsConfig.mLoginUser = getUser(context);
         }
 
+        if (XiaojsConfig.mLoginUser == null) {
+            return null;
+        }
+
         return XiaojsConfig.mLoginUser.getAccount();
     }
 

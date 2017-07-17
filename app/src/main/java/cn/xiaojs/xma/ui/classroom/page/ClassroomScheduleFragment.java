@@ -135,7 +135,7 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
                     LibDoc doc=new LibDoc();
                     doc.key=data.playback;
                     doc.mimeType= Collaboration.StreamingTypes.HLS;
-                    ClassroomController.getInstance().enterVideoPlayPage(doc);
+                    ClassroomController.getInstance(mContext).enterVideoPlayPage(doc);
                 }
             }
         });

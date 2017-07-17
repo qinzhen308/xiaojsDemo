@@ -462,7 +462,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             isPortrait = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT == newConfig.orientation;
         }
 
-        if (isPortrait && ClassroomController.getInstance().getPlayFragmentMode() == ClassroomController.MODE_FRAGMENT_PLAY_TALK) {
+        if (isPortrait
+                && ClassroomController.getInstance(mContext).getPlayFragmentMode() == ClassroomController.MODE_FRAGMENT_PLAY_TALK) {
             updatePortraitPlayViewStyle();
         } else {
             updateFullScreenPlayViewStyle(isPortrait);
@@ -482,7 +483,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         TalkManager.getInstance().setFullscreenMultiTalkVisible(true);
         mFullscreenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
 
-        ClassroomController.getInstance().enterLandFullScreen(isPortrait(), mContext);
+        ClassroomController.getInstance(mContext).enterLandFullScreen(isPortrait(), mContext);
         if (mFullScreenTalkPresenter == null) {
             mFullScreenTalkPresenter = new TalkPresenter(mContext, mDiscussionListView, null);
             mFullScreenTalkPresenter.setOnTalkItemClickListener(this);
@@ -496,16 +497,16 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
      */
     private void handOnBackPressed() {
         if (isPortrait()) {
-            if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+            if (ClassroomController.getInstance(mContext).isFragmentPlayFullScreen()) {
                 updatePortraitPlayViewStyle();
                 setUnreadMsgCountOnExitFullscreen();
-                ClassroomController.getInstance().exitFullScreen(mContext, false);
+                ClassroomController.getInstance(mContext).exitFullScreen(mContext, false);
             } else {
-                ClassroomController.getInstance().showExitClassroomDialog();
+                ClassroomController.getInstance(mContext).showExitClassroomDialog();
             }
         } else {
             setUnreadMsgCountOnExitFullscreen();
-            ClassroomController.getInstance().exitFullScreen(mContext, true);
+            ClassroomController.getInstance(mContext).exitFullScreen(mContext, true);
         }
     }
 
@@ -578,7 +579,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             return;
         }
 
-        if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+        if (ClassroomController.getInstance(mContext).isFragmentPlayFullScreen()) {
             if (mTopPanel.getVisibility() == View.VISIBLE) {
                 hideAnim(mTopPanel, "mTopPanel");
                 hideAnim(mFullscreenContactBtn, "mFullscreenContactBtn");
@@ -646,7 +647,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
         //FIXME 当老师挤掉学生个人推流并进行直播推流后，需要将老师端学生的播放地址重制，避免老师直播结束后回到小屏模式，还要播放之前学生端推流的问题。
 
-        ClassroomController.getInstance().enterPublishFragment(data, true);
+        ClassroomController.getInstance(mContext).enterPublishFragment(data, true);
     }
 
     @Override
@@ -694,7 +695,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     }
 
                     int peerCount = TalkManager.getInstance().getPeerTalkUnreadMsgCount();
-                    if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+                    if (ClassroomController.getInstance(mContext).isFragmentPlayFullScreen()) {
                         mFullscreenContactBtn.setCount(peerCount);
                     } else {
                         mTalkOpenContactBtn.setCount(peerCount);
@@ -702,16 +703,16 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
                     switch (action) {
                         case OnAttendItemClick.ACTION_OPEN_TALK:
-                            if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+                            if (ClassroomController.getInstance(mContext).isFragmentPlayFullScreen()) {
                                 int gravity = data.getIntExtra(Constants.KEY_SHEET_GRAVITY, SheetFragment.SHEET_GRAVITY_BOTTOM);
                                 int size = isPortrait() ? mSlideViewHeight : mSlideViewWidth;
 
                                 CtlSession ctlSession = classroomEngine.getCtlSession();
 
                                 if (isPortrait()) {
-                                    ClassroomController.getInstance().openSlideTalk(this, attendee, ctlSession, size);
+                                    ClassroomController.getInstance(mContext).openSlideTalk(this, attendee, ctlSession, size);
                                 } else {
-                                    ClassroomController.getInstance().openSlideTalk(this, attendee, ctlSession, gravity, size);
+                                    ClassroomController.getInstance(mContext).openSlideTalk(this, attendee, ctlSession, gravity, size);
                                 }
                             } else {
                                 mEmbedTalkFragment.switchPeerTalk(attendee);
@@ -725,7 +726,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     break;
                 case ClassroomController.REQUEST_DOC:
                     LibDoc doc = (LibDoc) data.getSerializableExtra(Constants.KEY_OPEN_DOC_BEAN);
-                    ClassroomController.getInstance().exitDocFragmentWhitOpenMime(doc, this);
+                    ClassroomController.getInstance(mContext).exitDocFragmentWhitOpenMime(doc, this);
                     break;
                 case ClassroomController.REQUEST_CLASS_CANLENDER:
                     //TODO 是否回放
@@ -909,7 +910,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mTipsHelper.hideTips();
 
         //exit video play
-        ClassroomController.getInstance().exitVideoPlayPage();
+        ClassroomController.getInstance(mContext).exitVideoPlayPage();
     }
 
     @Override
@@ -1073,6 +1074,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 @Override
                 public void onSuccess(ClassResponse response) {
                     cancelProgress();
+                    mTimeProgressHelper.resetTime();
                     startPublishFragment(response != null ? response.publishUrl : null,
                             null,
                             CTLConstant.StreamingType.PUBLISH_LIVE);
@@ -1104,7 +1106,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 data.putSerializable(Constants.KEY_PUBLISH_TYPE, CTLConstant.StreamingType.PUBLISH_LIVE);
                 //班课中，由于没有暂停上课，再次进入直播是，需要传之前的播放URL
                 //data.putString(Constants.KEY_PUBLISH_URL, mCtlSession.publishUrl);
-                ClassroomController.getInstance().enterPublishFragment(data, true);
+                ClassroomController.getInstance(mContext).enterPublishFragment(data, true);
             }
         } else {
             cancelProgress();
@@ -1125,13 +1127,13 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mCountTime = mTimeProgressHelper.getCountTime();
         data.putLong(Constants.KEY_COUNT_TIME, mCountTime);
         XjsUtils.hideIMM(mContext, mContent.getWindowToken());
-        ClassroomController.getInstance().enterPublishFragment(data, true);
+        ClassroomController.getInstance(mContext).enterPublishFragment(data, true);
     }
 
     @Override
     public void onExitTalk(int type) {
         if (type == TalkManager.TYPE_PEER_TALK) {
-            if (!ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+            if (!ClassroomController.getInstance(mContext).isFragmentPlayFullScreen()) {
                 //exit peer talk and enter multi talk (msg mode)
                 TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
                 mTalkOpenContactBtn.setCount(TalkManager.getInstance().getPeerTalkUnreadMsgCount());
@@ -1145,7 +1147,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             return;
         }
 
-        if (ClassroomController.getInstance().isFragmentPlayFullScreen()) {
+        if (ClassroomController.getInstance(mContext).isFragmentPlayFullScreen()) {
             //fullscreen mode
             if (mDiscussionListView.getVisibility() == View.VISIBLE) {
                 TalkManager.getInstance().resetMultiTalkUnreadMsgCount();
