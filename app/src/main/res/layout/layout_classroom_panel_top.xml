@@ -8,7 +8,7 @@
         android:paddingTop="@dimen/px5"
         android:paddingBottom="@dimen/px5"
         android:clickable="true"
-        android:background="@color/classroom_main_gray">
+        android:background="@color/classroom_main_black">
 
     <ImageView
             android:id="@+id/back_btn"
