@@ -955,5 +955,8 @@
     <string name="set_public_tip2">学生可以通过搜索班级关键词找到该班</string>
     <string name="file_rename">文件重命名</string>
     <string name="file_move">移动文件</string>
+    <string name="serach_material_hint">搜索资料名</string>
+    <string name="new_folder">新建文件夹</string>
+    <string name="new_folder_hint">请输入文件夹名称</string>
 
 </resources>

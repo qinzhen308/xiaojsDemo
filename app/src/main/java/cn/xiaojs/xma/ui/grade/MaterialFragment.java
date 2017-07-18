@@ -13,10 +13,14 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -50,6 +54,7 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.message.ChoiceContactActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -101,14 +106,17 @@ public class MaterialFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.material_up_load_close, R.id.share_btn})
+    @OnClick({R.id.material_up_load_close, R.id.share_btn, R.id.new_folder_btn})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.material_up_load_close://取消上传
+            case R.id.material_up_load_close:    //取消上传
                 confirmCancel();
                 break;
-            case R.id.share_btn:
+            case R.id.share_btn:                 //分享
                 shareToClass();
+                break;
+            case R.id.new_folder_btn:            //新建文件夹
+                newFolder();
                 break;
         }
     }
@@ -135,6 +143,7 @@ public class MaterialFragment extends BaseFragment {
         }
 
     }
+
     protected void changeChoiceMode(int choiceMode) {
         this.choiceMode = choiceMode;
         mList.setChoiceMode(choiceMode);
@@ -153,30 +162,30 @@ public class MaterialFragment extends BaseFragment {
     }
 
     private void choiceAll() {
-        if (mAdapter != null && mAdapter.getList() !=null && mAdapter.getList().size()>0) {
+        if (mAdapter != null && mAdapter.getList() != null && mAdapter.getList().size() > 0) {
 
             int size = mAdapter.getList().size();
-            for (int i=0;i<size;i++) {
-                mList.setItemChecked(i,true);
+            for (int i = 0; i < size; i++) {
+                mList.setItemChecked(i, true);
             }
         }
     }
 
     private void shareToClass() {
         long[] ids = mList.getCheckItemIds();
-        if (ids !=null && ids.length>0) {
+        if (ids != null && ids.length > 0) {
 
             int len = ids.length;
             String[] docIds = new String[len];
-            for (int i=0;i<len;i++) {
-                LibDoc doc = mAdapter.getItem((int)ids[i]);
+            for (int i = 0; i < len; i++) {
+                LibDoc doc = mAdapter.getItem((int) ids[i]);
                 docIds[i] = doc.id;
             }
             //toshare
             chooseShare(docIds);
 
-        }else {
-            Toast.makeText(mContext, R.string.choose_material_tips,Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, R.string.choose_material_tips, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -214,6 +223,44 @@ public class MaterialFragment extends BaseFragment {
         startActivityForResult(intent, BaseConstant.REQUEST_CODE_CHOOSE_FILE);
     }
 
+    private void newFolder() {
+
+        final CommonDialog dialog = new CommonDialog(mContext);
+        dialog.setTitle(R.string.new_folder);
+
+        final EditTextDel editText = new EditTextDel(mContext);
+        editText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                mContext.getResources().getDimensionPixelSize(R.dimen.px80)));
+        editText.setGravity(Gravity.CENTER_VERTICAL);
+        editText.setPadding(10, 0, 10, 0);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        editText.setTextColor(mContext.getResources().getColor(R.color.common_text));
+        editText.setBackgroundResource(R.drawable.common_edittext_bg);
+        editText.setHint(R.string.new_folder_hint);
+
+        dialog.setCustomView(editText);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+
+
+                //TODO 新建文件夹
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -240,12 +287,12 @@ public class MaterialFragment extends BaseFragment {
 
                 String subtype = data.getStringExtra(ChooseClassActivity.EXTRA_SUBTYPE);
 
-                if (choiceContacts != null && choiceContacts.size() > 0 && targetDocIds !=null) {
+                if (choiceContacts != null && choiceContacts.size() > 0 && targetDocIds != null) {
 
                     Contact chooseClass = choiceContacts.get(0);
 
                     //无论是单个分享或者多个分享，都用批量分享的接口
-                    toPatchShare(chooseClass.account, targetDocIds,chooseClass.alias, subtype, false);
+                    toPatchShare(chooseClass.account, targetDocIds, chooseClass.alias, subtype, false);
 //                    if (targetDocIds.length == 1) {
 //                        toshare(targetDocIds[0], chooseClass.account, chooseClass.alias);
 //                    }else{
@@ -268,7 +315,7 @@ public class MaterialFragment extends BaseFragment {
     @Keep
     @PermissionRationale(requestCode = REQUEST_PERMISSION)
     public void accessExternalStorageRationale() {
-        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_storage_tip));
+        PermissionHelper.showRationaleDialog(this, getResources().getString(R.string.permission_rationale_storage_tip));
     }
 
     private File queryFileFromDataBase() {
@@ -294,20 +341,20 @@ public class MaterialFragment extends BaseFragment {
         if (file == null) {
             return;
         }
-        String name=file.getName();
-        int i=name.lastIndexOf(".");
-        if(i>0){
-            int type= FileUtil.getFileTypeBySuffix(name.substring(i+1,name.length()));
-            if(type!=FileUtil.PPT
-                    && type!=FileUtil.PICTURE
-                    && type!=FileUtil.VIDEO
-                    && type!=FileUtil.DOC
-                    && type!=FileUtil.PDF){
-                ToastUtil.showToast(mContext,getString(R.string.upload_support_error_tips));
+        String name = file.getName();
+        int i = name.lastIndexOf(".");
+        if (i > 0) {
+            int type = FileUtil.getFileTypeBySuffix(name.substring(i + 1, name.length()));
+            if (type != FileUtil.PPT
+                    && type != FileUtil.PICTURE
+                    && type != FileUtil.VIDEO
+                    && type != FileUtil.DOC
+                    && type != FileUtil.PDF) {
+                ToastUtil.showToast(mContext, getString(R.string.upload_support_error_tips));
                 return;
             }
-        }else {
-            ToastUtil.showToast(mContext,getString(R.string.upload_support_error_tips));
+        } else {
+            ToastUtil.showToast(mContext, getString(R.string.upload_support_error_tips));
             return;
         }
 
@@ -477,7 +524,7 @@ public class MaterialFragment extends BaseFragment {
         startActivityForResult(i, REQUEST_CHOOSE_CLASS_CODE);
     }
 
-    private void toPatchShare(final String targetId, String[] documentIds, final String classname, final String subType,boolean repeat) {
+    private void toPatchShare(final String targetId, String[] documentIds, final String classname, final String subType, boolean repeat) {
 
         ShareResource resource = new ShareResource();
         resource.documents = documentIds;
@@ -490,10 +537,10 @@ public class MaterialFragment extends BaseFragment {
             public void onSuccess(ShareDoc object) {
                 shareResult();
 
-                if(object!= null && object.repeated !=null && object.repeated.length>0) {
+                if (object != null && object.repeated != null && object.repeated.length > 0) {
                     //说明分享的文件有已存在的，需要询问用户
-                    shareConflictWithPatch(targetId,object.repeated,classname, subType);
-                }else{
+                    shareConflictWithPatch(targetId, object.repeated, classname, subType);
+                } else {
                     changeChoiceMode(ListView.CHOICE_MODE_NONE);
                     shareSuccess(targetId, classname, subType);
                 }
@@ -540,7 +587,7 @@ public class MaterialFragment extends BaseFragment {
     }
 
     private void shareConflictWithPatch(final String targetId, final ConflictRes[] conflicts, final String classname, final String subType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_dlg_list,null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_dlg_list, null);
         final ListView listView = (ListView) view;
 
 
@@ -548,11 +595,11 @@ public class MaterialFragment extends BaseFragment {
         headerView.setText(R.string.query_go_on_share_when_confilc);
         headerView.setTextSize(14);
         headerView.setTextColor(getResources().getColor(R.color.font_light_gray));
-        headerView.setPadding(0,0,0,10);
+        headerView.setPadding(0, 0, 0, 10);
 
 
         ArrayAdapter<ConflictRes> adapter = new ArrayAdapter<ConflictRes>(mContext,
-                R.layout.layout_text_item_only,conflicts);
+                R.layout.layout_text_item_only, conflicts);
 
 
         listView.addHeaderView(headerView);
@@ -576,11 +623,11 @@ public class MaterialFragment extends BaseFragment {
                 dialog.dismiss();
 
                 String[] documentIds = new String[conflicts.length];
-                for (int i=0; i< conflicts.length; i++){
+                for (int i = 0; i < conflicts.length; i++) {
                     documentIds[i] = conflicts[i].id;
                 }
 
-                toPatchShare(targetId,documentIds,classname, subType,true);
+                toPatchShare(targetId, documentIds, classname, subType, true);
 
             }
         });
@@ -618,7 +665,7 @@ public class MaterialFragment extends BaseFragment {
         //FIXME 此处如果是助教、老师、主讲进入班级资料库，
         intent.putExtra(ClassMaterialActivity.EXTRA_ID, classid);
         intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, name);
-        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE,subType);
+        intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, subType);
         startActivity(intent);
     }
 

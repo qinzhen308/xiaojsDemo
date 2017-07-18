@@ -70,14 +70,23 @@
                 android:visibility="visible"
                 android:layout_below="@id/lay_tips">
 
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/new_folder_btn"
+                    android:layout_marginLeft="@dimen/px30"
+                    android:src="@drawable/ic_add"
+                    />
+
             <cn.xiaojs.xma.ui.widget.EditTextDel
                     android:id="@+id/my_course_search"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_search"
                     android:paddingLeft="@dimen/px15"
                     android:paddingRight="@dimen/px15"
                     android:maxLines="1"
-                    android:hint="搜索资料名/上传者"
+                    android:hint="@string/serach_material_hint"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_28px"
                     android:drawablePadding="@dimen/px10"
@@ -87,15 +96,10 @@
                     android:paddingTop="@dimen/px15"
                     android:layout_marginTop="@dimen/px15"
                     android:layout_marginBottom="@dimen/px15"
-                    android:layout_marginLeft="@dimen/px30"
+                    android:layout_marginLeft="@dimen/px29"
                     android:layout_marginRight="@dimen/px20"
                     android:layout_height="wrap_content"/>
         </LinearLayout>
-
-        <View
-                style="@style/DividerHorizontal"
-                android:id="@+id/lay_line1"
-                android:layout_below="@id/course_search_wrapper"/>
 
         <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -107,7 +111,7 @@
                 android:listSelector="@android:color/transparent"
                 android:dividerHeight="@dimen/px1"
                 android:orientation="vertical"
-                android:layout_below="@id/lay_line1"
+                android:layout_below="@id/course_search_wrapper"
                 android:layout_above="@id/share_btn"
                 />
     </RelativeLayout>
