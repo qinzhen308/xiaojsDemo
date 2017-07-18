@@ -57,15 +57,15 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     private boolean mIsMine;
     private String mOwner;
 
-    private MaterialActivity materialActivity;
+    private MaterialFragment materialFragment;
 
-    public MaterialAdapter(MaterialActivity activity, PullToRefreshSwipeListView listView, String owner) {
-        super(activity, listView);
+    public MaterialAdapter(MaterialFragment fragment, PullToRefreshSwipeListView listView, String owner) {
+        super(fragment.getActivity(), listView);
         if (TextUtils.isEmpty(owner)) {
             mIsMine = true;
         }
 
-        materialActivity = activity;
+        materialFragment = fragment;
 
         mOwner = owner;
 
@@ -80,11 +80,11 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     @Override
     protected void onDataItemClick(int position, LibDoc bean) {
 
-        if (materialActivity.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
+        if (materialFragment.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
             return;
         }
 
-        MaterialUtil.openMaterial(materialActivity, bean);
+        MaterialUtil.openMaterial(materialFragment.getActivity(), bean);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         holder.desc.setText(sb);
 
 
-        if (materialActivity.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
+        if (materialFragment.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
 
             holder.expand.setVisibility(View.GONE);
             holder.opera.setVisibility(View.GONE);
@@ -159,7 +159,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             @Override
             public void onClick(View v) {
 
-                ((MaterialActivity)mContext).chooseShare(new String[]{bean.id});
+                materialFragment.chooseShare(new String[]{bean.id});
 
             }
         });
@@ -168,7 +168,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             @Override
             public void onClick(View v) {
 
-                ((MaterialActivity)mContext).confirmDel(bean.id);
+                materialFragment.confirmDel(bean.id);
 
             }
         });
