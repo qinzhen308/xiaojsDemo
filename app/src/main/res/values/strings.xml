@@ -607,6 +607,7 @@
     <string name="relogin">登陆过期，请重新登陆</string>
 
     <!-- download-->
+    <string name="download">下载</string>
     <string name="download_ok">下载成功</string>
     <string name="download_error">下载失败</string>
     <string name="downloading">正在下载</string>
@@ -952,5 +953,7 @@
     <string name="permission_rationale_camera_audio_room_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用教室内直播功能哦~</string>
     <string name="set_public_tip">班级设为公开后，所有人可见，学生可通过搜索班级关键词找到该班</string>
     <string name="set_public_tip2">学生可以通过搜索班级关键词找到该班</string>
+    <string name="file_rename">文件重命名</string>
+    <string name="file_move">移动文件</string>
 
 </resources>

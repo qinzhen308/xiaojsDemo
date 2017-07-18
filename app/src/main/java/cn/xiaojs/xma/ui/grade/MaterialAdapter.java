@@ -14,12 +14,15 @@ package cn.xiaojs.xma.ui.grade;
  *
  * ======================================================================================== */
 
-import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -41,6 +44,9 @@ import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.material.UserDoc;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -167,6 +173,13 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             }
         });
 
+        holder.opera4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreDlg();
+            }
+        });
+
 //            holder.item.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
@@ -232,6 +245,63 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         });
     }
 
+    private void showMoreDlg() {
+        ListBottomDialog dialog = new ListBottomDialog(mContext);
+        String[] items = mContext.getResources().getStringArray(R.array.opera_material_more);
+
+        dialog.setItems(items);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                switch (position) {
+                    case 0:                 //重命名
+                        showRenameDlg();
+                        break;
+                    case 1:                 //移动到
+
+                        //TODO 移动到
+                        break;
+                }
+            }
+        });
+        dialog.show();
+    }
+
+    private void showRenameDlg() {
+        final CommonDialog dialog = new CommonDialog(mContext);
+        dialog.setTitle(R.string.file_rename);
+
+        final EditTextDel editText = new EditTextDel(mContext);
+        editText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                mContext.getResources().getDimensionPixelSize(R.dimen.px80)));
+        editText.setGravity(Gravity.CENTER_VERTICAL);
+        editText.setPadding(10, 0, 10, 0);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+        editText.setTextColor(mContext.getResources().getColor(R.color.common_text));
+        editText.setBackgroundResource(R.drawable.common_edittext_bg);
+
+        dialog.setCustomView(editText);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+
+
+                //TODO 文件重命名
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
     class Holder extends BaseHolder {
         @BindView(R.id.material_item_image)
         ImageView image;
@@ -250,6 +320,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         TextView opera2;
         @BindView(R.id.material_item_opera3)
         TextView opera3;
+        @BindView(R.id.material_item_opera4)
+        TextView opera4;
 
         @BindView(R.id.material_item)
         View item;

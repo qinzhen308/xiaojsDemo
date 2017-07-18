@@ -183,4 +183,8 @@
         <item>强行停止</item>
         <item>已取消</item>
     </string-array>
+    <string-array name="opera_material_more">
+        <item>重命名</item>
+        <item>移动到</item>
+    </string-array>
 </resources>

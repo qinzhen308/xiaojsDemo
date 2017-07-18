@@ -103,11 +103,11 @@
                     android:drawableTop="@drawable/ic_download"
                     android:paddingTop="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
-                    android:text="保存到手机"
+                    android:text="@string/download"
                     android:gravity="center"
                     android:drawablePadding="@dimen/px10"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
 
             <TextView
                     android:id="@+id/material_item_opera2"
@@ -130,7 +130,18 @@
                     android:text="@string/delete"
                     android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
+            <TextView
+                    android:id="@+id/material_item_opera4"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/font_26px"
+                    android:drawableTop="@drawable/ic_lesson_more"
+                    android:text="@string/more"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -158,5 +158,6 @@
     <color name="date_picked_color">#198CFF</color>
     <color name="grey_point">#dbdbdb</color>
     <color name="result_ok">#7dd096</color>
+    <color name="summary_color">#969696</color>
 
 </resources>

@@ -336,6 +336,9 @@
         <activity android:name=".ui.lesson.xclass.EditTimetableActivity"
                   android:screenOrientation="portrait"
                 />
+        <activity android:name=".ui.grade.ChoiceFolderActivity"
+                  android:screenOrientation="portrait"
+                />
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
