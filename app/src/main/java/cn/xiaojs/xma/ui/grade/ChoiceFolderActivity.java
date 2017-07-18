@@ -54,7 +54,7 @@ public class ChoiceFolderActivity extends BaseActivity {
         listView.setAdapter(adapter);
     }
 
-    private class FolderAdapter extends AbsSwipeAdapter<Void, FolderAdapter.Holder> {
+    protected class FolderAdapter extends AbsSwipeAdapter<Void, FolderAdapter.Holder> {
 
         public FolderAdapter(Context context, PullToRefreshSwipeListView listView) {
             super(context, listView);

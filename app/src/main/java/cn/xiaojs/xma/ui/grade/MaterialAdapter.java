@@ -258,8 +258,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
                         showRenameDlg();
                         break;
                     case 1:                 //移动到
-
-                        //TODO 移动到
+                        Intent i = new Intent(mContext, ChoiceFolderActivity.class);
+                        mContext.startActivity(i);
                         break;
                 }
             }
