@@ -75,7 +75,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/new_folder_btn"
                     android:layout_marginLeft="@dimen/px30"
-                    android:src="@drawable/ic_add"
+                    android:src="@drawable/ic_newfolder_selector"
                     />
 
             <cn.xiaojs.xma.ui.widget.EditTextDel

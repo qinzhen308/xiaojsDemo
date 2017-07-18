@@ -68,7 +68,7 @@ public class ChoiceFolderActivity extends BaseActivity {
 
         @Override
         protected View createContentView(int position) {
-            return LayoutInflater.from(mContext).inflate(R.layout.layout_contact_choice_child, null);
+            return LayoutInflater.from(mContext).inflate(R.layout.layout_multiple_select_item, null);
         }
 
         @Override
