@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/px90"
+    android:background="@color/class_bar_bg"
+    >
+
+    <TextView
+        android:id="@+id/check_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/multi_check_selector"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_gravity="center_vertical"
+        android:drawablePadding="@dimen/px24"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:textSize="@dimen/font_32px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/px64"
+        android:layout_gravity="center_vertical"
+        android:text="目录名"
+        android:textColor="@color/font_black"
+        android:drawableLeft="@drawable/ic_recorded_lesson"
+        android:drawablePadding="@dimen/px16"
+        android:textStyle="bold"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/font_26px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="50分钟"
+        android:textColor="@color/common_text"
+        android:layout_marginRight="@dimen/px21"
+        android:maxLines="1"
+        />
+
+    <ImageView
+        android:id="@id/drag_handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_drag_handle"
+        android:padding="@dimen/px6"
+        android:layout_marginRight="@dimen/px15"
+        android:visibility="gone"
+        />
+
+</LinearLayout>

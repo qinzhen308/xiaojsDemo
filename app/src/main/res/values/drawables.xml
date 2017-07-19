@@ -4,6 +4,8 @@
     <drawable name="white">#ffffff</drawable>
     <drawable name="main_orange">#ff9833</drawable>
     <drawable name="color_main_bg">#f7f7f7</drawable>
+    <drawable name="color_milk">#f6f8fa</drawable>
+    <drawable name="color_gray">#e0e5ed</drawable>
 
 
 </resources>

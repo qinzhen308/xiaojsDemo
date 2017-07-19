@@ -51,3 +51,6 @@ _sandbox
 
 #calendar
 /calendar/build
+
+#DragSortListview
+/DragSortListview/build
