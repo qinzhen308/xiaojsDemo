@@ -36,7 +36,7 @@ public class MaterialDownloadActivity extends BaseListActivity implements Loader
         setDividerHeight(R.dimen.px1);
         getSupportLoaderManager().initLoader(0, null, this);
 
-        mAdapter = new DownloadAdapter(this, null);
+        mAdapter = new DownloadAdapter(this,mList, null);
         mList.setAdapter(mAdapter);
         mList.enableLeftSwipe();
         mList.getRefreshableView().getWrappedList().setOffsetLeft(DeviceUtil.getScreenWidth(this) - getResources().getDimensionPixelSize(R.dimen.px140));

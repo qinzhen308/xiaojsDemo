@@ -90,6 +90,8 @@ public class DownloadProvider extends ContentProvider {
         copyString(DBTables.TDownload.URL, values, filteredValues);
         copyString(DBTables.TDownload.FILE_NAME, values, filteredValues);
         copyString(DBTables.TDownload.MIME_TYPE, values, filteredValues);
+        copyString(DBTables.TDownload.KEY, values, filteredValues);
+        copyString(DBTables.TDownload.STATUS, values, filteredValues);
 
         // set lastupdate to current time
         long lastMod = systemFacade.currentTimeMillis();

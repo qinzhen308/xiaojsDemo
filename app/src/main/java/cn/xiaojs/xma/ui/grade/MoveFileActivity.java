@@ -1,10 +1,8 @@
 package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -14,25 +12,25 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.VerificationActivity;
 
 /**
  * Created by maxiaobao on 2017/7/18.
  */
 
-public class ChoiceFolderActivity extends BaseActivity {
+public class MoveFileActivity extends BaseActivity {
 
     @BindView(R.id.folder_list)
     PullToRefreshSwipeListView listView;
+    @BindView(R.id.tips)
+    TextView tipsView;
 
     private FolderAdapter adapter;
 
     @Override
     protected void addViewContent() {
-        addView(R.layout.activity_choice_folder);
+        addView(R.layout.activity_move_file);
         setMiddleTitle(getString(R.string.file_move));
-        setRightText(R.string.ok);
-
+        //setRightText(R.string.move);
         init();
 
     }
@@ -68,7 +66,7 @@ public class ChoiceFolderActivity extends BaseActivity {
 
         @Override
         protected View createContentView(int position) {
-            return LayoutInflater.from(mContext).inflate(R.layout.layout_choice_folder, null);
+            return LayoutInflater.from(mContext).inflate(R.layout.layout_move_file_item, null);
         }
 
         @Override

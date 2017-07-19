@@ -15,6 +15,7 @@ import java.io.File;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DConstants;
+import cn.xiaojs.xma.data.download.DownloadInfo;
 import cn.xiaojs.xma.data.download.DownloadProvider;
 import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.data.preference.DataPref;
@@ -59,6 +60,7 @@ public class DownloadManager {
         values.put(DBTables.TDownload.URL,url);
         values.put(DBTables.TDownload.MIME_TYPE,mimeType);
         values.put(DBTables.TDownload.ICON,iconUrl);
+        values.put(DBTables.TDownload.STATUS, DownloadInfo.DownloadStatus.STATUS_PENDING);
 
         return startDownload(context, values);
     }

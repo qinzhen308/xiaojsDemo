@@ -161,5 +161,8 @@
     <color name="result_ok">#7dd096</color>
     <color name="summary_color">#969696</color>
     <color name="top_line">#d1d5db</color>
+    <color name="circle_root">#cbe3ff</color>
+    <color name="circle_pro">#809ac3</color>
+    <color name="del_red">#ff6161</color>
 
 </resources>

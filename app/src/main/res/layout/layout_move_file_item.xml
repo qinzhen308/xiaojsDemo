@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xiaojs.xma.ui.widget.CheckableRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/px100"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp">
+
+    <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/px39"
+            android:src="@drawable/ic_folder"/>
+
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_30px"
+            android:textColor="@color/font_black"
+            android:layout_marginTop="@dimen/px23"
+            android:layout_marginLeft="@dimen/px28"
+            android:layout_toRightOf="@id/icon"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="ewrweruwqerqwerwre"/>
+    <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/summary_color"
+            android:layout_marginTop="@dimen/px2"
+            android:layout_alignLeft="@id/title"
+            android:layout_below="@id/title"
+            android:singleLine="true"
+            android:text="dsdfsdfsdfasf"/>
+
+</cn.xiaojs.xma.ui.widget.CheckableRelativeLayout>
+
+
+
+
