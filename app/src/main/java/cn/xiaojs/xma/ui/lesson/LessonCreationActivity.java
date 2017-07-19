@@ -28,6 +28,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Finance;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
@@ -881,7 +882,8 @@ public class LessonCreationActivity extends BaseActivity {
 
         ll.setSubject(subject1);
         ll.setEnroll(enroll);
-        ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
+        //ll.setMode(BaseBusiness.getTeachingMode(mContext, mTeachFormTv.getText().toString()));
+        ll.setMode(Ctl.TeachingMode.LECTURE);
         ll.setFee(fee);
         ll.setSchedule(sch);
         ll.setAccessible(mPublicTv.isSelected());
