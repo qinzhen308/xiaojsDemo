@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/px90"
-    android:background="@color/class_bar_bg"
+    android:background="@drawable/line_bottom_gray_has_milk_bg"
     >
 
     <TextView
