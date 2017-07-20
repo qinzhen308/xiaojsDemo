@@ -49,8 +49,6 @@ public class CreateRecordlessonActivity extends BaseActivity {
                 break;
             case R.id.import_btn: //导入视频
                 Intent i = new Intent(this, ImportVideoActivity.class);
-                i.putExtra(ImportVideoActivity.EXTRA_CHOICE_MODE, AbsListView.CHOICE_MODE_SINGLE);
-                i.putExtra(ImportVideoActivity.EXTRA_TITLE,getString(R.string.choice_inner_video));
                 startActivity(i);
                 break;
             case R.id.lesson_creation_tips_close://关闭提醒

@@ -65,7 +65,6 @@ public class ImportVideoActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_import_video);
         setRightText(R.string.finish);
-
         init();
     }
 
