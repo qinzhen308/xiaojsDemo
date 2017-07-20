@@ -37,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.widget.NoScrollViewPager;
 
 
 public class MaterialActivity extends FragmentActivity {
@@ -44,7 +45,7 @@ public class MaterialActivity extends FragmentActivity {
     @BindView(R.id.lay_tab_group)
     RadioGroup tabGroupLayout;
     @BindView(R.id.tab_viewpager)
-    ViewPager tabPager;
+    NoScrollViewPager tabPager;
     @BindView(R.id.left_image)
     ImageView backBtn;
     @BindView(R.id.upload_btn)
@@ -126,7 +127,6 @@ public class MaterialActivity extends FragmentActivity {
         adapter.setList(fragmentList);
         tabPager.setAdapter(adapter);
 
-
         tabPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -151,6 +151,8 @@ public class MaterialActivity extends FragmentActivity {
 
             }
         });
+
+        tabPager.setScrollEnable(false);
     }
 
     private void checkToTab(int tab){

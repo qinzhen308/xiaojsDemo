@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <include
+            layout="@layout/layout_create_tips"
+            android:id="@+id/lay_tips"
+            />
+
+    <Button
+            android:id="@+id/import_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px90"
+            android:text="@string/import_video_tips"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_30px"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/px30"/>
+
+
+</LinearLayout>

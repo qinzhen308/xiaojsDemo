@@ -95,23 +95,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             holder.opera2.setText(R.string.share);
         }
 
+        thumbnail(bean.mimeType, bean.key, holder);
 
-        if (FileUtil.DOC == FileUtil.getFileType(bean.mimeType)) {
-            thumbnail(bean.key, R.drawable.ic_word, holder);
-        } else if (FileUtil.PPT == FileUtil.getFileType(bean.mimeType)) {
-            thumbnail(bean.key, R.drawable.ic_ppt, holder);
-        } else if (FileUtil.XLS == FileUtil.getFileType(bean.mimeType)) {
-            thumbnail(bean.key, R.drawable.ic_excel, holder);
-        } else if (FileUtil.PICTURE == FileUtil.getFileType(bean.mimeType)) {
-            thumbnail(bean.key, R.drawable.ic_picture, holder);
-        } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
-            thumbnail(bean.key, R.drawable.ic_pdf, holder);
-        } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)
-                || FileUtil.STEAMIMG == FileUtil.getFileType(bean.mimeType)){
-            thumbnail(bean.key, R.drawable.ic_video_mine, holder);
-        } else {
-            thumbnail(bean.key, R.drawable.ic_unknown, holder);
-        }
         holder.name.setText(bean.name);
         StringBuilder sb = new StringBuilder();
 
@@ -191,19 +176,46 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
     }
 
     private void download(LibDoc bean) {
-        if (DownloadManager.allowDownload(mContext)) {
-            DownloadManager.enqueueDownload(mContext, bean.name, bean.key, Social.getDrawing(bean.key, false), bean.mimeType, Social.getDrawing(bean.key, true));
-        } else {
-            Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
-        }
-
-        Intent intent = new Intent(mContext, MaterialDownloadActivity.class);
-        mContext.startActivity(intent);
+//        if (DownloadManager.allowDownload(mContext)) {
+            DownloadManager.enqueueDownload(mContext,
+                    bean.name,
+                    bean.key,
+                    MaterialUtil.getDownloadUrl(bean.key, bean.mimeType),
+                    bean.mimeType,
+                    Social.getDrawing(bean.key, true));
+//        } else {
+//           Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        Intent intent = new Intent(mContext, MaterialDownloadActivity.class);
+//        mContext.startActivity(intent);
     }
 
-    private void thumbnail(String key, int errorResId, Holder holder) {
+    private void thumbnail(String mimeType, String key,Holder holder) {
+
+        String iconUrl = "";
+        int errorResId;
+
+        if (FileUtil.DOC == FileUtil.getFileType(mimeType)) {
+            errorResId = R.drawable.ic_word;
+        } else if (FileUtil.PPT == FileUtil.getFileType(mimeType)) {
+            errorResId = R.drawable.ic_ppt;
+        } else if (FileUtil.XLS == FileUtil.getFileType(mimeType)) {
+            errorResId = R.drawable.ic_excel;
+        } else if (FileUtil.PICTURE == FileUtil.getFileType(mimeType)) {
+            errorResId = R.drawable.ic_picture;
+            iconUrl = Social.getDrawing(key, true);
+        } else if (FileUtil.PDF == FileUtil.getFileType(mimeType)) {
+            errorResId = R.drawable.ic_pdf;
+        } else if (FileUtil.VIDEO == FileUtil.getFileType(mimeType)
+                || FileUtil.STEAMIMG == FileUtil.getFileType(mimeType)){
+            errorResId = R.drawable.ic_video_mine;
+        } else {
+            errorResId = R.drawable.ic_unknown;
+        }
+
         Glide.with(mContext)
-                .load(Social.getDrawing(key, true))
+                .load(iconUrl)
                 .placeholder(errorResId)
                 .error(errorResId)
                 .into(holder.image);
@@ -258,7 +270,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
                         showRenameDlg();
                         break;
                     case 1:                 //移动到
-                        Intent i = new Intent(mContext, ChoiceFolderActivity.class);
+                        Intent i = new Intent(mContext, MoveFileActivity.class);
                         mContext.startActivity(i);
                         break;
                 }

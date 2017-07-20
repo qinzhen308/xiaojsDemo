@@ -122,12 +122,12 @@
             android:layout_height="@dimen/px1"
             android:background="@color/top_line"/>
 
-    <android.support.v4.view.ViewPager
+    <cn.xiaojs.xma.ui.widget.NoScrollViewPager
             android:id="@+id/tab_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffffff"
             android:orientation="vertical" >
-    </android.support.v4.view.ViewPager>
+    </cn.xiaojs.xma.ui.widget.NoScrollViewPager>
 
 </LinearLayout>

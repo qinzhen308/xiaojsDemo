@@ -344,6 +344,12 @@
         <activity android:name=".ui.grade.ChoiceFolderActivity"
                   android:screenOrientation="portrait"
                 />
+        <activity android:name=".ui.grade.MoveFileActivity"
+                  android:screenOrientation="portrait"
+                />
+        <activity android:name=".ui.lesson.xclass.CreateRecordlessonActivity"
+                  android:screenOrientation="portrait"
+                />
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

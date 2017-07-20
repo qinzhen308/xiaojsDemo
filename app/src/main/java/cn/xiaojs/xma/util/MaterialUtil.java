@@ -1,10 +1,13 @@
 package cn.xiaojs.xma.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Toast;
+
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,7 +15,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -23,6 +28,55 @@ import cn.xiaojs.xma.ui.common.PlayStreamingActivity;
  */
 
 public class MaterialUtil {
+
+    public static void openFileBySystem(Context context, String path, String mimeType) {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the file mime type: %s, and path: %s", mimeType, path);
+        }
+
+        Uri data = Uri.parse("file://" + path);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(data, mimeType);
+
+        List activities = context.getPackageManager().queryIntentActivities(intent,
+                PackageManager.MATCH_DEFAULT_ONLY);
+
+        if (activities != null && activities.size() > 0) {
+            context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "系统不支持打开此格式的文件", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public static String getDownloadUrl(String key, String mimeType) {
+
+
+        return "https://file.vipkid.com.cn/apps/vipkid_v1.5.5_17106180_default_defaultChannel.apk";
+
+//        if (Collaboration.isImage(mimeType)) {
+//
+//            return Social.getDrawing(key, false);
+//
+//        } else if (Collaboration.isVideo(mimeType)
+//                || Collaboration.isPPT(mimeType)
+//                ||Collaboration.isPDF(mimeType)
+//                ||Collaboration.isDoc(mimeType)) {
+//
+//            return new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
+//
+//        } else if (Collaboration.isStreaming(mimeType)) {
+//
+//           return new StringBuilder(ApiManager.getLiveBucket())
+//                    .append("/")
+//                    .append(key)
+//                    .append(".m3u8")
+//                    .toString();
+//        }
+//
+//        return "";
+    }
 
     public static void openMaterial(Activity activity, LibDoc bean) {
 

@@ -166,11 +166,11 @@ public class DownloadInfo {
     }
 
     public static class DownloadStatus{
-        public static final int STATUS_PENDING = 0;
-        public static final int STATUS_RUNNING = 1;
+        public static final int STATUS_RUNNING = 0;
+        public static final int STATUS_PENDING = 1;
         public static final int STATUS_PAUSED = 2;
         public static final int STATUS_FAILED = 3;
-        public static final int STATUS_SUCCESS = 6;
+        public static final int STATUS_SUCCESS = 200;
         public static final int STATUS_CANCELED = 41;
         public static final int STATUS_UNKNOWN_ERROR = 7;
 

@@ -208,16 +208,23 @@ public class HomeClassContentBuz {
         String[] items = mContext.getResources().getStringArray(R.array.add_menu2);
         menu.setWidth(mContext.getResources().getDimensionPixelSize(R.dimen.px280));
         menu.addTextItems(items);
-        menu.addImgItems(new Integer[]{R.drawable.ic_menu_create_lesson,R.drawable.ic_add_class1});
+        menu.addImgItems(new Integer[]{R.drawable.ic_menu_create_lesson,
+                R.drawable.ic_create_tapedlesson,
+                R.drawable.ic_add_class1});
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 switch (i) {
-                    case 1:
+                    case 2:
                         AnalyticEvents.onEvent(mContext,34);
                         if (JudgementUtil.checkTeachingAbility(mContext)) {
                             mContext.startActivity(new Intent(mContext, CreateClassActivity.class));
+                        }
+                        break;
+                    case 1:             //开录播课
+                        if (JudgementUtil.checkTeachingAbility(mContext)) {
+                            mContext.startActivity(new Intent(mContext, CreateRecordlessonActivity.class));
                         }
                         break;
                     case 0:

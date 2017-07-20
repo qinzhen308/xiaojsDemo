@@ -959,6 +959,12 @@
     <string name="serach_material_hint">搜索资料名</string>
     <string name="new_folder">新建文件夹</string>
     <string name="new_folder_hint">请输入文件夹名称</string>
+    <string name="move">移动</string>
+    <string name="select_taget_folder_tips">选择目标文件</string>
+    <string name="has_taget_folder_tips">已选（%1$s）</string>
+    <string name="create_record_lesson_tips">从你的资料库中选择直播课回放视频或上传的视频，快速生成课程，可上架售卖或共享给班级</string>
+    <string name="import_video_tips">导入视频</string>
+    <string name="create_recordlesson">开录播课</string>
     <string name="record_lesson_directory">课程目录</string>
     <string name="manage_it">管理</string>
     <string name="import_video">导入视频</string>
