@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,9 @@ import cn.xiaojs.xma.util.XjsUtils;
 
 public class ImportVideoActivity extends BaseActivity {
 
+    public static final String EXTRA_CHOICE_MODE = "cmode";
+    public static final String EXTRA_TITLE = "title";
+
     @BindView(R.id.list)
     PullToRefreshListView listView;
     @BindView(R.id.search)
@@ -55,11 +59,11 @@ public class ImportVideoActivity extends BaseActivity {
     private DataAdapter adapter;
     private Stack<VideoData> dataStack;
     private String folderName;
+    private int choiceMode;
 
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_import_video);
-        setMiddleTitle(R.string.import_video);
         setRightText(R.string.finish);
 
         init();
@@ -92,9 +96,22 @@ public class ImportVideoActivity extends BaseActivity {
     }
 
     private void init() {
+
+        choiceMode = getIntent().getIntExtra(EXTRA_CHOICE_MODE, AbsListView.CHOICE_MODE_MULTIPLE);
+        String title = getIntent().getStringExtra(Intent.EXTRA_TITLE);
+        if (TextUtils.isEmpty(title)) {
+            setMiddleTitle(R.string.import_video);
+        }else {
+            setMiddleTitle(title);
+        }
+
+        if (choiceMode == AbsListView.CHOICE_MODE_SINGLE){
+            checkAllBtn.setVisibility(View.GONE);
+        }
+
         dataStack = new Stack<>();
         adapter = new DataAdapter(this, listView);
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        listView.setChoiceMode(choiceMode);
         listView.setAdapter(adapter);
 
     }
@@ -152,6 +169,10 @@ public class ImportVideoActivity extends BaseActivity {
     }
 
     private void updateChoiceCountView() {
+
+        if (choiceMode == AbsListView.CHOICE_MODE_SINGLE)
+            return;
+
         int count = listView.getCheckItemIds().length;
         if (count <= 0) {
             setRightText(R.string.finish);
@@ -182,6 +203,13 @@ public class ImportVideoActivity extends BaseActivity {
 
             public Holder(View view) {
                 super(view);
+
+                if (choiceMode == AbsListView.CHOICE_MODE_SINGLE) {
+                    checkedView.setCheckMarkDrawable(R.drawable.single_check_selector);
+                }else {
+                    checkedView.setCheckMarkDrawable(R.drawable.multi_check_selector);
+                }
+
             }
         }
 
@@ -318,6 +346,7 @@ public class ImportVideoActivity extends BaseActivity {
             }
             onSuccess(videoData.libDocs);
             mPagination.setPage(videoData.page);
+            listView.clearChoices();
         }
 
         private void thumbnail(boolean folder, String mimeType, String key, Holder holder) {
