@@ -16,10 +16,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -74,15 +71,22 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
         thumbnail(mimeType, key, holder);
 
         String name = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME));
-        holder.name.setText(name);
 
-        final long id = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload._ID));
+        //final long id = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload._ID));
 
         int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
         if (status == DownloadInfo.DownloadStatus.STATUS_SUCCESS) {
             holder.progressView.setProgress(0);
             holder.progressView.setVisibility(View.GONE);
+            holder.size.setVisibility(View.VISIBLE);
+            holder.thumbnail.setVisibility(View.VISIBLE);
+
             holder.errorView.setVisibility(View.GONE);
+            holder.fuckView.setVisibility(View.GONE);
+
+            holder.name.setText(name);
+            holder.name.setVisibility(View.VISIBLE);
+
 
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             long modify = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
@@ -98,7 +102,14 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
         } else if (status == DownloadInfo.DownloadStatus.STATUS_PENDING) {
             holder.progressView.setProgress(0);
             holder.progressView.setVisibility(View.VISIBLE);
+            holder.size.setVisibility(View.VISIBLE);
+            holder.thumbnail.setVisibility(View.VISIBLE);
+
+            holder.name.setText(name);
+            holder.name.setVisibility(View.VISIBLE);
+
             holder.errorView.setVisibility(View.GONE);
+            holder.fuckView.setVisibility(View.GONE);
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             long modify = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
 
@@ -110,17 +121,45 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
 
         } else if (status == DownloadInfo.DownloadStatus.STATUS_RUNNING) {
             holder.progressView.setVisibility(View.VISIBLE);
+            holder.size.setVisibility(View.VISIBLE);
+            holder.thumbnail.setVisibility(View.VISIBLE);
             holder.errorView.setVisibility(View.GONE);
+            holder.fuckView.setVisibility(View.GONE);
+
+            holder.name.setText(name);
+            holder.name.setVisibility(View.VISIBLE);
+
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             long current = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.CURRENT_BYTES));
             holder.size.setText(XjsUtils.getSizeFormatText(current) + "/" + XjsUtils.getSizeFormatText(size));
             int percent = (int) (((float) current) / size * 100);
             holder.progressView.setProgress(percent);
 
-        } else {
+        } else if(status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING
+                || status == DownloadInfo.DownloadStatus.STATUS_FUCK_OVER){
+
+            holder.fuckView.setText(name);
+            holder.fuckView.setVisibility(View.VISIBLE);
+
+            holder.errorView.setVisibility(View.GONE);
+            holder.progressView.setVisibility(View.GONE);
+            holder.size.setVisibility(View.GONE);
+            holder.thumbnail.setVisibility(View.GONE);
+            holder.name.setVisibility(View.GONE);
+
+
+        }else {
+
             holder.progressView.setProgress(0);
             holder.progressView.setVisibility(View.VISIBLE);
             holder.errorView.setVisibility(View.VISIBLE);
+            holder.size.setVisibility(View.VISIBLE);
+            holder.thumbnail.setVisibility(View.VISIBLE);
+
+            holder.fuckView.setVisibility(View.GONE);
+
+            holder.name.setText(name);
+            holder.name.setVisibility(View.VISIBLE);
 
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             long modify = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
@@ -140,6 +179,18 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             convertView = new View(mContext);
         }
         return convertView;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
+        if(status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING
+                || status == DownloadInfo.DownloadStatus.STATUS_FUCK_OVER){
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -237,6 +288,8 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
         CircleProgressView progressView;
         @BindView(R.id.error_tip)
         TextView errorView;
+        @BindView(R.id.fuck_title)
+        TextView fuckView;
 
         public Holder(View view) {
             super(view);

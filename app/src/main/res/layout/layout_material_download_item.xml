@@ -6,6 +6,19 @@
         android:layout_height="wrap_content"
         >
 
+    <TextView
+            android:id="@+id/fuck_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px80"
+            android:background="@color/main_bg"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:paddingBottom="@dimen/px19"
+            android:paddingTop="@dimen/px19"
+            android:paddingLeft="@dimen/px27"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"/>
+
     <ImageView
             android:id="@+id/material_download_thumbnail"
             android:src="@drawable/ic_word"

@@ -92,7 +92,6 @@ public class DownloadInfo {
 
     public static DownloadInfo queryDownloadInfo(Context context, long downloadId) {
         final ContentResolver resolver = context.getContentResolver();
-
         Uri uri = ContentUris.withAppendedId(DownloadProvider.DOWNLOAD_URI, downloadId);
 
         Cursor cursor = resolver.query(uri, null, null, null, null);
@@ -166,6 +165,8 @@ public class DownloadInfo {
     }
 
     public static class DownloadStatus{
+        public static final int STATUS_FUCK_ING = -1;
+        public static final int STATUS_FUCK_OVER = 199;
         public static final int STATUS_RUNNING = 0;
         public static final int STATUS_PENDING = 1;
         public static final int STATUS_PAUSED = 2;

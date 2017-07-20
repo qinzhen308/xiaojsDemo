@@ -106,4 +106,38 @@ public class DownloadManager {
         i.setAction(DEL_ACTION);
         context.sendBroadcast(i);
     }
+
+    public static boolean insertFuckData(Context context) {
+
+        delFuckData(context);
+
+        ContentValues value1 = new ContentValues();
+        value1.put(DBTables.TDownload.FILE_NAME,"正在下载");
+        value1.put(DBTables.TDownload.MIME_TYPE,"none");
+        value1.put(DBTables.TDownload.STATUS, DownloadInfo.DownloadStatus.STATUS_FUCK_ING);
+
+        ContentValues value2 = new ContentValues();
+        value2.put(DBTables.TDownload.FILE_NAME,"已下载");
+        value2.put(DBTables.TDownload.MIME_TYPE,"none");
+        value2.put(DBTables.TDownload.STATUS, DownloadInfo.DownloadStatus.STATUS_FUCK_OVER);
+
+        int count = context.getContentResolver().bulkInsert(DownloadProvider.DOWNLOAD_URI,new ContentValues[]{value1,value2});
+
+        return count == 2? true : false;
+    }
+
+    public static void delFuckData(Context context) {
+
+        String where = new StringBuilder(DBTables.TDownload.STATUS)
+                .append("='")
+                .append(DownloadInfo.DownloadStatus.STATUS_FUCK_ING)
+                .append("' or ")
+                .append(DBTables.TDownload.STATUS)
+                .append("='")
+                .append(DownloadInfo.DownloadStatus.STATUS_FUCK_OVER)
+                .append("'")
+                .toString();
+
+        context.getContentResolver().delete(DownloadProvider.DOWNLOAD_URI, where, null);
+    }
 }

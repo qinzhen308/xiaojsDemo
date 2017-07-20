@@ -32,9 +32,21 @@ public class DataPref {
     private static final String PREF_NEW_MSG = "nmsg";
 
     private static final String PREF_SHOW_GUIDE = "show_guide";
+    private static final String PREF_HAS_FUCK = "fuck";
 
     protected static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static void setFuckdata(final Context context,boolean fuck) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putBoolean(PREF_HAS_FUCK, fuck).apply();
+
+    }
+
+    public static boolean hasFuckdata(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getBoolean(PREF_HAS_FUCK, false);
     }
 
     public static void setShowGuide(final Context context,boolean show) {

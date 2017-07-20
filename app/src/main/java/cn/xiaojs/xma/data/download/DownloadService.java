@@ -64,6 +64,11 @@ public class DownloadService extends IntentService {
             return;
         }
 
+        if (info.status == DownloadInfo.DownloadStatus.STATUS_FUCK_OVER
+                || info.status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING) {
+            return;
+        }
+
         if (XiaojsConfig.DEBUG) {
             Logger.d("the download is start ID:"+ downlodId);
         }

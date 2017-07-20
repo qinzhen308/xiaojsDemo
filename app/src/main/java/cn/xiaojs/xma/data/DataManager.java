@@ -65,6 +65,15 @@ public class DataManager {
 
         saveVersionCode(context, APPUtils.getAPPVersionCode(context));
 
+        if (!DataPref.hasFuckdata(context)) {
+            boolean fuck = DownloadManager.insertFuckData(context);
+            if (fuck) {
+                DataPref.setFuckdata(context,true);
+            }
+        }
+
+
+
         if (AccountDataManager.isLogin(context)) {
 
             XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);

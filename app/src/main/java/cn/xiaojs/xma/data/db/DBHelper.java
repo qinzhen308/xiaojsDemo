@@ -1,10 +1,13 @@
 package cn.xiaojs.xma.data.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.download.DownloadInfo;
 
 import static cn.xiaojs.xma.data.db.DBTables.TContact;
 
@@ -19,7 +22,6 @@ public final class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         createTables(db);
     }
 
@@ -210,6 +212,8 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .toString();
         db.execSQL(CREATE_TABLE_SQL);
     }
+
+
 
 
 }
