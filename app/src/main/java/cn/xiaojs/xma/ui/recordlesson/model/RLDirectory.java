@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.recordlesson.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by Paul Z on 2017/7/18.
@@ -76,6 +77,19 @@ public class RLDirectory implements Serializable{
 
     public boolean isChecked(){
         return isChecked_native;
+    }
+
+
+    public void removeChecked(){
+        if(children==null)return;
+        Iterator<RLLesson> iteratorChild=children.iterator();
+        while (iteratorChild.hasNext()){
+            RLLesson lesson=iteratorChild.next();
+            if(lesson.isChecked()){
+                lesson.parent=null;
+                iteratorChild.remove();
+            }
+        }
     }
 
 }

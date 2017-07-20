@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--课名称-->
+        <LinearLayout
+            style="@style/LiveLessonItem"
+            android:layout_marginTop="@dimen/px30">
+
+            <TextView
+                android:id="@+id/label1"
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/live_lesson_name" />
+
+            <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/live_lesson_name"
+                style="@style/LiveLessonCreateEdt"
+                android:layout_width="0dp"
+                android:layout_marginLeft="@dimen/px40"
+                android:layout_weight="1"
+                android:hint="@string/live_lesson_name_hint"
+                android:maxLines="2" />
+        </LinearLayout>
+
+
+        <!--学科类目-->
+        <include layout="@layout/layout_horizontal_line" />
+
+        <LinearLayout style="@style/LiveLessonItem">
+
+            <TextView
+                android:id="@+id/label2"
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/subject_category" />
+
+            <TextView
+                android:id="@+id/lesson_subject"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/please_select" />
+        </LinearLayout>
+
+        <!--主讲-->
+        <include layout="@layout/layout_horizontal_line" />
+
+        <LinearLayout style="@style/LiveLessonItem">
+
+            <TextView
+                android:id="@+id/label3"
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/record_lesson_teacher" />
+
+            <TextView
+                android:id="@+id/btn_teacher"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/please_select" />
+        </LinearLayout>
+
+        <!--是否需要报名-->
+        <LinearLayout
+            style="@style/LiveLessonItem"
+            android:layout_marginTop="@dimen/px32"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <TextView
+                style="@style/LiveLessonCreateTitle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/is_need_enroll" />
+
+            <ToggleButton
+                android:id="@+id/enroll_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/toggle_btn_selector"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/stu_count_divide"
+            layout="@layout/layout_horizontal_line" />
+
+        <!--是否设置有效期-->
+        <LinearLayout
+            style="@style/LiveLessonItem"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <TextView
+                style="@style/LiveLessonCreateTitle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/is_need_set_expired" />
+
+            <ToggleButton
+                android:id="@+id/expiry_date_switcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/toggle_btn_selector"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+
+        <!--有效期填写-->
+        <LinearLayout
+            android:id="@+id/layout_expired_date"
+            style="@style/LiveLessonItem"
+            android:visibility="gone"
+            android:paddingBottom="@dimen/px30">
+
+            <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/et_expired_date"
+                style="@style/LessonText"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px70"
+                android:layout_marginRight="@dimen/px20"
+                android:background="@drawable/common_search_bg"
+                android:ems="6"
+                android:gravity="left|center_vertical"
+                android:inputType="number"
+                android:paddingBottom="@dimen/px5"
+                android:paddingLeft="@dimen/px10"
+                android:paddingRight="@dimen/px10"
+                android:paddingTop="@dimen/px5"
+                android:textColor="@color/font_create_lesson_content"
+                android:textColorHint="@color/subject_selected_blue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unit_day"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_26px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rl_set_expired_date_tip"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_24px" />
+        </LinearLayout>
+
+
+        <!--封面设置-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px30">
+
+            <LinearLayout
+                android:id="@+id/cover_add_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/add_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/px160"
+                    android:drawableLeft="@drawable/ic_add_lesson_cover"
+                    android:drawablePadding="@dimen/px20"
+                    android:paddingBottom="@dimen/px26"
+                    android:paddingLeft="@dimen/px40"
+                    android:paddingRight="@dimen/px40"
+                    android:paddingTop="@dimen/px26"
+                    android:text="@string/add_cover"
+                    android:textColor="@color/font_dark_gray"
+                    android:textSize="@dimen/font_28px" />
+
+                <TextView
+                    android:id="@+id/add_cover_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/px2"
+                    android:text="@string/add_cover_tips"
+                    android:textColor="@color/font_light_gray"
+                    android:textSize="@dimen/font_26px" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/cover_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+        <!--简介-->
+        <LinearLayout
+            android:id="@+id/live_lesson_brief_layout"
+            style="@style/LiveLessonItem"
+            android:layout_marginTop="@dimen/px32">
+
+            <TextView
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/live_lesson_brief" />
+
+            <TextView
+                android:id="@+id/live_lesson_brief"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/please_input" />
+
+        </LinearLayout>
+
+        <include layout="@layout/layout_horizontal_line" />
+
+        <!--标签-->
+        <LinearLayout
+            android:id="@+id/live_lesson_label_layout"
+            style="@style/LiveLessonItem">
+
+            <TextView
+                style="@style/LiveLessonCreateTitle"
+                android:text="@string/live_lesson_label" />
+
+            <TextView
+                android:id="@+id/live_lesson_label"
+                style="@style/LiveLessonRightEntrance"
+                android:hint="@string/live_lesson_label_hint" />
+
+        </LinearLayout>
+
+        <include layout="@layout/layout_horizontal_line" />
+
+
+        <Button
+            android:id="@+id/sub_btn"
+            style="@style/BigSubmitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/px30"
+            android:layout_marginTop="@dimen/px86"
+            android:text="@string/finish" />
+
+    </LinearLayout>
+</ScrollView>
