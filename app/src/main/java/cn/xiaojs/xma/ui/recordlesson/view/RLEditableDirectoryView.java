@@ -77,6 +77,7 @@ public class RLEditableDirectoryView extends LinearLayout implements IViewModel<
 
             }
         });
+        checkView.setSelected(mData.isChecked());
     }
 
     @OnClick(R.id.check_view)

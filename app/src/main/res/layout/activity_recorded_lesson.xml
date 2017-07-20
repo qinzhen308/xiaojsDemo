@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/choice_all"
+            android:text="@string/delete"
             android:layout_marginLeft="@dimen/px30"
             android:textColor="@color/font_blue"
             android:textSize="@dimen/font_30px"

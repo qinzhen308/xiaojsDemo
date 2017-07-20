@@ -77,6 +77,7 @@ public class RLEditableLessonView extends LinearLayout implements IViewModel<RLL
 
             }
         });
+        checkView.setSelected(mData.isChecked());
     }
 
     @OnClick(R.id.check_view)
