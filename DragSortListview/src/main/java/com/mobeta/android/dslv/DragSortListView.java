@@ -3111,7 +3111,12 @@ public class DragSortListView extends ListView {
     }
 
     /**
-     * 不建议随意使用，如果在能保证数据集改变前后对应position之间的关系，才使用
+     * 此方法目的是改变拖动的item的位置，即drop(from,to)的from和to
+     * 不建议随意使用，如果在能保证数据集改变前后对应position之间的关系，才使用；
+     * 目前适用情况：startdrag时，如果使数据集发生数量或位置的改变，
+     *               为了修正拖动的item因数据集改变而造成和列表中的item不对应，
+     *               可以通过此方法修正拖动的item的position，但必须在drop前调用，否则无意义
+     *
      * @param position 改变后的position
      */
     public void hookChangeStartPosition(int position){

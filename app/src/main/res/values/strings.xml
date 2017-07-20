@@ -969,5 +969,9 @@
     <string name="manage_it">管理</string>
     <string name="import_video">导入视频</string>
     <string name="add_new_dir">新增一级</string>
+    <string name="add_new_directory">新增一级目录</string>
     <string name="add_new_lesson">新增一级</string>
+    <string name="add_new_dir_tip">请输入目录名称</string>
+    <string name="add_new_dir_not_input_tip">请输入一级目录名</string>
+
 </resources>

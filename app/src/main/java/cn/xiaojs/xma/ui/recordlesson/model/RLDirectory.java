@@ -67,10 +67,15 @@ public class RLDirectory implements Serializable{
 
 
     public void setChecked(boolean isChecked){
+        isChecked_native=isChecked;
+        if(children==null)return;
         for(RLLesson child:children){
             child.isChecked_native=isChecked;
         }
-        isChecked_native=isChecked;
+    }
+
+    public boolean isChecked(){
+        return isChecked_native;
     }
 
 }

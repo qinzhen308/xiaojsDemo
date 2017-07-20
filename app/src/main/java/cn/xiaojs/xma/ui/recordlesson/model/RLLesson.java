@@ -32,4 +32,8 @@ public class RLLesson implements Serializable{
         }
         parent.isChecked_native=parentChecked;
     }
+
+    public boolean isChecked(){
+        return isChecked_native;
+    }
 }

@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import com.mobeta.android.dslv.DragSortListView;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
@@ -85,7 +88,7 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
 
     @Override
     public int getViewTypeCount() {
-        return classes.length;
+        return classes.length+2;
     }
 
     @Override
@@ -261,6 +264,16 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
                 listView.hookChangeStartPosition(group);
             }
         }
+    }
+
+
+    public void addDir(RLDirectory dir){
+        List list=getList();
+        if(list==null){
+            list=new ArrayList();
+        }
+        list.add(dir);
+        notifyDataSetChanged();
     }
 
 }

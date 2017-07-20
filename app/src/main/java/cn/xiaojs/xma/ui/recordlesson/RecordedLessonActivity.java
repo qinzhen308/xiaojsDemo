@@ -3,15 +3,21 @@ package cn.xiaojs.xma.ui.recordlesson;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mobeta.android.dslv.DragSortListView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,8 +26,11 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ObjectUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/7/18.
@@ -43,6 +52,8 @@ public class RecordedLessonActivity extends BaseActivity {
     LinearLayout layoutEditBar;
 
     ArrayList srcList;
+    @BindView(R.id.all_check_view)
+    TextView allCheckView;
 
     @Override
     protected void addViewContent() {
@@ -68,7 +79,7 @@ public class RecordedLessonActivity extends BaseActivity {
         adapter = new RecordedLessonAdapter(this, listview);
         listview.addFooterView(footer);
         listview.setAdapter(adapter);
-        listview.setDragEnabled(true);
+        listview.setDragEnabled(false);
 //        DragSortController manager=new DragSortController(mListview);
 //        manager.setDragInitMode(DragSortController.ON_LONG_PRESS);
 //        mListview.setFloatViewManager(manager);
@@ -127,27 +138,30 @@ public class RecordedLessonActivity extends BaseActivity {
                 }
                 break;
             case R.id.all_check_view:
+                allCheck(!allCheckView.isSelected());
                 break;
             case R.id.btn_delete:
+                deleteSelected();
                 break;
             case R.id.add_dir:
+                addNewDir();
                 break;
             case R.id.btn_lesson:
-
+                addNewLesson();
                 break;
         }
     }
 
     private void readyToManage() {
-        if(adapter.getList()==null){
+        if (adapter.getList() == null) {
             return;
         }
-        adapter.setList(ObjectUtil.deepClone((ArrayList)adapter.getList()));
+        adapter.setList(ObjectUtil.deepClone((ArrayList) adapter.getList()));
         adapter.setEditMode(true);
     }
 
     private void saveManaged() {
-        srcList=(ArrayList) adapter.getList();
+        srcList = (ArrayList) adapter.getList();
         adapter.setEditMode(false);
     }
 
@@ -186,28 +200,25 @@ public class RecordedLessonActivity extends BaseActivity {
         dir.addChild(new RLLesson("06第六节课---3", "306"));
         dir.addChild(new RLLesson("07第七节课---3", "307"));
         list.add(dir);
-//        dir=new RLDirectory("04第二个目录","200");
-//        dir.addChild(new RLLesson("01第一节课--2","201"));
-//        list.add(dir);
-//        dir=new RLDirectory("05第二个目录","200");
-//        dir.addChild(new RLLesson("01第一节课--2","201"));
-//        list.add(dir);
-//        dir=new RLDirectory("05第二个目录","200");
-//        dir.addChild(new RLLesson("01第一节课--2","201"));
-//        list.add(dir);
-//        dir=new RLDirectory("06第二个目录","200");
-//        dir.addChild(new RLLesson("01第一节课--2","201"));
-//        list.add(dir);
-//        dir=new RLDirectory("07第二个目录","200");
-//        dir.addChild(new RLLesson("01第一节课--2","201"));
-//        list.add(dir);
-//        dir=new RLDirectory("08第二个目录","200");
-//        dir.addChild(new RLLesson("01第一节课--2","201"));
-//        list.add(dir);
-//        dir=new RLDirectory("09第二个目录","200");
-//        dir.addChild(new RLLesson("01第一节课--2","201"));
-//        list.add(dir);
-        srcList=list;
+        dir=new RLDirectory("04第四个目录","400");
+        dir.addChild(new RLLesson("01第一节课--4","401"));
+        list.add(dir);
+        dir=new RLDirectory("05第五个目录","500");
+        dir.addChild(new RLLesson("01第一节课--5","501"));
+        list.add(dir);
+        dir=new RLDirectory("06第六个目录","600");
+        dir.addChild(new RLLesson("01第一节课--6","601"));
+        list.add(dir);
+        dir=new RLDirectory("07第七个目录","700");
+        dir.addChild(new RLLesson("01第一节课--7","701"));
+        list.add(dir);
+        dir=new RLDirectory("08第八个目录","800");
+        dir.addChild(new RLLesson("01第一节课--8","801"));
+        list.add(dir);
+        dir=new RLDirectory("09第九个目录","900");
+        dir.addChild(new RLLesson("01第一节课--9","901"));
+        list.add(dir);
+        srcList = list;
         adapter.setList(list);
         adapter.notifyDataSetChanged();
     }
@@ -228,10 +239,75 @@ public class RecordedLessonActivity extends BaseActivity {
             nextBtn.setVisibility(View.VISIBLE);
             layoutEditBar.setVisibility(View.GONE);
             listview.setDragEnabled(false);
+            //重置选中状态
+            allCheck(false);
         }
     }
 
     private void importVideo() {
+        // TODO: 2017/7/20 导入视频页面
+        ToastUtil.showToast(getApplicationContext(), "未接入...");
+    }
+
+    private void allCheck(boolean isChecked) {
+        List list = adapter.getList();
+        allCheckView.setSelected(isChecked);
+        if (ArrayUtil.isEmpty(list)) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            Object o = list.get(i);
+            if (o instanceof RLDirectory) {
+                ((RLDirectory) o).setChecked(isChecked);
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+
+    private void deleteSelected(){
+        ToastUtil.showToast(getApplicationContext(), "删除未接入...");
+    }
+
+    private void addNewDir(){
+        final CommonDialog dialog=new CommonDialog(this);
+        dialog.setTitle(R.string.add_new_directory);
+        final EditText editText=new EditText(this);
+        editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        editText.setHint(R.string.add_new_dir_tip);
+        editText.setLines(1);
+        editText.setTextColor(getResources().getColor(R.color.font_black));
+        editText.setBackgroundResource(R.drawable.common_search_bg);
+        editText.setGravity(Gravity.LEFT|Gravity.TOP);
+        int padding=getResources().getDimensionPixelSize(R.dimen.px10);
+        editText.setPadding(padding,padding,padding,padding);
+        editText.setHintTextColor(getResources().getColor(R.color.font_gray));
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimensionPixelSize(R.dimen.font_28px));
+        dialog.setCustomView(editText);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                String dirName=editText.getText().toString().trim();
+                if(dirName.length()==0){
+                    ToastUtil.showToast(getApplicationContext(), R.string.add_new_dir_not_input_tip);
+                    return;
+                }
+                adapter.addDir(new RLDirectory(dirName,""));
+                dialog.dismiss();
+
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void addNewLesson(){
+
 
     }
 
@@ -239,7 +315,6 @@ public class RecordedLessonActivity extends BaseActivity {
         Intent intent = new Intent(context, RecordedLessonActivity.class);
         context.startActivity(intent);
     }
-
 
 
 }
