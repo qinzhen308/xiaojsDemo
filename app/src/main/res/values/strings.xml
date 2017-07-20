@@ -964,4 +964,5 @@
     <string name="create_record_lesson_tips">从你的资料库中选择直播课回放视频或上传的视频，快速生成课程，可上架售卖或共享给班级</string>
     <string name="import_video_tips">导入视频</string>
     <string name="create_recordlesson">开录播课</string>
+    <string name="import_video">导入视频</string>
 </resources>
