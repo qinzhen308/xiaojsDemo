@@ -973,5 +973,6 @@
     <string name="add_new_lesson">新增一级</string>
     <string name="add_new_dir_tip">请输入目录名称</string>
     <string name="add_new_dir_not_input_tip">请输入一级目录名</string>
+    <string name="finish_with_count">完成(%1$d)</string>
 
 </resources>

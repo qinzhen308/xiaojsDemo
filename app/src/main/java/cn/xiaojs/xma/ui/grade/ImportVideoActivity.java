@@ -1,21 +1,26 @@
 package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Stack;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsListAdapter;
@@ -39,10 +44,17 @@ public class ImportVideoActivity extends BaseActivity {
     PullToRefreshListView listView;
     @BindView(R.id.search)
     EditTextDel searchView;
-
+    @BindView(R.id.lay_folder_tip)
+    LinearLayout tipLay;
+    @BindView(R.id.tip_name)
+    TextView tipNameView;
+    @BindView(R.id.checkall_btn)
+    CheckBox checkAllBtn;
 
 
     private DataAdapter adapter;
+    private Stack<VideoData> dataStack;
+    private String folderName;
 
     @Override
     protected void addViewContent() {
@@ -57,21 +69,122 @@ public class ImportVideoActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
-                finish();
+                onBack();
                 break;
             case R.id.right_image:
+                complete();
                 break;
         }
     }
 
+    @OnCheckedChanged({R.id.checkall_btn})
+    public void onCheckedChanged(CompoundButton v, boolean checked) {
+        switch (v.getId()) {
+            case R.id.checkall_btn:
+                changeChoiceMode(checked);
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        onBack();
+    }
+
     private void init() {
+        dataStack = new Stack<>();
         adapter = new DataAdapter(this, listView);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(adapter);
 
     }
 
+    private void onBack() {
+        if (dataStack.size() <= 0){
+            finish();
+            return;
+        }
+
+        adapter.back();
+    }
+
+    private void changeChoiceMode(boolean checked) {
+
+        if (checked) {
+            checkAllBtn.setText(R.string.cancel_choice_all);
+            choiceAll();
+        }else {
+            checkAllBtn.setText(R.string.choice_all);
+            listView.clearChoices();
+            adapter.notifyDataSetChanged();
+        }
+
+        updateChoiceCountView();
+
+    }
+
+    private void choiceAll() {
+        if (adapter != null
+                && adapter.getList() != null
+                && adapter.getList().size() > 0) {
+
+            int size = adapter.getList().size();
+            for (int i = 0; i < size; i++) {
+
+                LibDoc doc = adapter.getItem(i);
+                if (!doc.showAction) {
+                    listView.setItemChecked(i, true);
+                }
+
+            }
+        }
+    }
+
+    private void updateTipNameView(String name){
+        if (TextUtils.isEmpty(name)) {
+            tipLay.setVisibility(View.GONE);
+            searchView.setVisibility(View.VISIBLE);
+        }else {
+            tipNameView.setText(name);
+            tipLay.setVisibility(View.VISIBLE);
+            searchView.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateChoiceCountView() {
+        int count = listView.getCheckItemIds().length;
+        if (count <= 0) {
+            setRightText(R.string.finish);
+        }else {
+            setRightText(getString(R.string.finish_with_count, count));
+        }
+    }
+
+    private void complete() {
+        //TODO 点击完成
+    }
+
+
     public class DataAdapter extends AbsListAdapter<LibDoc, DataAdapter.Holder> {
+
+
+        class Holder extends BaseHolder {
+
+            @BindView(R.id.check_view)
+            CheckedTextView checkedView;
+            @BindView(R.id.icon)
+            ImageView iconView;
+            @BindView(R.id.name)
+            TextView nameView;
+            @BindView(R.id.size)
+            TextView sizeView;
+
+
+            public Holder(View view) {
+                super(view);
+            }
+        }
+
 
         public DataAdapter(Context context, PullToRefreshListView listView) {
             super(context, listView);
@@ -81,9 +194,12 @@ public class ImportVideoActivity extends BaseActivity {
         protected void onDataItemClick(int position, LibDoc bean) {
             if (bean.showAction) {
                 //enter folder
+                enterNext(bean);
             }else {
                 super.onDataItemClick(position, bean);
             }
+
+            updateChoiceCountView();
 
         }
 
@@ -128,10 +244,26 @@ public class ImportVideoActivity extends BaseActivity {
         @Override
         protected void doRequest() {
 
+            int tempi = 0;
+
+            switch (dataStack.size()) {
+                case 0:
+                    tempi = 0;
+                    break;
+                case 1:
+                    tempi = 1000;
+                    break;
+                case 2:
+                    tempi = 2000;
+                    break;
+                default:
+                    break;
+            }
+
             List<LibDoc> libDocs = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
+            for (int i = tempi; i < tempi + 10; i++) {
                 LibDoc doc = new LibDoc();
-                if (i == 0 || i == 3 || i == 6) {
+                if (i == 0 || i == 3 || i == 6 || i==1000 || i== 2000) {
                     doc.showAction = true;
                     doc.name = "folder" + i;
                 }else {
@@ -145,28 +277,48 @@ public class ImportVideoActivity extends BaseActivity {
                 libDocs.add(doc);
             }
 
-
             onSuccess(libDocs);
 
         }
 
-        class Holder extends BaseHolder {
+        private void enterNext(LibDoc bean) {
 
-            @BindView(R.id.check_view)
-            CheckedTextView checkedView;
-            @BindView(R.id.icon)
-            ImageView iconView;
-            @BindView(R.id.name)
-            TextView nameView;
-            @BindView(R.id.size)
-            TextView sizeView;
+            int currentPage = mPagination.getPage();
+            dataStack.push(new VideoData(bean.id,
+                    folderName,
+                    currentPage,
+                    new ArrayList<LibDoc>(getList())));
 
+            listView.clearChoices();
+            checkAllBtn.setChecked(false);
 
-            public Holder(View view) {
-                super(view);
+            if (getList() !=null) {
+                getList().clear();
             }
+            adapter.notifyDataSetChanged();
+
+            folderName = bean.name;
+            updateTipNameView(folderName);
+
+            doRefresh();
         }
 
+        private void back() {
+
+            if (dataStack.size() <= 0) {
+                return;
+            }
+
+            VideoData videoData = dataStack.pop();
+
+            updateTipNameView(videoData.name);
+
+            if (getList() !=null) {
+                getList().clear();
+            }
+            onSuccess(videoData.libDocs);
+            mPagination.setPage(videoData.page);
+        }
 
         private void thumbnail(boolean folder, String mimeType, String key, Holder holder) {
 
@@ -205,5 +357,19 @@ public class ImportVideoActivity extends BaseActivity {
                     .into(holder.iconView);
         }
 
+    }
+
+    static class VideoData{
+        String id;
+        String name;
+        int page;
+        List<LibDoc> libDocs;
+
+        public VideoData(String id, String name, int page, List<LibDoc> libDocs) {
+            this.id = id;
+            this.name = name;
+            this.page = page;
+            this.libDocs = libDocs;
+        }
     }
 }

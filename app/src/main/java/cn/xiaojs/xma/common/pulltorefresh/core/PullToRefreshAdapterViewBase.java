@@ -191,6 +191,10 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		mRefreshableView.setChoiceMode(mode);
 	}
 
+	public void clearChoices() {
+		mRefreshableView.clearChoices();
+	}
+
 	public void setOnChildClickListener(ExpandableListView.OnChildClickListener listener) {
 		((ExpandableListView) mRefreshableView).setOnChildClickListener(listener);
 	}
