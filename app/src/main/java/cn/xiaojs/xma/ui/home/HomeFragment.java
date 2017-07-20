@@ -55,6 +55,7 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.LessonScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.animlib.Xiaojs120Anim;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.ui.widget.banner.BannerAdapter;
@@ -206,8 +207,9 @@ public class HomeFragment extends BaseFragment {
                 ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_UPDATE);
                 break;
             case R.id.iv_write_dynamic:
-                startActivityForResult(new Intent(getActivity(), PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
-                AnalyticEvents.onEvent(getActivity(),16);
+//                startActivityForResult(new Intent(getActivity(), PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
+//                AnalyticEvents.onEvent(getActivity(),16);
+                RecordedLessonActivity.invoke(getActivity());
                 break;
         }
     }

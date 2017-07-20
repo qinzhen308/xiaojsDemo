@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.mobeta.android.dslv.DragSortListView
+        xmlns:dslv="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:choiceMode="multipleChoice"
+        android:dividerHeight="0px"
+        android:divider="@null"
+        dslv:click_remove_id="@id/click_remove"
+        dslv:collapsed_height="1px"
+        dslv:drag_enabled="true"
+        dslv:drag_handle_id="@id/drag_handle"
+        dslv:drag_scroll_start="0.33"
+        dslv:drag_start_mode="onLongPress"
+        dslv:float_alpha="0.6"
+        dslv:remove_enabled="true"
+        dslv:remove_mode="clickRemove"
+        dslv:slide_shuffle_speed="0.3" />
+
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        style="@style/BigSubmitBtn"/>
+
+
+    <LinearLayout
+        android:id="@+id/layout_edit_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/px90"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/px32"
+        android:paddingRight="@dimen/px40"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/all_check_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/single_check_selector"
+            android:drawablePadding="@dimen/px21"
+            android:gravity="center"
+            android:text="@string/choice_all"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_30px"
+            />
+
+        <TextView
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/choice_all"
+            android:layout_marginLeft="@dimen/px30"
+            android:textColor="@color/font_blue"
+            android:textSize="@dimen/font_30px"
+            />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/add_dir"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/add_new_dir"
+            android:textColor="@color/font_blue"
+            android:textSize="@dimen/font_30px"
+            />
+
+        <TextView
+            android:id="@+id/btn_lesson"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/add_new_lesson"
+            android:layout_marginLeft="@dimen/px64"
+            android:textColor="@color/font_blue"
+            android:textSize="@dimen/font_30px"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
+
+
+
+

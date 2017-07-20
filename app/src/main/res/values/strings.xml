@@ -953,6 +953,7 @@
     <string name="permission_rationale_camera_audio_room_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用教室内直播功能哦~</string>
     <string name="set_public_tip">班级设为公开后，所有人可见，学生可通过搜索班级关键词找到该班</string>
     <string name="set_public_tip2">学生可以通过搜索班级关键词找到该班</string>
+
     <string name="file_rename">文件重命名</string>
     <string name="file_move">移动文件</string>
     <string name="serach_material_hint">搜索资料名</string>
@@ -964,5 +965,9 @@
     <string name="create_record_lesson_tips">从你的资料库中选择直播课回放视频或上传的视频，快速生成课程，可上架售卖或共享给班级</string>
     <string name="import_video_tips">导入视频</string>
     <string name="create_recordlesson">开录播课</string>
+    <string name="record_lesson_directory">课程目录</string>
+    <string name="manage_it">管理</string>
     <string name="import_video">导入视频</string>
+    <string name="add_new_dir">新增一级</string>
+    <string name="add_new_lesson">新增一级</string>
 </resources>
