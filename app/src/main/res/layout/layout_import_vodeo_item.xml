@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<cn.xiaojs.xma.ui.widget.CheckableRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    <CheckedTextView
+            android:id="@+id/check_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkMark="@drawable/multi_check_selector"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:drawablePadding="@dimen/px24"
+            android:layout_marginLeft="@dimen/px24"
+            />
+
+    <ImageView
+            android:id="@+id/icon"
+            android:src="@drawable/ic_word"
+            android:layout_gravity="center_vertical"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/check_view"
+            android:layout_marginLeft="@dimen/px32"
+            />
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="手把手教你做人力资源"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            android:layout_marginTop="@dimen/px23"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:layout_marginRight="@dimen/px80"
+            android:layout_marginLeft="@dimen/px29"
+            android:layout_toRightOf="@id/icon"
+            />
+
+    <TextView
+            android:id="@+id/size"
+            android:textSize="@dimen/font_24px"
+            android:text="0.8M"
+            android:textColor="@color/summary_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/name"
+            android:layout_below="@id/name"
+            android:layout_marginTop="@dimen/px2"
+            android:layout_marginBottom="@dimen/px18"
+            />
+
+</cn.xiaojs.xma.ui.widget.CheckableRelativeLayout>

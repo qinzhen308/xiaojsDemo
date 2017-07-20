@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.grade.ImportVideoActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -246,8 +248,9 @@ public class RecordedLessonActivity extends BaseActivity {
     }
 
     private void importVideo() {
-        // TODO: 2017/7/20 导入视频页面
-        ToastUtil.showToast(getApplicationContext(), "未接入...");
+        Intent i = new Intent(this, ImportVideoActivity.class);
+        i.putExtra(ImportVideoActivity.EXTRA_TITLE,getString(R.string.import_video_tips));
+        startActivity(i);
     }
 
     private void allCheck(boolean isChecked) {

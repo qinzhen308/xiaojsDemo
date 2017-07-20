@@ -195,6 +195,15 @@ public abstract class BaseActivity extends FragmentActivity implements IDialogMe
         }
     }
 
+    protected final void setRightText(String res) {
+        if (!TextUtils.isEmpty(res)) {
+            mRightText.setVisibility(View.VISIBLE);
+            mRightText.setText(res);
+        } else {
+            mRightText.setVisibility(View.GONE);
+        }
+    }
+
     protected final void setRightTextColor(@ColorInt int color) {
         mRightText.setTextColor(color);
     }

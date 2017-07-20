@@ -19,6 +19,12 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
         super(context, attrs);
     }
 
+
+    public CheckableRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr, CheckedTextView mTextView) {
+        super(context, attrs, defStyleAttr);
+        this.mTextView = mTextView;
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();

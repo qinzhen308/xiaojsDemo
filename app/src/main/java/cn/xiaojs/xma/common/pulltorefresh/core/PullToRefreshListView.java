@@ -61,6 +61,15 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		return Orientation.VERTICAL;
 	}
 
+
+	public long[] getCheckItemIds() {
+		return mRefreshableView.getCheckItemIds();
+	}
+
+	public void setItemChecked(int position, boolean value) {
+		mRefreshableView.setItemChecked(position, value);
+	}
+
 	@Override
 	protected void onRefreshing(final boolean doScroll) {
 		/**

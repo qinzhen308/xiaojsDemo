@@ -979,5 +979,7 @@
     <string name="belong_to_dir">所属一级目录</string>
     <string name="select_belong_to_dir">选择所属一级目录</string>
     <string name="please_add_dir_first">请先添加一级目录</string>
+    <string name="finish_with_count">完成(%1$d)</string>
+    <string name="choice_inner_video">选择关联视频</string>
 
 </resources>
