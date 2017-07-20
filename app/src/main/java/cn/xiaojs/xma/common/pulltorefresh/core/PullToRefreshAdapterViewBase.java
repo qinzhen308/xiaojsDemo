@@ -183,8 +183,12 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		((ExpandableListView) mRefreshableView).setDivider(childDivider);
 	}
 
+//	public void setChoiceMode(int mode) {
+//		((ExpandableListView) mRefreshableView).setChoiceMode(mode);
+//	}
+
 	public void setChoiceMode(int mode) {
-		((ExpandableListView) mRefreshableView).setChoiceMode(mode);
+		mRefreshableView.setChoiceMode(mode);
 	}
 
 	public void setOnChildClickListener(ExpandableListView.OnChildClickListener listener) {

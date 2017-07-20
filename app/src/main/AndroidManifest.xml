@@ -347,7 +347,10 @@
         <activity android:name=".ui.grade.MoveFileActivity"
                   android:screenOrientation="portrait"
                 />
-        <activity android:name=".ui.lesson.xclass.CreateRecordlessonActivity"
+        <activity android:name=".ui.recordlesson.CreateRecordlessonActivity"
+                  android:screenOrientation="portrait"
+                />
+        <activity android:name=".ui.grade.ImportVideoActivity"
                   android:screenOrientation="portrait"
                 />
         <!-- QQ -->

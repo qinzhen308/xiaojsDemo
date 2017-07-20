@@ -5,13 +5,35 @@
               android:orientation="vertical"
         >
 
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_search"
+                android:paddingLeft="@dimen/px15"
+                android:paddingRight="@dimen/px15"
+                android:maxLines="1"
+                android:hint="@string/serach_material_hint"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:drawablePadding="@dimen/px10"
+                android:gravity="center_vertical"
+                android:background="@drawable/common_edittext_bg"
+                android:paddingBottom="@dimen/px15"
+                android:paddingTop="@dimen/px15"
+                android:layout_marginTop="@dimen/px16"
+                android:layout_marginBottom="@dimen/px16"
+                android:layout_marginLeft="@dimen/px30"
+                android:layout_marginRight="@dimen/px30"
+                />
 
-    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
-            android:id="@+id/student_list"
+
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView
+            android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
             android:listSelector="@android:color/transparent"
             android:orientation="vertical"
-            android:layout_marginTop="@dimen/px30"/>
+            android:background="@color/white"/>
 </LinearLayout>
