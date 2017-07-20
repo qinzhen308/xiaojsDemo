@@ -970,8 +970,14 @@
     <string name="import_video">导入视频</string>
     <string name="add_new_dir">新增一级</string>
     <string name="add_new_directory">新增一级目录</string>
-    <string name="add_new_lesson">新增一级</string>
+    <string name="add_new_lesson">新增二级</string>
+    <string name="add_new_lesson_dir">新增二级目录</string>
     <string name="add_new_dir_tip">请输入目录名称</string>
     <string name="add_new_dir_not_input_tip">请输入一级目录名</string>
+    <string name="directory_name">目录名称</string>
+    <string name="relevance_video">关联视频</string>
+    <string name="belong_to_dir">所属一级目录</string>
+    <string name="select_belong_to_dir">选择所属一级目录</string>
+    <string name="please_add_dir_first">请先添加一级目录</string>
 
 </resources>

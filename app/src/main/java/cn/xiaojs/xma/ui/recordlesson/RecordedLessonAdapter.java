@@ -276,4 +276,12 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
         notifyDataSetChanged();
     }
 
+    public void addLesson(int dirPosition,RLLesson lesson){
+        if(lesson==null)return;
+        RLDirectory dir=(RLDirectory)super.getItem(dirPosition);
+        if(dir==null)return;
+        dir.addChild(lesson);
+        notifyDataSetChanged();
+    }
+
 }

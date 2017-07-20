@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    >
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px32" />
+
+    <!--目录名称-->
+    <LinearLayout style="@style/LiveLessonItem">
+
+        <TextView
+            style="@style/LiveLessonCreateTitle"
+            android:text="@string/directory_name" />
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/et_directory_name"
+            style="@style/LiveLessonCreateEdt"
+            android:layout_width="0dp"
+            android:layout_marginLeft="@dimen/px40"
+            android:layout_weight="1"
+            android:hint="@string/live_lesson_name_hint"
+            android:maxLines="2" />
+    </LinearLayout>
+
+
+    <!--关联视频-->
+    <include layout="@layout/layout_horizontal_line" />
+
+    <LinearLayout style="@style/LiveLessonItem">
+
+        <TextView
+            style="@style/LiveLessonCreateTitle"
+            android:text="@string/relevance_video" />
+
+        <TextView
+            android:id="@+id/btn_relevance_video"
+            style="@style/LiveLessonRightEntrance"
+            android:hint="@string/please_select" />
+    </LinearLayout>
+
+    <include layout="@layout/layout_horizontal_line" />
+
+    <LinearLayout style="@style/LiveLessonItem">
+
+        <TextView
+            style="@style/LiveLessonCreateTitle"
+            android:text="@string/belong_to_dir" />
+
+        <TextView
+            android:id="@+id/btn_belong_to_dir"
+            style="@style/LiveLessonRightEntrance"
+            android:hint="@string/please_select" />
+    </LinearLayout>
+
+
+</LinearLayout>

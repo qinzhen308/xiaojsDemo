@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -273,7 +274,10 @@ public class RecordedLessonActivity extends BaseActivity {
         final CommonDialog dialog=new CommonDialog(this);
         dialog.setTitle(R.string.add_new_directory);
         final EditText editText=new EditText(this);
-        editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin=getResources().getDimensionPixelSize(R.dimen.px20);
+        lp.topMargin=getResources().getDimensionPixelSize(R.dimen.px20);
+        editText.setLayoutParams(lp);
         editText.setHint(R.string.add_new_dir_tip);
         editText.setLines(1);
         editText.setTextColor(getResources().getColor(R.color.font_black));
@@ -307,6 +311,12 @@ public class RecordedLessonActivity extends BaseActivity {
     }
 
     private void addNewLesson(){
+        List dirs=adapter.getList();
+        if(ArrayUtil.isEmpty(dirs)){
+            ToastUtil.showToast(getApplicationContext(), R.string.please_add_dir_first);
+            return;
+        }
+        AddLessonDirActivity.invoke(this,(ArrayList<RLDirectory>)(Object)dirs);
 
 
     }
@@ -314,6 +324,19 @@ public class RecordedLessonActivity extends BaseActivity {
     public static void invoke(Context context) {
         Intent intent = new Intent(context, RecordedLessonActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(RESULT_OK==resultCode){
+            if(requestCode==AddLessonDirActivity.REQUEST_CODE){
+                int selectedDirPostion=data.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
+                adapter.addLesson(selectedDirPostion,(RLLesson) data.getSerializableExtra(AddLessonDirActivity.EXTRA_KEY_NEW_LESSON));
+            }else if(requestCode==1212){//绑定视频，code要改
+
+            }
+        }
     }
 
 
