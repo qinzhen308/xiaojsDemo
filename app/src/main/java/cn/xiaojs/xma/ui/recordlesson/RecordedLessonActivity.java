@@ -19,6 +19,7 @@ import com.mobeta.android.dslv.DragSortListView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -124,6 +125,7 @@ public class RecordedLessonActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.next_btn:
+                next();
                 break;
             case R.id.right_view:
                 if (isEditMode) {
@@ -153,6 +155,14 @@ public class RecordedLessonActivity extends BaseActivity {
                 addNewLesson();
                 break;
         }
+    }
+
+    private void next(){
+        if(ArrayUtil.isEmpty(srcList)){
+            ToastUtil.showToast(getApplicationContext(), "请先创建录播课目录");
+            return;
+        }
+        CreateRecordedLessonActivity.invoke(this,(ArrayList<RLDirectory>)(Object)srcList);
     }
 
     private void readyToManage() {
@@ -270,7 +280,23 @@ public class RecordedLessonActivity extends BaseActivity {
 
 
     private void deleteSelected(){
-        ToastUtil.showToast(getApplicationContext(), "删除未接入...");
+        if(adapter.getList()==null){
+            ToastUtil.showToast(getApplicationContext(),"已经删空了...");
+            return;
+        }
+        Iterator iterator=adapter.getList().iterator();
+        while (iterator.hasNext()){
+            Object o=iterator.next();
+            if(o instanceof RLDirectory){
+                RLDirectory dir=(RLDirectory) o;
+                if(dir.isChecked()){
+                    iterator.remove();
+                }else {
+                    dir.removeChecked();
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     private void addNewDir(){

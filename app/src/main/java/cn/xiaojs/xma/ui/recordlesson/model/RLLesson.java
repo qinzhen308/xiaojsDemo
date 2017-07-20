@@ -23,14 +23,18 @@ public class RLLesson implements Serializable{
     public void setChecked(boolean isChecked){
         isChecked_native=isChecked;
         if(parent==null)return;
-        boolean parentChecked=isChecked;
+        //优化全选后，再取消一个的情况
+        if(parent.isChecked()&&isChecked==false){
+            parent.isChecked_native=false;
+            return;
+        }
         for(RLLesson bro:parent.children){
-            if(bro.isChecked_native!=isChecked){
-                parentChecked=!parentChecked;
-                break;
+            if(!bro.isChecked_native){
+                parent.isChecked_native=false;
+                return;
             }
         }
-        parent.isChecked_native=parentChecked;
+        parent.isChecked_native=true;
     }
 
     public boolean isChecked(){

@@ -981,5 +981,12 @@
     <string name="please_add_dir_first">请先添加一级目录</string>
     <string name="finish_with_count">完成(%1$d)</string>
     <string name="choice_inner_video">选择关联视频</string>
+    <string name="record_lesson_teacher">主讲</string>
+    <string name="is_need_enroll">是否需要报名</string>
+    <string name="is_need_set_expired">是否设置有效期</string>
+    <string name="rl_set_expired_date_tip">（学生从报名之日开始算起）</string>
+    <string name="unit_day">天</string>
+    <string name="basic_infomation">基本信息</string>
+
 
 </resources>
