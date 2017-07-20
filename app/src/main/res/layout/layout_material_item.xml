@@ -137,7 +137,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/common_text"
                     android:textSize="@dimen/font_26px"
-                    android:drawableTop="@drawable/ic_lesson_more"
+                    android:drawableTop="@drawable/ic_more"
                     android:text="@string/more"
                     android:gravity="center"
                     android:layout_height="wrap_content"
