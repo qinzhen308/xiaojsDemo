@@ -165,27 +165,42 @@ public class DownloadInfo {
     }
 
     public static class DownloadStatus{
+        //ignore
         public static final int STATUS_FUCK_ING = -1;
-        public static final int STATUS_FUCK_OVER = 199;
-        public static final int STATUS_RUNNING = 0;
-        public static final int STATUS_PENDING = 1;
-        public static final int STATUS_PAUSED = 2;
-        public static final int STATUS_FAILED = 3;
-        public static final int STATUS_SUCCESS = 200;
-        public static final int STATUS_CANCELED = 41;
-        public static final int STATUS_UNKNOWN_ERROR = 7;
 
-        public static final int STATUS_CANNOT_RESUME = 4;
-        public static final int STATUS_FILE_ERROR = 5;
-        public static final int STATUS_UNHANDLED_HTTP_CODE = 8;
-        public static final int STATUS_TOO_MANY_REDIRECTS = 9;
-        public static final int STATUS_WAITING_FOR_NETWORK = 10;
-        public static final int STATUS_WAITING_TO_RETRY = 11;
-        public static final int STATUS_QUEUED_FOR_WIFI = 12;
-        public static final int STATUS_BAD_REQUEST = 13;
-        public static final int STATUS_UNHANDLED_REDIRECT = 14;
-        public static final int STATUS_HTTP_DATA_ERROR = 15;
-        public static final int STATUS_PAUSED_BY_APP = 16;
+        //running status
+        public static final int STATUS_RUNNING = 0;
+
+        //pending status
+        public static final int STATUS_PENDING = 10;
+        public static final int STATUS_QUEUED_FOR_WIFI = 11;
+        public static final int STATUS_WAITING_FOR_NETWORK = 12;
+        public static final int STATUS_WAITING_TO_RETRY = 13;
+
+        //pause status
+        public static final int STATUS_PAUSED = 20;
+        public static final int STATUS_PAUSED_BY_APP = 21;
+
+
+        //error status
+        public static final int STATUS_TOO_MANY_REDIRECTS = 49;
+        public static final int STATUS_FAILED = 50;
+        public static final int STATUS_UNKNOWN_ERROR = 51;
+        public static final int STATUS_CANNOT_RESUME = 52;
+        public static final int STATUS_FILE_ERROR = 53;
+        public static final int STATUS_UNHANDLED_HTTP_CODE = 54;
+        public static final int STATUS_BAD_REQUEST = 55;
+        public static final int STATUS_UNHANDLED_REDIRECT = 56;
+        public static final int STATUS_HTTP_DATA_ERROR = 57;
+
+        //cancel status
+        public static final int STATUS_CANCELED = 100;
+
+        //ignore
+        public static final int STATUS_FUCK_OVER = 199;
+
+        //success status
+        public static final int STATUS_SUCCESS = 200;
 
     }
 

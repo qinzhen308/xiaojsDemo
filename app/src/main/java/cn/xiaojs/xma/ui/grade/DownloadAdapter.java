@@ -20,11 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsCursorAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
@@ -33,6 +35,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadInfo;
+import cn.xiaojs.xma.model.material.DownloadCount;
 import cn.xiaojs.xma.ui.widget.CircleProgressView;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.MaterialUtil;
@@ -72,11 +75,12 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
 
         String name = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME));
 
-        //final long id = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload._ID));
+        final long id = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload._ID));
 
-        int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
+        final int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
         if (status == DownloadInfo.DownloadStatus.STATUS_SUCCESS) {
             holder.progressView.setProgress(0);
+            holder.progressView.setImageResource(R.drawable.ic_download_running);
             holder.progressView.setVisibility(View.GONE);
             holder.size.setVisibility(View.VISIBLE);
             holder.thumbnail.setVisibility(View.VISIBLE);
@@ -100,6 +104,7 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
 
 
         } else if (status == DownloadInfo.DownloadStatus.STATUS_PENDING) {
+            holder.progressView.setImageResource(R.drawable.ic_download_pending);
             holder.progressView.setProgress(0);
             holder.progressView.setVisibility(View.VISIBLE);
             holder.size.setVisibility(View.VISIBLE);
@@ -120,6 +125,7 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             holder.size.setText(sizeTime);
 
         } else if (status == DownloadInfo.DownloadStatus.STATUS_RUNNING) {
+            holder.progressView.setImageResource(R.drawable.ic_download_running);
             holder.progressView.setVisibility(View.VISIBLE);
             holder.size.setVisibility(View.VISIBLE);
             holder.thumbnail.setVisibility(View.VISIBLE);
@@ -135,10 +141,22 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             int percent = (int) (((float) current) / size * 100);
             holder.progressView.setProgress(percent);
 
-        } else if(status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING
-                || status == DownloadInfo.DownloadStatus.STATUS_FUCK_OVER){
+        } else if (status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING
+                || status == DownloadInfo.DownloadStatus.STATUS_FUCK_OVER) {
+            holder.progressView.setImageResource(R.drawable.ic_download_failed);
 
-            holder.fuckView.setText(name);
+
+            DownloadCount count = DownloadManager.getDownloadCount(context);
+
+            StringBuilder fuckStr = new StringBuilder(name);
+
+            if (status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING) {
+                fuckStr.append("(").append(count.running).append(")");
+            }else {
+                fuckStr.append("(").append(count.success).append(")");
+            }
+
+            holder.fuckView.setText(fuckStr.toString());
             holder.fuckView.setVisibility(View.VISIBLE);
 
             holder.errorView.setVisibility(View.GONE);
@@ -148,8 +166,8 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             holder.name.setVisibility(View.GONE);
 
 
-        }else {
-
+        } else {
+            holder.progressView.setImageResource(R.drawable.ic_download_failed);
             holder.progressView.setProgress(0);
             holder.progressView.setVisibility(View.VISIBLE);
             holder.errorView.setVisibility(View.VISIBLE);
@@ -161,6 +179,12 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             holder.name.setText(name);
             holder.name.setVisibility(View.VISIBLE);
 
+            if (status == DownloadInfo.DownloadStatus.STATUS_CANCELED) {
+                holder.errorView.setText(R.string.download_cancel);
+            } else {
+                holder.errorView.setText(R.string.download_error);
+            }
+
             long size = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.TOTAL_BYTES));
             long modify = cursor.getLong(cursor.getColumnIndex(DBTables.TDownload.LAST_MOD));
             String sizeTime = new StringBuilder(XjsUtils.getSizeFormatText(size))
@@ -170,6 +194,16 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
 
             holder.size.setText(sizeTime);
         }
+
+
+        holder.progressView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                handleOperaClick(status, id, path);
+
+            }
+        });
 
     }
 
@@ -186,8 +220,8 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
         Cursor cursor = getCursor();
         cursor.moveToPosition(position);
         int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
-        if(status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING
-                || status == DownloadInfo.DownloadStatus.STATUS_FUCK_OVER){
+        if (status == DownloadInfo.DownloadStatus.STATUS_FUCK_ING
+                || status == DownloadInfo.DownloadStatus.STATUS_FUCK_OVER) {
             return false;
         }
         return true;
@@ -222,9 +256,13 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
 
         if (object != null && object instanceof Cursor) {
             Cursor cursor = (Cursor) object;
-            String mimeType = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.MIME_TYPE));
-            String local = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
-            MaterialUtil.openFileBySystem(mContext, local, mimeType);
+
+            int status = cursor.getInt(cursor.getColumnIndex(DBTables.TDownload.STATUS));
+            if (status == DownloadInfo.DownloadStatus.STATUS_SUCCESS) {
+                String mimeType = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.MIME_TYPE));
+                String local = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
+                MaterialUtil.openFileBySystem(mContext, local, mimeType);
+            }
         }
     }
 
@@ -245,6 +283,26 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
     @Override
     public long getHeaderId(int position) {
         return 0;
+    }
+
+
+    private void handleOperaClick(int status, long id, String localPath) {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the status: %d, id: %d", status, id);
+        }
+
+       if (status == DownloadInfo.DownloadStatus.STATUS_RUNNING) {
+            DownloadManager.cancelDownload(mContext, id, localPath);
+        } else if (canResumeStatus(status)) {
+            DownloadManager.resumeDownload(mContext, id);
+        }
+
+    }
+
+    private boolean canResumeStatus(int status) {
+        return status >= DownloadInfo.DownloadStatus.STATUS_QUEUED_FOR_WIFI
+                && status <= DownloadInfo.DownloadStatus.STATUS_CANCELED;
     }
 
     private void thumbnail(String mimeType, String key, Holder holder) {

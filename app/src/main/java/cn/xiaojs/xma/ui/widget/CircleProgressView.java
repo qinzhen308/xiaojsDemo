@@ -41,7 +41,7 @@ public class CircleProgressView extends ImageView {
 
     private void init() {
 
-        strokeWidth = getResources().getDimensionPixelSize(R.dimen.px2);
+        strokeWidth = getResources().getDimensionPixelSize(R.dimen.px3);
         rootColor = getResources().getColor(R.color.circle_root);
         proColor = getResources().getColor(R.color.circle_pro);
 

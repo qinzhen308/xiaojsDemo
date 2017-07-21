@@ -32,13 +32,13 @@
 
     <cn.xiaojs.xma.ui.widget.CircleProgressView
             android:id="@+id/progress"
-            android:layout_width="@dimen/px60"
-            android:layout_height="@dimen/px60"
+            android:layout_width="@dimen/px70"
+            android:layout_height="@dimen/px70"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/px21"
-            android:padding="@dimen/px12"
-            android:src="@drawable/ic_add"
+            android:padding="@dimen/px5"
+            android:clickable="true"
             />
 
     <TextView

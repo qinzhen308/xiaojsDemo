@@ -610,6 +610,7 @@
     <string name="download">下载</string>
     <string name="download_ok">下载成功</string>
     <string name="download_error">下载失败</string>
+    <string name="download_cancel">下载取消</string>
     <string name="downloading">正在下载</string>
     <string name="u_version">版本：%1$s</string>
     <string name="upgrade_tips_title">更新说明:</string>
