@@ -987,6 +987,7 @@
     <string name="rl_set_expired_date_tip">（学生从报名之日开始算起）</string>
     <string name="unit_day">天</string>
     <string name="basic_infomation">基本信息</string>
+    <string name="record_lesson">录播课</string>
 
 
 </resources>

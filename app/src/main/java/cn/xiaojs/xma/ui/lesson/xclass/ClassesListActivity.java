@@ -26,6 +26,7 @@ import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonFragment;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.JudgementUtil;
@@ -60,7 +61,7 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
         }
     }
 
-    @OnClick({R.id.left_image, R.id.add_btn,R.id.tab_class,R.id.tab_lesson})
+    @OnClick({R.id.left_image, R.id.add_btn,R.id.tab_class,R.id.tab_lesson,R.id.tab_record_lesson})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -81,15 +82,22 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                     curCheckedTabId=R.id.tab_lesson;
                 }
                 break;
+            case R.id.tab_record_lesson:
+                if(curCheckedTabId!=R.id.tab_record_lesson){
+                    tabPager.setCurrentItem(2);
+                    curCheckedTabId=R.id.tab_record_lesson;
+                }
+                break;
         }
     }
 
     private void initView() {
         tabGroupLayout.check(R.id.tab_class);
-
+        tabPager.setOffscreenPageLimit(2);
         fragmentList = new ArrayList<>(2);
         fragmentList.add(new MyClassFragment());
         fragmentList.add(new LessonFragment());
+        fragmentList.add(new RecordedLessonFragment());
 
         FrgStatePageAdapter adapter = new FrgStatePageAdapter(getSupportFragmentManager());
         adapter.setList(fragmentList);
@@ -108,9 +116,12 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                 if (position == 0) {
                     curCheckedTabId=R.id.tab_class;
                     tabGroupLayout.check(R.id.tab_class);
-                }else{
+                }else if(position == 1){
                     curCheckedTabId=R.id.tab_lesson;
                     tabGroupLayout.check(R.id.tab_lesson);
+                }else if(position == 2){
+                    curCheckedTabId=R.id.tab_record_lesson;
+                    tabGroupLayout.check(R.id.tab_record_lesson);
                 }
             }
 
@@ -130,6 +141,10 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
             tabPager.setCurrentItem(1);
             tabGroupLayout.check(R.id.tab_lesson);
             curCheckedTabId=R.id.tab_lesson;
+        }else if(tab==2&&curCheckedTabId!=R.id.tab_record_lesson){
+            tabPager.setCurrentItem(2);
+            tabGroupLayout.check(R.id.tab_record_lesson);
+            curCheckedTabId=R.id.tab_record_lesson;
         }
     }
 

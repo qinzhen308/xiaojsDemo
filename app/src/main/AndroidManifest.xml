@@ -283,6 +283,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"
             />
+        <activity android:name=".ui.recordlesson.RLDirListActivity"
+            android:screenOrientation="portrait"
+            />
 
         <activity
                 android:name=".TestActivity"

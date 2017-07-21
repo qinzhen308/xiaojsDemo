@@ -9,6 +9,7 @@ import com.orhanobut.logger.Logger;
 import java.util.List;
 
 import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.live.LiveSchedule;
@@ -25,6 +26,8 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LiveScheduleLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.NativeLessonView;
+import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
+import cn.xiaojs.xma.ui.recordlesson.view.HomeRecordedLessonView;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -42,6 +45,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int VIEW_TYPE_LIVE_SCHEDULE_LESSON=6;
     //首页热门班级等于4个时，底部有"更多"按钮
     public static final int VIEW_TYPE_HOME_CLASS_FOOTER=7;
+    public static final int VIEW_TYPE_HOME_RECORDED_LESSON=8;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
     private List<?> mList;
@@ -82,6 +86,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder=new CommonHolder(new LiveScheduleLessonView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_HOME_CLASS_FOOTER){
             holder=new CommonHolder(new HomeClassFooterView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_HOME_RECORDED_LESSON){
+            holder=new CommonHolder(new HomeRecordedLessonView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -106,6 +112,10 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(holder.itemView instanceof LiveScheduleLessonView&&mEventCallback!=null){
             ((LiveScheduleLessonView) holder.itemView).setCallback(mEventCallback);
         }
+
+        if(holder.itemView instanceof IEventer&&mEventCallback!=null){
+            ((IEventer) holder.itemView).setEventCallback(mEventCallback);
+        }
     }
 
     @Override
@@ -125,6 +135,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_LIVE_SCHEDULE_LESSON;
         }else if(o instanceof ClassFooterModel){
             return VIEW_TYPE_HOME_CLASS_FOOTER;
+        }else if(o instanceof RLDirectory){
+            return VIEW_TYPE_HOME_RECORDED_LESSON;
         }
         return VIEW_TYPE_HOME_CLASS;
     }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/px20"
+    android:layout_marginLeft="@dimen/px25"
+    android:layout_marginRight="@dimen/px25"
+    android:layout_marginTop="@dimen/px20"
+    >
+
+    <ImageView
+        android:id="@+id/flag_view"
+        android:layout_width="@dimen/px250"
+        android:layout_height="@dimen/px132"
+        android:layout_marginLeft="@dimen/px25"
+        android:layout_marginTop="@dimen/px36"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/default_avatar" />
+
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/flag_view"
+        android:layout_toRightOf="@id/flag_view"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px17"
+        android:maxLines="1"
+        android:layout_toLeftOf="@+id/status_view"
+        android:text="我的标题"
+        android:textColor="@color/font_black"
+        android:textSize="@dimen/font_34px" />
+
+
+
+    <TextView
+        android:id="@+id/status_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/flag_view"
+        android:layout_marginRight="@dimen/px17"
+        android:text="待上课"
+        android:textColor="@color/class_orange"
+        android:textSize="@dimen/font_24px"
+        android:visibility="visible" />
+
+
+    <TextView
+        android:id="@+id/teachers_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px16"
+        android:layout_alignLeft="@id/title_view"
+        android:layout_below="@+id/title_view"
+        android:text="主讲：我我我我"
+        android:textColor="@color/class_grey"
+        android:textSize="@dimen/font_24px" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/teachers_view"
+        android:layout_marginTop="@dimen/px7"
+        android:layout_alignLeft="@+id/title_view"
+        android:text="有效期:20213"
+        android:drawablePadding="@dimen/px16"
+        android:textColor="@color/class_grey"
+        android:textSize="@dimen/font_24px" />
+
+    <TextView
+        android:id="@+id/member_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/teachers_view"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/px17"
+        android:layout_marginTop="@dimen/px7"
+        android:text="0人报名"
+        android:drawablePadding="@dimen/px16"
+        android:textColor="@color/class_grey"
+        android:textSize="@dimen/font_24px" />
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px99"
+        android:layout_below="@id/member_view"
+        android:layout_marginTop="@dimen/px44"
+        android:background="@drawable/bg_class_bottom"
+        android:paddingBottom="@dimen/px15"
+        android:paddingLeft="@dimen/px22"
+        android:paddingRight="@dimen/px17"
+        android:paddingTop="@dimen/px15">
+
+        <ImageButton
+            android:id="@+id/op_dir_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/px40"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_record_lesson_directory" />
+
+
+
+        <ImageButton
+            android:id="@+id/op_more_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/px10"
+            android:paddingRight="@dimen/px10"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_class_more"
+            android:layout_alignParentRight="true"
+            android:visibility="visible" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

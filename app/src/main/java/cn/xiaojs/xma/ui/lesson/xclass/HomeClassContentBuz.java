@@ -35,6 +35,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -53,8 +54,10 @@ import cn.xiaojs.xma.ui.lesson.xclass.model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
+import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -117,11 +120,24 @@ public class HomeClassContentBuz {
         doRequest(todayYear,todayMonth,todayDay);
         getMonthData();
         loadHotClasses();
+        getRecordedLesson();
     }
+
+    private EventCallback adapterEventCallback=new EventCallback() {
+        @Override
+        public void onEvent(int what, Object... object) {
+            switch (what){
+                case EVENT_1://切换班和录播课
+                    changeSubTab((int)object[0]);
+                    break;
+            }
+        }
+    };
 
     private void initListView() {
         tvTopDate.setText(ScheduleUtil.getDateYM_Ch(new Date()));
         mAdapter = new HomeClassAdapter(overLayout);
+        mAdapter.setCallback(adapterEventCallback);
         overLayout.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         overLayout.setAdapter(mAdapter);
         calendarView.setHintBoxTag(HintBoxPool.TAG_FIRST_BOX);
@@ -169,10 +185,7 @@ public class HomeClassContentBuz {
         });
 
         overLayout.addOnScrollListener(new PageChangeListener());
-
     }
-
-
 
 
     @OnClick({R.id.btn_scan2, R.id.s_root, R.id.btn_add,R.id.btn_today})
@@ -388,11 +401,56 @@ public class HomeClassContentBuz {
             Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));
     }
 
+    List<RLDirectory> dirs;
+
+    public void getRecordedLesson(){
+        dirs=new ArrayList<>();
+        dirs.add(new RLDirectory("按到阿斯顿",""));
+        dirs.add(new RLDirectory("曲儿",""));
+        dirs.add(new RLDirectory("门口瑞特",""));
+        dirs.add(new RLDirectory("而女人",""));
+
+    }
+
+    private void changeSubTab(int tab){
+        if(tab== HomeClassLabelView.TAB_CLASS){
+            clearItemsByType(LastEmptyModel.class);
+            clearItemsByType(RLDirectory.class);
+            if(!ArrayUtil.isEmpty(hotClass)){
+                mAdapter.getList().addAll(hotClass);
+                if(hotClass.size()==4){
+                    mAdapter.getList().add(new ClassFooterModel());
+                }
+            }
+            mAdapter.getList().add(lastEmptyModel);
+        }else if(tab==HomeClassLabelView.TAB_RECORDED_LESSON){
+            clearItemsByType(LastEmptyModel.class);
+            clearItemsByType(ClassFooterModel.class);
+            clearItemsByType(PrivateClass.class);
+            mAdapter.getList().addAll(dirs);
+            mAdapter.getList().add(lastEmptyModel);
+        }
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    private void clearItemsByType(Class type){
+        List datas=mAdapter.getList();
+        if(ArrayUtil.isEmpty(datas))return;
+        for(int i=datas.size()-1;i>=0;i--){
+            Object o=datas.get(i);
+            if(o.getClass().equals(type)){
+                datas.remove(i);
+            }
+        }
+    }
+
     public void update(){
         hotClass=null;
         getMonthData();
         doRequest(year,month,day);
         loadHotClasses();
+        getRecordedLesson();
     }
 
 
