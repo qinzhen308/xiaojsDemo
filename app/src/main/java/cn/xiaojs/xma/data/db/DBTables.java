@@ -15,6 +15,13 @@ public class DBTables {
      *
      * version 1
      * Init base columns:
+     *
+     * version 2 :
+     * nothing
+     *
+     * version 3 :
+     * add new column: hidden
+     *
      */
     public static final class TDownload implements BaseColumns {
         //Table name
@@ -44,6 +51,8 @@ public class DBTables {
         public static final String ALLOW_METERED = "metered";
         public static final String FLAGS = "flags";
         public static final String ERROR_MSG = "error";
+        public static final String HIDDEN = "hidden";
+
     }
 
 
@@ -57,6 +66,10 @@ public class DBTables {
      *
      * version 2 :1.0.2.26
      * new column: chatid
+     *
+     * version 3 :
+     * nothing
+     *
      */
     public static final class TContact implements BaseColumns {
         //Table name
@@ -100,6 +113,14 @@ public class DBTables {
      *
      * version 1
      * Init base columns: id,name
+     *
+     *
+     * version 2 :
+     * nothing
+     *
+     *
+     * version 3 :
+     * nothing
      */
     public static final class TGroup implements BaseColumns {
         //Table name

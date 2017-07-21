@@ -40,6 +40,18 @@ public final class DBHelper extends SQLiteOpenHelper {
             db.execSQL(addColumnSql);
         }
 
+        if (oldVersion < 3) {
+            //version 3 新增SHOW 字段
+            String addColumnSql = new StringBuilder("ALTER TABLE ")
+                    .append(DBTables.TDownload.TABLE_NAME)
+                    .append(" ADD ")
+                    .append(DBTables.TDownload.HIDDEN)
+                    .append(" BOOLEAN NOT NULL DEFAULT 0")
+                    .toString();
+
+            db.execSQL(addColumnSql);
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

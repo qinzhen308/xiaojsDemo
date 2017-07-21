@@ -48,6 +48,7 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
+import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
@@ -69,6 +70,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
+import cn.xiaojs.xma.model.material.CDirectory;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -440,7 +442,28 @@ public interface XiaojsService {
                                            @Path("lessonId") String lessonId);
 
 
+    //Create Recorded Course
+    @POST("/v1/ctl/course/recorded")
+    Call<CLResponse> createRecordedCourse(@Body CRecordLesson recordLesson);
 
+    //Put Recorded Course On Shelves
+    @PUT("/v1/ctl/course/recorded/{course}/onshelves")
+    Call<ResponseBody> putRecordedCourseOnShelves(@Path("course") String course);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //CTL Management
+    //
+
+    //Get Courses
+    @GET("/bs/ctl/courses")
+    Call<ResponseBody> getCourses(@Query("limit") int limit,
+                                  @Query("page") int page,
+                                  @Query("start") String start,
+                                  @Query("end") String end,
+                                  @Query("state") String state,
+                                  @Query("key") String key,
+                                  @Query("subtype") String subtype);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -736,6 +759,10 @@ public interface XiaojsService {
     //Share Documents
     @POST("/v1/collaboration/library/{targetId}/share")
     Call<ShareDoc> shareDocuments(@Path("targetId") String targetId, @Body ShareResource resource);
+
+    //Create Directory
+    @POST("/v1/collaboration/documents/directory")
+    Call<UploadReponse> createDirectory(@Body CDirectory directory);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

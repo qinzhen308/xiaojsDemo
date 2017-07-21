@@ -367,6 +367,7 @@ public class DownloadThread extends Thread {
             try {
                 if (out != null) out.flush();
             } catch (IOException e) {
+
             } finally {
                 IOUtils.closeQuietly(out);
             }
@@ -380,8 +381,8 @@ public class DownloadThread extends Thread {
         while (true) {
 
             if (shutdownRequested) {
-                throw new StopRequestException(STATUS_HTTP_DATA_ERROR,
-                        "Local halt requested; job probably timed out");
+                throw new StopRequestException(STATUS_CANCELED,
+                        "user cancel download or deleted");
             }
 
             int len = -1;

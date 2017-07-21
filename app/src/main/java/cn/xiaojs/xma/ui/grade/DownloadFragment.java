@@ -43,7 +43,7 @@ public class DownloadFragment extends BaseFragment
 
         mList.enableLeftSwipe();
 
-        mAdapter = new DownloadAdapter(mContext,mList, null);
+        mAdapter = new DownloadAdapter(mContext, mList, null);
         mList.setAdapter(mAdapter);
         mList.getRefreshableView()
                 .getWrappedList()
@@ -64,6 +64,10 @@ public class DownloadFragment extends BaseFragment
                 }
             }
         });
+
+
+        DownloadProvider.updateCount(getContext());
+
     }
 
 
@@ -84,12 +88,15 @@ public class DownloadFragment extends BaseFragment
                 DBTables.TDownload.CURRENT_BYTES
         };
 
+        String section = DBTables.TDownload.HIDDEN + " = ?";
+        String[] sectionArgs = {"0"};
+
         String order = DBTables.TDownload.STATUS + " ASC";
         return new CursorLoader(mContext,
                 DownloadProvider.DOWNLOAD_URI,
                 projections,
-                null,
-                null,
+                section,
+                sectionArgs,
                 order);
     }
 

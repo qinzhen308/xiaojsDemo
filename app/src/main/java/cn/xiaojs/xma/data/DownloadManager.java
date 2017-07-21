@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.data;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import cn.xiaojs.xma.data.download.DownloadInfo;
 import cn.xiaojs.xma.data.download.DownloadProvider;
 import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.data.preference.DataPref;
+import cn.xiaojs.xma.model.material.DownloadCount;
 
 /**
  * Created by maxiaobao on 2017/2/10.
@@ -28,6 +30,17 @@ public class DownloadManager {
 
     public static final String DEL_ACTION = "xiaojs.action.del.download";
 
+
+
+    public static DownloadCount getDownloadCount(Context context) {
+        int r = DataPref.getDownloadRC(context);
+        int s = DataPref.getDownloadSC(context);
+
+        DownloadCount count = new DownloadCount();
+        count.running = r;
+        count.success = s;
+        return count;
+    }
 
 
     /**
@@ -72,6 +85,36 @@ public class DownloadManager {
      */
     public static boolean allowDownload(Context context) {
         return DataPref.allowDownload(context);
+    }
+
+
+    /**
+     * 恢复下载
+     * @param context
+     * @param downloadId
+     */
+    public static void resumeDownload(Context context, long downloadId) {
+
+        Uri uri = ContentUris.withAppendedId(DownloadProvider.DOWNLOAD_URI, downloadId);
+
+        ContentValues cv = new ContentValues();
+        cv.put(DBTables.TDownload.STATUS, DownloadInfo.DownloadStatus.STATUS_PENDING);
+        cv.put(DBTables.TDownload.CURRENT_BYTES, 0);//目前不支持暂停和断点续传，此处再重新下载前，需要将已下载量归零
+
+        context.getContentResolver().update(uri, cv, null, null);
+    }
+
+    /**
+     * 取消下载
+     * @param context
+     * @param downloadId
+     */
+    public static void cancelDownload(Context context, long downloadId, String localPath) {
+        shutdownDownload(context, downloadId);
+
+        if (!TextUtils.isEmpty(localPath)){
+            new File(localPath).delete();
+        }
     }
 
     /**

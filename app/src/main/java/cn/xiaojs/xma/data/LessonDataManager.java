@@ -7,6 +7,7 @@ import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.LessonRequest;
@@ -33,6 +34,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
@@ -721,6 +723,63 @@ public class LessonDataManager {
                                            APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.cancelClassesLesson(classId, lessonId, reason);
+    }
+
+    /**
+     * Create Recorded Course
+     * @param context
+     * @param recordLesson
+     * @param callback
+     */
+    public static void createRecordedCourse(Context context,
+                                            CRecordLesson recordLesson,
+                                            APIServiceCallback<CLResponse> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.createRecordedCourse(recordLesson);
+    }
+
+    /**
+     * Requests to put the specific recorded course on shelves.
+     * @param context
+     * @param course
+     * @param callback
+     */
+    public static void putRecordedCourseOnShelves(Context context,
+                                                  String course,
+                                                  APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.putRecordedCourseOnShelves(course);
+    }
+
+    /**
+     * Returns a collection of standalone lessons that matched the specified criteria.
+     * @param context
+     * @param pagination
+     * @param start
+     * @param end
+     * @param state
+     * @param key
+     * @param subtype
+     * @param callback
+     */
+    public void getCourses(Context context,
+                           Pagination pagination,
+                           String start,
+                           String end,
+                           String state,
+                           String key,
+                           String subtype,
+                           APIServiceCallback<ResponseBody> callback) {
+
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getCourses(pagination.getMaxNumOfObjectsPerPage(),
+                pagination.getPage(),
+                start,
+                end,
+                state,
+                key,
+                subtype);
     }
 
 }

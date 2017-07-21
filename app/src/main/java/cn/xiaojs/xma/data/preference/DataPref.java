@@ -34,9 +34,38 @@ public class DataPref {
     private static final String PREF_SHOW_GUIDE = "show_guide";
     private static final String PREF_HAS_FUCK = "fuck";
 
+    private static final String PREF_DOWNLOAD_SUCCESS_COUNT = "download_sc";
+    private static final String PREF_DOWNLOAD_RUN_COUNT = "download_rc";
+
     protected static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
+
+
+    public static void setDownloadRC(final Context context,int count) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putInt(PREF_DOWNLOAD_RUN_COUNT, count).apply();
+
+    }
+
+    public static int getDownloadRC(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getInt(PREF_DOWNLOAD_RUN_COUNT,0);
+    }
+
+
+    public static void setDownloadSC(final Context context,int count) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putInt(PREF_DOWNLOAD_SUCCESS_COUNT, count).apply();
+
+    }
+
+    public static int getDownloadSC(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getInt(PREF_DOWNLOAD_SUCCESS_COUNT,0);
+    }
+
+
 
     public static void setFuckdata(final Context context,boolean fuck) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);

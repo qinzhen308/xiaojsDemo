@@ -37,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.download.DownloadProvider;
 import cn.xiaojs.xma.ui.widget.NoScrollViewPager;
 
 
@@ -74,6 +75,8 @@ public class MaterialActivity extends FragmentActivity {
         if(tab>0){
             checkToTab(tab);
         }
+
+
     }
 
     @OnClick({R.id.left_image,R.id.cancel_btn,
@@ -111,6 +114,11 @@ public class MaterialActivity extends FragmentActivity {
     }
 
     private void initView() {
+
+
+        DownloadProvider.updateCount(this);
+
+
         tabGroupLayout.check(R.id.tab_material);
         uploadBtn.setImageResource(R.drawable.upload_selector);
         modeBtn.setImageResource(R.drawable.ic_datasection_selector);

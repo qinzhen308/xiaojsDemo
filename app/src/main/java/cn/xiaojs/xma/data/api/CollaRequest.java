@@ -9,6 +9,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.material.CDirectory;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
@@ -19,6 +20,7 @@ import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.material.UserDoc;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 
 
 /**
@@ -74,5 +76,10 @@ public class CollaRequest extends ServiceRequest{
     public void shareDocuments(String targetId, ShareResource resource) {
         Call<ShareDoc> call = getService().shareDocuments(targetId, resource);
         enqueueRequest(APIType.SHARE_DOCUMENTS, call);
+    }
+
+    public void createDirectory(CDirectory directory) {
+        Call<UploadReponse> call = getService().createDirectory(directory);
+        enqueueRequest(APIType.CREATE_DIRECTORY, call);
     }
 }

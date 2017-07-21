@@ -38,6 +38,7 @@ import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
+import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
@@ -64,6 +65,9 @@ import cn.xiaojs.xma.model.ctl.Students;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -432,6 +436,29 @@ public class LessonRequest extends ServiceRequest {
     public void cancelClassesLesson(String classId, String lessonId, CancelReason reason) {
         Call<ResponseBody> call = getService().cancelClassesLesson(classId, lessonId, reason);
         enqueueRequest(APIType.CANCEL_CLASS_LESSON, call);
+    }
+
+    public void createRecordedCourse(CRecordLesson recordLesson) {
+        Call<CLResponse> call = getService().createRecordedCourse(recordLesson);
+        enqueueRequest(APIType.CREATE_RECORDED_COURSE, call);
+
+    }
+
+    public void putRecordedCourseOnShelves(String course) {
+        Call<ResponseBody> call = getService().putRecordedCourseOnShelves(course);
+        enqueueRequest(APIType.PUT_RECORDED_COURSE_ON_SHELVES, call);
+    }
+
+
+    public void getCourses(int limit,
+                           int page,
+                           String start,
+                           String end,
+                           String state,
+                           String key,
+                           String subtype) {
+        Call<ResponseBody> call = getService().getCourses(limit, page, start, end, state, key, subtype);
+        enqueueRequest(APIType.GET_COURSES, call);
     }
 
 
