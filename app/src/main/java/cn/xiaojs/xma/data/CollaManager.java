@@ -10,11 +10,13 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.material.CDirectory;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UploadParam;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.material.UserDoc;
 
 
@@ -229,5 +231,25 @@ public class CollaManager {
         request.shareDocuments(targetId, resource);
     }
 
+
+    /**
+     * Create directory for a library or directory.
+     * @param context
+     * @param name
+     * @param parent
+     * @param callback
+     */
+    public static void createDirectory(Context context,
+                                       String name,
+                                       String parent,
+                                       APIServiceCallback<UploadReponse> callback) {
+
+        CDirectory directory = new CDirectory();
+        directory.name = name;
+        directory.parent = parent;
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.createDirectory(directory);
+    }
 
 }

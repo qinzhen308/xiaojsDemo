@@ -189,4 +189,8 @@ public class APIType {
     public static final int GET_CLASS_STUDENTS_JOIN = 116;
     public static final int SEARCH_SEARCH = 117;
 
+    public static final int CREATE_RECORDED_COURSE = 118;
+    public static final int PUT_RECORDED_COURSE_ON_SHELVES = 119;
+
+    public static final int CREATE_DIRECTORY = 120;
 }

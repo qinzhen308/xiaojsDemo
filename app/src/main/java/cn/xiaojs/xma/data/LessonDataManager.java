@@ -33,6 +33,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
+import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
@@ -721,6 +722,32 @@ public class LessonDataManager {
                                            APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.cancelClassesLesson(classId, lessonId, reason);
+    }
+
+    /**
+     * Create Recorded Course
+     * @param context
+     * @param recordLesson
+     * @param callback
+     */
+    public static void createRecordedCourse(Context context,
+                                            CRecordLesson recordLesson,
+                                            APIServiceCallback<CLResponse> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.createRecordedCourse(recordLesson);
+    }
+
+    /**
+     * Requests to put the specific recorded course on shelves.
+     * @param context
+     * @param course
+     * @param callback
+     */
+    public static void putRecordedCourseOnShelves(Context context,
+                                                  String course,
+                                                  APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.putRecordedCourseOnShelves(course);
     }
 
 }
