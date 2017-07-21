@@ -193,4 +193,5 @@ public class APIType {
     public static final int PUT_RECORDED_COURSE_ON_SHELVES = 119;
 
     public static final int CREATE_DIRECTORY = 120;
+    public static final int GET_COURSES = 121;
 }

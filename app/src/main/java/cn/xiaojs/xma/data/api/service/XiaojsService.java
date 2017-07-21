@@ -450,6 +450,20 @@ public interface XiaojsService {
     @PUT("/v1/ctl/course/recorded/{course}/onshelves")
     Call<ResponseBody> putRecordedCourseOnShelves(@Path("course") String course);
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //CTL Management
+    //
+
+    //Get Courses
+    @GET("/bs/ctl/courses")
+    Call<ResponseBody> getCourses(@Query("limit") int limit,
+                                  @Query("page") int page,
+                                  @Query("start") String start,
+                                  @Query("end") String end,
+                                  @Query("state") String state,
+                                  @Query("key") String key,
+                                  @Query("subtype") String subtype);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

@@ -7,6 +7,7 @@ import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.LessonRequest;
@@ -748,6 +749,37 @@ public class LessonDataManager {
                                                   APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.putRecordedCourseOnShelves(course);
+    }
+
+    /**
+     * Returns a collection of standalone lessons that matched the specified criteria.
+     * @param context
+     * @param pagination
+     * @param start
+     * @param end
+     * @param state
+     * @param key
+     * @param subtype
+     * @param callback
+     */
+    public void getCourses(Context context,
+                           Pagination pagination,
+                           String start,
+                           String end,
+                           String state,
+                           String key,
+                           String subtype,
+                           APIServiceCallback<ResponseBody> callback) {
+
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getCourses(pagination.getMaxNumOfObjectsPerPage(),
+                pagination.getPage(),
+                start,
+                end,
+                state,
+                key,
+                subtype);
     }
 
 }

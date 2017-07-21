@@ -67,6 +67,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -446,6 +447,18 @@ public class LessonRequest extends ServiceRequest {
     public void putRecordedCourseOnShelves(String course) {
         Call<ResponseBody> call = getService().putRecordedCourseOnShelves(course);
         enqueueRequest(APIType.PUT_RECORDED_COURSE_ON_SHELVES, call);
+    }
+
+
+    public void getCourses(int limit,
+                           int page,
+                           String start,
+                           String end,
+                           String state,
+                           String key,
+                           String subtype) {
+        Call<ResponseBody> call = getService().getCourses(limit, page, start, end, state, key, subtype);
+        enqueueRequest(APIType.GET_COURSES, call);
     }
 
 
