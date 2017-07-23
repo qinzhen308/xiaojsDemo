@@ -113,8 +113,8 @@ public class LessonHomeActivity extends BaseActivity {
 //    Button mConsultingBtn;
 
 
-    @BindView(R.id.block_detail_bar)
-    BlockTabView mBlockTabView;
+//    @BindView(R.id.block_detail_bar)
+//    BlockTabView mBlockTabView;
 
     @BindView(R.id.intro_view)
     TextView introView;
@@ -130,7 +130,7 @@ public class LessonHomeActivity extends BaseActivity {
         //setLeftImage(R.drawable.back_arrow)
 
         needHeader(false);
-        initTabBar();
+        //initTabBar();
 
         mLessonOriMoneyTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
@@ -522,11 +522,11 @@ public class LessonHomeActivity extends BaseActivity {
     }
 
 
-    private void initTabBar() {
-        String[] titles = getResources().getStringArray(R.array.lesson_home_tab_titles);
-        initShowTextView();
-        mBlockTabView.setViews("", titles, textViews, "");
-    }
+    //private void initTabBar() {
+        //String[] titles = getResources().getStringArray(R.array.lesson_home_tab_titles);
+        //initShowTextView();
+        //mBlockTabView.setViews("", titles, textViews, "");
+    //}
 
     private void initShowTextView() {
         textViews = new ArrayList<>(1);

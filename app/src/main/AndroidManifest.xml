@@ -367,6 +367,8 @@
         <activity android:name=".ui.grade.ImportVideoActivity"
                   android:screenOrientation="portrait"
                 />
+        <activity android:name=".ui.recordlesson.RecordedLessonEnrollActivity"
+                android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

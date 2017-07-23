@@ -989,6 +989,7 @@
     <string name="unit_day">天</string>
     <string name="basic_infomation">基本信息</string>
     <string name="record_lesson">录播课</string>
+    <string name="valid_days">有效期%1$d天</string>
 
 
 </resources>
