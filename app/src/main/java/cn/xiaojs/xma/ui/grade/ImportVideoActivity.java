@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -27,8 +28,13 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsListAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.CollaManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.FileUtil;
@@ -43,6 +49,7 @@ public class ImportVideoActivity extends BaseActivity {
 
     public static final String EXTRA_CHOICE_MODE = "cmode";
     public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_CHOICE_DATA = "choice_data";
 
     @BindView(R.id.list)
     PullToRefreshListView listView;
@@ -181,7 +188,35 @@ public class ImportVideoActivity extends BaseActivity {
     }
 
     private void complete() {
-        //TODO 点击完成
+        //点击完成
+        if (choiceMode == AbsListView.CHOICE_MODE_SINGLE) {
+            int pos = listView.getRefreshableView().getCheckedItemPosition();
+            if (pos >= 0 && pos < adapter.getCount()) {
+                LibDoc libDoc = adapter.getItem(pos);
+
+                Intent data = new Intent();
+                data.putExtra(EXTRA_CHOICE_DATA,libDoc);
+                setResult(RESULT_OK, data);
+            }
+        }else {
+            long[] ids = listView.getCheckItemIds();
+            if (ids !=null && ids.length>0) {
+
+                ArrayList<LibDoc> libDocs = new ArrayList<>(ids.length);
+
+                for (int i=0;i< ids.length;i++) {
+                    LibDoc libDoc = adapter.getItem((int) ids[i]);
+                    libDocs.add(libDoc);
+                }
+
+                Intent data = new Intent();
+                data.putExtra(EXTRA_CHOICE_DATA,libDocs);
+                setResult(RESULT_OK, data);
+            }
+        }
+
+
+        finish();
     }
 
 
@@ -223,11 +258,29 @@ public class ImportVideoActivity extends BaseActivity {
                 //enter folder
                 enterNext(bean);
             }else {
+
                 super.onDataItemClick(position, bean);
+
             }
 
             updateChoiceCountView();
 
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+
+            if (position < 0)
+                return false;
+
+            LibDoc bean = getItem(position);
+            if (bean.showAction
+                    || FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)
+                    || FileUtil.STEAMIMG == FileUtil.getFileType(bean.mimeType)){
+                return true;
+            }
+
+            return false;
         }
 
         @Override
@@ -271,40 +324,65 @@ public class ImportVideoActivity extends BaseActivity {
         @Override
         protected void doRequest() {
 
-            int tempi = 0;
+            CollaManager.getDocuments(mContext,
+                    AccountDataManager.getAccountID(mContext),
+                    Collaboration.SubType.PERSON,
+                    mPagination,
+                    new APIServiceCallback<UserDoc>() {
+                @Override
+                public void onSuccess(UserDoc object) {
 
-            switch (dataStack.size()) {
-                case 0:
-                    tempi = 0;
-                    break;
-                case 1:
-                    tempi = 1000;
-                    break;
-                case 2:
-                    tempi = 2000;
-                    break;
-                default:
-                    break;
-            }
+                    if (getList() !=null) {
+                        getList().clear();
+                    }
 
-            List<LibDoc> libDocs = new ArrayList<>();
-            for (int i = tempi; i < tempi + 10; i++) {
-                LibDoc doc = new LibDoc();
-                if (i == 0 || i == 3 || i == 6 || i==1000 || i== 2000) {
-                    doc.showAction = true;
-                    doc.name = "folder" + i;
-                }else {
-                    doc.name = "file.doc" + i;
+                    if (object != null && object.documents!=null && object.documents.size() > 0) {
+                        DataAdapter.this.onSuccess(object.documents);
+                    } else {
+                        DataAdapter.this.onSuccess(null);
+                    }
                 }
 
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    DataAdapter.this.onFailure(errorCode, errorMessage);
+                }
+            });
 
-                doc.used = 1024 * i;
-                doc.uploadedOn = new Date();
-
-                libDocs.add(doc);
-            }
-
-            onSuccess(libDocs);
+//            int tempi = 0;
+//
+//            switch (dataStack.size()) {
+//                case 0:
+//                    tempi = 0;
+//                    break;
+//                case 1:
+//                    tempi = 1000;
+//                    break;
+//                case 2:
+//                    tempi = 2000;
+//                    break;
+//                default:
+//                    break;
+//            }
+//
+//            List<LibDoc> libDocs = new ArrayList<>();
+//            for (int i = tempi; i < tempi + 10; i++) {
+//                LibDoc doc = new LibDoc();
+//                if (i == 0 || i == 3 || i == 6 || i==1000 || i== 2000) {
+//                    doc.showAction = true;
+//                    doc.name = "folder" + i;
+//                }else {
+//                    doc.name = "file.doc" + i;
+//                }
+//
+//
+//                doc.used = 1024 * i;
+//                doc.uploadedOn = new Date();
+//
+//                libDocs.add(doc);
+//            }
+//
+//            onSuccess(libDocs);
 
         }
 

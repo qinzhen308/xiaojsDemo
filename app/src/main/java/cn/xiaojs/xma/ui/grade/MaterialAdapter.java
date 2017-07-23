@@ -59,6 +59,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     private MaterialFragment materialFragment;
 
+
     public MaterialAdapter(MaterialFragment fragment, PullToRefreshSwipeListView listView, String owner) {
         super(fragment.getActivity(), listView);
         if (TextUtils.isEmpty(owner)) {
