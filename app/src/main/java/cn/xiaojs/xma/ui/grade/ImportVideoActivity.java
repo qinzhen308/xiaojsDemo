@@ -75,13 +75,13 @@ public class ImportVideoActivity extends BaseActivity {
         init();
     }
 
-    @OnClick({R.id.left_image, R.id.right_image})
+    @OnClick({R.id.left_image, R.id.right_image2})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 onBack();
                 break;
-            case R.id.right_image:
+            case R.id.right_image2:
                 complete();
                 break;
         }
