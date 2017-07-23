@@ -274,12 +274,12 @@
                 </RelativeLayout>
 
 
-                <cn.xiaojs.xma.ui.widget.BlockTabView
-                        android:id="@+id/block_detail_bar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        />
+                <!--<cn.xiaojs.xma.ui.widget.BlockTabView-->
+                        <!--android:id="@+id/block_detail_bar"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:visibility="gone"-->
+                        <!--/>-->
 
                 <TextView
                         android:layout_marginTop="@dimen/px24"

@@ -20,7 +20,7 @@ public class DBTables {
      * nothing
      *
      * version 3 :
-     * add new column: hidden
+     * add new column: hidden, owner
      *
      */
     public static final class TDownload implements BaseColumns {
@@ -52,6 +52,7 @@ public class DBTables {
         public static final String FLAGS = "flags";
         public static final String ERROR_MSG = "error";
         public static final String HIDDEN = "hidden";
+        public static final String OWNER = "owner";
 
     }
 

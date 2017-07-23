@@ -15,7 +15,10 @@ import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 
+import org.w3c.dom.Text;
+
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.db.DBHelper;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.preference.DataPref;
@@ -97,6 +100,11 @@ public class DownloadProvider extends ContentProvider {
         copyString(DBTables.TDownload.MIME_TYPE, values, filteredValues);
         copyString(DBTables.TDownload.KEY, values, filteredValues);
         copyString(DBTables.TDownload.STATUS, values, filteredValues);
+        copyString(DBTables.TDownload.OWNER, values, filteredValues);
+
+        if (!values.containsKey(DBTables.TDownload.OWNER)) {
+            filteredValues.put(DBTables.TDownload.OWNER, AccountDataManager.getAccountID(getContext()));
+        }
 
         // set lastupdate to current time
         long lastMod = systemFacade.currentTimeMillis();
@@ -198,6 +206,7 @@ public class DownloadProvider extends ContentProvider {
     }
 
     private static final void copyString(String key, ContentValues from, ContentValues to) {
+
         String s = from.getAsString(key);
         if (s != null) {
             to.put(key, s);
@@ -234,7 +243,13 @@ public class DownloadProvider extends ContentProvider {
                 .append(DownloadInfo.DownloadStatus.STATUS_RUNNING)
                 .append(" AND ")
                 .append(DownloadInfo.DownloadStatus.STATUS_CANCELED)
-                .append(" THEN 1 ELSE NULL END) FROM ").append(DBTables.TDownload.TABLE_NAME)
+                .append(" THEN 1 ELSE NULL END) FROM ")
+                .append(DBTables.TDownload.TABLE_NAME)
+                .append(" WHERE ")
+                .append(DBTables.TDownload.OWNER)
+                .append(" = '")
+                .append(AccountDataManager.getAccountID(context))
+                .append("'")
                 .toString();
 
         if (XiaojsConfig.DEBUG) {
@@ -256,11 +271,11 @@ public class DownloadProvider extends ContentProvider {
                 }
 
                 ContentValues cv = new ContentValues();
-                cv.put(DBTables.TDownload.HIDDEN, scount > 0? false : true);
+                cv.put(DBTables.TDownload.HIDDEN, scount > 0? 0 : 1);
                 db.update(DBTables.TDownload.TABLE_NAME,cv,DBTables.TDownload.STATUS + "=" + DownloadInfo.DownloadStatus.STATUS_FUCK_OVER,null);
 
                 cv = new ContentValues();
-                cv.put(DBTables.TDownload.HIDDEN, dcount > 0? false : true);
+                cv.put(DBTables.TDownload.HIDDEN, dcount > 0? 0 : 1);
                 db.update(DBTables.TDownload.TABLE_NAME,cv,DBTables.TDownload.STATUS + "=" + DownloadInfo.DownloadStatus.STATUS_FUCK_ING,null);
 
 

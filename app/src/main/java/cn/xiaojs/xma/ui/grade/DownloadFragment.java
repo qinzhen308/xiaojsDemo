@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadProvider;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -88,8 +89,8 @@ public class DownloadFragment extends BaseFragment
                 DBTables.TDownload.CURRENT_BYTES
         };
 
-        String section = DBTables.TDownload.HIDDEN + " = ?";
-        String[] sectionArgs = {"0"};
+        String section = DBTables.TDownload.HIDDEN + " = ? and " + DBTables.TDownload.OWNER + " in (?,?)";
+        String[] sectionArgs = {"0", "-1", AccountDataManager.getAccountID(mContext)};
 
         String order = DBTables.TDownload.STATUS + " ASC";
         return new CursorLoader(mContext,
@@ -105,6 +106,13 @@ public class DownloadFragment extends BaseFragment
         if (mAdapter != null) {
             mAdapter.swapCursor(cursor);
         }
+
+        if (cursor == null || cursor.getCount()<=0) {
+            showEmptyView();
+        }else {
+            hideEmptyView();
+        }
+
     }
 
     @Override

@@ -27,7 +27,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
@@ -45,6 +47,7 @@ public abstract class BaseFragment extends Fragment {
     private Unbinder mBinder;
     private ProgressHUD progress;
     private View mFailView;
+    private View mEmptyView;
     private View mFailReloadBtn;
     private SimpleDataChangeListener mDataChangeListener;
     private boolean mDataChanged = false;
@@ -86,6 +89,31 @@ public abstract class BaseFragment extends Fragment {
             mContent.addView(view, 0);
         }
     }
+
+    public void showEmptyView() {
+        if (mEmptyView == null) {
+            mEmptyView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty, null);
+            TextView tipView = (TextView) mEmptyView.findViewById(R.id.empty_desc);
+            tipView.setText("(空)");
+            tipView.setVisibility(View.VISIBLE);
+            if (mContent != null) {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER;
+                mContent.addView(mEmptyView, params);
+            }
+        }
+
+        mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideEmptyView() {
+        if (mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
 
     public void showFailView() {
         if (mFailView == null) {

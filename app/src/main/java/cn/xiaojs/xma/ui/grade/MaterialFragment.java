@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -250,10 +251,16 @@ public class MaterialFragment extends BaseFragment {
             @Override
             public void onClick() {
 
-
-                //TODO 新建文件夹
+                String name = editText.getText().toString().trim();
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(mContext, "名称不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 dialog.dismiss();
+
+                //新建文件夹
+                createFolder(name, "593d0342332f8a85d73ef3a3");
             }
         });
 
@@ -708,6 +715,23 @@ public class MaterialFragment extends BaseFragment {
             public void onFailure(String errorCode, String errorMessage) {
                 cancelProgress();
                 Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createFolder(String name, String parent) {
+        showProgress(true);
+        CollaManager.createDirectory(mContext, name, parent, new APIServiceCallback<UploadReponse>() {
+            @Override
+            public void onSuccess(UploadReponse object) {
+                cancelProgress();
+               Toast.makeText(mContext,"创建成功",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(mContext,errorMessage,Toast.LENGTH_SHORT).show();
             }
         });
     }

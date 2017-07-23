@@ -46,7 +46,9 @@ public final class DBHelper extends SQLiteOpenHelper {
                     .append(DBTables.TDownload.TABLE_NAME)
                     .append(" ADD ")
                     .append(DBTables.TDownload.HIDDEN)
-                    .append(" BOOLEAN NOT NULL DEFAULT 0")
+                    .append(" INTEGER NOT NULL DEFAULT 0, ")
+                    .append(DBTables.TDownload.OWNER)
+                    .append(" TEXT")
                     .toString();
 
             db.execSQL(addColumnSql);
@@ -192,6 +194,10 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append(" BOOLEAN NOT NULL DEFAULT 0, ")
                 .append(DBTables.TDownload.STATUS)
                 .append(" INTEGER, ")
+                .append(DBTables.TDownload.HIDDEN)
+                .append(" INTEGER NOT NULL DEFAULT 0, ")
+                .append(DBTables.TDownload.OWNER)
+                .append(" TEXT, ")
                 .append(DBTables.TDownload.NUM_FAILED)
                 .append(" INTEGER, ")
                 .append(DBTables.TDownload.LAST_MOD)
