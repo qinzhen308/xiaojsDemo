@@ -286,7 +286,7 @@ public class ImportVideoActivity extends BaseActivity {
         @Override
         protected void setViewContent(Holder holder, LibDoc bean, int position) {
 
-            if (bean.showAction) {
+            if (bean.showAction || !isEnabled(position)) {
                 holder.checkedView.setVisibility(View.INVISIBLE);
             } else {
                 holder.checkedView.setVisibility(View.VISIBLE);

@@ -90,7 +90,7 @@ public class DownloadFragment extends BaseFragment
         };
 
         String section = DBTables.TDownload.HIDDEN + " = ? and " + DBTables.TDownload.OWNER + " in (?,?)";
-        String[] sectionArgs = {"0", AccountDataManager.getAccountID(mContext), "-1"};
+        String[] sectionArgs = {"0", "-1", AccountDataManager.getAccountID(mContext)};
 
         String order = DBTables.TDownload.STATUS + " ASC";
         return new CursorLoader(mContext,

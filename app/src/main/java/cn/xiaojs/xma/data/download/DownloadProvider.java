@@ -247,8 +247,9 @@ public class DownloadProvider extends ContentProvider {
                 .append(DBTables.TDownload.TABLE_NAME)
                 .append(" WHERE ")
                 .append(DBTables.TDownload.OWNER)
-                .append(" = ")
+                .append(" = '")
                 .append(AccountDataManager.getAccountID(context))
+                .append("'")
                 .toString();
 
         if (XiaojsConfig.DEBUG) {
@@ -270,11 +271,11 @@ public class DownloadProvider extends ContentProvider {
                 }
 
                 ContentValues cv = new ContentValues();
-                cv.put(DBTables.TDownload.HIDDEN, scount > 0? false : true);
+                cv.put(DBTables.TDownload.HIDDEN, scount > 0? 0 : 1);
                 db.update(DBTables.TDownload.TABLE_NAME,cv,DBTables.TDownload.STATUS + "=" + DownloadInfo.DownloadStatus.STATUS_FUCK_OVER,null);
 
                 cv = new ContentValues();
-                cv.put(DBTables.TDownload.HIDDEN, dcount > 0? false : true);
+                cv.put(DBTables.TDownload.HIDDEN, dcount > 0? 0 : 1);
                 db.update(DBTables.TDownload.TABLE_NAME,cv,DBTables.TDownload.STATUS + "=" + DownloadInfo.DownloadStatus.STATUS_FUCK_ING,null);
 
 

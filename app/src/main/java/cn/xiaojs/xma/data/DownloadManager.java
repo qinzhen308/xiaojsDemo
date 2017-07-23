@@ -163,7 +163,7 @@ public class DownloadManager {
         ContentValues value2 = new ContentValues();
         value2.put(DBTables.TDownload.FILE_NAME,"已下载");
         value2.put(DBTables.TDownload.MIME_TYPE,"none");
-        value1.put(DBTables.TDownload.OWNER,"-1");
+        value2.put(DBTables.TDownload.OWNER,"-1");
         value2.put(DBTables.TDownload.STATUS, DownloadInfo.DownloadStatus.STATUS_FUCK_OVER);
 
         int count = context.getContentResolver().bulkInsert(DownloadProvider.DOWNLOAD_URI,new ContentValues[]{value1,value2});
