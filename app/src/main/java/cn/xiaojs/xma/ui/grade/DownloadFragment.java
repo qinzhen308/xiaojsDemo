@@ -106,6 +106,13 @@ public class DownloadFragment extends BaseFragment
         if (mAdapter != null) {
             mAdapter.swapCursor(cursor);
         }
+
+        if (cursor == null || cursor.getCount()<=0) {
+            showEmptyView();
+        }else {
+            hideEmptyView();
+        }
+
     }
 
     @Override
