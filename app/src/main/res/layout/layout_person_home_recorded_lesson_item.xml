@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/white_grey_selector"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/px30">
+
+        <FrameLayout
+            android:id="@+id/lesson_cover_la"
+            android:layout_width="@dimen/px260"
+            android:layout_height="@dimen/px147"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/lesson_adapter_image"
+                android:layout_width="@dimen/px260"
+                android:layout_height="@dimen/px147"
+                android:scaleType="fitXY"
+                android:src="@drawable/default_lesson_cover" />
+
+            <cn.xiaojs.xma.ui.widget.LiveingImageView
+                android:id="@+id/lesson_state_imgview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/translucent_50"
+                android:scaleType="centerInside"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_toRightOf="@id/lesson_cover_la"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lesson_adapter_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px" />
+
+            <TextView
+                android:id="@+id/lesson_adapter_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px5"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_26px" />
+
+
+            <TextView
+                android:id="@+id/lesson_adapter_enroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px21"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="0人报名"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/font_26px" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <View style="@style/DividerHorizontal"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        />
+</LinearLayout>

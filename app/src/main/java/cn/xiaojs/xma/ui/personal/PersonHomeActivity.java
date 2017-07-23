@@ -216,16 +216,18 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             b2.putSerializable(PersonalBusiness.KEY_PERSONAL_ACTIVITY_LIST, mBean.activities);
             f1.setArguments(b1);
             f1.setPagePosition(0);
-            f2.setPagePosition(1);
+            f2.setPagePosition(2);
             f2.setArguments(b2);
             //f3.setPagePosition(2);
 
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
             fragments.add(f1);
+            fragments.add(PersonHomeRecordedLessonFragment.newInstance(1,mAccount));
             fragments.add(f2);
             //fragments.add(f3);
             String[] tabs = new String[]{
                     getString(R.string.person_lesson, StringUtil.getTa(home.profile.sex)),
+                    getString(R.string.record_lesson),
                     //getString(R.string.person_comment),
                     getString(R.string.person_moment)};
             if (mIsMyself) {

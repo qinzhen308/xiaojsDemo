@@ -30,5 +30,6 @@ public abstract class SimpleDataChangeListener implements DataChangeListener {
     public final static int DYNAMIC_CHANGED = 1 << 2;
     public final static int LESSON_ENROLL_CHANGED = 1 << 3;
     public final static int CREATE_CLASS_CHANGED = 1 << 4;
+    public final static int CREATE_RECORDED_LESSON_CHANGED = 1 << 5;
 }
 

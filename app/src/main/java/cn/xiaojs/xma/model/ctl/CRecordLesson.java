@@ -20,10 +20,11 @@ public class CRecordLesson {
     public TeachLead teaching;
     public String cover;
     public LiveLesson.TeachersIntro teachersIntro;
+    public LiveLesson.Overview overview;
     public String[] tags;
     public boolean accessible;
     public boolean autoOnShelves;
-    public long effective;
+    public Long effective;
     public CChapter[] chapters;
 
 

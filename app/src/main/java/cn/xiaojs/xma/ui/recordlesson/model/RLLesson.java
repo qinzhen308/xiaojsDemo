@@ -10,6 +10,7 @@ public class RLLesson implements Serializable{
     public String id;
     public RLDirectory parent;
     public String name;
+    public String videoId;
 
 
     public boolean isChecked_native;

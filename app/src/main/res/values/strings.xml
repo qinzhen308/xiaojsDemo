@@ -990,5 +990,8 @@
     <string name="basic_infomation">基本信息</string>
     <string name="record_lesson">录播课</string>
 
+    <string name="create_recorded_lesson_skip_tip">创建成功，你可以在“我的班课”中查看该课</string>
+
+
 
 </resources>

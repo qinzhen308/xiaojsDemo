@@ -35,24 +35,36 @@ import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.LiveLesson;
+import cn.xiaojs.xma.model.ctl.CChapter;
+import cn.xiaojs.xma.model.ctl.CChapterSection;
+import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.AuditActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonBriefActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonLabelActivity;
 import cn.xiaojs.xma.ui.lesson.SalePromotionActivity;
 import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
 import cn.xiaojs.xma.ui.lesson.TeacherIntroductionActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
+import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/7/20.
@@ -122,7 +134,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
 
     private Competency mCompetency;
     private String mCompetencyId;
-    private LiveLesson mLesson;
+    private LiveLesson mLesson=new LiveLesson();
 
 
     @Override
@@ -169,7 +181,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     }
 
     @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief,R.id.lesson_subject,
-            R.id.live_lesson_label,R.id.cover_view})
+            R.id.live_lesson_label,R.id.cover_view,R.id.sub_btn})
     public void onClick(View v) {
         Intent i = null;
         switch (v.getId()) {
@@ -203,12 +215,14 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
             case R.id.lesson_subject:
                 selectSubject();
                 break;
+            case R.id.sub_btn:
+                submit();
+                break;
 
             default:
                 break;
         }
     }
-
 
 
     private void initCoverLayout() {
@@ -378,6 +392,116 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         handleBackPressed();
         super.onBackPressed();
     }
+
+
+    private void submit() {
+        String name=liveLessonName.getText().toString();
+        if(TextUtils.isEmpty(name)){
+            ToastUtil.showToast(getApplicationContext(),R.string.live_lesson_name_empty);
+            return;
+        }
+
+        if (name.length() > MAX_LESSON_CHAR) {
+            String nameEr = getString(R.string.live_lesson_name_error, MAX_LESSON_CHAR);
+            ToastUtil.showToast(getApplicationContext(),nameEr);
+            return;
+        }
+
+        if(mCompetency==null||mCompetency.getSubject()==null){
+            ToastUtil.showToast(getApplicationContext(),R.string.subject_empty);
+            return;
+        }
+
+
+        CRecordLesson lesson=new CRecordLesson();
+        lesson.title=name;
+        lesson.subject=mCompetency.getSubject().getId();
+        lesson.mode=2;
+
+        if(expiryDateSwitcher.isChecked()){
+            String daysStr=etExpiredDate.getText().toString().trim();
+            if(TextUtils.isEmpty(daysStr)){
+                ToastUtil.showToast(getApplicationContext(),"请填写有效天数");
+                return;
+            }
+            lesson.effective=Long.valueOf(daysStr);
+        }
+        showProgress(false);
+        lesson.accessible=enrollSwitcher.isChecked();
+
+        lesson.overview=mLesson.getOverview();
+        lesson.cover=mLesson.getCover();
+        lesson.tags=mLesson.getTags();
+        setChaptersWithDirs(lesson);
+
+        LessonDataManager.createRecordedCourse(this, lesson, new APIServiceCallback<CLResponse>() {
+            @Override
+            public void onSuccess(CLResponse object) {
+                cancelProgress();
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_RECORDED_LESSON_CHANGED);
+                showSkipTip();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void setChaptersWithDirs( CRecordLesson lesson){
+        ArrayList<RLDirectory> dirs=(ArrayList<RLDirectory>)getIntent().getSerializableExtra(EXTRA_KEY_DIRS);
+        CChapter[] chapters=new CChapter[dirs.size()];
+        CChapter parent=null;
+        CChapterSection child=null;
+        CChapterSection[] childChapters=null;
+        for(int i=0,size=dirs.size();i<size;i++){
+            RLDirectory dir=dirs.get(i);
+            parent=new CChapter();
+            parent.index=i;
+            parent.title=dir.name;
+            childChapters=new CChapterSection[dir.getChildrenCount()];
+            for(int j=0,size2=dir.children.size();i<size2;j++){
+                RLLesson l=dir.getChild(j);
+                child=new CChapterSection();
+                child.index=j;
+                child.title=l.name;
+                child.resource=l.videoId;
+                childChapters[j]=child;
+            }
+            parent.sections=childChapters;
+            chapters[i]=parent;
+        }
+        lesson.chapters=chapters;
+    }
+
+
+    private void showSkipTip() {
+        CommonDialog dialog = new CommonDialog(this);
+        dialog.setDesc(getString(R.string.create_recorded_lesson_skip_tip));
+        dialog.setLefBtnText(R.string.create_lesson_skip_btn_back);
+        dialog.setRightBtnText(R.string.create_lesson_skip_btn_look);
+        dialog.setCancelable(false);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                ClassesListActivity.invoke(CreateRecordedLessonActivity.this, 2);
+                finish();
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                finish();
+            }
+        });
+        dialog.show();
+    }
+
+
+
 
     public static void invoke(Activity context, ArrayList<RLDirectory> dirs){
         Intent intent=new Intent(context,CreateRecordedLessonActivity.class);
