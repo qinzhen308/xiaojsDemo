@@ -15,7 +15,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,22 +28,17 @@ import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshRecyclerView;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
-import cn.xiaojs.xma.model.CollectionCalendar;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
-import cn.xiaojs.xma.model.ctl.ClassSchedule;
-import cn.xiaojs.xma.model.ctl.ScheduleOptions;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
+import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.SearchLessonActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
-import cn.xiaojs.xma.ui.lesson.xclass.util.LessonFilterHelper;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
-import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -72,7 +66,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
 
 //    private LessonAdapter lessonAdapter;
     HomeClassAdapter mAdapter;
-    DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
+    DataPageLoader<RLesson,CollectionPage<RLesson>> dataPageLoader;
     Pagination mPagination;
     LoadStatusViewDecoratee stateView;
 
@@ -114,9 +108,8 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         mAdapter = new HomeClassAdapter(mRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
-        testData();
-//        initPageLoad();
-//        getMonthData();
+        initPageLoad();
+        getRecordLessonData();
     }
 
     @OnClick({R.id.course_filter,R.id.my_course_search})
@@ -163,23 +156,23 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         mPagination=new Pagination();
         mPagination.setPage(1);
         mPagination.setMaxNumOfObjectsPerPage(10);
-        dataPageLoader=new DataPageLoader<ClassSchedule, CollectionCalendar<ClassSchedule>>() {
+        dataPageLoader=new DataPageLoader<RLesson,CollectionPage<RLesson>>() {
             PageChangeInRecyclerView pageChangeInRecyclerView;
             @Override
             public void onRequst(int page) {
                 mPagination.setPage(page);
-                getMonthData();
+                getRecordLessonData();
                 stateView.change(LoadStateListener.STATE_LOADING,"");
             }
 
             @Override
-            public List<ClassSchedule> adaptData(CollectionCalendar<ClassSchedule> object) {
+            public List<RLesson> adaptData(CollectionPage<RLesson> object) {
                 if(object==null)return new ArrayList<>();
-                return object.calendar;
+                return object.objectsOfPage;
             }
 
             @Override
-            public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
+            public void onSuccess(List<RLesson> curPage, List<RLesson> all) {
                 pageChangeInRecyclerView.completeLoading();
                 mPullRecyclerView.onRefreshComplete();
                 if(ArrayUtil.isEmpty(all)){
@@ -194,7 +187,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
             public void onFailed(String errorCode, String errorMessage) {
                 pageChangeInRecyclerView.completeLoading();
                 mPullRecyclerView.onRefreshComplete();
-                bindData(new ArrayList<ClassSchedule>());
+                bindData(new ArrayList<RLesson>());
                 stateView.change(LoadStateListener.STATE_LOADING_ERROR,"");
             }
 
@@ -207,32 +200,19 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
     }
 
 
-    private void bindData(List<ClassSchedule> list){
-        ArrayList monthLists=new ArrayList();
-        LessonLabelModel tempLabel=null;
-        for(int j=0;j<list.size();j++){
-            ClassSchedule cs=list.get(j);
-            tempLabel=new LessonLabelModel(ScheduleUtil.getDateYMDW(cs.date),0,false);
-            monthLists.add(tempLabel);
-            monthLists.addAll(cs.lessons);
-            tempLabel.lessonCount=cs.lessons.size();
-            if(cs.lessons.size()>0){
-                tempLabel.hasData=true;
-            }
-        }
-        monthLists.add(new LastEmptyModel());
-        mAdapter.setList(monthLists);
+    private void bindData(List<RLesson> list){
+//        ArrayList datas=new ArrayList();
+//        datas.addAll(list);
+//        datas.add(new LastEmptyModel());
+        mAdapter.setList(list);
         mAdapter.notifyDataSetChanged();
     }
 
-    private void getMonthData(){
-        long start=new Date(0).getTime();
-        long end=ScheduleUtil.ymdToTimeMill(3000,1,1);
-        ScheduleOptions options=new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(start))
-                .setEnd(ScheduleUtil.getUTCDate(end)).setState(LessonFilterHelper.getState(group2Position))
-                .setType(Account.TypeName.STAND_ALONE_LESSON).setRole(LessonFilterHelper.getType(group1Position))
-                .build();
-        LessonDataManager.getClassesSchedule4Lesson(getActivity(),options,mPagination , dataPageLoader);
+    private void getRecordLessonData(){
+        RecordedLessonCriteria criteria=new RecordedLessonCriteria();
+        criteria.role="All";
+//        criteria.state="All";
+        LessonDataManager.getRecordedCourses(getActivity(),criteria,mPagination , dataPageLoader);
     }
 
 
@@ -273,17 +253,5 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         }
     }
 
-    private void testData(){
-        ArrayList list=new ArrayList<>();
-        list.add(new RLDirectory("啊哈到平静欧普"));
-        list.add(new RLDirectory("嫩么；是"));
-        list.add(new RLDirectory("毛毛雨送"));
-        list.add(new RLDirectory("阿斯顿"));
-        list.add(new RLDirectory("保存兰桂坊"));
-        list.add(new RLDirectory("请进入日"));
-        list.add(new RLDirectory("爱尚里人额阿萨德"));
-        list.add(new LastEmptyModel());
-        mAdapter.setList(list);
-        mAdapter.notifyDataSetChanged();
-    }
+
 }

@@ -467,7 +467,15 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getRecordedCourses(RecordedLessonCriteria criteria,Pagination pagination) {
-        Call<CollectionPage<RLesson>> call = getService().getRecordedCourses(criteria,pagination);
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+        Call<CollectionPage<RLesson>> call = getService().getRecordedCourses(criteriaJsonstr,paginationJsonstr);
         enqueueRequest(APIType.GET_RECORDED_COURSES, call);
     }
 

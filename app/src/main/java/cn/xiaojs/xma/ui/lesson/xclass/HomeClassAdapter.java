@@ -13,6 +13,7 @@ import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.live.LiveSchedule;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.ui.lesson.xclass.model.ClassFooterModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
@@ -135,7 +136,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_LIVE_SCHEDULE_LESSON;
         }else if(o instanceof ClassFooterModel){
             return VIEW_TYPE_HOME_CLASS_FOOTER;
-        }else if(o instanceof RLDirectory){
+        }else if(o instanceof RLesson){
             return VIEW_TYPE_HOME_RECORDED_LESSON;
         }
         return VIEW_TYPE_HOME_CLASS;

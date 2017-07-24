@@ -2,6 +2,9 @@ package cn.xiaojs.xma.ui.recordlesson.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -9,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -17,6 +23,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
@@ -27,10 +34,10 @@ import cn.xiaojs.xma.util.ArrayUtil;
  * Created by Paul Z on 2017/5/23.
  */
 
-public class HomeRecordedLessonView extends RelativeLayout implements IViewModel<RLDirectory> {
+public class HomeRecordedLessonView extends RelativeLayout implements IViewModel<RLesson> {
 
 
-    RLDirectory mData;
+    RLesson mData;
     @BindView(R.id.flag_view)
     ImageView flagView;
     @BindView(R.id.title_view)
@@ -47,6 +54,8 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     ImageButton opDirView;
     @BindView(R.id.op_more_view)
     ImageButton opMoreView;
+    @BindColor(R.color.chocolate_light)
+    int teacherColor;
 
     public HomeRecordedLessonView(Context context) {
         super(context);
@@ -66,20 +75,20 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 
 
     @Override
-    public void bindData(int position, RLDirectory data) {
+    public void bindData(int position, RLesson data) {
         mData = data;
-        titleView.setText(mData.name);
+        titleView.setText(mData.title);
 //        if (Ctl.LiveLessonState.LIVE.equals(mData.state)) {
 //            statusView.setVisibility(INVISIBLE);
 //        } else {
 //            statusView.setVisibility(INVISIBLE);
 //        }
 
-//        if (mData.enroll != null) {
-//            memberView.setText("学生：" + mData.enroll.current + "人");
-//        } else {
-//            memberView.setText("学生：" + 0 + "人");
-//        }
+        if (mData.enroll != null) {
+            memberView.setText(mData.enroll.current + "人报名");
+        } else {
+            memberView.setText(0 + "人报名");
+        }
 //        String teachers = "班主任：";
 //        for (int i = 0; i < mData.advisers.length; i++) {
 //            teachers += mData.advisers[i].name + "、";
@@ -87,7 +96,20 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 //        if ("、".equals(teachers.charAt(teachers.length() - 1) + "")) {
 //            teachers = teachers.substring(0, teachers.length() - 1);
 //        }
-//        teachersView.setText(teachers);
+        if(mData.teacher!=null&&mData.teacher.getBasic()!=null){
+            SpannableString ss=new SpannableString("主讲："+mData.teacher.getBasic().getName());
+            ss.setSpan(new ForegroundColorSpan(teacherColor),3,ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            teachersView.setText(ss);
+        }else {
+            teachersView.setText("主讲：");
+        }
+        if(mData.expire!=null){
+            tvDate.setText("有效期："+mData.expire.effective+"天");
+            tvDate.setVisibility(VISIBLE);
+        }else {
+            tvDate.setVisibility(INVISIBLE);
+        }
+        Glide.with(getContext()).load(mData.cover).fitCenter().placeholder(R.drawable.default_lesson_cover).into(flagView);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

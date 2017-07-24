@@ -22,7 +22,7 @@ public class RLesson {
 
     public String id;
     public String title;
-    public Date createdBy;
+//    public Date createdBy;
     public SubjectName subject;
     public Enroll enroll;
     public String cover;
@@ -34,4 +34,11 @@ public class RLesson {
     public String[] tags;
     public LiveLesson.Overview overview;
     public String reason;
+    public Expire expire;
+
+
+    public class Expire{
+        public int mode;
+        public int effective;
+    }
 }

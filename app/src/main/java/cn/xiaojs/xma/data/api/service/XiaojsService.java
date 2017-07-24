@@ -472,8 +472,8 @@ public interface XiaojsService {
 
 
     @GET("/v1/ctl/courses/recorded/{criteria}/{pagination}")
-    Call<CollectionPage<RLesson>> getRecordedCourses(@Path("criteria") RecordedLessonCriteria criteria,
-                                                         @Path("pagination") Pagination pagination);
+    Call<CollectionPage<RLesson>> getRecordedCourses(@Path("criteria") String criteria,
+                                                         @Path("pagination") String pagination);
 
     @GET("/v1/ctl/courses/recorded/{course}")
     Call<RLessonDetail> getRecordedCourse(@Path("course") String course);
