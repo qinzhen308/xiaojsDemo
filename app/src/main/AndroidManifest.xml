@@ -384,7 +384,6 @@
                 android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-                as
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
