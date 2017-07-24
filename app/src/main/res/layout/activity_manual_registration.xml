@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:paddingTop="@dimen/px32"
+        >
+
+    <include
+            layout="@layout/layout_create_tips"
+            android:id="@+id/lay_tips"
+            />
+
+    <Button
+            android:id="@+id/complete_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px100"
+            android:text="@string/finish"
+            android:textColor="@drawable/common_btn_white_text_selector"
+            android:background="@drawable/big_submit_btn_selector"
+            android:textSize="@dimen/font_32px"
+            android:layout_alignParentBottom="true"
+            />
+
+    <View
+            android:id="@+id/section"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px439"
+            android:background="@color/white"
+            android:layout_below="@id/lay_tips"
+            android:layout_marginTop="@dimen/px30"
+            />
+
+    <TextView
+            android:id="@+id/phone_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_num"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            android:layout_alignTop="@id/section"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px35"
+            android:layout_marginBottom="@dimen/px34"
+            android:layout_alignParentLeft="true"
+            />
+
+    <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/phone_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:layout_marginLeft="@dimen/px39"
+            android:hint="@string/please_input"
+            android:layout_toRightOf="@id/phone_title"
+            android:layout_alignBaseline="@id/phone_title"
+            android:layout_marginRight="@dimen/px29"
+            android:singleLine="true"
+            android:background="@null"
+
+            />
+
+    <view
+            android:id="@+id/p_line"
+            style="@style/DividerHorizontal"
+            android:layout_below="@id/phone_title"
+            android:layout_alignLeft="@id/phone_title"/>
+
+    <TextView
+            android:id="@+id/name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            android:layout_below="@id/p_line"
+            android:layout_alignLeft="@id/phone_title"
+            android:layout_marginTop="@dimen/px33"
+            android:layout_marginBottom="@dimen/px34"
+            />
+
+    <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:hint="@string/please_input"
+            android:layout_below="@id/phone_num"
+            android:layout_alignLeft="@id/phone_num"
+            android:layout_alignBaseline="@id/name_title"
+            android:layout_marginRight="@dimen/px29"
+            android:text="wanghai"
+            android:background="@null"
+            android:singleLine="true"
+            />
+
+    <view
+            android:id="@+id/n_line"
+            style="@style/DividerHorizontal"
+            android:layout_below="@id/name_title"
+            android:layout_alignLeft="@id/phone_title"/>
+
+    <TextView
+            android:id="@+id/remark_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remark"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            android:layout_below="@id/n_line"
+            android:layout_alignLeft="@id/phone_title"
+            android:layout_marginTop="@dimen/px33"
+            android:layout_marginBottom="@dimen/px34"
+            />
+
+    <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:layout_marginRight="@dimen/px29"
+            android:layout_below="@id/name"
+            android:layout_alignLeft="@id/phone_num"
+            android:layout_alignBaseline="@id/remark_title"
+            android:hint="@string/please_input_remark"
+            android:background="@null"
+            android:maxLength="100"
+            />
+
+    <TextView
+            android:id="@+id/limit_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/section"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginBottom="@dimen/px23"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/font_light_gray"
+            android:text="0/100"/>
+
+</RelativeLayout>
+
+

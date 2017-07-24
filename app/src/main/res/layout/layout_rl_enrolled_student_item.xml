@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <ImageView
+            android:id="@+id/ic_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_entrance"
+            android:layout_marginRight="@dimen/px32"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px30"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/font_black"
+            android:layout_alignParentLeft="true"
+            />
+
+    <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/name"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_marginTop="@dimen/px32"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/font_black"
+            />
+
+    <TextView
+            android:id="@+id/time_env"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_26px"
+            android:textColor="@color/font_dark_gray"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/px20"
+            android:layout_marginBottom="@dimen/px32"
+            android:layout_alignLeft="@id/name"
+            android:layout_below="@+id/name"
+            />
+
+
+</RelativeLayout>
