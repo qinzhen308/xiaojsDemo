@@ -1,8 +1,11 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
 import android.app.Activity;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.mobeta.android.dslv.DragSortListView;
 
@@ -10,6 +13,7 @@ import com.mobeta.android.dslv.DragSortListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
@@ -20,7 +24,10 @@ import cn.xiaojs.xma.ui.recordlesson.view.RLDirectoryView;
 import cn.xiaojs.xma.ui.recordlesson.view.RLEditableDirectoryView;
 import cn.xiaojs.xma.ui.recordlesson.view.RLEditableLessonView;
 import cn.xiaojs.xma.ui.recordlesson.view.RLLessonView;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/7/18.
@@ -52,8 +59,13 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
         eventCallback=new EventCallback() {
             @Override
             public void onEvent(int what, Object... object) {
-                if(what==1){
+                if(what==EVENT_1){
                     notifyDataSetChanged();
+                }else if(what==EVENT_2){
+                    showEditDirDialog((int)object[1],(RLDirectory) object[0]);
+                }else if(what==EVENT_3){
+                    int[] targetDirPosition=findInGroup((int)object[1]);
+                    AddLessonDirActivity.invoke(mContext,(ArrayList<RLDirectory>) (Object)getList(),(RLLesson) object[0],targetDirPosition[0],targetDirPosition[1]);
                 }
             }
         };
@@ -199,6 +211,7 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
         }
     }
 
+
     public Object remove(int position){
         if(ArrayUtil.isEmpty(getList())){
             return null;
@@ -282,6 +295,55 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
         if(dir==null)return;
         dir.addChild(lesson);
         notifyDataSetChanged();
+    }
+
+
+    public void editLessonItem(int dirPosition,int lessonPosition,RLLesson lesson){
+        if(ArrayUtil.isEmpty(getList()))return;
+        RLDirectory dir=(RLDirectory) getList().get(dirPosition);
+        dir.replace(lessonPosition,lesson);
+        notifyDataSetChanged();
+    }
+
+    private void showEditDirDialog(int position, final RLDirectory dir){
+        final CommonDialog dialog=new CommonDialog(mContext);
+        dialog.setTitle(R.string.edit_directory_name);
+        final EditTextDel editText=new EditTextDel(mContext);
+        FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin=mContext.getResources().getDimensionPixelSize(R.dimen.px20);
+        lp.topMargin=mContext.getResources().getDimensionPixelSize(R.dimen.px20);
+        editText.setLayoutParams(lp);
+        editText.setHint(R.string.add_new_dir_tip);
+        editText.setLines(1);
+        editText.setTextColor(mContext.getResources().getColor(R.color.font_black));
+        editText.setBackgroundResource(R.drawable.common_search_bg);
+        editText.setGravity(Gravity.LEFT|Gravity.TOP);
+        int padding=mContext.getResources().getDimensionPixelSize(R.dimen.px10);
+        editText.setPadding(padding,padding,padding,padding);
+        editText.setHintTextColor(mContext.getResources().getColor(R.color.font_gray));
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_PX,mContext.getResources().getDimensionPixelSize(R.dimen.font_28px));
+        editText.setText(dir.name);
+        dialog.setCustomView(editText);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                String dirName=editText.getText().toString().trim();
+                if(dirName.length()==0){
+                    ToastUtil.showToast(mContext, R.string.add_new_dir_not_input_tip);
+                    return;
+                }
+                dir.name=dirName;
+                notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 }

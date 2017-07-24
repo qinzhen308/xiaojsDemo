@@ -971,6 +971,7 @@
     <string name="import_video">导入视频</string>
     <string name="add_new_dir">新增一级</string>
     <string name="add_new_directory">新增一级目录</string>
+    <string name="edit_directory_name">编辑目录名称</string>
     <string name="add_new_lesson">新增二级</string>
     <string name="add_new_lesson_dir">新增二级目录</string>
     <string name="add_new_dir_tip">请输入目录名称</string>

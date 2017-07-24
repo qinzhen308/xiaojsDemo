@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ImportVideoActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
@@ -66,7 +67,7 @@ public class RecordedLessonActivity extends BaseActivity {
         setRightText(R.string.manage_it);
         setMiddleTitle(R.string.record_lesson_directory);
         initView();
-        testData();
+        initData();
     }
 
 
@@ -193,46 +194,31 @@ public class RecordedLessonActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    private void testData() {
-        ArrayList<Object> list = new ArrayList<>();
-        RLDirectory dir = null;
-        dir = new RLDirectory("01第一个目录", "100");
-        dir.addChild(new RLLesson("01第一节课--1", "101"));
-        dir.addChild(new RLLesson("02第二节课--1", "102"));
-        dir.addChild(new RLLesson("03第三节课--1", "103"));
-        list.add(dir);
-        dir = new RLDirectory("02第二个目录", "200");
-        dir.addChild(new RLLesson("01第一节课--2", "201"));
-        list.add(dir);
-        dir = new RLDirectory("03第三个目录", "300");
-        dir.addChild(new RLLesson("01第一节课---3", "301"));
-        dir.addChild(new RLLesson("02第二节课---3", "302"));
-        dir.addChild(new RLLesson("03第三节课---3", "303"));
-        dir.addChild(new RLLesson("04第四节课---3", "304"));
-        dir.addChild(new RLLesson("05第五节课---3", "305"));
-        dir.addChild(new RLLesson("06第六节课---3", "306"));
-        dir.addChild(new RLLesson("07第七节课---3", "307"));
-        list.add(dir);
-        dir=new RLDirectory("04第四个目录","400");
-        dir.addChild(new RLLesson("01第一节课--4","401"));
-        list.add(dir);
-        dir=new RLDirectory("05第五个目录","500");
-        dir.addChild(new RLLesson("01第一节课--5","501"));
-        list.add(dir);
-        dir=new RLDirectory("06第六个目录","600");
-        dir.addChild(new RLLesson("01第一节课--6","601"));
-        list.add(dir);
-        dir=new RLDirectory("07第七个目录","700");
-        dir.addChild(new RLLesson("01第一节课--7","701"));
-        list.add(dir);
-        dir=new RLDirectory("08第八个目录","800");
-        dir.addChild(new RLLesson("01第一节课--8","801"));
-        list.add(dir);
-        dir=new RLDirectory("09第九个目录","900");
-        dir.addChild(new RLLesson("01第一节课--9","901"));
-        list.add(dir);
-        srcList = list;
-        adapter.setList(list);
+
+    private void initData() {
+        ArrayList<LibDoc> doc=(ArrayList<LibDoc>)getIntent().getSerializableExtra(ImportVideoActivity.EXTRA_CHOICE_DATA);
+        buildDirs(doc);
+    }
+
+    private void buildDirs(ArrayList<LibDoc> docs){
+        if(ArrayUtil.isEmpty(docs)){
+            ToastUtil.showToast(getApplicationContext(),"导入失败");
+            return;
+        }
+        if(srcList==null){
+            srcList=new ArrayList();
+        }
+        RLDirectory dir=new RLDirectory(docs.get(0).name);
+        for(int i=0,size=docs.size();i<size;i++){
+            LibDoc doc=docs.get(i);
+            RLLesson child=new RLLesson();
+            child.name=doc.name;
+            child.videoName=doc.name;
+            child.videoId=doc.id;
+            dir.addChild(child);
+        }
+        srcList.add(dir);
+        adapter.setList(srcList);
         adapter.notifyDataSetChanged();
     }
 
@@ -260,7 +246,7 @@ public class RecordedLessonActivity extends BaseActivity {
     private void importVideo() {
         Intent i = new Intent(this, ImportVideoActivity.class);
         i.putExtra(ImportVideoActivity.EXTRA_TITLE,getString(R.string.import_video_tips));
-        startActivity(i);
+        startActivityForResult(i,ImportVideoActivity.REQUEST_CODE);
     }
 
     private void allCheck(boolean isChecked) {
@@ -325,7 +311,7 @@ public class RecordedLessonActivity extends BaseActivity {
                     ToastUtil.showToast(getApplicationContext(), R.string.add_new_dir_not_input_tip);
                     return;
                 }
-                adapter.addDir(new RLDirectory(dirName,""));
+                adapter.addDir(new RLDirectory(dirName));
                 dialog.dismiss();
 
             }
@@ -355,15 +341,26 @@ public class RecordedLessonActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    public static void invoke(Context context,Intent data) {
+        Intent intent = new Intent(context, RecordedLessonActivity.class);
+        intent.fillIn(data,Intent.FILL_IN_DATA);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(RESULT_OK==resultCode){
-            if(requestCode==AddLessonDirActivity.REQUEST_CODE){
+            if(requestCode==AddLessonDirActivity.REQUEST_CODE_ADD){
                 int selectedDirPostion=data.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
                 adapter.addLesson(selectedDirPostion,(RLLesson) data.getSerializableExtra(AddLessonDirActivity.EXTRA_KEY_NEW_LESSON));
-            }else if(requestCode==1212){//绑定视频，code要改
-
+            }else if(requestCode==AddLessonDirActivity.REQUEST_CODE_EDIT){
+                int selectedDirPostion=data.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
+                int selectedLessonPostion=data.getIntExtra(AddLessonDirActivity.EXTRA_KEY_LESSON_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
+                RLLesson lesson=(RLLesson) data.getSerializableExtra(AddLessonDirActivity.EXTRA_KEY_NEW_LESSON);
+                adapter.editLessonItem(selectedDirPostion,selectedLessonPostion,lesson);
+            }else if(requestCode==ImportVideoActivity.REQUEST_CODE){//绑定视频，code要改
+                buildDirs((ArrayList<LibDoc>) data.getSerializableExtra(ImportVideoActivity.EXTRA_CHOICE_DATA));
             }
         }
     }

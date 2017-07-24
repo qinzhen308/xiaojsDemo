@@ -59,10 +59,15 @@ import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
+import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
+import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
+import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -780,6 +785,59 @@ public class LessonDataManager {
                 state,
                 key,
                 subtype);
+    }
+
+    /**
+     * Returns recordedCourses owned or enrolled by an user or taught by an user
+     * (as the lead teacher or a teaching assistant) or owned by an organization,
+     * optionally filtered by criteria.
+     *
+     * @param context
+     * @param criteria
+     * @param pagination
+     * @param callback
+     */
+    public void getRecordedCourses(Context context,
+                           RecordedLessonCriteria criteria,
+                           Pagination pagination,
+                           APIServiceCallback<CollectionPage<RLLesson>> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getRecordedCourses(criteria,pagination);
+    }
+
+
+    /**
+     * Returns detailed data for the recordedCourse.
+     * @param context
+     * @param course
+     * @param callback
+     */
+    public void getRecordedCourse(Context context,
+                                   String course,
+                                   APIServiceCallback<RLessonDetail> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getRecordedCourse(course);
+    }
+
+    /**
+     * Returns detailed data for the recordedCourse in public state.
+     * @param context
+     * @param course
+     * @param callback
+     */
+    public void getRecordedCoursePublic(Context context,
+                                  String course,
+                                  APIServiceCallback<RLessonDetail> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getRecordedCoursePublic(course);
+    }
+
+    public void getRecordedCourseChapters(Context context,
+                                  String course,
+                                  String chapter,
+                                  APIServiceCallback<ArrayList<RLChapter>> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getRecordedCourseChapters(course,chapter);
     }
 
 }

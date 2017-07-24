@@ -18,6 +18,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.ui.recordlesson.AddLessonDirActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 
 /**
@@ -68,13 +69,15 @@ public class RLEditableDirectoryView extends LinearLayout implements IViewModel<
     }
 
     @Override
-    public void bindData(int position, RLDirectory data) {
+    public void bindData(final int position, RLDirectory data) {
         mData = data;
         tvName.setText(mData.name);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(eventCallback!=null){
+                    eventCallback.onEvent(EventCallback.EVENT_2,mData,position);
+                }
             }
         });
         checkView.setSelected(mData.isChecked());

@@ -275,13 +275,13 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
 
     private void testData(){
         ArrayList list=new ArrayList<>();
-        list.add(new RLDirectory("啊哈到平静欧普",""));
-        list.add(new RLDirectory("嫩么；是",""));
-        list.add(new RLDirectory("毛毛雨送",""));
-        list.add(new RLDirectory("阿斯顿",""));
-        list.add(new RLDirectory("保存兰桂坊",""));
-        list.add(new RLDirectory("请进入日",""));
-        list.add(new RLDirectory("爱尚里人额阿萨德",""));
+        list.add(new RLDirectory("啊哈到平静欧普"));
+        list.add(new RLDirectory("嫩么；是"));
+        list.add(new RLDirectory("毛毛雨送"));
+        list.add(new RLDirectory("阿斯顿"));
+        list.add(new RLDirectory("保存兰桂坊"));
+        list.add(new RLDirectory("请进入日"));
+        list.add(new RLDirectory("爱尚里人额阿萨德"));
         list.add(new LastEmptyModel());
         mAdapter.setList(list);
         mAdapter.notifyDataSetChanged();

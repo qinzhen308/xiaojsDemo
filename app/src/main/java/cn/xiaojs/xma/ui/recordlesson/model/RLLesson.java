@@ -10,15 +10,11 @@ public class RLLesson implements Serializable{
     public String id;
     public RLDirectory parent;
     public String name;
+    public String videoName;
     public String videoId;
 
 
     public boolean isChecked_native;
-
-    public RLLesson(String name,String id){
-        this.name=name;
-        this.id=id;
-    }
 
 
     public void setChecked(boolean isChecked){

@@ -9,15 +9,13 @@ import java.util.Iterator;
  */
 
 public class RLDirectory implements Serializable{
-    public String id;
     public String name;
     public ArrayList<RLLesson> children;
 
     public boolean isChecked_native;
 
-    public RLDirectory(String name,String id){
+    public RLDirectory(String name){
         this.name=name;
-        this.id=id;
     }
 
 
@@ -57,6 +55,15 @@ public class RLDirectory implements Serializable{
         }
         child.parent=this;
         children.add(position,child);
+    }
+
+    public void replace(int position , RLLesson child){
+        if(children==null){
+            return;
+        }
+        children.get(position).parent=null;
+        child.parent=this;
+        children.set(position,child);
     }
 
     public RLLesson getChild(int position){

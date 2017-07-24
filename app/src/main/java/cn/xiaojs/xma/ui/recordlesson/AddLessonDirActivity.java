@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.recordlesson;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.TextView;
@@ -13,11 +14,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ImportVideoActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 /**
@@ -27,7 +30,9 @@ import cn.xiaojs.xma.util.ToastUtil;
 public class AddLessonDirActivity extends BaseActivity {
     public static final String EXTRA_KEY_DIRS="extra_key_dirs";
     public static final String EXTRA_KEY_NEW_LESSON="extra_key_new_lesson";
-    public static final int REQUEST_CODE=32;
+    public static final String EXTRA_KEY_LESSON_POSITION="extra_key_lesson_position";
+    public static final int REQUEST_CODE_ADD=32;
+    public static final int REQUEST_CODE_EDIT=31;
 
     private final int MAX_NAME_CHAR = 50;
 
@@ -41,6 +46,8 @@ public class AddLessonDirActivity extends BaseActivity {
     ArrayList<RLDirectory> dirs;
 
     private int selectedDirPostion=-1;
+    private int lessonPosition=-1;
+    RLLesson lesson;
 
     @Override
     protected void addViewContent() {
@@ -51,6 +58,21 @@ public class AddLessonDirActivity extends BaseActivity {
         etDirectoryName.setHint(getString(R.string.live_lesson_name_hint, MAX_NAME_CHAR));
         etDirectoryName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_NAME_CHAR)});
         dirs=(ArrayList<RLDirectory>) getIntent().getSerializableExtra(EXTRA_KEY_DIRS);
+        initLessonInfo();
+    }
+
+    private void initLessonInfo(){
+        Intent intent=getIntent();
+        if(!intent.hasExtra(EXTRA_KEY_NEW_LESSON)){
+            lesson=new RLLesson();
+            return;
+        }
+        selectedDirPostion=intent.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,-1);
+        lessonPosition=intent.getIntExtra(EXTRA_KEY_LESSON_POSITION,-1);
+        lesson=(RLLesson) intent.getSerializableExtra(EXTRA_KEY_NEW_LESSON);
+        etDirectoryName.setText(lesson.name);
+        btnRelevanceVideo.setText(lesson.videoName);
+        tvBelongToDir.setText(dirs.get(selectedDirPostion).name);
     }
 
 
@@ -73,11 +95,10 @@ public class AddLessonDirActivity extends BaseActivity {
     }
 
     private void bindVideo(){
-        // TODO: 2017/7/20 绑定视频 看是否必选
         Intent i = new Intent(this, ImportVideoActivity.class);
         i.putExtra(ImportVideoActivity.EXTRA_CHOICE_MODE, AbsListView.CHOICE_MODE_SINGLE);
         i.putExtra(ImportVideoActivity.EXTRA_TITLE,getString(R.string.choice_inner_video));
-        startActivity(i);
+        startActivityForResult(i,ImportVideoActivity.REQUEST_CODE);
     }
 
     private void bindDir(){
@@ -96,20 +117,52 @@ public class AddLessonDirActivity extends BaseActivity {
             ToastUtil.showToast(getApplicationContext(),"请选择所属一级目录");
             return;
         }
-        RLLesson lesson=new RLLesson(name,"");
+        if(TextUtils.isEmpty(lesson.videoId)){
+            ToastUtil.showToast(getApplicationContext(),"请关联视频");
+            return;
+        }
+
+        lesson.name=name;
+
         // TODO: 2017/7/20 判断绑定视频
         Intent intent=new Intent();
         intent.putExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,selectedDirPostion);
+        intent.putExtra(EXTRA_KEY_LESSON_POSITION,lessonPosition);
         intent.putExtra(EXTRA_KEY_NEW_LESSON,lesson);
         setResult(RESULT_OK,intent);
         finish();
+    }
+
+    private void updateLesson(LibDoc docs){
+        if(docs==null){
+            ToastUtil.showToast(getApplicationContext(),"选择视频失败");
+            return;
+        }
+        if(etDirectoryName.getText().toString().trim().length()==0){
+            lesson.name=docs.name;
+            etDirectoryName.setText(lesson.name);
+        }
+        lesson.videoId=docs.id;
+        lesson.videoName=docs.name;
+        btnRelevanceVideo.setText(lesson.videoName);
     }
 
 
     public static void invoke(Activity context, ArrayList<RLDirectory> dirs){
         Intent intent=new Intent(context,AddLessonDirActivity.class);
         intent.putExtra(EXTRA_KEY_DIRS,dirs);
-        context.startActivityForResult(intent,REQUEST_CODE);
+        context.startActivityForResult(intent,REQUEST_CODE_ADD);
+    }
+
+    public static void invoke(Activity context, ArrayList<RLDirectory> dirs,RLLesson editLesson,int editDirPosition,int editLessonPosition){
+        Intent intent=new Intent(context,AddLessonDirActivity.class);
+        intent.putExtra(EXTRA_KEY_DIRS,dirs);
+        if(editLesson!=null){
+            intent.putExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,editDirPosition);
+            intent.putExtra(EXTRA_KEY_LESSON_POSITION,editLessonPosition);
+            intent.putExtra(EXTRA_KEY_NEW_LESSON,editLesson);
+        }
+        context.startActivityForResult(intent,REQUEST_CODE_EDIT);
     }
 
     @Override
@@ -119,8 +172,8 @@ public class AddLessonDirActivity extends BaseActivity {
             if(requestCode==SelectDirectoryActivity.REQUEST_CODE){
                 selectedDirPostion=data.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
                 tvBelongToDir.setText(dirs.get(selectedDirPostion).name);
-            }else if(requestCode==1212){//绑定视频，code要改
-
+            }else if(requestCode==ImportVideoActivity.REQUEST_CODE){
+                updateLesson((LibDoc) data.getSerializableExtra(ImportVideoActivity.EXTRA_CHOICE_DATA));
             }
         }
     }

@@ -68,13 +68,15 @@ public class RLEditableLessonView extends LinearLayout implements IViewModel<RLL
     }
 
     @Override
-    public void bindData(int position, RLLesson data) {
+    public void bindData(final int position, RLLesson data) {
         mData=data;
         tvName.setText("课--" + data.name);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(eventCallback!=null){
+                    eventCallback.onEvent(EventCallback.EVENT_3,mData,position);
+                }
             }
         });
         checkView.setSelected(mData.isChecked());

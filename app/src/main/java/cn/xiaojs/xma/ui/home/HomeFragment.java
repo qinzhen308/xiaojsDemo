@@ -207,9 +207,8 @@ public class HomeFragment extends BaseFragment {
                 ((BaseActivity)mContext).startActivityForResult(intent,HomeConstant.REQUEST_CODE_UPDATE);
                 break;
             case R.id.iv_write_dynamic:
-//                startActivityForResult(new Intent(getActivity(), PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
-//                AnalyticEvents.onEvent(getActivity(),16);
-                RecordedLessonActivity.invoke(getActivity());
+                startActivityForResult(new Intent(getActivity(), PostDynamicActivity.class), BaseConstant.REQUEST_CODE_SEND_MOMENT);
+                AnalyticEvents.onEvent(getActivity(),16);
                 break;
         }
     }

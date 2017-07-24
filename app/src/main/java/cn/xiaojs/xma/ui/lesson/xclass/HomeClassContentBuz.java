@@ -405,10 +405,10 @@ public class HomeClassContentBuz {
 
     public void getRecordedLesson(){
         dirs=new ArrayList<>();
-        dirs.add(new RLDirectory("按到阿斯顿",""));
-        dirs.add(new RLDirectory("曲儿",""));
-        dirs.add(new RLDirectory("门口瑞特",""));
-        dirs.add(new RLDirectory("而女人",""));
+        dirs.add(new RLDirectory("按到阿斯顿"));
+        dirs.add(new RLDirectory("曲儿"));
+        dirs.add(new RLDirectory("门口瑞特"));
+        dirs.add(new RLDirectory("而女人"));
 
     }
 

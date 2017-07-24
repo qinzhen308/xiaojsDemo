@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.Pagination;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import cn.xiaojs.xma.model.Publish;
@@ -62,6 +63,10 @@ import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
+import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
+import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
+import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -459,6 +464,25 @@ public class LessonRequest extends ServiceRequest {
                            String subtype) {
         Call<ResponseBody> call = getService().getCourses(limit, page, start, end, state, key, subtype);
         enqueueRequest(APIType.GET_COURSES, call);
+    }
+
+    public void getRecordedCourses(RecordedLessonCriteria criteria,Pagination pagination) {
+        Call<CollectionPage<RLesson>> call = getService().getRecordedCourses(criteria,pagination);
+        enqueueRequest(APIType.GET_RECORDED_COURSES, call);
+    }
+
+    public void getRecordedCourse(String course) {
+        Call<RLessonDetail> call = getService().getRecordedCourse(course);
+        enqueueRequest(APIType.GET_RECORDED_COURSE, call);
+    }
+    public void getRecordedCoursePublic(String course) {
+        Call<RLessonDetail> call = getService().getRecordedCoursePublic(course);
+        enqueueRequest(APIType.GET_RECORDED_COURSE, call);
+    }
+
+    public void getRecordedCourseChapters(String course,String chapter) {
+        Call<ArrayList<RLChapter>> call = getService().getRecordedCourseChapters(course,chapter);
+        enqueueRequest(APIType.GET_RECORDED_COURSE_CHAPTERS, call);
     }
 
 

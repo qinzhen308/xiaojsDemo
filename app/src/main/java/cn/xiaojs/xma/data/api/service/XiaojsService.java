@@ -10,6 +10,7 @@ import cn.xiaojs.xma.model.AccessLesson;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.CollectionResult;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.Registrant;
@@ -81,6 +82,10 @@ import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentOrder;
+import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
+import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
+import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.search.LessonInfo;
@@ -464,6 +469,22 @@ public interface XiaojsService {
                                   @Query("state") String state,
                                   @Query("key") String key,
                                   @Query("subtype") String subtype);
+
+
+    @GET("/v1/ctl/courses/recorded/{criteria}/{pagination}")
+    Call<CollectionPage<RLesson>> getRecordedCourses(@Path("criteria") RecordedLessonCriteria criteria,
+                                                         @Path("pagination") Pagination pagination);
+
+    @GET("/v1/ctl/courses/recorded/{course}")
+    Call<RLessonDetail> getRecordedCourse(@Path("course") String course);
+
+    @GET("/v1/ctl/courses/recorded/{course}/public")
+    Call<RLessonDetail> getRecordedCoursePublic(@Path("course") String course);
+
+
+    @GET("/v1/ctl/courses/recorded/{course}/chapters/{chapter}")
+    Call<ArrayList<RLChapter>> getRecordedCourseChapters(@Path("course") String course,
+                                              @Path("chapter") String chapterid);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

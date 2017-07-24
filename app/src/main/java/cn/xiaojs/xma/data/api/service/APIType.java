@@ -194,4 +194,7 @@ public class APIType {
 
     public static final int CREATE_DIRECTORY = 120;
     public static final int GET_COURSES = 121;
+    public static final int GET_RECORDED_COURSES = 122;
+    public static final int GET_RECORDED_COURSE = 123;
+    public static final int GET_RECORDED_COURSE_CHAPTERS = 124;
 }

@@ -49,7 +49,7 @@ public class CreateRecordlessonActivity extends BaseActivity {
                 break;
             case R.id.import_btn: //导入视频
                 Intent i = new Intent(this, ImportVideoActivity.class);
-                startActivity(i);
+                startActivityForResult(i,ImportVideoActivity.REQUEST_CODE);
                 break;
             case R.id.lesson_creation_tips_close://关闭提醒
                 closeCourCreateTips();
@@ -66,5 +66,15 @@ public class CreateRecordlessonActivity extends BaseActivity {
         tipsRootView.setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(RESULT_OK==resultCode){
+            if(requestCode==ImportVideoActivity.REQUEST_CODE){
+                RecordedLessonActivity.invoke(this,data);
+                finish();
+            }
+        }
+    }
 }
 

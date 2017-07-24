@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -44,9 +45,12 @@ import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.LiveLesson;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.CChapter;
 import cn.xiaojs.xma.model.ctl.CChapterSection;
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
+import cn.xiaojs.xma.model.ctl.Enroll;
+import cn.xiaojs.xma.model.ctl.TeachLead;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -150,6 +154,12 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         mustInputSymbol();
         expiryDateSwitcher.setChecked(false);
         enrollSwitcher.setChecked(false);
+
+        Account account = AccountDataManager.getAccont(this);
+        if (account != null && account.getBasic() != null) {
+            String name = account.getBasic().getName();
+            btnTeacher.setText(name);
+        }
 
         liveLessonName.setHint(getString(R.string.live_lesson_name_hint, MAX_LESSON_CHAR));
         liveLessonName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LESSON_CHAR)});
@@ -427,7 +437,14 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
             lesson.effective=Long.valueOf(daysStr);
         }
         showProgress(false);
-        lesson.accessible=enrollSwitcher.isChecked();
+        lesson.enroll=new Enroll();
+        lesson.enroll.mandatory=enrollSwitcher.isChecked();
+        lesson.enroll.max=0;
+
+
+        TeachLead lead=new TeachLead();
+        lead.leads=new String[]{AccountDataManager.getAccountID(this)};
+        lesson.teaching=lead;
 
         lesson.overview=mLesson.getOverview();
         lesson.cover=mLesson.getCover();
@@ -460,13 +477,13 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         for(int i=0,size=dirs.size();i<size;i++){
             RLDirectory dir=dirs.get(i);
             parent=new CChapter();
-            parent.index=i;
+            parent.index=i+1;
             parent.title=dir.name;
             childChapters=new CChapterSection[dir.getChildrenCount()];
-            for(int j=0,size2=dir.children.size();i<size2;j++){
+            for(int j=0,size2=dir.children.size();j<size2;j++){
                 RLLesson l=dir.getChild(j);
                 child=new CChapterSection();
-                child.index=j;
+                child.index=j+1;
                 child.title=l.name;
                 child.resource=l.videoId;
                 childChapters[j]=child;
