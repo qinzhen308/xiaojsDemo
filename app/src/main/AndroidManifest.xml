@@ -369,6 +369,14 @@
                 />
         <activity android:name=".ui.recordlesson.RecordedLessonEnrollActivity"
                 android:screenOrientation="portrait"/>
+        <activity android:name=".ui.recordlesson.EnrolledStudentsActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.recordlesson.EnrolledStudentInfoActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.recordlesson.ManualRegistrationActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.recordlesson.RecordedLessonDetailActivity"
+                  android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"
@@ -376,7 +384,6 @@
                 android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-                as
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 

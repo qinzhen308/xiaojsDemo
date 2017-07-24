@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px493"
+        android:background="@color/white"
+        android:paddingTop="@dimen/px32"
+        >
+    <TextView
+            android:id="@+id/phone_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_num"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginTop="@dimen/px35"
+            android:layout_marginBottom="@dimen/px34"
+            android:layout_alignParentLeft="true"
+            />
+
+    <TextView
+            android:id="@+id/phone_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:layout_marginLeft="@dimen/px39"
+            android:layout_toRightOf="@id/phone_title"
+            android:layout_alignBaseline="@id/phone_title"
+            android:text="123456789"
+            />
+    <view
+            android:id="@+id/p_line"
+            style="@style/DividerHorizontal"
+            android:layout_below="@id/phone_title"
+            android:layout_alignLeft="@id/phone_title"/>
+
+    <TextView
+            android:id="@+id/name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            android:layout_below="@id/p_line"
+            android:layout_alignLeft="@id/phone_title"
+            android:layout_marginTop="@dimen/px33"
+            android:layout_marginBottom="@dimen/px34"
+            />
+
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:layout_below="@id/phone_num"
+            android:layout_alignLeft="@id/phone_num"
+            android:layout_alignBaseline="@id/name_title"
+            android:text="wanghai"
+            />
+
+    <view
+            android:id="@+id/n_line"
+            style="@style/DividerHorizontal"
+            android:layout_below="@id/name_title"
+            android:layout_alignLeft="@id/phone_title"/>
+
+    <TextView
+            android:id="@+id/remark_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remark"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_30px"
+            android:layout_below="@id/n_line"
+            android:layout_alignLeft="@id/phone_title"
+            android:layout_marginTop="@dimen/px33"
+            android:layout_marginBottom="@dimen/px34"
+            />
+
+    <TextView
+            android:id="@+id/remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_28px"
+            android:layout_below="@id/name"
+            android:layout_alignLeft="@id/phone_num"
+            android:layout_alignBaseline="@id/remark_title"
+            android:text="@string/no_remarks"
+            />
+
+</RelativeLayout>
+
+
