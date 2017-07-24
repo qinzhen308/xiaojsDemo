@@ -132,11 +132,11 @@
         <ImageView
                 android:id="@+id/lesson_cover"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/px389"
                 android:layout_marginTop="@dimen/px29"
                 android:layout_below="@id/lcover"/>
 
-        <view
+        <View
                 android:id="@+id/c_line"
                 style="@style/DividerHorizontal"
                 android:layout_below="@id/lesson_cover"/>
@@ -162,7 +162,7 @@
                 android:layout_below="@id/ltag"
                 />
 
-        <view
+        <View
                 android:id="@+id/t_line"
                 style="@style/DividerHorizontal"
                 android:layout_marginTop="@dimen/px35"
