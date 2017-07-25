@@ -148,8 +148,7 @@ public class AddLessonDirActivity extends BaseActivity {
             lesson.name=docs.name;
             etDirectoryName.setText(lesson.name);
         }
-        lesson.videoId=docs.id;
-        lesson.videoName=docs.name;
+        lesson.setLibDoc(docs);
         btnRelevanceVideo.setText(lesson.videoName);
     }
 

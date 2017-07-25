@@ -286,6 +286,9 @@
         <activity android:name=".ui.recordlesson.RLDirListActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".ui.recordlesson.SearchRecordedLessonActivity"
+            android:screenOrientation="portrait"
+            />
 
         <activity
                 android:name=".TestActivity"

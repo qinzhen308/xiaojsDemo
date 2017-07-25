@@ -127,7 +127,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
                 filter();
                 break;
             case R.id.my_course_search:
-                startActivity(new Intent(getActivity(),SearchLessonActivity.class));
+                SearchRecordedLessonActivity.invoke(getActivity());
                 break;
         }
     }

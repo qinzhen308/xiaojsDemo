@@ -2,6 +2,8 @@ package cn.xiaojs.xma.ui.recordlesson.model;
 
 import java.io.Serializable;
 
+import cn.xiaojs.xma.model.material.LibDoc;
+
 /**
  * Created by Paul Z on 2017/7/18.
  */
@@ -12,6 +14,8 @@ public class RLLesson implements Serializable{
     public String name;
     public String videoName;
     public String videoId;
+    public String videoKey;
+    public String videoMimeType;
 
 
     public boolean isChecked_native;
@@ -36,5 +40,22 @@ public class RLLesson implements Serializable{
 
     public boolean isChecked(){
         return isChecked_native;
+    }
+
+
+    public void setLibDoc(LibDoc doc){
+        videoMimeType=doc.mimeType;
+        videoId=doc.id;
+        videoName=doc.name;
+        videoKey=doc.key;
+    }
+
+    public LibDoc buildLibDoc(){
+        LibDoc doc=new LibDoc();
+        doc.mimeType=videoMimeType;
+        doc.id =videoId;
+        doc.name =videoName;
+        doc.key =videoKey;
+        return doc;
     }
 }

@@ -63,7 +63,7 @@
 
             />
 
-    <view
+    <View
             android:id="@+id/p_line"
             style="@style/DividerHorizontal"
             android:layout_below="@id/phone_title"
@@ -98,7 +98,7 @@
             android:singleLine="true"
             />
 
-    <view
+    <View
             android:id="@+id/n_line"
             style="@style/DividerHorizontal"
             android:layout_below="@id/name_title"

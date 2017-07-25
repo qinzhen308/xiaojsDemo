@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.recordlesson.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -17,6 +18,7 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
+import cn.xiaojs.xma.util.MaterialUtil;
 
 /**
  * Created by Administrator on 2017/7/18.
@@ -31,6 +33,7 @@ public class RLLessonView extends LinearLayout implements IViewModel<RLLesson> {
     TextView tvName;
     @BindView(R.id.drag_handle)
     ImageView dragHandle;
+    RLLesson mData;
 
     public RLLessonView(Context context) {
         super(context);
@@ -57,11 +60,12 @@ public class RLLessonView extends LinearLayout implements IViewModel<RLLesson> {
 
     @Override
     public void bindData(int position, RLLesson data) {
-        tvName.setText("课--"+data.name);
+        mData=data;
+        tvName.setText(data.name);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                MaterialUtil.openMaterial((Activity) getContext(),mData.buildLibDoc());
             }
         });
     }

@@ -214,8 +214,7 @@ public class RecordedLessonActivity extends BaseActivity {
             LibDoc doc=docs.get(i);
             RLLesson child=new RLLesson();
             child.name=doc.name;
-            child.videoName=doc.name;
-            child.videoId=doc.id;
+            child.setLibDoc(doc);
             dir.addChild(child);
         }
         srcList.add(dir);
