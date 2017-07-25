@@ -28,10 +28,6 @@ public class CreateRecordlessonActivity extends BaseActivity {
     LinearLayout tipsRootView;
 
 
-    @BindView(R.id.import_btn)
-    Button importButton;
-
-
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_create_recordlesson);
@@ -41,13 +37,13 @@ public class CreateRecordlessonActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_image, R.id.import_btn, R.id.lesson_creation_tips_close})
+    @OnClick({R.id.left_image, R.id.btn_add, R.id.lesson_creation_tips_close})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
                 break;
-            case R.id.import_btn: //导入视频
+            case R.id.btn_add: //导入视频
                 Intent i = new Intent(this, ImportVideoActivity.class);
                 startActivityForResult(i,ImportVideoActivity.REQUEST_CODE);
                 break;

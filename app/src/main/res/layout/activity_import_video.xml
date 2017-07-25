@@ -61,6 +61,7 @@
             android:layout_height="match_parent"
             android:scrollbars="none"
             android:listSelector="@android:color/transparent"
+            android:divider="@null"
             android:orientation="vertical"
             android:background="@color/white"/>
 </LinearLayout>
