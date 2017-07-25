@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.recordlesson.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.SpannableString;
@@ -14,7 +15,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -22,18 +25,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.preference.AccountPref;
-import cn.xiaojs.xma.model.ctl.Adviser;
-import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.social.Dimension;
-import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
+import cn.xiaojs.xma.ui.base.AbsOpModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.ui.lesson.xclass.view.LessonOperateBoard;
 import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
-import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
+import cn.xiaojs.xma.ui.recordlesson.model.RLOpModel;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -63,6 +64,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     @BindColor(R.color.chocolate_light)
     int teacherColor;
     Dimension dimension;
+    int position;
 
     public HomeRecordedLessonView(Context context) {
         super(context);
@@ -87,11 +89,12 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     @Override
     public void bindData(int position, RLesson data) {
         mData = data;
+        this.position = position;
         titleView.setText(mData.title);
         if (Ctl.RecordedCourseState.DRAFT.equals(mData.state)) {
             statusView.setVisibility(VISIBLE);
             statusView.setText("待上架");
-        }else if (Ctl.RecordedCourseState.FROZEN.equals(mData.state)) {
+        }else if (Ctl.RecordedCourseState.PENDING_FOR_APPROVAL.equals(mData.state)) {
             statusView.setVisibility(VISIBLE);
             statusView.setText("待审核");
         } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {
@@ -145,7 +148,86 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
                 RLDirListActivity.invoke(getContext());
                 break;
             case R.id.op_more_view:
+                moreOperate();
                 break;
         }
     }
+
+    public void moreOperate() {
+        List<RLOpModel> group1 = createRecordedLessonOpMode();
+        List<RLOpModel> group2 = new ArrayList<>();
+        if(group1.size()>4){
+            while (group1.size()>3){
+                group2.add(group1.remove(3));
+            }
+        }
+        new LessonOperateBoard(getContext()).setOpGroup1(group1).setOpGroup2(group2).maybe((Activity) getContext(), mData, position).show();
+    }
+
+    public List<RLOpModel> createRecordedLessonOpMode() {
+        List<RLOpModel> ops;
+        if (!ArrayUtil.isEmpty(mData.teacher) && AccountPref.getAccountID(getContext()).equals(mData.teacher[0].getId())) {//我虽然不是所有者，但我是讲师
+            ops = imSpeaker();
+        } else {//我就是个学生
+            ops = imStudent();
+        }
+        return ops;
+    }
+
+    public List<RLOpModel> imSpeaker() {
+        List<RLOpModel> list = new ArrayList<>();
+        if (Ctl.RecordedCourseState.DRAFT.equals(mData.state)) {//待上架
+            list.add(new RLOpModel(AbsOpModel.OP_PUBLISH));
+            list.add(new RLOpModel(AbsOpModel.OP_EDIT));
+            list.add(new RLOpModel(AbsOpModel.OP_DELETE));
+            //查看课程目录
+//            list.add(new RLOpModel(AbsOpModel.OP_));
+            list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
+            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+
+        } else if (Ctl.RecordedCourseState.PENDING_FOR_APPROVAL.equals(mData.state)) {//待审核
+            //查看课程目录
+//            list.add(new RLOpModel(AbsOpModel.OP_));
+            list.add(new RLOpModel(AbsOpModel.OP_CANCEL_CHECK));
+            list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
+            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+
+        } else if (Ctl.RecordedCourseState.ONSHELVES.equals(mData.state)) {//审核通过
+            if(mData.publish!=null&&mData.publish.accessible){
+                list.add(new RLOpModel(AbsOpModel.OP_PRIVATE));
+            }else {
+                list.add(new RLOpModel(AbsOpModel.OP_PUBLIC));
+            }
+            list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
+            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+            list.add(new RLOpModel(AbsOpModel.OP_APPLY_STUDENTS_LIST));
+            list.add(new RLOpModel(AbsOpModel.OP_SIGNUP));
+            list.add(new RLOpModel(AbsOpModel.OP_SHARE));
+        } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {//审核失败
+            list.add(new RLOpModel(AbsOpModel.OP_DELETE));
+            list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
+            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+        }
+        return list;
+    }
+
+    public List<RLOpModel> imStudent() {
+        List<RLOpModel> list = new ArrayList<>();
+        if (Ctl.RecordedCourseState.DRAFT.equals(mData.state)) {//待上架
+
+
+        } else if (Ctl.RecordedCourseState.PENDING_FOR_APPROVAL.equals(mData.state)) {//待审核
+
+        } else if (Ctl.RecordedCourseState.ONSHELVES.equals(mData.state)) {//审核通过
+            //查看课程目录
+//            list.add(new RLOpModel(AbsOpModel.Op_));
+            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+            list.add(new RLOpModel(AbsOpModel.OP_SIGNUP));
+
+        } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {//审核失败
+
+        }
+        return list;
+    }
+
 }

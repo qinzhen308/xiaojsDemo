@@ -19,7 +19,7 @@ public class RLessonFilterHelper {
                 state= Ctl.RecordedCourseState.DRAFT;
                 break;
             case 2:
-                state= Ctl.RecordedCourseState.FROZEN;
+                state= Ctl.RecordedCourseState.PENDING_FOR_APPROVAL;
                 break;
             case 3:
                 state= Ctl.RecordedCourseState.ONSHELVES;
