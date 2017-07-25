@@ -37,8 +37,4 @@ public class RLesson {
     public Expire expire;
 
 
-    public class Expire{
-        public int mode;
-        public int effective;
-    }
 }

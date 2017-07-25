@@ -32,6 +32,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.util.ArrayUtil;
 
@@ -123,8 +124,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                getContext().startActivity(new Intent(getContext(),RecordedLessonDetailActivity.class).putExtra(RecordedLessonDetailActivity.EXTRA_RLESSON_ID,mData.id));
             }
         });
     }
