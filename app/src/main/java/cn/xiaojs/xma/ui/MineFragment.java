@@ -54,6 +54,8 @@ import cn.xiaojs.xma.ui.mine.ProfileActivity;
 import cn.xiaojs.xma.ui.mine.SettingsActivity;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
 import cn.xiaojs.xma.ui.widget.PortraitView;
@@ -179,6 +181,7 @@ public class MineFragment extends BaseFragment {
             case R.id.my_document_layout:
                 AnalyticEvents.onEvent(getActivity(),10);
                 startActivity(new Intent(mContext, MaterialActivity.class));
+                //startActivity(new Intent(mContext, RecordedLessonDetailActivity.class));
                 break;
 //            case R.id.my_favorites_layout:
 //                break;

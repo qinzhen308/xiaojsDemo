@@ -22,16 +22,18 @@ public class RLessonDetail {
 
     public String id;
     public String title;
-    public Date createdBy;
+    public Date createdOn;
     public SubjectName subject;
     public Enroll enroll;
     public String cover;
     public String state;
     public Fee fee;
     public Publish publish;
-    public Account teacher;
+    public Account[] teacher;
     public Account[] assistants;
     public String[] tags;
     public LiveLesson.Overview overview;
     public String reason;
+    public Expire expire;
+
 }
