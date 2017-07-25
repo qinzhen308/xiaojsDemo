@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.recordlesson.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import cn.xiaojs.xma.model.material.LibDoc;
@@ -62,8 +63,8 @@ public class RecordLessonHelper {
     }
 
 
-    public static ArrayList<String> getIds(List<RLDirectory> src){
-        ArrayList<String> ids=new ArrayList<>();
+    public static HashSet<String> getIds(List<RLDirectory> src){
+        HashSet<String> ids=new HashSet<>();
         if(ArrayUtil.isEmpty(src)){
             return ids;
         }
