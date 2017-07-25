@@ -180,6 +180,7 @@ public class DownloadInfo {
         //pause status
         public static final int STATUS_PAUSED = 20;
         public static final int STATUS_PAUSED_BY_APP = 21;
+        public static final int STATUS_PAUSED_BY_APP_KILLED = 22;
 
 
         //error status
@@ -194,13 +195,13 @@ public class DownloadInfo {
         public static final int STATUS_HTTP_DATA_ERROR = 57;
 
         //cancel status
-        public static final int STATUS_CANCELED = 100;
+        public static final int STATUS_CANCELED = 600;
 
         //ignore
-        public static final int STATUS_FUCK_OVER = 199;
+        public static final int STATUS_FUCK_OVER = 799;
 
         //success status
-        public static final int STATUS_SUCCESS = 200;
+        public static final int STATUS_SUCCESS = 800;
 
     }
 

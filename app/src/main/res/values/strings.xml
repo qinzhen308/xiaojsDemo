@@ -1002,5 +1002,6 @@
     <string name="telc_category">学科类目</string>
     <string name="valid">有效期</string>
     <string name="valid_forever">永久</string>
+    <string name="empty_download">您还没有下载过文件哦～</string>
 
 </resources>
