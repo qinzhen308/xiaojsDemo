@@ -347,7 +347,8 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         classroomEngine.addEvenListener(this);
 
         String state = classroomEngine.getLiveState();
-        if (Live.LiveSessionState.CANCELLED.equals(state)) {
+        if (classroomEngine.getClassroomType() == ClassroomType.StandaloneLesson
+                && Live.LiveSessionState.CANCELLED.equals(state)) {
             Toast.makeText(this, R.string.forbidden_enter_class_for_cancel, Toast.LENGTH_SHORT).show();
             //退出教室
             finish();
