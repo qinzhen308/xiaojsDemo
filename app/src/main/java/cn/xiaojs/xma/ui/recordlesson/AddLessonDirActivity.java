@@ -138,6 +138,11 @@ public class AddLessonDirActivity extends BaseActivity {
             ToastUtil.showToast(getApplicationContext(),"选择视频失败");
             return;
         }
+        RLLesson duplicationItem=RecordLessonHelper.isDuplication(dirs,docs);
+        if(duplicationItem!=null){
+            ToastUtil.showToast(getApplicationContext(),"该视频已经在《"+duplicationItem.name+"》中绑定");
+            return;
+        }
         if(etDirectoryName.getText().toString().trim().length()==0){
             lesson.name=docs.name;
             etDirectoryName.setText(lesson.name);

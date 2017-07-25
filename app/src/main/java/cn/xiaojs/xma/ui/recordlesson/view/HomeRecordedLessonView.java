@@ -14,17 +14,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Date;
+
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
+import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
@@ -56,6 +61,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     ImageButton opMoreView;
     @BindColor(R.color.chocolate_light)
     int teacherColor;
+    Dimension dimension;
 
     public HomeRecordedLessonView(Context context) {
         super(context);
@@ -71,6 +77,9 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
         inflate(getContext(), R.layout.item_home_recorded_lesson, this);
         setBackgroundResource(R.drawable.bg_classlist_item);
         ButterKnife.bind(this);
+        dimension=new Dimension();
+        dimension.width=getResources().getDimensionPixelSize(R.dimen.px250);
+        dimension.height=getResources().getDimensionPixelSize(R.dimen.px132);
     }
 
 
@@ -96,20 +105,21 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 //        if ("、".equals(teachers.charAt(teachers.length() - 1) + "")) {
 //            teachers = teachers.substring(0, teachers.length() - 1);
 //        }
-        if(mData.teacher!=null&&mData.teacher.getBasic()!=null){
-            SpannableString ss=new SpannableString("主讲："+mData.teacher.getBasic().getName());
+        if(!ArrayUtil.isEmpty(mData.teacher)&&mData.teacher[0].getBasic()!=null){
+            SpannableString ss=new SpannableString("主讲："+mData.teacher[0].getBasic().getName());
             ss.setSpan(new ForegroundColorSpan(teacherColor),3,ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             teachersView.setText(ss);
         }else {
             teachersView.setText("主讲：");
         }
         if(mData.expire!=null){
-            tvDate.setText("有效期："+mData.expire.effective+"天");
-            tvDate.setVisibility(VISIBLE);
+//            tvDate.setText("有效期："+mData.expire.effective+"天");
+            tvDate.setText("有效期至"+ ScheduleUtil.getDateYMD(new Date(mData.createdOn.getTime()+mData.expire.effective*ScheduleUtil.DAY)));
         }else {
-            tvDate.setVisibility(INVISIBLE);
+            tvDate.setText("永久");
         }
-        Glide.with(getContext()).load(mData.cover).fitCenter().placeholder(R.drawable.default_lesson_cover).into(flagView);
+
+        Glide.with(getContext()).load(Ctl.getCover(mData.cover,dimension)).fitCenter().placeholder(R.drawable.default_lesson_cover).into(flagView);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
