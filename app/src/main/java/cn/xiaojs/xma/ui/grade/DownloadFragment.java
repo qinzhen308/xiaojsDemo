@@ -108,7 +108,7 @@ public class DownloadFragment extends BaseFragment
         }
 
         if (cursor == null || cursor.getCount()<=0) {
-            showEmptyView();
+            showEmptyView(getString(R.string.empty_download));
         }else {
             hideEmptyView();
         }

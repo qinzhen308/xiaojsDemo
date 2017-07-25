@@ -87,6 +87,24 @@ public class DownloadManager {
         return DataPref.allowDownload(context);
     }
 
+    public static void resetDownloadRunningWhenKilled(Context context) {
+
+        Uri uri = DownloadProvider.DOWNLOAD_URI;
+
+        ContentValues cv = new ContentValues();
+        cv.put(DBTables.TDownload.STATUS, DownloadInfo.DownloadStatus.STATUS_PAUSED_BY_APP_KILLED);
+
+        String where = DBTables.TDownload.STATUS + " in (?, ?) ";
+        String[] selectArgs = {String.valueOf(DownloadInfo.DownloadStatus.STATUS_RUNNING),
+                String.valueOf(DownloadInfo.DownloadStatus.STATUS_PENDING)};
+
+        int count = context.getContentResolver().update(uri, cv, where, selectArgs);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("reset download Running or pending update count: %d", count);
+        }
+    }
+
 
     /**
      * 恢复下载

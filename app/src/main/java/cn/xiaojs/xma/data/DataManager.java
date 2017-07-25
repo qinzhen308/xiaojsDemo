@@ -65,14 +65,7 @@ public class DataManager {
 
         saveVersionCode(context, APPUtils.getAPPVersionCode(context));
 
-        if (!DataPref.hasFuckdata(context)) {
-            boolean fuck = DownloadManager.insertFuckData(context);
-            if (fuck) {
-                DataPref.setFuckdata(context,true);
-            }
-        }
-
-
+        dealDownloadAsync(context);
 
         if (AccountDataManager.isLogin(context)) {
 
@@ -115,6 +108,26 @@ public class DataManager {
         i.putExtra(DataManager.SYNC_TYPE,DataManager.TYPE_CONTACT);
         i.putExtra(DataManager.EXTRA_CONTACT,contactGroups);
         context.startService(i);
+    }
+
+    public static void dealDownloadAsync(final Context context) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                if (!DataPref.hasFuckdata(context)) {
+                    boolean fuck = DownloadManager.insertFuckData(context);
+                    if (fuck) {
+                        DataPref.setFuckdata(context,true);
+                    }
+                }
+
+                //由于目前不支持断点续传，所以在application启动时，将正在下载、等待下载的状态改为下载失败
+                DownloadManager.resetDownloadRunningWhenKilled(context);
+            }
+        }).start();
+
     }
 
     public static void setShowGuide(Context context, boolean show) {

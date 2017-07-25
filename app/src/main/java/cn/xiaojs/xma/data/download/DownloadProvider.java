@@ -159,12 +159,18 @@ public class DownloadProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         int match = sURIMatcher.match(uri);
-        if (match != DOWNLOAD_ID) {
-            return -1;
-        }
 
-        String id = uri.getLastPathSegment();
-        selection = DBTables.TDownload._ID + " = "+ id;
+        String id = null;
+
+
+        switch (match) {
+            case ALL_DOWNLOAD:
+                break;
+            case DOWNLOAD_ID:
+                id = uri.getLastPathSegment();
+                selection = DBTables.TDownload._ID + " = "+ id;
+                break;
+        }
 
         SQLiteDatabase db = DBHelper.getWriteDb(getContext());
         int count = db.update(DBTables.TDownload.TABLE_NAME, values, selection, selectionArgs);
@@ -179,6 +185,7 @@ public class DownloadProvider extends ContentProvider {
         notifyContentChanged();
 
         if(count >0
+                && !TextUtils.isEmpty(id)
                 && values.containsKey(DBTables.TDownload.STATUS)
                 && values.getAsInteger(DBTables.TDownload.STATUS) == DownloadInfo.DownloadStatus.STATUS_PENDING) {
             lanuchDownload(Integer.valueOf(id));

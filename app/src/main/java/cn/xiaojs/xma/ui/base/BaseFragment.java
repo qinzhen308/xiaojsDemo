@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
@@ -90,11 +93,16 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    public void showEmptyView() {
+    public void showEmptyView(String emptyTitle) {
         if (mEmptyView == null) {
             mEmptyView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty, null);
             TextView tipView = (TextView) mEmptyView.findViewById(R.id.empty_desc);
-            tipView.setText("(空)");
+
+            if (TextUtils.isEmpty(emptyTitle)) {
+                emptyTitle = "(空)";
+            }
+
+            tipView.setText(emptyTitle);
             tipView.setVisibility(View.VISIBLE);
             if (mContent != null) {
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(

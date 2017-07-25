@@ -43,15 +43,14 @@
 
     <TextView
             android:id="@+id/material_download_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="手把手教你做人力资源"
             android:textColor="@color/font_black"
             android:textSize="@dimen/font_30px"
             android:layout_marginTop="@dimen/px23"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:layout_marginRight="@dimen/px80"
+            android:layout_marginRight="@dimen/px120"
             android:layout_marginLeft="@dimen/px29"
             android:layout_toRightOf="@id/material_download_thumbnail"
             />
@@ -59,7 +58,6 @@
     <TextView
             android:id="@+id/material_download_size"
             android:textSize="@dimen/font_24px"
-            android:text="0.8M"
             android:textColor="@color/summary_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
