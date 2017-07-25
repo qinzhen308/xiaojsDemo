@@ -201,6 +201,13 @@ public class Ctl {
 
     }
 
+    public class RecordedCourseState{
+        public static final String DRAFT="Draft";
+        public static final String REJECTED="Rejected";
+        public static final String ONSHELVES="OnShelves";
+        public static final String FROZEN="Frozen";
+    }
+
     /**
      * Returns the URL to a sized cover for specific CTL.
      * @param key

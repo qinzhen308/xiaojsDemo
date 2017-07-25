@@ -28,6 +28,7 @@ import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshBase;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshRecyclerView;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
@@ -39,6 +40,8 @@ import cn.xiaojs.xma.ui.lesson.xclass.SearchLessonActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
+import cn.xiaojs.xma.ui.recordlesson.util.RLessonFilterHelper;
+import cn.xiaojs.xma.ui.recordlesson.util.RecordLessonHelper;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -92,6 +95,11 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         mRecyclerView=mPullRecyclerView.getRefreshableView();
         stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container)));
 //        stateView=new LoadStatusViewDecoratee(null);
+        if(AccountDataManager.isTeacher(getActivity())){
+            mFilter.setVisibility(View.VISIBLE);
+        }else {
+            mFilter.setVisibility(View.GONE);
+        }
         return v;
     }
 
@@ -129,7 +137,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         dialog.setGroup2Title(R.string.course_state);
         dialog.setTimeSelection(group1Position);
         dialog.setStateSelection(group2Position);
-        dialog.setGroup1(getResources().getStringArray(R.array.lesson_filter_type)).setGroup2(getResources().getStringArray(R.array.lesson_filter_state));
+        dialog.setGroup1(getResources().getStringArray(R.array.recorded_lesson_filter_type)).setGroup2(getResources().getStringArray(R.array.recorded_lesson_filter_state));
         dialog.showAsDropDown(mFilterLine);
         mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_up, 0);
         dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -146,7 +154,6 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
 //                LessonFilterHelper.getType(group1Position);
 //                LessonFilterHelper.getState(group2Position);
                 dataPageLoader.refresh();
-
             }
         });
     }
@@ -210,8 +217,8 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
 
     private void getRecordLessonData(){
         RecordedLessonCriteria criteria=new RecordedLessonCriteria();
-        criteria.role="All";
-//        criteria.state="All";
+        criteria.role= RLessonFilterHelper.getType(group1Position);
+        criteria.state= RLessonFilterHelper.getState(group2Position);
         LessonDataManager.getRecordedCourses(getActivity(),criteria,mPagination , dataPageLoader);
     }
 

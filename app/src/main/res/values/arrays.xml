@@ -184,6 +184,19 @@
         <item>强行停止</item>
         <item>已取消</item>
     </string-array>
+
+    <string-array name="recorded_lesson_filter_type">
+        <item>全部</item>
+        <item>我开的课</item>
+        <item>我学的课</item>
+    </string-array>
+    <string-array name="recorded_lesson_filter_state">
+        <item>全部</item>
+        <item>待上架</item>
+        <item>待审核</item>
+        <item>审核通过</item>
+        <item>审核失败</item>
+    </string-array>
     <string-array name="opera_material_more">
         <item>重命名</item>
         <item>移动到</item>

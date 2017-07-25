@@ -31,6 +31,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ImportVideoActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
+import cn.xiaojs.xma.ui.recordlesson.util.RecordLessonHelper;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -246,6 +247,7 @@ public class RecordedLessonActivity extends BaseActivity {
     private void importVideo() {
         Intent i = new Intent(this, ImportVideoActivity.class);
         i.putExtra(ImportVideoActivity.EXTRA_TITLE,getString(R.string.import_video_tips));
+        i.putExtra(ImportVideoActivity.EXTRA_ALREADY_CHOICE_DATA, RecordLessonHelper.getIds(srcList));
         startActivityForResult(i,ImportVideoActivity.REQUEST_CODE);
     }
 

@@ -41,7 +41,7 @@
         android:layout_alignTop="@id/flag_view"
         android:layout_marginRight="@dimen/px17"
         android:text="待上课"
-        android:textColor="@color/class_orange"
+        android:textColor="@color/orange_point"
         android:textSize="@dimen/font_24px"
         android:visibility="visible" />
 

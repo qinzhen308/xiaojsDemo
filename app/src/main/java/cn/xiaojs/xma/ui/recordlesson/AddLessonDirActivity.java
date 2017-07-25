@@ -19,8 +19,8 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ImportVideoActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
+import cn.xiaojs.xma.ui.recordlesson.util.RecordLessonHelper;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
-import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 /**
@@ -98,6 +98,7 @@ public class AddLessonDirActivity extends BaseActivity {
         Intent i = new Intent(this, ImportVideoActivity.class);
         i.putExtra(ImportVideoActivity.EXTRA_CHOICE_MODE, AbsListView.CHOICE_MODE_SINGLE);
         i.putExtra(ImportVideoActivity.EXTRA_TITLE,getString(R.string.choice_inner_video));
+        i.putExtra(ImportVideoActivity.EXTRA_ALREADY_CHOICE_DATA,RecordLessonHelper.getIds(dirs));
         startActivityForResult(i,ImportVideoActivity.REQUEST_CODE);
     }
 
@@ -138,7 +139,7 @@ public class AddLessonDirActivity extends BaseActivity {
             ToastUtil.showToast(getApplicationContext(),"选择视频失败");
             return;
         }
-        RLLesson duplicationItem=RecordLessonHelper.isDuplication(dirs,docs);
+        RLLesson duplicationItem= RecordLessonHelper.isDuplication(dirs,docs);
         if(duplicationItem!=null){
             ToastUtil.showToast(getApplicationContext(),"该视频已经在《"+duplicationItem.name+"》中绑定");
             return;

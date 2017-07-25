@@ -88,11 +88,18 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     public void bindData(int position, RLesson data) {
         mData = data;
         titleView.setText(mData.title);
-//        if (Ctl.LiveLessonState.LIVE.equals(mData.state)) {
-//            statusView.setVisibility(INVISIBLE);
-//        } else {
-//            statusView.setVisibility(INVISIBLE);
-//        }
+        if (Ctl.RecordedCourseState.DRAFT.equals(mData.state)) {
+            statusView.setVisibility(VISIBLE);
+            statusView.setText("待上架");
+        }else if (Ctl.RecordedCourseState.FROZEN.equals(mData.state)) {
+            statusView.setVisibility(VISIBLE);
+            statusView.setText("待审核");
+        } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {
+            statusView.setVisibility(VISIBLE);
+            statusView.setText("审核失败");
+        }else {
+            statusView.setVisibility(INVISIBLE);
+        }
 
         if (mData.enroll != null) {
             memberView.setText(mData.enroll.current + "人报名");

@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.recordlesson;
+package cn.xiaojs.xma.ui.recordlesson.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,5 +59,22 @@ public class RecordLessonHelper {
             if(l.videoId.equals(target.id))return l;
         }
         return null;
+    }
+
+
+    public static ArrayList<String> getIds(List<RLDirectory> src){
+        ArrayList<String> ids=new ArrayList<>();
+        if(ArrayUtil.isEmpty(src)){
+            return ids;
+        }
+        for(RLDirectory dir:src){
+            if(ArrayUtil.isEmpty(dir.children)){
+                continue;
+            }
+            for(RLLesson lesson:dir.children){
+                ids.add(lesson.videoId);
+            }
+        }
+        return ids;
     }
 }

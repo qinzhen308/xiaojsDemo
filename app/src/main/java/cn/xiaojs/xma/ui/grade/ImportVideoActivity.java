@@ -49,6 +49,7 @@ public class ImportVideoActivity extends BaseActivity {
     public static final String EXTRA_CHOICE_MODE = "cmode";
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_CHOICE_DATA = "choice_data";
+    public static final String EXTRA_ALREADY_CHOICE_DATA = "already_choice_data";
     public static final int REQUEST_CODE=44;
 
     @BindView(R.id.list)
