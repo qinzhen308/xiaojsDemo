@@ -1,119 +1,89 @@
-package cn.xiaojs.xma.ui.lesson.xclass.view;
+package cn.xiaojs.xma.ui.recordlesson.model;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.widget.Toast;
+
+import java.util.Date;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.preference.AccountPref;
-import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.TeachLesson;
-import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.ui.base.AbsOpModel;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
-import cn.xiaojs.xma.ui.lesson.LessonBusiness;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
-import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.EditTimetableActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.recordlesson.EnrolledStudentsActivity;
+import cn.xiaojs.xma.ui.recordlesson.ManualRegistrationActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ShareUtil;
-import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 /**
- * Created by Paul Z on 2017/5/25.
+ * Created by Paul Z on 2017/7/25.
  */
 
-public class LOpModel extends AbsOpModel<CLesson> {
+public class RLOpModel extends AbsOpModel<RLesson> {
 
 
 
-    public LOpModel(int id){
+    public RLOpModel(int id){
         super(id);
     }
 
 
     @Override
-    public void onClick(Activity context,CLesson data,int position){
+    public void onClick(Activity context,RLesson data,int position){
         switch (getId()){
             case OP_APPLY:
                 //报名页
                 enterApplyPage(context,data.id);
                 break;
-            case OP_CANCEL_LESSON:
-                cancelLesson(context,data);
-                break;
-            case OP_CANCEL_SUBMIT:
-
-                break;
-            case OP_CLASS_INFO:
-                classInfo(context, data.classInfo.id,false);
-                break;
-            case OP_DATABASE2:
-//                enterDatabase(context);
-                databank(context,data);
-                break;
             case OP_DELETE:
-                if(data==null){
-                    deleteNativeLesson(context,position);
-                }else {
-                    delete(context,position,data);
-                }
+//                if(data==null){
+//                    deleteNativeLesson(context,position);
+//                }else {
+//                    delete(context,position,data);
+//                }
                 break;
             case OP_EDIT:
-                edit(context, data);
-                break;
-            case OP_ENTER:
-                enterClass(context, data);
-                break;
-            case OP_ENTER_2:
-                enterClass(context, data);
+//                edit(context, data);
                 break;
             case OP_LOOK:
                 detail(context, data.id);
                 break;
-            case OP_MODIFY_TIME:
-                modifyLesson(context,data);
-                break;
             case OP_PRIVATE:
-                cancelPublish(context,data);
+//                cancelPublish(context,data);
                 break;
             case OP_PUBLIC:
-                publish(context,data);
+//                publish(context,data);
                 break;
             case OP_PUBLISH:
                 //上架
                 shelves(context,data,position);
                 break;
             case OP_CREATE_LESSON_AGAIN:
-                lessonAgain(context,data);
-                break;
-            case OP_SCHEDULE:
-                enterSchedule(context, data.classInfo.id, data.classInfo.title,isTeaching(context,data));
+//                lessonAgain(context,data);
                 break;
             case OP_SHARE:
                 share(context,data);
@@ -121,28 +91,17 @@ public class LOpModel extends AbsOpModel<CLesson> {
             case OP_SIGNUP:
                 registration(context,data);
                 break;
-            case OP_SUBMIT:
-                break;
             case OP_CANCEL_CHECK:
-                offShelves(context, data);
-                break;
-            case OP_SHARE2:
-                share(context,data);
-                break;
-            case OP_DATABASE1:
-                databank(context,data);
-                break;
-            case OP_AGREE_INVITE:
-                dealAck(context,position,data,Ctl.ACKDecision.ACKNOWLEDGE);
-                break;
-            case OP_DISAGREE_INVITE:
-                dealAck(context,position,data,Ctl.ACKDecision.REFUSED);
+//                offShelves(context, data);
                 break;
             case OP_REJECT_REASON:
                 rejectReason(context,data);
                 break;
             case OP_RECREATE_LESSON:
-                lessonAgain(context,data);
+//                lessonAgain(context,data);
+                break;
+            case OP_APPLY_STUDENTS_LIST:
+                enterApplyStudents(context,data);
                 break;
 
         }
@@ -167,11 +126,11 @@ public class LOpModel extends AbsOpModel<CLesson> {
         ((IUpdateMethod)context).updateData(justNative);
     }
 
-    private void updateJustItem(Activity context,int position,CLesson cLesson){
+    private void updateJustItem(Activity context,int position,RLesson cLesson){
         ((IUpdateMethod)context).updateItem(position,cLesson);
     }
 
-    private void removeJustItem(Activity context,int position,CLesson cLesson){
+    private void removeJustItem(Activity context,int position,RLesson cLesson){
         ((IUpdateMethod)context).updateItem(position,cLesson,"remove");
     }
 
@@ -182,44 +141,25 @@ public class LOpModel extends AbsOpModel<CLesson> {
     }
 
 
-    public static void enterSchedule(Activity context,String classId,String title,boolean teaching){
-        ClassScheduleActivity.invoke(context,classId,title,teaching);
-    }
-
-
-    public void classInfo(Activity context,String classId,boolean teaching){
-        Intent intent=new Intent(context,ClassInfoActivity.class);
-        intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,classId);
-        context.startActivity(intent);
-    }
-
     //进入报名页
     public void enterApplyPage(Activity context,String lessonId){
-        context.startActivity(new Intent(context,LessonHomeActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,lessonId));
+        context.startActivity(new Intent(context,ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,lessonId));
     }
 
 
     //上架
-    private void shelves(final Activity context,final CLesson bean,final int position) {
+    private void shelves(final Activity context,final RLesson bean,final int position) {
         showProgress(context);
-        LessonDataManager.requestPutLessonOnShelves(context, bean.id, new APIServiceCallback() {
+        LessonDataManager.putRecordedCourseOnShelves(context, bean.id, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
                 cancelProgress(context);
 
                 //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
                 if (AccountDataManager.isVerified(context)) {
-
-                    if (TextUtils.isEmpty(bean.ticket)) {
-                        //如果没有ticket，需要重新调用接口，刷新课的信息。
-                        updateData(context,false);
-
-                    }else {
-                        bean.state=LessonState.PENDING_FOR_LIVE;
-                        ToastUtil.showToast(context, R.string.shelves_ok);
-                        updateData(context,true);
-                    }
-
+                    bean.state=LessonState.PENDING_FOR_LIVE;
+                    ToastUtil.showToast(context, R.string.shelves_ok);
+                    updateData(context,true);
                 }else {
                     bean.state=LessonState.PENDING_FOR_APPROVAL;
                     ToastUtil.showToast(context, R.string.shelves_need_examine);
@@ -292,36 +232,6 @@ public class LOpModel extends AbsOpModel<CLesson> {
 
     }
 
-    //同意或者拒绝
-    private void dealAck(final Activity context, final int position, final CLesson bean, final int descion) {
-
-        DealAck ack = new DealAck();
-        ack.decision = descion;
-
-        showProgress(context);
-        LessonDataManager.acknowledgeLesson(context, bean.id, ack, new APIServiceCallback() {
-            @Override
-            public void onSuccess(Object object) {
-                cancelProgress(context);
-                if (descion == Ctl.ACKDecision.ACKNOWLEDGE) {
-                    bean.state=LessonState.ACKNOWLEDGED;
-                    Toast.makeText(context, "您已同意", Toast.LENGTH_SHORT).show();
-                    updateJustItem(context,position,bean);
-
-                } else {
-                    Toast.makeText(context, "您已拒绝", Toast.LENGTH_SHORT).show();
-                    removeJustItem(context,position,bean);
-                }
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress(context);
-                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     //查看详情
     private void detail(Activity context,String id) {
@@ -335,33 +245,6 @@ public class LOpModel extends AbsOpModel<CLesson> {
         //modifyLesson(bean);
     }
 
-    //资料库
-    private void databank(Activity context,CLesson cl) {
-        if(Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)){
-            Intent intent = new Intent(context, ClassMaterialActivity.class);
-//        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
-            intent.putExtra(ClassMaterialActivity.EXTRA_ID, cl.id);
-            intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, cl.title);
-            intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)?Collaboration.SubType.STANDA_LONE_LESSON:Collaboration.SubType.PRIVATE_CLASS);
-            context.startActivity(intent);
-        }else if(cl.classInfo!=null){
-            Intent intent = new Intent(context, ClassMaterialActivity.class);
-//        intent.putExtra(ClassMaterialActivity.EXTRA_DELETEABLE,true);
-            intent.putExtra(ClassMaterialActivity.EXTRA_ID, cl.classInfo.id);
-            intent.putExtra(ClassMaterialActivity.EXTRA_TITLE, cl.classInfo.title);
-            intent.putExtra(ClassMaterialActivity.EXTRA_SUBTYPE, Account.TypeName.STAND_ALONE_LESSON.equals(cl.type)?Collaboration.SubType.STANDA_LONE_LESSON:Collaboration.SubType.PRIVATE_CLASS);
-            context.startActivity(intent);
-        }
-
-    }
-
-    //进入教室
-    private void enterClass(Activity context,CLesson data) {
-        Intent i = new Intent();
-        i.putExtra(Constants.KEY_TICKET, data.classInfo!=null&&!TextUtils.isEmpty(data.classInfo.ticket)?data.classInfo.ticket:data.ticket);
-        i.setClass(context, ClassroomActivity.class);
-        context.startActivity(i);
-    }
 
     private void modifyLesson(Activity context,CLesson bean) {
         Intent intent = new Intent(context, ModifyLessonActivity.class);
@@ -409,7 +292,7 @@ public class LOpModel extends AbsOpModel<CLesson> {
                 public void onSuccess(Object object) {
                     cancelProgress(context);
                     ToastUtil.showToast(context, R.string.delete_success);
-                    removeJustItem(context, pos, bean);
+//                    removeJustItem(context, pos, bean);
                 }
 
                 @Override
@@ -424,7 +307,7 @@ public class LOpModel extends AbsOpModel<CLesson> {
                 public void onSuccess(Object object) {
                     cancelProgress(context);
                     ToastUtil.showToast(context, R.string.delete_success);
-                    removeJustItem(context, pos, bean);
+//                    removeJustItem(context, pos, bean);
                 }
 
                 @Override
@@ -450,33 +333,26 @@ public class LOpModel extends AbsOpModel<CLesson> {
     }
 
     //分享
-    private void share(Context context,CLesson bean) {
+    private void share(Context context,RLesson bean) {
 
         if (bean == null) return;
-
-        String startTime = TimeUtil.format(bean.schedule.getStart().getTime(),
-                TimeUtil.TIME_YYYY_MM_DD_HH_MM);
-
-        String name = "";
-        if (bean.teacher != null ) {
-            name = bean.teacher.name;
+        String date = null;
+        if(bean.expire!=null){
+            date=ScheduleUtil.getDateYMD(new Date(bean.createdOn.getTime()+ ScheduleUtil.DAY*bean.expire.effective));
+        }else {
+            date="永久";
         }
-
-        String shareUrl = ApiManager.getShareLessonUrl(bean.id,bean.type);
-
-        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
+        String name = "";
+        if (!ArrayUtil.isEmpty(bean.teacher)) {
+            name = bean.teacher[0].name;
+        }
+        String shareUrl = ApiManager.getShareLessonUrl(bean.id,"asdasdasdas");
+        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(date).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
     }
 
     //报名注册
-    private void registration(Context context,CLesson bean) {
-        Schedule schedule = bean.schedule;
-        long start = (schedule != null && schedule.getStart() != null) ? schedule.getStart().getTime() : 0;
-        LessonBusiness.enterEnrollRegisterPage(context,
-                bean.id,
-                "",
-                bean.title,
-                start,
-                schedule != null ? schedule.getDuration() : 0);
+    private void registration(Context context,RLesson bean) {
+        context.startActivity(new Intent(context,RecordedLessonDetailActivity.class).putExtra(RecordedLessonDetailActivity.EXTRA_RLESSON_ID,bean.id));
     }
 
     //发布到主页
@@ -549,11 +425,15 @@ public class LOpModel extends AbsOpModel<CLesson> {
         context.startActivityForResult(intent, CourseConstant.CODE_LESSON_AGAIN);
     }
 
-    private void rejectReason(Activity context, CLesson bean){
+    private void rejectReason(Activity context, RLesson bean){
         Common2Dialog dialog=new Common2Dialog(context);
         dialog.setTitle("取消原因");
-        dialog.setDesc("原因：不知道");
+        dialog.setDesc(bean.reason);
         dialog.show();
+    }
+
+    public void enterApplyStudents(Context context,RLesson bean){
+        context.startActivity(new Intent(context,EnrolledStudentsActivity.class));
     }
 
     //判断权限是否大于等于班主任
@@ -573,5 +453,6 @@ public class LOpModel extends AbsOpModel<CLesson> {
     private void deleteNativeLesson(final Activity context,final int pos) {
         ((IUpdateMethod)context).updateItem(pos,null,"remove");
     }
+
 
 }

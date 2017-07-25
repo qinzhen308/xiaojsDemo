@@ -206,6 +206,7 @@ public class Ctl {
         public static final String REJECTED="Rejected";
         public static final String ONSHELVES="OnShelves";
         public static final String FROZEN="Frozen";
+        public static final String PENDING_FOR_APPROVAL="PendingForApproval";
     }
 
     /**

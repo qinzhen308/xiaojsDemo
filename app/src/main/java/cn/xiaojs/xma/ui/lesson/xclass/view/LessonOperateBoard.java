@@ -25,13 +25,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.ui.base.AbsOpModel;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/5/25.
  */
-public class LessonOperateBoard extends Dialog implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
+public class LessonOperateBoard<T> extends Dialog implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
     @BindView(R.id.recyclerview1)
     RecyclerView recyclerview1;
@@ -41,9 +41,9 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     Button cancel;
     private View mContentView;// dialog content view
 
-    private List<LOpModel> opGroup1 =new ArrayList<>();
+    private List<AbsOpModel<T>> opGroup1 =new ArrayList<>();
 
-    private List<LOpModel> opGroup2 =new ArrayList<>();
+    private List<AbsOpModel<T>> opGroup2 =new ArrayList<>();
 
     ItemAdapter mAdapter1;
     ItemAdapter mAdapter2;
@@ -63,7 +63,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.drawable.ic_op_submit,R.drawable.ic_op_cancel_check,
             R.drawable.ic_op_share2,R.drawable.ic_op_database1,
             R.drawable.ic_op_agree_invite,R.drawable.ic_op_disagree_invite,
-            R.drawable.ic_op_reject_reason,R.drawable.ic_op_recreate_lesson
+            R.drawable.ic_op_reject_reason,R.drawable.ic_op_recreate_lesson,
+            R.drawable.ic_op_apply_students_list
     };
 
     //请一定按顺序，并且和LOpModel里面的OP_..顺序保持一致
@@ -80,18 +81,12 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
             R.string.lesson_op_submit,R.string.lesson_op_cancel_check,
             R.string.lesson_op_share,R.string.lesson_op_database,
             R.string.lesson_op_agree_invite,R.string.lesson_op_disagree_invite,
-            R.string.lesson_op_reject_reason,R.string.lesson_op_recreate_lesson
+            R.string.lesson_op_reject_reason,R.string.lesson_op_recreate_lesson,
+            R.string.lesson_op_apply_students_list
     };
 
     private OnDialogCloseListener mOnDismissListener;
 
-    public final static List<LOpModel> commonOps=new ArrayList<>(4);
-    static {
-        commonOps.add(new LOpModel(LOpModel.OP_APPLY));
-        commonOps.add(new LOpModel(LOpModel.OP_DATABASE2));
-        commonOps.add(new LOpModel(LOpModel.OP_ENTER_2));
-        commonOps.add(new LOpModel(LOpModel.OP_SHARE2));
-    }
 
     public LessonOperateBoard(Context context) {
         super(context, R.style.CommonDialog);
@@ -106,12 +101,6 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     protected LessonOperateBoard(Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
         init();
-    }
-
-
-
-    public static List<LOpModel> getCommonOps(){
-        return commonOps;
     }
 
     private void init() {
@@ -159,7 +148,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
-    public LessonOperateBoard setOpGroup1(List<LOpModel> ops) {
+    public LessonOperateBoard setOpGroup1(List<AbsOpModel<T>> ops) {
         this.opGroup1 = ops;
         mAdapter1.setList(ops);
         mAdapter1.notifyDataSetChanged();
@@ -171,7 +160,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         return this;
     }
 
-    public LessonOperateBoard setOpGroup2(List<LOpModel> ops) {
+    public LessonOperateBoard setOpGroup2(List<AbsOpModel<T>> ops) {
         this.opGroup2 = ops;
         mAdapter2.setList(ops);
         mAdapter2.notifyDataSetChanged();
@@ -208,9 +197,9 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
     }
 
     class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
-        private List<LOpModel> list;
+        private List<AbsOpModel<T>> list;
 
-        private void setList(List<LOpModel> list){
+        private void setList(List<AbsOpModel<T>> list){
             this.list=list;
         }
 
@@ -260,7 +249,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
-    public void show(List<LOpModel> ops){
+    public void show(List<AbsOpModel<T>> ops){
         this.opGroup2 =ops;
         mAdapter2.setList(ops);
         mAdapter2.notifyDataSetChanged();
@@ -271,8 +260,8 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         }
     }
 
-    CLesson data;
-    public LessonOperateBoard setData(CLesson data){
+    T data;
+    public LessonOperateBoard setData(T data){
         this.data=data;
         return this;
     }
@@ -288,7 +277,7 @@ public class LessonOperateBoard extends Dialog implements DialogInterface.OnCanc
         return this;
     }
 
-    public LessonOperateBoard maybe(Activity activity,CLesson data,int position){
+    public LessonOperateBoard maybe(Activity activity,T data,int position){
         return setActivity(activity).setData(data).setPosition(position);
     }
 
