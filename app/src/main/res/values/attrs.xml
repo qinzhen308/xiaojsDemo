@@ -326,4 +326,8 @@
         <attr name="labelSrc" format="reference|color">
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="bottom_line">
+        <attr name="showLine" format="boolean"/>
+    </declare-styleable>
 </resources>

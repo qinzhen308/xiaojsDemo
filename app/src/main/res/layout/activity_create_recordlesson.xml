@@ -9,15 +9,26 @@
             android:id="@+id/lay_tips"
             />
 
-    <Button
-            android:id="@+id/import_btn"
+    <FrameLayout
+            android:id="@+id/btn_add"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px90"
-            android:text="@string/import_video_tips"
-            android:textColor="@color/font_dark_gray"
-            android:textSize="@dimen/font_30px"
-            android:background="@color/white"
-            android:layout_marginTop="@dimen/px30"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px40"
+            android:layout_marginBottom="@dimen/px40"
+            android:background="@color/white">
 
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px90"
+                android:drawableLeft="@drawable/ic_add"
+                android:gravity="center"
+                android:text="@string/import_video"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/common_text"
+                android:layout_gravity="center"
+                android:drawablePadding="@dimen/px20"
+                />
+
+    </FrameLayout>
 
 </LinearLayout>

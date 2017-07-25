@@ -17,7 +17,9 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import butterknife.BindView;
@@ -69,6 +71,8 @@ public class ImportVideoActivity extends BaseActivity {
     private String folderName;
     private int choiceMode;
 
+    private HashSet<String> disableIds;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_import_video);
@@ -106,6 +110,8 @@ public class ImportVideoActivity extends BaseActivity {
 
         choiceMode = getIntent().getIntExtra(EXTRA_CHOICE_MODE, AbsListView.CHOICE_MODE_MULTIPLE);
         String title = getIntent().getStringExtra(Intent.EXTRA_TITLE);
+        disableIds = (HashSet<String>) getIntent().getSerializableExtra(EXTRA_ALREADY_CHOICE_DATA);
+
         if (TextUtils.isEmpty(title)) {
             setMiddleTitle(R.string.import_video);
         }else {
@@ -223,6 +229,9 @@ public class ImportVideoActivity extends BaseActivity {
 
     public class DataAdapter extends AbsListAdapter<LibDoc, DataAdapter.Holder> {
 
+        private int choiceResId;
+        private int disableResId;
+
 
         class Holder extends BaseHolder {
 
@@ -238,19 +247,22 @@ public class ImportVideoActivity extends BaseActivity {
 
             public Holder(View view) {
                 super(view);
-
-                if (choiceMode == AbsListView.CHOICE_MODE_SINGLE) {
-                    checkedView.setCheckMarkDrawable(R.drawable.single_check_selector);
-                }else {
-                    checkedView.setCheckMarkDrawable(R.drawable.multi_check_selector);
-                }
-
             }
         }
 
 
         public DataAdapter(Context context, PullToRefreshListView listView) {
             super(context, listView);
+
+            if (choiceMode == AbsListView.CHOICE_MODE_SINGLE) {
+                choiceResId = R.drawable.single_check_selector;
+                disableResId = R.drawable.ic_choice_single_disable;
+            }else {
+                choiceResId = R.drawable.multi_check_selector;
+                disableResId = R.drawable.ic_choice_multipul_disable;
+            }
+
+
         }
 
         @Override
@@ -268,6 +280,7 @@ public class ImportVideoActivity extends BaseActivity {
 
         }
 
+
         @Override
         public boolean isEnabled(int position) {
 
@@ -275,6 +288,14 @@ public class ImportVideoActivity extends BaseActivity {
                 return false;
 
             LibDoc bean = getItem(position);
+
+            if (disableIds != null && disableIds.size() >0) {
+                if (disableIds.contains(bean.id)) {
+                    return false;
+                }
+            }
+
+
             if (bean.showAction
                     || FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)
                     || FileUtil.STEAMIMG == FileUtil.getFileType(bean.mimeType)){
@@ -288,8 +309,18 @@ public class ImportVideoActivity extends BaseActivity {
         protected void setViewContent(Holder holder, LibDoc bean, int position) {
 
             if (bean.showAction || !isEnabled(position)) {
-                holder.checkedView.setVisibility(View.INVISIBLE);
+
+                if (disableIds!=null && disableIds.contains(bean.id)) {
+                    holder.checkedView.setCheckMarkDrawable(disableResId);
+                    holder.checkedView.setVisibility(View.VISIBLE);
+                }else {
+                    holder.checkedView.setCheckMarkDrawable(choiceResId);
+                    holder.checkedView.setVisibility(View.INVISIBLE);
+                }
+
             } else {
+
+                holder.checkedView.setCheckMarkDrawable(choiceResId);
                 holder.checkedView.setVisibility(View.VISIBLE);
             }
 

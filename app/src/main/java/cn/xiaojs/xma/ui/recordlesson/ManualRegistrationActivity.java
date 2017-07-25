@@ -42,7 +42,7 @@ public class ManualRegistrationActivity extends BaseActivity {
         tipsContentView.setText(R.string.phone_usage_tips);
     }
 
-    @OnClick({R.id.left_image,R.id.right_image2, R.id.import_btn,R.id.complete_btn, R.id.lesson_creation_tips_close})
+    @OnClick({R.id.left_image,R.id.right_image2,R.id.complete_btn, R.id.lesson_creation_tips_close})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:                  //返回
