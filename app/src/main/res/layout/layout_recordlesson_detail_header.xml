@@ -33,7 +33,6 @@
                 android:layout_toRightOf="@id/ltitle"
                 android:layout_alignBaseline="@id/ltitle"
                 android:layout_marginLeft="@dimen/px95"
-                android:text="eee"
                 />
         <TextView
                 android:id="@+id/lcategory"
@@ -56,7 +55,6 @@
                 android:textColor="@color/font_black"
                 android:layout_alignBaseline="@id/lcategory"
                 android:layout_alignLeft="@id/lesson_title"
-                android:text="jineng"
                 />
 
         <TextView
@@ -80,7 +78,6 @@
                 android:textColor="@color/font_black"
                 android:layout_alignBaseline="@id/lenroll"
                 android:layout_alignLeft="@id/lesson_title"
-                android:text="dddd"
                 />
 
         <TextView
@@ -105,7 +102,6 @@
                 android:textColor="@color/font_black"
                 android:layout_alignBaseline="@id/lvalid"
                 android:layout_alignLeft="@id/lesson_title"
-                android:text="dddd"
                 />
     </RelativeLayout>
 
@@ -186,7 +182,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_30px"
                 android:textColor="@color/font_black"
-                android:text="dsdsvsdvsdvasdasdv"
                 android:minLines="3"
                 android:layout_below="@id/linfo"
                 android:layout_marginTop="@dimen/px20"

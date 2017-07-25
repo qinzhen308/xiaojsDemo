@@ -1001,5 +1001,6 @@
     <string name="phone_usage_tips">手机号将作为学生登录小教室的唯一账号</string>
     <string name="telc_category">学科类目</string>
     <string name="valid">有效期</string>
+    <string name="valid_forever">永久</string>
 
 </resources>

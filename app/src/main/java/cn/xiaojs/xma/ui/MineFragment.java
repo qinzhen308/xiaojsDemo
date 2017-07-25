@@ -180,8 +180,8 @@ public class MineFragment extends BaseFragment {
 //                break;
             case R.id.my_document_layout:
                 AnalyticEvents.onEvent(getActivity(),10);
-                //startActivity(new Intent(mContext, MaterialActivity.class));
-                startActivity(new Intent(mContext, RecordedLessonDetailActivity.class));
+                startActivity(new Intent(mContext, MaterialActivity.class));
+                //startActivity(new Intent(mContext, RecordedLessonDetailActivity.class));
                 break;
 //            case R.id.my_favorites_layout:
 //                break;

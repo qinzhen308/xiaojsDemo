@@ -35,6 +35,8 @@ import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
 
 public class RecordedLessonDetailActivity extends BaseActivity {
 
+    public static final String EXTRA_RLESSON_ID = "rl_id";
+
 
     @BindView(R.id.list)
     ListView listView;
@@ -61,6 +63,10 @@ public class RecordedLessonDetailActivity extends BaseActivity {
     TextView lCoverView;
 
     @Nullable
+    @BindView(R.id.c_line)
+    View clineView;
+
+    @Nullable
     @BindView(R.id.lesson_cover)
     ImageView lessonCoverView;
 
@@ -71,6 +77,10 @@ public class RecordedLessonDetailActivity extends BaseActivity {
     @Nullable
     @BindView(R.id.lesson_tags)
     ColorTextFlexboxLayout labelLayout;
+
+    @Nullable
+    @BindView(R.id.t_line)
+    View tlineView;
 
     @Nullable
     @BindView(R.id.lesson_info)
@@ -89,10 +99,10 @@ public class RecordedLessonDetailActivity extends BaseActivity {
 
 
     @Optional
-    @OnClick({R.id.back_btn})
+    @OnClick({R.id.left_image})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_btn:       //返回
+            case R.id.left_image:       //返回
                 finish();
                 break;
         }
@@ -108,7 +118,7 @@ public class RecordedLessonDetailActivity extends BaseActivity {
         adapter = new RecordedLessonListAdapter(this);
         listView.setAdapter(adapter);
 
-        lessonId = "5975cb5235e98db668728868";
+        lessonId = getIntent().getStringExtra(EXTRA_RLESSON_ID);
 
         requestDetail();
 
@@ -152,12 +162,15 @@ public class RecordedLessonDetailActivity extends BaseActivity {
 
         if(detail.expire !=null) {
             validView.setText(detail.expire.effective + "天");
+        }else {
+            validView.setText(R.string.valid_forever);
         }
 
         String cover = detail.cover;
         if (TextUtils.isEmpty(cover)) {
             lCoverView.setVisibility(View.GONE);
             lessonCoverView.setVisibility(View.GONE);
+            clineView.setVisibility(View.GONE);
         }else {
 
             Dimension dimension = new Dimension();
@@ -182,13 +195,14 @@ public class RecordedLessonDetailActivity extends BaseActivity {
         }else {
             lTagView.setVisibility(View.GONE);
             labelLayout.setVisibility(View.GONE);
+            tlineView.setVisibility(View.GONE);
         }
 
 
         if (detail.overview != null  && !TextUtils.isEmpty(detail.overview.getText())) {
             lessonInfoView.setText(detail.overview.getText());
         }else {
-            lessonInfoView.setText("无");
+            lessonInfoView.setText(R.string.lesson_no_introduction);
         }
 
 
