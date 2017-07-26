@@ -64,6 +64,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
@@ -491,6 +492,25 @@ public class LessonRequest extends ServiceRequest {
     public void getRecordedCourseChapters(String course,String chapter) {
         Call<ArrayList<RLChapter>> call = getService().getRecordedCourseChapters(course,chapter);
         enqueueRequest(APIType.GET_RECORDED_COURSE_CHAPTERS, call);
+    }
+
+    public void getRecordedCourseStudents(String course,RLStudentsCriteria criteria, Pagination pagination) {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+        Call<CollectionPage<StudentEnroll>> call = getService().getRecordedCourseStudents(course,criteriaJsonstr,paginationJsonstr);
+        enqueueRequest(APIType.GET_RECORDED_COURSE_STUDENTS, call);
+    }
+
+    public void addRecordedCourseStudent(String course,ClassEnrollParams enrollParams) {
+        Call<ResponseBody> call = getService().addRecordedCourseStudent(course,enrollParams);
+        enqueueRequest(APIType.ADD_RECORDED_COURSE_STUDENT, call);
     }
 
 

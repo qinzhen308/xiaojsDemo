@@ -54,6 +54,7 @@ import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
+import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
@@ -485,6 +486,15 @@ public interface XiaojsService {
     @GET("/v1/ctl/courses/recorded/{course}/chapters/{chapter}")
     Call<ArrayList<RLChapter>> getRecordedCourseChapters(@Path("course") String course,
                                               @Path("chapter") String chapterid);
+
+    @GET("/v1/ctl/courses/recorded/{course}/students/{criteria}/{pagination}")
+    Call<CollectionPage<StudentEnroll>> getRecordedCourseStudents(@Path("course") String course,
+                                                         @Path("criteria") String criteria,
+                                                         @Path("pagination") String pagination);
+
+    @PATCH("/v1/ctl/courses/recorded/{course}/students")
+    Call<ResponseBody> addRecordedCourseStudent(@Path("course") String course,
+                                                         @Body ClassEnrollParams enroll);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

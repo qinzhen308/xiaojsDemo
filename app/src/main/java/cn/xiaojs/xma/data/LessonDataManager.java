@@ -60,6 +60,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
@@ -502,12 +503,13 @@ public class LessonDataManager {
         int page = pagination.getPage();
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule4Lesson(classid,options.getOptions(), limit, page);
+        lessonRequest.getClassesSchedule4Lesson(classid, options.getOptions(), limit, page);
     }
 
 
     /**
      * 获取热门班
+     *
      * @param context
      * @param limit
      * @param callback
@@ -517,7 +519,7 @@ public class LessonDataManager {
                                      APIServiceCallback<CollectionResult<PrivateClass>> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getClassesSchedule(Account.TypeName.CLASS, limit,"NotHumanRemoved");
+        lessonRequest.getClassesSchedule(Account.TypeName.CLASS, limit, "NotHumanRemoved");
     }
 
     /**
@@ -536,7 +538,7 @@ public class LessonDataManager {
      * 可用于排课前的检查，包括检查老师的状态、上课日程是否冲突 .
      */
     public static boolean checkOverlap(Context context,
-                                    CheckOverlapParams params) throws Exception {
+                                       CheckOverlapParams params) throws Exception {
 
         LessonRequest lessonRequest = new LessonRequest(context, null);
         return lessonRequest.checkOverlapSync(params);
@@ -639,18 +641,20 @@ public class LessonDataManager {
 
     /**
      * A person apply for join as student for the class
+     *
      * @param context
      * @param classid
      * @param callback
      */
     public static void joinClass(Context context, String classid, JoinClassParams joinClassParams, APIServiceCallback<ResponseBody> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.joinClass(classid,joinClassParams);
+        lessonRequest.joinClass(classid, joinClassParams);
 
     }
 
     /**
      * Approved or rejected the person apply for join class as student.
+     *
      * @param context
      * @param joinId
      * @param reason
@@ -667,8 +671,9 @@ public class LessonDataManager {
 
     /**
      * Remove a class.
-     Can only be removed if the state as Idle. if there are unfinished lessons in the class,
-     please cancelled or removed the lessons if you want to do this .
+     * Can only be removed if the state as Idle. if there are unfinished lessons in the class,
+     * please cancelled or removed the lessons if you want to do this .
+     *
      * @param context
      * @param classid
      * @param callback
@@ -681,6 +686,7 @@ public class LessonDataManager {
 
     /**
      * 编辑班课
+     *
      * @param context
      * @param classId
      * @param lessonId
@@ -700,6 +706,7 @@ public class LessonDataManager {
 
     /**
      * 删除班课
+     *
      * @param context
      * @param classId
      * @param lessonId
@@ -716,6 +723,7 @@ public class LessonDataManager {
 
     /**
      * 取消班课.
+     *
      * @param context
      * @param classId
      * @param lessonId
@@ -733,6 +741,7 @@ public class LessonDataManager {
 
     /**
      * Create Recorded Course
+     *
      * @param context
      * @param recordLesson
      * @param callback
@@ -746,6 +755,7 @@ public class LessonDataManager {
 
     /**
      * Requests to put the specific recorded course on shelves.
+     *
      * @param context
      * @param course
      * @param callback
@@ -759,6 +769,7 @@ public class LessonDataManager {
 
     /**
      * Returns a collection of standalone lessons that matched the specified criteria.
+     *
      * @param context
      * @param pagination
      * @param start
@@ -803,42 +814,62 @@ public class LessonDataManager {
                                           Pagination pagination,
                                           APIServiceCallback<CollectionPage<RLesson>> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getRecordedCourses(criteria,pagination);
+        lessonRequest.getRecordedCourses(criteria, pagination);
     }
 
 
     /**
      * Returns detailed data for the recordedCourse.
+     *
      * @param context
      * @param course
      * @param callback
      */
     public static void getRecordedCourse(Context context,
-                                   String course,
-                                   APIServiceCallback<RLessonDetail> callback) {
+                                         String course,
+                                         APIServiceCallback<RLessonDetail> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCourse(course);
     }
 
     /**
      * Returns detailed data for the recordedCourse in public state.
+     *
      * @param context
      * @param course
      * @param callback
      */
     public static void getRecordedCoursePublic(Context context,
-                                  String course,
-                                  APIServiceCallback<RLessonDetail> callback) {
+                                               String course,
+                                               APIServiceCallback<RLessonDetail> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCoursePublic(course);
     }
 
     public static void getRecordedCourseChapters(Context context,
-                                  String course,
-                                  String chapter,
-                                  APIServiceCallback<ArrayList<RLChapter>> callback) {
+                                                 String course,
+                                                 String chapter,
+                                                 APIServiceCallback<ArrayList<RLChapter>> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
-        lessonRequest.getRecordedCourseChapters(course,chapter);
+        lessonRequest.getRecordedCourseChapters(course, chapter);
+    }
+
+
+    public static void getRecordedCourseStudents(Context context,
+                                                 String course,
+                                                 RLStudentsCriteria criteria,
+                                                 Pagination pagination,
+                                                 APIServiceCallback<CollectionPage<StudentEnroll>> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getRecordedCourseStudents(course, criteria, pagination);
+    }
+
+    public static void addRecordedCourseStudent(Context context,
+                                                String course,
+                                                ClassEnrollParams enrollParams,
+                                                APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.addRecordedCourseStudent(course, enrollParams);
     }
 
 }
