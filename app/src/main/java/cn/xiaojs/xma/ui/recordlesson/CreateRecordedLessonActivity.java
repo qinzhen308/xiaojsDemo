@@ -437,10 +437,8 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
             lesson.effective=Long.valueOf(daysStr);
         }
         showProgress(false);
-        lesson.enroll=new Enroll();
-        lesson.enroll.mandatory=enrollSwitcher.isChecked();
-        lesson.enroll.max=0;
-
+        lesson.enroll=new CRecordLesson.EnrollMode();
+        lesson.enroll.mode=enrollSwitcher.isChecked()?Ctl.JoinMode.VERIFICATION:Ctl.JoinMode.OPEN;
 
         TeachLead lead=new TeachLead();
         lead.leads=new String[]{AccountDataManager.getAccountID(this)};
