@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cn.xiaojs.xma.model.LiveLesson;
+import cn.xiaojs.xma.model.recordedlesson.EnrollMode;
 
 /**
  * Created by maxiaobao on 2017/7/21.
@@ -27,9 +28,5 @@ public class CRecordLesson {
     public CChapter[] chapters;
 
 
-    public static class EnrollMode{
-        public int mode;
-        public int max;
-    }
 
 }

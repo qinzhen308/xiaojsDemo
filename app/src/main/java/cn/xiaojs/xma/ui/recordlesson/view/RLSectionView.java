@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,41 +18,39 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 
 /**
- * Created by Paul Z on 2017/7/18.
+ * Created by Paul Z on 2017/7/26.
  */
 
-public class RLDirectoryView extends LinearLayout implements IViewModel<RLDirectory> {
+public class RLSectionView extends LinearLayout implements IViewModel<Section> {
 
 
-    @BindView(R.id.check_view)
-    TextView checkView;
+
     @BindView(R.id.tv_name)
     TextView tvName;
-    @BindView(R.id.drag_handle)
-    ImageView dragHandle;
     @BindView(R.id.tv_lesson_count)
     TextView tvLessonCount;
 
-    RLDirectory mData;
+    Section mData;
+
     @BindColor(R.color.main_orange)
     int main_orange;
 
-
-    public RLDirectoryView(Context context) {
+    public RLSectionView(Context context) {
         super(context);
         init();
     }
 
-    public RLDirectoryView(Context context, @Nullable AttributeSet attrs) {
+    public RLSectionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public RLDirectoryView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RLSectionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -66,9 +63,9 @@ public class RLDirectoryView extends LinearLayout implements IViewModel<RLDirect
     }
 
     @Override
-    public void bindData(int position, RLDirectory data) {
+    public void bindData(int position, Section data) {
         mData=data;
-        tvName.setText(data.name);
+        tvName.setText(data.title);
         SpannableString ss=new SpannableString("共" + mData.getChildrenCount() + "节课");
         ss.setSpan(new ForegroundColorSpan(main_orange),1,ss.length()-2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvLessonCount.setText(ss);

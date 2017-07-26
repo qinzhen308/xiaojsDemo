@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 
 /**
- * Created by maxiaobao on 2017/7/24.
+ * Created by Administrator on 2017/7/26.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Expire implements Serializable{
+public class EnrollMode implements Serializable {
     public int mode;
-    public int effective;
+    public int max;
 }

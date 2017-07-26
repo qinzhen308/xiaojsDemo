@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.recordlesson;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobeta.android.dslv.DragSortListView;
 import com.orhanobut.logger.Logger;
@@ -26,7 +28,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ImportVideoActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
@@ -43,6 +48,8 @@ import cn.xiaojs.xma.util.ToastUtil;
  */
 
 public class RecordedLessonActivity extends BaseActivity {
+
+    public static final String EXTRA_LESSON_ID="extra_lesson_id";
 
 
     @BindView(R.id.listview)
@@ -61,12 +68,17 @@ public class RecordedLessonActivity extends BaseActivity {
     @BindView(R.id.all_check_view)
     TextView allCheckView;
 
+    private String lessonId;
+
+    RLessonDetail recreateData;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_recorded_lesson);
         needHeader(true);
         setRightText(R.string.manage_it);
         setMiddleTitle(R.string.record_lesson_directory);
+        lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
         initView();
         initData();
     }
@@ -122,6 +134,36 @@ public class RecordedLessonActivity extends BaseActivity {
     };
 
 
+    private void loadRecreateData(){
+        showProgress(true);
+        LessonDataManager.getRecordedCourse(this, lessonId, new APIServiceCallback<RLessonDetail>() {
+            @Override
+            public void onSuccess(RLessonDetail object) {
+                cancelProgress();
+                recreateData=object;
+                if (object == null) {
+                    showEmptyView("空");
+                }else{
+                    handleRecreateData();
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                showFailedView(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loadRecreateData();
+                    }
+                });
+            }
+        });
+
+    }
+
+
     @OnClick({R.id.next_btn, R.id.right_view, R.id.left_image,
             R.id.all_check_view, R.id.btn_delete, R.id.add_dir, R.id.btn_lesson})
     public void onViewClicked(View view) {
@@ -164,7 +206,7 @@ public class RecordedLessonActivity extends BaseActivity {
             ToastUtil.showToast(getApplicationContext(), "请先创建录播课目录");
             return;
         }
-        CreateRecordedLessonActivity.invoke(this,(ArrayList<RLDirectory>)(Object)srcList);
+        CreateRecordedLessonActivity.invoke(this,(ArrayList<RLDirectory>)(Object)srcList,recreateData);
     }
 
     private void readyToManage() {
@@ -197,8 +239,12 @@ public class RecordedLessonActivity extends BaseActivity {
 
 
     private void initData() {
-        ArrayList<LibDoc> doc=(ArrayList<LibDoc>)getIntent().getSerializableExtra(ImportVideoActivity.EXTRA_CHOICE_DATA);
-        buildDirs(doc);
+        if(TextUtils.isEmpty(lessonId)){
+            ArrayList<LibDoc> doc=(ArrayList<LibDoc>)getIntent().getSerializableExtra(ImportVideoActivity.EXTRA_CHOICE_DATA);
+            buildDirs(doc);
+        }else {
+            loadRecreateData();
+        }
     }
 
     private void buildDirs(ArrayList<LibDoc> docs){
@@ -220,6 +266,10 @@ public class RecordedLessonActivity extends BaseActivity {
         srcList.add(dir);
         adapter.setList(srcList);
         adapter.notifyDataSetChanged();
+    }
+
+    private void handleRecreateData(){
+
     }
 
 
@@ -339,6 +389,14 @@ public class RecordedLessonActivity extends BaseActivity {
 
     public static void invoke(Context context) {
         Intent intent = new Intent(context, RecordedLessonActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void invoke(Context context,String rLessonId) {
+        Intent intent = new Intent(context, RecordedLessonActivity.class);
+        if(!TextUtils.isEmpty(rLessonId)){
+            intent.putExtra(EXTRA_LESSON_ID,rLessonId);
+        }
         context.startActivity(intent);
     }
 

@@ -49,19 +49,16 @@ import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.CChapter;
 import cn.xiaojs.xma.model.ctl.CChapterSection;
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
-import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.TeachLead;
 import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.model.recordedlesson.EnrollMode;
+import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.lesson.AuditActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
-import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonBriefActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonLabelActivity;
-import cn.xiaojs.xma.ui.lesson.SalePromotionActivity;
 import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
-import cn.xiaojs.xma.ui.lesson.TeacherIntroductionActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
@@ -87,6 +84,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
 
     public final static String KEY_COMPETENCY = "key_competency";
     public static final String EXTRA_KEY_DIRS="extra_key_dirs";
+    public static final String EXTRA_KEY_OLD_DATA="extra_key_old_data";
 
 
 
@@ -140,6 +138,8 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     private String mCompetencyId;
     private LiveLesson mLesson=new LiveLesson();
 
+    private RLessonDetail oldDatal;
+
 
     @Override
     protected void addViewContent() {
@@ -148,6 +148,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         initView();
         setListener();
         initCoverLayout();
+        initOldData();
     }
 
     private void initView() {
@@ -168,6 +169,47 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         mDarkGrayFont = getResources().getColor(R.color.font_create_lesson_content);
         mLightGrayFont = getResources().getColor(R.color.font_gray);
         mErrorDrawable = new ColorDrawable(Color.WHITE);
+    }
+
+    private void initOldData(){
+        if(!getIntent().hasExtra(EXTRA_KEY_OLD_DATA)){
+            return;
+        }
+        oldDatal=(RLessonDetail) getIntent().getSerializableExtra(EXTRA_KEY_OLD_DATA);
+        mLesson.setTags(oldDatal.tags);
+        mLesson.setOverview(oldDatal.overview);
+        mLesson.setCover(oldDatal.cover);
+        mCompetency=new Competency();
+        mCompetency.setChecked(true);
+        mCompetency.setSubject(oldDatal.subject);
+        mCompetencyId=oldDatal.subject.getId();
+
+        if(!TextUtils.isEmpty(mLesson.getCover())){
+            mCoverFileName = mLesson.getCover();
+            coverView.setVisibility(View.VISIBLE);
+            Dimension dimension = new Dimension();
+            dimension.width = coverView.getMeasuredWidth();
+            dimension.height = coverView.getMeasuredHeight();
+            String url = Ctl.getCover(mLesson.getCover(), dimension);
+            Glide.with(this)
+                    .load(url)
+                    .placeholder(mErrorDrawable)
+                    .error(mErrorDrawable)
+                    .into(coverView);
+        }
+
+        enrollSwitcher.setChecked((oldDatal.enroll!=null&&oldDatal.enroll.mode==Ctl.JoinMode.VERIFICATION));
+        if(oldDatal.expire!=null&&oldDatal.expire.effective>0){
+            expiryDateSwitcher.setChecked(true);
+            etExpiredDate.setText(""+oldDatal.expire.effective);
+        }else {
+            expiryDateSwitcher.setChecked(false);
+        }
+        lessonSubject.setTextColor(mDarkGrayFont);
+        lessonSubject.setText(mCompetency.getSubject().getName());
+        initLessonBrief(mLesson);
+        initLessonLabel(mLesson);
+        liveLessonName.setText(oldDatal.title);
     }
 
     private void mustInputSymbol() {
@@ -437,7 +479,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
             lesson.effective=Long.valueOf(daysStr);
         }
         showProgress(false);
-        lesson.enroll=new CRecordLesson.EnrollMode();
+        lesson.enroll=new EnrollMode();
         lesson.enroll.mode=enrollSwitcher.isChecked()?Ctl.JoinMode.VERIFICATION:Ctl.JoinMode.OPEN;
 
         TeachLead lead=new TeachLead();
@@ -521,6 +563,15 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     public static void invoke(Activity context, ArrayList<RLDirectory> dirs){
         Intent intent=new Intent(context,CreateRecordedLessonActivity.class);
         intent.putExtra(EXTRA_KEY_DIRS,dirs);
+        context.startActivity(intent);
+    }
+
+    public static void invoke(Activity context, ArrayList<RLDirectory> dirs, RLessonDetail oldData){
+        Intent intent=new Intent(context,CreateRecordedLessonActivity.class);
+        intent.putExtra(EXTRA_KEY_DIRS,dirs);
+        if(oldData!=null){
+            intent.putExtra(EXTRA_KEY_OLD_DATA,oldData);
+        }
         context.startActivity(intent);
     }
 

@@ -3,13 +3,14 @@ package cn.xiaojs.xma.model.recordedlesson;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
+import cn.xiaojs.xma.model.CSubject;
 import cn.xiaojs.xma.model.LiveLesson;
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.account.Account;
-import cn.xiaojs.xma.model.category.SubjectName;
-import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.Fee;
 
 /**
@@ -18,13 +19,13 @@ import cn.xiaojs.xma.model.ctl.Fee;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RLessonDetail {
+public class RLessonDetail implements Serializable{
 
     public String id;
     public String title;
     public Date createdOn;
-    public SubjectName subject;
-    public Enroll enroll;
+    public CSubject subject;
+    public EnrollMode enroll;
     public String cover;
     public String state;
     public Fee fee;
@@ -36,4 +37,5 @@ public class RLessonDetail {
     public String reason;
     public Expire expire;
 
+    public ArrayList<Section> sections;
 }

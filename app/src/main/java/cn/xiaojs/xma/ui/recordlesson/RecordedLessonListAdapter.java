@@ -5,21 +5,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.orhanobut.logger.Logger;
+
 import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import cn.xiaojs.xma.ui.recordlesson.view.RLDirectoryView;
 import cn.xiaojs.xma.ui.recordlesson.view.RLLessonView;
+import cn.xiaojs.xma.ui.recordlesson.view.RLSectionDocView;
+import cn.xiaojs.xma.ui.recordlesson.view.RLSectionView;
 
 /**
  * Created by Paul Z on 2017/7/18.
  */
 
-public class RecordedLessonListAdapter extends AbsListAdapter<Object,AbsListAdapter.ViewHolder> {
+public class RecordedLessonListAdapter extends AbsListAdapter<Section,AbsListAdapter.ViewHolder> {
 
-    public Class classes[]={RLDirectory.class,RLLesson.class};
 
     EventCallback eventCallback;
 
@@ -42,25 +46,26 @@ public class RecordedLessonListAdapter extends AbsListAdapter<Object,AbsListAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CommonHolder holder=null;
         if(viewType==0){
-            holder=new CommonHolder(new RLDirectoryView(mContext));
+            holder=new CommonHolder(new RLSectionView(mContext));
 
         }else if(viewType==1){
-            holder=new CommonHolder(new RLLessonView(mContext));
+            holder=new CommonHolder(new RLSectionDocView(mContext));
         }
         return holder;
     }
 
     @Override
     public int getViewTypeCount() {
-        return classes.length;
+        return 2;
     }
 
     @Override
     public int getItemViewType(int position) {
-        for(int i=0,size=classes.length;i<size;i++){
-            if(classes[i].equals(getItem(position).getClass()) ){
-                return i;
-            }
+        Section section=getItem(position);
+        if(section.isLib()){
+            return 0;
+        }else if(section.isLesson()){
+            return 1;
         }
         return 0;
     }
@@ -70,21 +75,22 @@ public class RecordedLessonListAdapter extends AbsListAdapter<Object,AbsListAdap
     public int getCount() {
         int count=0;
         for(int i=0,size=super.getCount();i<size;i++){
-            Object o=getList().get(i);
-            if(isDir(o)){
-                count+=1+((RLDirectory)o).getChildrenCount();
+            Section o=getList().get(i);
+            if(o.isLib()){
+                count+=1+o.getChildrenCount();
             }else {
                 count++;
             }
         }
+        Logger.d("-----getcount---"+count);
         return count;
     }
 
     @Override
-    public Object getItem(int position) {
+    public Section getItem(int position) {
         int cursor=0;
         for(int i=0,size=super.getCount();i<size;i++){
-            RLDirectory dir=(RLDirectory) getList().get(i);
+            Section dir= getList().get(i);
             if(cursor==position){
                 return dir;
             }
@@ -101,16 +107,6 @@ public class RecordedLessonListAdapter extends AbsListAdapter<Object,AbsListAdap
         public CommonHolder(View v) {
             super(v);
         }
-    }
-
-
-
-
-    public boolean isDir(Object item){
-        return item instanceof RLDirectory;
-    }
-    public boolean isLesson(Object item){
-        return item instanceof RLLesson;
     }
 
 

@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
  *
@@ -1032,6 +1034,19 @@ public class TimeUtil {
 
     private static long toYears(long date) {
         return toMonths(date) / 365L;
+    }
+
+    public static String differenceForTime(Date start,Date end){
+        long diff=end.getTime()-start.getTime();
+        int[] units={1000,60*1000,60*60*1000,24*60*60*1000};
+        String[] unitTexts={"秒","分钟","小时"};
+        int i=0;
+        String result="";
+        while (i<unitTexts.length&&diff>units[i]){
+            result=diff%units[i+1]+unitTexts[i]+result;
+            i++;
+        }
+        return result;
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Paul Z on 2017/7/24.
+ * 录播课目录节点---创建时用
  */
 
 public class RLChapter {

@@ -32,6 +32,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.recordlesson.EnrolledStudentsActivity;
 import cn.xiaojs.xma.ui.recordlesson.ManualRegistrationActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -98,7 +99,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
                 rejectReason(context,data);
                 break;
             case OP_RECREATE_LESSON:
-//                lessonAgain(context,data);
+                lessonAgain(context,data);
                 break;
             case OP_APPLY_STUDENTS_LIST:
                 enterApplyStudents(context,data);
@@ -418,11 +419,8 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     //再次开课
-    private void lessonAgain(Activity context,CLesson bean) {
-        Intent intent = new Intent(context, LessonCreationActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
-        intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_AGAIN);
-        context.startActivityForResult(intent, CourseConstant.CODE_LESSON_AGAIN);
+    private void lessonAgain(Activity context,RLesson bean) {
+        RecordedLessonActivity.invoke(context,bean.id);
     }
 
     private void rejectReason(Activity context, RLesson bean){

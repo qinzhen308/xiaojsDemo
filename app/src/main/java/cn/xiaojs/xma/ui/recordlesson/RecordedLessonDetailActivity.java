@@ -155,10 +155,10 @@ public class RecordedLessonDetailActivity extends BaseActivity {
     private void bindView(RLessonDetail detail) {
         lessonTitleView.setText(detail.title);
         if (detail.subject != null) {
-            lessonCategoryView.setText(detail.subject.name);
+            lessonCategoryView.setText(detail.subject.getName());
         }
 
-        //TODO 报名确认
+        enrollView.setText(detail.enroll!=null&&detail.enroll.mode==Ctl.JoinMode.VERIFICATION?R.string.need_confirm:R.string.no_verification_required);
 
         if(detail.expire !=null) {
             validView.setText(detail.expire.effective + "天");
@@ -207,11 +207,9 @@ public class RecordedLessonDetailActivity extends BaseActivity {
 
 
 
+        adapter.setList(detail.sections);
 
-
-
-
-
+        adapter.notifyDataSetChanged();
 
 
 
