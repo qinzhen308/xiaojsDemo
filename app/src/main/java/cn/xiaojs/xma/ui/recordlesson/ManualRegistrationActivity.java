@@ -1,7 +1,10 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -9,9 +12,17 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.SearchManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionResult;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ImportStudentFormClassActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.util.VerifyUtils;
+
+import static cn.xiaojs.xma.R.id.text;
 
 /**
  * Created by maxiaobao on 2017/7/24.
@@ -61,8 +72,19 @@ public class ManualRegistrationActivity extends BaseActivity {
     }
 
     @OnTextChanged(value = R.id.remark, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    void afterTextChanged(CharSequence text) {
-        limltCountView.setText(text.length()+ "/100");
+    void remarkTextChanged(Editable editable) {
+        limltCountView.setText(editable.length()+ "/100");
+    }
+
+    @OnTextChanged(value = R.id.phone_num, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    void phoneTextChanged(Editable editable) {
+
+        String phone = editable.toString().trim();
+
+        if (phone.length() ==11 && VerifyUtils.checkPhoneNum(phone)) {
+            searchAccountInfo(phone);
+        }
+
     }
 
 
@@ -71,5 +93,31 @@ public class ManualRegistrationActivity extends BaseActivity {
         tipsRootView.setVisibility(View.GONE);
     }
 
+
+    private void searchAccountInfo(String keyWord) {
+        showProgress(true);
+        SearchManager.search(this,
+                Social.SearchType.PERSON,
+                keyWord,
+                1,
+                10,
+                new APIServiceCallback<CollectionResult<SearchResultV2>>() {
+                    @Override
+                    public void onSuccess(CollectionResult<SearchResultV2> result) {
+                        if (result != null && result.results != null && result.results.size()>0) {
+
+                            SearchResultV2 searchResultV2 = result.results.get(0);
+                            //if (searchResultV2 != null )
+
+                        }
+                        cancelProgress();
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                    }
+                });
+    }
 
 }
