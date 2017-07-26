@@ -4,8 +4,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:paddingTop="@dimen/px32"
+
         >
 
     <include
@@ -93,7 +92,6 @@
             android:layout_alignLeft="@id/phone_num"
             android:layout_alignBaseline="@id/name_title"
             android:layout_marginRight="@dimen/px29"
-            android:text="wanghai"
             android:background="@null"
             android:singleLine="true"
             />
@@ -117,7 +115,7 @@
             android:layout_marginBottom="@dimen/px34"
             />
 
-    <cn.xiaojs.xma.ui.widget.EditTextDel
+    <EditText
             android:id="@+id/remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,6 +128,7 @@
             android:hint="@string/please_input_remark"
             android:background="@null"
             android:maxLength="100"
+            android:maxLines="3"
             />
 
     <TextView

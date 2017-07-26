@@ -407,7 +407,7 @@ public interface XiaojsService {
     Call<ResponseBody> addClassStudent(@Path("classes") String classes,
                                        @Body ClassEnrollParams enrollParams);
 
-    //get Class Students
+    //get Class
     @GET("/v1/ctl/owner/classes/{criteria}")
     Call<Students> getClasses(@Path("criteria") String criteria);
 
