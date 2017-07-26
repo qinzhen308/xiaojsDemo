@@ -496,6 +496,11 @@ public interface XiaojsService {
     Call<ResponseBody> addRecordedCourseStudent(@Path("course") String course,
                                                          @Body ClassEnrollParams enroll);
 
+    // Review Recorded Course Enroll
+    @PATCH("/v1/ctl/courses/recorded/students/{enroll}/review")
+    Call<ResponseBody> reviewRecordedCourseEnroll(@Path("enroll") String enroll,
+                                       @Body DecisionReason reason);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories

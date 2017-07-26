@@ -433,7 +433,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     public void enterApplyStudents(Context context,RLesson bean){
-        context.startActivity(new Intent(context,EnrolledStudentsActivity.class));
+        EnrolledStudentsActivity.invoke(context,bean.id);
     }
 
     //判断权限是否大于等于班主任
@@ -453,6 +453,5 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     private void deleteNativeLesson(final Activity context,final int pos) {
         ((IUpdateMethod)context).updateItem(pos,null,"remove");
     }
-
 
 }

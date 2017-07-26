@@ -199,4 +199,5 @@ public class APIType {
     public static final int GET_RECORDED_COURSE_CHAPTERS = 124;
     public static final int GET_RECORDED_COURSE_STUDENTS = 125;
     public static final int ADD_RECORDED_COURSE_STUDENT = 126;
+    public static final int REVIEW_RECORDED_COURSE_ENROLL = 127;
 }
