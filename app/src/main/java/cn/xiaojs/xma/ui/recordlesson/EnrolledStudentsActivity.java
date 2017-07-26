@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,14 +14,21 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
 /**
  * Created by maxiaobao on 2017/7/24.
  */
 
 public class EnrolledStudentsActivity extends BaseActivity {
+
+    public static final String EXTRA_LESSON_ID="extra_lesson_id";
 
     @BindView(R.id.student_list)
     PullToRefreshSwipeListView listView;
@@ -29,6 +37,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
     RelativeLayout verLayout;
     @BindView(R.id.veri_count)
     TextView veriCount;
+    private String lessonId;
 
 
     private boolean teaching;
@@ -40,7 +49,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_enrolled_students);
         setMiddleTitle(R.string.enroll_register_stu);
-
+        lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
         init();
     }
 
@@ -85,8 +94,9 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
         @Override
         protected void setViewContent(Holder holder, StudentEnroll bean, int position) {
-
-            //TODO
+            holder.nameView.setText(bean.name);
+            holder.phoneView.setText(bean.mobile);
+            holder.timeEnvView.setText("报名时间"+ ScheduleUtil.getDateYMDHM(bean.createdOn));
         }
 
         @Override
@@ -101,13 +111,28 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
         @Override
         protected void doRequest() {
-            //TODO
+            RLStudentsCriteria criteria=new RLStudentsCriteria();
+            LessonDataManager.getRecordedCourseStudents(EnrolledStudentsActivity.this, lessonId, criteria, mPagination, new APIServiceCallback<CollectionPage<StudentEnroll>>() {
+                @Override
+                public void onSuccess(CollectionPage<StudentEnroll> object) {
+                    if(object!=null){
+                        StudentsAdapter.this.onSuccess(object.objectsOfPage);
+                    }else {
+                        StudentsAdapter.this.onSuccess(null);
+                    }
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    StudentsAdapter.this.onFailure(errorCode,errorMessage);
+                }
+            });
         }
 
         class Holder extends BaseHolder {
 
             @BindView(R.id.ic_nav)
-            ImageView name;
+            ImageView icNav;
             @BindView(R.id.name)
             TextView nameView;
             @BindView(R.id.phone)
@@ -120,6 +145,12 @@ public class EnrolledStudentsActivity extends BaseActivity {
                 super(view);
             }
         }
+    }
+
+    public static void invoke(Context context,String lessonId){
+        Intent intent=new Intent(context,EnrolledStudentsActivity.class);
+        intent.putExtra(EXTRA_LESSON_ID,lessonId);
+        context.startActivity(intent);
     }
 
 
