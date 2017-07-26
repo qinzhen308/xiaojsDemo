@@ -467,7 +467,7 @@ public class LessonHomeActivity extends BaseActivity {
     }
 
     /**
-     * set teacher info
+     * set teachers info
      */
     private void setTeacherInfo(LessonDetail lesson) {
         if (lesson != null) {

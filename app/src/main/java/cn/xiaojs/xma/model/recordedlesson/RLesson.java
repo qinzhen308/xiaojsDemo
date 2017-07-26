@@ -29,7 +29,7 @@ public class RLesson {
     public String state;
     public Fee fee;
     public Publish publish;
-    public Account[] teacher;
+    public Account[] teachers;
     public Account[] assistants;
     public String[] tags;
     public LiveLesson.Overview overview;

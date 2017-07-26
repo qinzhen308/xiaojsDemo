@@ -20,7 +20,7 @@ public class Ctl {
 
 
     //
-    // Defines acknowledgement decisions from the invited lead teacher.
+    // Defines acknowledgement decisions from the invited lead teachers.
     //
     public static class ACKDecision{
         public static final int ACKNOWLEDGE = 0;

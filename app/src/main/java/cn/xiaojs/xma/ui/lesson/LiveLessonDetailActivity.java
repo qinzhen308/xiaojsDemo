@@ -109,7 +109,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
     @BindView(R.id.unfold_lesson_brief)
     TextView mUnfoldLessonBriefTv;
 
-    //teacher introduction
+    //teachers introduction
     @BindView(R.id.teacher_intro_layout)
     LinearLayout mTeacherIntroLayout;
     @BindView(R.id.teacher_introduction)
@@ -422,7 +422,7 @@ public class LiveLessonDetailActivity extends BaseActivity {
                 mLessonBriefLayout.setVisibility(View.GONE);
             }
 
-            //set teacher introduction
+            //set teachers introduction
             LiveLesson.TeachersIntro teaIntro = lesson.getTeachersIntro();
             String intro = null;
             if (teaIntro != null && !TextUtils.isEmpty((intro = teaIntro.getText()))) {

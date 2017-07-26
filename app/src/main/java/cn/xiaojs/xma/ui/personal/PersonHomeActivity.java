@@ -534,7 +534,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
 
     private void myself() {
-        //TODO not data for teacher summary
+        //TODO not data for teachers summary
         //mSummaryWrapper.setVisibility(View.VISIBLE);
         mRelationshipWrapper.setVisibility(View.GONE);
         mTargetWrapper.setVisibility(View.GONE);

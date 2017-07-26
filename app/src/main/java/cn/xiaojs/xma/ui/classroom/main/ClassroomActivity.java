@@ -385,7 +385,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
                 (Live.LiveSessionState.DELAY.equals(ctlSession.state) ||
                         Live.LiveSessionState.LIVE.equals(ctlSession.state))) {
-            //teacher-->live, delay
+            //teachers-->live, delay
 
             Bundle data = new Bundle();
 

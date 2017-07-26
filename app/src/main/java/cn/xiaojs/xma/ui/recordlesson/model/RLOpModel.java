@@ -343,8 +343,8 @@ public class RLOpModel extends AbsOpModel<RLesson> {
             date="永久";
         }
         String name = "";
-        if (!ArrayUtil.isEmpty(bean.teacher)) {
-            name = bean.teacher[0].name;
+        if (!ArrayUtil.isEmpty(bean.teachers)) {
+            name = bean.teachers[0].name;
         }
         String shareUrl = ApiManager.getShareLessonUrl(bean.id,"asdasdasdas");
         ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(date).append("\r\n").append("主讲：").append(name).toString(), shareUrl);

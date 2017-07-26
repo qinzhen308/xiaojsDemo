@@ -38,8 +38,8 @@ public class GuideBrowseActivity extends Activity {
         ButterKnife.bind(this);
 
 
-//        boolean teacher = getIntent().getBooleanExtra(EXTRA_TEACHER, false);
-//        if (teacher) {
+//        boolean teachers = getIntent().getBooleanExtra(EXTRA_TEACHER, false);
+//        if (teachers) {
 //            images = new int[]{R.drawable.usage_teacher_1,
 //                    R.drawable.usage_teacher_2,
 //                    R.drawable.usage_teacher_3,

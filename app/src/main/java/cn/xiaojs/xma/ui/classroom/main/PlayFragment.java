@@ -1098,7 +1098,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             cancelProgress();
             //进入播放端
             if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
-                //teacher-->live, delay
+                //teachers-->live, delay
                 Bundle data = new Bundle();
                 data.putInt(Constants.KEY_FROM, Constants.FROM_PLAY_FRAGMENT);
                 mCountTime = mTimeProgressHelper.getCountTime();

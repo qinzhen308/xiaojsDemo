@@ -439,7 +439,7 @@ public class LessonDataManager {
     }
 
     /**
-     * Creates a class by a teacher or an organization, and entering into the following lifecycle.
+     * Creates a class by a teachers or an organization, and entering into the following lifecycle.
      */
     public static void createClass(Context context,
                                    ClassParams params,
@@ -801,7 +801,7 @@ public class LessonDataManager {
 
     /**
      * Returns recordedCourses owned or enrolled by an user or taught by an user
-     * (as the lead teacher or a teaching assistant) or owned by an organization,
+     * (as the lead teachers or a teaching assistant) or owned by an organization,
      * optionally filtered by criteria.
      *
      * @param context

@@ -116,8 +116,8 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 //        if ("、".equals(teachers.charAt(teachers.length() - 1) + "")) {
 //            teachers = teachers.substring(0, teachers.length() - 1);
 //        }
-        if(!ArrayUtil.isEmpty(mData.teacher)&&mData.teacher[0].getBasic()!=null){
-            SpannableString ss=new SpannableString("主讲："+mData.teacher[0].getBasic().getName());
+        if(!ArrayUtil.isEmpty(mData.teachers)&&mData.teachers[0].getBasic()!=null){
+            SpannableString ss=new SpannableString("主讲："+mData.teachers[0].getBasic().getName());
             ss.setSpan(new ForegroundColorSpan(teacherColor),3,ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             teachersView.setText(ss);
         }else {
@@ -166,7 +166,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 
     public List<RLOpModel> createRecordedLessonOpMode() {
         List<RLOpModel> ops;
-        if (!ArrayUtil.isEmpty(mData.teacher) && AccountPref.getAccountID(getContext()).equals(mData.teacher[0].getId())) {//我虽然不是所有者，但我是讲师
+        if (!ArrayUtil.isEmpty(mData.teachers) && AccountPref.getAccountID(getContext()).equals(mData.teachers[0].getId())) {//我虽然不是所有者，但我是讲师
             ops = imSpeaker();
         } else {//我就是个学生
             ops = imStudent();

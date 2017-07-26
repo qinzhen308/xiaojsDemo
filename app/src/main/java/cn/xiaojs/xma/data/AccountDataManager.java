@@ -571,7 +571,7 @@ public class AccountDataManager {
 
 
     /**
-     * Requests to verify identify for an unverified teacher or organization.
+     * Requests to verify identify for an unverified teachers or organization.
      * @param context
      * @param name
      * @param no

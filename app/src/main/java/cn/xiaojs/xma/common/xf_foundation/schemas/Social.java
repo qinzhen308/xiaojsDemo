@@ -226,7 +226,7 @@ public class Social {
     public static class Relationship{
         public static String CLASS_MATE = "classmate";
         public static String FRIENDS = "friends";
-        public static String TEACHER = "teacher";
+        public static String TEACHER = "teachers";
         public static String STRANGER = "stranger";
     }
 
