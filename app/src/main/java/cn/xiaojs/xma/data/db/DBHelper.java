@@ -46,7 +46,7 @@ public final class DBHelper extends SQLiteOpenHelper {
                     .append(DBTables.TDownload.TABLE_NAME)
                     .append(" ADD ")
                     .append(DBTables.TDownload.HIDDEN)
-                    .append(" INTEGER NOT NULL DEFAULT 0, ")
+                    .append(" INTEGER NOT NULL DEFAULT 0, ADD ")
                     .append(DBTables.TDownload.OWNER)
                     .append(" TEXT")
                     .toString();
