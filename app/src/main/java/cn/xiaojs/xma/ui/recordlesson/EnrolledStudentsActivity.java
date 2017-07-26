@@ -14,9 +14,11 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -63,7 +65,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
                 // TODO
                 break;
             case R.id.lay_veri:        //报名确认
-                // TODO
+                EnrollConfirmActivity.invoke(this,lessonId);
                 break;
 
         }
@@ -112,6 +114,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
         @Override
         protected void doRequest() {
             RLStudentsCriteria criteria=new RLStudentsCriteria();
+            criteria.enrolled= "true";
             LessonDataManager.getRecordedCourseStudents(EnrolledStudentsActivity.this, lessonId, criteria, mPagination, new APIServiceCallback<CollectionPage<StudentEnroll>>() {
                 @Override
                 public void onSuccess(CollectionPage<StudentEnroll> object) {

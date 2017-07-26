@@ -872,4 +872,12 @@ public class LessonDataManager {
         lessonRequest.addRecordedCourseStudent(course, enrollParams);
     }
 
+    public static void reviewRecordedCourseEnroll(Context context,
+                                                String enroll,
+                                                DecisionReason reason,
+                                                APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.reviewRecordedCourseEnroll(enroll, reason);
+    }
+
 }

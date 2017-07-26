@@ -513,6 +513,11 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.ADD_RECORDED_COURSE_STUDENT, call);
     }
 
+    public void reviewRecordedCourseEnroll(String enroll,DecisionReason reason) {
+        Call<ResponseBody> call = getService().reviewRecordedCourseEnroll(enroll,reason);
+        enqueueRequest(APIType.REVIEW_RECORDED_COURSE_ENROLL, call);
+    }
+
 
     @Override
     public void doTask(int apiType, Object responseBody) {

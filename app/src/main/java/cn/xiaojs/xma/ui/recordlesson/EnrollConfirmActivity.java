@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,15 +22,19 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.StudentsListActivity;
 import cn.xiaojs.xma.util.TimeUtil;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/5/18.
  */
 
 public class EnrollConfirmActivity extends BaseActivity {
+    public static final String EXTRA_LESSON_ID="extra_lesson_id";
+    private String lessonId;
 
 
     @BindView(R.id.ver_list)
@@ -41,7 +46,7 @@ public class EnrollConfirmActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_verification_add_class_msg);
         setMiddleTitle(R.string.enroll_confirm);
-
+        lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
         initView();
 
     }
@@ -125,19 +130,16 @@ public class EnrollConfirmActivity extends BaseActivity {
             holder.agreeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO 同意
-
+                    ackDecision(position,bean, Ctl.ACKDecision.ACKNOWLEDGE);
                 }
             });
 
             holder.refuseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO 拒绝
+                    ackDecision(position,bean, Ctl.ACKDecision.REFUSED);
                 }
             });
-
-
         }
 
         @Override
@@ -152,6 +154,23 @@ public class EnrollConfirmActivity extends BaseActivity {
 
         @Override
         protected void doRequest() {
+            RLStudentsCriteria criteria=new RLStudentsCriteria();
+            criteria.enrolled= "false";
+            LessonDataManager.getRecordedCourseStudents(EnrollConfirmActivity.this, lessonId, criteria, mPagination, new APIServiceCallback<CollectionPage<StudentEnroll>>() {
+                @Override
+                public void onSuccess(CollectionPage<StudentEnroll> object) {
+                    if(object!=null){
+                        ConfirmAdapter.this.onSuccess(object.objectsOfPage);
+                    }else {
+                        ConfirmAdapter.this.onSuccess(null);
+                    }
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ConfirmAdapter.this.onFailure(errorCode,errorMessage);
+                }
+            });
         }
 
         class Holder extends BaseHolder{
@@ -176,6 +195,45 @@ public class EnrollConfirmActivity extends BaseActivity {
 
         }
 
+    }
+
+    private void ackDecision(int position, final StudentEnroll student, final int decision) {
+
+        DecisionReason reason = new DecisionReason();
+        reason.action = decision;
+
+        showProgress(true);
+        LessonDataManager.reviewRecordedCourseEnroll(this, student.doc.id, reason, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+
+                cancelProgress();
+
+                if (decision == Ctl.ACKDecision.ACKNOWLEDGE) {
+                    student.state = Platform.JoinClassState.ACCEPTED;
+                }else if (decision == Ctl.ACKDecision.REFUSED) {
+                    student.state = Platform.JoinClassState.REJECTTED;
+                }
+
+                confirmAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+                cancelProgress();
+                Toast.makeText(EnrollConfirmActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+
+    public static void invoke(Context context,String lessonId){
+        Intent intent=new Intent(context,EnrollConfirmActivity.class);
+        intent.putExtra(EXTRA_LESSON_ID,lessonId);
+        context.startActivity(intent);
     }
 
 }
