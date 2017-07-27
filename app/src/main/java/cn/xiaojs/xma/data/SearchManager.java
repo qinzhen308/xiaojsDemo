@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.data.api.SearchRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.Pagination;
@@ -25,33 +26,25 @@ public class SearchManager {
     /**
      * Search Accounts
      * Searches accounts with the specific mobile criteria for implementing auto-complete feature.
-     * @param context
-     * @param query
-     * @param callback
      */
-    public static void searchAccounts(Context context,
-                                      String query,
-                                      APIServiceCallback<ArrayList<AccountSearch>> callback) {
+    public static ServiceRequest searchAccounts(Context context,
+                                                String query,
+                                                APIServiceCallback<ArrayList<AccountSearch>> callback) {
 
-        SearchRequest searchRequest = new SearchRequest(context,callback);
+        SearchRequest searchRequest = new SearchRequest(context, callback);
         searchRequest.searchAccounts(query);
+        return searchRequest;
 
     }
 
     /**
      * Search accounts by userName or phoneNumber.
-     * @param context
-     * @param key
-     * @param page
-     * @param limit
-     * @param type
-     * @param callback
      */
-    public static void searchAccounts(Context context,
-                                      String key,
-                                      Pagination pagination,
-                                      String type,
-                                      APIServiceCallback<CollectionPageData<AccountInfo>> callback) {
+    public static ServiceRequest searchAccounts(Context context,
+                                                String key,
+                                                Pagination pagination,
+                                                String type,
+                                                APIServiceCallback<CollectionPageData<AccountInfo>> callback) {
 
         int page = 1;
         int limit = 20;
@@ -61,24 +54,19 @@ public class SearchManager {
             limit = pagination.getMaxNumOfObjectsPerPage();
         }
 
-        SearchRequest searchRequest = new SearchRequest(context,callback);
+        SearchRequest searchRequest = new SearchRequest(context, callback);
         searchRequest.searchAccounts(key, page, limit, type);
+        return searchRequest;
     }
 
     /**
      * Search lessons by title / tags.
-     * @param context
-     * @param key
-     * @param page
-     * @param limit
-     * @param type
-     * @param callback
      */
-    public static void searchLessons(Context context,
-                                     String key,
-                                     Pagination pagination,
-                                     String type,
-                                     APIServiceCallback<CollectionPageData<LessonInfo>> callback) {
+    public static ServiceRequest searchLessons(Context context,
+                                               String key,
+                                               Pagination pagination,
+                                               String type,
+                                               APIServiceCallback<CollectionPageData<LessonInfo>> callback) {
 
         int page = 1;
         int limit = 20;
@@ -89,40 +77,38 @@ public class SearchManager {
         }
 
 
-
-        SearchRequest searchRequest = new SearchRequest(context,callback);
+        SearchRequest searchRequest = new SearchRequest(context, callback);
         searchRequest.searchLessons(key, page, limit, type);
+        return searchRequest;
     }
 
     /**
      * Search lessons & accounts.
-     * @param context
-     * @param key
-     * @param size
-     * @param callback
      */
-    public static void searchAccountsOrLessons(Context context,
-                                               String key,
-                                               String size,
-                                               APIServiceCallback<SearchResponse> callback) {
+    public static ServiceRequest searchAccountsOrLessons(Context context,
+                                                         String key,
+                                                         String size,
+                                                         APIServiceCallback<SearchResponse> callback) {
 
-        SearchRequest searchRequest = new SearchRequest(context,callback);
+        SearchRequest searchRequest = new SearchRequest(context, callback);
         searchRequest.searchAccountsOrLessons(key, size);
+        return searchRequest;
 
     }
 
     /**
      * Search search.
      */
-    public static void search(Context context,
-                                               String type,
-                                               String keyword,
-                                               int page,
-                                               int limit,
-                                               APIServiceCallback<CollectionResult<SearchResultV2>> callback) {
+    public static ServiceRequest ServiceRequest(Context context,
+                                      String type,
+                                      String keyword,
+                                      int page,
+                                      int limit,
+                                      APIServiceCallback<CollectionResult<SearchResultV2>> callback) {
 
-        SearchRequest searchRequest = new SearchRequest(context,callback);
-        searchRequest.search(type, keyword,page,limit);
+        SearchRequest searchRequest = new SearchRequest(context, callback);
+        searchRequest.search(type, keyword, page, limit);
+        return searchRequest;
 
     }
 

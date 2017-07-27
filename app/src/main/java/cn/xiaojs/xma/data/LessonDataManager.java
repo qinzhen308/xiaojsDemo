@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.api.LessonRequest;
 import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CLEResponse;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CancelReason;
@@ -83,19 +84,13 @@ public class LessonDataManager {
     /**
      * 创建直播课
      */
-    public static void requestCreateLiveLesson(Context context,
+    public static ServiceRequest requestCreateLiveLesson(Context context,
                                                CreateLesson lesson,
                                                APIServiceCallback<CLResponse> callback) {
 
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the create live lession request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.createLiveLesson(lesson);
+        return lessonRequest;
 
     }
 
@@ -123,7 +118,7 @@ public class LessonDataManager {
     /**
      * 通过用户ID获取用户授的课
      */
-    public static void getLessonsByUser(Context context,
+    public static ServiceRequest getLessonsByUser(Context context,
                                         String account,
                                         Pagination pagination,
                                         APIServiceCallback<CollectionPageData<PersonHomeUserLesson>> callback) {
@@ -143,43 +138,32 @@ public class LessonDataManager {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLessons(account, page, limit);
 
+        return lessonRequest;
     }
 
     /**
      * 上架直播课
      */
-    public static void requestPutLessonOnShelves(Context context,
+    public static ServiceRequest requestPutLessonOnShelves(Context context,
                                                  @NonNull String lesson,
                                                  @NonNull APIServiceCallback callback) {
 
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the putLessonOnShelves request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.putLessonOnShelves(lesson);
+        return lessonRequest;
 
     }
 
     /**
      * 取消上架课程
      */
-    public static void requestCancelLessonOnShelves(Context context,
+    public static ServiceRequest requestCancelLessonOnShelves(Context context,
                                                     @NonNull String lesson,
                                                     @NonNull APIServiceCallback callback) {
 
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the requestCancelLessonOnShelves request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.cancelLessonOnShelves(lesson);
+        return lessonRequest;
     }
 
 //    /**
@@ -206,19 +190,13 @@ public class LessonDataManager {
     /**
      * 获取直播课详情
      */
-    public static void requestLessonData(Context context,
+    public static ServiceRequest requestLessonData(Context context,
                                          @NonNull String lesson,
                                          @NonNull APIServiceCallback<LessonDetail> callback) {
 
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the requestGetLessonDetails request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLessonData(lesson);
+        return lessonRequest;
     }
 
 
@@ -255,139 +233,112 @@ public class LessonDataManager {
     }
 
 
-    public static void requestLessonDetails(Context context,
+    public static ServiceRequest requestLessonDetails(Context context,
                                             @NonNull String lesson,
                                             @NonNull APIServiceCallback<LessonDetail> callback) {
 
 
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLessonDetails(lesson);
+        return lessonRequest;
     }
 
 
-    public static void requestEditLesson(Context context,
+    public static ServiceRequest requestEditLesson(Context context,
                                          @NonNull String lesson,
                                          @NonNull LiveLesson liveLesson,
                                          @NonNull APIServiceCallback callback) {
 
-
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.editLesson(lesson, liveLesson);
+
+        return lessonRequest;
     }
 
     /**
      * 修改上课时间
      */
-    public static void editLessonSchedule(Context context,
+    public static ServiceRequest editLessonSchedule(Context context,
                                           @NonNull String lesson,
                                           @NonNull LessonSchedule lessonSchedule,
                                           @NonNull APIServiceCallback callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.editLessonSchedule(lesson, lessonSchedule);
+        return lessonRequest;
     }
 
 
-    public static void requestEnrollLesson(Context context,
+    public static ServiceRequest requestEnrollLesson(Context context,
                                            @NonNull String lesson,
                                            @Nullable OfflineRegistrant offlineRegistrant,
                                            @NonNull APIServiceCallback<ELResponse> callback) {
 
 
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.enrollLesson(lesson, offlineRegistrant);
+        return lessonRequest;
 
     }
 
-    public static void requestLessonEnrollment(Context context,
+    public static ServiceRequest requestLessonEnrollment(Context context,
                                                @NonNull String lesson,
                                                @NonNull String registrant,
                                                @NonNull APIServiceCallback<CLEResponse> callback) {
 
-
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.confirmLessonEnrollment(lesson, registrant);
+        return lessonRequest;
     }
 
 
-    public static void requestCancelLesson(Context context,
+    public static ServiceRequest requestCancelLesson(Context context,
                                            @NonNull String lesson,
                                            @NonNull CancelReason reason,
                                            @NonNull APIServiceCallback callback) {
 
-        if (callback == null) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("the api service callback is null,so cancel the request");
-            }
-            return;
-        }
-
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.cancelLesson(lesson, reason);
+        return lessonRequest;
 
     }
 
-    public static void requestToggleAccessLesson(Context context,
+    public static ServiceRequest requestToggleAccessLesson(Context context,
                                                  @NonNull String lesson,
                                                  boolean accessible,
                                                  @NonNull APIServiceCallback callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.toggleAccessLesson(lesson, accessible);
+        return lessonRequest;
     }
 
 
     /**
      * 获取开的课程
      */
-    public static void getClasses(Context context,
+    public static ServiceRequest getClasses(Context context,
                                   @NonNull Criteria criteria,
                                   @NonNull Pagination pagination,
                                   @NonNull APIServiceCallback<GetLessonsResponse> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClasses(criteria, pagination);
+        return lessonRequest;
 
     }
 
     /**
      * 获取我报名的课
      */
-    public static void getEnrolledClasses(Context context,
+    public static ServiceRequest getEnrolledClasses(Context context,
                                           @NonNull Criteria criteria,
                                           @NonNull Pagination pagination,
                                           @NonNull APIServiceCallback<GELessonsResponse> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getEnrolledClasses(criteria, pagination);
+        return lessonRequest;
 
     }
 
@@ -395,20 +346,26 @@ public class LessonDataManager {
     /**
      * 直播课接口
      */
-    public static void getLiveClasses(Context context, @NonNull APIServiceCallback<LiveClass> callback) {
+    public static ServiceRequest getLiveClasses(Context context,
+                                                @NonNull APIServiceCallback<LiveClass> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLiveClasses();
+        return lessonRequest;
     }
 
-    public static void acknowledgeLesson(Context context, String lesson, DealAck ack, APIServiceCallback callback) {
+    public static ServiceRequest acknowledgeLesson(Context context,
+                                                   String lesson,
+                                                   DealAck ack,
+                                                   APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.acknowledgeLesson(lesson, ack);
+        return lessonRequest;
     }
 
     /**
      * 查询指定课程的报名的学生
      */
-    public static void getEnrolledStudents(Context context,
+    public static ServiceRequest getEnrolledStudents(Context context,
                                            String lesson,
                                            int page,
                                            int limit,
@@ -416,60 +373,65 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getEnrolledStudents(lesson, page, limit, "Enrolled");
+        return lessonRequest;
 
     }
 
     /**
      * Hidden the specific standalone lesson.
      */
-    public static void hideLesson(Context context, String lesson, APIServiceCallback callback) {
+    public static ServiceRequest hideLesson(Context context, String lesson, APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.hideLesson(lesson);
+        return lessonRequest;
     }
 
     /**
      * 加入无需报名的课
      */
-    public static void joinLesson(Context context,
+    public static ServiceRequest joinLesson(Context context,
                                   String lesson,
                                   APIServiceCallback<JoinResponse> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.joinLesson(lesson);
+        return lessonRequest;
     }
 
     /**
      * Creates a class by a teachers or an organization, and entering into the following lifecycle.
      */
-    public static void createClass(Context context,
+    public static ServiceRequest createClass(Context context,
                                    ClassParams params,
                                    APIServiceCallback<CLResponse> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.createClass(params);
+        return lessonRequest;
     }
 
 
     /**
      * Get Classes Schedule
      */
-    public static void getClassesSchedule(Context context,
+    public static ServiceRequest getClassesSchedule(Context context,
                                           ScheduleOptions options,
                                           APIServiceCallback<ScheduleData> callback) {
 
-        getClassesSchedule(context, null, options, callback);
+        return getClassesSchedule(context, null, options, callback);
     }
 
-    public static void getClassesSchedule(Context context,
+    public static ServiceRequest getClassesSchedule(Context context,
                                           String classId,
                                           ScheduleOptions options,
                                           APIServiceCallback<ScheduleData> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule(classId, options.getOptions());
+        return lessonRequest;
     }
 
 
-    public static void getClassesSchedule4Class(Context context,
+    public static ServiceRequest getClassesSchedule4Class(Context context,
                                                 ScheduleOptions options,
                                                 Pagination pagination,
                                                 APIServiceCallback<CollectionResult<PrivateClass>> callback) {
@@ -479,9 +441,10 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule4Class(options.getOptions(), limit, page);
+        return lessonRequest;
     }
 
-    public static void getClassesSchedule4Lesson(Context context,
+    public static ServiceRequest getClassesSchedule4Lesson(Context context,
                                                  ScheduleOptions options,
                                                  Pagination pagination,
                                                  APIServiceCallback<CollectionCalendar<ClassSchedule>> callback) {
@@ -491,9 +454,10 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule4Lesson(options.getOptions(), limit, page);
+        return lessonRequest;
     }
 
-    public static void getClassesSchedule4Lesson(Context context,
+    public static ServiceRequest getClassesSchedule4Lesson(Context context,
                                                  String classid,
                                                  ScheduleOptions options,
                                                  Pagination pagination,
@@ -504,6 +468,7 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule4Lesson(classid, options.getOptions(), limit, page);
+        return lessonRequest;
     }
 
 
@@ -514,24 +479,26 @@ public class LessonDataManager {
      * @param limit
      * @param callback
      */
-    public static void getHotClasses(Context context,
+    public static ServiceRequest getHotClasses(Context context,
                                      int limit,
                                      APIServiceCallback<CollectionResult<PrivateClass>> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassesSchedule(Account.TypeName.CLASS, limit, "NotHumanRemoved");
+        return lessonRequest;
     }
 
     /**
      * Schedule Class Lesson .
      */
-    public static void scheduleClassLesson(Context context,
+    public static ServiceRequest scheduleClassLesson(Context context,
                                            String classes,
                                            ScheduleParams params,
                                            APIServiceCallback callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.scheduleClassLesson(classes, params);
+        return lessonRequest;
     }
 
     /**
@@ -548,47 +515,51 @@ public class LessonDataManager {
      * get the info of privateclass.
      * 获取班信息
      */
-    public static void getClassInfo(Context context,
+    public static ServiceRequest getClassInfo(Context context,
                                     String classid,
                                     APIServiceCallback<ClassInfo> callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClass(classid);
+        return lessonRequest;
     }
 
     /**
      * modify the specific private class.
      * 编辑班课内容（班名称、班主任）;
      */
-    public static void modifyClass(Context context,
+    public static ServiceRequest modifyClass(Context context,
                                    String classid,
                                    ModifyClassParams params,
                                    APIServiceCallback<CLResponse> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClass(classid, params);
+        return lessonRequest;
     }
 
-    public static void modifyClass(Context context,
+    public static ServiceRequest modifyClass(Context context,
                                    String classid,
                                    ModifyModeParam params,
                                    APIServiceCallback<CLResponse> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClass(classid, params);
+        return lessonRequest;
     }
 
-    public static void modifyClass(Context context,
+    public static ServiceRequest modifyClass(Context context,
                                    String classid,
                                    Publish params,
                                    APIServiceCallback<CLResponse> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClass(classid, params);
+        return lessonRequest;
     }
 
 
     /**
      * Returns the students taught by an classes .
      */
-    public static void getClassStudents(Context context,
+    public static ServiceRequest getClassStudents(Context context,
                                         String classes,
                                         boolean joined,
                                         Pagination pagination,
@@ -599,32 +570,37 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassStudents(classes, joinCriteria, pagination);
+        return lessonRequest;
 
     }
 
     /**
      * Import students from a standaloneLesson or class, or enrolled students to the class.
      */
-    public static void addClassStudent(Context context,
+    public static ServiceRequest addClassStudent(Context context,
                                        String classId,
                                        ClassEnrollParams enrollParams,
                                        APIServiceCallback callback) {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.addClassStudent(classId, enrollParams);
+        return lessonRequest;
 
     }
 
-    public static void getClasses(Context context, CriteriaStudents criteria, APIServiceCallback<Students> callback) {
+    public static ServiceRequest getClasses(Context context,
+                                            CriteriaStudents criteria,
+                                            APIServiceCallback<Students> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClasses(criteria);
+        return lessonRequest;
     }
 
 
     /**
      * Remove enrolled students from the Class.
      */
-    public static void removeClassStudent(Context context,
+    public static ServiceRequest removeClassStudent(Context context,
                                           String classid,
                                           String[] students,
                                           APIServiceCallback callback) {
@@ -637,6 +613,8 @@ public class LessonDataManager {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.removeClassStudent(classid, params);
 
+        return lessonRequest;
+
     }
 
     /**
@@ -646,9 +624,13 @@ public class LessonDataManager {
      * @param classid
      * @param callback
      */
-    public static void joinClass(Context context, String classid, JoinClassParams joinClassParams, APIServiceCallback<ResponseBody> callback) {
+    public static ServiceRequest joinClass(Context context,
+                                           String classid,
+                                           JoinClassParams joinClassParams,
+                                           APIServiceCallback<ResponseBody> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.joinClass(classid, joinClassParams);
+        return lessonRequest;
 
     }
 
@@ -660,12 +642,13 @@ public class LessonDataManager {
      * @param reason
      * @param callback
      */
-    public static void reviewJoinClass(Context context,
+    public static ServiceRequest reviewJoinClass(Context context,
                                        String joinId,
                                        DecisionReason reason,
                                        APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.reviewJoinClass(joinId, reason);
+        return lessonRequest;
     }
 
 
@@ -678,9 +661,10 @@ public class LessonDataManager {
      * @param classid
      * @param callback
      */
-    public static void removeClass(Context context, String classid, APIServiceCallback callback) {
+    public static ServiceRequest removeClass(Context context, String classid, APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.removeClass(classid);
+        return lessonRequest;
     }
 
 
@@ -693,7 +677,7 @@ public class LessonDataManager {
      * @param classLesson
      * @param callback
      */
-    public static void modifyClassesLesson(Context context,
+    public static ServiceRequest modifyClassesLesson(Context context,
                                            String classId,
                                            String lessonId,
                                            ClassLesson classLesson,
@@ -701,6 +685,7 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClassesLesson(classId, lessonId, classLesson);
+        return lessonRequest;
 
     }
 
@@ -712,12 +697,13 @@ public class LessonDataManager {
      * @param lessonId
      * @param callback
      */
-    public static void deleteClassesLesson(Context context,
+    public static ServiceRequest deleteClassesLesson(Context context,
                                            String classId,
                                            String lessonId,
                                            APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.deleteClassesLesson(classId, lessonId);
+        return lessonRequest;
     }
 
 
@@ -730,13 +716,14 @@ public class LessonDataManager {
      * @param reason
      * @param callback
      */
-    public static void cancelClassesLesson(Context context,
+    public static ServiceRequest cancelClassesLesson(Context context,
                                            String classId,
                                            String lessonId,
                                            CancelReason reason,
                                            APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.cancelClassesLesson(classId, lessonId, reason);
+        return lessonRequest;
     }
 
     /**
@@ -746,11 +733,12 @@ public class LessonDataManager {
      * @param recordLesson
      * @param callback
      */
-    public static void createRecordedCourse(Context context,
+    public static ServiceRequest createRecordedCourse(Context context,
                                             CRecordLesson recordLesson,
                                             APIServiceCallback<CLResponse> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.createRecordedCourse(recordLesson);
+        return lessonRequest;
     }
 
     /**
@@ -760,11 +748,12 @@ public class LessonDataManager {
      * @param course
      * @param callback
      */
-    public static void putRecordedCourseOnShelves(Context context,
+    public static ServiceRequest putRecordedCourseOnShelves(Context context,
                                                   String course,
                                                   APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.putRecordedCourseOnShelves(course);
+        return lessonRequest;
     }
 
     /**
@@ -779,7 +768,7 @@ public class LessonDataManager {
      * @param subtype
      * @param callback
      */
-    public void getCourses(Context context,
+    public ServiceRequest getCourses(Context context,
                            Pagination pagination,
                            String start,
                            String end,
@@ -797,6 +786,8 @@ public class LessonDataManager {
                 state,
                 key,
                 subtype);
+
+        return lessonRequest;
     }
 
     /**
@@ -809,12 +800,14 @@ public class LessonDataManager {
      * @param pagination
      * @param callback
      */
-    public static void getRecordedCourses(Context context,
+    public static ServiceRequest getRecordedCourses(Context context,
                                           RecordedLessonCriteria criteria,
                                           Pagination pagination,
                                           APIServiceCallback<CollectionPage<RLesson>> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCourses(criteria, pagination);
+
+        return lessonRequest;
     }
 
 
@@ -825,11 +818,12 @@ public class LessonDataManager {
      * @param course
      * @param callback
      */
-    public static void getRecordedCourse(Context context,
+    public static ServiceRequest getRecordedCourse(Context context,
                                          String course,
                                          APIServiceCallback<RLessonDetail> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCourse(course);
+        return lessonRequest;
     }
 
     /**
@@ -839,45 +833,50 @@ public class LessonDataManager {
      * @param course
      * @param callback
      */
-    public static void getRecordedCoursePublic(Context context,
+    public static ServiceRequest getRecordedCoursePublic(Context context,
                                                String course,
                                                APIServiceCallback<RLessonDetail> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCoursePublic(course);
+        return lessonRequest;
     }
 
-    public static void getRecordedCourseChapters(Context context,
+    public static ServiceRequest getRecordedCourseChapters(Context context,
                                                  String course,
                                                  String chapter,
                                                  APIServiceCallback<ArrayList<RLChapter>> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCourseChapters(course, chapter);
+        return lessonRequest;
     }
 
 
-    public static void getRecordedCourseStudents(Context context,
+    public static ServiceRequest getRecordedCourseStudents(Context context,
                                                  String course,
                                                  RLStudentsCriteria criteria,
                                                  Pagination pagination,
                                                  APIServiceCallback<CollectionPage<StudentEnroll>> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCourseStudents(course, criteria, pagination);
+        return lessonRequest;
     }
 
-    public static void addRecordedCourseStudent(Context context,
+    public static ServiceRequest addRecordedCourseStudent(Context context,
                                                 String course,
                                                 ClassEnrollParams enrollParams,
                                                 APIServiceCallback<ResponseBody> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.addRecordedCourseStudent(course, enrollParams);
+        return lessonRequest;
     }
 
-    public static void reviewRecordedCourseEnroll(Context context,
-                                                String enroll,
-                                                DecisionReason reason,
-                                                APIServiceCallback<ResponseBody> callback) {
+    public static ServiceRequest reviewRecordedCourseEnroll(Context context,
+                                                            String enroll,
+                                                            DecisionReason reason,
+                                                            APIServiceCallback<ResponseBody> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.reviewRecordedCourseEnroll(enroll, reason);
+        return lessonRequest;
     }
 
 }

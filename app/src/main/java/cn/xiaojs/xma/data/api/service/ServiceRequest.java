@@ -90,6 +90,13 @@ public class ServiceRequest<T> implements ContextLifecycle {
         return serviceCallback;
     }
 
+    public void cancelRequest() {
+        if (serviceCall != null && !serviceCall.isCanceled()) {
+            serviceCall.cancel();
+        }
+    }
+
+
     public void doTask(int apiType, T responseBody) {
     }
 
@@ -314,9 +321,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
     private void cancelAndResetnull() {
 
-        if (serviceCall != null) {
-            serviceCall.cancel();
-        }
+        cancelRequest();
 
         serviceCallback = null;
         requestObj = null;
