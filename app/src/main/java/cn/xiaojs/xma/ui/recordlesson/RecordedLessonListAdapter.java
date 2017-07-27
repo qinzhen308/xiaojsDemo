@@ -82,7 +82,6 @@ public class RecordedLessonListAdapter extends AbsListAdapter<Section,AbsListAda
                 count++;
             }
         }
-        Logger.d("-----getcount---"+count);
         return count;
     }
 

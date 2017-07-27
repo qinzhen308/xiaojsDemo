@@ -11,6 +11,12 @@
             android:layout_height="match_parent"
             android:background="@color/white"/>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px5" />
+
     <include
             android:id="@+id/error_layout"
             layout="@layout/layout_list_empty"

@@ -938,7 +938,9 @@
     <string name="join_class_suc_tip">你已经成功加入该班级，现在可以去与班级成员互动交流啦~</string>
     <string name="into_my_classes">查看我的班</string>
     <string name="add_class_verification_msg2">验证消息</string>
+    <string name="add_recorded_lesson_verification_msg">报名申请</string>
     <string name="add_class_verify_msg_tip">班主任需要验证您的身份，请输入您的验证信息</string>
+    <string name="add_recorded_lesson_verify_msg_tip">该课需要验证确认，您才可以听课，请输入您的验证信息</string>
     <string name="create_class_exit_tip">您开的班未点“完成”，将不能生效，确定要退出吗？</string>
     <string name="create_class_exit_tip2">您开的班资料未填写完，确定要退出吗？</string>
     <string name="create_lesson_exit_tip">您开的课未点“完成”，将不能生效，确定要退出吗？</string>
@@ -1005,5 +1007,7 @@
     <string name="valid">有效期</string>
     <string name="valid_forever">永久</string>
     <string name="empty_download">您还没有下载过文件哦～</string>
+    <string name="cant_join_yourself_recorded_lesson">你是该课的所有者，无需报名即可去查看该课哦~</string>
+    <string name="look_my_lessons">查看我的课</string>
 
 </resources>

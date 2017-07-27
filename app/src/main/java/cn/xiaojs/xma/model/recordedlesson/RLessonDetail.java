@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.model.recordedlesson;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -36,6 +37,8 @@ public class RLessonDetail implements Serializable{
     public LiveLesson.Overview overview;
     public String reason;
     public Expire expire;
+    public String enrollState;
+
 
     public ArrayList<Section> sections;
 }

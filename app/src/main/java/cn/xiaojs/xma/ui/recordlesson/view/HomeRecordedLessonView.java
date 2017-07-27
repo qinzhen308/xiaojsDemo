@@ -145,7 +145,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.op_dir_view:
-                RLDirListActivity.invoke(getContext());
+                RLDirListActivity.invoke(getContext(),mData.id);
                 break;
             case R.id.op_more_view:
                 moreOperate();

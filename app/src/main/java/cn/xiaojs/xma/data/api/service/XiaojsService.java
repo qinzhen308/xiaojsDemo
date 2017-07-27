@@ -87,6 +87,7 @@ import cn.xiaojs.xma.model.recordedlesson.RLChapter;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
+import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
 import cn.xiaojs.xma.model.search.LessonInfo;
@@ -479,13 +480,17 @@ public interface XiaojsService {
     @GET("/v1/ctl/courses/recorded/{course}")
     Call<RLessonDetail> getRecordedCourse(@Path("course") String course);
 
+    @POST("/v1/ctl/courses/recorded/{course}/students/enroll")
+    Call<ResponseBody> enrollRecordedCourse(@Path("course") String course,
+                                            @Body JoinClassParams joinClassParams);
+
     @GET("/v1/ctl/courses/recorded/{course}/public")
     Call<RLessonDetail> getRecordedCoursePublic(@Path("course") String course);
 
 
     @GET("/v1/ctl/courses/recorded/{course}/chapters/{chapter}")
-    Call<ArrayList<RLChapter>> getRecordedCourseChapters(@Path("course") String course,
-                                              @Path("chapter") String chapterid);
+    Call<ArrayList<Section>> getRecordedCourseChapters(@Path("course") String course,
+                                                       @Path("chapter") String chapterid);
 
     @GET("/v1/ctl/courses/recorded/{course}/students/{criteria}/{pagination}")
     Call<CollectionPage<StudentEnroll>> getRecordedCourseStudents(@Path("course") String course,

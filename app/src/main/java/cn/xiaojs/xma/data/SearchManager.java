@@ -99,7 +99,7 @@ public class SearchManager {
     /**
      * Search search.
      */
-    public static ServiceRequest ServiceRequest(Context context,
+    public static ServiceRequest search(Context context,
                                       String type,
                                       String keyword,
                                       int page,

@@ -465,7 +465,10 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 ClassesListActivity.invoke(this,0);
                 break;
             case ACTION_TO_MY_LESSONS:
-                ClassesListActivity.invoke(this,0);
+                ClassesListActivity.invoke(this,1);
+                break;
+            case ACTION_TO_MY_RECORDED_LESSONS:
+                ClassesListActivity.invoke(this,2);
                 break;
             case ACTION_TO_CLASSROOM:
                 String ticket=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+0);

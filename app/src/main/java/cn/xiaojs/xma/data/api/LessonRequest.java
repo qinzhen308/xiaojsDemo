@@ -68,6 +68,7 @@ import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
+import cn.xiaojs.xma.model.recordedlesson.Section;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -489,8 +490,13 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_RECORDED_COURSE, call);
     }
 
+    public void enrollRecordedCourse(String course, JoinClassParams joinClassParams) {
+        Call<ResponseBody> call = getService().enrollRecordedCourse(course,joinClassParams);
+        enqueueRequest(APIType.ENROLL_RECORDED_COURSE, call);
+    }
+
     public void getRecordedCourseChapters(String course,String chapter) {
-        Call<ArrayList<RLChapter>> call = getService().getRecordedCourseChapters(course,chapter);
+        Call<ArrayList<Section>> call = getService().getRecordedCourseChapters(course,chapter);
         enqueueRequest(APIType.GET_RECORDED_COURSE_CHAPTERS, call);
     }
 
