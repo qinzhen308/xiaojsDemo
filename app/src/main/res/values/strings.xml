@@ -1001,7 +1001,7 @@
     <string name="no_remarks">无备注</string>
     <string name="please_input_remark">请填写备注说明</string>
     <string name="man_register">手动注册</string>
-    <string name="import_from_class_or_lesson">从班／课导入</string>
+    <string name="import_from_class_or_lesson">从班/课导入</string>
     <string name="phone_usage_tips">手机号将作为学生登录小教室的唯一账号</string>
     <string name="telc_category">学科类目</string>
     <string name="valid">有效期</string>
