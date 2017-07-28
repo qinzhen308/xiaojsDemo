@@ -48,6 +48,8 @@ import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SearchManager;
+import cn.xiaojs.xma.data.api.SearchRequest;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.base.BaseActivity;
@@ -229,11 +231,17 @@ public class SearchActivity extends BaseActivity {
         }
     };
 
+    ServiceRequest mRequest;
+    public void cancelRequst(){
+        if(mRequest==null)return;
+        mRequest.cancelRequest();
+    }
     private void searchRequest(int page){
+        cancelRequst();
         if(TextUtils.isEmpty(keywords)){
             return;
         }
-        SearchManager.search(this,typeName,keywords,page,MAX_PER_PAGE,dataPageLoader);
+        mRequest=SearchManager.search(this,typeName,keywords,page,MAX_PER_PAGE,dataPageLoader);
     }
 
     private void bindData(List<SearchResultV2> data){

@@ -40,7 +40,9 @@ import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionResult;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
@@ -53,6 +55,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.model.ClassFooterModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.ClassLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LoadStateMode;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
@@ -98,6 +101,8 @@ public class HomeClassContentBuz {
     int c_red;
     @BindColor(R.color.grey_point)
     int c_gray;
+
+    ServiceRequest mRequest;
 
     LastEmptyModel lastEmptyModel=new LastEmptyModel();
 
@@ -259,7 +264,15 @@ public class HomeClassContentBuz {
     }
 
 
+    private void cancelRequest(){
+        if(mRequest!=null){
+            mRequest.cancelRequest();
+        }
+    }
+
     private void doRequest(final int y,final int m,final int d){
+//        clearLessonsAndLoading(true);
+        cancelRequest();
         long time=System.currentTimeMillis();
         long start= ScheduleUtil.ymdToTimeMill(y,m,d);
         long end=start+ ScheduleUtil.DAY-1000;
@@ -271,9 +284,10 @@ public class HomeClassContentBuz {
         ScheduleOptions options=new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(start))
                 .setEnd(ScheduleUtil.getUTCDate(end))
                 .build();
-        LessonDataManager.getClassesSchedule(mContext, options, new APIServiceCallback<ScheduleData>() {
+        mRequest=LessonDataManager.getClassesSchedule(mContext, options, new APIServiceCallback<ScheduleData>() {
             @Override
             public void onSuccess(ScheduleData object) {
+//                clearLessonsAndLoading(false);
                 long time=System.currentTimeMillis();
                 LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
                 ArrayList list=new ArrayList();
@@ -443,6 +457,33 @@ public class HomeClassContentBuz {
                 datas.remove(i);
             }
         }
+    }
+
+    private void clearLessonsAndLoading(boolean showLoading){
+        Class lessonType= CLesson.class;
+        Class lessonLabelType= LessonLabelModel.class;
+        Class loadType= LoadStateMode.class;
+        List datas=mAdapter.getList();
+        if(ArrayUtil.isEmpty(datas)){
+            datas=new ArrayList<>();
+            mAdapter.setList(datas);
+        }
+        while (0<datas.size()){
+            Object o=datas.get(0);
+            if(o.getClass().equals(lessonType)){
+                datas.remove(0);
+            }else if(o.getClass().equals(lessonLabelType)){
+                datas.remove(0);
+            }else if(o.getClass().equals(loadType)){
+                datas.remove(0);
+            }else {
+                break;
+            }
+        }
+        if(showLoading){
+            datas.add(0,new LoadStateMode());
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     public void update(){
