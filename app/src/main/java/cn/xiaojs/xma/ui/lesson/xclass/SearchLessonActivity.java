@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -28,11 +30,14 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 
@@ -41,7 +46,7 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
  * 搜索公开课
  */
 
-public class SearchLessonActivity extends BaseActivity {
+public class SearchLessonActivity extends BaseActivity implements IUpdateMethod{
 
 
     @BindView(R.id.back)
@@ -218,7 +223,56 @@ public class SearchLessonActivity extends BaseActivity {
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case CourseConstant.CODE_CANCEL_LESSON:
+                case CourseConstant.CODE_EDIT_LESSON:
+                case CourseConstant.CODE_LESSON_AGAIN:
+                case CourseConstant.CODE_CREATE_LESSON:
+                    updateData(false);
+                    break;
+
+            }
+        }
+    }
 
 
+    @Override
+    public void updateData(boolean justNative) {
+        if(justNative){
+            mAdapter.notifyDataSetChanged();
+        }else {
+            dataPageLoader.refresh();
+        }
+    }
 
+    @Override
+    public void updateItem(int position, Object obj, Object... others) {
+        if(position<mAdapter.getItemCount()){
+            Object item=mAdapter.getList().get(position);
+            //由于有些操作是异步的，为了防止在本方法调用前，列表已经刷新过，作如下判断
+            if(item instanceof CLesson &&((CLesson)item).id.equals(((CLesson)obj).id)){
+                if(others.length>0&&others[0].equals("remove")){
+                    mAdapter.getList().remove(position);
+                    //除了删除该项，还需要处理该课对应日期的标签：删除或者改变课的数量
+                    for(int i=position-1;i>=0;i--){
+                        Object preItem=mAdapter.getList().get(position-1);
+                        if(preItem instanceof LessonLabelModel){
+                            if(((LessonLabelModel) preItem).lessonCount==1){
+                                mAdapter.getList().remove(i);
+                            }else {
+                                ((LessonLabelModel) preItem).lessonCount--;
+                            }
+                            break;
+                        }
+                    }
+                }else {
+                    mAdapter.getList().set(position,obj);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 }

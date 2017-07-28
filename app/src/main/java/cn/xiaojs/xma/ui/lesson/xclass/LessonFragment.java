@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,6 +98,9 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
         });
         mRecyclerView=mPullRecyclerView.getRefreshableView();
         stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container)));
+        mAdapter = new HomeClassAdapter(mRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(mAdapter);
 //        stateView=new LoadStatusViewDecoratee(null);
         return v;
     }
@@ -110,11 +115,10 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
 //        lessonAdapter.setButtonDesc(getString(R.string.lesson_creation));
 
 //        listView.setAdapter(lessonAdapter);
-        mAdapter = new HomeClassAdapter(mRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(mAdapter);
+
         initPageLoad();
         getMonthData();
+        Logger.d("---lessonfragment--onActivityCreated----adapter="+mAdapter);
     }
 
     @OnClick({R.id.course_filter,R.id.my_course_search})
