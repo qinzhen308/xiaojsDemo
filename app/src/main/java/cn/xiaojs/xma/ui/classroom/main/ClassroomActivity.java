@@ -214,7 +214,15 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 if (ClassroomController.getInstance(this).getStackFragment() != null) {
                     ClassroomController.getInstance(this).onActivityBackPressed(backStackEntryCount);
                 } else {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        if (!isDestroyed()) {
+                            return false;
+                        }
+                    }
+
                     ClassroomController.getInstance(this).showExitClassroomDialog();
+
                 }
                 return false;
             }

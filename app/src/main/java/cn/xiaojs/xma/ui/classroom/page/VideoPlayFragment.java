@@ -94,7 +94,7 @@ public class VideoPlayFragment extends BaseFragment {
         Bundle data = getArguments();
         if (data != null) {
             mDoc = (LibDoc) data.getSerializable(Constants.KEY_LIB_DOC);
-            palyActivity = data.getBoolean(Constants.KEY_LAUNCH_ACTIVITY,false);
+            palyActivity = data.getBoolean(Constants.KEY_LAUNCH_ACTIVITY, false);
         }
 
         mViewWidth = getResources().getDisplayMetrics().widthPixels;
@@ -176,7 +176,7 @@ public class VideoPlayFragment extends BaseFragment {
             case R.id.back:
                 if (palyActivity) {
                     getActivity().finish();
-                }else{
+                } else {
                     getFragmentManager().popBackStackImmediate();
                 }
                 break;
@@ -283,11 +283,18 @@ public class VideoPlayFragment extends BaseFragment {
     }
 
     public void seekTo(long position) {
-        if (mPlMediaPlayer != null) {
-            pause();
-            mPlMediaPlayer.seekTo(position);
-            play();
+
+        try {
+            if (mPlMediaPlayer != null) {
+                pause();
+                mPlMediaPlayer.seekTo(position);
+                play();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
+
     }
 
     private void onHandleMessage(Message msg) {
