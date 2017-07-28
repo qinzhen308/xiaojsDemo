@@ -40,13 +40,17 @@ public class ScheduleUtil {
     public final static long DAY=3600*24*1000;
 
     public static List<ClassLesson> sort(List<ClassLesson> src) {
-        for (int i=1;i<src.size();i++) {
-            long d1 = src.get(i-1).schedule.getStart().getTime();
-            long d2 = src.get(i).schedule.getStart().getTime();
-            if(d2<d1){
-                ClassLesson cl=src.get(i-1);
-                src.set(i-1,src.get(i));
-                src.set(i,cl);
+        int size=src.size();
+        ClassLesson cl=null;
+        for(int i=0,limit=size-1;i<limit;i++){
+            for (int j=i+1;j<size;j++) {
+                long cursorItem = src.get(i).schedule.getStart().getTime();
+                long compareItem = src.get(j).schedule.getStart().getTime();
+                if(compareItem<cursorItem){
+                    cl=src.get(i);
+                    src.set(i,src.get(j));
+                    src.set(j,cl);
+                }
             }
         }
         return src;

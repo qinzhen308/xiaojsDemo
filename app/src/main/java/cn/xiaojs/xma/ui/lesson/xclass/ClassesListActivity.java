@@ -22,6 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonAdapter;
@@ -95,7 +97,7 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
     private void initView() {
         tabGroupLayout.check(R.id.tab_class);
         tabPager.setOffscreenPageLimit(2);
-        fragmentList = new ArrayList<>(2);
+        fragmentList = new ArrayList<>(3);
         fragmentList.add(new MyClassFragment());
         fragmentList.add(new LessonFragment());
         fragmentList.add(new RecordedLessonFragment());
@@ -188,7 +190,11 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
 
     @Override
     public void updateItem(int position, Object obj,Object... others) {
-        ((IUpdateMethod)fragmentList.get(1)).updateItem(position,obj,others);
+        if(obj instanceof CLesson){
+            ((IUpdateMethod)fragmentList.get(1)).updateItem(position,obj,others);
+        }else if(obj instanceof RLesson){
+            ((IUpdateMethod)fragmentList.get(2)).updateItem(position,obj,others);
+        }
     }
 
     private ProgressHUD progress;
