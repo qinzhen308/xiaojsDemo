@@ -6,13 +6,17 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,11 +32,13 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.JsInvokeNativeInterface;
+import cn.xiaojs.xma.util.ShareUtil;
 
 public class CommonWebActivity extends BaseActivity {
 
     public final static String EXTRA_TITLE="extra_title";
     public final static String EXTRA_URL="extra_url";
+    public final static String EXTRA_SHARE_URL="extra_share_url";
 
     @BindView(R.id.content_webview)
     WebView contentView;
@@ -46,24 +52,35 @@ public class CommonWebActivity extends BaseActivity {
     @BindView(R.id.empty_desc1)
     TextView emptyView1;
 
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+
+    private String share_url;
     @Override
     protected void addViewContent() {
-        addView(R.layout.activity_agreement);
+        addView(R.layout.activity_common_web);
         String title=getIntent().getStringExtra(EXTRA_TITLE);
         if(title==null){
             needHeader(false);
         }else {
             setMiddleTitle(title);
         }
+        share_url=getIntent().getStringExtra(EXTRA_SHARE_URL);
+        if(!TextUtils.isEmpty(share_url)){
+            setRightImage2(R.drawable.share_selector);
+        }
         initWebView();
         loadContent();
     }
 
-    @OnClick({R.id.left_view})
+    @OnClick({R.id.left_view,R.id.right_image2})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_view:
                 finish();
+                break;
+            case R.id.right_image2:
+//                ShareUtil.shareUrlByUmeng();
                 break;
         }
     }
@@ -77,6 +94,19 @@ public class CommonWebActivity extends BaseActivity {
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
                 Logger.d("---qz----"+consoleMessage.message());
                 return super.onConsoleMessage(consoleMessage);
+            }
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if (newProgress == 100) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                } else {
+                    if (View.INVISIBLE == progressBar.getVisibility()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    progressBar.setProgress(newProgress);
+                }
+                super.onProgressChanged(view, newProgress);
             }
         });
         contentView.setWebViewClient(new WebViewClient(){
@@ -124,6 +154,16 @@ public class CommonWebActivity extends BaseActivity {
         Intent intent =new Intent(contex,CommonWebActivity.class);
         intent.putExtra(EXTRA_TITLE,title);
         intent.putExtra(EXTRA_URL,url);
+        contex.startActivity(intent);
+    }
+
+
+    //包含右上角分享按钮的分享功能
+    public static void invoke(Context contex,String title,String url,String shareUrl){
+        Intent intent =new Intent(contex,CommonWebActivity.class);
+        intent.putExtra(EXTRA_TITLE,title);
+        intent.putExtra(EXTRA_URL,url);
+        intent.putExtra(EXTRA_SHARE_URL,shareUrl);
         contex.startActivity(intent);
     }
 

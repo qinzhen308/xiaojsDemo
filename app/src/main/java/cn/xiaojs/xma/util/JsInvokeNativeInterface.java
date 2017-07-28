@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -16,21 +15,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URLDecoder;
-import java.util.ArrayList;
-
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.ctl.AbsStudent;
 import cn.xiaojs.xma.model.ctl.CriteriaStudents;
 import cn.xiaojs.xma.model.ctl.CriteriaStudentsDoc;
 import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.Students;
+import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -42,6 +39,7 @@ import okhttp3.ResponseBody;
 
 public class JsInvokeNativeInterface {
     public static final String TYPE_JION_CLASS="classhome";
+    public static final String TYPE_JION_RECORDED_LESSON="recordedCourse";
 
 
     Activity context;
@@ -60,9 +58,22 @@ public class JsInvokeNativeInterface {
             return;
         }
         if(needVerify){
-            showVerifyMsgDialog(classid);
+            showJoinClassVerifyMsgDialog(classid);
         }else {
-            doJoinRequest(classid,null);
+            doJoinClassRequest(classid,null);
+        }
+
+    }
+
+    public void checkJoinNeedVerify(String lessonid,boolean needVerify){
+        if(TextUtils.isEmpty(lessonid)){
+            showToastOnUiThread("lessonid 无效");
+            return;
+        }
+        if(needVerify){
+            showJoinRecordedLessonVerifyMsgDialog(lessonid);
+        }else {
+            doJoinRecordedLessonRequest(lessonid,null);
         }
 
     }
@@ -79,16 +90,11 @@ public class JsInvokeNativeInterface {
         }
         try {
             JSONObject object=new JSONObject(params);
-            if(TYPE_JION_CLASS.equals(object.optString("type"))){
-                JSONObject data=object.optJSONObject("data");
-                String id=data.optString("id");
-                int needJoin=data.optInt("join");
-                String ownerID=object.optString("ownerID");
-                if(AccountDataManager.getAccountID(context).equals(ownerID)){
-                    showToastOnUiThread(R.string.cant_join_yourself_class);
-                }else {
-                    checkJoinState(id,needJoin==1);
-                }
+            String tpye=object.optString("type");
+            if(TYPE_JION_CLASS.equals(tpye)){
+                joinClassBuz(object);
+            }else if(TYPE_JION_RECORDED_LESSON.equals(tpye)){
+                joinRecordedLesson(object);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -96,8 +102,46 @@ public class JsInvokeNativeInterface {
         }
     }
 
+    /**
+     * 加班逻辑
+     * @param object
+     */
+    private void joinClassBuz(JSONObject object){
+        JSONObject data=object.optJSONObject("data");
+        String id=data.optString("id");
+        int needJoin=data.optInt("join");
+        String ownerID=object.optString("ownerID");
+        if(AccountDataManager.getAccountID(context).equals(ownerID)){
+            showToastOnUiThread(R.string.cant_join_yourself_class);
+        }else {
+            checkJoinClassState(id,needJoin==1);
+        }
+    }
 
-    private void doJoinRequest(String classid,String msg){
+    /**
+     * 加课逻辑
+     * @param object
+     */
+    private void joinRecordedLesson(JSONObject object){
+        JSONObject data=object.optJSONObject("data");
+        String id=data.optString("id");
+        int needJoin=data.optInt("join");
+        JSONObject createdBy=object.optJSONObject("createdBy");
+        //判断是不是创建者
+        if(createdBy!=null&&AccountDataManager.getAccountID(context).equals(createdBy.optString("id"))){
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showMyselfRecordedLessonDialog();
+                }
+            });
+        }else {
+            checkJoinRecordedLessonState(id,needJoin==1);
+        }
+    }
+
+
+    private void doJoinClassRequest(String classid, String msg){
         showDialogOnUiThread();
         JoinClassParams params=new JoinClassParams();
         params.remarks=msg;
@@ -113,6 +157,39 @@ public class JsInvokeNativeInterface {
                 }else if(!TextUtils.isEmpty(joinResponse.id)){
                     //此班是需要申请验证才能加入的班
                     showToastOnUiThread("您已提交申请，请等待班主任确认");
+                    context.startActivity(new Intent(context,MainActivity.class));
+                }else if(!TextUtils.isEmpty(joinResponse.ticket)){
+                    showTipDialog(joinResponse.ticket);
+                }else {
+                    showToastOnUiThread("加入成功");
+                    context.startActivity(new Intent(context,MainActivity.class));
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelDialogOnUiThread();
+                showToastOnUiThread(errorMessage);
+            }
+        });
+    }
+
+    private void doJoinRecordedLessonRequest(String lessonid, String msg){
+        showDialogOnUiThread();
+        JoinClassParams params=new JoinClassParams();
+        params.remarks=msg;
+        LessonDataManager.enrollRecordedCourse(context, lessonid,params, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+                cancelDialogOnUiThread();
+                JoinResponse joinResponse = getJoinResponse(object);
+                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
+                if (joinResponse == null) {
+                    showToastOnUiThread("加入成功");
+                    context.startActivity(new Intent(context,MainActivity.class));
+                }else if(!TextUtils.isEmpty(joinResponse.id)){
+                    //此班是需要申请验证才能加入的班
+                    showToastOnUiThread("您已提交申请，请等待确认");
                     context.startActivity(new Intent(context,MainActivity.class));
                 }else if(!TextUtils.isEmpty(joinResponse.ticket)){
                     showTipDialog(joinResponse.ticket);
@@ -165,7 +242,7 @@ public class JsInvokeNativeInterface {
     }
 
 
-    private void showVerifyMsgDialog(final String classid){
+    private void showJoinClassVerifyMsgDialog(final String classid){
         final CommonDialog dialog=new CommonDialog(context);
         dialog.setTitle(R.string.add_class_verification_msg2);
         final EditText editText=new EditText(context);
@@ -184,7 +261,38 @@ public class JsInvokeNativeInterface {
             @Override
             public void onClick() {
                 dialog.dismiss();
-                doJoinRequest(classid,editText.getText().toString().trim());
+                doJoinClassRequest(classid,editText.getText().toString().trim());
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void showJoinRecordedLessonVerifyMsgDialog(final String lessonid){
+        final CommonDialog dialog=new CommonDialog(context);
+        dialog.setTitle(R.string.add_recorded_lesson_verification_msg);
+        final EditText editText=new EditText(context);
+        editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        editText.setHint(R.string.add_recorded_lesson_verify_msg_tip);
+        editText.setLines(4);
+        editText.setTextColor(context.getResources().getColor(R.color.font_black));
+        editText.setBackgroundResource(R.drawable.common_search_bg);
+        editText.setGravity(Gravity.LEFT|Gravity.TOP);
+        int padding=context.getResources().getDimensionPixelSize(R.dimen.px10);
+        editText.setPadding(padding,padding,padding,padding);
+        editText.setHintTextColor(context.getResources().getColor(R.color.font_gray));
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_PX,context.getResources().getDimensionPixelSize(R.dimen.font_28px));
+        dialog.setCustomView(editText);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                doJoinRecordedLessonRequest(lessonid,editText.getText().toString().trim());
             }
         });
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
@@ -197,7 +305,7 @@ public class JsInvokeNativeInterface {
     }
 
 
-    private void checkJoinState(final String classid,final boolean needVerify){
+    private void checkJoinClassState(final String classid, final boolean needVerify){
         showDialogOnUiThread();
         CriteriaStudents criteria=new CriteriaStudents();
         criteria.roles=new String[]{"ClassStudent"};
@@ -216,6 +324,34 @@ public class JsInvokeNativeInterface {
                         showToastOnUiThread("您已提交申请，请等待班主任确认");
                     }else {
                         xjsclasshome(classid,needVerify);
+                    }
+                }else {
+                    showToastOnUiThread("解析失败");
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelDialogOnUiThread();
+                showToastOnUiThread(errorMessage);
+            }
+        });
+    }
+
+
+    private void checkJoinRecordedLessonState(final String lessonId,final boolean needVerify){
+        showDialogOnUiThread();
+        LessonDataManager.getRecordedCoursePublic(context, lessonId, new APIServiceCallback<RLessonDetail>() {
+            @Override
+            public void onSuccess(RLessonDetail object) {
+                cancelDialogOnUiThread();
+                if(object!=null){
+                    if(Ctl.CourseEnrollmentState.ENROLLED.equals(object.enrollState)){
+                        showToastOnUiThread("您已是该班成员");
+                    }else if(Ctl.CourseEnrollmentState.PENDING_FOR_ACCEPTANCE.equals(object.enrollState)){
+                        showToastOnUiThread("您已提交申请，请等待班主任确认");
+                    }else {
+                        checkJoinNeedVerify(lessonId,needVerify);
                     }
                 }else {
                     showToastOnUiThread("解析失败");
@@ -264,5 +400,27 @@ public class JsInvokeNativeInterface {
                 ((IDialogMethod)context).cancelProgress();
             }
         });
+    }
+
+
+    private void showMyselfRecordedLessonDialog(){
+        final CommonDialog dialog=new CommonDialog(context);
+        dialog.setDesc(R.string.cant_join_yourself_recorded_lesson);
+        dialog.setLefBtnText(R.string.cancel);
+        dialog.setRightBtnText(R.string.look_my_lessons);
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                MainActivity.invokeWithAction(context,MainActivity.ACTION_TO_MY_RECORDED_LESSONS);
+            }
+        });
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+
+            }
+        });
+        dialog.show();
     }
 }

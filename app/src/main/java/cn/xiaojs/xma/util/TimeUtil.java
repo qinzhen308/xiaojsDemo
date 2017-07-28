@@ -1036,6 +1036,12 @@ public class TimeUtil {
         return toMonths(date) / 365L;
     }
 
+    /**
+     * 返回时间差
+     * @param start
+     * @param end
+     * @return 格式：x小时x分钟x秒、x分钟x秒、x秒
+     */
     public static String differenceForTime(Date start,Date end){
         long diff=end.getTime()-start.getTime();
         int[] units={1000,60*1000,60*60*1000,24*60*60*1000};
@@ -1043,7 +1049,7 @@ public class TimeUtil {
         int i=0;
         String result="";
         while (i<unitTexts.length&&diff>units[i]){
-            result=diff%units[i+1]+unitTexts[i]+result;
+            result=(diff%units[i+1])/units[i]+unitTexts[i]+result;
             i++;
         }
         return result;

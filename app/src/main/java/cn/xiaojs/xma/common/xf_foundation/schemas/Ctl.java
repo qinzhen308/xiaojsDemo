@@ -39,6 +39,20 @@ public class Ctl {
 
     }
 
+    public static class CourseEnrollmentState{
+        public static final String DRAFT = "Draft";
+        public static final String PENDING_FOR_PAYMENT = "PendingForPayment";
+        public static final String ENROLLED = "Enrolled";
+        public static final String PENDING_FOR_ACK = "PendingForACK";
+        public static final String CANCELLED = "Cancelled";
+        public static final String DROPPED = "Dropped";
+        public static final String OBSOLETE = "Obsolete";
+        public static final String FROZE = "Froze";
+        public static final String PENDING_FOR_ACCEPTANCE = "PendingForAcceptance";
+        public static final String REJECTED = "Rejected";
+
+    }
+
     /**
      * Defines the live lesson lifecycle states, which inherits those common MSP states.
      */

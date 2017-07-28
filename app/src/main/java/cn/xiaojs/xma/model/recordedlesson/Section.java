@@ -54,7 +54,7 @@ public class Section implements Serializable{
 
         public String getTime(){
             if(duration==null)return "未知";
-            return TimeUtil.differenceForTime(duration.getEnd(),duration.getStart());
+            return TimeUtil.differenceForTime(duration.getStart(),duration.getEnd());
         }
     }
 

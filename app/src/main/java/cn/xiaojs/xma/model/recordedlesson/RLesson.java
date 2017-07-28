@@ -23,6 +23,7 @@ public class RLesson {
     public String id;
     public String title;
     public Date createdOn;
+    public Account createdBy;
     public SubjectName subject;
     public Enroll enroll;
     public String cover;

@@ -65,6 +65,7 @@ import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
+import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import okhttp3.ResponseBody;
 
@@ -827,6 +828,22 @@ public class LessonDataManager {
     }
 
     /**
+     * A person apply for enroll as student for the recordedCourse.
+     * @param context
+     * @param course
+     * @param callback
+     * @return
+     */
+    public static ServiceRequest enrollRecordedCourse(Context context,
+                                         String course,
+                                         JoinClassParams joinParams,
+                                         APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.enrollRecordedCourse(course,joinParams);
+        return lessonRequest;
+    }
+
+    /**
      * Returns detailed data for the recordedCourse in public state.
      *
      * @param context
@@ -844,7 +861,7 @@ public class LessonDataManager {
     public static ServiceRequest getRecordedCourseChapters(Context context,
                                                  String course,
                                                  String chapter,
-                                                 APIServiceCallback<ArrayList<RLChapter>> callback) {
+                                                 APIServiceCallback<ArrayList<Section>> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getRecordedCourseChapters(course, chapter);
         return lessonRequest;

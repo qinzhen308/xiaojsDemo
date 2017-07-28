@@ -15,6 +15,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
 import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.data.api.service.OtherService;
@@ -304,6 +305,8 @@ public class ApiManager {
             typeParam="coursedetails";
         }else if(Account.TypeName.CLASS_LESSON.equals(type)){
             typeParam="classhome";
+        }else if(Social.SearchType.COURSE.equals(type)){
+            typeParam="recorded";
         }else {//班课
             typeParam="coursedetails";
         }

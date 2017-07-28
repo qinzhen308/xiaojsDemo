@@ -11,28 +11,37 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 
 /**
  * Created by Paul Z on 2017/7/21.
+ * 课程目录
  */
 
 public class RLDirListActivity extends BaseActivity {
 
+    public static final String EXTRA_LESSON_ID="extra_lesson_id";
 
     @BindView(R.id.listview)
     ListView listview;
     RecordedLessonListAdapter adapter;
+    String lessonId;
 
 
     @Override
     protected void addViewContent() {
+        lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
         addView(R.layout.activity_recorded_lesson_dir_list);
         needHeader(true);
         setMiddleTitle(R.string.record_lesson_directory);
         initView();
+        loadChapters();
     }
 
 
@@ -51,9 +60,25 @@ public class RLDirListActivity extends BaseActivity {
         }
     }
 
+    private void loadChapters(){
+        LessonDataManager.getRecordedCourseChapters(this, lessonId, "all", new APIServiceCallback<ArrayList<Section>>() {
+            @Override
+            public void onSuccess(ArrayList<Section> object) {
+                adapter.setList(object);
+                adapter.notifyDataSetChanged();
+            }
 
-    public static void invoke(Context context) {
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
+
+    public static void invoke(Context context,String lessonId) {
         Intent intent = new Intent(context, RLDirListActivity.class);
+        intent.putExtra(EXTRA_LESSON_ID,lessonId);
         context.startActivity(intent);
     }
 
