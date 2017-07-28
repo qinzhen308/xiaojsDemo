@@ -15,6 +15,9 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
@@ -24,7 +27,7 @@ import cn.xiaojs.xma.util.MaterialUtil;
  * Created by Paul Z on 2017/7/26.
  */
 
-public class RLSectionDocView extends LinearLayout implements IViewModel<Section> {
+public class RLSectionDocView extends LinearLayout implements IViewModel<Section> ,IEventer {
 
 
     @BindView(R.id.tv_name)
@@ -32,6 +35,8 @@ public class RLSectionDocView extends LinearLayout implements IViewModel<Section
     @BindView(R.id.tv_time)
     TextView tvTime;
     Section mData;
+
+    EventCallback eventCallback;
 
     public RLSectionDocView(Context context) {
         super(context);
@@ -63,8 +68,15 @@ public class RLSectionDocView extends LinearLayout implements IViewModel<Section
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialUtil.openMaterial((Activity) getContext(),mData.document.buildLibDoc());
+                if(eventCallback!=null){
+                    eventCallback.onEvent(EventCallback.EVENT_1, mData.document.buildLibDoc());
+                }
             }
         });
+    }
+
+    @Override
+    public void setEventCallback(EventCallback callback) {
+        eventCallback=callback;
     }
 }

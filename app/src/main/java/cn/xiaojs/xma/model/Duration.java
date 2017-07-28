@@ -3,6 +3,7 @@ package cn.xiaojs.xma.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
@@ -12,7 +13,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Duration {
+public class Duration implements Serializable{
 
     //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date start;

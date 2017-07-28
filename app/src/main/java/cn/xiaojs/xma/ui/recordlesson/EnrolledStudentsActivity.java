@@ -72,7 +72,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
     }
 
     private void init() {
-
+        verLayout.setVisibility(View.VISIBLE);
 
         adapter = new StudentsAdapter(this, listView);
         if (teaching) {
@@ -97,8 +97,8 @@ public class EnrolledStudentsActivity extends BaseActivity {
         @Override
         protected void setViewContent(Holder holder, StudentEnroll bean, int position) {
             holder.nameView.setText(bean.name);
-            holder.phoneView.setText(bean.mobile);
-            holder.timeEnvView.setText("报名时间"+ ScheduleUtil.getDateYMDHM(bean.createdOn));
+            holder.phoneView.setText(""+bean.mobile);
+            holder.timeEnvView.setText("报名时间"+ (bean.createdOn==null?"暂无":ScheduleUtil.getDateYMDHM(bean.createdOn)));
         }
 
         @Override

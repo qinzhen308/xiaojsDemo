@@ -29,6 +29,7 @@ import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonFragment;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
@@ -157,15 +158,23 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
         String[] items = this.getResources().getStringArray(R.array.add_menu2);
         menu.setWidth(this.getResources().getDimensionPixelSize(R.dimen.px280));
         menu.addTextItems(items);
-        menu.addImgItems(new Integer[]{R.drawable.ic_menu_create_lesson,R.drawable.ic_add_class1});
+        menu.addImgItems(new Integer[]{R.drawable.ic_menu_create_lesson,
+                R.drawable.ic_create_tapedlesson,
+                R.drawable.ic_add_class1});
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 switch (i) {
-                    case 1:
+                    case 2:
                         if (JudgementUtil.checkTeachingAbility(ClassesListActivity.this)) {
                             ClassesListActivity.this.startActivityForResult(new Intent(ClassesListActivity.this, CreateClassActivity.class),CourseConstant.CODE_CREATE_CLASS);
+                        }
+                        break;
+                    case 1:             //开录播课
+                        if (JudgementUtil.checkTeachingAbility(ClassesListActivity.this)) {
+//                            startActivityForResult(new Intent(ClassesListActivity.this, CreateRecordlessonActivity.class),CourseConstant.CODE_CREATE_RECORDED_LESSON);
+                            startActivity(new Intent(ClassesListActivity.this, CreateRecordlessonActivity.class));
                         }
                         break;
                     case 0:

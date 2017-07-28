@@ -10,6 +10,7 @@ import java.util.Date;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -44,6 +45,7 @@ import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/7/25.
+ * 录播课操作
  */
 
 public class RLOpModel extends AbsOpModel<RLesson> {
@@ -163,11 +165,11 @@ public class RLOpModel extends AbsOpModel<RLesson> {
 
                 //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
                 if (AccountDataManager.isVerified(context)) {
-                    bean.state=LessonState.PENDING_FOR_LIVE;
+                    bean.state= Ctl.RecordedCourseState.ONSHELVES;
                     ToastUtil.showToast(context, R.string.shelves_ok);
                     updateData(context,true);
                 }else {
-                    bean.state=LessonState.PENDING_FOR_APPROVAL;
+                    bean.state= Ctl.RecordedCourseState.PENDING_FOR_APPROVAL;
                     ToastUtil.showToast(context, R.string.shelves_need_examine);
                     updateJustItem(context,position,bean);
                 }

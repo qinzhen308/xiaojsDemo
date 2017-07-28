@@ -54,7 +54,9 @@ import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.recordedlesson.EnrollMode;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.social.Dimension;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.base.XiaojsActions;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LiveLessonBriefActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonLabelActivity;
@@ -544,14 +546,13 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
-                ClassesListActivity.invoke(CreateRecordedLessonActivity.this, 2);
-                finish();
+                MainActivity.invokeWithAction(CreateRecordedLessonActivity.this, XiaojsActions.ACTION_TO_MY_RECORDED_LESSONS);
             }
         });
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
-                finish();
+                MainActivity.invokeWithAction(CreateRecordedLessonActivity.this, null);
             }
         });
         dialog.show();

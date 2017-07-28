@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -11,13 +12,16 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.recordedlesson.RLChapter;
 import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
+import cn.xiaojs.xma.util.MaterialUtil;
 
 /**
  * Created by Paul Z on 2017/7/21.
@@ -47,6 +51,14 @@ public class RLDirListActivity extends BaseActivity {
 
     private void initView() {
         adapter = new RecordedLessonListAdapter(this);
+        adapter.setEventCallback(new EventCallback() {
+            @Override
+            public void onEvent(int what, Object... object) {
+                if(what==EVENT_1){
+                    MaterialUtil.openMaterial(RLDirListActivity.this,(LibDoc) object[0]);
+                }
+            }
+        });
         listview.setAdapter(adapter);
     }
 

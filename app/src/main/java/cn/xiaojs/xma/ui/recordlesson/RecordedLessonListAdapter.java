@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
@@ -22,7 +23,7 @@ import cn.xiaojs.xma.ui.recordlesson.view.RLSectionView;
  * Created by Paul Z on 2017/7/18.
  */
 
-public class RecordedLessonListAdapter extends AbsListAdapter<Section,AbsListAdapter.ViewHolder> {
+public class RecordedLessonListAdapter extends AbsListAdapter<Section,AbsListAdapter.ViewHolder> implements IEventer {
 
 
     EventCallback eventCallback;
@@ -37,9 +38,9 @@ public class RecordedLessonListAdapter extends AbsListAdapter<Section,AbsListAda
         if(holder.root instanceof IViewModel){
             ((IViewModel) holder.root).bindData(position,getItem(position));
         }
-//        if(holder.root instanceof IEventer){
-//            ((IEventer) holder.root).setEventCallback(eventCallback);
-//        }
+        if(holder.root instanceof IEventer&&eventCallback!=null){
+            ((IEventer) holder.root).setEventCallback(eventCallback);
+        }
     }
 
     @Override
@@ -99,6 +100,11 @@ public class RecordedLessonListAdapter extends AbsListAdapter<Section,AbsListAda
             }
         }
         return null;
+    }
+
+    @Override
+    public void setEventCallback(EventCallback callback) {
+        eventCallback=callback;
     }
 
     public static class CommonHolder extends ViewHolder{

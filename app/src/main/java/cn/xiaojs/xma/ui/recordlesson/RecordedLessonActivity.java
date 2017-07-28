@@ -32,6 +32,7 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
+import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.grade.ImportVideoActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
@@ -184,6 +185,8 @@ public class RecordedLessonActivity extends BaseActivity {
                 if (isEditMode) {
                     changeMode(false);
                     cancelManaged();
+                }else {
+                    finish();
                 }
                 break;
             case R.id.all_check_view:
@@ -269,7 +272,30 @@ public class RecordedLessonActivity extends BaseActivity {
     }
 
     private void handleRecreateData(){
-
+        if(srcList==null){
+            srcList=new ArrayList();
+        }
+        if(ArrayUtil.isEmpty(recreateData.sections)){
+            return;
+        }
+        for(Section sp:recreateData.sections){
+            RLDirectory dir=new RLDirectory(sp.name);
+            srcList.add(dir);
+            if(ArrayUtil.isEmpty(sp.sections)){
+                continue;
+            }
+            for(Section sc:sp.sections){
+                RLLesson lesson=new RLLesson();
+                lesson.name=sc.name;
+                lesson.videoName=sc.document.name;
+                lesson.videoId=sc.document.id;
+                lesson.videoMimeType=sc.document.mimeType;
+                lesson.videoKey=sc.document.key;
+                dir.addChild(lesson);
+            }
+        }
+        adapter.setList(srcList);
+        adapter.notifyDataSetChanged();
     }
 
 

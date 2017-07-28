@@ -40,6 +40,7 @@ public class Section implements Serializable{
         public String name;
         public String mimeType;
         public String typeName;
+        public String key;
         public Duration duration;
         public String id;
 
@@ -47,8 +48,8 @@ public class Section implements Serializable{
             LibDoc doc=new LibDoc();
             doc.mimeType=mimeType;
             doc.name=name;
-            doc.key=resource;
-            doc.id=resource;
+            doc.key=key;
+            doc.id=id;
             return doc;
         }
 
