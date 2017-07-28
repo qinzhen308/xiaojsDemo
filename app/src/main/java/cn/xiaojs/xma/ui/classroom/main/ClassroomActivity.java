@@ -71,9 +71,9 @@ import io.socket.emitter.Emitter;
  *  the maximum extent under the law.
  *
  *  ---------------------------------------------------------------------------------------
- * Author:huangyong
- * Date:2017/4/27
- * Desc:
+ *  Author:huangyong
+ *  Date:2017/4/27
+ *  Desc:
  *
  * ======================================================================================== */
 
@@ -214,7 +214,15 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                 if (ClassroomController.getInstance(this).getStackFragment() != null) {
                     ClassroomController.getInstance(this).onActivityBackPressed(backStackEntryCount);
                 } else {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        if (!isDestroyed()) {
+                            return false;
+                        }
+                    }
+
                     ClassroomController.getInstance(this).showExitClassroomDialog();
+
                 }
                 return false;
             }
@@ -242,7 +250,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
                     if (session.accessible) {
                         //连接socket
                         connectSocket(ticket, session.secret, false);
-                    }else {
+                    } else {
                         //询问用户是否强制进入
                         checkForceKickOut(session.secret);
                     }
@@ -363,8 +371,13 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
         //init fragment
 
-        ClassroomLiveFragment liveFragment = ClassroomController.getInstance(this).getStackFragment();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (isDestroyed()) {
+                return;
+            }
+        }
 
+        ClassroomLiveFragment liveFragment = ClassroomController.getInstance(this).getStackFragment();
         if (liveFragment == null) {
             initFragment(ctlSession);
         } else if (liveFragment instanceof PlayFragment) {
@@ -381,6 +394,13 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     }
 
     private void initFragment(CtlSession ctlSession) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (isDestroyed()) {
+                return;
+            }
+        }
+
         //Fragment fragment = null;
         if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
                 (Live.LiveSessionState.DELAY.equals(ctlSession.state) ||
@@ -532,7 +552,6 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
         mContinueConnectDialog.show();
     }
-
 
 
     private void disConnectSocket() {

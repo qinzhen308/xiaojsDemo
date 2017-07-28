@@ -44,6 +44,7 @@ import org.w3c.dom.Text;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by maxiaobao on 2016/11/4.
@@ -113,11 +114,19 @@ public class AccountDataManager {
      * @return
      */
     public static boolean isVerified(Context context) {
-        return getAccont(context).isVerified;
+
+        Account account = getAccont(context);
+        return account == null? false : account.isVerified;
     }
 
     public static void setVerified(Context context,boolean ver) {
-        getAccont(context).isVerified = ver;
+        Account account = getAccont(context);
+
+        if (account == null)
+            return;
+
+
+        account.isVerified = ver;
         setUserInfo(context, XiaojsConfig.mLoginUser);
     }
 
@@ -127,12 +136,18 @@ public class AccountDataManager {
      * @return
      */
     public static boolean isTeacher(Context context) {
-        return getAccont(context).isTeacher;
+
+        Account account = getAccont(context);
+
+
+        return account == null? false : account.isTeacher;
     }
 
     public static void setTeacher(Context context, boolean teacher) {
 
         Account account = getAccont(context);
+        if (account ==null)
+            return;
 
         if (account.isTeacher != teacher) {
             account.isTeacher = teacher;
