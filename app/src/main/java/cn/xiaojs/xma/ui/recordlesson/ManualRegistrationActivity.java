@@ -74,13 +74,13 @@ public class ManualRegistrationActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_image,R.id.right_image2,R.id.complete_btn, R.id.lesson_creation_tips_close})
+    @OnClick({R.id.left_image,R.id.right_view,R.id.complete_btn, R.id.lesson_creation_tips_close})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:                  //返回
                 finish();
                 break;
-            case R.id.right_image2:                //从班／课中导入
+            case R.id.right_view:                //从班／课中导入
                 Intent i = new Intent(this, ImportStudentFormClassActivity.class);
                 startActivityForResult(i,REQUEST_IMPORT_CODE);
                 break;
@@ -185,9 +185,11 @@ public class ManualRegistrationActivity extends BaseActivity {
 
 
     private void addStudent(StudentEnroll enroll, ArrayList<EnrollImport> imports) {
-
-        ArrayList<StudentEnroll> studentEnrolls = new ArrayList<>(1);
-        studentEnrolls.add(enroll);
+        ArrayList<StudentEnroll> studentEnrolls = null;
+        if (enroll !=null) {
+            studentEnrolls = new ArrayList<>(1);
+            studentEnrolls.add(enroll);
+        }
 
         ClassEnrollParams params = new ClassEnrollParams();
         ClassEnroll classEnroll = new ClassEnroll();
