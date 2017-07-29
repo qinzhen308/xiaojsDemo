@@ -21,6 +21,8 @@ import cn.xiaojs.xma.ui.recordlesson.view.RLSectionView;
 
 /**
  * Created by Paul Z on 2017/7/18.
+ *
+ *  录播课程的视频目录
  */
 
 public class RecordedLessonListAdapter extends AbsListAdapter<Section,AbsListAdapter.ViewHolder> implements IEventer {

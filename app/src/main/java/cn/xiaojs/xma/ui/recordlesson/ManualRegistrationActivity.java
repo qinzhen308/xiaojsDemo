@@ -16,6 +16,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SearchManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -33,6 +34,8 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.VerifyUtils;
 import okhttp3.ResponseBody;
 
+import static cn.xiaojs.xma.R.id.encode_failed;
+import static cn.xiaojs.xma.R.id.mobile_network_set_layout;
 import static cn.xiaojs.xma.R.id.text;
 import static cn.xiaojs.xma.ui.lesson.xclass.ImportStudentFormClassActivity.EXTRA_IMPORTS;
 
@@ -165,6 +168,11 @@ public class ManualRegistrationActivity extends BaseActivity {
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(this, "请输入姓名", Toast.LENGTH_SHORT).show();
             return ;
+        }
+
+        if(AccountDataManager.getPhone(this).equals(phone)) {
+            Toast.makeText(this, "自己的课，无需报名", Toast.LENGTH_SHORT).show();
+            return;
         }
 
 

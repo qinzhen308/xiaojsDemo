@@ -51,7 +51,7 @@ public class RLDirectory implements Serializable{
 
     public void insert(int position , RLLesson child){
         if(children==null){
-            return;
+            children=new ArrayList<>();
         }
         child.parent=this;
         children.add(position,child);
@@ -59,7 +59,7 @@ public class RLDirectory implements Serializable{
 
     public void replace(int position , RLLesson child){
         if(children==null){
-            return;
+            children=new ArrayList<>();
         }
         children.get(position).parent=null;
         child.parent=this;

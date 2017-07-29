@@ -36,6 +36,7 @@ public class RLesson {
     public LiveLesson.Overview overview;
     public String reason;
     public Expire expire;
+    public EnrollOfAccount enrollOfCurrentAccount;
 
 
 }

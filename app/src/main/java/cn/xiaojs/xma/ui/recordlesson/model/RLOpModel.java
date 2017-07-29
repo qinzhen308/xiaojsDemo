@@ -37,6 +37,7 @@ import cn.xiaojs.xma.ui.recordlesson.EnrolledStudentsActivity;
 import cn.xiaojs.xma.ui.recordlesson.ManualRegistrationActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -145,13 +146,14 @@ public class RLOpModel extends AbsOpModel<RLesson> {
 
     //进入报名页
     public void enterApplyPage(Activity context,RLesson bean){
-        String url=ApiManager.getShareLessonUrl(bean.id, Social.SearchType.COURSE);
-        if(url.contains("?")){
-            url+="&app=android";
-        }else {
-            url+="?app=android";
-        }
-        CommonWebActivity.invoke(context,"",url);
+//        String url=ApiManager.getShareLessonUrl(bean.id, Social.SearchType.COURSE);
+//        if(url.contains("?")){
+//            url+="&app=android";
+//        }else {
+//            url+="?app=android";
+//        }
+//        CommonWebActivity.invoke(context,"",url);
+        RecordedLessonEnrollActivity.invoke(context,bean.id);
     }
 
 
@@ -364,13 +366,14 @@ public class RLOpModel extends AbsOpModel<RLesson> {
             context.startActivity(new Intent(context,ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,bean.id));
         }else {
             //线上报名---学生主动报
-            String url=ApiManager.getShareLessonUrl(bean.id, Social.SearchType.COURSE);
+            /*String url=ApiManager.getShareLessonUrl(bean.id, Social.SearchType.COURSE);
             if(url.contains("?")){
                 url+="&app=android";
             }else {
                 url+="?app=android";
             }
-            CommonWebActivity.invoke(context,"",url);
+            CommonWebActivity.invoke(context,"",url);*/
+            RecordedLessonEnrollActivity.invoke(context,bean.id);
         }
 
     }

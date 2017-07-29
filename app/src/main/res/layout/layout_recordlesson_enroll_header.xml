@@ -1,152 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <ImageView
-            android:id="@+id/lesson_img"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/default_lesson_cover"
-            android:paddingBottom="@dimen/px39"
-            android:visibility="gone"/>
+        android:id="@+id/lesson_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/px39"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_lesson_cover"
+        android:visibility="gone" />
 
     <RelativeLayout
+        style="@style/lesson_home_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/lesson_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/lesson_home_layout">
+            android:layout_alignParentTop="true"
+            android:text="hahah"
+            android:textSize="@dimen/font_36px" />
 
         <TextView
-                android:id="@+id/lesson_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/font_36px"
-                android:layout_alignParentTop="true"
-                android:text="hahah"/>
+            android:id="@+id/valid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/lesson_title"
+            android:layout_below="@id/lesson_title"
+            android:layout_marginTop="@dimen/px23"
+            android:text="@string/valid_days"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_26px" />
 
         <TextView
-                android:id="@+id/valid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/valid_days"
-                android:textSize="@dimen/font_26px"
-                android:layout_marginTop="@dimen/px23"
-                android:layout_below="@id/lesson_title"
-                android:layout_alignLeft="@id/lesson_title"
-                android:textColor="@color/common_text"/>
-
-        <TextView
-                android:id="@+id/enroll_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/font_26px"
-                android:layout_below="@id/lesson_title"
-                android:textColor="@color/common_text"
-                android:layout_alignParentRight="true"
-                android:layout_alignBaseline="@id/valid"
-                android:text="sfsdasfsfd"/>
+            android:id="@+id/enroll_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/valid"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/lesson_title"
+            android:text="sfsdasfsfd"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_26px" />
 
         <cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout
-                android:id="@+id/label_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/px10"
-                android:layout_below="@id/valid"
-                android:layout_alignLeft="@id/valid"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-            android:id="@+id/lay_teacher"
+            android:id="@+id/label_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px30"
-            style="@style/lesson_home_layout"
-            android:background="@drawable/item_pressed"
-            android:clickable="true"
-            >
-
-        <ImageView
-                android:id="@+id/tea_avatar"
-                android:layout_width="@dimen/px120"
-                android:layout_height="@dimen/px120"
-                android:layout_marginRight="@dimen/px24"
-                android:scaleType="fitXY"
-                />
-
-        <ImageView
-                android:id="@+id/nav_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_entrance"/>
-
-        <TextView
-                android:id="@+id/tea_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/tea_avatar"
-                android:layout_marginTop="8dp"
-                android:textSize="16sp"
-                android:text="lizaozai"/>
-
-        <TextView
-                android:id="@+id/tea_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/nav_right"
-                android:layout_below="@id/tea_name"
-                style="@style/lesson_home_textview"
-                android:textColor="@color/common_text"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:layout_alignLeft="@id/tea_name"
-                android:text="what title"/>
-
+            android:layout_alignLeft="@id/valid"
+            android:layout_below="@id/valid"
+            android:layout_marginTop="@dimen/px10"
+            android:visibility="gone" />
     </RelativeLayout>
 
+    <LinearLayout
+        style="@style/lesson_home_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px30"
+        android:background="@drawable/item_pressed"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主讲老师"
+            android:textSize="@dimen/font_30px" />
+
+        <TextView
+            android:id="@+id/tea_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px16"
+            android:singleLine="true"
+            android:text="()"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/font_28px" />
+
+    </LinearLayout>
+
+    <View
+        style="@style/DividerHorizontal"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_teachers"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px200"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/px40"
+        android:paddingRight="@dimen/px40" />
+
+
+
     <RadioGroup
-            android:id="@+id/tab_group"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px90"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@color/white"
-            android:layout_marginTop="@dimen/px30">
+        android:id="@+id/tab_group"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px90"
+        android:layout_marginTop="@dimen/px30"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <cn.xiaojs.xma.ui.widget.BottomLineCheckButton
-                android:id="@+id/tab_info"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:text="课程简介"
-                android:paddingRight="@dimen/px51"
-                android:paddingLeft="@dimen/px51"
-                android:textSize="@dimen/font_30px"
-                android:textColor="@drawable/record_lesson_check_text_selector"
-                />
+            android:id="@+id/tab_info"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:paddingLeft="@dimen/px51"
+            android:paddingRight="@dimen/px51"
+            android:text="课程简介"
+            android:textColor="@drawable/record_lesson_check_text_selector"
+            android:textSize="@dimen/font_30px" />
 
         <cn.xiaojs.xma.ui.widget.BottomLineCheckButton
-                android:id="@+id/tab_dir"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:text="目录"
-                android:paddingLeft="@dimen/px51"
-                android:paddingRight="@dimen/px51"
-                android:textSize="@dimen/font_30px"
-                android:textColor="@drawable/record_lesson_check_text_selector"
-                />
+            android:id="@+id/tab_dir"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:paddingLeft="@dimen/px51"
+            android:paddingRight="@dimen/px51"
+            android:text="目录"
+            android:textColor="@drawable/record_lesson_check_text_selector"
+            android:textSize="@dimen/font_30px" />
 
 
     </RadioGroup>
 
-    <View
-            style="@style/DividerHorizontal"/>
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="6"
+        android:textSize="@dimen/font_30px"
+        android:textColor="@color/font_black"
+        android:padding="@dimen/px30"
+        />
+
+
+
+    <View style="@style/DividerHorizontal" />
 </LinearLayout>
 
 

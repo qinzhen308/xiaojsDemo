@@ -25,19 +25,21 @@ public class RLessonDetail implements Serializable{
     public String id;
     public String title;
     public Date createdOn;
+    public Account createdBy;
     public CSubject subject;
     public EnrollMode enroll;
     public String cover;
     public String state;
     public Fee fee;
     public Publish publish;
-    public Account[] teacher;
+    public Account[] teachers;
     public Account[] assistants;
     public String[] tags;
     public LiveLesson.Overview overview;
     public String reason;
     public Expire expire;
     public String enrollState;
+    public EnrollOfAccount enrollOfCurrentAccount;
 
 
     public ArrayList<Section> sections;

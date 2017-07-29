@@ -41,12 +41,16 @@ import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
+import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.CollectionResult;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleOptions;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
+import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
@@ -60,7 +64,8 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.PageChangeListener;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
-import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
+import cn.xiaojs.xma.ui.recordlesson.model.HomeRLessonFooterModel;
+import cn.xiaojs.xma.ui.recordlesson.util.RLessonFilterHelper;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -95,7 +100,10 @@ public class HomeClassContentBuz {
     int year, month,day;
     int todayYear, todayMonth,todayDay;
 
+    private List<RLesson> recordedLessonList;
     private List<PrivateClass> hotClass;
+    private ScheduleData curLessons;
+    LessonLabelModel label;
 
     @BindColor(R.color.orange_point)
     int c_red;
@@ -105,6 +113,10 @@ public class HomeClassContentBuz {
     ServiceRequest mRequest;
 
     LastEmptyModel lastEmptyModel=new LastEmptyModel();
+    ClassLabelModel classLabel=new ClassLabelModel(false);
+
+    int curSubTab;
+
 
     /**
      * @param context
@@ -133,7 +145,8 @@ public class HomeClassContentBuz {
         public void onEvent(int what, Object... object) {
             switch (what){
                 case EVENT_1://切换班和录播课
-                    changeSubTab((int)object[0]);
+                    curSubTab=(int)object[0];
+                    bindHomeDatas(false);
                     break;
             }
         }
@@ -270,6 +283,12 @@ public class HomeClassContentBuz {
         }
     }
 
+    /**
+     * 获取某天数据
+     * @param y
+     * @param m
+     * @param d
+     */
     private void doRequest(final int y,final int m,final int d){
 //        clearLessonsAndLoading(true);
         cancelRequest();
@@ -288,29 +307,9 @@ public class HomeClassContentBuz {
             @Override
             public void onSuccess(ScheduleData object) {
 //                clearLessonsAndLoading(false);
-                long time=System.currentTimeMillis();
-                LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
-                ArrayList list=new ArrayList();
-                list.add(label);
-                if(object!=null&&!object.calendar.isEmpty()){
-                    ClassSchedule schedule=object.calendar.get(0);
-                    label.hasData=true;
-                    label.lessonCount=schedule.lessons.size();
-                    list.addAll(schedule.lessons);
-                }
-                mAdapter.setList(list);
-                if(hotClass!=null){
-                    bindHotClasses(hotClass);
-                }
-                mAdapter.notifyDataSetChanged();
-                overLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.scrollToPosition(0);
-                    }
-                });
-                if(XiaojsConfig.DEBUG)
-                Logger.d("-----qz-----time analyze---bindLessons="+(System.currentTimeMillis()-time));
+                label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
+                curLessons=object;
+                bindHomeDatas(true);
             }
             @Override
             public void onFailure(String errorCode, String errorMessage) {
@@ -325,6 +324,9 @@ public class HomeClassContentBuz {
     }
 
 
+    /**
+     * 获取月课表数据
+     */
     private void getMonthData(){
         long time=System.currentTimeMillis();
         final int y=year;
@@ -372,6 +374,9 @@ public class HomeClassContentBuz {
         });
     }
 
+    /**
+     * 加载热门班级
+     */
     private void loadHotClasses(){
         long time=System.currentTimeMillis();
         LessonDataManager.getHotClasses(mContext, 4, new APIServiceCallback<CollectionResult<PrivateClass>>() {
@@ -379,25 +384,22 @@ public class HomeClassContentBuz {
             public void onSuccess(CollectionResult<PrivateClass> object) {
                 if(object!=null){
                     hotClass=object.results;
-                    if(ArrayUtil.isEmpty(mAdapter.getList())){//
-
-                    }else {//课先回来，绑定班
-                        bindHotClasses(object.results);
-                        mAdapter.notifyDataSetChanged();
-                    }
+                }else {
+                    hotClass=null;
                 }
+                bindHomeDatas(false);
             }
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                if(!ArrayUtil.isEmpty(mAdapter.getList())){//课先回来，绑定班
-                    bindHotClasses(null);
-                    mAdapter.notifyDataSetChanged();
-                }
+                hotClass=null;
+                bindHomeDatas(false);
             }
         });
         if(XiaojsConfig.DEBUG)
             Logger.d("-----qz-----time analyze---doRequest="+(System.currentTimeMillis()-time));
     }
+
+    @Deprecated
     private void bindHotClasses(List<PrivateClass> list){
         long time=System.currentTimeMillis();
         ClassLabelModel classLabel=new ClassLabelModel(false);
@@ -415,39 +417,89 @@ public class HomeClassContentBuz {
             Logger.d("-----qz-----time analyze---bindHotClasses="+(System.currentTimeMillis()-time));
     }
 
-    List<RLDirectory> dirs;
 
+    /**
+     * 获取录播课
+     */
     public void getRecordedLesson(){
-        dirs=new ArrayList<>();
-        dirs.add(new RLDirectory("按到阿斯顿"));
-        dirs.add(new RLDirectory("曲儿"));
-        dirs.add(new RLDirectory("门口瑞特"));
-        dirs.add(new RLDirectory("而女人"));
+        RecordedLessonCriteria criteria=new RecordedLessonCriteria();
+        criteria.role= RLessonFilterHelper.getType(0);
+        criteria.state= RLessonFilterHelper.getState(0);
+        Pagination pagination=new Pagination();
+        pagination.setPage(1);
+        pagination.setMaxNumOfObjectsPerPage(4);
+        LessonDataManager.getRecordedCourses(mContext, criteria, pagination, new APIServiceCallback<CollectionPage<RLesson>>() {
+            @Override
+            public void onSuccess(CollectionPage<RLesson> object) {
+                if(object!=null){
+                    recordedLessonList=object.objectsOfPage;
+                }else {
+                    recordedLessonList=null;
+                }
+                bindHomeDatas(false);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                recordedLessonList=null;
+                bindHomeDatas(false);
+            }
+        });
 
     }
 
-    private void changeSubTab(int tab){
-        if(tab== HomeClassLabelView.TAB_CLASS){
-            clearItemsByType(LastEmptyModel.class);
-            clearItemsByType(RLDirectory.class);
+    private void bindClassOrRlesson(List list){
+        list.add(classLabel);
+        if(curSubTab == HomeClassLabelView.TAB_CLASS){
             if(!ArrayUtil.isEmpty(hotClass)){
-                mAdapter.getList().addAll(hotClass);
+                classLabel.hasData=true;
+                list.addAll(hotClass);
                 if(hotClass.size()==4){
-                    mAdapter.getList().add(new ClassFooterModel());
+                    list.add(new ClassFooterModel());
                 }
+            }else {
+                classLabel.hasData=false;
             }
-            mAdapter.getList().add(lastEmptyModel);
-        }else if(tab==HomeClassLabelView.TAB_RECORDED_LESSON){
-            clearItemsByType(LastEmptyModel.class);
-            clearItemsByType(ClassFooterModel.class);
-            clearItemsByType(PrivateClass.class);
-            mAdapter.getList().addAll(dirs);
-            mAdapter.getList().add(lastEmptyModel);
+
+        }else if(curSubTab ==HomeClassLabelView.TAB_RECORDED_LESSON){
+            if(!ArrayUtil.isEmpty(recordedLessonList)){
+                classLabel.hasData=true;
+                list.addAll(recordedLessonList);
+                if(recordedLessonList.size()==4){
+                    list.add(new HomeRLessonFooterModel());
+                }
+            }else {
+                classLabel.hasData=false;
+            }
         }
         mAdapter.notifyDataSetChanged();
 
     }
 
+    private void bindHomeDatas(boolean backTop){
+        ArrayList list=new ArrayList();
+        list.add(label);
+        if(curLessons!=null&&!curLessons.calendar.isEmpty()){
+            ClassSchedule schedule=curLessons.calendar.get(0);
+            label.hasData=true;
+            label.lessonCount=schedule.lessons.size();
+            list.addAll(schedule.lessons);
+        }
+        bindClassOrRlesson(list);
+        list.add(lastEmptyModel);
+        mAdapter.setList(list);
+        mAdapter.notifyDataSetChanged();
+        if(backTop){
+            overLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.scrollToPosition(0);
+                }
+            });
+        }
+    }
+
+    @Deprecated
     private void clearItemsByType(Class type){
         List datas=mAdapter.getList();
         if(ArrayUtil.isEmpty(datas))return;

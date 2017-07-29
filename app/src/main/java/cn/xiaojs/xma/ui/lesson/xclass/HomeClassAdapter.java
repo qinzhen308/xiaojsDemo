@@ -29,7 +29,9 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LiveScheduleLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LoadStateBarView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.NativeLessonView;
+import cn.xiaojs.xma.ui.recordlesson.model.HomeRLessonFooterModel;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
+import cn.xiaojs.xma.ui.recordlesson.view.HomeRLFooterView;
 import cn.xiaojs.xma.ui.recordlesson.view.HomeRecordedLessonView;
 import cn.xiaojs.xma.util.ArrayUtil;
 
@@ -49,6 +51,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     //首页热门班级等于4个时，底部有"更多"按钮
     public static final int VIEW_TYPE_HOME_CLASS_FOOTER=7;
     public static final int VIEW_TYPE_HOME_RECORDED_LESSON=8;
+    public static final int VIEW_TYPE_HOME_RECORDED_LESSON_FOOTER=9;
     //加载状态
     public static final int VIEW_TYPE_LOADING_STATE=99;
     public static final int VIEW_TYPE_LAST_EMPTY=100;
@@ -93,6 +96,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder=new CommonHolder(new HomeClassFooterView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_HOME_RECORDED_LESSON){
             holder=new CommonHolder(new HomeRecordedLessonView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_HOME_RECORDED_LESSON_FOOTER){
+            holder=new CommonHolder(new HomeRLFooterView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_LOADING_STATE){
             holder=new CommonHolder(new LoadStateBarView(parent.getContext()));
         }else {
@@ -144,6 +149,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_HOME_CLASS_FOOTER;
         }else if(o instanceof RLesson){
             return VIEW_TYPE_HOME_RECORDED_LESSON;
+        }else if(o instanceof HomeRLessonFooterModel){
+            return VIEW_TYPE_HOME_RECORDED_LESSON_FOOTER;
         }else if(o instanceof LoadStateMode){
             return VIEW_TYPE_LOADING_STATE;
         }

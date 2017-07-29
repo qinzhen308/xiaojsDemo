@@ -22,6 +22,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import cn.xiaojs.xma.util.MaterialUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/7/21.
@@ -31,16 +32,19 @@ import cn.xiaojs.xma.util.MaterialUtil;
 public class RLDirListActivity extends BaseActivity {
 
     public static final String EXTRA_LESSON_ID="extra_lesson_id";
+    public static final String EXTRA_LESSON_EXPIRED="extra_lesson_expired";
 
     @BindView(R.id.listview)
     ListView listview;
     RecordedLessonListAdapter adapter;
     String lessonId;
+    boolean isExpired;
 
 
     @Override
     protected void addViewContent() {
         lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
+        isExpired=getIntent().getBooleanExtra(EXTRA_LESSON_EXPIRED,false);
         addView(R.layout.activity_recorded_lesson_dir_list);
         needHeader(true);
         setMiddleTitle(R.string.record_lesson_directory);
@@ -55,7 +59,11 @@ public class RLDirListActivity extends BaseActivity {
             @Override
             public void onEvent(int what, Object... object) {
                 if(what==EVENT_1){
-                    MaterialUtil.openMaterial(RLDirListActivity.this,(LibDoc) object[0]);
+                    if(isExpired){
+                        ToastUtil.showToast(getApplicationContext(),"该课已过期");
+                    }else {
+                        MaterialUtil.openMaterial(RLDirListActivity.this,(LibDoc) object[0]);
+                    }
                 }
             }
         });
@@ -88,9 +96,10 @@ public class RLDirListActivity extends BaseActivity {
     }
 
 
-    public static void invoke(Context context,String lessonId) {
+    public static void invoke(Context context,String lessonId,boolean isExpired) {
         Intent intent = new Intent(context, RLDirListActivity.class);
         intent.putExtra(EXTRA_LESSON_ID,lessonId);
+        intent.putExtra(EXTRA_LESSON_EXPIRED,isExpired);
         context.startActivity(intent);
     }
 

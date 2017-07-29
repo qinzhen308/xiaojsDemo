@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -226,6 +227,16 @@ public class ImportVideoActivity extends BaseActivity {
         finish();
     }
 
+    private void filterVideo(List<LibDoc> docs){
+        Iterator<LibDoc> iterator=docs.iterator();
+        while (iterator.hasNext()){
+            LibDoc doc=iterator.next();
+            if(!(Collaboration.isVideo(doc.mimeType)||Collaboration.isStreaming(doc.mimeType))){
+                iterator.remove();
+            }
+        }
+    }
+
 
     public class DataAdapter extends AbsListAdapter<LibDoc, DataAdapter.Holder> {
 
@@ -367,8 +378,8 @@ public class ImportVideoActivity extends BaseActivity {
                     if (getList() !=null) {
                         getList().clear();
                     }
-
                     if (object != null && object.documents!=null && object.documents.size() > 0) {
+                        filterVideo(object.documents);
                         DataAdapter.this.onSuccess(object.documents);
                     } else {
                         DataAdapter.this.onSuccess(null);
@@ -380,6 +391,7 @@ public class ImportVideoActivity extends BaseActivity {
                     DataAdapter.this.onFailure(errorCode, errorMessage);
                 }
             });
+
 
 //            int tempi = 0;
 //

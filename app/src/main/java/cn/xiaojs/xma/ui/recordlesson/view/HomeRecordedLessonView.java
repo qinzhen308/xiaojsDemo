@@ -25,7 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.AbsOpModel;
@@ -91,17 +93,38 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
         mData = data;
         this.position = position;
         titleView.setText(mData.title);
-        if (Ctl.RecordedCourseState.DRAFT.equals(mData.state)) {
-            statusView.setVisibility(VISIBLE);
-            statusView.setText("待上架");
-        }else if (Ctl.RecordedCourseState.PENDING_FOR_APPROVAL.equals(mData.state)) {
-            statusView.setVisibility(VISIBLE);
-            statusView.setText("待审核");
-        } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {
-            statusView.setVisibility(VISIBLE);
-            statusView.setText("审核失败");
-        }else {
-            statusView.setVisibility(INVISIBLE);
+        if(mData.createdBy!=null&& AccountDataManager.getAccountID(getContext()).equals(mData.createdBy.getId())){//是这个课的创建者
+            if (Ctl.RecordedCourseState.DRAFT.equals(mData.state)) {
+                statusView.setVisibility(VISIBLE);
+                statusView.setText("待上架");
+            }else if (Ctl.RecordedCourseState.PENDING_FOR_APPROVAL.equals(mData.state)) {
+                statusView.setVisibility(VISIBLE);
+                statusView.setText("待审核");
+            } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {
+                statusView.setVisibility(VISIBLE);
+                statusView.setText("审核失败");
+            }else {
+                statusView.setVisibility(INVISIBLE);
+            }
+            if(mData.expire!=null){
+                tvDate.setText("有效期："+mData.expire.effective+"天");
+            }else {
+                tvDate.setText("永久");
+            }
+        }else {//学生
+
+            if(mData.enrollOfCurrentAccount!=null&&mData.enrollOfCurrentAccount.isExpired){
+                statusView.setText("已过期");
+                statusView.setVisibility(VISIBLE);
+            }else {
+                statusView.setVisibility(INVISIBLE);
+            }
+
+            if(mData.expire!=null&&mData.enrollOfCurrentAccount!=null){
+                tvDate.setText("有效期至"+ ScheduleUtil.getDateYMD(mData.enrollOfCurrentAccount.deadline));
+            }else {
+                tvDate.setText("永久");
+            }
         }
 
         if (mData.enroll != null) {
@@ -109,26 +132,16 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
         } else {
             memberView.setText(0 + "人报名");
         }
-//        String teachers = "班主任：";
-//        for (int i = 0; i < mData.advisers.length; i++) {
-//            teachers += mData.advisers[i].name + "、";
-//        }
-//        if ("、".equals(teachers.charAt(teachers.length() - 1) + "")) {
-//            teachers = teachers.substring(0, teachers.length() - 1);
-//        }
-        if(!ArrayUtil.isEmpty(mData.teachers)&&mData.teachers[0].getBasic()!=null){
-            SpannableString ss=new SpannableString("主讲："+mData.teachers[0].getBasic().getName());
+
+        if(!ArrayUtil.isEmpty(mData.teachers)){
+
+            SpannableString ss=new SpannableString("主讲："+handleTeachersNames());
             ss.setSpan(new ForegroundColorSpan(teacherColor),3,ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             teachersView.setText(ss);
         }else {
             teachersView.setText("主讲：");
         }
-        if(mData.expire!=null){
-//            tvDate.setText("有效期："+mData.expire.effective+"天");
-            tvDate.setText("有效期至"+ ScheduleUtil.getDateYMD(new Date(mData.createdOn.getTime()+mData.expire.effective*ScheduleUtil.DAY)));
-        }else {
-            tvDate.setText("永久");
-        }
+
 
         Glide.with(getContext()).load(Ctl.getCover(mData.cover,dimension)).fitCenter().placeholder(R.drawable.default_lesson_cover).into(flagView);
         setOnClickListener(new OnClickListener() {
@@ -145,7 +158,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.op_dir_view:
-                RLDirListActivity.invoke(getContext(),mData.id);
+                RLDirListActivity.invoke(getContext(),mData.id,mData.enrollOfCurrentAccount!=null&&mData.enrollOfCurrentAccount.isExpired);
                 break;
             case R.id.op_more_view:
                 moreOperate();
@@ -228,6 +241,23 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 
         }
         return list;
+    }
+
+    private String handleTeachersNames(){
+        String teachersName="";
+        for(int i=0,size=Math.min(mData.teachers.length,3);i<size;i++){
+            Account t=mData.teachers[i];
+            if(t.getBasic()!=null){
+                teachersName+=t.getBasic().getName()+"、";
+            }
+        }
+        if(teachersName.endsWith("、")){
+            teachersName=teachersName.substring(0,teachersName.length()-1);
+        }
+        if(mData.teachers.length>3){
+            teachersName+="等"+mData.teachers.length+"人";
+        }
+        return teachersName;
     }
 
 }
