@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.recordlesson;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -147,23 +148,6 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
         }
     }
 
-    @Optional
-    @OnCheckedChanged({R.id.tab_info, R.id.tab_dir})
-    public void onCheckedChanged(CompoundButton v, boolean checked) {
-        switch (v.getId()) {
-            case R.id.tab_info:      //课程简介
-                tvDescription.setVisibility(View.VISIBLE);
-                adapter.setList(new ArrayList<Section>());
-                adapter.notifyDataSetChanged();
-                break;
-            case R.id.tab_dir:       //目录
-                tvDescription.setVisibility(View.GONE);
-                adapter.setList(mDetail.sections);
-                adapter.notifyDataSetChanged();
-                break;
-        }
-    }
-
 
     private void doEnrollBuz(){
         if(mDetail==null)return;
@@ -212,7 +196,24 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
         adapter = new RecordedLessonListAdapter(this);
         listView.setAdapter(adapter);
 
-        tabGroup.check(R.id.tab_dir);
+        tabGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.tab_info:      //课程简介
+                        tvDescription.setVisibility(View.VISIBLE);
+                        adapter.setList(new ArrayList<Section>());
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case R.id.tab_dir:       //目录
+                        tvDescription.setVisibility(View.GONE);
+                        adapter.setList(mDetail.sections);
+                        adapter.notifyDataSetChanged();
+                        break;
+                }
+            }
+        });
+//        tabGroup.check(R.id.tab_dir);
         initItemWidth();
         teacherAdapter=new ItemAdapter();
         rvTeachers.setLayoutManager(new GridLayoutManager(this,1,RecyclerView.HORIZONTAL,false));
@@ -220,7 +221,6 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
     }
 
     private void initCoverLayout() {
-        lessonCoverView.setVisibility(View.GONE);
         ViewGroup.LayoutParams imgParams = lessonCoverView.getLayoutParams();
         int w = getResources().getDisplayMetrics().widthPixels;
         int h = (int) ((CourseConstant.COURSE_COVER_HEIGHT / (float) CourseConstant.COURSE_COVER_WIDTH) * w);
@@ -271,9 +271,12 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
 
         enrollCountView.setText((mDetail.enroll==null?0:mDetail.enroll.current)+"人报名");
         teacherAdapter.setList(mDetail.teachers);
+        teacherAdapter.notifyDataSetChanged();
         tvDescription.setText(mDetail.overview==null?"暂无简介~":mDetail.overview.getText());
         teaCount.setText("（"+(mDetail.teachers==null?0:mDetail.teachers.length)+"）");
         if (mDetail.tags !=null && mDetail.tags.length > 0) {
+            labelLayout.setVisibility(View.VISIBLE);
+
             for (String tag : mDetail.tags) {
                 labelLayout.addText(tag);
             }
@@ -314,7 +317,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
                 }
             }
         }
-
+        lessonCoverView.requestLayout();
 
     }
 
@@ -419,7 +422,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(ItemHolder holder, final int position) {
             final Account account=list[position];
-            holder.name.setText(account.name);
+            holder.name.setText(account.getBasic().getName());
             Glide.with(RecordedLessonEnrollActivity.this)
                     .load(cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(account.getId(), 300))
                     .bitmapTransform(new CircleTransform(RecordedLessonEnrollActivity.this))
