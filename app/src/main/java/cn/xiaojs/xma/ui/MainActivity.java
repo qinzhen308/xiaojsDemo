@@ -355,7 +355,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
     }
 
     @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         ClassFragment fragment=(ClassFragment) getFragment(0);
         fragment.updateData();
     }

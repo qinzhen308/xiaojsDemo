@@ -11,7 +11,7 @@ public interface IUpdateMethod {
      *
      * @param justNative true：只刷新列表，不请求服务器
      */
-    public void updateData(boolean justNative);
+    public void updateData(boolean justNative,Object... others);
 
     /**
      * 刷新列表中的某项

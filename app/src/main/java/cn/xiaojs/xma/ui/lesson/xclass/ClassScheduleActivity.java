@@ -178,7 +178,7 @@ public class ClassScheduleActivity extends BaseActivity implements IUpdateMethod
     }
 
     @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         tabFragment.updateData(justNative);
         calenerFragment.updateData(justNative);
     }

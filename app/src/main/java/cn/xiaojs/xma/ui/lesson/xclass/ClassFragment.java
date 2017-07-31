@@ -357,7 +357,7 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener 
     }
 
     @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         if(contentBuz==null)return;
         if(justNative){
             contentBuz.mAdapter.notifyDataSetChanged();

@@ -41,7 +41,7 @@ public class ClassSheduleCalenerFragment extends AbsClassScheduleFragment implem
     }
 
     @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         if(mContent==null)return;
 
         buz.updateData(justNative);

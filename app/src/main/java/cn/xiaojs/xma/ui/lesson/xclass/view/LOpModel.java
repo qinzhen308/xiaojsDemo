@@ -164,7 +164,7 @@ public class LOpModel extends AbsOpModel<CLesson> {
     //这个类的存在是为了封装所有操作，以适用很多场景，但精准刷新会加重耦合，使得这个类毫无意义
     //后续优化
     private void updateData(Activity context,boolean justNative){
-        ((IUpdateMethod)context).updateData(justNative);
+        ((IUpdateMethod)context).updateData(justNative,1);
     }
 
     private void updateJustItem(Activity context,int position,CLesson cLesson){

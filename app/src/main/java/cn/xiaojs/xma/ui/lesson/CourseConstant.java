@@ -56,6 +56,8 @@ public interface CourseConstant {
     public final static int CODE_CREATE_LESSON = 4;
     public final static int CODE_CREATE_CLASS = 5;
     public final static int CODE_CREATE_RECORDED_LESSON = 6;
+    public final static int CODE_RECORDED_LESSON_AGAIN = 7;
+    public final static int CODE_RECORDED_LESSON_EDIT = 8;
 
 
 }

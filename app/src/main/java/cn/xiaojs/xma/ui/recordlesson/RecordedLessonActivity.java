@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ import cn.xiaojs.xma.util.ToastUtil;
 public class RecordedLessonActivity extends BaseActivity {
 
     public static final String EXTRA_LESSON_ID="extra_lesson_id";
+    public static final String EXTRA_KEY_IS_MODIFY="extra_key_is_modify";
+    private final static int REQUEST_CODE_MODIFY = 54;
 
 
     @BindView(R.id.listview)
@@ -70,6 +73,7 @@ public class RecordedLessonActivity extends BaseActivity {
     TextView allCheckView;
 
     private String lessonId;
+    private boolean isModify;
 
     RLessonDetail recreateData;
 
@@ -80,6 +84,7 @@ public class RecordedLessonActivity extends BaseActivity {
         setRightText(R.string.manage_it);
         setMiddleTitle(R.string.record_lesson_directory);
         lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
+        isModify=getIntent().getBooleanExtra(EXTRA_KEY_IS_MODIFY,false);
         initView();
         initData();
     }
@@ -209,7 +214,11 @@ public class RecordedLessonActivity extends BaseActivity {
             ToastUtil.showToast(getApplicationContext(), "请先创建录播课目录");
             return;
         }
-        CreateRecordedLessonActivity.invoke(this,(ArrayList<RLDirectory>)(Object)srcList,recreateData);
+        if(isModify){
+            CreateRecordedLessonActivity.invoke(this,(ArrayList<RLDirectory>)(Object)srcList,recreateData,lessonId);
+        }else {
+            CreateRecordedLessonActivity.invoke(this,(ArrayList<RLDirectory>)(Object)srcList,recreateData);
+        }
     }
 
     private void readyToManage() {
@@ -426,6 +435,15 @@ public class RecordedLessonActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+   public static void invoke(Activity context, String rLessonId, boolean isModify) {
+        Intent intent = new Intent(context, RecordedLessonActivity.class);
+        if(!TextUtils.isEmpty(rLessonId)){
+            intent.putExtra(EXTRA_LESSON_ID,rLessonId);
+        }
+        intent.putExtra(EXTRA_KEY_IS_MODIFY,isModify);
+        context.startActivityForResult(intent,REQUEST_CODE_MODIFY);
+    }
+
     public static void invoke(Context context,Intent data) {
         Intent intent = new Intent(context, RecordedLessonActivity.class);
         intent.fillIn(data,Intent.FILL_IN_DATA);
@@ -446,6 +464,9 @@ public class RecordedLessonActivity extends BaseActivity {
                 adapter.editLessonItem(selectedDirPostion,selectedLessonPostion,lesson);
             }else if(requestCode==ImportVideoActivity.REQUEST_CODE){//绑定视频，code要改
                 buildDirs((ArrayList<LibDoc>) data.getSerializableExtra(ImportVideoActivity.EXTRA_CHOICE_DATA));
+            }else if(requestCode==CreateRecordedLessonActivity.REQUEST_CODE_MODIFY){
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

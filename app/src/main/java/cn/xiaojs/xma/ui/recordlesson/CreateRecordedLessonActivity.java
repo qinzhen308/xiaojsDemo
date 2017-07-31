@@ -68,6 +68,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
+import okhttp3.ResponseBody;
 
 /**
  * Created by Paul Z on 2017/7/20.
@@ -80,6 +81,8 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     private final static int REQUEST_SELECT_SUBJECT = 4;
     private final static int ADD_COVER = 5;
 
+    public final static int REQUEST_CODE_MODIFY = 55;
+
     private final static int DEFAULT_SHOW_CHAR_LEN = 8;
 
     private final int MAX_LESSON_CHAR = 50;
@@ -87,6 +90,9 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     public final static String KEY_COMPETENCY = "key_competency";
     public static final String EXTRA_KEY_DIRS="extra_key_dirs";
     public static final String EXTRA_KEY_OLD_DATA="extra_key_old_data";
+    public static final String EXTRA_KEY_LESSON_ID="extra_key_lesson_id";
+
+    private String lessonid;
 
 
 
@@ -154,6 +160,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     }
 
     private void initView() {
+        lessonid=getIntent().getStringExtra(EXTRA_KEY_LESSON_ID);
         mustInputSymbol();
         expiryDateSwitcher.setChecked(false);
         enrollSwitcher.setChecked(false);
@@ -212,6 +219,11 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         initLessonBrief(mLesson);
         initLessonLabel(mLesson);
         liveLessonName.setText(oldDatal.title);
+
+        if(!TextUtils.isEmpty(lessonid)&&Ctl.RecordedCourseState.ONSHELVES.equals(oldDatal.state)){
+            expiryDateSwitcher.setEnabled(false);
+            etExpiredDate.setEnabled(false);
+        }
     }
 
     private void mustInputSymbol() {
@@ -492,21 +504,40 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         lesson.cover=mLesson.getCover();
         lesson.tags=mLesson.getTags();
         setChaptersWithDirs(lesson);
+        if(TextUtils.isEmpty(lessonid)){//创建
 
-        LessonDataManager.createRecordedCourse(this, lesson, new APIServiceCallback<CLResponse>() {
-            @Override
-            public void onSuccess(CLResponse object) {
-                cancelProgress();
-                DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_RECORDED_LESSON_CHANGED);
-                showSkipTip();
-            }
+            LessonDataManager.createRecordedCourse(this, lesson, new APIServiceCallback<CLResponse>() {
+                @Override
+                public void onSuccess(CLResponse object) {
+                    cancelProgress();
+                    DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_RECORDED_LESSON_CHANGED);
+                    showSkipTip();
+                }
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
-                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else {//编辑
+            LessonDataManager.modifyRecordedCourse(this,lessonid ,lesson, new APIServiceCallback<ResponseBody>() {
+                @Override
+                public void onSuccess(ResponseBody object) {
+                    cancelProgress();
+                    DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_RECORDED_LESSON_CHANGED);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
     }
 
 
@@ -574,6 +605,18 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
             intent.putExtra(EXTRA_KEY_OLD_DATA,oldData);
         }
         context.startActivity(intent);
+    }
+
+    public static void invoke(Activity context, ArrayList<RLDirectory> dirs, RLessonDetail oldData,String id){
+        Intent intent=new Intent(context,CreateRecordedLessonActivity.class);
+        intent.putExtra(EXTRA_KEY_DIRS,dirs);
+        if(oldData!=null){
+            intent.putExtra(EXTRA_KEY_OLD_DATA,oldData);
+        }
+        if(id!=null){
+            intent.putExtra(EXTRA_KEY_LESSON_ID,id);
+        }
+        context.startActivityForResult(intent,REQUEST_CODE_MODIFY);
     }
 
 }

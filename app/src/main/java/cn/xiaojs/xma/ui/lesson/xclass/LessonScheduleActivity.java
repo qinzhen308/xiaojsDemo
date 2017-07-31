@@ -232,7 +232,7 @@ public class LessonScheduleActivity extends BaseActivity implements IUpdateMetho
     }
 
     @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         if(justNative){
             mAdapter.notifyDataSetChanged();
         }else {

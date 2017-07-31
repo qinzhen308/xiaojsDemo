@@ -313,11 +313,9 @@ public class HomeClassContentBuz {
             }
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                LessonLabelModel label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
-                ArrayList list=new ArrayList();
-                list.add(label);
-                mAdapter.setList(list);
-                mAdapter.notifyDataSetChanged();
+                label=new LessonLabelModel(ScheduleUtil.getDateYMD(y,m,d)+" "+ ScheduleUtil.getWeek(y,m,d),0,false);
+                curLessons=null;
+                bindHomeDatas(true);
             }
         });
         Logger.d("-----qz-----time analyze---doRequest="+(System.currentTimeMillis()-time));
@@ -478,7 +476,9 @@ public class HomeClassContentBuz {
 
     private void bindHomeDatas(boolean backTop){
         ArrayList list=new ArrayList();
-        list.add(label);
+        if(label!=null){
+            list.add(label);
+        }
         if(curLessons!=null&&!curLessons.calendar.isEmpty()){
             ClassSchedule schedule=curLessons.calendar.get(0);
             label.hasData=true;

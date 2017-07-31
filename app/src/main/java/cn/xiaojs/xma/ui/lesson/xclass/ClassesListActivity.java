@@ -29,6 +29,7 @@ import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.recordlesson.CreateRecordedLessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonFragment;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
@@ -193,8 +194,14 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
     }
 
     @Override
-    public void updateData(boolean justNative) {
-        ((IUpdateMethod)fragmentList.get(1)).updateData(justNative);
+    public void updateData(boolean justNative,Object... others) {
+        if(others.length>0){
+            //others[0]是tab的index
+            ((IUpdateMethod)fragmentList.get((int)others[0])).updateData(justNative);
+        }else {
+            ((IUpdateMethod)fragmentList.get(1)).updateData(justNative);
+            ((IUpdateMethod)fragmentList.get(2)).updateData(justNative);
+        }
     }
 
     @Override
@@ -278,11 +285,16 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                 case CourseConstant.CODE_EDIT_LESSON:
                 case CourseConstant.CODE_LESSON_AGAIN:
                 case CourseConstant.CODE_CREATE_LESSON:
-                    updateData(false);
+                    updateData(false,1);
                     break;
                 case CourseConstant.CODE_CREATE_CLASS:
                     ((MyClassFragment)fragmentList.get(0)).refresh();
                     break;
+                case CourseConstant.CODE_RECORDED_LESSON_AGAIN:
+                case CreateRecordedLessonActivity.REQUEST_CODE_MODIFY:
+                    updateData(false,2);
+                    break;
+
             }
         }
     }

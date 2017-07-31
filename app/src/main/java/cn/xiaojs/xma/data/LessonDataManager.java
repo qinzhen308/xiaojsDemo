@@ -743,6 +743,22 @@ public class LessonDataManager {
     }
 
     /**
+     * modify Recorded Course
+     *
+     * @param context
+     * @param recordLesson
+     * @param callback
+     */
+    public static ServiceRequest modifyRecordedCourse(Context context,
+                                                      String course,
+                                            CRecordLesson recordLesson,
+                                            APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.modifyRecordedCourse(course,recordLesson);
+        return lessonRequest;
+    }
+
+    /**
      * Requests to put the specific recorded course on shelves.
      *
      * @param context

@@ -239,7 +239,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
 
 
     @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         if(justNative){
             mAdapter.notifyDataSetChanged();
         }else {

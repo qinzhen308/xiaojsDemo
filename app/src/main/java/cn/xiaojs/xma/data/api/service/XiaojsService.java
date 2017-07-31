@@ -453,6 +453,11 @@ public interface XiaojsService {
     @POST("/v1/ctl/course/recorded")
     Call<CLResponse> createRecordedCourse(@Body CRecordLesson recordLesson);
 
+    //modify Recorded Course
+    @POST("/v1/ctl/course/recorded/{course}")
+    Call<ResponseBody> modifyRecordedCourse(@Path("course") String course,
+                                          @Body CRecordLesson recordLesson);
+
     //Put Recorded Course On Shelves
     @PUT("/v1/ctl/course/recorded/{course}/onshelves")
     Call<ResponseBody> putRecordedCourseOnShelves(@Path("course") String course);

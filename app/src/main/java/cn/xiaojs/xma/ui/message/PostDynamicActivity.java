@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
+import com.orhanobut.logger.Logger;
 
 import org.w3c.dom.Text;
 
@@ -315,12 +316,12 @@ public class PostDynamicActivity extends BaseActivity {
 
             @Override
             public void uploadFailure(boolean cancel) {
-
                 cancelProgress();
                 Toast.makeText(PostDynamicActivity.this.getApplicationContext(),
                         R.string.upload_pic_error,
                         Toast.LENGTH_SHORT)
                         .show();
+
             }
         });
     }

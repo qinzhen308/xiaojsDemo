@@ -228,19 +228,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case CourseConstant.CODE_EDIT_LESSON:
-                case CourseConstant.CODE_LESSON_AGAIN:
-                    updateData(false);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         if (justNative) {
             mAdapter.notifyDataSetChanged();
         } else {

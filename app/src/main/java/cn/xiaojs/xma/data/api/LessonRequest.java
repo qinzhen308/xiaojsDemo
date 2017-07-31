@@ -451,6 +451,12 @@ public class LessonRequest extends ServiceRequest {
 
     }
 
+    public void modifyRecordedCourse(String course,CRecordLesson recordLesson) {
+        Call<ResponseBody> call = getService().modifyRecordedCourse(course,recordLesson);
+        enqueueRequest(APIType.MODIFY_RECORDED_COURSE, call);
+
+    }
+
     public void putRecordedCourseOnShelves(String course) {
         Call<ResponseBody> call = getService().putRecordedCourseOnShelves(course);
         enqueueRequest(APIType.PUT_RECORDED_COURSE_ON_SHELVES, call);

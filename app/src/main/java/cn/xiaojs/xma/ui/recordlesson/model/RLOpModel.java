@@ -73,7 +73,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
 //                }
                 break;
             case OP_EDIT:
-//                edit(context, data);
+                edit(context, data);
                 break;
             case OP_LOOK:
                 detail(context, data.id);
@@ -126,7 +126,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     //这个类的存在是为了封装所有操作，以适用很多场景，但精准刷新会加重耦合，使得这个类毫无意义
     //后续优化
     private void updateData(Activity context,boolean justNative){
-        ((IUpdateMethod)context).updateData(justNative);
+        ((IUpdateMethod)context).updateData(justNative,2);
     }
 
     private void updateJustItem(Activity context,int position,RLesson cLesson){
@@ -188,18 +188,8 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     //编辑（区分公开课和班课）
-    private void edit(Activity context,CLesson bean) {
-        if(Account.TypeName.STAND_ALONE_LESSON.equals(bean.type)){
-            Intent intent = new Intent(context, LessonCreationActivity.class);
-            intent.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
-            intent.putExtra(CourseConstant.KEY_TEACH_ACTION_TYPE, CourseConstant.TYPE_LESSON_EDIT);
-            context.startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
-        }else {
-            Intent intent = new Intent(context, EditTimetableActivity.class);
-            intent.putExtra(ClassInfoActivity.EXTRA_CLASSID,bean.classInfo.id);
-            intent.putExtra(EditTimetableActivity.EXTRA_C_LESSON,bean);
-            context.startActivityForResult(intent, CourseConstant.CODE_EDIT_LESSON);
-        }
+    private void edit(Activity context,RLesson bean) {
+        RecordedLessonActivity.invoke(context,bean.id,true);
 
     }
 

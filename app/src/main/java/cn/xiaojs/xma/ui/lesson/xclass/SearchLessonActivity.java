@@ -240,7 +240,7 @@ public class SearchLessonActivity extends BaseActivity implements IUpdateMethod{
 
 
     @Override
-    public void updateData(boolean justNative) {
+    public void updateData(boolean justNative,Object... others) {
         if(justNative){
             mAdapter.notifyDataSetChanged();
         }else {
