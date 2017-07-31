@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +27,7 @@ import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.StringUtil;
 
 /**
@@ -73,12 +76,13 @@ public class SRRecordedLessonView extends RelativeLayout implements IViewModel<S
     @Override
     public void bindData(int position, SearchResultV2 data) {
         mData = data;
-        if(mData.teacher!=null){
+        if(!ArrayUtil.isEmpty(mData.teachers)){
             tvName.setVisibility(VISIBLE);
             ivAvatar.setVisibility(VISIBLE);
-            tvName.setText(StringUtil.setHighlightText2(mData.teacher.name,mData._name,heightlightColor));
+//            tvName.setText(StringUtil.setHighlightText2(mData.teacher.name,mData._name,heightlightColor));
+            tvName.setText(mData.teachers[0].name);
             Glide.with(getContext())
-                    .load(Account.getAvatar(data.teacher.getId(), 300))
+                    .load(Account.getAvatar(data.teachers[0].getId(), 300))
                     .bitmapTransform(circleTransform)
                     .placeholder(R.drawable.default_avatar_grey)
                     .error(R.drawable.default_avatar_grey)

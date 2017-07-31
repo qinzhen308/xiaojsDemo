@@ -28,7 +28,8 @@ public class SearchResultV2 {
     public Date createdOn;
     public String _title;
     public Account teacher;
-//    public Account[] assistants;
+    public Account[] teachers;
+    //    public Account[] assistants;
     public Account[] advisers;
 
     public Schedule schedule;
