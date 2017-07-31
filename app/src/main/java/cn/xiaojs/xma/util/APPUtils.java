@@ -215,9 +215,9 @@ public class APPUtils {
      */
     public static int getAPPType(Context context) {
 
-        if (UIUtils.isTablet(context)) {
-            return Platform.AppType.TABLET_ANDROID;
-        }
+//        if (UIUtils.isTablet(context)) {
+//            return Platform.AppType.TABLET_ANDROID;
+//        }
 
         return Platform.AppType.MOBILE_ANDROID;
     }

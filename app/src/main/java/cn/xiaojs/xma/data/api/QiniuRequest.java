@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.orhanobut.logger.Logger;
@@ -12,6 +13,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
+import com.qiniu.android.utils.AsyncRun;
 
 import org.json.JSONObject;
 
@@ -22,6 +24,7 @@ import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.material.TokenPair;
 import cn.xiaojs.xma.model.material.UploadParam;
 import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.util.APPUtils;
 
 
 /**
@@ -156,8 +159,8 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
         }));
     }
 
-    private void completed(String key,
-                           ResponseInfo info,
+    private void completed(final String key,
+                           final ResponseInfo info,
                            JSONObject response,
                            @NonNull final QiniuService callback) {
 
@@ -170,11 +173,27 @@ public class QiniuRequest implements APIServiceCallback<TokenPair[]> {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("the API service callback is now null, so don't send callback and return");
             }
-
             return;
         }
 
 
+        if (APPUtils.isBackgroundThread()) {
+
+            //由于七牛SDK中上传completed的回调并不是在主线程中
+            AsyncRun.runInMain(new Runnable() {
+                @Override
+                public void run() {
+                    callbackFinal(key, info, callback);
+                }
+            });
+
+        }else {
+            callbackFinal(key, info, callback);
+        }
+
+    }
+
+    private void callbackFinal(String key, ResponseInfo info, @NonNull final QiniuService callback) {
         if (info.isOK()){
 
             if (type == Collaboration.UploadTokenType.DOCUMENT_IN_LIBRARY) {
