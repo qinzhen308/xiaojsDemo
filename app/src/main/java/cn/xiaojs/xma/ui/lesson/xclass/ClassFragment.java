@@ -47,6 +47,7 @@ import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.JudgementUtil;
@@ -160,6 +161,9 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener 
                 if(JudgementUtil.checkTeachingAbility(mContext)){
                     mContext.startActivity(new Intent(mContext,CreateClassActivity.class));
                 }
+                break;
+            case RecordedLessonActivity.REQUEST_CODE_MODIFY:
+                updateData();
                 break;
             default:
                 break;

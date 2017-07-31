@@ -53,7 +53,7 @@ public class RecordedLessonActivity extends BaseActivity {
 
     public static final String EXTRA_LESSON_ID="extra_lesson_id";
     public static final String EXTRA_KEY_IS_MODIFY="extra_key_is_modify";
-    private final static int REQUEST_CODE_MODIFY = 54;
+    public final static int REQUEST_CODE_MODIFY = 54;
 
 
     @BindView(R.id.listview)

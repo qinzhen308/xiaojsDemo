@@ -31,6 +31,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordedLessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonFragment;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
@@ -291,7 +292,7 @@ public class ClassesListActivity extends FragmentActivity implements IUpdateMeth
                     ((MyClassFragment)fragmentList.get(0)).refresh();
                     break;
                 case CourseConstant.CODE_RECORDED_LESSON_AGAIN:
-                case CreateRecordedLessonActivity.REQUEST_CODE_MODIFY:
+                case RecordedLessonActivity.REQUEST_CODE_MODIFY:
                     updateData(false,2);
                     break;
 

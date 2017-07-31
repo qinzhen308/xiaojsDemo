@@ -239,8 +239,8 @@ public class SearchRecordedLessonActivity extends BaseActivity implements IUpdat
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case CourseConstant.CODE_EDIT_LESSON:
-                case CourseConstant.CODE_LESSON_AGAIN:
+                case CourseConstant.CODE_RECORDED_LESSON_AGAIN:
+                case RecordedLessonActivity.REQUEST_CODE_MODIFY:
                     updateData(false);
                     break;
             }
