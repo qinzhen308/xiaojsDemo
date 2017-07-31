@@ -8,6 +8,7 @@ import java.util.Date;
 import cn.xiaojs.xma.model.Schedule;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.account.Stats;
+import cn.xiaojs.xma.model.recordedlesson.Expire;
 
 /**
  * Created by Paul Z on 2017/7/12.
@@ -33,6 +34,8 @@ public class SearchResultV2 {
     public Schedule schedule;
 
     public Stats stats;
+
+    public Expire expire;
 
     public boolean isFollowed;
 

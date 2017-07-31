@@ -68,6 +68,7 @@ public class Collaboration {
         public static final String PERSON = "Person";
         public static final String ORGANIZATION = "Organization";
         public static final String PRIVATE_CLASS = "PrivateClass";
+        public static final String RECORDED_COURSE = "RecordedCourse";
 
 
     }

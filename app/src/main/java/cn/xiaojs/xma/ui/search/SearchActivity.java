@@ -125,7 +125,7 @@ public class SearchActivity extends BaseActivity {
                         typeName= Social.SearchType.LESSON;
                         break;
                     case R.id.tab3:
-                        typeName= Social.SearchType.LESSON;
+                        typeName= Social.SearchType.COURSE;
 
                         break;
                     case R.id.tab4:

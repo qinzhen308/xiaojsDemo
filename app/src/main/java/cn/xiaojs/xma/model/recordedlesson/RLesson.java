@@ -39,4 +39,16 @@ public class RLesson {
     public EnrollOfAccount enrollOfCurrentAccount;
 
 
+    public void setPublic(boolean isPublic){
+        if(publish==null){
+            publish=new Publish();
+        }
+        publish.accessible=isPublic;
+    }
+
+    public boolean isPublic(){
+        return publish!=null&&publish.accessible;
+    }
+
+
 }

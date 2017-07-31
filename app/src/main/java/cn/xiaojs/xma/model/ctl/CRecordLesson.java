@@ -16,14 +16,13 @@ public class CRecordLesson {
     public String title;
     public String subject;
     public EnrollMode enroll;
-    public int mode;
+    public Integer mode;
     public TeachLead teaching;
     public String cover;
     public LiveLesson.TeachersIntro teachersIntro;
     public LiveLesson.Overview overview;
     public String[] tags;
-    public boolean accessible;
-    public boolean autoOnShelves;
+    public Boolean accessible;
     public Long effective;
     public CChapter[] chapters;
 

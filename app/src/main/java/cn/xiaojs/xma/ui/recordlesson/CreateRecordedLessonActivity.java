@@ -490,7 +490,13 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
                 ToastUtil.showToast(getApplicationContext(),"请填写有效天数");
                 return;
             }
+            if(Long.valueOf(daysStr)<=0){
+                ToastUtil.showToast(getApplicationContext(),"有效天数必须大于0");
+                return;
+            }
             lesson.effective=Long.valueOf(daysStr);
+        }else {//永久
+            lesson.effective=Long.valueOf(0);
         }
         showProgress(false);
         lesson.enroll=new EnrollMode();

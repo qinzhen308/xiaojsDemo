@@ -1009,5 +1009,8 @@
     <string name="empty_download">您还没有下载过文件哦～</string>
     <string name="cant_join_yourself_recorded_lesson">你是该课的所有者，无需报名即可去查看该课哦~</string>
     <string name="look_my_lessons">查看我的课</string>
+    <string name="record_lesson_shelve_tip_for_verified">上架后，有效期不允许修改哦，确定需要继续上架?</string>
+    <string name="record_lesson_shelve_tip_for_not_verify">上架后，不允许修改哦，确定需要继续上架?</string>
+    <string name="record_lesson_shelve_tip">上架提示</string>
 
 </resources>

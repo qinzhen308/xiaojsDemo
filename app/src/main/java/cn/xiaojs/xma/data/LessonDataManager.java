@@ -759,6 +759,24 @@ public class LessonDataManager {
     }
 
     /**
+     * modify Recorded Course
+     *
+     * @param context
+     * @param isPublish
+     * @param callback
+     */
+    public static ServiceRequest publishRecordedCourse(Context context,
+                                                      String course,
+                                                      boolean isPublish,
+                                                      APIServiceCallback<ResponseBody> callback) {
+        CRecordLesson recordLesson=new CRecordLesson();
+        recordLesson.accessible=isPublish;
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.modifyRecordedCourse(course,recordLesson);
+        return lessonRequest;
+    }
+
+    /**
      * Requests to put the specific recorded course on shelves.
      *
      * @param context

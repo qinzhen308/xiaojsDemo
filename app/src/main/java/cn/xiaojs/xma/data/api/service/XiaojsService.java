@@ -454,7 +454,7 @@ public interface XiaojsService {
     Call<CLResponse> createRecordedCourse(@Body CRecordLesson recordLesson);
 
     //modify Recorded Course
-    @POST("/v1/ctl/course/recorded/{course}")
+    @PATCH("/v1/ctl/course/recorded/{course}")
     Call<ResponseBody> modifyRecordedCourse(@Path("course") String course,
                                           @Body CRecordLesson recordLesson);
 

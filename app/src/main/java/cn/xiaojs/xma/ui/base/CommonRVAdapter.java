@@ -17,6 +17,7 @@ import cn.xiaojs.xma.ui.search.view.SRClassView;
 import cn.xiaojs.xma.ui.search.view.SRLiveLessonView;
 import cn.xiaojs.xma.ui.search.view.SROrganizationView;
 import cn.xiaojs.xma.ui.search.view.SRPersonView;
+import cn.xiaojs.xma.ui.search.view.SRRecordedLessonView;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -32,6 +33,7 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int VIEW_TYPE_SEARCH_RESULT_CLASS =2;
     public static final int VIEW_TYPE_SEARCH_RESULT_ORGANIZATION =3;
     public static final int VIEW_TYPE_SEARCH_RESULT_LIVE_LESSON=4;
+    public static final int VIEW_TYPE_SEARCH_RESULT_RECORDED_LESSON=5;
 
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
@@ -66,6 +68,8 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder=new CommonHolder(new SROrganizationView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_SEARCH_RESULT_LIVE_LESSON){
             holder=new CommonHolder(new SRLiveLessonView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_SEARCH_RESULT_RECORDED_LESSON){
+            holder=new CommonHolder(new SRRecordedLessonView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -99,12 +103,13 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 case Collaboration.SubType.STANDA_LONE_LESSON:
                     viewtype=VIEW_TYPE_SEARCH_RESULT_LIVE_LESSON;
                     break;
+                case Collaboration.SubType.RECORDED_COURSE:
+                    viewtype=VIEW_TYPE_SEARCH_RESULT_RECORDED_LESSON;
+                    break;
             }
             return viewtype;
         }else if(o instanceof LastEmptyModel){
             return VIEW_TYPE_LAST_EMPTY;
-        }else if(o instanceof LessonLabelModel){
-            return VIEW_TYPE_SEARCH_RESULT_PERSON;
         }
         return -1;
     }

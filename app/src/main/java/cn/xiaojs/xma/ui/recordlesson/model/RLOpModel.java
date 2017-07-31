@@ -43,6 +43,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.ToastUtil;
+import okhttp3.ResponseBody;
 
 /**
  * Created by Paul Z on 2017/7/25.
@@ -79,10 +80,10 @@ public class RLOpModel extends AbsOpModel<RLesson> {
                 detail(context, data.id);
                 break;
             case OP_PRIVATE:
-//                cancelPublish(context,data);
+                cancelPublish(context,data);
                 break;
             case OP_PUBLIC:
-//                publish(context,data);
+                publish(context,data);
                 break;
             case OP_PUBLISH:
                 //上架
@@ -159,32 +160,50 @@ public class RLOpModel extends AbsOpModel<RLesson> {
 
     //上架
     private void shelves(final Activity context,final RLesson bean,final int position) {
-        showProgress(context);
-        LessonDataManager.putRecordedCourseOnShelves(context, bean.id, new APIServiceCallback() {
+
+        final CommonDialog dialog = new CommonDialog(context);
+        dialog.setTitle(R.string.record_lesson_shelve_tip);
+        dialog.setDesc(AccountDataManager.isVerified(context)?R.string.record_lesson_shelve_tip_for_verified:R.string.record_lesson_shelve_tip_for_not_verify);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override
-            public void onSuccess(Object object) {
-                cancelProgress(context);
-
-                //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
-                if (AccountDataManager.isVerified(context)) {
-                    bean.state= Ctl.RecordedCourseState.ONSHELVES;
-                    ToastUtil.showToast(context, R.string.shelves_ok);
-                    updateData(context,true);
-                }else {
-                    bean.state= Ctl.RecordedCourseState.PENDING_FOR_APPROVAL;
-                    ToastUtil.showToast(context, R.string.shelves_need_examine);
-                    updateJustItem(context,position,bean);
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress(context);
-                ToastUtil.showToast(context, errorMessage);
+            public void onClick() {
+                dialog.cancel();
             }
         });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+                showProgress(context);
+                LessonDataManager.putRecordedCourseOnShelves(context, bean.id, new APIServiceCallback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        cancelProgress(context);
+
+                        //如果是已经实名认证的用户开的课，上架成功后，自动通过，不需要审核
+                        if (AccountDataManager.isVerified(context)) {
+                            bean.state= Ctl.RecordedCourseState.ONSHELVES;
+                            ToastUtil.showToast(context, R.string.shelves_ok);
+                            updateData(context,true);
+                        }else {
+                            bean.state= Ctl.RecordedCourseState.PENDING_FOR_APPROVAL;
+                            ToastUtil.showToast(context, R.string.shelves_need_examine);
+                            updateJustItem(context,position,bean);
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress(context);
+                        ToastUtil.showToast(context, errorMessage);
+                    }
+                });
+            }
+        });
+
     }
 
     //编辑（区分公开课和班课）
@@ -369,17 +388,17 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     //发布到主页
-    private void publish(final Activity context, final CLesson bean) {
-        if (bean.accessible) {
+    private void publish(final Activity context, final RLesson bean) {
+        if (bean.isPublic()) {
             cancelPublish(context,bean);
             return;
         }
         showProgress(context);
-        LessonDataManager.requestToggleAccessLesson(context, bean.id, true, new APIServiceCallback() {
+        LessonDataManager.publishRecordedCourse(context, bean.id, true, new APIServiceCallback<ResponseBody>() {
             @Override
-            public void onSuccess(Object object) {
+            public void onSuccess(ResponseBody object) {
                 cancelProgress(context);
-                bean.accessible = true;
+                bean.setPublic(true);
                 ToastUtil.showToast(context, R.string.lesson_publish_tip);
                 updateData(context,true);
             }
@@ -393,7 +412,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     //取消发布
-    private void cancelPublish(final Activity context, final CLesson bean) {
+    private void cancelPublish(final Activity context, final RLesson bean) {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.cancel_publish);
         dialog.setDesc(R.string.cancel_publish_tip);
@@ -410,11 +429,11 @@ public class RLOpModel extends AbsOpModel<RLesson> {
                 dialog.dismiss();
 
                 showProgress(context);
-                LessonDataManager.requestToggleAccessLesson(context, bean.id, false, new APIServiceCallback() {
+                LessonDataManager.publishRecordedCourse(context, bean.id, false, new APIServiceCallback<ResponseBody>() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(ResponseBody object) {
                         cancelProgress(context);
-                        bean.accessible = false;
+                        bean.setPublic(false);
                         ToastUtil.showToast(context, R.string.course_state_cancel);
                         updateData(context,true);
                     }

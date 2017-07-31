@@ -211,6 +211,9 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             }else {
                 list.add(new RLOpModel(AbsOpModel.OP_PUBLIC));
             }
+            if(AccountDataManager.isVerified(getContext())){
+                list.add(new RLOpModel(AbsOpModel.OP_EDIT));
+            }
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
             list.add(new RLOpModel(AbsOpModel.OP_APPLY));
             list.add(new RLOpModel(AbsOpModel.OP_APPLY_STUDENTS_LIST));
