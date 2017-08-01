@@ -22,6 +22,7 @@ import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.base.AbsOpModel;
+import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
@@ -204,6 +205,8 @@ public class RLOpModel extends AbsOpModel<RLesson> {
             }
         });
 
+        dialog.show();
+
     }
 
     //编辑（区分公开课和班课）
@@ -353,19 +356,22 @@ public class RLOpModel extends AbsOpModel<RLesson> {
 
     //分享
     private void share(Context context,RLesson bean) {
-        if (bean == null) return;
-        String date = null;
-        if(bean.expire!=null){
-            date=ScheduleUtil.getDateYMD(new Date(bean.createdOn.getTime()+ ScheduleUtil.DAY*bean.expire.effective));
-        }else {
-            date="永久";
-        }
-        String name = "";
-        if (!ArrayUtil.isEmpty(bean.teachers)) {
-            name = bean.teachers[0].name;
-        }
-        String shareUrl = ApiManager.getShareLessonUrl(bean.id,Social.SearchType.COURSE);
-        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(date).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
+
+        ShareBeautifulQrcodeActivity.invoke(context,ShareBeautifulQrcodeActivity.TYPE_RECORDED_LESSON,bean.id,bean.title,bean.teachers[0],bean.expire!=null?bean.expire.effective+"天":"永久");
+
+//        if (bean == null) return;
+//        String date = null;
+//        if(bean.expire!=null){
+//            date=ScheduleUtil.getDateYMD(new Date(bean.createdOn.getTime()+ ScheduleUtil.DAY*bean.expire.effective));
+//        }else {
+//            date="永久";
+//        }
+//        String name = "";
+//        if (!ArrayUtil.isEmpty(bean.teachers)) {
+//            name = bean.teachers[0].name;
+//        }
+//        String shareUrl = ApiManager.getShareLessonUrl(bean.id,Social.SearchType.COURSE);
+//        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(date).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
     }
 
     //报名注册

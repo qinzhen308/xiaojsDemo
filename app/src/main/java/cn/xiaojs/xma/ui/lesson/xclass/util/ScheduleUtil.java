@@ -286,6 +286,14 @@ public class ScheduleUtil {
         return simpleYMDFormat.format(date)+" "+getWeek(date.getTime());
     }
 
+    public static String getDateYMDW2(Date date){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date(0));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        calendar.setTime(date);
+        return simpleYMDFormat.format(date)+"（"+getWeek(date.getTime())+"）";
+    }
+
     /**
      *
      * @param dateStr 格式 yyyy-MM-dd  or  yyyy-M-d
@@ -362,5 +370,15 @@ public class ScheduleUtil {
         }else {
             return -1;
         }
+    }
+
+    public static String timeDuring(Date start,Date end){
+        StringBuilder sb=new StringBuilder(getHMDate(start));
+        sb.append("-");
+        if(!isSameDay(start,end)){
+            sb.append("次日");
+        }
+        sb.append(getHMDate(end));
+        return sb.toString();
     }
 }

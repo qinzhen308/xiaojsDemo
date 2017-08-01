@@ -1,11 +1,13 @@
 package cn.xiaojs.xma.ui.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,12 +39,15 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.ShareUtil;
+import cn.xiaojs.xma.util.TimeUtil;
 
 /**
- * Created by maxiaobao on 2017/5/19.
+ * Created by Paul Z on 2017/8/1.
  */
 
 public class ShareBeautifulQrcodeActivity extends BaseActivity {
@@ -50,8 +57,6 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
     public static final String EXTRA_KEY_ID = "extra_key_id";
     public static final String EXTRA_KEY_TEACHER = "extra_key_teacher";
     public static final String EXTRA_KEY_OTHER_INFO_PREFIX = "extra_key_other_info_";
-    public static final int CLIENT_DOWNLOAD_QRCODE = 0x1;
-    public static final int CLASS_QRCODE = 0x2;
 
     public static final int TYPE_CLASS = 0;
     public static final int TYPE_STANDALONG_LESSON = 1;
@@ -110,7 +115,12 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
 
         addView(R.layout.activity_share_beautiful_qrcode);
 
-        setMiddleTitle(getString(R.string.qr_code));
+        if(qrcodeType==TYPE_CLASS){
+            setMiddleTitle(getString(R.string.share_class));
+        }else {
+            setMiddleTitle(getString(R.string.share_lesson));
+        }
+        setRightImage(R.drawable.ic_share);
         shareUrl = ApiManager.getShareLessonUrl(id, shareTypes[qrcodeType]);
     }
 
@@ -125,7 +135,7 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_image, R.id.save_btn, R.id.share_btn})
+    @OnClick({R.id.left_image, R.id.save_btn, R.id.share_btn,R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -137,6 +147,15 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
                 break;
             case R.id.share_btn:
                 sharePicture();
+                break;
+            case R.id.right_image2:
+                if(qrcodeType==TYPE_CLASS){
+                    shareUrlForClass();
+                }else if(qrcodeType==TYPE_STANDALONG_LESSON){
+                    shareUrlForLesson();
+                }else if(qrcodeType==TYPE_RECORDED_LESSON){
+                    shareUrlForRecordedLesson();
+                }
                 break;
         }
 
@@ -158,7 +177,6 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
         ivLabel.setImageResource(labels[qrcodeType]);
         layoutContent.setBackgroundResource(bgs[qrcodeType]);
         tvTitle.setText(title);
-        tvTeacherName.setText("班主任："+(teacher.getBasic()!=null&&!TextUtils.isEmpty(teacher.getBasic().getName())?teacher.getBasic().getName():teacher.name));
         Glide.with(this)
                 .load(cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(teacher.getId(),300))
                 .transform(new CircleTransform(this))
@@ -172,6 +190,7 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
             tvExpiredDay.setVisibility(View.GONE);
             tips2.setText(R.string.qrcode_tips_class);
             tvWelcomTip.setText(R.string.qrcode_tips_welcom_class);
+            tvTeacherName.setText("班主任："+(teacher.getBasic()!=null&&!TextUtils.isEmpty(teacher.getBasic().getName())?teacher.getBasic().getName():teacher.name));
 
         } else if (qrcodeType == TYPE_STANDALONG_LESSON) {
 
@@ -180,8 +199,12 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
             tvExpiredDay.setVisibility(View.GONE);
             tips2.setText(R.string.qrcode_tips_lesson);
             tvWelcomTip.setText(R.string.qrcode_tips_welcom_lesson);
-            tvDate.setText(getIntent().getStringExtra(EXTRA_KEY_OTHER_INFO_PREFIX+0));
-            tvTime.setText(getIntent().getStringExtra(EXTRA_KEY_OTHER_INFO_PREFIX+1));
+            Date start=(Date) getIntent().getSerializableExtra(EXTRA_KEY_OTHER_INFO_PREFIX+0);
+            Date end=(Date) getIntent().getSerializableExtra(EXTRA_KEY_OTHER_INFO_PREFIX+1);
+            tvDate.setText(ScheduleUtil.getDateYMDW2(start));
+            tvTime.setText(ScheduleUtil.timeDuring(start,end));
+            tvTeacherName.setText("主讲："+(teacher.getBasic()!=null&&!TextUtils.isEmpty(teacher.getBasic().getName())?teacher.getBasic().getName():teacher.name));
+
         } else if (qrcodeType == TYPE_RECORDED_LESSON) {
             tvDate.setVisibility(View.GONE);
             tvTime.setVisibility(View.GONE);
@@ -189,6 +212,7 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
             tips2.setText(R.string.qrcode_tips_recorded_lesson);
             tvWelcomTip.setText(R.string.qrcode_tips_welcom_lesson);
             tvExpiredDay.setText("有效期："+getIntent().getStringExtra(EXTRA_KEY_OTHER_INFO_PREFIX+0));
+            tvTeacherName.setText("主讲："+(teacher.getBasic()!=null&&!TextUtils.isEmpty(teacher.getBasic().getName())?teacher.getBasic().getName():teacher.name));
 
         }
         new Thread(){
@@ -217,11 +241,7 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
 
 
     private void savePicture() {
-        if (qrcodeType == CLIENT_DOWNLOAD_QRCODE) {
-            AnalyticEvents.onEvent(this, 28);
-        } else if (qrcodeType == CLASS_QRCODE) {
 
-        }
         layoutContent.setDrawingCacheEnabled(true);
         Bitmap bm = layoutContent.getDrawingCache();
         bm = bm.createBitmap(bm);
@@ -318,8 +338,26 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
         return null;
     }
 
+    private void shareUrlForRecordedLesson(){
+        String date = tvExpiredDay.getText().toString();
+        String name = tvTeacherName.getText().toString();
+        ShareUtil.shareUrlByUmeng(this, title, new StringBuilder(date).append("\r\n").append(name).toString(), shareUrl);
+    }
 
-    public static void invoke(Context context,int type,String id, String title,Account teacher,String... otherInfo) {
+    private void shareUrlForLesson(){
+        Date start=(Date) getIntent().getSerializableExtra(EXTRA_KEY_OTHER_INFO_PREFIX+0);
+        String date = ScheduleUtil.getDateYMDHM(start);
+        String name = tvTeacherName.getText().toString();
+        ShareUtil.shareUrlByUmeng(this, title, new StringBuilder(date).append("\r\n").append(name).toString(), shareUrl);
+    }
+
+    private void shareUrlForClass(){
+        String name = tvTeacherName.getText().toString();
+        ShareUtil.shareUrlByUmeng(this, title, name, shareUrl);
+    }
+
+
+    public static void invoke(Context context,int type,String id, String title,Account teacher,Serializable... otherInfo) {
         Intent intent = new Intent(context, ShareBeautifulQrcodeActivity.class);
         intent.putExtra(EXTRA_QRCODE_TYPE, type);
         intent.putExtra(EXTRA_KEY_TEACHER, teacher);

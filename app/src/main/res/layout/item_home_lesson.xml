@@ -267,4 +267,22 @@
         android:visibility="gone"
         />
 
+
+    <TextView
+        android:id="@+id/state_label"
+        android:layout_width="@dimen/px66"
+        android:layout_height="@dimen/px34"
+        android:text="@string/teach_form_lecture"
+        android:background="@drawable/class_live_finished"
+        android:textColor="@color/white"
+        android:textSize="@dimen/px20"
+        android:layout_toRightOf="@+id/v_line"
+        android:layout_alignTop="@+id/tv_date"
+        android:layout_marginLeft="-17dp"
+        android:layout_marginTop="@dimen/px45"
+        android:paddingTop="@dimen/px5"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

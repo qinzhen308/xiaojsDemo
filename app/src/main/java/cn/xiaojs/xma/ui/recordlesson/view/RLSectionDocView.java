@@ -63,7 +63,7 @@ public class RLSectionDocView extends LinearLayout implements IViewModel<Section
     @Override
     public void bindData(int position, Section data) {
         mData=data;
-        tvName.setText(data.name);
+        tvName.setText(data.title);
         tvTime.setText(data.document.getTime());
         setOnClickListener(new OnClickListener() {
             @Override

@@ -16,6 +16,9 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
 
 
 /**
@@ -29,6 +32,8 @@ public class ScanQrcodeActivity extends QrCodeActivity {
     private String urlPrefix;
 
     private final String IDENTIFICATION_CLASS_CODE="web/mobile/classhome/";
+    private final String IDENTIFICATION_STANDALONG_LESSON_CODE="web/mobile/coursedetails/";
+    private final String IDENTIFICATION_RECORDED_LESSON_CODE="web/mobile/recorded/";
 
 
     @Override
@@ -59,16 +64,25 @@ public class ScanQrcodeActivity extends QrCodeActivity {
             i.putExtra(Constants.KEY_TICKET,key);
             startActivity(i);
             finish();
-        } else if(data!=null&&data.contains(IDENTIFICATION_CLASS_CODE)){
-            //h5 班级信息的url
-            String url=null;
-            if(data.contains("?")){
-                url=data+"&app=android";
-            }else {
-                url=data+"?app=android";
+        } else if(data!=null){
+            if(data.contains(IDENTIFICATION_CLASS_CODE)){
+                //h5 班级信息的url
+                String url=null;
+                if(data.contains("?")){
+                    url=data+"&app=android";
+                }else {
+                    url=data+"?app=android";
+                }
+                CommonWebActivity.invoke(this,"",url);
+                finish();
+            }else if(data.contains(IDENTIFICATION_STANDALONG_LESSON_CODE)){
+                String id=data.substring(data.lastIndexOf("/"),data.contains(".")?data.lastIndexOf("."):data.length());
+                startActivity(new Intent(this,LessonHomeActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,id));
+            }else if(data.contains(IDENTIFICATION_RECORDED_LESSON_CODE)){
+                String id=data.substring(data.lastIndexOf("/"),data.contains(".")?data.lastIndexOf("."):data.length());
+                RecordedLessonEnrollActivity.invoke(this,id);
             }
-            CommonWebActivity.invoke(this,"",url);
-            finish();
+
         }else if(URLUtil.isHttpUrl(data)||URLUtil.isHttpsUrl(data)){
             Intent intent=new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(data));

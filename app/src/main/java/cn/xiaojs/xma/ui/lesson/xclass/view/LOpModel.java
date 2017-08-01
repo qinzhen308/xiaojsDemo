@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import java.util.Date;
+
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
@@ -23,6 +25,7 @@ import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.ui.base.AbsOpModel;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
@@ -452,19 +455,21 @@ public class LOpModel extends AbsOpModel<CLesson> {
     //分享
     private void share(Context context,CLesson bean) {
 
-        if (bean == null) return;
+        ShareBeautifulQrcodeActivity.invoke(context,ShareBeautifulQrcodeActivity.TYPE_STANDALONG_LESSON,bean.id,bean.title,bean.teacher,bean.schedule.getStart(),new Date(bean.schedule.getStart().getTime()+bean.schedule.getDuration()));
 
-        String startTime = TimeUtil.format(bean.schedule.getStart().getTime(),
-                TimeUtil.TIME_YYYY_MM_DD_HH_MM);
-
-        String name = "";
-        if (bean.teacher != null ) {
-            name = bean.teacher.name;
-        }
-
-        String shareUrl = ApiManager.getShareLessonUrl(bean.id,bean.type);
-
-        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
+//        if (bean == null) return;
+//
+//        String startTime = TimeUtil.format(bean.schedule.getStart().getTime(),
+//                TimeUtil.TIME_YYYY_MM_DD_HH_MM);
+//
+//        String name = "";
+//        if (bean.teacher != null ) {
+//            name = bean.teacher.name;
+//        }
+//
+//        String shareUrl = ApiManager.getShareLessonUrl(bean.id,bean.type);
+//
+//        ShareUtil.shareUrlByUmeng((Activity) context, bean.title, new StringBuilder(startTime).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
     }
 
     //报名注册

@@ -1021,5 +1021,7 @@
     <string name="qrcode_tips_class">长按识别二维码，加入班级</string>
     <string name="qrcode_tips_welcom_class">邀请你加入班级，一起学习</string>
     <string name="qrcode_tips_welcom_lesson">邀请你一起学习</string>
+    <string name="share_lesson">分享课</string>
+    <string name="share_class">分享班</string>
 
 </resources>

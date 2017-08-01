@@ -288,14 +288,14 @@ public class RecordedLessonActivity extends BaseActivity {
             return;
         }
         for(Section sp:recreateData.sections){
-            RLDirectory dir=new RLDirectory(sp.name);
+            RLDirectory dir=new RLDirectory(sp.title);
             srcList.add(dir);
             if(ArrayUtil.isEmpty(sp.sections)){
                 continue;
             }
             for(Section sc:sp.sections){
                 RLLesson lesson=new RLLesson();
-                lesson.name=sc.name;
+                lesson.name=sc.title;
                 lesson.videoName=sc.document.name;
                 lesson.videoId=sc.document.id;
                 lesson.videoMimeType=sc.document.mimeType;

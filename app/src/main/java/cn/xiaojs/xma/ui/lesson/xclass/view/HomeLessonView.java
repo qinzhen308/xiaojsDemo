@@ -86,6 +86,9 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     @BindView(R.id.tv_state)
     TextView tvState;
 
+    @BindView(R.id.state_label)
+    TextView stateLabel;
+
     int position;
     @BindView(R.id.btn_replay)
     TextView btnReplay;
@@ -197,15 +200,20 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
                 statePoint.setVisibility(VISIBLE);
                 statePoint.setBackgroundResource(R.drawable.shape_orange_point);
+                stateLabel.setVisibility(VISIBLE);
+                stateLabel.setBackgroundResource(R.drawable.class_live_attend);
                 iconLive.setVisibility(GONE);
 
             } else if (Ctl.LiveLessonState.LIVE.equals(data.state)) {
                 statePoint.setVisibility(INVISIBLE);
                 iconLive.setVisibility(VISIBLE);
+                stateLabel.setVisibility(GONE);
 
             } else {
                 statePoint.setVisibility(VISIBLE);
                 statePoint.setBackgroundResource(R.drawable.shape_grey_point);
+                stateLabel.setVisibility(VISIBLE);
+                stateLabel.setBackgroundResource(R.drawable.class_live_finished);
                 iconLive.setVisibility(GONE);
             }
 
