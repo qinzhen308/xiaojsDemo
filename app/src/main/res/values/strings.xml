@@ -1012,6 +1012,8 @@
     <string name="record_lesson_shelve_tip_for_verified">上架后，有效期不允许修改哦，确定需要继续上架?</string>
     <string name="record_lesson_shelve_tip_for_not_verify">上架后，不允许修改哦，确定需要继续上架?</string>
     <string name="record_lesson_shelve_tip">上架提示</string>
+    <string name="choice_video_empty_tips">暂无视频可选择，请先上传视频到资料库哦~</string>
+    <string name="upload_now">立即上传</string>
 
 
     <string name="qrcode_tips_recorded_lesson">长按识别二维码，免费学习</string>

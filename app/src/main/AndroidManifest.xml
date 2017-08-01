@@ -389,6 +389,8 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".ui.recordlesson.RecordedLessonDetailActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".ui.grade.MaterialFragmentActivity"
+                  android:screenOrientation="portrait"/>
         <!-- QQ -->
         <activity
                 android:name="com.tencent.tauth.AuthActivity"

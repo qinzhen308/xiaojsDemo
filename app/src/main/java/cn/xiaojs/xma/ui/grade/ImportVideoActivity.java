@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
@@ -54,7 +55,7 @@ public class ImportVideoActivity extends BaseActivity {
     public static final String EXTRA_CHOICE_DATA = "choice_data";
     public static final String EXTRA_ALREADY_CHOICE_DATA = "already_choice_data";
     public static final int REQUEST_CODE=44;
-
+    public static final int REQUEST_UPLOAD_CODE=22;
     @BindView(R.id.list)
     PullToRefreshListView listView;
     @BindView(R.id.search)
@@ -237,6 +238,14 @@ public class ImportVideoActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_UPLOAD_CODE && resultCode == RESULT_OK) {
+            if (adapter != null) {
+                adapter.refresh();
+            }
+        }
+    }
 
     public class DataAdapter extends AbsListAdapter<LibDoc, DataAdapter.Holder> {
 
@@ -273,6 +282,17 @@ public class ImportVideoActivity extends BaseActivity {
                 disableResId = R.drawable.ic_choice_multipul_disable;
             }
 
+            setEmptyDesc(R.string.choice_video_empty_tips);
+            setEmptyButton(R.string.upload_now, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, MaterialFragmentActivity.class);
+                    intent.putExtra(MaterialFragmentActivity.EXTRA_FROM,
+                            MaterialFragmentActivity.FROM_CHOICE_EMPTY);
+                    startActivityForResult(intent,REQUEST_UPLOAD_CODE);
+
+                }
+            });
 
         }
 
@@ -362,6 +382,10 @@ public class ImportVideoActivity extends BaseActivity {
         @Override
         protected Holder initHolder(View view) {
             return new Holder(view);
+        }
+
+        @Override
+        protected void onDataEmpty() {
         }
 
         @Override

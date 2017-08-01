@@ -16,6 +16,8 @@ package cn.xiaojs.xma.common.pulltorefresh;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +98,11 @@ public abstract class AbsListAdapter<B, H extends BaseHolder> extends BaseAdapte
     private View mFailedView;
     private boolean mRefreshOnLoad = true;
 
+    private ImageView mEmptyImage;
+    private TextView mEmptyDesc;
+    private Button mEmptyButton;
+
+
     public AbsListAdapter(Context context, PullToRefreshListView listView) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
@@ -123,6 +130,9 @@ public abstract class AbsListAdapter<B, H extends BaseHolder> extends BaseAdapte
             return;
         }
         mEmptyView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_empty, null);
+        mEmptyDesc = (TextView) mEmptyView.findViewById(R.id.empty_desc);
+        mEmptyButton = (Button) mEmptyView.findViewById(R.id.empty_click);
+        mEmptyImage = (ImageView) mEmptyView.findViewById(R.id.empty_image);
         mPagination = new Pagination();
         mPagination.setPage(PAGE_FIRST);
         mPagination.setMaxNumOfObjectsPerPage(getPageSize());
@@ -477,5 +487,33 @@ public abstract class AbsListAdapter<B, H extends BaseHolder> extends BaseAdapte
     public boolean isChoiceMode() {
         return false;
     }
+
+
+    public void setEmptyDesc(@StringRes int desc) {
+        if (mEmptyDesc != null) {
+            mEmptyDesc.setVisibility(View.VISIBLE);
+            mEmptyDesc.setText(desc);
+        }
+
+    }
+
+
+    public void setEmptyIcon(@DrawableRes int resId) {
+        if (mEmptyImage != null) {
+            mEmptyImage.setImageResource(resId);
+        }
+    }
+
+
+
+    public void setEmptyButton(@StringRes int desc, View.OnClickListener listener) {
+        if (mEmptyButton !=null) {
+            mEmptyButton.setVisibility(View.VISIBLE);
+            mEmptyButton.setText(desc);
+            mEmptyButton.setOnClickListener(listener);
+        }
+
+    }
+
 
 }
