@@ -125,6 +125,11 @@
         <activity
                 android:name=".ui.CommonWebActivity"
                 android:screenOrientation="portrait"/>
+
+        <activity
+                android:name=".ui.common.ShareBeautifulQrcodeActivity"
+                android:screenOrientation="portrait"/>
+
         <activity
                 android:name=".ui.lesson.MyLessonActivity"
                 android:screenOrientation="portrait"/>

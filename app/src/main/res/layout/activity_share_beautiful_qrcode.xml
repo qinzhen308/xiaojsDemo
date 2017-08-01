@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/translucent_50"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_content"
+        android:layout_width="@dimen/px560"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/px20"
+        android:layout_weight="1"
+        android:background="@drawable/bg_qrcode_class"
+        android:padding="@dimen/px20"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/bg_qrcode_content"
+            android:layout_above="@+id/iv_qr_code"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/iv_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_qrcode_label_class"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px50"
+                    android:textSize="@dimen/font_38px"
+                    android:textColor="@color/font_black"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px30"
+                    android:textSize="@dimen/font_24px"
+                    android:textColor="@color/font_black"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px4"
+                    android:textSize="@dimen/font_24px"
+                    android:textColor="@color/font_black"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_expired_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px30"
+                    android:textSize="@dimen/font_24px"
+                    android:textColor="@color/font_black"
+                    android:gravity="center"
+                    />
+
+
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="@dimen/px120"
+                    android:layout_height="@dimen/px120"
+                    android:src="@drawable/default_avatar"
+                    android:layout_marginTop="@dimen/px50"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_teacher_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px50"
+                    android:textSize="@dimen/font_28px"
+                    android:gravity="center"
+                    android:textColor="@color/font_black"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_welcom_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px30"
+                    android:textSize="@dimen/font_28px"
+                    android:gravity="center"
+                    android:textColor="@color/chocolate_light"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_qr_code"
+            android:layout_width="@dimen/px150"
+            android:layout_height="@dimen/px150"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/px30"
+            android:scaleType="fitXY"
+            android:src="@drawable/xjs_app_qrcode"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignTop="@+id/iv_qr_code"
+            android:layout_alignBottom="@+id/iv_qr_code"
+            android:paddingTop="@dimen/px10"
+            android:paddingBottom="@dimen/px10"
+            android:layout_toLeftOf="@+id/iv_qr_code"
+            >
+
+            <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="@dimen/px70"
+                android:layout_height="@dimen/px70"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher"
+                />
+            <TextView
+                android:id="@+id/tips1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小教室"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_30px"
+                android:layout_marginLeft="@dimen/px15"
+                android:layout_toRightOf="@+id/iv_logo"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="人人可用的直播教室"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_20px"
+                android:layout_marginLeft="@dimen/px15"
+                android:layout_toRightOf="@+id/iv_logo"
+                android:layout_alignBottom="@+id/iv_logo"
+                />
+
+            <TextView
+                android:id="@+id/tips2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="长按识别二维码，加入班级"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_24px"
+                android:layout_alignParentBottom="true"
+                />
+
+
+        </RelativeLayout>
+
+
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/px30"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/px80"
+            android:background="@color/white"
+            android:text="@string/save_picture"
+            android:textColor="@color/font_blue"
+            android:textSize="@dimen/font_28px" />
+
+        <View
+            style="@style/DividerVertical"
+            android:layout_marginTop="@dimen/px15"
+            android:layout_marginBottom="@dimen/px15"
+            />
+
+        <Button
+            android:id="@+id/share_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/px80"
+            android:layout_marginLeft="@dimen/px30"
+            android:background="@color/white"
+            android:text="@string/share_qrcode"
+            android:textColor="@color/font_blue"
+            android:textSize="@dimen/font_28px" />
+
+    </LinearLayout>
+
+</LinearLayout>

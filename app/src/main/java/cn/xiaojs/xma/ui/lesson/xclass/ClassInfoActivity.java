@@ -34,10 +34,12 @@ import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /**
@@ -132,12 +134,15 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.lay_qrcode:
                 // 二维码
-                Intent qrIntent = new Intent(this, ShareQrcodeActivity.class);
-                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_QRCODE_TYPE,
-                        ShareQrcodeActivity.CLASS_QRCODE);
-                qrIntent.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
-                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_CLASS_NAME, nameView.getText().toString());
-                startActivity(qrIntent);
+//                Intent qrIntent = new Intent(this, ShareQrcodeActivity.class);
+//                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_QRCODE_TYPE,
+//                        ShareQrcodeActivity.CLASS_QRCODE);
+//                qrIntent.putExtra(ClassInfoActivity.EXTRA_CLASSID, classId);
+//                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_CLASS_NAME, nameView.getText().toString());
+//                startActivity(qrIntent);
+                if(classInfo!=null&& !ArrayUtil.isEmpty(classInfo.advisers)){
+                    ShareBeautifulQrcodeActivity.invoke(this,ShareBeautifulQrcodeActivity.TYPE_CLASS,classId,nameView.getText().toString(),classInfo.advisers[0]);
+                }
                 break;
             case R.id.veri_switcher:
                 //是否需要验证
