@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
 import android.app.Activity;
+import android.text.InputFilter;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -313,8 +314,9 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
         lp.bottomMargin=mContext.getResources().getDimensionPixelSize(R.dimen.px20);
         lp.topMargin=mContext.getResources().getDimensionPixelSize(R.dimen.px20);
         editText.setLayoutParams(lp);
-        editText.setHint(R.string.add_new_dir_tip);
+        editText.setHint(mContext.getString(R.string.add_new_dir_tip)+"（50字内）");
         editText.setLines(1);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
         editText.setTextColor(mContext.getResources().getColor(R.color.font_black));
         editText.setBackgroundResource(R.drawable.common_search_bg);
         editText.setGravity(Gravity.LEFT|Gravity.TOP);

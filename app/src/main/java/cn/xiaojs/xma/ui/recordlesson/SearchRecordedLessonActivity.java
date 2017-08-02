@@ -7,7 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +41,7 @@ import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
+import cn.xiaojs.xma.ui.lesson.xclass.SearchLessonActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
@@ -46,6 +49,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.recordlesson.util.RLessonFilterHelper;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 /**
  * Created by Paul Z on 2017/5/31.
@@ -89,25 +93,36 @@ public class SearchRecordedLessonActivity extends BaseActivity implements IUpdat
         recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerview.setAdapter(mAdapter);
         searchInput.setHint(R.string.hint_input_recorded_lesson_name);
-        searchInput.addTextChangedListener(new TextWatcher() {
+//        searchInput.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String query = searchInput.getText().toString();
+//                if(query.length()>0){
+//                    searchOk.setText(btn_text_search);
+//                }else {
+//                    searchOk.setText(btn_text_cancel);
+//                }
+//            }
+//        });
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String query = searchInput.getText().toString();
-                if(query.length()>0){
-                    searchOk.setText(btn_text_search);
-                }else {
-                    searchOk.setText(btn_text_cancel);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_SEARCH){
+                    search();
+                    XjsUtils.hideIMM(SearchRecordedLessonActivity.this);
+                    return true;
                 }
+                return false;
             }
         });
         initPageLoad();
@@ -121,7 +136,8 @@ public class SearchRecordedLessonActivity extends BaseActivity implements IUpdat
             case R.id.back:
                 break;
             case R.id.search_ok:
-                searchOrCancel(searchOk.getText().toString());
+//                searchOrCancel(searchOk.getText().toString());
+                finish();
                 break;
         }
     }

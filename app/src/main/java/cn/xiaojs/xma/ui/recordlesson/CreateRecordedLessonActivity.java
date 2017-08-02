@@ -151,7 +151,11 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
 
     @Override
     protected void addViewContent() {
-        setMiddleTitle(R.string.basic_infomation);
+        if(TextUtils.isEmpty(lessonid)){
+            setMiddleTitle(R.string.basic_infomation);
+        }else {
+            setMiddleTitle(R.string.basic_infomation_edit);
+        }
         addView(R.layout.activity_create_recorded_lesson);
         initView();
         setListener();

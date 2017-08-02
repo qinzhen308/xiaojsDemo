@@ -171,14 +171,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px160"
-                    android:drawableLeft="@drawable/ic_add_lesson_cover"
+                    android:drawableLeft="@drawable/ic_addcover_blue"
                     android:drawablePadding="@dimen/px20"
                     android:paddingBottom="@dimen/px26"
                     android:paddingLeft="@dimen/px40"
                     android:paddingRight="@dimen/px40"
                     android:paddingTop="@dimen/px26"
+                    android:gravity="center"
                     android:text="@string/add_cover"
-                    android:textColor="@color/font_dark_gray"
+                    android:textColor="@color/subject_selected_blue"
                     android:textSize="@dimen/font_28px" />
 
                 <TextView
@@ -187,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px2"
-                    android:text="@string/add_cover_tips"
+                    android:text="@string/add_cover_tips2"
                     android:textColor="@color/font_light_gray"
                     android:textSize="@dimen/font_26px" />
 

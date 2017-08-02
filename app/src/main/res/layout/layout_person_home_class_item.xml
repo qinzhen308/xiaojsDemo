@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/line_bottom_person_home_class"
+    android:paddingLeft="@dimen/px25"
+    android:paddingRight="@dimen/px30"
+    >
+
+    <TextView
+        android:layout_marginTop="@dimen/px22"
+        android:layout_marginBottom="@dimen/px25"
+        android:id="@+id/flag_view"
+        android:layout_width="@dimen/px100"
+        android:layout_height="@dimen/px100"
+        android:background="@drawable/bg_classportrait"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:text="a"
+        android:textColor="@color/blue_gentle"
+        android:textSize="@dimen/font_40px"
+        />
+
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/flag_view"
+        android:layout_alignTop="@+id/flag_view"
+        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px30"
+        android:layout_marginTop="@dimen/px5"
+        android:text="我的标题"
+        android:textColor="@color/font_black"
+        android:textSize="@dimen/font_34px" />
+
+
+    <TextView
+        android:id="@+id/member_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_view"
+        android:layout_marginLeft="@dimen/px40"
+        android:layout_marginTop="@dimen/px16"
+        android:layout_toRightOf="@+id/flag_view"
+        android:text="0人"
+        android:drawablePadding="@dimen/px16"
+        android:textColor="@color/class_grey"
+        android:textSize="@dimen/font_24px" />
+
+
+    <TextView
+        android:id="@+id/teachers_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/member_view"
+        android:layout_marginLeft="@dimen/px36"
+        android:layout_marginTop="@dimen/px20"
+        android:layout_toRightOf="@id/member_view"
+        android:text="班主任：我我我我"
+        android:textColor="@color/class_grey"
+        android:textSize="@dimen/font_24px" />
+
+
+    <TextView
+        android:id="@+id/btn_join"
+        android:layout_width="@dimen/px110"
+        android:layout_height="@dimen/px50"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/teachers_view"
+        android:layout_marginBottom="@dimen/px_5"
+        android:gravity="center"
+        android:textSize="@dimen/font_24px"
+        />
+
+</RelativeLayout>

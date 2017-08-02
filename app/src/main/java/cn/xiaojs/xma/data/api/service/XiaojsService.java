@@ -84,6 +84,7 @@ import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentOrder;
 import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLCollectionPageData;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
@@ -251,6 +252,16 @@ public interface XiaojsService {
     Call<CollectionPageData<PersonHomeUserLesson>> getLessons(@Path("userId") String userId,
                                                               @Query("page") int page,
                                                               @Query("limit") int limit);
+
+    @GET("/v1/ctl/taught/recordedCourses/{userId}")
+    Call<RLCollectionPageData<RLesson>> getRecordedCourseByUser(@Path("userId") String userId,
+                                                                @Query("page") int page,
+                                                                @Query("limit") int limit);
+
+  @GET("/v1/ctl/taught/classes/{userId}")
+    Call<RLCollectionPageData<RLesson>> getClassesByUser(@Path("userId") String userId,
+                                                                @Query("page") int page,
+                                                                @Query("limit") int limit);
 
     //Put Lesson On Shelves
     @POST("/v1/ctl/lessons/{lesson}/onshelves")

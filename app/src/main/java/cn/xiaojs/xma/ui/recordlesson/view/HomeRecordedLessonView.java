@@ -36,6 +36,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LessonOperateBoard;
 import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLOpModel;
 import cn.xiaojs.xma.util.ArrayUtil;
 
@@ -147,7 +148,14 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getContext().startActivity(new Intent(getContext(),RecordedLessonDetailActivity.class).putExtra(RecordedLessonDetailActivity.EXTRA_RLESSON_ID,mData.id));
+
+//                if (isOwner()) {//所有者
+//                    getContext().startActivity(new Intent(getContext(),RecordedLessonDetailActivity.class).putExtra(RecordedLessonDetailActivity.EXTRA_RLESSON_ID,mData.id));
+//                } else {//我就是个学生
+//                    RecordedLessonEnrollActivity.invoke(getContext(),mData.id);
+//                }
+                RecordedLessonEnrollActivity.invoke(getContext(),mData.id);
+
             }
         });
     }
@@ -179,7 +187,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 
     public List<RLOpModel> createRecordedLessonOpMode() {
         List<RLOpModel> ops;
-        if (!ArrayUtil.isEmpty(mData.teachers) && AccountPref.getAccountID(getContext()).equals(mData.teachers[0].getId())) {//我虽然不是所有者，但我是讲师
+        if (isOwner()) {//我虽然不是所有者，但我是讲师
             ops = imSpeaker();
         } else {//我就是个学生
             ops = imStudent();
@@ -196,14 +204,15 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             //查看课程目录
 //            list.add(new RLOpModel(AbsOpModel.OP_));
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
-            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+//            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
 
         } else if (Ctl.RecordedCourseState.PENDING_FOR_APPROVAL.equals(mData.state)) {//待审核
             //查看课程目录
 //            list.add(new RLOpModel(AbsOpModel.OP_));
+            list.add(new RLOpModel(AbsOpModel.OP_LOOK));
             list.add(new RLOpModel(AbsOpModel.OP_CANCEL_CHECK));
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
-            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+//            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
 
         } else if (Ctl.RecordedCourseState.ONSHELVES.equals(mData.state)) {//审核通过
             if(mData.publish!=null&&mData.publish.accessible){
@@ -213,16 +222,19 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             }
             if(AccountDataManager.isVerified(getContext())){
                 list.add(new RLOpModel(AbsOpModel.OP_EDIT));
+            }else {
+                list.add(new RLOpModel(AbsOpModel.OP_LOOK));
             }
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
-            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+//            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
             list.add(new RLOpModel(AbsOpModel.OP_APPLY_STUDENTS_LIST));
             list.add(new RLOpModel(AbsOpModel.OP_SIGNUP));
             list.add(new RLOpModel(AbsOpModel.OP_SHARE));
         } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {//审核失败
+            list.add(new RLOpModel(AbsOpModel.OP_LOOK));
             list.add(new RLOpModel(AbsOpModel.OP_DELETE));
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
-            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+//            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
         }
         return list;
     }
@@ -237,8 +249,9 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
         } else if (Ctl.RecordedCourseState.ONSHELVES.equals(mData.state)) {//审核通过
             //查看课程目录
 //            list.add(new RLOpModel(AbsOpModel.Op_));
-            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
+//            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
             list.add(new RLOpModel(AbsOpModel.OP_SIGNUP));
+            list.add(new RLOpModel(AbsOpModel.OP_SHARE));
 
         } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {//审核失败
 
@@ -261,6 +274,10 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             teachersName+="等"+mData.teachers.length+"人";
         }
         return teachersName;
+    }
+
+    private boolean isOwner(){
+        return mData.createdBy!=null&&AccountDataManager.getAccountID(getContext()).equals(mData.createdBy.getId());
     }
 
 }

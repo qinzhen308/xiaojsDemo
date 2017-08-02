@@ -37,7 +37,10 @@ public class ScheduleUtil {
     public static final SimpleDateFormat simpleYMDHMSFormat=new SimpleDateFormat(simpleYMDHMSFormatStr,Locale.CHINA);
     public static final SimpleDateFormat simpleYMDHMFormat=new SimpleDateFormat(simpleYMDHMFormatStr,Locale.CHINA);
 
-    public final static long DAY=3600*24*1000;
+    public final static long SECOND=1000;
+    public final static long MINUTE=60*SECOND;
+    public final static long HOUR=MINUTE*60;
+    public final static long DAY=24*HOUR;
 
     public static List<ClassLesson> sort(List<ClassLesson> src) {
         int size=src.size();

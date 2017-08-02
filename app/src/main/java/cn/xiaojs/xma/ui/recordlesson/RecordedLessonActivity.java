@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -40,6 +41,7 @@ import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import cn.xiaojs.xma.ui.recordlesson.util.RecordLessonHelper;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ObjectUtil;
@@ -82,7 +84,11 @@ public class RecordedLessonActivity extends BaseActivity {
         addView(R.layout.activity_recorded_lesson);
         needHeader(true);
         setRightText(R.string.manage_it);
-        setMiddleTitle(R.string.record_lesson_directory);
+        if(isModify){
+            setMiddleTitle(R.string.record_lesson_directory_edit);
+        }else {
+            setMiddleTitle(R.string.record_lesson_directory_input);
+        }
         lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
         isModify=getIntent().getBooleanExtra(EXTRA_KEY_IS_MODIFY,false);
         initView();
@@ -374,12 +380,13 @@ public class RecordedLessonActivity extends BaseActivity {
     private void addNewDir(){
         final CommonDialog dialog=new CommonDialog(this);
         dialog.setTitle(R.string.add_new_directory);
-        final EditText editText=new EditText(this);
+        final EditTextDel editText=new EditTextDel(this);
         FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.bottomMargin=getResources().getDimensionPixelSize(R.dimen.px20);
         lp.topMargin=getResources().getDimensionPixelSize(R.dimen.px20);
         editText.setLayoutParams(lp);
-        editText.setHint(R.string.add_new_dir_tip);
+        editText.setHint(getString(R.string.add_new_dir_tip)+"（50字内）");
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
         editText.setLines(1);
         editText.setTextColor(getResources().getColor(R.color.font_black));
         editText.setBackgroundResource(R.drawable.common_search_bg);

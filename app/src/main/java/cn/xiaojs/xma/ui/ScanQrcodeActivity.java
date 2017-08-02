@@ -76,10 +76,10 @@ public class ScanQrcodeActivity extends QrCodeActivity {
                 CommonWebActivity.invoke(this,"",url);
                 finish();
             }else if(data.contains(IDENTIFICATION_STANDALONG_LESSON_CODE)){
-                String id=data.substring(data.lastIndexOf("/"),data.contains(".")?data.lastIndexOf("."):data.length());
+                String id=data.substring(data.lastIndexOf("/")+1,data.contains(".")?data.lastIndexOf("."):data.length());
                 startActivity(new Intent(this,LessonHomeActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,id));
             }else if(data.contains(IDENTIFICATION_RECORDED_LESSON_CODE)){
-                String id=data.substring(data.lastIndexOf("/"),data.contains(".")?data.lastIndexOf("."):data.length());
+                String id=data.substring(data.lastIndexOf("/")+1,data.contains(".")?data.lastIndexOf("."):data.length());
                 RecordedLessonEnrollActivity.invoke(this,id);
             }
 

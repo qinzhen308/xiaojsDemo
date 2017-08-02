@@ -201,6 +201,7 @@
     <string name="add_cover">添加封面</string>
     <string name="upload_cover_fail">上传封面失败</string>
     <string name="add_cover_tips">一张好的封面可以增加报名人数哦~</string>
+    <string name="add_cover_tips2">一张漂亮的封面让你的课更吸引人~</string>
     <string name="live_lesson_brief">简介</string>
     <string name="live_lesson_brief_hint">请填写公开课简介</string>
     <string name="live_lesson_label">标签</string>
@@ -570,6 +571,7 @@
     <string name="follow_and_send_message">关注%1$s，发消息</string>
     <string name="lesson_no_introduction">暂无简介</string>
     <string name="teacher_resetting">老师还没开课~</string>
+    <string name="teacher_nerver_create_class">老师还没开班~</string>
     <string name="no_teacher_tip">暂无老师~</string>
     <string name="dynamic_empty">什么都没有，下次再来看看~</string>
 
@@ -853,7 +855,7 @@
     <string name="lesson_op_public">设为公开</string>
     <string name="lesson_op_private">取消公开</string>
     <string name="lesson_op_recreate_lesson">重新开课</string>
-    <string name="lesson_op_share">分享</string>
+    <string name="lesson_op_share">分享课</string>
     <string name="lesson_op_cancel_lesson">取消</string>
     <string name="lesson_op_submit">提交确认</string>
     <string name="lesson_op_publish">上架</string>
@@ -967,10 +969,12 @@
     <string name="move">移动</string>
     <string name="select_taget_folder_tips">选择目标文件</string>
     <string name="has_taget_folder_tips">已选（%1$s）</string>
-    <string name="create_record_lesson_tips">从你的资料库中选择直播课回放视频或上传的视频，快速生成课程，可上架售卖或共享给班级</string>
+    <string name="create_record_lesson_tips">从你的资料库中选择直播课回放视频或上传的视频，快速生成课程</string>
     <string name="import_video_tips">导入视频</string>
     <string name="create_recordlesson">开录播课</string>
     <string name="record_lesson_directory">课程目录</string>
+    <string name="record_lesson_directory_input">填写课程目录</string>
+    <string name="record_lesson_directory_edit">编辑课程目录</string>
     <string name="manage_it">管理</string>
     <string name="import_video">导入视频</string>
     <string name="add_new_dir">新增一级</string>
@@ -992,7 +996,8 @@
     <string name="is_need_set_expired">是否设置有效期</string>
     <string name="rl_set_expired_date_tip">（学生从报名之日开始算起）</string>
     <string name="unit_day">天</string>
-    <string name="basic_infomation">基本信息</string>
+    <string name="basic_infomation">填写基本信息</string>
+    <string name="basic_infomation_edit">编辑基本信息</string>
     <string name="record_lesson">录播课</string>
     <string name="valid_days">有效期%1$d天</string>
 
@@ -1023,5 +1028,7 @@
     <string name="qrcode_tips_welcom_lesson">邀请你一起学习</string>
     <string name="share_lesson">分享课</string>
     <string name="share_class">分享班</string>
+    <string name="share_mode_url">链接分享</string>
+    <string name="share_mode_qrcode">二维码分享</string>
 
 </resources>

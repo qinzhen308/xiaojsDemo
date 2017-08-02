@@ -6,7 +6,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +26,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
@@ -40,6 +43,9 @@ import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.UIUtils;
+import cn.xiaojs.xma.util.XjsUtils;
 
 /**
  * Created by Paul Z on 2017/5/31.
@@ -82,7 +88,7 @@ public class SearchLessonActivity extends BaseActivity implements IUpdateMethod{
         mAdapter=new HomeClassAdapter(recyclerview);
         recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerview.setAdapter(mAdapter);
-        searchInput.addTextChangedListener(new TextWatcher() {
+        /*searchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -102,6 +108,17 @@ public class SearchLessonActivity extends BaseActivity implements IUpdateMethod{
                     searchOk.setText(btn_text_cancel);
                 }
             }
+        });*/
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_SEARCH){
+                    search();
+                    XjsUtils.hideIMM(SearchLessonActivity.this);
+                    return true;
+                }
+                return false;
+            }
         });
         initPageLoad();
     }
@@ -114,7 +131,8 @@ public class SearchLessonActivity extends BaseActivity implements IUpdateMethod{
             case R.id.back:
                 break;
             case R.id.search_ok:
-                searchOrCancel(searchOk.getText().toString());
+                finish();
+//                searchOrCancel(searchOk.getText().toString());
                 break;
         }
     }

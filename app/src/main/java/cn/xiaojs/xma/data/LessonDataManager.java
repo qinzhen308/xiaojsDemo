@@ -61,6 +61,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLCollectionPageData;
 import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
@@ -138,6 +139,58 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getLessons(account, page, limit);
+
+        return lessonRequest;
+    }
+
+    /**
+     * 通过用户ID获取用户的录播课
+     */
+    public static ServiceRequest getRecordedCourseByUser(Context context,
+                                        String account,
+                                        Pagination pagination,
+                                        APIServiceCallback<RLCollectionPageData<RLesson>> callback) {
+
+        int page = 1;
+        int limit = 10;
+
+        if (pagination != null) {
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        if (account == null) {
+            account = "";
+        }
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getRecordedCourseByUser(account, page, limit);
+
+        return lessonRequest;
+    }
+
+    /**
+     * 通过用户ID获取用户授的班
+     */
+    public static ServiceRequest getClassesByUser(Context context,
+                                                         String account,
+                                                         Pagination pagination,
+                                                         APIServiceCallback<RLCollectionPageData<RLesson>> callback) {
+
+        int page = 1;
+        int limit = 10;
+
+        if (pagination != null) {
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        if (account == null) {
+            account = "";
+        }
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesByUser(account, page, limit);
 
         return lessonRequest;
     }

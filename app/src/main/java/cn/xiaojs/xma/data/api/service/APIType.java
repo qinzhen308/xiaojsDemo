@@ -202,4 +202,7 @@ public class APIType {
     public static final int REVIEW_RECORDED_COURSE_ENROLL = 127;
     public static final int ENROLL_RECORDED_COURSE = 128;
     public static final int MODIFY_RECORDED_COURSE = 129;
+    public static final int GET_RECORD_COURSE_BY_USER= 130;
+    public static final int GET_CLASS_BY_USER= 131;
+
 }

@@ -2,6 +2,6 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/color_milk" ></item>
     <item android:drawable="@drawable/color_gray" android:left="@dimen/px70"></item>
-    <item android:drawable="@drawable/color_milk" android:bottom="@dimen/px3" android:left="@dimen/px70"></item>
+    <item android:drawable="@drawable/color_milk" android:bottom="@dimen/px2" android:left="@dimen/px70"></item>
 
 </layer-list>

@@ -170,6 +170,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
 
         if(Account.TypeName.CLASS_LESSON.equals(data.type)&&data.classInfo!=null){
             tvState.setVisibility(GONE);
+            stateLabel.setVisibility(GONE);
 
             if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
                 statePoint.setVisibility(VISIBLE);

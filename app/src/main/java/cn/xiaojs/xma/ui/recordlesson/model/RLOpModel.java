@@ -5,35 +5,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import java.util.Date;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
-import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.TeachLesson;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
-import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.base.AbsOpModel;
 import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
 import cn.xiaojs.xma.ui.grade.GradeHomeActivity;
 import cn.xiaojs.xma.ui.lesson.CancelLessonActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
-import cn.xiaojs.xma.ui.lesson.LiveLessonDetailActivity;
 import cn.xiaojs.xma.ui.lesson.ModifyLessonActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.ClassInfoActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.EditTimetableActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.recordlesson.EnrolledStudentsActivity;
 import cn.xiaojs.xma.ui.recordlesson.ManualRegistrationActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonActivity;
@@ -42,7 +34,6 @@ import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
-import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import okhttp3.ResponseBody;
 
@@ -257,9 +248,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
 
     //查看详情
     private void detail(Activity context,String id) {
-        Intent intent = new Intent(context, LiveLessonDetailActivity.class);
-        intent.putExtra(CourseConstant.KEY_LESSON_BEAN, id);
-        context.startActivity(intent);
+        context.startActivity(new Intent(context,RecordedLessonDetailActivity.class).putExtra(RecordedLessonDetailActivity.EXTRA_RLESSON_ID,id));
     }
 
     //班级圈

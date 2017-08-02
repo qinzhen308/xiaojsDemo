@@ -40,6 +40,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.EditTimetableActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -455,7 +456,14 @@ public class LOpModel extends AbsOpModel<CLesson> {
     //分享
     private void share(Context context,CLesson bean) {
 
-        ShareBeautifulQrcodeActivity.invoke(context,ShareBeautifulQrcodeActivity.TYPE_STANDALONG_LESSON,bean.id,bean.title,bean.teacher,bean.schedule.getStart(),new Date(bean.schedule.getStart().getTime()+bean.schedule.getDuration()));
+        ShareBeautifulQrcodeActivity.invoke(
+                context,
+                ShareBeautifulQrcodeActivity.TYPE_STANDALONG_LESSON,
+                bean.id,
+                bean.title,
+                bean.teacher,
+                bean.schedule.getStart(),
+                new Date(bean.schedule.getStart().getTime()+bean.schedule.getDuration()* ScheduleUtil.MINUTE));
 
 //        if (bean == null) return;
 //

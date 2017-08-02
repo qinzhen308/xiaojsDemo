@@ -215,7 +215,7 @@
             android:layout_height="@dimen/px80"
             android:layout_marginLeft="@dimen/px30"
             android:background="@color/white"
-            android:text="@string/share_qrcode"
+            android:text="@string/share_mode_qrcode"
             android:textColor="@color/font_blue"
             android:textSize="@dimen/font_28px" />
 

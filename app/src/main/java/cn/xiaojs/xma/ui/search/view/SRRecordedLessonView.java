@@ -26,6 +26,7 @@ import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.StringUtil;
@@ -105,9 +106,7 @@ public class SRRecordedLessonView extends RelativeLayout implements IViewModel<S
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), LessonHomeActivity.class);
-                i.putExtra(CourseConstant.KEY_LESSON_ID, mData.id);
-                getContext().startActivity(i);
+                RecordedLessonEnrollActivity.invoke(getContext(),mData.id);
             }
         });
     }

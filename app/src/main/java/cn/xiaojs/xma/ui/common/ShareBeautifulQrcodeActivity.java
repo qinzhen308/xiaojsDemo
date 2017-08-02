@@ -120,7 +120,7 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
         }else {
             setMiddleTitle(getString(R.string.share_lesson));
         }
-        setRightImage(R.drawable.ic_share);
+        setRightText(R.string.share_mode_url);
         shareUrl = ApiManager.getShareLessonUrl(id, shareTypes[qrcodeType]);
     }
 
@@ -135,7 +135,7 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_image, R.id.save_btn, R.id.share_btn,R.id.right_image})
+    @OnClick({R.id.left_image, R.id.save_btn, R.id.share_btn,R.id.right_view})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -148,7 +148,7 @@ public class ShareBeautifulQrcodeActivity extends BaseActivity {
             case R.id.share_btn:
                 sharePicture();
                 break;
-            case R.id.right_image2:
+            case R.id.right_view:
                 if(qrcodeType==TYPE_CLASS){
                     shareUrlForClass();
                 }else if(qrcodeType==TYPE_STANDALONG_LESSON){

@@ -4,7 +4,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +24,7 @@ import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 /**
  * Created by Paul Z on 2017/5/31.
@@ -68,25 +71,36 @@ public class SearchClassActivity extends BaseActivity {
         mAdapter=new ClassAdapter(this,listview);
         mAdapter.setKeyword("囃");//这个关键字只是为了不让adapter第一次加载出数据
         listview.setAdapter(mAdapter);
-        searchInput.addTextChangedListener(new TextWatcher() {
+//        searchInput.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String query = searchInput.getText().toString();
+//                if(query.length()>0){
+//                    searchOk.setText(btn_text_search);
+//                }else {
+//                    searchOk.setText(btn_text_cancel);
+//                }
+//            }
+//        });
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String query = searchInput.getText().toString();
-                if(query.length()>0){
-                    searchOk.setText(btn_text_search);
-                }else {
-                    searchOk.setText(btn_text_cancel);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_SEARCH){
+                    search();
+                    XjsUtils.hideIMM(SearchClassActivity.this);
+                    return true;
                 }
+                return false;
             }
         });
     }
@@ -99,7 +113,8 @@ public class SearchClassActivity extends BaseActivity {
             case R.id.back:
                 break;
             case R.id.search_ok:
-                searchOrCancel(searchOk.getText().toString());
+//                searchOrCancel(searchOk.getText().toString());
+                finish();
                 break;
         }
     }

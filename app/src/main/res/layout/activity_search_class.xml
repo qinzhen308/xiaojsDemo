@@ -33,6 +33,7 @@
                 android:textSize="@dimen/font_28px"
                 android:gravity="center_vertical"
                 android:maxLines="1"
+            android:imeOptions="actionSearch"
                 android:background="@drawable/grey_conner_bg"
                 android:paddingBottom="@dimen/px15"
                 android:paddingTop="@dimen/px15"

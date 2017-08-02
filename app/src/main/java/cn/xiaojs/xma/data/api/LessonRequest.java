@@ -64,6 +64,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.recordedlesson.RLChapter;
+import cn.xiaojs.xma.model.recordedlesson.RLCollectionPageData;
 import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
@@ -98,6 +99,16 @@ public class LessonRequest extends ServiceRequest {
     public void getLessons(String account, int page, int limit) {
         Call<CollectionPageData<PersonHomeUserLesson>> call = getService().getLessons(account, page, limit);
         enqueueRequest(APIType.GET_LESSONS_BY_USER, call);
+    }
+
+    public void getRecordedCourseByUser(String account, int page, int limit) {
+        Call<RLCollectionPageData<RLesson>> call = getService().getRecordedCourseByUser(account, page, limit);
+        enqueueRequest(APIType.GET_RECORD_COURSE_BY_USER, call);
+    }
+
+    public void getClassesByUser(String account, int page, int limit) {
+        Call<RLCollectionPageData<RLesson>> call = getService().getClassesByUser(account, page, limit);
+        enqueueRequest(APIType.GET_CLASS_BY_USER, call);
     }
 
 //    public void getLessons(@NonNull Criteria criteria,
