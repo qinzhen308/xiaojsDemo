@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.grade;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -41,6 +42,7 @@ import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.FileUtil;
+import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -263,6 +265,8 @@ public class ImportVideoActivity extends BaseActivity {
             TextView nameView;
             @BindView(R.id.size)
             TextView sizeView;
+            @BindView(R.id.open_button)
+            TextView openBtn;
 
 
             public Holder(View view) {
@@ -337,7 +341,7 @@ public class ImportVideoActivity extends BaseActivity {
         }
 
         @Override
-        protected void setViewContent(Holder holder, LibDoc bean, int position) {
+        protected void setViewContent(Holder holder, final LibDoc bean, int position) {
 
             if (bean.showAction || !isEnabled(position)) {
 
@@ -370,6 +374,14 @@ public class ImportVideoActivity extends BaseActivity {
             sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
 
             holder.sizeView.setText(sb);
+
+
+            holder.openBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MaterialUtil.openMaterial((Activity) mContext,bean);
+                }
+            });
 
 
         }
