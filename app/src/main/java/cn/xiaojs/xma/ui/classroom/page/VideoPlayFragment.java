@@ -277,7 +277,7 @@ public class VideoPlayFragment extends BaseFragment {
         mPlaying = false;
         mHandler.removeMessages(MSG_COUNT_TIME);
         mHandler.removeMessages(MSG_HIDE_VIDEO_CONTROLLER);
-        mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
+        mPlayPauseBtn.setImageResource(R.drawable.ic_start_play);
         mVideoPlayerView.pause();
         mCurrPosition = mPlMediaPlayer != null ? mPlMediaPlayer.getCurrentPosition() : 0;
     }
