@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -101,7 +102,6 @@ public class MaterialFragment extends BaseFragment {
 
     @Override
     protected void init() {
-
         mAdapter = new MaterialAdapter(this, mList, XiaojsConfig.mLoginUser.getId());
         mList.setAdapter(mAdapter);
     }
@@ -238,6 +238,7 @@ public class MaterialFragment extends BaseFragment {
         editText.setTextColor(mContext.getResources().getColor(R.color.common_text));
         editText.setBackgroundResource(R.drawable.common_edittext_bg);
         editText.setHint(R.string.new_folder_hint);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
 
         dialog.setCustomView(editText);
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {

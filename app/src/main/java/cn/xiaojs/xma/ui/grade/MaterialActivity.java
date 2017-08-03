@@ -57,7 +57,7 @@ public class MaterialActivity extends FragmentActivity {
     Button cancelBtn;
     @BindView(R.id.choice_btn)
     Button choiceBtn;
-    private static final String EXTRA_TAB="extra_tab";
+    public static final String EXTRA_TAB="extra_tab";
     private int curCheckedTabId;
 
 
@@ -72,8 +72,8 @@ public class MaterialActivity extends FragmentActivity {
         ButterKnife.bind(this);
         initView();
         int tab=getIntent().getIntExtra(EXTRA_TAB,-1);
-        if(tab>0){
-            checkToTab(tab);
+        if(tab > 0){
+            initToTab(tab);
         }
 
 
@@ -163,20 +163,17 @@ public class MaterialActivity extends FragmentActivity {
         tabPager.setScrollEnable(false);
     }
 
-    private void checkToTab(int tab){
-        if(tab==0&&curCheckedTabId!=R.id.tab_material){
+    private void initToTab(int tab){
+        if(tab==0){
             tabPager.setCurrentItem(0);
             tabGroupLayout.check(R.id.tab_material);
-            curCheckedTabId=R.id.tab_material;
-            switchOperaBtn(R.id.tab_material);
-        }else if(tab==1&&curCheckedTabId!=R.id.tab_download){
+            curCheckedTabId = R.id.tab_material;
+        }else if(tab==1){
             tabPager.setCurrentItem(1);
             tabGroupLayout.check(R.id.tab_download);
-            curCheckedTabId=R.id.tab_download;
-            switchOperaBtn(R.id.tab_download);
+            curCheckedTabId = R.id.tab_download;
         }
     }
-
 
     class FrgStatePageAdapter extends FragmentStatePagerAdapter {
 
@@ -258,7 +255,9 @@ public class MaterialActivity extends FragmentActivity {
             cancelBtn.setVisibility(View.GONE);
         }
 
-        materialFragment.changeChoiceMode(choiceMode);
+        if (materialFragment.isAdded()) {
+            materialFragment.changeChoiceMode(choiceMode);
+        }
     }
 
 

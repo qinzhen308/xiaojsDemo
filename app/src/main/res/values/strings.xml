@@ -965,7 +965,7 @@
     <string name="file_move">移动文件</string>
     <string name="serach_material_hint">搜索资料名</string>
     <string name="new_folder">新建文件夹</string>
-    <string name="new_folder_hint">请输入文件夹名称</string>
+    <string name="new_folder_hint">请输入文件夹名称(50字内)</string>
     <string name="move">移动</string>
     <string name="select_taget_folder_tips">选择目标文件</string>
     <string name="has_taget_folder_tips">已选（%1$s）</string>
@@ -1030,5 +1030,6 @@
     <string name="share_class">分享班</string>
     <string name="share_mode_url">链接分享</string>
     <string name="share_mode_qrcode">二维码分享</string>
+    <string name="material_info_summary">%1$s&#160;&#160;&#160;&#160;分享:&#160;<![CDATA[<font color="#b49e89">%2$s</font>]]></string>
 
 </resources>

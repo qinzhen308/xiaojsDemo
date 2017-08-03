@@ -101,15 +101,18 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         holder.name.setText(bean.name);
         StringBuilder sb = new StringBuilder();
 
+        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
         if (bean.used <= 0) {
             sb.append("");
         }else{
+            sb.append("    ");
             sb.append(XjsUtils.getSizeFormatText(bean.used));
-            sb.append("  ");
+
         }
 
 
-        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
 
         holder.desc.setText(sb);
 
@@ -159,6 +162,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             }
         });
 
+        holder.opera4.setVisibility(View.VISIBLE);
         holder.opera4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,7 +188,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
                     MaterialUtil.getDownloadUrl(bean.key, bean.mimeType),
                     bean.mimeType,
                     Social.getDrawing(bean.key, true));
-        Toast.makeText(mContext, "已添加到下载队列，可以到我的下载查看", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "已添加到下载队列", Toast.LENGTH_SHORT).show();
 //        } else {
 //           Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
 //        }

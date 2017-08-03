@@ -364,14 +364,14 @@ public class ImportVideoActivity extends BaseActivity {
             holder.nameView.setText(bean.name);
 
             StringBuilder sb = new StringBuilder();
-
+            sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
             if (bean.used <= 0) {
                 sb.append("");
             } else {
-                sb.append(XjsUtils.getSizeFormatText(bean.used));
                 sb.append("  ");
+                sb.append(XjsUtils.getSizeFormatText(bean.used));
             }
-            sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
 
             holder.sizeView.setText(sb);
 
