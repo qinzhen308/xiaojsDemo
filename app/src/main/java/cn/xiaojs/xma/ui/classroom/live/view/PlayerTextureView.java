@@ -162,6 +162,7 @@ public class PlayerTextureView extends BaseMediaView {
         options.setInteger(AVOptions.KEY_LIVE_STREAMING, mIsLiveStreaming);
         if (mIsLiveStreaming == 1) {
             options.setInteger(AVOptions.KEY_DELAY_OPTIMIZATION, 1);
+            options.setInteger(AVOptions.KEY_CACHE_BUFFER_DURATION, 300);
         }
 
         // 1 -> hw codec enable, 0 -> disable [recommended]

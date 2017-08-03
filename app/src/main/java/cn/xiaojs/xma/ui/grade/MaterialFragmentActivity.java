@@ -59,7 +59,7 @@ public class MaterialFragmentActivity extends FragmentActivity{
                 finish();
                 break;
             case R.id.upload_btn:             //上传文件
-                materialFragment.upload();
+                //materialFragment.upload();
                 break;
             case R.id.mode_btn:               //进入选择模式
                 changeChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

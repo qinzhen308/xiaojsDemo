@@ -1,176 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-    <RelativeLayout
+    <Button
+            android:id="@+id/share_btn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="@dimen/px96"
+            android:text="@string/share_material_to_class"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_32px"
+            android:background="@drawable/orange_bg_selector"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"/>
 
-        <Button
-                android:id="@+id/share_btn"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/px96"
-                android:text="@string/share_material_to_class"
-                android:textColor="@color/font_white"
-                android:textSize="@dimen/font_32px"
-                android:background="@drawable/orange_bg_selector"
-                android:layout_alignParentBottom="true"
-                android:visibility="gone"/>
-
-        <LinearLayout
-                android:id="@+id/lay_tips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/px28"
-                android:background="#ebf0f7"
-                android:visibility="gone"
-                android:layout_alignParentTop="true">
-
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px16"
-                    android:src="@drawable/ic_tips"/>
-
-            <TextView
-                    android:id="@+id/tip_text_view"
-                    android:layout_weight="1"
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/px20"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                    android:text="@string/lesson_creation_tips"
-                    android:textSize="@dimen/font_26px"
-                    android:textColor="@color/font_dark_gray"/>
-
-            <ImageView
-                    android:id="@+id/lesson_creation_tips_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/px26"
-                    android:paddingRight="@dimen/px26"
-                    android:paddingTop="@dimen/px16"
-                    android:paddingBottom="@dimen/px16"
-                android:visibility="gone"
-                    android:src="@drawable/ic_edit_text_del"/>
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/course_search_wrapper"
-                android:orientation="horizontal"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:layout_below="@id/lay_tips">
-
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/new_folder_btn"
-                    android:layout_marginLeft="@dimen/px30"
-                    android:src="@drawable/ic_newfolder_selector"
-                    />
-
-            <cn.xiaojs.xma.ui.widget.EditTextDel
-                    android:id="@+id/my_course_search"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_search"
-                    android:paddingLeft="@dimen/px15"
-                    android:paddingRight="@dimen/px15"
-                    android:maxLines="1"
-                    android:hint="@string/serach_material_hint"
-                    android:textColor="@color/font_black"
-                    android:textSize="@dimen/font_28px"
-                    android:drawablePadding="@dimen/px10"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/common_edittext_bg"
-                    android:paddingBottom="@dimen/px15"
-                    android:paddingTop="@dimen/px15"
-                    android:layout_marginTop="@dimen/px15"
-                    android:layout_marginBottom="@dimen/px15"
-                    android:layout_marginLeft="@dimen/px29"
-                    android:layout_marginRight="@dimen/px20"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/material_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:listSelector="@android:color/transparent"
-                android:orientation="vertical"
-                android:layout_below="@id/course_search_wrapper"
-                android:layout_above="@id/share_btn"
-                />
-    </RelativeLayout>
-
-    <RelativeLayout
-            android:id="@+id/material_uploading_wrapper"
+    <LinearLayout
+            android:id="@+id/lay_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/px28"
+            android:background="#ebf0f7"
             android:visibility="gone"
-            android:background="@color/translucent_30"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_centerInParent="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <TextView
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_30px"
-                    android:text="@string/up_loading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            <TextView
-                    android:id="@+id/material_up_load_name"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="@dimen/px50"
-                    android:textSize="@dimen/font_26px"
-                    android:text="@string/up_loading"
-                    android:layout_marginLeft="@dimen/px50"
-                    android:layout_marginRight="@dimen/px50"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            <ProgressBar
-                    android:id="@+id/material_up_load_progress"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:minHeight="@dimen/px4"
-                    android:maxHeight="@dimen/px4"
-                    android:max="100"
-                    android:progress="0"
-                    android:layout_marginTop="@dimen/px25"
-                    android:progressDrawable="@drawable/progress_live"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/px50"
-                    android:layout_marginRight="@dimen/px50"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
+            android:layout_alignParentTop="true">
 
         <ImageView
-                android:id="@+id/material_up_load_close"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/px80"
-                android:src="@drawable/ic_close"
-                android:scaleType="fitXY"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px16"
+                android:src="@drawable/ic_tips"/>
+
+        <TextView
+                android:id="@+id/tip_text_view"
+                android:layout_weight="1"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/px20"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:text="@string/lesson_creation_tips"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/font_dark_gray"/>
+
+        <ImageView
+                android:id="@+id/lesson_creation_tips_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/px26"
+                android:paddingRight="@dimen/px26"
+                android:paddingTop="@dimen/px16"
+                android:paddingBottom="@dimen/px16"
+                android:visibility="gone"
+                android:src="@drawable/ic_edit_text_del"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/course_search_wrapper"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_below="@id/lay_tips">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/new_folder_btn"
+                android:layout_marginLeft="@dimen/px30"
+                android:src="@drawable/ic_newfolder_selector"
+                />
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+                android:id="@+id/my_course_search"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_search"
+                android:paddingLeft="@dimen/px15"
+                android:paddingRight="@dimen/px15"
+                android:maxLines="1"
+                android:hint="@string/serach_material_hint"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"
+                android:drawablePadding="@dimen/px10"
+                android:gravity="center_vertical"
+                android:background="@drawable/common_edittext_bg"
+                android:paddingBottom="@dimen/px15"
+                android:paddingTop="@dimen/px15"
+                android:layout_marginTop="@dimen/px15"
+                android:layout_marginBottom="@dimen/px15"
+                android:layout_marginLeft="@dimen/px29"
+                android:layout_marginRight="@dimen/px20"
                 android:layout_height="wrap_content"/>
-    </RelativeLayout>
-</FrameLayout>
+    </LinearLayout>
+
+    <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/material_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:listSelector="@android:color/transparent"
+            android:orientation="vertical"
+            android:layout_below="@id/course_search_wrapper"
+            android:layout_above="@id/share_btn"
+            />
+</RelativeLayout>

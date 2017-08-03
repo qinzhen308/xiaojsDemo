@@ -101,15 +101,18 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         holder.name.setText(bean.name);
         StringBuilder sb = new StringBuilder();
 
+        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
         if (bean.used <= 0) {
             sb.append("");
         }else{
+            sb.append("    ");
             sb.append(XjsUtils.getSizeFormatText(bean.used));
-            sb.append("  ");
+
         }
 
 
-        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
 
         holder.desc.setText(sb);
 
@@ -134,12 +137,12 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         });
 
 
-        holder.opera1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                download(bean);
-            }
-        });
+//        holder.opera1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                download(bean);
+//            }
+//        });
 
         holder.opera2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,20 +162,13 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             }
         });
 
-        holder.opera4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMoreDlg();
-            }
-        });
-
-//            holder.item.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    MaterialUtil.openMaterial((MaterialActivity)mContext, bean);
-//                }
-//            });
-
+//        holder.opera4.setVisibility(View.VISIBLE);
+//        holder.opera4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showMoreDlg();
+//            }
+//        });
 
     }
 
@@ -184,7 +180,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
                     MaterialUtil.getDownloadUrl(bean.key, bean.mimeType),
                     bean.mimeType,
                     Social.getDrawing(bean.key, true));
-        Toast.makeText(mContext, "已添加到下载队列，可以到我的下载查看", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "已添加到下载队列", Toast.LENGTH_SHORT).show();
 //        } else {
 //           Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
 //        }
@@ -328,14 +324,14 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
         @BindView(R.id.material_item_opera_wrapper)
         LinearLayout opera;
-        @BindView(R.id.material_item_opera1)
-        TextView opera1;
+//        @BindView(R.id.material_item_opera1)
+//        TextView opera1;
         @BindView(R.id.material_item_opera2)
         TextView opera2;
         @BindView(R.id.material_item_opera3)
         TextView opera3;
-        @BindView(R.id.material_item_opera4)
-        TextView opera4;
+//        @BindView(R.id.material_item_opera4)
+//        TextView opera4;
 
         @BindView(R.id.material_item)
         View item;

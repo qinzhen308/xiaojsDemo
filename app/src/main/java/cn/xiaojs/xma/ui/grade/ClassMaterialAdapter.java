@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.grade;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -106,37 +107,32 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
         holder.name.setText(bean.name);
         StringBuilder sb = new StringBuilder();
 
+        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+
         if (bean.used <= 0) {
             sb.append("");
         }else{
+            sb.append("&#160;&#160;&#160;&#160;");
             sb.append(XjsUtils.getSizeFormatText(bean.used));
-            sb.append("  ");
+
         }
-
-        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
-
-        holder.desc.setText(sb);
 
         if (!TextUtils.isEmpty(bean.owner.name)) {
 
             String author = bean.owner.name;
-
-            SpannableString spanString = new SpannableString(author);
-            ForegroundColorSpan span = new ForegroundColorSpan(mContext.getResources().getColor(R.color.font_blue));
-            spanString.setSpan(span, 0, author.length()-1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            holder.desc.append("  ");
-            holder.desc.append("分享：" + spanString);
+            holder.desc.setText(Html.fromHtml(mContext.getString(R.string.material_info_summary, sb, author)));
         }else {
-            holder.desc.append("");
+            holder.desc.setText(sb);
         }
+
+
 
         if (delable || bean.owner.id.equals(myAccountId)) {
             holder.opera3.setVisibility(View.VISIBLE);
             holder.expand.setVisibility(View.VISIBLE);
         }else{
             holder.opera3.setVisibility(View.GONE);
-            holder.expand.setVisibility(View.GONE);
+            holder.expand.setVisibility(View.INVISIBLE);
         }
 
 
@@ -147,12 +143,12 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
             }
         });
 
-        holder.opera1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                download(bean);
-            }
-        });
+//        holder.opera1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                download(bean);
+//            }
+//        });
 
         holder.opera3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,14 +168,17 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
     }
 
     private void download(LibDoc bean) {
-        if (DownloadManager.allowDownload(mContext)) {
-            DownloadManager.enqueueDownload(mContext, bean.name, bean.key, Social.getDrawing(bean.key, false), bean.mimeType, Social.getDrawing(bean.key, true));
-        } else {
-            Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
-        }
+        DownloadManager.enqueueDownload(mContext,
+                bean.name,
+                bean.key,
+                MaterialUtil.getDownloadUrl(bean.key, bean.mimeType),
+                bean.mimeType,
+                Social.getDrawing(bean.key, true));
+        Toast.makeText(mContext, "已添加到下载队列", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(mContext, MaterialDownloadActivity.class);
-        mContext.startActivity(intent);
+        Intent idintent = new Intent(mContext, MaterialActivity.class);
+        idintent.putExtra(MaterialActivity.EXTRA_TAB,1);
+        mContext.startActivity(idintent);
     }
 
     private void thumbnail(String key, int errorResId, Holder holder) {
@@ -247,8 +246,8 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
 
         @BindView(R.id.material_item_opera_wrapper)
         LinearLayout opera;
-        @BindView(R.id.material_item_opera1)
-        TextView opera1;
+//        @BindView(R.id.material_item_opera1)
+//        TextView opera1;
         @BindView(R.id.material_item_opera2)
         TextView opera2;
         @BindView(R.id.material_item_opera3)

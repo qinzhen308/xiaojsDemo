@@ -53,6 +53,7 @@
                     />
 
             <LinearLayout
+                    android:id="@+id/lay_text"
                     android:layout_toRightOf="@+id/material_item_image"
                     android:layout_toLeftOf="@+id/material_item_expand"
                     android:layout_margin="@dimen/px30"
@@ -82,6 +83,21 @@
                         android:singleLine="true"
                         android:ellipsize="end"/>
             </LinearLayout>
+
+            <!--<TextView-->
+                    <!--android:id="@+id/share_author"-->
+                    <!--android:textSize="@dimen/font_26px"-->
+                    <!--android:textColor="@color/common_text"-->
+                    <!--android:text="@string/share_atuhor"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:maxWidth="@dimen/px250"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:layout_alignBottom="@id/lay_text"-->
+                    <!--android:layout_toLeftOf="@id/material_item_expand"-->
+                    <!--android:visibility="gone"-->
+                    <!--/>-->
         </RelativeLayout>
 
         <LinearLayout
@@ -107,7 +123,7 @@
                     android:gravity="center"
                     android:drawablePadding="@dimen/px10"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
             <TextView
                     android:id="@+id/material_item_opera2"
@@ -141,7 +157,7 @@
                     android:text="@string/more"
                     android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
         </LinearLayout>
     </LinearLayout>

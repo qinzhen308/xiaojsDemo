@@ -147,14 +147,6 @@ public class ClassMaterialActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.material_right_image://我的下载
-//                if (DownloadManager.allowDownload(this)) {
-//                    DownloadManager.enqueueDownload(this, "vipkid" + System.currentTimeMillis() + ".apk", "key", "http://file.vipkid.com.cn/apps/vipkid_v1.2.1.apk", "", "");
-//                } else {
-//                    Toast.makeText(this, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
-//                }
-
-                Intent intent = new Intent(this, MaterialDownloadActivity.class);
-                startActivity(intent);
                 break;
             case R.id.material_right_image2://上传文件
                 upload();
