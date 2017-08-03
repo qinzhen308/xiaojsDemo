@@ -130,7 +130,7 @@ public class VideoPlayFragment extends BaseFragment {
                             mCountTimeTv.setText(TimeUtil.formatSecondTime(0));
                         }
                         if (mPlayPauseBtn != null) {
-                            mPlayPauseBtn.setImageResource(R.drawable.ic_cr_start);
+                            mPlayPauseBtn.setImageResource(R.drawable.ic_start_play);
                         }
                     }
                 });
