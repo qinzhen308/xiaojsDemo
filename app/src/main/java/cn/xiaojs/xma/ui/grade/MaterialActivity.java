@@ -20,6 +20,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -34,6 +35,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
 import android.view.View;
@@ -190,6 +192,11 @@ public class MaterialActivity extends FragmentActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BaseConstant.REQUEST_CODE_CHOOSE_FILE) {
             if (resultCode == RESULT_OK && data != null) {//是否选择，没选择就不会继续
@@ -198,8 +205,9 @@ public class MaterialActivity extends FragmentActivity {
                     if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(chooseUri.getScheme())) {
                         addToLibrary(new File(chooseUri.getPath()));
                     } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(chooseUri.getScheme())) {
-                        if (PermissionUtil.isOverMarshmallow()) {
-                            PermissionGen.needPermission(this, REQUEST_PERMISSION,
+                        if (PermissionUtil.isOverMarshmallow()
+                                && ContextCompat.checkSelfPermission(MaterialActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            PermissionGen.needPermission(MaterialActivity.this, REQUEST_PERMISSION,
                                     Manifest.permission.READ_EXTERNAL_STORAGE);
                         } else {
                             addToLibrary(queryFileFromDataBase(chooseUri));
