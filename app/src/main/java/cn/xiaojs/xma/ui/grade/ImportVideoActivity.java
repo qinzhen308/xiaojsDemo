@@ -112,6 +112,8 @@ public class ImportVideoActivity extends BaseActivity {
 
     private void init() {
 
+        searchView.setVisibility(View.GONE);
+
         choiceMode = getIntent().getIntExtra(EXTRA_CHOICE_MODE, AbsListView.CHOICE_MODE_MULTIPLE);
         String title = getIntent().getStringExtra(Intent.EXTRA_TITLE);
         disableIds = (HashSet<String>) getIntent().getSerializableExtra(EXTRA_ALREADY_CHOICE_DATA);
@@ -290,9 +292,8 @@ public class ImportVideoActivity extends BaseActivity {
             setEmptyButton(R.string.upload_now, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, MaterialFragmentActivity.class);
-                    intent.putExtra(MaterialFragmentActivity.EXTRA_FROM,
-                            MaterialFragmentActivity.FROM_CHOICE_EMPTY);
+                    Intent intent = new Intent(mContext, MaterialActivity.class);
+                    intent.putExtra(MaterialActivity.EXTRA_SHOW_DOWNLOAD,false);
                     startActivityForResult(intent,REQUEST_UPLOAD_CODE);
 
                 }

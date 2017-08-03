@@ -607,6 +607,7 @@
     <string name="download_of_mine">我的下载</string>
 
     <string name="relogin">登陆过期，请重新登陆</string>
+    <string name="up_loading_with_per">上传中&#160;%1$d%%</string>
 
     <!-- download-->
     <string name="download">下载</string>

@@ -69,25 +69,16 @@ import static cn.xiaojs.xma.ui.message.ShareScopeActivity.REQUEST_CHOOSE_CLASS_C
 
 public class MaterialFragment extends BaseFragment {
 
-    private static final int REQUEST_PERMISSION = 1000;
+
 
     @BindView(R.id.material_list)
     PullToRefreshSwipeListView mList;
-
-    @BindView(R.id.material_uploading_wrapper)
-    RelativeLayout mUploadingWrapper;
-    @BindView(R.id.material_up_load_name)
-    TextView mUploadName;
-    @BindView(R.id.material_up_load_progress)
-    ProgressBar mUploadProgress;
 
     @BindView(R.id.share_btn)
     Button shareBtn;
 
 
     MaterialAdapter mAdapter;
-    CollaManager mManager;
-    private Uri mUri;
 
     private String[] targetDocIds;
 
@@ -107,12 +98,9 @@ public class MaterialFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.material_up_load_close, R.id.share_btn, R.id.new_folder_btn})
+    @OnClick({R.id.share_btn, R.id.new_folder_btn})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.material_up_load_close:    //取消上传
-                confirmCancel();
-                break;
             case R.id.share_btn:                 //分享
                 shareToClass();
                 break;
@@ -190,39 +178,6 @@ public class MaterialFragment extends BaseFragment {
         }
     }
 
-    public void confirmCancel() {
-        final CommonDialog dialog = new CommonDialog(mContext);
-        dialog.setTitle("提示");
-        dialog.setDesc("确定需要取消上传资料么？");
-        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-            @Override
-            public void onClick() {
-                dialog.dismiss();
-                if (mManager != null) {
-                    mManager.cancelAdd();
-                }
-            }
-        });
-        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-            @Override
-            public void onClick() {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-
-    protected void upload() {
-
-        String action = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ?
-                Intent.ACTION_OPEN_DOCUMENT : Intent.ACTION_GET_CONTENT;
-
-        Intent intent = new Intent(action);
-        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, BaseConstant.REQUEST_CODE_CHOOSE_FILE);
-    }
 
     private void newFolder() {
 
@@ -272,23 +227,7 @@ public class MaterialFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BaseConstant.REQUEST_CODE_CHOOSE_FILE) {
-            if (resultCode == RESULT_OK && data != null) {//是否选择，没选择就不会继续
-                mUri = data.getData();//得到uri，后面就是将uri转化成file的过程。
-                if (mUri != null) {
-                    if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(mUri.getScheme())) {
-                        addToLibrary(new File(mUri.getPath()));
-                    } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(mUri.getScheme())) {
-                        if (PermissionUtil.isOverMarshmallow()) {
-                            PermissionGen.needPermission(this, REQUEST_PERMISSION,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE);
-                        } else {
-                            addToLibrary(queryFileFromDataBase());
-                        }
-                    }
-                }
-            }
-        } else if (requestCode == REQUEST_CHOOSE_CLASS_CODE) {
+        if (requestCode == REQUEST_CHOOSE_CLASS_CODE) {
             if (resultCode == RESULT_OK) {
                 ArrayList<Contact> choiceContacts = (ArrayList<Contact>) data.getSerializableExtra(
                         ChoiceContactActivity.CHOOSE_CONTACT_EXTRA);
@@ -312,217 +251,6 @@ public class MaterialFragment extends BaseFragment {
             }
         }
     }
-
-
-    @Keep
-    @PermissionSuccess(requestCode = REQUEST_PERMISSION)
-    public void accessExternalStorageSuccess() {
-        addToLibrary(queryFileFromDataBase());
-    }
-
-    @Keep
-    @PermissionRationale(requestCode = REQUEST_PERMISSION)
-    public void accessExternalStorageRationale() {
-        PermissionHelper.showRationaleDialog(this, getResources().getString(R.string.permission_rationale_storage_tip));
-    }
-
-    private File queryFileFromDataBase() {
-        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
-        Cursor cursor = mContext.getContentResolver().query(mUri,
-                filePathColumn, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            if (picturePath != null) {
-                return new File(picturePath);
-            } else {
-                return new File(getPath(mContext, mUri));
-            }
-        }
-
-        return null;
-    }
-
-    private void addToLibrary(File file) {
-        if (file == null) {
-            return;
-        }
-        String name = file.getName();
-        int i = name.lastIndexOf(".");
-        if (i > 0) {
-            int type = FileUtil.getFileTypeBySuffix(name.substring(i + 1, name.length()));
-            if (type != FileUtil.PPT
-                    && type != FileUtil.PICTURE
-                    && type != FileUtil.VIDEO
-                    && type != FileUtil.DOC
-                    && type != FileUtil.PDF) {
-                ToastUtil.showToast(mContext, getString(R.string.upload_support_error_tips));
-                return;
-            }
-        } else {
-            ToastUtil.showToast(mContext, getString(R.string.upload_support_error_tips));
-            return;
-        }
-
-        mUploadName.setText(file.getName());
-        mUploadingWrapper.setVisibility(View.VISIBLE);
-        mManager = new CollaManager();
-
-        mManager.addToLibrary(mContext, file.getPath(), file.getName(), new QiniuService() {
-            @Override
-            public void uploadSuccess(String key, UploadReponse reponse) {
-                mUploadingWrapper.setVisibility(View.GONE);
-
-                if (mAdapter != null) {
-                    mAdapter.doRequest();
-                }
-
-                ToastUtil.showToast(mContext, R.string.up_load_success);
-            }
-
-            @Override
-            public void uploadProgress(String key, double percent) {
-                mUploadProgress.setProgress((int) (percent * 100));
-            }
-
-            @Override
-            public void uploadFailure(boolean cancel) {
-                mUploadingWrapper.setVisibility(View.GONE);
-                if (cancel) {
-                    ToastUtil.showToast(mContext, R.string.up_load_cancel);
-                } else {
-                    ToastUtil.showToast(mContext, R.string.up_load_failure);
-                }
-            }
-
-        });
-    }
-
-    @TargetApi(19)
-    public String getPath(final Context context, final Uri uri) {
-        final boolean isKitKat = Build.VERSION.SDK_INT >= 19; //Build.VERSION_CODES.KITKAT
-        // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-                // TODO handle non-primary volumes
-            }
-
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                return getDataColumn(context, contentUri, null, null);
-            }
-
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{split[1]};
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(uri.getScheme())) {
-            // MediaStore (and general)
-            // Return the remote address
-            if (isGooglePhotosUri(uri)) {
-                return uri.getLastPathSegment();
-            }
-
-            return getDataColumn(context, uri, null, null);
-        } else if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(uri.getScheme())) {
-            // File
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the value of the data column for this Uri. This is useful for MediaStore Uris, and other
-     * file-based ContentProviders.
-     *
-     * @param context       The context.
-     * @param uri           The Uri to query.
-     * @param selection     (Optional) Filter used in the query.
-     * @param selectionArgs (Optional) Selection arguments used in the query.
-     * @return The value of the _data column, which is typically a file path.
-     */
-    public String getDataColumn(Context context, Uri uri, String selection,
-                                String[] selectionArgs) {
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {column};
-        try {
-            cursor = mContext.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-
-        return null;
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
-
 
     public void chooseShare(String[] docmentIds) {
 
@@ -549,7 +277,7 @@ public class MaterialFragment extends BaseFragment {
                     //说明分享的文件有已存在的，需要询问用户
                     shareConflictWithPatch(targetId, object.repeated, classname, subType);
                 } else {
-                    changeChoiceMode(ListView.CHOICE_MODE_NONE);
+                    ((MaterialActivity)getActivity()).changeChoiceMode(ListView.CHOICE_MODE_NONE);
                     shareSuccess(targetId, classname, subType);
                 }
                 //Toast.makeText(MaterialActivity.this, R.string.shareok_and_to_class, Toast.LENGTH_SHORT).show();

@@ -143,12 +143,12 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
             }
         });
 
-        holder.opera1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                download(bean);
-            }
-        });
+//        holder.opera1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                download(bean);
+//            }
+//        });
 
         holder.opera3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,8 +246,8 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
 
         @BindView(R.id.material_item_opera_wrapper)
         LinearLayout opera;
-        @BindView(R.id.material_item_opera1)
-        TextView opera1;
+//        @BindView(R.id.material_item_opera1)
+//        TextView opera1;
         @BindView(R.id.material_item_opera2)
         TextView opera2;
         @BindView(R.id.material_item_opera3)

@@ -180,8 +180,10 @@ public class MineFragment extends BaseFragment {
 //                break;
             case R.id.my_document_layout:
                 AnalyticEvents.onEvent(getActivity(),10);
-                startActivity(new Intent(mContext, MaterialActivity.class));
-                //startActivity(new Intent(mContext, RecordedLessonDetailActivity.class));
+                //startActivity(new Intent(mContext, MaterialActivity.class));
+                Intent intent = new Intent(mContext, MaterialActivity.class);
+                intent.putExtra(MaterialActivity.EXTRA_SHOW_DOWNLOAD,false);
+                startActivity(intent);
                 break;
 //            case R.id.my_favorites_layout:
 //                break;
@@ -191,12 +193,12 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.teach_ability_layout:
                 AnalyticEvents.onEvent(getActivity(),12);
-                Intent intent = new Intent();
-                intent.setClass(mContext, SubjectSelectorActivity.class);
-                intent.putExtra(SubjectSelectorActivity.EXTRA_NORMAL, 1);
+                Intent in = new Intent();
+                in.setClass(mContext, SubjectSelectorActivity.class);
+                in.putExtra(SubjectSelectorActivity.EXTRA_NORMAL, 1);
 
                 //Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
-                startActivityForResult(intent, REQUEST_TEACHING_ABILITY);
+                startActivityForResult(in, REQUEST_TEACHING_ABILITY);
                 break;
             case R.id.name_auth_layout:
                 AnalyticEvents.onEvent(getActivity(),13);
