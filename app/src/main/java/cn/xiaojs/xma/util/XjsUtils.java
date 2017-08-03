@@ -14,6 +14,7 @@ package cn.xiaojs.xma.util;
  *
  * ======================================================================================== */
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -179,6 +180,21 @@ public class XjsUtils {
     public static void hideIMM(Context ctx) {
         InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    // 显示软键盘
+    public static void showSoftInputMethod(Activity activity, View view) {
+        InputMethodManager imm = (InputMethodManager) activity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    // 隐藏软键盘
+    public static void hideSoftInputMethod(Activity activity, View view) {
+        InputMethodManager imm = (InputMethodManager) activity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     public static SharedPreferences getSharedPreferences() {

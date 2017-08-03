@@ -231,7 +231,7 @@
             <TextView
                 android:id="@+id/live_lesson_label"
                 style="@style/LiveLessonRightEntrance"
-                android:hint="@string/live_lesson_label_hint" />
+                android:hint="@string/please_input" />
 
         </LinearLayout>
 

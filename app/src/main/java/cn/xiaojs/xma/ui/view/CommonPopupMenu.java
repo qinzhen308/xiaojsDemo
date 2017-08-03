@@ -37,6 +37,11 @@ public class CommonPopupMenu {
         mContext = ctx;
         mListView = (ListView) LayoutInflater.from(ctx).inflate(
                 R.layout.common_popup_menu, null);
+        mListView.setPadding(
+                ctx.getResources().getDimensionPixelSize(R.dimen.px15),
+                ctx.getResources().getDimensionPixelSize(R.dimen.px30),
+                ctx.getResources().getDimensionPixelSize(R.dimen.px15),
+                ctx.getResources().getDimensionPixelSize(R.dimen.px25));
         mItemList = new ArrayList<String>();
         mImgList = new ArrayList<Integer>();
 

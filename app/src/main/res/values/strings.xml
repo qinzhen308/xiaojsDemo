@@ -971,9 +971,9 @@
     <string name="has_taget_folder_tips">已选（%1$s）</string>
     <string name="create_record_lesson_tips">从你的资料库中选择直播课回放视频或上传的视频，快速生成课程</string>
     <string name="import_video_tips">导入视频</string>
-    <string name="create_recordlesson">开录播课</string>
+    <string name="create_recordlesson">创建课程目录</string>
     <string name="record_lesson_directory">课程目录</string>
-    <string name="record_lesson_directory_input">填写课程目录</string>
+    <string name="record_lesson_directory_input">创建课程目录</string>
     <string name="record_lesson_directory_edit">编辑课程目录</string>
     <string name="manage_it">管理</string>
     <string name="import_video">导入视频</string>
@@ -982,6 +982,7 @@
     <string name="edit_directory_name">编辑目录名称</string>
     <string name="add_new_lesson">新增二级</string>
     <string name="add_new_lesson_dir">新增二级目录</string>
+    <string name="edit_new_lesson_dir">编辑二级目录</string>
     <string name="add_new_dir_tip">请输入目录名称</string>
     <string name="add_new_dir_not_input_tip">请输入一级目录名</string>
     <string name="directory_name">目录名称</string>
@@ -1030,5 +1031,7 @@
     <string name="share_class">分享班</string>
     <string name="share_mode_url">链接分享</string>
     <string name="share_mode_qrcode">二维码分享</string>
+    <string name="filter_tip_lesson">没有符合筛选条件的课~</string>
+    <string name="filter_tip_class">没有符合筛选条件的班~</string>
 
 </resources>

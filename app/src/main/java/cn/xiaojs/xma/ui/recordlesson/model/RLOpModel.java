@@ -154,8 +154,9 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     private void shelves(final Activity context,final RLesson bean,final int position) {
 
         final CommonDialog dialog = new CommonDialog(context);
-        dialog.setTitle(R.string.record_lesson_shelve_tip);
+//        dialog.setTitle(R.string.record_lesson_shelve_tip);
         dialog.setDesc(AccountDataManager.isVerified(context)?R.string.record_lesson_shelve_tip_for_verified:R.string.record_lesson_shelve_tip_for_not_verify);
+        dialog.setRightBtnText(R.string.lesson_op_publish);
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {

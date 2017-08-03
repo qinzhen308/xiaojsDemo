@@ -23,7 +23,10 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 
+import java.util.Locale;
+
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 
 public class StringUtil {
 
@@ -105,5 +108,34 @@ public class StringUtil {
             e.printStackTrace();
         }
         return ss;
+    }
+
+
+
+    public static final String suffixLib=".aiff.avi.mov.mpeg.mpg.ogg.mp4.3gp.doc.docx.ppt.pptx.pdf.bm.bmp.png.jpg.jpeg.gif.tiff";
+    /**
+     * 去掉指定mimetype的后缀
+     * @param src
+     * @param mimeType
+     * @return
+     */
+    public static String wipeSuffix(String src,String mimeType){
+        if(!src.contains(".")||src.endsWith(".")){
+            return src;
+        }
+        String suffix=src.substring(src.lastIndexOf(".")+1,src.length()).toLowerCase(Locale.ENGLISH);
+        if(!Collaboration.isVideo(mimeType)&&
+                !Collaboration.isStreaming(mimeType)&&
+                !Collaboration.isDoc(mimeType)&&
+                !Collaboration.isPDF(mimeType)&&
+                !Collaboration.isPPT(mimeType)&&
+                !Collaboration.isImage(mimeType)){
+            return src;
+        }
+
+        if(!suffixLib.contains(suffix)){
+            return src;
+        }
+        return src.substring(0,src.lastIndexOf("."));
     }
 }

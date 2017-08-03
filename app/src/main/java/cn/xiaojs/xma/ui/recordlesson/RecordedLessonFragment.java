@@ -86,7 +86,8 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         context = getActivity();
         View v = LayoutInflater.from(context).inflate(R.layout.fragment_public_lesson, null);
         ButterKnife.bind(this,v);
-        searchView.setHint(R.string.hint_input_lesson_name);
+        searchView.setHint(R.string.hint_input_recorded_lesson_name);
+
         mPullRecyclerView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         mPullRecyclerView.setFirstLoading(false);
         mPullRecyclerView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<RecyclerView>() {
@@ -96,7 +97,9 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
             }
         });
         mRecyclerView=mPullRecyclerView.getRefreshableView();
-        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container)));
+        AppLoadState2 loadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
+        loadState.setTips(getString(R.string.filter_tip_lesson),null,null,null,null,null);
+        stateView=new LoadStatusViewDecoratee(loadState);
 //        stateView=new LoadStatusViewDecoratee(null);
         if(AccountDataManager.isTeacher(getActivity())){
             mFilter.setVisibility(View.VISIBLE);

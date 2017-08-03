@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 
@@ -107,9 +108,9 @@ public class SelectDirectoryActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = super.getView(position, convertView, parent);
             TextView title = (TextView) v.findViewById(R.id.tv_title);
-            TextView count = (TextView) v.findViewById(R.id.tv_count);
-            title.setText(getItem(position).name);
-            count.setText("（"+getItem(position).getChildrenCount()+"）");
+            String text=getItem(position).name;
+            String count="（"+getItem(position).getChildrenCount()+"）";
+            title.setText(StringUtil.getSpecialString(text+count,count,getResources().getDimensionPixelSize(R.dimen.px24),getResources().getColor(R.color.common_text)));
             return v;
         }
     }

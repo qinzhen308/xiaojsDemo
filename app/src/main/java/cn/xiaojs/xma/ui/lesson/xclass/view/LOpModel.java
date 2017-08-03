@@ -389,6 +389,7 @@ public class LOpModel extends AbsOpModel<CLesson> {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
+        dialog.setRightBtnText(R.string.delete);
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {

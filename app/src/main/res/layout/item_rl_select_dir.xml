@@ -10,24 +10,19 @@
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:maxLines="2"
         android:textColor="@color/font_black"
         android:textSize="@dimen/font_32px" />
 
-    <TextView
-        android:id="@+id/tv_count"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px10"
-        android:layout_weight="1"
-        android:textColor="@color/common_text"
-        android:textSize="@dimen/font_24px" />
+
 
     <CheckedTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checkMark="@drawable/multi_check_selector"
+        android:checkMark="@drawable/single_check_selector"
         android:drawablePadding="@dimen/px24"
         android:gravity="center_vertical"
         android:textSize="18sp" />

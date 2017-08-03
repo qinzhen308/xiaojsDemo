@@ -17,13 +17,16 @@ package cn.xiaojs.xma.ui.base;
  *        
  * ======================================================================================== */
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -38,6 +41,7 @@ import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.xiaojs.xma.util.XjsUtils;
 
 
 public abstract class BaseActivity extends FragmentActivity implements IDialogMethod{
@@ -62,7 +66,7 @@ public abstract class BaseActivity extends FragmentActivity implements IDialogMe
 
     private SimpleDataChangeListener mDataChangeListener;
     private boolean mDataChanged = false;
-
+    protected InputMethodManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +87,21 @@ public abstract class BaseActivity extends FragmentActivity implements IDialogMe
         mFailedDescView = (TextView) findViewById(R.id.base_failed_desc);
         mFailedDescView1 = (TextView) findViewById(R.id.base_failed_desc1);
         addViewContent();
-
+        manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         registerDataChangeListener();
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            if (getCurrentFocus() != null
+                    && getCurrentFocus().getWindowToken() != null) {
+                manager.hideSoftInputFromWindow(getCurrentFocus()
+                        .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private void registerDataChangeListener() {

@@ -62,6 +62,7 @@ public class EnrollConfirmActivity extends BaseActivity {
 
     private void initView() {
         confirmAdapter = new ConfirmAdapter(this,listView);
+        confirmAdapter.setDesc("暂无报名学生");
         listView.setAdapter(confirmAdapter);
     }
 

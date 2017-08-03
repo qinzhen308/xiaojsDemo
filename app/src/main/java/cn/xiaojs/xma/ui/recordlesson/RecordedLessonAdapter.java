@@ -227,6 +227,14 @@ public class RecordedLessonAdapter extends AbsListAdapter<Object,AbsListAdapter.
         return dir.remove(child);
     }
 
+    public Object remove(int dirPosition,int lessonPosition){
+        if(ArrayUtil.isEmpty(getList())||dirPosition<0||lessonPosition<0){
+            return null;
+        }
+        RLDirectory dir=(RLDirectory) super.getItem(dirPosition);
+        return dir.remove(lessonPosition);
+    }
+
 
     public boolean isDir(Object item){
         return item instanceof RLDirectory;

@@ -44,6 +44,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.APPUtils;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.UIUtils;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -196,6 +197,7 @@ public class SearchLessonActivity extends BaseActivity implements IUpdateMethod{
             @Override
             public void onRequst(int page) {
                 mPagination.setPage(page);
+                searchEmpty.setVisibility(View.GONE);
                 request();
             }
 
@@ -207,12 +209,18 @@ public class SearchLessonActivity extends BaseActivity implements IUpdateMethod{
 
             @Override
             public void onSuccess(List<ClassSchedule> curPage, List<ClassSchedule> all) {
+                if(ArrayUtil.isEmpty(all)){
+                    searchEmpty.setVisibility(View.VISIBLE);
+                }else {
+                    searchEmpty.setVisibility(View.GONE);
+                }
                 bindData(all);
             }
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
                 bindData(new ArrayList<ClassSchedule>());
+                searchEmpty.setVisibility(View.VISIBLE);
             }
 
             @Override

@@ -22,6 +22,7 @@ import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
 /**
@@ -51,6 +52,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
     protected void addViewContent() {
         addView(R.layout.activity_enrolled_students);
         setMiddleTitle(R.string.enroll_register_stu);
+        setRightText(R.string.registration);
         lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
         init();
     }
@@ -63,6 +65,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
                 break;
             case R.id.right_image2:    //报名注册
                 // TODO
+                startActivity(new Intent(this,ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,lessonId));
                 break;
             case R.id.lay_veri:        //报名确认
                 EnrollConfirmActivity.invoke(this,lessonId);
@@ -75,6 +78,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
         verLayout.setVisibility(View.VISIBLE);
 
         adapter = new StudentsAdapter(this, listView);
+        adapter.setDesc("暂无报名学生");
         if (teaching) {
             listView.enableLeftSwipe(true);
             setRightText(R.string.lesson_op_signup);

@@ -12,7 +12,7 @@
         android:textColor="@color/font_dark_gray"
         android:layout_marginTop="@dimen/px46"
         android:textSize="@dimen/font_32px"
-        android:text="今天还没有课哦~"
+        android:text="今天没有直播课~"
         android:layout_centerInParent="true"
         android:maxLines="1"
         />

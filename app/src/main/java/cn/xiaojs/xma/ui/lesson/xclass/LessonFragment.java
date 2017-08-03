@@ -97,7 +97,9 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             }
         });
         mRecyclerView=mPullRecyclerView.getRefreshableView();
-        stateView=new LoadStatusViewDecoratee(new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container)));
+        AppLoadState2 loadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
+        loadState.setTips(getString(R.string.filter_tip_lesson),null,null,null,null,null);
+        stateView=new LoadStatusViewDecoratee(loadState);
         mAdapter = new HomeClassAdapter(mRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);

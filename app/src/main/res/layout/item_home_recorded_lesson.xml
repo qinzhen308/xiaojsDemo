@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/flag_view"
         android:layout_toRightOf="@id/flag_view"
-        android:layout_marginLeft="@dimen/px30"
+        android:layout_marginLeft="@dimen/px15"
         android:layout_marginRight="@dimen/px17"
         android:maxLines="1"
         android:layout_toLeftOf="@+id/status_view"

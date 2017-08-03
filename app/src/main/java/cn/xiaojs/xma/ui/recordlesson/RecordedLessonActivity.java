@@ -45,6 +45,7 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ObjectUtil;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 /**
@@ -277,10 +278,11 @@ public class RecordedLessonActivity extends BaseActivity {
         for(int i=0,size=docs.size();i<size;i++){
             LibDoc doc=docs.get(i);
             RLLesson child=new RLLesson();
-            child.name=doc.name;
+            child.name= StringUtil.wipeSuffix(doc.name,doc.mimeType);
             child.setLibDoc(doc);
             dir.addChild(child);
         }
+        dir.name=dir.getChild(0).name;
         srcList.add(dir);
         adapter.setList(srcList);
         adapter.notifyDataSetChanged();
@@ -465,10 +467,16 @@ public class RecordedLessonActivity extends BaseActivity {
                 int selectedDirPostion=data.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
                 adapter.addLesson(selectedDirPostion,(RLLesson) data.getSerializableExtra(AddLessonDirActivity.EXTRA_KEY_NEW_LESSON));
             }else if(requestCode==AddLessonDirActivity.REQUEST_CODE_EDIT){
+                int srcDirPosition=data.getIntExtra(AddLessonDirActivity.EXTRA_KEY_DIR_SRC_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
                 int selectedDirPostion=data.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
                 int selectedLessonPostion=data.getIntExtra(AddLessonDirActivity.EXTRA_KEY_LESSON_POSITION,SelectDirectoryActivity.SELECTED_POSITION_NONE);
                 RLLesson lesson=(RLLesson) data.getSerializableExtra(AddLessonDirActivity.EXTRA_KEY_NEW_LESSON);
-                adapter.editLessonItem(selectedDirPostion,selectedLessonPostion,lesson);
+                if(srcDirPosition!=selectedDirPostion){//换了文件夹
+                    adapter.remove(srcDirPosition,selectedLessonPostion);
+                    adapter.addLesson(selectedDirPostion,(RLLesson) data.getSerializableExtra(AddLessonDirActivity.EXTRA_KEY_NEW_LESSON));
+                }else {
+                    adapter.editLessonItem(selectedDirPostion,selectedLessonPostion,lesson);
+                }
             }else if(requestCode==ImportVideoActivity.REQUEST_CODE){//绑定视频，code要改
                 buildDirs((ArrayList<LibDoc>) data.getSerializableExtra(ImportVideoActivity.EXTRA_CHOICE_DATA));
             }else if(requestCode==CreateRecordedLessonActivity.REQUEST_CODE_MODIFY){

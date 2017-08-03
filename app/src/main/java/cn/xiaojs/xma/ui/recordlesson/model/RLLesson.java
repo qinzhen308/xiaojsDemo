@@ -2,7 +2,9 @@ package cn.xiaojs.xma.ui.recordlesson.model;
 
 import java.io.Serializable;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.util.StringUtil;
 
 /**
  * Created by Paul Z on 2017/7/18.
@@ -46,7 +48,7 @@ public class RLLesson implements Serializable{
     public void setLibDoc(LibDoc doc){
         videoMimeType=doc.mimeType;
         videoId=doc.id;
-        videoName=doc.name;
+        videoName= doc.name;
         videoKey=doc.key;
     }
 

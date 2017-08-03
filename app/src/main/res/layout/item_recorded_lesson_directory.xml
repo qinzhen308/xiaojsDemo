@@ -3,7 +3,9 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:background="@color/white"
-    android:layout_height="@dimen/px90"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/px30"
+    android:paddingBottom="@dimen/px30"
     >
 
     <TextView
@@ -25,11 +27,11 @@
         android:textSize="@dimen/font_32px"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/px26"
+        android:layout_marginRight="@dimen/px26"
         android:layout_gravity="center_vertical"
         android:text="目录名"
         android:textColor="@color/font_black"
         android:textStyle="bold"
-        android:maxLines="1"
         />
 
     <ImageView

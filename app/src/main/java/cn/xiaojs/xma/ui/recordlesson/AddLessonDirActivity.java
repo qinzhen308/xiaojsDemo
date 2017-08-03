@@ -21,6 +21,7 @@ import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import cn.xiaojs.xma.ui.recordlesson.util.RecordLessonHelper;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
 /**
@@ -30,6 +31,7 @@ import cn.xiaojs.xma.util.ToastUtil;
 public class AddLessonDirActivity extends BaseActivity {
     public static final String EXTRA_KEY_DIRS="extra_key_dirs";
     public static final String EXTRA_KEY_NEW_LESSON="extra_key_new_lesson";
+    public static final String EXTRA_KEY_DIR_SRC_POSITION="extra_key_dir_src_position";
     public static final String EXTRA_KEY_LESSON_POSITION="extra_key_lesson_position";
     public static final int REQUEST_CODE_ADD=32;
     public static final int REQUEST_CODE_EDIT=31;
@@ -46,6 +48,7 @@ public class AddLessonDirActivity extends BaseActivity {
     ArrayList<RLDirectory> dirs;
 
     private int selectedDirPostion=-1;
+    private int srcDirPostion =-1;
     private int lessonPosition=-1;
     RLLesson lesson;
 
@@ -67,7 +70,8 @@ public class AddLessonDirActivity extends BaseActivity {
             lesson=new RLLesson();
             return;
         }
-        selectedDirPostion=intent.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,-1);
+        setMiddleTitle(R.string.edit_new_lesson_dir);
+        srcDirPostion =selectedDirPostion=intent.getIntExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,-1);
         lessonPosition=intent.getIntExtra(EXTRA_KEY_LESSON_POSITION,-1);
         lesson=(RLLesson) intent.getSerializableExtra(EXTRA_KEY_NEW_LESSON);
         etDirectoryName.setText(lesson.name);
@@ -128,6 +132,7 @@ public class AddLessonDirActivity extends BaseActivity {
         // TODO: 2017/7/20 判断绑定视频
         Intent intent=new Intent();
         intent.putExtra(SelectDirectoryActivity.EXTRA_KEY_SELETED_POSITION,selectedDirPostion);
+        intent.putExtra(EXTRA_KEY_DIR_SRC_POSITION, srcDirPostion);
         intent.putExtra(EXTRA_KEY_LESSON_POSITION,lessonPosition);
         intent.putExtra(EXTRA_KEY_NEW_LESSON,lesson);
         setResult(RESULT_OK,intent);
@@ -145,7 +150,7 @@ public class AddLessonDirActivity extends BaseActivity {
             return;
         }
         if(etDirectoryName.getText().toString().trim().length()==0){
-            lesson.name=docs.name;
+            lesson.name= StringUtil.wipeSuffix(docs.name,docs.mimeType);
             etDirectoryName.setText(lesson.name);
         }
         lesson.setLibDoc(docs);

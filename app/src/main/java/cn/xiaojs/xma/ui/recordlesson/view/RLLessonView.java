@@ -31,6 +31,8 @@ public class RLLessonView extends LinearLayout implements IViewModel<RLLesson> {
     TextView checkView;
     @BindView(R.id.tv_name)
     TextView tvName;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
     @BindView(R.id.drag_handle)
     ImageView dragHandle;
     RLLesson mData;
@@ -62,6 +64,7 @@ public class RLLessonView extends LinearLayout implements IViewModel<RLLesson> {
     public void bindData(int position, RLLesson data) {
         mData=data;
         tvName.setText(data.name);
+        tvTime.setVisibility(GONE);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

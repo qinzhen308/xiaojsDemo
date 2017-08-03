@@ -138,10 +138,12 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.lesson.xclass.SearchLessonActivity"
+                android:windowSoftInputMode="adjustPan"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.lesson.xclass.SearchClassActivity"
-                android:screenOrientation="portrait"/>
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.lesson.LessonCreationActivity"
             android:screenOrientation="portrait"
             />
@@ -292,6 +294,7 @@
             android:screenOrientation="portrait"
             />
         <activity android:name=".ui.recordlesson.SearchRecordedLessonActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             />
 

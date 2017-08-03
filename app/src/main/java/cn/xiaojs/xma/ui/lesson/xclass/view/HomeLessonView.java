@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
@@ -94,6 +96,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
     TextView btnReplay;
 
     boolean fromSchedule;
+    boolean fromHome;
 
 
     private CircleTransform circleTransform;
@@ -113,6 +116,9 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         inflate(getContext(), R.layout.item_home_lesson, this);
         ButterKnife.bind(this);
         circleTransform = new CircleTransform(getContext());
+        if(getContext() instanceof MainActivity){
+            fromHome=true;
+        }
     }
 
     //待上课
@@ -147,6 +153,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
         if (Account.TypeName.CLASS_LESSON.equals(data.type) && data.classInfo != null) {
             tvClassName.setText(data.classInfo.title);
             tvClassName.setVisibility(VISIBLE);
+            tvClassName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_class_member,0,0,0);
 
         } else if (Account.TypeName.STAND_ALONE_LESSON.equals(data.type) && data.enroll != null) {
             if (data.enroll.mandatory) {//需要报名
@@ -156,6 +163,7 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
                 tvClassName.setText(data.enroll.current + "人学");
             }
             tvClassName.setVisibility(VISIBLE);
+            tvClassName.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
         } else {
             tvClassName.setVisibility(INVISIBLE);
         }
@@ -201,20 +209,25 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
                 statePoint.setVisibility(VISIBLE);
                 statePoint.setBackgroundResource(R.drawable.shape_orange_point);
-                stateLabel.setVisibility(VISIBLE);
-                stateLabel.setBackgroundResource(R.drawable.class_live_attend);
+                if(fromHome){
+                    stateLabel.setVisibility(VISIBLE);
+                    stateLabel.setBackgroundResource(R.drawable.class_live_attend);
+                }
                 iconLive.setVisibility(GONE);
 
             } else if (Ctl.LiveLessonState.LIVE.equals(data.state)) {
                 statePoint.setVisibility(INVISIBLE);
                 iconLive.setVisibility(VISIBLE);
-                stateLabel.setVisibility(GONE);
-
+                if(fromHome) {
+                    stateLabel.setVisibility(GONE);
+                }
             } else {
                 statePoint.setVisibility(VISIBLE);
                 statePoint.setBackgroundResource(R.drawable.shape_grey_point);
-                stateLabel.setVisibility(VISIBLE);
-                stateLabel.setBackgroundResource(R.drawable.class_live_finished);
+                if(fromHome) {
+                    stateLabel.setVisibility(VISIBLE);
+                    stateLabel.setBackgroundResource(R.drawable.class_live_finished);
+                }
                 iconLive.setVisibility(GONE);
             }
 
