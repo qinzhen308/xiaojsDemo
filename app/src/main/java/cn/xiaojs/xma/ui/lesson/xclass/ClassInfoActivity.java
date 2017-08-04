@@ -110,7 +110,9 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.enter_btn:
                 //进入教室
-                enterClass(this,classInfo.ticket);
+                if (classInfo != null) {
+                    enterClass(this,classInfo.ticket);
+                }
                 break;
             case R.id.lay_time_table:
                 //课表
@@ -118,7 +120,10 @@ public class ClassInfoActivity extends BaseActivity {
                 break;
             case R.id.lay_material:
                 //资料库
-                databank();
+                if (classInfo != null) {
+                    databank();
+                }
+
                 break;
             case R.id.lay_student://学生列表
 
