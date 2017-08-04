@@ -68,6 +68,10 @@ public class MyClassFilterDialog extends BaseFullWindow {
 
     public void setGroup1Selection(int position) {
         group1Position = position;
+        ListAdapter adapter=mTime.getAdapter();
+        if(adapter!=null){
+            ((CommonAdapter)adapter).setSelection(position);
+        }
     }
 
     public MyClassFilterDialog setGroup1Title(@StringRes int title) {
@@ -90,6 +94,10 @@ public class MyClassFilterDialog extends BaseFullWindow {
 
     public void setGroup2Selection(int position) {
         group2Position = position;
+        ListAdapter adapter=mState.getAdapter();
+        if(adapter!=null){
+            ((CommonAdapter)adapter).setSelection(position);
+        }
     }
 
     public void setSourcePosition(int position) {
