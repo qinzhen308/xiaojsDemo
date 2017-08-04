@@ -186,6 +186,8 @@
                 android:minLines="3"
                 android:layout_below="@id/linfo"
                 android:layout_marginTop="@dimen/px20"
+                android:lineSpacingExtra="@dimen/px20"
+                android:lineSpacingMultiplier="1"
                 />
 
         <TextView

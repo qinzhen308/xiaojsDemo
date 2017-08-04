@@ -41,17 +41,24 @@ public final class DBHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 3) {
-            //version 3 新增SHOW 字段
-            String addColumnSql = new StringBuilder("ALTER TABLE ")
+            //version 3 新增hidden、owner 字段
+            String addHiddenColumnSql = new StringBuilder("ALTER TABLE ")
                     .append(DBTables.TDownload.TABLE_NAME)
                     .append(" ADD ")
                     .append(DBTables.TDownload.HIDDEN)
-                    .append(" INTEGER NOT NULL DEFAULT 0, ADD ")
+                    .append(" INTEGER NOT NULL DEFAULT 0")
+                    .toString();
+
+            db.execSQL(addHiddenColumnSql);
+
+            String addOwnerColumnSql = new StringBuilder("ALTER TABLE ")
+                    .append(DBTables.TDownload.TABLE_NAME)
+                    .append(" ADD ")
                     .append(DBTables.TDownload.OWNER)
                     .append(" TEXT")
                     .toString();
 
-            db.execSQL(addColumnSql);
+            db.execSQL(addOwnerColumnSql);
         }
 
     }
