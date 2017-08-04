@@ -104,6 +104,9 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {
                 statusView.setVisibility(VISIBLE);
                 statusView.setText("审核失败");
+            }else if(Ctl.RecordedCourseState.ONSHELVES.equals(mData.state)){
+                statusView.setVisibility(VISIBLE);
+                statusView.setText("审核通过");
             }else {
                 statusView.setVisibility(INVISIBLE);
             }
