@@ -260,9 +260,12 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         public boolean processMessage(Message msg) {
             switch (msg.what) {
                 case StandloneChannel.RESUME_LESSON:                        //恢复上课
-                    ClassResponse response = (ClassResponse) msg.obj;
+
                     CtlSession ctlSession = getSession().ctlSession;
-                    ctlSession.publishUrl = response.publishUrl;
+                    ClassResponse response = (ClassResponse) msg.obj;
+                    if (response!=null) {
+                        ctlSession.publishUrl = response.publishUrl;
+                    }
                     ctlSession.state = Live.LiveSessionState.LIVE;
                     transitionTo(liveState);
                     return HANDLED;
