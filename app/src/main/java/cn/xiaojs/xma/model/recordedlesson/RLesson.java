@@ -25,7 +25,7 @@ public class RLesson {
     public Date createdOn;
     public Account createdBy;
     public SubjectName subject;
-    public Enroll enroll;
+    public EnrollMode enroll;
     public String cover;
     public String state;
     public Fee fee;

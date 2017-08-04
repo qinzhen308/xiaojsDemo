@@ -116,6 +116,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
         initPageLoad();
+//        mPullRecyclerView.setRefreshing();
         getRecordLessonData();
     }
 

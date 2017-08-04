@@ -32,6 +32,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 public class EnrolledStudentsActivity extends BaseActivity {
 
     public static final String EXTRA_LESSON_ID="extra_lesson_id";
+    public static final String EXTRA_NEED_VERIFICATION="extra_need_verification";
 
     @BindView(R.id.student_list)
     PullToRefreshSwipeListView listView;
@@ -74,7 +75,11 @@ public class EnrolledStudentsActivity extends BaseActivity {
     }
 
     private void init() {
-        verLayout.setVisibility(View.VISIBLE);
+        if(getIntent().getBooleanExtra(EXTRA_NEED_VERIFICATION,false)){
+            verLayout.setVisibility(View.VISIBLE);
+        }else {
+            verLayout.setVisibility(View.GONE);
+        }
 
         adapter = new StudentsAdapter(this, listView);
         adapter.setDesc("暂无报名学生");
@@ -159,9 +164,10 @@ public class EnrolledStudentsActivity extends BaseActivity {
         }
     }
 
-    public static void invoke(Context context,String lessonId){
+    public static void invoke(Context context,String lessonId,boolean needVerification){
         Intent intent=new Intent(context,EnrolledStudentsActivity.class);
         intent.putExtra(EXTRA_LESSON_ID,lessonId);
+        intent.putExtra(EXTRA_NEED_VERIFICATION,needVerification);
         context.startActivity(intent);
     }
 

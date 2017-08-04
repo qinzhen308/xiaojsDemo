@@ -458,7 +458,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     public void enterApplyStudents(Context context,RLesson bean){
-        EnrolledStudentsActivity.invoke(context,bean.id);
+        EnrolledStudentsActivity.invoke(context,bean.id,bean.enroll!=null&&Ctl.JoinMode.VERIFICATION==bean.enroll.mode);
     }
 
     //判断权限是否大于等于班主任

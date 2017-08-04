@@ -49,6 +49,7 @@ import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.EnrollSuccessActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
@@ -164,7 +165,14 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
     //分享
     private void share() {
         if (mDetail == null) return;
-        String date = null;
+        ShareBeautifulQrcodeActivity.invoke(
+                this,
+                ShareBeautifulQrcodeActivity.TYPE_RECORDED_LESSON,
+                mDetail.id,
+                mDetail.title,
+                mDetail.teachers[0],
+                mDetail.expire!=null&&mDetail.expire.effective>0?mDetail.expire.effective+"天":"永久");
+        /*String date = null;
         if(mDetail.expire!=null){
             date=ScheduleUtil.getDateYMD(new Date(mDetail.createdOn.getTime()+ ScheduleUtil.DAY*mDetail.expire.effective));
         }else {
@@ -175,7 +183,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
             name = mDetail.teachers[0].name;
         }
         String shareUrl = ApiManager.getShareLessonUrl(mDetail.id, Social.SearchType.COURSE);
-        ShareUtil.shareUrlByUmeng( this, mDetail.title, new StringBuilder(date).append("\r\n").append("主讲：").append(name).toString(), shareUrl);
+        ShareUtil.shareUrlByUmeng( this, mDetail.title, new StringBuilder(date).append("\r\n").append("主讲：").append(name).toString(), shareUrl);*/
     }
 
 
@@ -284,7 +292,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
 
         if(mDetail.createdBy!=null&& AccountDataManager.getAccountID(this).equals(mDetail.createdBy.getId())){//是这个课的创建者
 
-            if(mDetail.expire!=null){
+            if(mDetail.expire!=null&&mDetail.expire.effective>0){
                 lessonValidView.setText("有效期："+mDetail.expire.effective+"天");
             }else {
                 lessonValidView.setText("永久");
@@ -302,7 +310,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
                     lessonValidView.setText("永久");
                 }
             }else if(Ctl.CourseEnrollmentState.ENROLLED.equals(mDetail.enrollState)){//已经加入
-                if(mDetail.expire!=null&&mDetail.enrollOfCurrentAccount!=null){
+                if(mDetail.expire!=null&&mDetail.enrollOfCurrentAccount!=null&&mDetail.enrollOfCurrentAccount.deadline!=null){
                     lessonValidView.setText("有效期至"+ ScheduleUtil.getDateYMD(mDetail.enrollOfCurrentAccount.deadline));
                 }else {
                     lessonValidView.setText("永久");
