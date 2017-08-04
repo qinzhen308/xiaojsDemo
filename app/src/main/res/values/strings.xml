@@ -1040,6 +1040,8 @@
 
     <string name="enroll_rlesson_result_ok_tips">已添加到“我的班课”，现在你可以观看视频学习了</string>
     <string name="look_rlesson_dir">查看课程目录</string>
+    <string name="home_no_class_tip">你还没有任何班</string>
+    <string name="home_no_recorded_lesson_tip">你还没有任何录播课</string>
 
 
 </resources>

@@ -7,6 +7,7 @@ package cn.xiaojs.xma.ui.lesson.xclass.model;
 public class ClassLabelModel {
 
     public boolean hasData;
+    public String desc;
 
 
     public ClassLabelModel(boolean hasData) {

@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,7 +41,7 @@ public class HomeClassLabelView extends LinearLayout implements IViewModel<Class
     int curTab=TAB_CLASS;
 
     EventCallback eventCallback;
-
+    ClassLabelModel mData;
 
     public HomeClassLabelView(Context context) {
         super(context);
@@ -63,12 +64,17 @@ public class HomeClassLabelView extends LinearLayout implements IViewModel<Class
 
     @Override
     public void bindData(int position, ClassLabelModel data) {
+        mData=data;
         showNoClass(!data.hasData);
     }
 
     public void showNoClass(boolean isShow) {
+
         if (isShow) {
             noData.setVisibility(View.VISIBLE);
+            if(!TextUtils.isEmpty(mData.desc)){
+                noClassTip.setText(mData.desc);
+            }
         } else {
             noData.setVisibility(View.GONE);
         }

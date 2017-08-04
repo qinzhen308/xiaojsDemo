@@ -449,6 +449,7 @@ public class HomeClassContentBuz {
     private void bindClassOrRlesson(List list){
         list.add(classLabel);
         if(curSubTab == HomeClassLabelView.TAB_CLASS){
+            classLabel.desc=mContext.getString(R.string.home_no_class_tip);
             if(!ArrayUtil.isEmpty(hotClass)){
                 classLabel.hasData=true;
                 list.addAll(hotClass);
@@ -460,6 +461,7 @@ public class HomeClassContentBuz {
             }
 
         }else if(curSubTab ==HomeClassLabelView.TAB_RECORDED_LESSON){
+            classLabel.desc=mContext.getString(R.string.home_no_recorded_lesson_tip);
             if(!ArrayUtil.isEmpty(recordedLessonList)){
                 classLabel.hasData=true;
                 list.addAll(recordedLessonList);

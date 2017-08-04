@@ -148,6 +148,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
         if(mDetail==null)return;
         if(mDetail.createdBy!=null&& AccountDataManager.getAccountID(this).equals(mDetail.createdBy.getId())){//是这个课的创建者
             //老师按钮失效
+            RLDirListActivity.invoke(this,mDetail.id,false);
         }else {//学生
 
             if(Ctl.CourseEnrollmentState.PENDING_FOR_ACCEPTANCE.equals(mDetail.enrollState)){//等待确认
@@ -288,10 +289,13 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
             }else {
                 lessonValidView.setText("永久");
             }
-            enrollButton.setEnabled(false);
+            enrollButton.setText("立即听课");
         }else {//学生
 
             if(Ctl.CourseEnrollmentState.PENDING_FOR_ACCEPTANCE.equals(mDetail.enrollState)){//等待确认
+                enrollButton.setText("审核中");
+                enrollButton.setEnabled(false);
+
                 if(mDetail.expire!=null&&mDetail.expire.effective>0){
                     lessonValidView.setText("有效期："+mDetail.expire.effective+"天");
                 }else {

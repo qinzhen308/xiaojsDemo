@@ -167,7 +167,11 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.op_dir_view:
-                RLDirListActivity.invoke(getContext(),mData.id,mData.enrollOfCurrentAccount!=null&&mData.enrollOfCurrentAccount.isExpired);
+                if(isOwner()){
+                    RLDirListActivity.invoke(getContext(),mData.id,false);
+                }else {
+                    RLDirListActivity.invoke(getContext(),mData.id,mData.enrollOfCurrentAccount!=null&&mData.enrollOfCurrentAccount.isExpired);
+                }
                 break;
             case R.id.op_more_view:
                 moreOperate();
