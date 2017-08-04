@@ -135,6 +135,7 @@
         <View
                 android:id="@+id/c_line"
                 style="@style/DividerHorizontal"
+            android:layout_marginTop="@dimen/px40"
                 android:layout_below="@id/lesson_cover"/>
 
 
@@ -176,7 +177,7 @@
                 android:layout_marginTop="@dimen/px32"
                 />
 
-        <TextView
+        <cn.xiaojs.xma.ui.widget.MaxLineTextView
                 android:id="@+id/lesson_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -186,6 +187,23 @@
                 android:layout_below="@id/linfo"
                 android:layout_marginTop="@dimen/px20"
                 />
+
+        <TextView
+            android:id="@+id/overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/px21"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/font_dark_gray"
+            android:text="@string/look_all"
+            android:layout_marginTop="@dimen/px32"
+            android:drawableLeft="@drawable/ic_filter_down"
+            android:drawablePadding="@dimen/px16"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_below="@+id/lesson_info"
+            android:visibility="gone"
+            />
 
 
     </RelativeLayout>

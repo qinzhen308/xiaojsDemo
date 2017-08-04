@@ -14,6 +14,7 @@
         android:choiceMode="multipleChoice"
         android:dividerHeight="0px"
         android:divider="@null"
+        android:background="@color/main_bg"
         dslv:click_remove_id="@id/click_remove"
         dslv:collapsed_height="1px"
         dslv:drag_enabled="true"

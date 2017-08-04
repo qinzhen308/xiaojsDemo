@@ -107,10 +107,10 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             }else {
                 statusView.setVisibility(INVISIBLE);
             }
-            if(mData.expire!=null){
+            if(mData.expire!=null&&mData.expire.effective>0){
                 tvDate.setText("有效期："+mData.expire.effective+"天");
             }else {
-                tvDate.setText("永久");
+                tvDate.setText("有效期：永久");
             }
         }else {//学生
 
@@ -124,7 +124,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             if(mData.expire!=null&&mData.enrollOfCurrentAccount!=null){
                 tvDate.setText("有效期至"+ ScheduleUtil.getDateYMD(mData.enrollOfCurrentAccount.deadline));
             }else {
-                tvDate.setText("永久");
+                tvDate.setText("有效期：永久");
             }
         }
 

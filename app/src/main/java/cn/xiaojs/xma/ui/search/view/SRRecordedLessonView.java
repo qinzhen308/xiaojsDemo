@@ -94,11 +94,10 @@ public class SRRecordedLessonView extends RelativeLayout implements IViewModel<S
         }
 
         tvTitle.setText(StringUtil.setHighlightText2(mData.title,mData._title,heightlightColor));
-        if(data.expire!=null){
+        if(mData.expire!=null&&mData.expire.effective>0){
             SpannableString ss=new SpannableString("有效期"+mData.expire.effective+"天");
             ss.setSpan(new ForegroundColorSpan(chocolate_light),3,ss.length()-1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvDate.setText(ss);
-
         }else {
             tvDate.setText("永久");
         }

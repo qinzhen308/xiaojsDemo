@@ -64,7 +64,8 @@ public class RLSectionDocView extends LinearLayout implements IViewModel<Section
     public void bindData(int position, Section data) {
         mData=data;
         tvName.setText(data.title);
-        tvTime.setText(data.document.getTime());
+        tvTime.setVisibility(GONE);
+//        tvTime.setText(data.document.getTime());
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

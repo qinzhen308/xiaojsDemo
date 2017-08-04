@@ -811,8 +811,8 @@
     <string name="head_teacher">班主任</string>
     <string name="join_type">加入班级是否需要验证</string>
     <string name="class_need_public">班级是否公开</string>
-    <string name="need_confirm">需要确认</string>
-    <string name="no_verification_required">无需验证</string>
+    <string name="need_confirm">需要报名确认</string>
+    <string name="no_verification_required">无需报名确认</string>
     <string name="time_table">课表</string>
     <string name="arrange_class">请排课</string>
     <string name="class_student">学生</string>
@@ -1021,6 +1021,8 @@
     <string name="record_lesson_shelve_tip">上架提示</string>
     <string name="choice_video_empty_tips">暂无视频可选择，请先上传视频到资料库哦~</string>
     <string name="upload_now">立即上传</string>
+    <string name="look_all">查看全部</string>
+
 
 
     <string name="qrcode_tips_recorded_lesson">长按识别二维码，免费学习</string>

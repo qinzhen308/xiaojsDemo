@@ -61,6 +61,7 @@ public class MaxLineTextView extends android.support.v7.widget.AppCompatTextView
                 }
             }
         });
+
     }
 
     private boolean refuseListener=false;
@@ -102,6 +103,8 @@ public class MaxLineTextView extends android.support.v7.widget.AppCompatTextView
         setMaxLines(maxLine);
         setEllipsize(TextUtils.TruncateAt.END);
     }
+
+
 
     // set a listener for callback
     public OnOverSizeChangedListener getChangedListener() {

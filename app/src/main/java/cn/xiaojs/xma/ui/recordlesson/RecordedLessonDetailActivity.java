@@ -27,6 +27,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.widget.MaxLineTextView;
 import cn.xiaojs.xma.ui.widget.flow.ColorTextFlexboxLayout;
 
 /**
@@ -84,7 +85,10 @@ public class RecordedLessonDetailActivity extends BaseActivity {
 
     @Nullable
     @BindView(R.id.lesson_info)
-    TextView lessonInfoView;
+    MaxLineTextView lessonInfoView;
+    @Nullable
+    @BindView(R.id.overlay)
+    TextView overlay;
 
     private String lessonId;
     private RecordedLessonListAdapter adapter;
@@ -99,11 +103,22 @@ public class RecordedLessonDetailActivity extends BaseActivity {
 
 
     @Optional
-    @OnClick({R.id.left_image})
+    @OnClick({R.id.left_image,R.id.overlay,R.id.lesson_info})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:       //返回
                 finish();
+                break;
+            case R.id.overlay:   //展开
+                lessonInfoView.displayAll();
+
+                break;
+            case R.id.lesson_info:   //展开
+                if(lessonInfoView.isOverSize()){
+                    lessonInfoView.displayAll();
+                }else {
+                    lessonInfoView.hide(3);
+                }
                 break;
         }
     }
@@ -119,6 +134,17 @@ public class RecordedLessonDetailActivity extends BaseActivity {
         listView.setAdapter(adapter);
 
         lessonId = getIntent().getStringExtra(EXTRA_RLESSON_ID);
+
+        lessonInfoView.setOnOverLineChangedListener(new MaxLineTextView.OnOverSizeChangedListener() {
+            @Override
+            public void onChanged(boolean isOverSize) {
+                if(isOverSize){
+                    overlay.setVisibility(View.VISIBLE);
+                }else {
+                    overlay.setVisibility(View.GONE);
+                }
+            }
+        });
 
         requestDetail();
 
@@ -160,7 +186,7 @@ public class RecordedLessonDetailActivity extends BaseActivity {
 
         enrollView.setText(detail.enroll!=null&&detail.enroll.mode==Ctl.JoinMode.VERIFICATION?R.string.need_confirm:R.string.no_verification_required);
 
-        if(detail.expire !=null) {
+        if(detail.expire !=null&&detail.expire.effective>0) {
             validView.setText(detail.expire.effective + "天");
         }else {
             validView.setText(R.string.valid_forever);
@@ -198,20 +224,22 @@ public class RecordedLessonDetailActivity extends BaseActivity {
             tlineView.setVisibility(View.GONE);
         }
 
-
+        lessonInfoView.hide(3);
         if (detail.overview != null  && !TextUtils.isEmpty(detail.overview.getText())) {
             lessonInfoView.setText(detail.overview.getText());
         }else {
             lessonInfoView.setText(R.string.lesson_no_introduction);
         }
 
-
+      /*  lessonInfoView.setText("超级长的简介我泪崩阿萨德那等了两个周，昨天海贼王874话的文字情报已经出了，和情报一起传过来的还有SBS。这期海迷问了个关于白胡子的问题：\n" +
+                "Q：尾田老师你好，白胡子头上总是包着印花巾，其实是个秃头吗？到底是怎样的发型呢？请您画出来。\n" +
+                "A：传闻是这样的。" +
+                "\n还有一次，白胡子和罗杰在某地一起喝酒，罗杰还趁机调侃白胡子，想不想知道最终之岛的位置。老爹果断拒绝，一是因为这种事情要自己来的才痛快，二是老爹想要的那时候基本已经达成，大秘宝并不是他追求的。这时候白胡子的年纪应该不比SBS上小吧，依然是波浪形金发。因此，七月君认为本期SBS上尾田老师回答读者的答案，是在临时的想法，纯属开玩笑，并不是老爹的真实设定。");
+*/
 
         adapter.setList(detail.sections);
 
         adapter.notifyDataSetChanged();
-
-
 
 
 

@@ -297,7 +297,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
         }else {//学生
 
             if(Ctl.CourseEnrollmentState.PENDING_FOR_ACCEPTANCE.equals(mDetail.enrollState)){//等待确认
-                if(mDetail.expire!=null){
+                if(mDetail.expire!=null&&mDetail.expire.effective>0){
                     lessonValidView.setText("有效期："+mDetail.expire.effective+"天");
                 }else {
                     lessonValidView.setText("永久");
