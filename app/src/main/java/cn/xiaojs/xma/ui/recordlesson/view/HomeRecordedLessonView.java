@@ -255,7 +255,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             //查看课程目录
 //            list.add(new RLOpModel(AbsOpModel.Op_));
 //            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
-            list.add(new RLOpModel(AbsOpModel.OP_SIGNUP));
+//            list.add(new RLOpModel(AbsOpModel.OP_SIGNUP));
             list.add(new RLOpModel(AbsOpModel.OP_SHARE));
 
         } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {//审核失败

@@ -221,6 +221,12 @@ public class RecordedLessonActivity extends BaseActivity {
             ToastUtil.showToast(getApplicationContext(), "请先创建录播课目录");
             return;
         }
+        for(Object dir:srcList){
+            if(dir!=null&&dir instanceof RLDirectory&&((RLDirectory) dir).getChildrenCount()==0){
+                ToastUtil.showToast(getApplicationContext(),"一级目录不能为空");
+                return;
+            }
+        }
         if(isModify){
             CreateRecordedLessonActivity.invoke(this,(ArrayList<RLDirectory>)(Object)srcList,recreateData,lessonId);
         }else {

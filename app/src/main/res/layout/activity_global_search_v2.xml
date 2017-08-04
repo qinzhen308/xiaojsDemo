@@ -105,7 +105,7 @@
                 android:gravity="center"
                 android:paddingLeft="@dimen/px30"
                 android:paddingRight="@dimen/px30"
-                android:text="录播课程"
+                android:text="录播课"
                 android:textColor="@color/selector_btn_orange_black"
                 android:textSize="@dimen/font_28px"
                  />

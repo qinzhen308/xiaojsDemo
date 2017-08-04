@@ -310,14 +310,19 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
                     lessonValidView.setText("永久");
                 }
             }else if(Ctl.CourseEnrollmentState.ENROLLED.equals(mDetail.enrollState)){//已经加入
-                if(mDetail.expire!=null&&mDetail.enrollOfCurrentAccount!=null&&mDetail.enrollOfCurrentAccount.deadline!=null){
+                /*if(mDetail.expire!=null&&mDetail.enrollOfCurrentAccount!=null&&mDetail.enrollOfCurrentAccount.deadline!=null){
                     lessonValidView.setText("有效期至"+ ScheduleUtil.getDateYMD(mDetail.enrollOfCurrentAccount.deadline));
+                }else {
+                    lessonValidView.setText("永久");
+                }*/
+                if(mDetail.expire!=null&&mDetail.expire.effective>0){
+                    lessonValidView.setText("有效期："+mDetail.expire.effective+"天");
                 }else {
                     lessonValidView.setText("永久");
                 }
                 enrollButton.setText("立即学习");
             }else {//未加入
-                if(mDetail.expire!=null){
+                if(mDetail.expire!=null&&mDetail.expire.effective>0){
                     lessonValidView.setText("有效期："+mDetail.expire.effective+"天");
                 }else {
                     lessonValidView.setText("永久");
