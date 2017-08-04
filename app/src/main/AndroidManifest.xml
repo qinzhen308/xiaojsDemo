@@ -301,6 +301,9 @@
         <activity android:name=".ui.recordlesson.EnrollConfirmActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".ui.recordlesson.EnrollRLessonSuccessActivity"
+            android:screenOrientation="portrait"
+            />
 
         <activity
                 android:name=".TestActivity"

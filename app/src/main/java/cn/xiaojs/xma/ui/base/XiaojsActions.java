@@ -11,6 +11,7 @@ public interface XiaojsActions {
     String ACTION_TO_MY_LESSONS="xiaojs_action_my_lessons";
     String ACTION_TO_CLASSROOM="xiaojs_action_classroom";
     String ACTION_TO_MY_RECORDED_LESSONS="xiaojs_action_my_recorded_lessons";
+    String ACTION_TO_RECORDED_LESSONS_DIR="xiaojs_action_recorded_lessons_dir";
 
 
     void doAction(String action,Intent intent);

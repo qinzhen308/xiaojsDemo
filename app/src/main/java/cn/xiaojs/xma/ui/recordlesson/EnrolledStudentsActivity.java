@@ -64,7 +64,6 @@ public class EnrolledStudentsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_image2:    //报名注册
-                // TODO
                 startActivity(new Intent(this,ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,lessonId));
                 break;
             case R.id.lay_veri:        //报名确认
@@ -102,7 +101,13 @@ public class EnrolledStudentsActivity extends BaseActivity {
         protected void setViewContent(Holder holder, StudentEnroll bean, int position) {
             holder.nameView.setText(bean.name);
             holder.phoneView.setText(""+bean.mobile);
-            holder.timeEnvView.setText("报名时间"+ (bean.createdOn==null?"暂无":ScheduleUtil.getDateYMDHM(bean.createdOn)));
+            String time="报名时间"+ (bean.createdOn==null?"暂无":ScheduleUtil.getDateYMDHM(bean.createdOn));
+            if("OnlineEnrollment".equals(bean.typeName)){
+                time+="    线上";
+            }else if("OfflineRegistration".equals(bean.typeName)){
+                time+="    线下";
+            }
+            holder.timeEnvView.setText(time);
         }
 
         @Override

@@ -25,6 +25,7 @@ public class StudentEnroll  implements Parcelable{
     public Date createdOn;
     public String state;
     public String remarks;
+    public String typeName;
 
     public Doc doc;
 

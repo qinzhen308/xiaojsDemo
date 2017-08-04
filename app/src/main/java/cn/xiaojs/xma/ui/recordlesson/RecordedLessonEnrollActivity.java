@@ -13,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -31,7 +29,6 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.Optional;
 import cn.xiaojs.xma.R;
@@ -46,13 +43,11 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
-import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
 import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.MainActivity;
-import cn.xiaojs.xma.ui.base.AbsOpModel;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.EnrollSuccessActivity;
@@ -339,7 +334,7 @@ public class RecordedLessonEnrollActivity extends BaseActivity {
                     ToastUtil.showToast(getApplicationContext(),"您已提交申请，请等待确认");
                     MainActivity.invokeWithAction(RecordedLessonEnrollActivity.this,null);
                 }else {
-                    startActivity(new Intent(RecordedLessonEnrollActivity.this,EnrollSuccessActivity.class));
+                    EnrollRLessonSuccessActivity.invoke(RecordedLessonEnrollActivity.this,lessonId);
                 }
             }
 

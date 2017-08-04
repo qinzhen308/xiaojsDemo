@@ -1,9 +1,7 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -33,18 +32,12 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
-import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
-import cn.xiaojs.xma.ui.lesson.xclass.MyClassFragment;
-import cn.xiaojs.xma.ui.lesson.xclass.SearchLessonActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.view.MyClassFilterDialog;
 import cn.xiaojs.xma.ui.recordlesson.util.RLessonFilterHelper;
-import cn.xiaojs.xma.ui.recordlesson.util.RecordLessonHelper;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -138,13 +131,29 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         }
     }
 
+    private int[] group2disables={0,1,2,3,4};
+
     private void filter() {
-        MyClassFilterDialog dialog = new MyClassFilterDialog(context, false);
+        final MyClassFilterDialog dialog = new MyClassFilterDialog(context, false);
         dialog.setGroup2Title(R.string.course_state);
-        dialog.setTimeSelection(group1Position);
-        dialog.setStateSelection(group2Position);
+        dialog.setGroup1Selection(group1Position);
+        dialog.setGroup2Selection(group2Position);
+        if(group1Position==2){
+            dialog.setGroup2Disables(group2disables);
+        }
         dialog.setGroup1(getResources().getStringArray(R.array.recorded_lesson_filter_type)).setGroup2(getResources().getStringArray(R.array.recorded_lesson_filter_state));
         dialog.showAsDropDown(mFilterLine);
+        dialog.setOnGroup1ItemClick(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position==2){
+                    dialog.setGroup2Selection(0);
+                    dialog.setGroup2Disables(group2disables);
+                }else {
+                    dialog.setGroup2Disables(null);
+                }
+            }
+        });
         mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_up, 0);
         dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override

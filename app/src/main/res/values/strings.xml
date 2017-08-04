@@ -1038,4 +1038,8 @@
     <string name="filter_tip_class">没有符合筛选条件的班~</string>
     <string name="material_info_summary">%1$s&#160;&#160;&#160;&#160;分享:&#160;<![CDATA[<font color="#b49e89">%2$s</font>]]></string>
 
+    <string name="enroll_rlesson_result_ok_tips">已添加到“我的班课”，现在你可以观看视频学习了</string>
+    <string name="look_rlesson_dir">查看课程目录</string>
+
+
 </resources>

@@ -129,8 +129,8 @@ public class MyClassFragment extends Fragment {
 
     private void filter() {
         MyClassFilterDialog dialog = new MyClassFilterDialog(context, false);
-        dialog.setTimeSelection(timePosition);
-        dialog.setStateSelection(statePosition);
+        dialog.setGroup1Selection(timePosition);
+        dialog.setGroup2Selection(statePosition);
         dialog.setGroup1(getResources().getStringArray(R.array.class_filter_type)).setGroup2(getResources().getStringArray(R.array.class_filter_time));
         dialog.showAsDropDown(mFilterLine);
         mFilter.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_filter_up, 0);

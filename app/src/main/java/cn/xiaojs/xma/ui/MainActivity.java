@@ -45,6 +45,7 @@ import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
+import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
 import cn.xiaojs.xma.ui.search.SearchActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
@@ -481,6 +482,21 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 i.putExtra(Constants.KEY_TICKET, ticket);
                 i.setClass(this, ClassroomActivity.class);
                 this.startActivity(i);
+                break;
+            case ACTION_TO_RECORDED_LESSONS_DIR:
+                String id=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+0);
+                String isEpiredStr=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+1);
+                if (TextUtils.isEmpty(id)) {
+                    Toast.makeText(this,"课程id有误",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                boolean isEpired=false;
+                try {
+                    isEpired=Boolean.valueOf(isEpiredStr);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                RLDirListActivity.invoke(this,id,isEpired);
                 break;
         }
 
