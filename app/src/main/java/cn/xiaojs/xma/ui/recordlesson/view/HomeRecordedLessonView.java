@@ -121,7 +121,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
                 statusView.setVisibility(INVISIBLE);
             }
 
-            if(mData.expire!=null&&mData.enrollOfCurrentAccount!=null){
+            if(mData.expire!=null&&mData.enrollOfCurrentAccount!=null&&mData.enrollOfCurrentAccount.deadline!=null){
                 tvDate.setText("有效期至"+ ScheduleUtil.getDateYMD(mData.enrollOfCurrentAccount.deadline));
             }else {
                 tvDate.setText("有效期：永久");

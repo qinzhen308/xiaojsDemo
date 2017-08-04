@@ -39,7 +39,7 @@ public class RLessonFilterHelper {
                 type= "All";
                 break;
             case 1:
-                type= "CourseTeacher";
+                type= "Owner";
 
                 break;
             case 2:
