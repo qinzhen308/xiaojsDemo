@@ -1,13 +1,11 @@
 package cn.xiaojs.xma.ui.recordlesson;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,18 +18,14 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.signature.StringSignature;
 
 import java.util.ArrayList;
 
+import butterknife.BindColor;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -61,7 +55,6 @@ import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LiveLessonBriefActivity;
 import cn.xiaojs.xma.ui.lesson.LiveLessonLabelActivity;
 import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
 import cn.xiaojs.xma.ui.recordlesson.model.RLLesson;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -88,12 +81,11 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     private final int MAX_LESSON_CHAR = 50;
 
     public final static String KEY_COMPETENCY = "key_competency";
-    public static final String EXTRA_KEY_DIRS="extra_key_dirs";
-    public static final String EXTRA_KEY_OLD_DATA="extra_key_old_data";
-    public static final String EXTRA_KEY_LESSON_ID="extra_key_lesson_id";
+    public static final String EXTRA_KEY_DIRS = "extra_key_dirs";
+    public static final String EXTRA_KEY_OLD_DATA = "extra_key_old_data";
+    public static final String EXTRA_KEY_LESSON_ID = "extra_key_lesson_id";
 
     private String lessonid;
-
 
 
     @BindView(R.id.label1)
@@ -132,11 +124,12 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     TextView liveLessonLabel;
     @BindView(R.id.live_lesson_label_layout)
     LinearLayout liveLessonLabelLayout;
-
-
+    @BindColor(R.color.font_blue)
+    int fontBlue;
 
     private int mDarkGrayFont;
     private int mLightGrayFont;
+
     private Drawable mErrorDrawable;
 
     private String mCoverFileName;
@@ -144,16 +137,16 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
 
     private Competency mCompetency;
     private String mCompetencyId;
-    private LiveLesson mLesson=new LiveLesson();
+    private LiveLesson mLesson = new LiveLesson();
 
     private RLessonDetail oldDatal;
 
 
     @Override
     protected void addViewContent() {
-        if(TextUtils.isEmpty(lessonid)){
+        if (TextUtils.isEmpty(lessonid)) {
             setMiddleTitle(R.string.basic_infomation);
-        }else {
+        } else {
             setMiddleTitle(R.string.basic_infomation_edit);
         }
         addView(R.layout.activity_create_recorded_lesson);
@@ -164,7 +157,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     }
 
     private void initView() {
-        lessonid=getIntent().getStringExtra(EXTRA_KEY_LESSON_ID);
+        lessonid = getIntent().getStringExtra(EXTRA_KEY_LESSON_ID);
         mustInputSymbol();
         expiryDateSwitcher.setChecked(false);
         enrollSwitcher.setChecked(false);
@@ -184,20 +177,23 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         mErrorDrawable = new ColorDrawable(Color.WHITE);
     }
 
-    private void initOldData(){
-        if(!getIntent().hasExtra(EXTRA_KEY_OLD_DATA)){
+    private void initOldData() {
+        if (!getIntent().hasExtra(EXTRA_KEY_OLD_DATA)) {
             return;
         }
-        oldDatal=(RLessonDetail) getIntent().getSerializableExtra(EXTRA_KEY_OLD_DATA);
+        oldDatal = (RLessonDetail) getIntent().getSerializableExtra(EXTRA_KEY_OLD_DATA);
         mLesson.setTags(oldDatal.tags);
-        mLesson.setOverview(oldDatal.overview);
+        if (oldDatal.overview != null) {
+            mLesson.setOverview(oldDatal.overview);
+        } else {
+        }
         mLesson.setCover(oldDatal.cover);
-        mCompetency=new Competency();
+        mCompetency = new Competency();
         mCompetency.setChecked(true);
         mCompetency.setSubject(oldDatal.subject);
-        mCompetencyId=oldDatal.subject.getId();
+        mCompetencyId = oldDatal.subject.getId();
 
-        if(!TextUtils.isEmpty(mLesson.getCover())){
+        if (!TextUtils.isEmpty(mLesson.getCover())) {
             mCoverFileName = mLesson.getCover();
             coverView.setVisibility(View.VISIBLE);
             Dimension dimension = new Dimension();
@@ -211,11 +207,11 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
                     .into(coverView);
         }
 
-        enrollSwitcher.setChecked((oldDatal.enroll!=null&&oldDatal.enroll.mode==Ctl.JoinMode.VERIFICATION));
-        if(oldDatal.expire!=null&&oldDatal.expire.effective>0){
+        enrollSwitcher.setChecked((oldDatal.enroll != null && oldDatal.enroll.mode == Ctl.JoinMode.VERIFICATION));
+        if (oldDatal.expire != null && oldDatal.expire.effective > 0) {
             expiryDateSwitcher.setChecked(true);
-            etExpiredDate.setText(""+oldDatal.expire.effective);
-        }else {
+            etExpiredDate.setText("" + oldDatal.expire.effective);
+        } else {
             expiryDateSwitcher.setChecked(false);
         }
         lessonSubject.setTextColor(mDarkGrayFont);
@@ -224,7 +220,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         initLessonLabel(mLesson);
         liveLessonName.setText(oldDatal.title);
 
-        if(!TextUtils.isEmpty(lessonid)&&Ctl.RecordedCourseState.ONSHELVES.equals(oldDatal.state)){
+        if (!TextUtils.isEmpty(lessonid) && Ctl.RecordedCourseState.ONSHELVES.equals(oldDatal.state)) {
             expiryDateSwitcher.setEnabled(false);
             etExpiredDate.setEnabled(false);
         }
@@ -237,21 +233,21 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
 
     }
 
-    private void setListener(){
+    private void setListener() {
         expiryDateSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     layoutExpiredDate.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layoutExpiredDate.setVisibility(View.GONE);
                 }
             }
         });
     }
 
-    @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief,R.id.lesson_subject,
-            R.id.live_lesson_label,R.id.cover_view,R.id.sub_btn})
+    @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief, R.id.lesson_subject,
+            R.id.live_lesson_label, R.id.cover_view, R.id.sub_btn})
     public void onClick(View v) {
         Intent i = null;
         switch (v.getId()) {
@@ -398,11 +394,11 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
                 liveLessonBrief.setText(txt);
                 liveLessonBrief.setTextColor(mDarkGrayFont);
             } else {
-                liveLessonBrief.setTextColor(mLightGrayFont);
+                liveLessonBrief.setTextColor(fontBlue);
                 liveLessonBrief.setText(R.string.please_input);
             }
         } else {
-            liveLessonBrief.setTextColor(mLightGrayFont);
+            liveLessonBrief.setTextColor(fontBlue);
             liveLessonBrief.setText(R.string.please_input);
         }
     }
@@ -440,8 +436,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     }
 
 
-
-
     private String formatResult(String s) {
         if (!TextUtils.isEmpty(s)) {
             if (s.length() > DEFAULT_SHOW_CHAR_LEN) {
@@ -465,56 +459,61 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
 
 
     private void submit() {
-        String name=liveLessonName.getText().toString();
-        if(TextUtils.isEmpty(name)){
-            ToastUtil.showToast(getApplicationContext(),R.string.live_lesson_name_empty);
+        String name = liveLessonName.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            ToastUtil.showToast(getApplicationContext(), R.string.live_lesson_name_empty);
             return;
         }
 
         if (name.length() > MAX_LESSON_CHAR) {
             String nameEr = getString(R.string.live_lesson_name_error, MAX_LESSON_CHAR);
-            ToastUtil.showToast(getApplicationContext(),nameEr);
+            ToastUtil.showToast(getApplicationContext(), nameEr);
             return;
         }
 
-        if(mCompetency==null||mCompetency.getSubject()==null){
-            ToastUtil.showToast(getApplicationContext(),R.string.subject_empty);
+        if (mCompetency == null || mCompetency.getSubject() == null) {
+            ToastUtil.showToast(getApplicationContext(), R.string.subject_empty);
             return;
         }
 
 
-        CRecordLesson lesson=new CRecordLesson();
-        lesson.title=name;
-        lesson.subject=mCompetency.getSubject().getId();
-        lesson.mode=2;
+        CRecordLesson lesson = new CRecordLesson();
+        lesson.title = name;
+        lesson.subject = mCompetency.getSubject().getId();
+        lesson.mode = 2;
 
-        if(expiryDateSwitcher.isChecked()){
-            String daysStr=etExpiredDate.getText().toString().trim();
-            if(TextUtils.isEmpty(daysStr)){
-                ToastUtil.showToast(getApplicationContext(),"请填写有效天数");
-                return;
+        if (!TextUtils.isEmpty(lessonid) && Ctl.RecordedCourseState.ONSHELVES.equals(oldDatal.state)) {
+            lesson.effective = null;
+        } else {
+            if (expiryDateSwitcher.isChecked()) {
+                String daysStr = etExpiredDate.getText().toString().trim();
+                if (TextUtils.isEmpty(daysStr)) {
+                    ToastUtil.showToast(getApplicationContext(), "请填写有效天数");
+                    return;
+                }
+                if (Long.valueOf(daysStr) <= 0) {
+                    ToastUtil.showToast(getApplicationContext(), "有效天数必须大于0");
+                    return;
+                }
+                lesson.effective = Long.valueOf(daysStr);
+            } else {//永久
+                lesson.effective = null;
             }
-            if(Long.valueOf(daysStr)<=0){
-                ToastUtil.showToast(getApplicationContext(),"有效天数必须大于0");
-                return;
-            }
-            lesson.effective=Long.valueOf(daysStr);
-        }else {//永久
-            lesson.effective=Long.valueOf(0);
         }
+
         showProgress(false);
-        lesson.enroll=new EnrollMode();
-        lesson.enroll.mode=enrollSwitcher.isChecked()?Ctl.JoinMode.VERIFICATION:Ctl.JoinMode.OPEN;
+        lesson.enroll = new EnrollMode();
+        lesson.enroll.mode = enrollSwitcher.isChecked() ? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
 
-        TeachLead lead=new TeachLead();
-        lead.leads=new String[]{AccountDataManager.getAccountID(this)};
-        lesson.teaching=lead;
+        TeachLead lead = new TeachLead();
+        lead.leads = new String[]{AccountDataManager.getAccountID(this)};
+        lesson.teaching = lead;
 
-        lesson.overview=mLesson.getOverview();
-        lesson.cover=mLesson.getCover();
-        lesson.tags=mLesson.getTags();
+        lesson.overview = mLesson.getOverview();
+        lesson.cover = mLesson.getCover();
+        lesson.tags = mLesson.getTags();
         setChaptersWithDirs(lesson);
-        if(TextUtils.isEmpty(lessonid)){//创建
+        if (TextUtils.isEmpty(lessonid)) {//创建
 
             LessonDataManager.createRecordedCourse(this, lesson, new APIServiceCallback<CLResponse>() {
                 @Override
@@ -530,8 +529,8 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
                     Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
-        }else {//编辑
-            LessonDataManager.modifyRecordedCourse(this,lessonid ,lesson, new APIServiceCallback<ResponseBody>() {
+        } else {//编辑
+            LessonDataManager.modifyRecordedCourse(this, lessonid, lesson, new APIServiceCallback<ResponseBody>() {
                 @Override
                 public void onSuccess(ResponseBody object) {
                     cancelProgress();
@@ -551,30 +550,30 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     }
 
 
-    private void setChaptersWithDirs( CRecordLesson lesson){
-        ArrayList<RLDirectory> dirs=(ArrayList<RLDirectory>)getIntent().getSerializableExtra(EXTRA_KEY_DIRS);
-        CChapter[] chapters=new CChapter[dirs.size()];
-        CChapter parent=null;
-        CChapterSection child=null;
-        CChapterSection[] childChapters=null;
-        for(int i=0,size=dirs.size();i<size;i++){
-            RLDirectory dir=dirs.get(i);
-            parent=new CChapter();
-            parent.index=i+1;
-            parent.title=dir.name;
-            childChapters=new CChapterSection[dir.getChildrenCount()];
-            for(int j=0,size2=dir.children.size();j<size2;j++){
-                RLLesson l=dir.getChild(j);
-                child=new CChapterSection();
-                child.index=j+1;
-                child.title=l.name;
-                child.resource=l.videoId;
-                childChapters[j]=child;
+    private void setChaptersWithDirs(CRecordLesson lesson) {
+        ArrayList<RLDirectory> dirs = (ArrayList<RLDirectory>) getIntent().getSerializableExtra(EXTRA_KEY_DIRS);
+        CChapter[] chapters = new CChapter[dirs.size()];
+        CChapter parent = null;
+        CChapterSection child = null;
+        CChapterSection[] childChapters = null;
+        for (int i = 0, size = dirs.size(); i < size; i++) {
+            RLDirectory dir = dirs.get(i);
+            parent = new CChapter();
+            parent.index = i + 1;
+            parent.title = dir.name;
+            childChapters = new CChapterSection[dir.getChildrenCount()];
+            for (int j = 0, size2 = dir.children.size(); j < size2; j++) {
+                RLLesson l = dir.getChild(j);
+                child = new CChapterSection();
+                child.index = j + 1;
+                child.title = l.name;
+                child.resource = l.videoId;
+                childChapters[j] = child;
             }
-            parent.sections=childChapters;
-            chapters[i]=parent;
+            parent.sections = childChapters;
+            chapters[i] = parent;
         }
-        lesson.chapters=chapters;
+        lesson.chapters = chapters;
     }
 
 
@@ -600,33 +599,31 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     }
 
 
-
-
-    public static void invoke(Activity context, ArrayList<RLDirectory> dirs){
-        Intent intent=new Intent(context,CreateRecordedLessonActivity.class);
-        intent.putExtra(EXTRA_KEY_DIRS,dirs);
+    public static void invoke(Activity context, ArrayList<RLDirectory> dirs) {
+        Intent intent = new Intent(context, CreateRecordedLessonActivity.class);
+        intent.putExtra(EXTRA_KEY_DIRS, dirs);
         context.startActivity(intent);
     }
 
-    public static void invoke(Activity context, ArrayList<RLDirectory> dirs, RLessonDetail oldData){
-        Intent intent=new Intent(context,CreateRecordedLessonActivity.class);
-        intent.putExtra(EXTRA_KEY_DIRS,dirs);
-        if(oldData!=null){
-            intent.putExtra(EXTRA_KEY_OLD_DATA,oldData);
+    public static void invoke(Activity context, ArrayList<RLDirectory> dirs, RLessonDetail oldData) {
+        Intent intent = new Intent(context, CreateRecordedLessonActivity.class);
+        intent.putExtra(EXTRA_KEY_DIRS, dirs);
+        if (oldData != null) {
+            intent.putExtra(EXTRA_KEY_OLD_DATA, oldData);
         }
         context.startActivity(intent);
     }
 
-    public static void invoke(Activity context, ArrayList<RLDirectory> dirs, RLessonDetail oldData,String id){
-        Intent intent=new Intent(context,CreateRecordedLessonActivity.class);
-        intent.putExtra(EXTRA_KEY_DIRS,dirs);
-        if(oldData!=null){
-            intent.putExtra(EXTRA_KEY_OLD_DATA,oldData);
+    public static void invoke(Activity context, ArrayList<RLDirectory> dirs, RLessonDetail oldData, String id) {
+        Intent intent = new Intent(context, CreateRecordedLessonActivity.class);
+        intent.putExtra(EXTRA_KEY_DIRS, dirs);
+        if (oldData != null) {
+            intent.putExtra(EXTRA_KEY_OLD_DATA, oldData);
         }
-        if(id!=null){
-            intent.putExtra(EXTRA_KEY_LESSON_ID,id);
+        if (id != null) {
+            intent.putExtra(EXTRA_KEY_LESSON_ID, id);
         }
-        context.startActivityForResult(intent,REQUEST_CODE_MODIFY);
+        context.startActivityForResult(intent, REQUEST_CODE_MODIFY);
     }
 
 }
