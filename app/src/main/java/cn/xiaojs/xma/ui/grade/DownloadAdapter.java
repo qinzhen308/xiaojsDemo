@@ -321,9 +321,10 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             iconUrl = Social.getDrawing(key, true);
         } else if (FileUtil.PDF == FileUtil.getFileType(mimeType)) {
             errorResId = R.drawable.ic_pdf;
-        } else if (FileUtil.VIDEO == FileUtil.getFileType(mimeType)
-                || FileUtil.STEAMIMG == FileUtil.getFileType(mimeType)) {
+        } else if (FileUtil.VIDEO == FileUtil.getFileType(mimeType)) {
             errorResId = R.drawable.ic_video_mine;
+        } else if (FileUtil.STEAMIMG == FileUtil.getFileType(mimeType)) {
+            errorResId = R.drawable.ic_record_video;
         } else {
             errorResId = R.drawable.ic_unknown;
         }
