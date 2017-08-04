@@ -88,7 +88,7 @@ public class EnrollConfirmActivity extends BaseActivity {
                 holder.tvVerifyMsg.setText(bean.remarks);
             }
 
-            if (Platform.JoinClassState.PENDING_FOR_ACCEPTANCE.equals(bean.state)) {
+            if (Ctl.CourseEnrollmentState.PENDING_FOR_ACCEPTANCE.equals(bean.state)) {
                 holder.agreeBtn.setVisibility(View.VISIBLE);
                 holder.refuseBtn.setVisibility(View.VISIBLE);
 
@@ -97,7 +97,7 @@ public class EnrollConfirmActivity extends BaseActivity {
 
                 holder.statusView.setText("");
 
-            }else if (Platform.JoinClassState.ACCEPTED.equals(bean.state)) {
+            }else if (Ctl.CourseEnrollmentState.ENROLLED.equals(bean.state)) {
                 holder.agreeBtn.setVisibility(View.GONE);
                 holder.refuseBtn.setVisibility(View.GONE);
 
@@ -107,7 +107,7 @@ public class EnrollConfirmActivity extends BaseActivity {
 
                 holder.statusView.setText(R.string.had_agreed);
 
-            }else if (Platform.JoinClassState.REJECTTED.equals(bean.state)) {
+            }else if (Ctl.CourseEnrollmentState.REJECTED.equals(bean.state)) {
                 holder.agreeBtn.setVisibility(View.GONE);
                 holder.refuseBtn.setVisibility(View.GONE);
 
@@ -211,9 +211,9 @@ public class EnrollConfirmActivity extends BaseActivity {
                 cancelProgress();
 
                 if (decision == Ctl.ACKDecision.ACKNOWLEDGE) {
-                    student.state = Platform.JoinClassState.ACCEPTED;
+                    student.state = Ctl.CourseEnrollmentState.ENROLLED;
                 }else if (decision == Ctl.ACKDecision.REFUSED) {
-                    student.state = Platform.JoinClassState.REJECTTED;
+                    student.state = Ctl.CourseEnrollmentState.REJECTED;
                 }
 
                 confirmAdapter.notifyDataSetChanged();
