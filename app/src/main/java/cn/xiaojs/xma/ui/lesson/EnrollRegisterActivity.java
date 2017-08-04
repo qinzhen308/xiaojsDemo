@@ -16,13 +16,16 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SearchManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.ELResponse;
 import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -150,6 +153,7 @@ public class EnrollRegisterActivity extends BaseActivity {
         //TODO 当学生账号已经在注册时，需优化
         final String name = mNameEdt.getEditableText().toString();
         final String phone = mPhoneNumEdt.getEditableText().toString();
+        final long phoneNum = Long.parseLong(phone);
 
 
 //        OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
@@ -164,63 +168,68 @@ public class EnrollRegisterActivity extends BaseActivity {
 
         //String remark = mRemarkEdt.getEditableText().toString();
         try {
-            final long phoneNum = Long.parseLong(phone);
-            showProgress(false);
+
+            showProgress(true);
             //因为已经注册的用户，需要上传用户的ID，所以在这里要检测是否注册，如果注册了就获取ID.
-            SearchManager.searchAccounts(this, phone, new APIServiceCallback<ArrayList<AccountSearch>>() {
-                @Override
-                public void onSuccess(ArrayList<AccountSearch> object) {
-                    boolean hasExist = false;
-                    AccountSearch currSearch = null;
-                    if (object != null && !object.isEmpty()) {
-                        for (AccountSearch search : object) {
-                            //FIXME 此处的目的是判断个人账号，排除掉机构账号。但是目前个人账号的type返回的是account
-                            if (Account.TypeName.PERSION.equals(search._type) || "account".equals(search._type)) {
+
+            SearchManager.search(this,
+                    Social.SearchType.PERSON,
+                    phone,
+                    1,
+                    10,
+                    new APIServiceCallback<CollectionResult<SearchResultV2>>() {
+                        @Override
+                        public void onSuccess(CollectionResult<SearchResultV2> result) {
+                            boolean hasExist = false;
+                            SearchResultV2 searchResultV2 = null;
+
+                            if (result != null && result.results != null && !result.results.isEmpty()) {
+                                searchResultV2 = result.results.get(0);
                                 hasExist = true;
-                                currSearch = search;
-                                break;
                             }
+
+                            if (searchResultV2 == null || TextUtils.isEmpty(searchResultV2.id)) {
+                                hasExist = false;
+                            }
+
+                            OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
+                            Registrant registrant = new Registrant();
+                            offlineRegistrant.setRegistrant(registrant);
+                            if (hasExist) {
+                                registrant.setAccount(searchResultV2.id);
+                            } else {
+                                registrant.setName(name);
+                                registrant.setMobile(phoneNum);
+                            }
+
+                            offlineRegister(offlineRegistrant);
+
                         }
-                    }
 
-                    if (currSearch == null || TextUtils.isEmpty(currSearch._id)) {
-                        hasExist = false;
-                    }
+                        @Override
+                        public void onFailure(String errorCode, String errorMessage) {
+                            //Toast.makeText(EnrollRegisterActivity.this, R.string.enroll_register_fail, Toast.LENGTH_SHORT).show();
 
-                    OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
-                    Registrant registrant = new Registrant();
-                    offlineRegistrant.setRegistrant(registrant);
-                    if (hasExist) {
-                        registrant.setAccount(currSearch._id);
-                    } else {
-                        registrant.setName(name);
-                        registrant.setMobile(phoneNum);
-                    }
+                            OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
+                            Registrant registrant = new Registrant();
+                            registrant.setName(name);
+                            registrant.setMobile(phoneNum);
+                            offlineRegistrant.setRegistrant(registrant);
 
-                    offlineRegister(offlineRegistrant);
-                }
-
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress();
-                    //Toast.makeText(EnrollRegisterActivity.this, R.string.enroll_register_fail, Toast.LENGTH_SHORT).show();
-
-                    OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
-                    Registrant registrant = new Registrant();
-                    registrant.setName(name);
-                    registrant.setMobile(phoneNum);
-                    offlineRegistrant.setRegistrant(registrant);
-
-                    offlineRegister(offlineRegistrant);
-
-
-
-                }
-            });
-
+                            offlineRegister(offlineRegistrant);
+                        }
+                    });
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            OfflineRegistrant offlineRegistrant = new OfflineRegistrant();
+            Registrant registrant = new Registrant();
+            registrant.setName(name);
+            registrant.setMobile(phoneNum);
+            offlineRegistrant.setRegistrant(registrant);
+
+            offlineRegister(offlineRegistrant);
         }
     }
 

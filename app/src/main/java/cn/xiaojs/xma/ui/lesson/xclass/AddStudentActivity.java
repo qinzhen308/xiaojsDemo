@@ -17,13 +17,16 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SearchManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.ctl.ClassEnroll;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.util.VerifyUtils;
 
@@ -165,55 +168,54 @@ public class AddStudentActivity extends BaseActivity {
 
     private void checkAccount(final StudentEnroll studentEnroll, final boolean preview) {
         try {
-            showProgress(false);
+            showProgress(true);
             //因为已经注册的用户，需要上传用户的ID，所以在这里要检测是否注册，如果注册了就获取ID.
-            SearchManager.searchAccounts(this, String.valueOf(studentEnroll.mobile), new APIServiceCallback<ArrayList<AccountSearch>>() {
-                @Override
-                public void onSuccess(ArrayList<AccountSearch> object) {
-                    cancelProgress();
-                    boolean hasExist = false;
-                    AccountSearch currSearch = null;
-                    if (object != null && !object.isEmpty()) {
-                        for (AccountSearch search : object) {
-                            //FIXME 此处的目的是判断个人账号，排除掉机构账号。但是目前个人账号的type返回的是account
-                            if (Account.TypeName.PERSION.equals(search._type) || "account".equals(search._type)) {
+            SearchManager.search(this,
+                    Social.SearchType.PERSON,
+                    String.valueOf(studentEnroll.mobile),
+                    1,
+                    10,
+                    new APIServiceCallback<CollectionResult<SearchResultV2>>() {
+                        @Override
+                        public void onSuccess(CollectionResult<SearchResultV2> result) {
+                            cancelProgress();
+                            boolean hasExist = false;
+                            SearchResultV2 searchResultV2 = null;
+
+                            if (result != null && result.results != null && !result.results.isEmpty()) {
+                                searchResultV2 = result.results.get(0);
                                 hasExist = true;
-                                currSearch = search;
-                                break;
                             }
-                        }
-                    }
 
-                    if (currSearch == null || TextUtils.isEmpty(currSearch._id)) {
-                        hasExist = false;
-                    }
+                            if (searchResultV2 == null || TextUtils.isEmpty(searchResultV2.id)) {
+                                hasExist = false;
+                            }
 
-                    if (hasExist) {
-                        studentEnroll.id = currSearch._id;
-                        studentEnroll.name=currSearch._source.basic.getName();
-                        if(preview){
-                            nameEdit.setText(studentEnroll.name);
-                        }
+                            if (hasExist) {
+                                studentEnroll.id = searchResultV2.id;
+                                studentEnroll.name=searchResultV2.basic.getName();
+                                if(preview){
+                                    nameEdit.setText(studentEnroll.name);
+                                }
 //                        studentEnroll.name = "";
 //                        studentEnroll.mobile = "";
-                    }
-                    //搜索时不用跳转
-                    if(preview)return;
+                            }
+                            //搜索时不用跳转
+                            if(preview)return;
 
-                    //OK
-                    toAdd(studentEnroll);
+                            //OK
+                            toAdd(studentEnroll);
 
-                }
+                        }
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress();
-                    if(preview)return;
-                    //OK
-                    toAdd(studentEnroll);
-                }
-            });
-
+                        @Override
+                        public void onFailure(String errorCode, String errorMessage) {
+                            cancelProgress();
+                            if(preview)return;
+                            //OK
+                            toAdd(studentEnroll);
+                        }
+                    });
 
         } catch (Exception e) {
             e.printStackTrace();
