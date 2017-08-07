@@ -328,19 +328,24 @@ public class HomeFragment extends BaseFragment {
                     }
                 }else if (resultCode == HomeConstant.RESULT_MOMENT_DETAIL_OPERATED){
 
-                    String action = data.getAction();
+                    if(data!=null){
+                        String action = data.getAction();
+                        if (!TextUtils.isEmpty(action) && action.equals(HomeConstant.ACTION_RESULT_DEL)) {
 
-                    if (!TextUtils.isEmpty(action) && action.equals(HomeConstant.ACTION_RESULT_DEL)) {
+                            int removeId = data.getIntExtra(HomeConstant.KEY_ITEM_POSITION,-1);
+                            if (removeId >=0){
+                                if (mAdapter != null){
+                                    mAdapter.getList().remove(removeId);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
 
-                        int removeId = data.getIntExtra(HomeConstant.KEY_ITEM_POSITION,-1);
-                        if (removeId >=0){
+                        }else{
                             if (mAdapter != null){
-                                mAdapter.getList().remove(removeId);
-                                mAdapter.notifyDataSetChanged();
+                                mAdapter.doRefresh();
                             }
                         }
-
-                    }else{
+                    }else {
                         if (mAdapter != null){
                             mAdapter.doRefresh();
                         }

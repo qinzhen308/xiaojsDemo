@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.search.AccountInfo;

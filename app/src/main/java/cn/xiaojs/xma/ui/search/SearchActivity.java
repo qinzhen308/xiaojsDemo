@@ -48,6 +48,7 @@ import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SearchManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.SearchRequest;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionResult;
@@ -247,5 +248,15 @@ public class SearchActivity extends BaseActivity {
     private void bindData(List<SearchResultV2> data){
         mAdapter.setList(data);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected int registerDataChangeListenerType() {
+        return SimpleDataChangeListener.FOLLOW_USER;
+    }
+
+    @Override
+    protected void onDataChanged() {
+        dataPageLoader.refresh();
     }
 }

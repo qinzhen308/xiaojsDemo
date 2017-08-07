@@ -39,8 +39,11 @@ import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
@@ -447,7 +450,12 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                 break;
             case R.id.scroll_tab_right_view://加关注
                 if (mBean !=null && !mBean.isFollowed){
-                    BaseBusiness.showFollowDialog(this, this);
+                    boolean isOrganization = mBean.profile != null ? Account.TypeName.ORGANIZATION.equals(mBean.profile.typeName) : false;
+                    if (isOrganization){
+                        BaseBusiness.showFollowDialog(this, this, Social.ContactGroup.ORGANIZATIONS);
+                    }else {
+                        BaseBusiness.showFollowDialog(this, this);
+                    }
                 }
                 break;
             case R.id.person_home_summary_wrapper://查看签名
@@ -479,7 +487,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                     ToastUtil.showToast(getApplicationContext(), R.string.followed);
                     mBean.isFollowed = true;
                     headerNormal(mBean.isFollowed);
-
+                    DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.FOLLOW_USER);
                 }
 
                 @Override

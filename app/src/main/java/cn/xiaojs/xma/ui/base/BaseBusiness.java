@@ -233,7 +233,37 @@ public class BaseBusiness {
             });
             dialog.show();
         }
+    }
 
+    public static void showFollowDialog(Context context, final OnFollowListener listener,long selectedGroupId) {
+        SingleSelectDialog dialog = new SingleSelectDialog(context);
+        final Map<Long, ContactGroup> group = DataManager.getGroupData(context);
+        Iterator<ContactGroup> its = group.values().iterator();
+        if (its != null) {
+            final String[] items = new String[group.size()];
+            int i = 0;
+            while (its.hasNext()) {
+                ContactGroup cg = its.next();
+                if(cg.group==selectedGroupId){
+                    dialog.setSelectPosition(i);
+                }
+                items[i] = cg.name;
+                i++;
+            }
+            dialog.setItems(items);
+            dialog.setTitle(R.string.add_contact_to);
+            dialog.setOnOkClick(new SingleSelectDialog.OnOkClickListener() {
+                @Override
+                public void onOk(int position) {
+                    if (listener != null) {
+                        String name = items[position];
+                        long groupId = getGroup(group, name);
+                        listener.onFollow(groupId);
+                    }
+                }
+            });
+            dialog.show();
+        }
     }
 
     private static long getGroup(Map<Long, ContactGroup> group, String name) {
