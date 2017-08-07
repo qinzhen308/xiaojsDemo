@@ -68,6 +68,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
     DataPageLoader<RLesson,CollectionPage<RLesson>> dataPageLoader;
     Pagination mPagination;
     LoadStatusViewDecoratee stateView;
+    AppLoadState2 loadState;
 
 
     @Nullable
@@ -90,8 +91,8 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
             }
         });
         mRecyclerView=mPullRecyclerView.getRefreshableView();
-        AppLoadState2 loadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
-        loadState.setTips(getString(R.string.filter_tip_lesson),null,null,null,null,null);
+        loadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
+        loadState.setTips(getString(R.string.my_class_list_no_rlesson_tip),null,null,null,null,null);
         stateView=new LoadStatusViewDecoratee(loadState);
 //        stateView=new LoadStatusViewDecoratee(null);
         if(AccountDataManager.isTeacher(getActivity())){
@@ -232,6 +233,11 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
     }
 
     private void getRecordLessonData(){
+        if(group1Position==0&&group1Position==0){
+            loadState.setTips(getString(R.string.my_class_list_no_rlesson_tip),null,null,null,null,null);
+        }else {
+            loadState.setTips(getString(R.string.filter_tip_lesson),null,null,null,null,null);
+        }
         RecordedLessonCriteria criteria=new RecordedLessonCriteria();
         criteria.role= RLessonFilterHelper.getType(group1Position);
         criteria.state= RLessonFilterHelper.getState(group2Position);

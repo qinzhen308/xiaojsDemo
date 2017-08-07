@@ -153,6 +153,15 @@ public class MyClassFragment extends Fragment {
                     }else {
                         classAdapter.setTime(ClassFilterHelper.getStartTime(group2Position),ClassFilterHelper.getEndTime(group2Position));
                     }
+                    if(group1Position==0&&group2Position==0){
+                        classAdapter.setDesc(getString(R.string.empty_class_tips));
+                        classAdapter.setIcon(R.drawable.ic_teach_empty);
+                        classAdapter.setButtonDesc(getString(R.string.want_to_create_class));
+                    }else {
+                        classAdapter.setDesc(getString(R.string.filter_tip_class));
+                        classAdapter.setIcon(R.drawable.ic_teach_empty);
+                        classAdapter.setButtonDesc(null);
+                    }
                     classAdapter.refresh();
                 }
             }

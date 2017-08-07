@@ -76,6 +76,7 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
     DataPageLoader<ClassSchedule,CollectionCalendar<ClassSchedule>> dataPageLoader;
     Pagination mPagination;
     LoadStatusViewDecoratee stateView;
+    AppLoadState2 loadState;
 
 
     @Nullable
@@ -97,8 +98,8 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
             }
         });
         mRecyclerView=mPullRecyclerView.getRefreshableView();
-        AppLoadState2 loadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
-        loadState.setTips(getString(R.string.filter_tip_lesson),null,null,null,null,null);
+        loadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
+        loadState.setTips(getString(R.string.my_class_list_no_lesson_tip),null,null,null,null,null);
         stateView=new LoadStatusViewDecoratee(loadState);
         mAdapter = new HomeClassAdapter(mRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -230,6 +231,11 @@ public class LessonFragment extends Fragment implements IUpdateMethod{
     }
 
     private void getMonthData(){
+        if(group1Position==0&&group2Position==0){
+            loadState.setTips(getString(R.string.my_class_list_no_lesson_tip),null,null,null,null,null);
+        }else {
+            loadState.setTips(getString(R.string.filter_tip_lesson),null,null,null,null,null);
+        }
         long start=new Date(0).getTime();
         long end=ScheduleUtil.ymdToTimeMill(3000,1,1);
         ScheduleOptions options=new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(start))
