@@ -39,6 +39,10 @@ public interface OnStreamChangeListener {
 
     public void onStreamingQualityChanged(StreamingQuality streamingQuality);
 
+    //public void onStreamingReadyTimeout();
+
+
+
 
 
 }

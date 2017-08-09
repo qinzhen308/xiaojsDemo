@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.orhanobut.logger.Logger;
 
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.statemachine.IState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.EventManager;
 import cn.xiaojs.xma.data.LiveManager;
@@ -161,6 +163,10 @@ public class RoomRequest {
         LiveManager.beginClass(context, ticket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
             @Override
             public void onSuccess(ClassResponse object) {
+                if (XiaojsConfig.DEBUG) {
+                    IState state = stateMachine.getCurrentState();
+                    Logger.d("the current state is:%s", state);
+                }
                 stateMachine.startLesson(object);
                 callback.onSuccess(object);
             }

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -773,8 +774,14 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 
     }
 
+    private void sendExceptionNotify(@StringRes int tips) {
+        Intent i = new Intent(CTLConstant.ACTION_STREAMING_EXCEPTION);
+        i.putExtra(CTLConstant.EXTRA_EXCEPTION_TIPS, getString(tips));
+        mContext.sendBroadcast(i);
+    }
+
     @Override
-    public void onStreamException(final StreamingState errorCode, final int type, Object extra) {
+    public void onStreamException(final StreamingState errorCode, final int type, final Object extra) {
 
 
         if (getActivity() != null) {
@@ -783,11 +790,23 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 public void run() {
                     try {
 
-                        if (errorCode == StreamingState.OPEN_CAMERA_FAIL) {
-                            showNoCameraPermissDlg(type);
-                        }else {
-                            Toast.makeText(mContext, R.string.live_occur_exception, Toast.LENGTH_SHORT).show();
-                            exitCurrentFragment();
+                        switch (errorCode) {
+                            case OPEN_CAMERA_FAIL:
+                                showNoCameraPermissDlg(type);
+                                break;
+                            case DISCONNECTED:
+                                if (extra != null && extra instanceof Integer) {
+                                    int flag = (int)extra;
+                                    if (flag == LiveRecordView.STREAMING_TIMEOUT) {
+                                        exitCurrentFragment();
+                                        sendExceptionNotify(R.string.streaming_occur_exception);
+                                    }
+                                }
+                                break;
+                            default:
+                                exitCurrentFragment();
+                                sendExceptionNotify(R.string.streaming_occur_exception);
+
                         }
 
                     } catch (Exception e) {

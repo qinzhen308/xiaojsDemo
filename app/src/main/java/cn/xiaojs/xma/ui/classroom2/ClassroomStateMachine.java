@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.statemachine.State;
 import cn.xiaojs.xma.common.statemachine.StateMachine;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -135,6 +136,13 @@ public abstract class ClassroomStateMachine extends StateMachine {
         }
 
         return CTLConstant.UserIdentity.NONE;
+    }
+
+    protected void sendTransitionMessage(State state) {
+        Message message = new Message();
+        message.what = CTLConstant.BaseChannel.TRANSITION_STATE;
+        message.obj = state;
+        sendMessage(message);
     }
 
 

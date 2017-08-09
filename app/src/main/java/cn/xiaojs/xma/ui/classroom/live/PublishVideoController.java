@@ -306,6 +306,7 @@ public class PublishVideoController extends VideoController implements EventList
             case IOERROR:
             case INVALID_STREAMING_URL:
             case AUDIO_RECORDING_FAIL:
+            case DISCONNECTED:
                 if (mStreamChangeListener != null) {
                     mStreamChangeListener.onStreamException(streamingState, mPublishType, data);
                 }

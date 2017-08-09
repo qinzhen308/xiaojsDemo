@@ -5,6 +5,11 @@ package cn.xiaojs.xma.ui.classroom2;
  */
 
 public class CTLConstant {
+
+    public static final String ACTION_STREAMING_EXCEPTION = "cn.xiaojs.xma.streaming_exception";
+    public static final String EXTRA_EXCEPTION_TIPS = "exception_tips";
+
+
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                //有课
         public static final int NO_LESSON= 0x002;                 //无课
@@ -24,7 +29,9 @@ public class CTLConstant {
         public static final int START_PLAY_LIVE_SHOW = 0x006;     //开始播放直播秀
         public static final int STOP_PLAY_LIVE_SHOW = 0x007;      //结束播放直播秀
 
-        public static final int RESUME_LESSON = 0x1002;          //恢复上课
+        public static final int RESUME_LESSON = 0x008;            //恢复上课
+
+        public static final int TRANSITION_STATE = 0x009;         //切换状态
     }
 
     public static class StandloneChannel extends BaseChannel{

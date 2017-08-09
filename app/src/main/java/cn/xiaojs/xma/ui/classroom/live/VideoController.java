@@ -18,11 +18,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+
+import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.live.view.LiveRecordView;
@@ -205,6 +208,11 @@ public abstract class VideoController implements StreamConfirmCallback{
      */
     public void publishStream(int type, String url) {
         if (TextUtils.isEmpty(url)) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the publish url is empty.......");
+            }
+
             return;
         }
 

@@ -239,7 +239,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
         reset();
 
-        showProgress(true);
+        showProgress(false);
         LiveManager.bootSession(this, ticket, new APIServiceCallback<CtlSession>() {
             @Override
             public void onSuccess(CtlSession session) {
@@ -563,6 +563,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     private void registeNetwork() {
         networkChangedReceiver = new NetworkChangedReceiver();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(CTLConstant.ACTION_STREAMING_EXCEPTION);
         registerReceiver(networkChangedReceiver, filter);
     }
 
@@ -581,6 +582,17 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     public class NetworkChangedReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(final Context context, Intent intent) {
+
+            if (CTLConstant.ACTION_STREAMING_EXCEPTION.equals(intent.getAction())) {
+
+                disConnectSocket();
+
+                String tips = intent.getStringExtra(CTLConstant.EXTRA_EXCEPTION_TIPS);
+                showConnectClassroom(tips);
+                return;
+            }
+
+
             ConnectivityManager manager = (ConnectivityManager)
                     context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mobileInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
