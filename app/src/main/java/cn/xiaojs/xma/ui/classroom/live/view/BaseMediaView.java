@@ -16,6 +16,7 @@ package cn.xiaojs.xma.ui.classroom.live.view;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -142,6 +143,13 @@ public abstract class BaseMediaView extends FrameLayout {
         } else {
             mLoadingLayout.setVisibility(GONE);
         }
+    }
+
+    public void setLadingDesc(@StringRes int str) {
+        if (mLadingDesc != null) {
+            mLadingDesc.setText(str);
+        }
+
     }
 
     private boolean isPlayer() {

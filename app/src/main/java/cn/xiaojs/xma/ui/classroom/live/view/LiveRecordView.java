@@ -47,6 +47,7 @@ import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 import com.qiniu.pili.droid.streaming.SurfaceTextureCallback;
 import com.qiniu.pili.droid.streaming.widget.AspectFrameLayout;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
@@ -84,6 +85,8 @@ public class LiveRecordView extends BaseMediaView implements
     private static final int MSG_SWITCH_ORIENTATION = 8;
     private static final int MSG_SWITCH_RESOLUTION = 9;
     private static final int MSG_SWITCH_ORIENTATION_DELAY = 10;
+    private static final int STREAMING_TIMEOUT_MS = 30 * 1000;
+    public static final int STREAMING_TIMEOUT = 11;
 
     private AspectFrameLayout mAspect;
     private CameraPreviewFrameView mPreviewFrameView;
@@ -106,6 +109,9 @@ public class LiveRecordView extends BaseMediaView implements
     private int mCurrentZoom = 0;
     private int mMaxZoom = 0;
 
+    private Handler timeoutHandler;
+    private boolean streamingFlag = false;
+
     @Override
     protected void initHandler() {
         mHandler = new Handler(Looper.getMainLooper()) {
@@ -114,15 +120,35 @@ public class LiveRecordView extends BaseMediaView implements
                 onHandleMessage(msg);
             }
         };
+
+        timeoutHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("timeoutHandler received message what: %d" + msg.what);
+                }
+
+               if (msg.what == STREAMING_TIMEOUT && !streamingFlag) {
+                   if (mOuterStreamingStateChangedListener != null) {
+                       mMediaStreamingManager.stopStreaming();
+                       mOuterStreamingStateChangedListener.onStateChanged(StreamingState.DISCONNECTED,
+                               STREAMING_TIMEOUT);
+                   }
+               }
+            }
+        };
     }
 
     private void onHandleMessage(Message msg) {
+
         if (mMediaStreamingManager == null) {
             return;
         }
 
         switch (msg.what) {
             case MSG_START_STREAMING:
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -220,6 +246,9 @@ public class LiveRecordView extends BaseMediaView implements
     }
 
     public void init() {
+
+        setLadingDesc(R.string.readying_live_tips);
+
         setStreamingProfile();
 
         CameraStreamingSetting.CAMERA_FACING_ID cameraFacingId = chooseCameraFacingId();
@@ -249,6 +278,9 @@ public class LiveRecordView extends BaseMediaView implements
         mMediaStreamingManager.setSurfaceTextureCallback(this);
         mMediaStreamingManager.setStreamingSessionListener(this);
         mMediaStreamingManager.setNativeLoggingEnabled(XiaojsConfig.DEBUG);
+
+
+        timeoutHandler.sendEmptyMessageDelayed(STREAMING_TIMEOUT, STREAMING_TIMEOUT_MS);
     }
 
     public void setViewClickListener(Listener listener) {
@@ -312,7 +344,12 @@ public class LiveRecordView extends BaseMediaView implements
                  *
                  * */
                 case PREPARING:
-                    //id = MSG_SHOW_LOADING;
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("PREPARING..........");
+                    }
+
+                    id = MSG_SHOW_LOADING;
                     info("PREPARING");
                     break;
                 /**
@@ -322,7 +359,14 @@ public class LiveRecordView extends BaseMediaView implements
                  * </ol>
                  * */
                 case READY:
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("REDAY..........");
+                    }
+
                     // start streaming when READY
+                    id = MSG_SHOW_LOADING;
+
                     mIsReady = true;
 
                     mMaxZoom = mMediaStreamingManager.getMaxZoom();
@@ -330,6 +374,7 @@ public class LiveRecordView extends BaseMediaView implements
                     if (mHandler != null) {
                         mHandler.removeCallbacksAndMessages(null);
                         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_STREAMING), 50);
+                        //mHandler.sendMessage(mHandler.obtainMessage(MSG_START_STREAMING));
                     }
                     info("READY");
                     break;
@@ -338,6 +383,11 @@ public class LiveRecordView extends BaseMediaView implements
                  *
                  * */
                 case CONNECTING:
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("CONNECTING..........");
+                    }
+
                     id = MSG_SHOW_LOADING;
                     info("CONNECTING");
                     break;
@@ -346,6 +396,9 @@ public class LiveRecordView extends BaseMediaView implements
                  *
                  * */
                 case STREAMING:
+                    streamingFlag = true;
+                    timeoutHandler.removeMessages(STREAMING_TIMEOUT);
+
                     info("STREAMING");
                     break;
                 /**
@@ -353,6 +406,7 @@ public class LiveRecordView extends BaseMediaView implements
                  *
                  * */
                 case SHUTDOWN:
+                    timeoutHandler.removeMessages(STREAMING_TIMEOUT);
                     Logger.i("Recorder Shutdown!");
                     info("SHUTDOWN");
                     break;
@@ -368,6 +422,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * 连接失败，重连也失败，无法通过网络和服务端建立链接
                  * */
                 case IOERROR:
+                    timeoutHandler.removeMessages(STREAMING_TIMEOUT);
                     info("IOERROR");
                     break;
                 /**
@@ -396,6 +451,7 @@ public class LiveRecordView extends BaseMediaView implements
                  *
                  * */
                 case AUDIO_RECORDING_FAIL:
+                    timeoutHandler.removeMessages(STREAMING_TIMEOUT);
                     info("AUDIO_RECORDING_FAIL");
                     break;
                 /**
@@ -403,7 +459,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * 摄像机打开失败，需要提示
                  * */
                 case OPEN_CAMERA_FAIL:
-
+                    timeoutHandler.removeMessages(STREAMING_TIMEOUT);
                     Log.e(TAG, "Open Camera Fail. id:" + extra);
                     info("OPEN_CAMERA_FAIL");
                     break;
@@ -412,6 +468,7 @@ public class LiveRecordView extends BaseMediaView implements
                  *  网络连接断开，需要提示
                  * */
                 case DISCONNECTED:
+                    timeoutHandler.removeMessages(STREAMING_TIMEOUT);
                     info("DISCONNECTED");
                     break;
                 /**
@@ -421,6 +478,7 @@ public class LiveRecordView extends BaseMediaView implements
                  * url is invalid. Also gets the url as the extra info.
                  * */
                 case INVALID_STREAMING_URL:
+                    timeoutHandler.removeMessages(STREAMING_TIMEOUT);
                     Log.e(TAG, "Invalid streaming url:" + extra);
                     info("INVALID_STREAMING_URL");
                     break;

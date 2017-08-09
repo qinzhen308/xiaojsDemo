@@ -123,7 +123,8 @@ public class ClassStateMachine extends ClassroomStateMachine{
     @Override
     protected void switchStateWhenReceiveSyncState(String state) {
         super.switchStateWhenReceiveSyncState(state);
-        transitionTo(getStateBySession(state));
+        //transitionTo(getStateBySession(state));
+        sendTransitionMessage(getStateBySession(state));
     }
 
     @Override
@@ -173,7 +174,7 @@ public class ClassStateMachine extends ClassroomStateMachine{
         }
 
 
-        transitionTo(getStateBySession(syncState.to));
+        sendTransitionMessage(getStateBySession(syncState.to));
 
     }
 
@@ -218,15 +219,18 @@ public class ClassStateMachine extends ClassroomStateMachine{
         public boolean processMessage(Message msg) {
 
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case CTLConstant.ClassChannel.ENTER_PENDING_4_LIVE_SATE:           //进入pending for live状态
                     transitionTo(pending4LiveState);
-                    return true;
+                    return HANDLED;
                 case CTLConstant.ClassChannel.ENTER_SCHEDULED:                     //schdeule
                     transitionTo(scheduledState);
-                    return true;
+                    return HANDLED;
                 case CTLConstant.ClassChannel.JOIN_AVAILABLE:                      //进入pending for join
                     transitionTo(pending4JoinState);
-                    return true;
+                    return HANDLED;
                 case CTLConstant.ClassChannel.START_LIVE_SHOW:                     //开始直播秀
                     ClaimReponse claimReponse = (ClaimReponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
@@ -262,9 +266,12 @@ public class ClassStateMachine extends ClassroomStateMachine{
         public boolean processMessage(Message msg) {
 
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case CTLConstant.ClassChannel.JOIN_AVAILABLE:                      //进入pending for join状态
                     transitionTo(pending4JoinState);
-                    return true;
+                    return HANDLED;
                 case CTLConstant.ClassChannel.START_LIVE_SHOW:                     //开始直播秀
                 {
                     ClaimReponse claimReponse = (ClaimReponse) msg.obj;
@@ -274,7 +281,7 @@ public class ClassStateMachine extends ClassroomStateMachine{
                     transitionTo(liveShowState);
                     return HANDLED;
                 }
-                case CTLConstant.StandloneChannel.START_LESSON:                        //开始上课
+                case CTLConstant.ClassChannel.START_LESSON:                        //开始上课
                     ClassResponse response = (ClassResponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = response.publishUrl;
@@ -307,9 +314,12 @@ public class ClassStateMachine extends ClassroomStateMachine{
         public boolean processMessage(Message msg) {
 
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case CTLConstant.ClassChannel.JOIN_AVAILABLE:                      //进入pending for jion状态
                     transitionTo(pending4JoinState);
-                    return true;
+                    return HANDLED;
                 case CTLConstant.ClassChannel.START_LIVE_SHOW:                     //开始直播秀
                     ClaimReponse claimReponse = (ClaimReponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
@@ -343,7 +353,10 @@ public class ClassStateMachine extends ClassroomStateMachine{
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
-                case CTLConstant.StandloneChannel.START_LESSON:                        //开始上课
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
+                case CTLConstant.ClassChannel.START_LESSON:                        //开始上课
                     ClassResponse response = (ClassResponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = response.publishUrl;
@@ -376,6 +389,9 @@ public class ClassStateMachine extends ClassroomStateMachine{
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case CTLConstant.ClassChannel.FINISH_LESSON:                      //下课
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = null;
@@ -417,6 +433,9 @@ public class ClassStateMachine extends ClassroomStateMachine{
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case CTLConstant.StandloneChannel.STOP_LIVE_SHOW:                      //停止直播秀
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("LiveShowState: received STOP_LIVE_SHOW");

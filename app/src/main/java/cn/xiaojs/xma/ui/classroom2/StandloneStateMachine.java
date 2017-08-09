@@ -108,7 +108,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     @Override
     protected void switchStateWhenReceiveSyncState(String state) {
         super.switchStateWhenReceiveSyncState(state);
-        transitionTo(getStateBySession(state));
+        sendTransitionMessage(getStateBySession(state));
     }
 
     private State getStateBySession(String sessionState) {
@@ -172,6 +172,9 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         public boolean processMessage(Message msg) {
 
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case StandloneChannel.JOIN_AVAILABLE:                      //进入pending for jion状态
                     transitionTo(pending4JoinState);
                     return true;
@@ -189,9 +192,27 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     }
 
     class Pending4JoinState extends State {
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Pending4JoinState enter...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("Pending4JoinState exit...");
+            }
+        }
+
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case StandloneChannel.START_LESSON:                        //开始上课
                     ClassResponse response = (ClassResponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
@@ -205,9 +226,27 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     }
 
     class LiveState extends State {
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("LiveState enter...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("LiveState exit...");
+            }
+        }
+
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case StandloneChannel.DELAY_LESSON:                       //拖堂
                     transitionTo(delayedState);
                     return HANDLED;
@@ -236,9 +275,27 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     }
 
     class DelayedState extends State {
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("DelayedState enter...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("DelayedState exit...");
+            }
+        }
+
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case StandloneChannel.FINISH_LESSON:                        //下课
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = null;
@@ -256,9 +313,27 @@ public class StandloneStateMachine extends ClassroomStateMachine {
     }
 
     class RestState extends State {
+
+        @Override
+        public void enter() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("RestState enter...");
+            }
+        }
+
+        @Override
+        public void exit() {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("RestState exit...");
+            }
+        }
+
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case StandloneChannel.RESUME_LESSON:                        //恢复上课
 
                     CtlSession ctlSession = getSession().ctlSession;
@@ -293,6 +368,9 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
                     ClaimReponse claimReponse = (ClaimReponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
@@ -331,6 +409,9 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         @Override
         public boolean processMessage(Message msg) {
             switch (msg.what) {
+                case CTLConstant.BaseChannel.TRANSITION_STATE:
+                    transitionTo((State)msg.obj);
+                    return HANDLED;
                 case StandloneChannel.STOP_LIVE_SHOW:                      //停止直播秀
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("LiveShowState: received STOP_LIVE_SHOW");

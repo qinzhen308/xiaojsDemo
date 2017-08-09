@@ -610,6 +610,7 @@ public class DownloadThread extends Thread {
     }
 
     private File getDownloadTempFile(String fileName){
+        //FIXME 临时文件名保证唯一
         String tempFilename = fileName + ".temp";
         return new File(getDownloadDir(),tempFilename);
     }
