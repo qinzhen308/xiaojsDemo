@@ -70,7 +70,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/font_black"
+                android:textColor="@color/common_text_enable_style2"
                 android:textSize="@dimen/font_28px"
                 android:background="@null"
                 android:hint="@string/not_setting"

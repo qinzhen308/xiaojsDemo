@@ -158,7 +158,11 @@ public class ProfileActivity extends BaseActivity {
                             .error(R.drawable.default_avatar_grey)
                             .into(mPortraitImg);
 
+
                     mNameEdt.setText(basic.getName());
+
+                    mNameEdt.setEnabled(!account.isVerified);
+
                     //set sex
                     if ("true".equals(basic.getSex())) {
                         mSexTv.setText(R.string.male);
