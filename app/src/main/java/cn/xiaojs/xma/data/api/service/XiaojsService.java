@@ -513,6 +513,10 @@ public interface XiaojsService {
                                                          @Path("criteria") String criteria,
                                                          @Path("pagination") String pagination);
 
+    @DELETE("/v1/ctl/courses/recorded/{course}/students/{student}")
+    Call<ResponseBody> removeRecordedCourseStudent(@Path("course") String course,
+                                                   @Path("student") String student);
+
     @PATCH("/v1/ctl/courses/recorded/{course}/students")
     Call<ResponseBody> addRecordedCourseStudent(@Path("course") String course,
                                                          @Body ClassEnrollParams enroll);

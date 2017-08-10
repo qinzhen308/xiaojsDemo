@@ -965,6 +965,15 @@ public class LessonDataManager {
         return lessonRequest;
     }
 
+    public static ServiceRequest removeRecordedCourseStudent(Context context,
+                                                 String course,
+                                                 String student,
+                                                 APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.removeRecordedCourseStudent(course, student);
+        return lessonRequest;
+    }
+
     public static ServiceRequest addRecordedCourseStudent(Context context,
                                                 String course,
                                                 ClassEnrollParams enrollParams,

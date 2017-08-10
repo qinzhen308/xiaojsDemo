@@ -531,6 +531,12 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_RECORDED_COURSE_STUDENTS, call);
     }
 
+    public void removeRecordedCourseStudent(String course,String student) {
+
+        Call<ResponseBody> call = getService().removeRecordedCourseStudent(course,student);
+        enqueueRequest(APIType.REMOVE_RECORDED_COURSE_STUDENT, call);
+    }
+
     public void addRecordedCourseStudent(String course,ClassEnrollParams enrollParams) {
         Call<ResponseBody> call = getService().addRecordedCourseStudent(course,enrollParams);
         enqueueRequest(APIType.ADD_RECORDED_COURSE_STUDENT, call);

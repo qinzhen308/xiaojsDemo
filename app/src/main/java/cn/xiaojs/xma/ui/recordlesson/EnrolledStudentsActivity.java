@@ -24,6 +24,8 @@ import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.util.ToastUtil;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/7/24.
@@ -33,6 +35,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
     public static final String EXTRA_LESSON_ID="extra_lesson_id";
     public static final String EXTRA_NEED_VERIFICATION="extra_need_verification";
+    public static final String EXTRA_IM_OWNER="extra_im_owner";
 
     @BindView(R.id.student_list)
     PullToRefreshSwipeListView listView;
@@ -55,6 +58,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
         setMiddleTitle(R.string.enroll_register_stu);
         setRightText(R.string.registration);
         lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
+        teaching=getIntent().getBooleanExtra(EXTRA_IM_OWNER,false);
         init();
     }
 
@@ -146,6 +150,31 @@ public class EnrolledStudentsActivity extends BaseActivity {
             });
         }
 
+        @Override
+        protected void onSwipeDelete(final int position) {
+            StudentEnroll bean=getItem(position);
+            showProgress(false);
+            LessonDataManager.removeRecordedCourseStudent(mContext, lessonId, bean.id, new APIServiceCallback<ResponseBody>() {
+                @Override
+                public void onSuccess(ResponseBody object) {
+                    cancelProgress();
+                    removeItem(position);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    cancelProgress();
+                    ToastUtil.showToast(getApplicationContext(),errorMessage);
+                }
+            });
+
+        }
+
+        @Override
+        protected void onAttachSwipe(TextView mark, TextView del) {
+            mark.setVisibility(View.GONE);
+        }
+
         class Holder extends BaseHolder {
 
             @BindView(R.id.ic_nav)
@@ -164,10 +193,11 @@ public class EnrolledStudentsActivity extends BaseActivity {
         }
     }
 
-    public static void invoke(Context context,String lessonId,boolean needVerification){
+    public static void invoke(Context context,String lessonId,boolean needVerification,boolean imOwner){
         Intent intent=new Intent(context,EnrolledStudentsActivity.class);
         intent.putExtra(EXTRA_LESSON_ID,lessonId);
         intent.putExtra(EXTRA_NEED_VERIFICATION,needVerification);
+        intent.putExtra(EXTRA_IM_OWNER,imOwner);
         context.startActivity(intent);
     }
 
