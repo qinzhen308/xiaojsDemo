@@ -51,6 +51,8 @@ import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
+import cn.xiaojs.xma.model.ctl.ClassByUser;
+import cn.xiaojs.xma.model.ctl.ClassCollectionPageData;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
@@ -259,7 +261,7 @@ public interface XiaojsService {
                                                                 @Query("limit") int limit);
 
   @GET("/v1/ctl/taught/classes/{userId}")
-    Call<RLCollectionPageData<RLesson>> getClassesByUser(@Path("userId") String userId,
+    Call<ClassCollectionPageData<ClassByUser>> getClassesByUser(@Path("userId") String userId,
                                                                 @Query("page") int page,
                                                                 @Query("limit") int limit);
 

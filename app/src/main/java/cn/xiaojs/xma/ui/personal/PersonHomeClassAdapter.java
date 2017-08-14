@@ -18,19 +18,26 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.ClassByUser;
+import cn.xiaojs.xma.model.ctl.ClassCollectionPageData;
 import cn.xiaojs.xma.model.recordedlesson.RLCollectionPageData;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.social.Dimension;
+import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
+import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.StringUtil;
 
 /**
  * Created by Paul Z on 2017/7/23.
  */
-public class PersonHomeClassAdapter extends AbsSwipeAdapter<RLesson, PersonHomeClassAdapter.Holder> {
+public class PersonHomeClassAdapter extends AbsSwipeAdapter<ClassByUser, PersonHomeClassAdapter.Holder> {
 
     private String mAccount;
 
@@ -40,15 +47,35 @@ public class PersonHomeClassAdapter extends AbsSwipeAdapter<RLesson, PersonHomeC
         setDesc(context.getString(R.string.teacher_nerver_create_class));
     }
 
-    public PersonHomeClassAdapter(Context context, PullToRefreshSwipeListView list, List<RLesson> data) {
+    public PersonHomeClassAdapter(Context context, PullToRefreshSwipeListView list, List<ClassByUser> data) {
         super(context, list, data);
     }
 
     @Override
-    protected void setViewContent(Holder holder, RLesson bean, int position) {
+    protected void setViewContent(Holder holder, ClassByUser bean, int position) {
         holder.titleView.setText(bean.title);
         holder.flagView.setText(bean.title.charAt(0)+"");
         setJoinState(holder.btnJoin,false);
+        holder.memberView.setText("学生 "+(bean.join!=null?bean.join.current:0)+"人");
+        String teachersLabel="班主任：";
+        if(ArrayUtil.isEmpty(bean.teachers)){
+            holder.teachersView.setText(teachersLabel);
+        }else {
+            String teachersText="";
+            for(int i=0;i<bean.teachers.length;i++){
+                if(i>=3){
+                    teachersText=teachersText.substring(0,teachersText.lastIndexOf("、"))+"等"+bean.teachers.length+"人";
+                    break;
+                }else {
+                    teachersText+=bean.teachers[i].getBasic().getName()+"、";
+                }
+            }
+            if(teachersText.endsWith("、")){
+                teachersText=teachersText.substring(0,teachersText.lastIndexOf("、"));
+            }
+            holder.teachersView.setText(StringUtil.getSpecialString(teachersLabel+teachersText,teachersText,mContext.getResources().getColor(R.color.chocolate_light)));
+        }
+
     }
 
     @Override
@@ -58,22 +85,14 @@ public class PersonHomeClassAdapter extends AbsSwipeAdapter<RLesson, PersonHomeC
     }
 
     @Override
-    protected void onDataItemClick(int position, RLesson bean) {
-        String state = bean.state;
-        if (TextUtils.isEmpty(state)
-                || state.equalsIgnoreCase(LessonState.ACKNOWLEDGED)
-                || state.equalsIgnoreCase(LessonState.PENDING_FOR_ACK)
-                || state.equalsIgnoreCase(LessonState.DRAFT)
-                || state.equalsIgnoreCase(LessonState.PENDING_FOR_APPROVAL)
-                || state.equalsIgnoreCase(LessonState.CANCELLED)
-                || state.equalsIgnoreCase(LessonState.REJECTED)) {
-            return;
+    protected void onDataItemClick(int position, ClassByUser bean) {
+        String url= ApiManager.getShareLessonUrl(bean.id, Account.TypeName.CLASS_LESSON);
+        if(url.contains("?")){
+            url+="&app=android";
+        }else {
+            url+="?app=android";
         }
-
-        Intent i = new Intent(mContext, LessonHomeActivity.class);
-        i.putExtra(CourseConstant.KEY_ENTRANCE_TYPE, LessonHomeActivity.ENTRANCE_FROM_TEACH_LESSON);
-        i.putExtra(CourseConstant.KEY_LESSON_ID, bean.id);
-        mContext.startActivity(i);
+        CommonWebActivity.invoke(mContext,"",url);
     }
 
     @Override
@@ -84,11 +103,11 @@ public class PersonHomeClassAdapter extends AbsSwipeAdapter<RLesson, PersonHomeC
 
     @Override
     protected void doRequest() {
-        LessonDataManager.getClassesByUser(mContext, mAccount, mPagination, new APIServiceCallback<RLCollectionPageData<RLesson>>() {
+        LessonDataManager.getClassesByUser(mContext, mAccount, mPagination, new APIServiceCallback<ClassCollectionPageData<ClassByUser>>() {
             @Override
-            public void onSuccess(RLCollectionPageData<RLesson> object) {
-                if (object != null && object.recordedCourse != null) {
-                    PersonHomeClassAdapter.this.onSuccess(object.recordedCourse);
+            public void onSuccess(ClassCollectionPageData<ClassByUser> object) {
+                if (object != null && object.classes != null) {
+                    PersonHomeClassAdapter.this.onSuccess(object.classes);
                 } else {
                     PersonHomeClassAdapter.this.onSuccess(null);
                 }

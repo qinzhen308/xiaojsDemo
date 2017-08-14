@@ -41,6 +41,8 @@ import cn.xiaojs.xma.model.PersonHomeUserLesson;
 
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
+import cn.xiaojs.xma.model.ctl.ClassByUser;
+import cn.xiaojs.xma.model.ctl.ClassCollectionPageData;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
@@ -107,7 +109,7 @@ public class LessonRequest extends ServiceRequest {
     }
 
     public void getClassesByUser(String account, int page, int limit) {
-        Call<RLCollectionPageData<RLesson>> call = getService().getClassesByUser(account, page, limit);
+        Call<ClassCollectionPageData<ClassByUser>> call = getService().getClassesByUser(account, page, limit);
         enqueueRequest(APIType.GET_CLASS_BY_USER, call);
     }
 

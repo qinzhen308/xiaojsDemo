@@ -219,20 +219,20 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             b2.putSerializable(PersonalBusiness.KEY_PERSONAL_ACTIVITY_LIST, mBean.activities);
             f1.setArguments(b1);
             f1.setPagePosition(0);
-            f2.setPagePosition(2);
+            f2.setPagePosition(3);
             f2.setArguments(b2);
             //f3.setPagePosition(2);
 
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
             fragments.add(f1);
             fragments.add(PersonHomeRecordedLessonFragment.newInstance(1,mAccount));
-//            fragments.add(PersonHomeClassFragment.newInstance(2,mAccount));
+            fragments.add(PersonHomeClassFragment.newInstance(2,mAccount));
             fragments.add(f2);
             //fragments.add(f3);
             String[] tabs = new String[]{
                     "公开课",
                     getString(R.string.record_lesson),
-//                    getString(R.string.gradle),
+                    getString(R.string.gradle),
                     //getString(R.string.person_comment),
                     getString(R.string.person_moment)};
 //            if (mIsMyself) {
@@ -268,16 +268,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             f1.setArguments(b1);
             f1.setPagePosition(0);
             PersonHomeTeacherFragment f2 = PersonHomeTeacherFragment.createInstance(mAccount);
-            f2.setPagePosition(2);
+            f2.setPagePosition(3);
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
             fragments.add(f1);
             fragments.add(PersonHomeRecordedLessonFragment.newInstance(1,mAccount));
-//            fragments.add(PersonHomeClassFragment.newInstance(2,mAccount));
+            fragments.add(PersonHomeClassFragment.newInstance(2,mAccount));
             fragments.add(f2);
             String[] tabs = new String[]{
                     "公开课",
                     getString(R.string.record_lesson),
-//                    getString(R.string.gradle),
+                    getString(R.string.gradle),
                     "老师"};
             addContent(fragments, tabs);
         }else {//用户不是老师

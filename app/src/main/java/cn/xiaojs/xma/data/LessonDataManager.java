@@ -37,6 +37,8 @@ import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
+import cn.xiaojs.xma.model.ctl.ClassByUser;
+import cn.xiaojs.xma.model.ctl.ClassCollectionPageData;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
@@ -175,7 +177,7 @@ public class LessonDataManager {
     public static ServiceRequest getClassesByUser(Context context,
                                                          String account,
                                                          Pagination pagination,
-                                                         APIServiceCallback<RLCollectionPageData<RLesson>> callback) {
+                                                         APIServiceCallback<ClassCollectionPageData<ClassByUser>> callback) {
 
         int page = 1;
         int limit = 10;
