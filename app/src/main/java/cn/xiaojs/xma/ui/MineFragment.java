@@ -182,7 +182,7 @@ public class MineFragment extends BaseFragment {
                 AnalyticEvents.onEvent(getActivity(),10);
                 //startActivity(new Intent(mContext, MaterialActivity.class));
                 Intent intent = new Intent(mContext, MaterialActivity.class);
-                intent.putExtra(MaterialActivity.EXTRA_SHOW_DOWNLOAD,false);
+                intent.putExtra(MaterialActivity.EXTRA_SHOW_DOWNLOAD,true);
                 startActivity(intent);
                 break;
 //            case R.id.my_favorites_layout:

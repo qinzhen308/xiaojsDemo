@@ -2,6 +2,8 @@ package com.jeek.calendar.widget.calendar.schedule;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -298,7 +300,7 @@ public class ScheduleLayout extends FrameLayout {
                 float distanceX = Math.abs(x - mDownPosition[0]);
                 float distanceY = Math.abs(y - mDownPosition[1]);
                 if (distanceY > mMinDistance && distanceY > distanceX * 2.0f) {
-                    return (y > mDownPosition[1] && isRecyclerViewTouch()) || (y < mDownPosition[1] && mState == ScheduleState.OPEN);
+                    return iNeedIntercept(ev)||(y > mDownPosition[1] && isRecyclerViewTouch()) || (y < mDownPosition[1] && mState == ScheduleState.OPEN);
                 }
                 break;
         }
@@ -307,6 +309,26 @@ public class ScheduleLayout extends FrameLayout {
 
     private boolean isRecyclerViewTouch() {
         return mState == ScheduleState.CLOSE && (conflictResolver.resolve());
+    }
+
+    private boolean iNeedIntercept(MotionEvent ev){
+        int x=(int)ev.getX();
+        int y=(int)ev.getY();
+        Rect rect=new Rect();
+        Point offset=new Point();
+        this.getGlobalVisibleRect(rect,offset);
+        if(mcvCalendar.getVisibility()==VISIBLE){
+            rect.setEmpty();
+            mcvCalendar.getGlobalVisibleRect(rect);
+            rect.offset(-offset.x,-offset.y);
+            return rect.contains(x,y);
+        }else if(wcvCalendar.getVisibility()==VISIBLE){
+            rect.setEmpty();
+            wcvCalendar.getGlobalVisibleRect(rect);
+            rect.offset(-offset.x,-offset.y);
+            return rect.contains(x,y);
+        }
+        return false;
     }
 
 

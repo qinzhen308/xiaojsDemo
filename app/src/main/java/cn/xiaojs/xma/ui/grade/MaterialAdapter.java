@@ -137,12 +137,12 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         });
 
 
-//        holder.opera1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                download(bean);
-//            }
-//        });
+        holder.opera1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download(bean);
+            }
+        });
 
         holder.opera2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,13 +162,13 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             }
         });
 
-//        holder.opera4.setVisibility(View.VISIBLE);
-//        holder.opera4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showMoreDlg();
-//            }
-//        });
+        holder.opera4.setVisibility(View.VISIBLE);
+        holder.opera4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMoreDlg();
+            }
+        });
 
     }
 
@@ -325,14 +325,14 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
         @BindView(R.id.material_item_opera_wrapper)
         LinearLayout opera;
-//        @BindView(R.id.material_item_opera1)
-//        TextView opera1;
+        @BindView(R.id.material_item_opera1)
+        TextView opera1;
         @BindView(R.id.material_item_opera2)
         TextView opera2;
         @BindView(R.id.material_item_opera3)
         TextView opera3;
-//        @BindView(R.id.material_item_opera4)
-//        TextView opera4;
+        @BindView(R.id.material_item_opera4)
+        TextView opera4;
 
         @BindView(R.id.material_item)
         View item;
@@ -354,6 +354,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             super(view);
 
             opera3.setVisibility(View.VISIBLE);
+            opera1.setVisibility(View.VISIBLE);
+            opera4.setVisibility(View.VISIBLE);
         }
     }
 }
