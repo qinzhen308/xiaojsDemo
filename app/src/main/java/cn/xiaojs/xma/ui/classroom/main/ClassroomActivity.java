@@ -246,6 +246,9 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
                 try {
                     tempSession = session;
+                    if(!TextUtils.isEmpty(session.ticket)){
+                        ticket=session.ticket;
+                    }
 
                     if (session.accessible) {
                         //连接socket
@@ -311,6 +314,7 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
     private void connectSocket(String ticket, String secret, boolean force) {
         String url = getClassroomUrl(ticket);
+        Logger.d("------qz-----connectSocket----url="+url);
         connectCount++;
         handler.sendEmptyMessageDelayed(MSG_CONNECT_TIMEOUT, MAX_CONNECT_TIME);
 

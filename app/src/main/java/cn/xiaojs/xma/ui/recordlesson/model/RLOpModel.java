@@ -59,11 +59,8 @@ public class RLOpModel extends AbsOpModel<RLesson> {
                 enterApplyPage(context,data);
                 break;
             case OP_DELETE:
-//                if(data==null){
-//                    deleteNativeLesson(context,position);
-//                }else {
-//                    delete(context,position,data);
-//                }
+
+                delete(context,position,data);
                 break;
             case OP_EDIT:
                 edit(context, data);
@@ -88,7 +85,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
                 registration(context,data);
                 break;
             case OP_CANCEL_CHECK:
-//                offShelves(context, data);
+                offShelves(context, data);
                 break;
             case OP_REJECT_REASON:
                 rejectReason(context,data);
@@ -208,7 +205,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     //撤销审核，取消上架
-    private void offShelves(final Activity context, final CLesson bean) {
+    private void offShelves(final Activity context, final RLesson bean) {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.cancel_examine);
         dialog.setDesc(R.string.cancel_examine_tip);
@@ -224,11 +221,11 @@ public class RLOpModel extends AbsOpModel<RLesson> {
             public void onClick() {
                 dialog.cancel();
                 showProgress(context);
-                LessonDataManager.requestCancelLessonOnShelves(context, bean.id, new APIServiceCallback() {
+                LessonDataManager.cancelRecordedCourseOnShelves(context, bean.id, new APIServiceCallback() {
                     @Override
                     public void onSuccess(Object object) {
                         cancelProgress(context);
-                        bean.state=LessonState.DRAFT;
+                        bean.state=Ctl.RecordedCourseState.DRAFT;
                         updateData(context,true);
                         ToastUtil.showToast(context, R.string.off_shelves_success);
                     }
@@ -276,7 +273,7 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     }
 
     //删除
-    private void delete(final Activity context,final int pos,final CLesson bean) {
+    private void delete(final Activity context,final int pos,final RLesson bean) {
         final CommonDialog dialog = new CommonDialog(context);
         dialog.setTitle(R.string.delete);
         dialog.setDesc(R.string.delete_lesson_tip);
@@ -296,39 +293,22 @@ public class RLOpModel extends AbsOpModel<RLesson> {
         dialog.show();
     }
 
-    private void hideLesson(final Activity context, final int pos, final CLesson bean) {
+    private void hideLesson(final Activity context, final int pos, final RLesson bean) {
         showProgress(context);
-        if(Account.TypeName.STAND_ALONE_LESSON.equals(bean.type)){
-            LessonDataManager.hideLesson(context, bean.id, new APIServiceCallback() {
-                @Override
-                public void onSuccess(Object object) {
-                    cancelProgress(context);
-                    ToastUtil.showToast(context, R.string.delete_success);
-//                    removeJustItem(context, pos, bean);
-                }
+        LessonDataManager.removeRecordedCourse(context, bean.id, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+                cancelProgress(context);
+                ToastUtil.showToast(context, R.string.delete_success);
+                removeJustItem(context, pos, bean);
+            }
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress(context);
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }else {
-            LessonDataManager.deleteClassesLesson(context, bean.classInfo.id, bean.id, new APIServiceCallback() {
-                @Override
-                public void onSuccess(Object object) {
-                    cancelProgress(context);
-                    ToastUtil.showToast(context, R.string.delete_success);
-//                    removeJustItem(context, pos, bean);
-                }
-
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    cancelProgress(context);
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress(context);
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

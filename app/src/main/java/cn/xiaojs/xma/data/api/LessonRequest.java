@@ -469,10 +469,20 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.MODIFY_RECORDED_COURSE, call);
 
     }
+    public void removeRecordedCourse(String course) {
+        Call<ResponseBody> call = getService().removeRecordedCourse(course);
+        enqueueRequest(APIType.REMOVE_RECORDED_COURSE, call);
+
+    }
 
     public void putRecordedCourseOnShelves(String course) {
         Call<ResponseBody> call = getService().putRecordedCourseOnShelves(course);
         enqueueRequest(APIType.PUT_RECORDED_COURSE_ON_SHELVES, call);
+    }
+
+    public void cancelRecordedCourseOnShelves(String courseId) {
+        Call<ResponseBody> call = getService().cancelRecordedCourseOnShelves(courseId);
+        enqueueRequest(APIType.CANCEL_RECORDED_COURSE_ON_SHELVES, call);
     }
 
 

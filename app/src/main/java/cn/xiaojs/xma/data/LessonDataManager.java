@@ -813,6 +813,14 @@ public class LessonDataManager {
         return lessonRequest;
     }
 
+    public static ServiceRequest removeRecordedCourse(Context context,
+                                                      String course,
+                                            APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.removeRecordedCourse(course);
+        return lessonRequest;
+    }
+
     /**
      * modify Recorded Course
      *
@@ -843,6 +851,22 @@ public class LessonDataManager {
                                                   APIServiceCallback callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.putRecordedCourseOnShelves(course);
+        return lessonRequest;
+    }
+
+
+    /**
+     * Requests to cancel the specific recorded course on shelves.
+     *
+     * @param context
+     * @param courseId
+     * @param callback
+     */
+    public static ServiceRequest cancelRecordedCourseOnShelves(Context context,
+                                                  String courseId,
+                                                  APIServiceCallback callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.cancelRecordedCourseOnShelves(courseId);
         return lessonRequest;
     }
 

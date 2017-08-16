@@ -471,9 +471,17 @@ public interface XiaojsService {
     Call<ResponseBody> modifyRecordedCourse(@Path("course") String course,
                                           @Body CRecordLesson recordLesson);
 
+    //Hide Lesson
+    @DELETE("/v1/ctl/course/recorded/{courseId}")
+    Call<ResponseBody> removeRecordedCourse(@Path("courseId") String courseId);
+
     //Put Recorded Course On Shelves
     @PUT("/v1/ctl/course/recorded/{course}/onshelves")
     Call<ResponseBody> putRecordedCourseOnShelves(@Path("course") String course);
+
+    //Requests to cancel the specific recorded course on shelves
+    @DELETE("/v1/ctl/course/recorded/{courseId}/onshelves")
+    Call<ResponseBody> cancelRecordedCourseOnShelves(@Path("courseId") String courseId);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

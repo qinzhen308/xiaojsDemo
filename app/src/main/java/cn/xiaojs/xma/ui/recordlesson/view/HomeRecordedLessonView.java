@@ -208,7 +208,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
         if (Ctl.RecordedCourseState.DRAFT.equals(mData.state)) {//待上架
             list.add(new RLOpModel(AbsOpModel.OP_PUBLISH));
             list.add(new RLOpModel(AbsOpModel.OP_EDIT));
-//            list.add(new RLOpModel(AbsOpModel.OP_DELETE));
+            list.add(new RLOpModel(AbsOpModel.OP_DELETE));
             //查看课程目录
 //            list.add(new RLOpModel(AbsOpModel.OP_));
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
@@ -218,7 +218,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             //查看课程目录
 //            list.add(new RLOpModel(AbsOpModel.OP_));
             list.add(new RLOpModel(AbsOpModel.OP_LOOK));
-//            list.add(new RLOpModel(AbsOpModel.OP_CANCEL_CHECK));
+            list.add(new RLOpModel(AbsOpModel.OP_CANCEL_CHECK));
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
 //            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
 
@@ -240,7 +240,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
             list.add(new RLOpModel(AbsOpModel.OP_SHARE));
         } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {//审核失败
             list.add(new RLOpModel(AbsOpModel.OP_LOOK));
-//            list.add(new RLOpModel(AbsOpModel.OP_DELETE));
+            list.add(new RLOpModel(AbsOpModel.OP_DELETE));
             list.add(new RLOpModel(AbsOpModel.OP_RECREATE_LESSON));
 //            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
         }

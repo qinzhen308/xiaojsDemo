@@ -53,29 +53,29 @@ public class MaterialUtil {
     public static String getDownloadUrl(String key, String mimeType) {
 
 
-        return "https://file.vipkid.com.cn/apps/vipkid_v1.5.5_17106180_default_defaultChannel.apk";
+//        return "https://file.vipkid.com.cn/apps/vipkid_v1.5.5_17106180_default_defaultChannel.apk";
 
-//        if (Collaboration.isImage(mimeType)) {
-//
-//            return Social.getDrawing(key, false);
-//
-//        } else if (Collaboration.isVideo(mimeType)
-//                || Collaboration.isPPT(mimeType)
-//                ||Collaboration.isPDF(mimeType)
-//                ||Collaboration.isDoc(mimeType)) {
-//
-//            return new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
-//
-//        } else if (Collaboration.isStreaming(mimeType)) {
-//
-//           return new StringBuilder(ApiManager.getLiveBucket())
-//                    .append("/")
-//                    .append(key)
-//                    .append(".m3u8")
-//                    .toString();
-//        }
-//
-//        return "";
+        if (Collaboration.isImage(mimeType)) {
+
+            return Social.getDrawing(key, false);
+
+        } else if (Collaboration.isVideo(mimeType)
+                || Collaboration.isPPT(mimeType)
+                ||Collaboration.isPDF(mimeType)
+                ||Collaboration.isDoc(mimeType)) {
+
+            return new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
+
+        } else if (Collaboration.isStreaming(mimeType)) {
+
+           return new StringBuilder(ApiManager.getLiveBucket())
+                    .append("/")
+                    .append(key)
+                    .append(".m3u8")
+                    .toString();
+        }
+
+        return "";
     }
 
     public static void openMaterial(Activity activity, LibDoc bean) {

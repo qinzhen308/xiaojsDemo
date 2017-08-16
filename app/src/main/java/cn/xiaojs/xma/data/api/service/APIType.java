@@ -205,5 +205,7 @@ public class APIType {
     public static final int GET_RECORD_COURSE_BY_USER= 130;
     public static final int GET_CLASS_BY_USER= 131;
     public static final int REMOVE_RECORDED_COURSE_STUDENT= 132;
+    public static final int REMOVE_RECORDED_COURSE= 133;
+    public static final int CANCEL_RECORDED_COURSE_ON_SHELVES= 134;
 
 }
