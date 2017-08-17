@@ -50,7 +50,9 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.XjsUtils;
+import okhttp3.ResponseBody;
 
 public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Holder> {
 
@@ -73,10 +75,12 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         setDescNow("空空如也～");
     }
 
+/*
     @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
         return PullToRefreshBase.Mode.PULL_FROM_START;
     }
+*/
 
     @Override
     protected void onDataItemClick(int position, LibDoc bean) {
@@ -99,22 +103,32 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         thumbnail(bean.mimeType, bean.key, holder);
 
         holder.name.setText(bean.name);
-        StringBuilder sb = new StringBuilder();
 
-        sb.append(TimeUtil.format(bean.uploadedOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+        if(Collaboration.State.INIT.equals(bean.state)||Collaboration.State.CONVERTING.equals(bean.state)){
+            holder.desc.setTextColor(mContext.getResources().getColor(R.color.main_orange));
+            holder.desc.setText("转码中...");
+        }else if(Collaboration.State.FAULTED.equals(bean.state)){
+            holder.desc.setTextColor(mContext.getResources().getColor(R.color.main_orange));
+            holder.desc.setText("转码失败");
+        }else {
+            holder.desc.setTextColor(mContext.getResources().getColor(R.color.common_text));
+            StringBuilder sb = new StringBuilder();
 
-        if (bean.used <= 0) {
-            sb.append("");
-        }else{
-            sb.append("    ");
-            sb.append(XjsUtils.getSizeFormatText(bean.used));
+            sb.append(TimeUtil.format(bean.uploadedOn!=null?bean.uploadedOn:bean.createdOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
 
+            if (bean.used <= 0) {
+                sb.append("");
+            }else{
+                sb.append("    ");
+                sb.append(XjsUtils.getSizeFormatText(bean.used));
+
+            }
+            holder.desc.setText(sb);
         }
 
 
 
 
-        holder.desc.setText(sb);
 
 
         if (materialFragment.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
@@ -140,7 +154,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         holder.opera1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                download(bean);
+                showDoanloadTips(bean);
             }
         });
 
@@ -172,12 +186,55 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     }
 
+    private void showDoanloadTips(final LibDoc bean){
+        if(Collaboration.isStreaming(bean.mimeType)){
+            final CommonDialog commonDialog=new CommonDialog(mContext);
+            commonDialog.setRightBtnText(R.string.yes);
+            commonDialog.setLefBtnText(R.string.no);
+            commonDialog.setDesc(R.string.donwload_doc_conver_vedio_tip);
+            commonDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    commonDialog.dismiss();
+                    convertStreamToMp4(bean);
+                }
+            });
+            commonDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+                @Override
+                public void onClick() {
+                    commonDialog.dismiss();
+                }
+            });
+            commonDialog.show();
+        }else {
+            download(bean);
+        }
+    }
+
+    private void convertStreamToMp4(LibDoc libDoc){
+//        showProgress(true);
+        CollaManager.convertDocument(mContext, libDoc.id, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+//                cancelProgress();
+                ToastUtil.showToast(mContext,"转码中...");
+                refresh();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+//                cancelProgress();
+                ToastUtil.showToast(mContext,errorMessage);
+            }
+        });
+    }
+
     private void download(LibDoc bean) {
 //        if (DownloadManager.allowDownload(mContext)) {
             DownloadManager.enqueueDownload(mContext,
                     bean.name,
                     bean.key,
-                    MaterialUtil.getDownloadUrl(bean.key, bean.mimeType),
+                    MaterialUtil.getDownloadUrl(bean),
                     bean.mimeType,
                     Social.getDrawing(bean.key, true));
         Toast.makeText(mContext, "已添加到下载队列", Toast.LENGTH_SHORT).show();
@@ -238,10 +295,10 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             @Override
             public void onSuccess(UserDoc object) {
 
-                if (getList() !=null) {
+              /*  if (getList() !=null) {
                     getList().clear();
                 }
-
+*/
                 if (object != null && object.documents!=null && object.documents.size() > 0) {
                     MaterialAdapter.this.onSuccess(object.documents);
                 } else {

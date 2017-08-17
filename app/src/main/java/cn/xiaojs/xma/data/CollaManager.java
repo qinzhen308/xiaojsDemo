@@ -18,6 +18,7 @@ import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UploadParam;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.material.UserDoc;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -150,7 +151,7 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype);
+        request.getDocuments(id, subtype,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
     }
 
     /**
@@ -180,7 +181,20 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype);
+        request.getDocuments(id, subtype,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
+    }
+
+    /**
+     * Convert document (recorded m3u8 for now) to mp4.
+     * @param context
+     * @param id
+     * @param callback
+     */
+    public static void convertDocument(Context context,
+                                    String id,
+                                    APIServiceCallback<ResponseBody> callback) {
+        CollaRequest request = new CollaRequest(context, callback);
+        request.convertDocument(id);
     }
 
     /**

@@ -2,8 +2,13 @@ package cn.xiaojs.xma.ui.lesson.xclass;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +23,15 @@ import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
+import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.message.ChooseClassActivity;
+import cn.xiaojs.xma.ui.recordlesson.EnrolledStudentsActivity;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 
 /**
  * Created by maxiaobao on 2017/5/21.
@@ -45,6 +54,13 @@ public class StudentsListActivity extends BaseActivity {
 
     private StudentsListAdapter adapter;
 
+    @BindView(R.id.search_input)
+    EditTextDel searchInput;
+    @BindView(R.id.search_ok)
+    TextView searchOk;
+
+    String keyword;
+
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_students_list);
@@ -54,9 +70,45 @@ public class StudentsListActivity extends BaseActivity {
         teaching = getIntent().getBooleanExtra(ClassInfoActivity.EXTRA_TEACHING, false);
         initView();
 
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String query = searchInput.getText().toString();
+                if (query.length() > 0) {
+                    searchOk.setVisibility(View.VISIBLE);
+                } else {
+                    searchOk.setVisibility(View.GONE);
+                }
+            }
+        });
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    keyword=searchInput.getText().toString().trim();
+                    if (adapter != null) {
+                        adapter.resetAndrequest();
+                    }
+                    XjsUtils.hideIMM(StudentsListActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
-    @OnClick({R.id.left_image, R.id.right_image2, R.id.lay_veri})
+    @OnClick({R.id.left_image, R.id.right_image2, R.id.lay_veri, R.id.search_ok})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
@@ -72,7 +124,12 @@ public class StudentsListActivity extends BaseActivity {
                 i.putExtra(EXTRA_CLASS, classId);
                 startActivity(i);
                 break;
-
+            case R.id.search_ok:        //搜索
+                keyword=searchInput.getText().toString().trim();
+                if (adapter != null) {
+                    adapter.resetAndrequest();
+                }
+                break;
         }
     }
 
@@ -190,8 +247,14 @@ public class StudentsListActivity extends BaseActivity {
 
         @Override
         protected void doRequest() {
-
-            LessonDataManager.getClassStudents(mContext, classId, true, mPagination,
+            JoinCriteria criteria=new JoinCriteria();
+            criteria.joined=true;
+            if (!TextUtils.isEmpty(keyword)) {
+                criteria.title = keyword;
+            } else {
+                criteria.title = null;
+            }
+            LessonDataManager.getClassStudents(mContext, classId, criteria, mPagination,
                     new APIServiceCallback<CollectionPage<StudentEnroll>>() {
                         @Override
                         public void onSuccess(CollectionPage<StudentEnroll> object) {

@@ -17,7 +17,9 @@ public class LibDoc implements Serializable {
     public DocExport exported;
     public long used;
     public String mimeType;
+    public String typeName;
 
+    public Date createdOn;
     public Date uploadedOn;
     //    public duration
     public String state;

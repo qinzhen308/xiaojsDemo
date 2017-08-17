@@ -1,66 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-        >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px90"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_weight="1"
+            android:background="@drawable/grey_conner_bg"
+            android:drawableLeft="@drawable/ic_search"
+            android:gravity="center_vertical"
+            android:hint="@string/hint_input_search_students"
+            android:imeOptions="actionSearch"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/px15"
+            android:paddingLeft="@dimen/px10"
+            android:paddingRight="@dimen/px10"
+            android:paddingTop="@dimen/px15"
+            android:singleLine="true"
+            android:textSize="@dimen/font_28px" />
+
+        <TextView
+            android:id="@+id/search_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/px30"
+            android:text="@string/search"
+            android:textColor="@drawable/orange_click_text_selector"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
 
     <RelativeLayout
-            android:id="@+id/lay_veri"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px142"
-            android:layout_marginTop="@dimen/px30"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
-            android:paddingLeft="@dimen/px25"
-            android:paddingRight="@dimen/px25"
-            android:visibility="gone"
-            >
+        android:id="@+id/lay_veri"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px142"
+        android:layout_marginTop="@dimen/px30"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/px20"
+        android:paddingLeft="@dimen/px25"
+        android:paddingRight="@dimen/px25"
+        android:paddingTop="@dimen/px10"
+        android:visibility="gone">
 
         <ImageView
-                android:id="@+id/veri_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_join_message"
-                />
+            android:id="@+id/veri_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_join_message" />
 
         <TextView
-                android:id="@+id/veri_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_class_verification_msg"
-                android:textSize="@dimen/font_32px"
-                android:textColor="@color/font_black"
-                android:layout_marginTop="@dimen/px13"
-                android:layout_marginLeft="@dimen/px23"
-                android:layout_toRightOf="@id/veri_img"
-                android:layout_centerVertical="true"
-                />
+            android:id="@+id/veri_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/px23"
+            android:layout_marginTop="@dimen/px13"
+            android:layout_toRightOf="@id/veri_img"
+            android:text="@string/add_class_verification_msg"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_32px" />
 
 
         <TextView
-                android:id="@+id/veri_count"
-                android:layout_width="@dimen/px34"
-                android:layout_height="@dimen/px34"
-                android:textSize="@dimen/font_16px"
-                android:textColor="@color/white"
-                android:layout_toRightOf="@+id/veri_title"
-                android:layout_marginLeft="@dimen/px20"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:background="@drawable/bg_red_circle_point"
-                android:visibility="gone"
-                />
+            android:id="@+id/veri_count"
+            android:layout_width="@dimen/px34"
+            android:layout_height="@dimen/px34"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_toRightOf="@+id/veri_title"
+            android:background="@drawable/bg_red_circle_point"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_16px"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView
-            android:id="@+id/student_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:listSelector="@android:color/transparent"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/px30"/>
+        android:id="@+id/student_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/px30"
+        android:listSelector="@android:color/transparent"
+        android:orientation="vertical"
+        android:scrollbars="none" />
 </LinearLayout>

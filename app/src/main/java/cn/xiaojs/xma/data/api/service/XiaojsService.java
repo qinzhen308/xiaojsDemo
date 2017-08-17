@@ -815,9 +815,15 @@ public interface XiaojsService {
     //Get Documents
     @GET("/v1/collaboration/documents")
     Call<UserDoc> getDocuments(@Query("id") String id,
-                               @Query("subtype") String subtype
-                               /*@Query("page") int page,
-                               @Query("limit") int limit*/);
+                               @Query("subtype") String subtype,
+                               @Query("sortBy") String sortBy,
+                               @Query("reverse") String reverse,
+                               @Query("page") int page,
+                               @Query("limit") int limit);
+
+    //Convert document (recorded m3u8 for now) to mp4.
+    @PATCH("/v1/collaboration/documents/{documentId}/conversion")
+    Call<ResponseBody> convertDocument(@Path("documentId") String documentId);
 
     //Delete Document
     @DELETE("/v1/collaboration/documents/{document}")

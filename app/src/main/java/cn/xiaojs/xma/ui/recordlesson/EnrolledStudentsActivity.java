@@ -2,8 +2,13 @@ package cn.xiaojs.xma.ui.recordlesson;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,8 +28,11 @@ import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.lesson.xclass.SearchLessonActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.XjsUtils;
 import okhttp3.ResponseBody;
 
 /**
@@ -33,9 +41,9 @@ import okhttp3.ResponseBody;
 
 public class EnrolledStudentsActivity extends BaseActivity {
 
-    public static final String EXTRA_LESSON_ID="extra_lesson_id";
-    public static final String EXTRA_NEED_VERIFICATION="extra_need_verification";
-    public static final String EXTRA_IM_OWNER="extra_im_owner";
+    public static final String EXTRA_LESSON_ID = "extra_lesson_id";
+    public static final String EXTRA_NEED_VERIFICATION = "extra_need_verification";
+    public static final String EXTRA_IM_OWNER = "extra_im_owner";
 
     @BindView(R.id.student_list)
     PullToRefreshSwipeListView listView;
@@ -51,37 +59,82 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
     private StudentsAdapter adapter;
 
+    @BindView(R.id.search_input)
+    EditTextDel searchInput;
+    @BindView(R.id.search_ok)
+    TextView searchOk;
+
+    String keyword;
+
 
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_enrolled_students);
         setMiddleTitle(R.string.enroll_register_stu);
         setRightText(R.string.registration);
-        lessonId=getIntent().getStringExtra(EXTRA_LESSON_ID);
-        teaching=getIntent().getBooleanExtra(EXTRA_IM_OWNER,false);
+        lessonId = getIntent().getStringExtra(EXTRA_LESSON_ID);
+        teaching = getIntent().getBooleanExtra(EXTRA_IM_OWNER, false);
         init();
+
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String query = searchInput.getText().toString();
+                if (query.length() > 0) {
+                    searchOk.setVisibility(View.VISIBLE);
+                } else {
+                    searchOk.setVisibility(View.GONE);
+                }
+            }
+        });
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    keyword=searchInput.getText().toString().trim();
+                    adapter.refresh();
+                    XjsUtils.hideIMM(EnrolledStudentsActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
-    @OnClick({R.id.left_image, R.id.right_image2, R.id.lay_veri})
+    @OnClick({R.id.left_image, R.id.right_image2, R.id.lay_veri, R.id.search_ok})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:      //返回
                 finish();
                 break;
             case R.id.right_image2:    //报名注册
-                startActivity(new Intent(this,ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,lessonId));
+                startActivity(new Intent(this, ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID, lessonId));
                 break;
             case R.id.lay_veri:        //报名确认
-                EnrollConfirmActivity.invoke(this,lessonId);
+                EnrollConfirmActivity.invoke(this, lessonId);
+                break;
+            case R.id.search_ok:        //搜索
+                keyword=searchInput.getText().toString().trim();
+                adapter.refresh();
                 break;
 
         }
     }
 
     private void init() {
-        if(getIntent().getBooleanExtra(EXTRA_NEED_VERIFICATION,false)){
+        if (getIntent().getBooleanExtra(EXTRA_NEED_VERIFICATION, false)) {
             verLayout.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             verLayout.setVisibility(View.GONE);
         }
 
@@ -109,12 +162,12 @@ public class EnrolledStudentsActivity extends BaseActivity {
         @Override
         protected void setViewContent(Holder holder, StudentEnroll bean, int position) {
             holder.nameView.setText(bean.name);
-            holder.phoneView.setText(""+bean.mobile);
-            String time="报名时间"+ (bean.createdOn==null?"暂无":ScheduleUtil.getDateYMDHM(bean.createdOn));
-            if("OnlineEnrollment".equals(bean.typeName)){
-                time+="    线上";
-            }else if("OfflineRegistration".equals(bean.typeName)){
-                time+="    线下";
+            holder.phoneView.setText("" + bean.mobile);
+            String time = "报名时间" + (bean.createdOn == null ? "暂无" : ScheduleUtil.getDateYMDHM(bean.createdOn));
+            if ("OnlineEnrollment".equals(bean.typeName)) {
+                time += "    线上";
+            } else if ("OfflineRegistration".equals(bean.typeName)) {
+                time += "    线下";
             }
             holder.timeEnvView.setText(time);
         }
@@ -131,28 +184,33 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
         @Override
         protected void doRequest() {
-            RLStudentsCriteria criteria=new RLStudentsCriteria();
-            criteria.enrolled= "true";
+            RLStudentsCriteria criteria = new RLStudentsCriteria();
+            criteria.enrolled = "true";
+            if (!TextUtils.isEmpty(keyword)) {
+                criteria.title = keyword;
+            } else {
+                criteria.title = null;
+            }
             LessonDataManager.getRecordedCourseStudents(EnrolledStudentsActivity.this, lessonId, criteria, mPagination, new APIServiceCallback<CollectionPage<StudentEnroll>>() {
                 @Override
                 public void onSuccess(CollectionPage<StudentEnroll> object) {
-                    if(object!=null){
+                    if (object != null) {
                         StudentsAdapter.this.onSuccess(object.objectsOfPage);
-                    }else {
+                    } else {
                         StudentsAdapter.this.onSuccess(null);
                     }
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-                    StudentsAdapter.this.onFailure(errorCode,errorMessage);
+                    StudentsAdapter.this.onFailure(errorCode, errorMessage);
                 }
             });
         }
 
         @Override
         protected void onSwipeDelete(final int position) {
-            StudentEnroll bean=getItem(position);
+            StudentEnroll bean = getItem(position);
             showProgress(false);
             LessonDataManager.removeRecordedCourseStudent(mContext, lessonId, bean.id, new APIServiceCallback<ResponseBody>() {
                 @Override
@@ -164,7 +222,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
                     cancelProgress();
-                    ToastUtil.showToast(getApplicationContext(),errorMessage);
+                    ToastUtil.showToast(getApplicationContext(), errorMessage);
                 }
             });
 
@@ -193,11 +251,11 @@ public class EnrolledStudentsActivity extends BaseActivity {
         }
     }
 
-    public static void invoke(Context context,String lessonId,boolean needVerification,boolean imOwner){
-        Intent intent=new Intent(context,EnrolledStudentsActivity.class);
-        intent.putExtra(EXTRA_LESSON_ID,lessonId);
-        intent.putExtra(EXTRA_NEED_VERIFICATION,needVerification);
-        intent.putExtra(EXTRA_IM_OWNER,imOwner);
+    public static void invoke(Context context, String lessonId, boolean needVerification, boolean imOwner) {
+        Intent intent = new Intent(context, EnrolledStudentsActivity.class);
+        intent.putExtra(EXTRA_LESSON_ID, lessonId);
+        intent.putExtra(EXTRA_NEED_VERIFICATION, needVerification);
+        intent.putExtra(EXTRA_IM_OWNER, imOwner);
         context.startActivity(intent);
     }
 

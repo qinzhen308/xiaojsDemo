@@ -10,4 +10,5 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JoinCriteria {
     public boolean joined;
+    public String title;
 }

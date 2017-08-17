@@ -79,6 +79,19 @@ public class Collaboration {
         public static final String COPY = "Copy";
     }
 
+    public class State{
+        public static final String INIT = "Init";
+        public static final String CONVERTING = "Converting";
+        public static final String READY = "Ready";
+        public static final String FAULTED = "Faulted";
+    }
+
+    public class TypeName{
+        public static final String RECORDING_IN_LIBRARY = "RecordingInLibrary";
+        public static final String PICTURE_IN_LIBRARY = "PictureInLibrary";
+        public static final String MEDIA_IN_LIBRARY = "MediaInLibrary";
+    }
+
 
     public static boolean isImage(String mimeType) {
         if (TextUtils.isEmpty(mimeType)) return false;

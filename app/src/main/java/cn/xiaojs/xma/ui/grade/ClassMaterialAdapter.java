@@ -75,11 +75,11 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
         setDescNow("空空如也～");
     }
 
-    @Override
+  /*  @Override
     protected PullToRefreshBase.Mode getRefreshMode() {
         return PullToRefreshBase.Mode.PULL_FROM_START;
     }
-
+*/
     @Override
     protected void setViewContent(final Holder holder, final LibDoc bean, int position) {
         holder.showOpera(false);
@@ -172,7 +172,7 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
         DownloadManager.enqueueDownload(mContext,
                 bean.name,
                 bean.key,
-                MaterialUtil.getDownloadUrl(bean.key, bean.mimeType),
+                MaterialUtil.getDownloadUrl(bean),
                 bean.mimeType,
                 Social.getDrawing(bean.key, true));
         Toast.makeText(mContext, "已添加到下载队列", Toast.LENGTH_SHORT).show();
@@ -209,9 +209,9 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
             @Override
             public void onSuccess(UserDoc object) {
 
-                if (getList() !=null) {
+                /*if (getList() !=null) {
                     getList().clear();
-                }
+                }*/
 
                 if (object != null && object.documents!=null && object.documents.size() > 0) {
                     ClassMaterialAdapter.this.onSuccess(object.documents);

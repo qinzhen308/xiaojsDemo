@@ -50,9 +50,10 @@ public class MaterialUtil {
 
     }
 
-    public static String getDownloadUrl(String key, String mimeType) {
+    public static String getDownloadUrl(LibDoc libDoc) {
 
-
+        String key=libDoc.key;
+        String mimeType=libDoc.mimeType;
 //        return "https://file.vipkid.com.cn/apps/vipkid_v1.5.5_17106180_default_defaultChannel.apk";
 
         if (Collaboration.isImage(mimeType)) {
@@ -63,11 +64,19 @@ public class MaterialUtil {
                 || Collaboration.isPPT(mimeType)
                 ||Collaboration.isPDF(mimeType)
                 ||Collaboration.isDoc(mimeType)) {
+            //要判断是不是转码的
+            String url = "";
+            if(Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(libDoc.typeName)){//录播课转码的
+                url=new StringBuilder(ApiManager.getLiveBucket()).append("/").append(key).append(".mp4").toString();
+            }else {
+                url=new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
+            }
 
-            return new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
+            return url;
 
         } else if (Collaboration.isStreaming(mimeType)) {
 
+            //下不了，可以忽略
            return new StringBuilder(ApiManager.getLiveBucket())
                     .append("/")
                     .append(key)
@@ -90,8 +99,13 @@ public class MaterialUtil {
             UIUtils.toImageViewActivity(activity, urls,bean.name);
 
         } else if (Collaboration.isVideo(mimeType)) {
+            String url = "";
 
-            String url = new StringBuilder(ApiManager.getFileBucket()).append("/").append(bean.key).toString();
+            if(Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName)){//录播课转码的
+                url=new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).append(".mp4").toString();
+            }else {
+                url=new StringBuilder(ApiManager.getFileBucket()).append("/").append(bean.key).toString();
+            }
 
             Uri data = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW);

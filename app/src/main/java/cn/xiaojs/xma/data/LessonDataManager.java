@@ -627,7 +627,19 @@ public class LessonDataManager {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassStudents(classes, joinCriteria, pagination);
         return lessonRequest;
+    }
 
+    /**
+     * Returns the students taught by an classes .
+     */
+    public static ServiceRequest getClassStudents(Context context,
+                                                  String classes,
+                                                  JoinCriteria criteria,
+                                                  Pagination pagination,
+                                                  APIServiceCallback<CollectionPage<StudentEnroll>> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassStudents(classes, criteria, pagination);
+        return lessonRequest;
     }
 
     /**

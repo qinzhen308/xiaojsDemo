@@ -11,5 +11,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class RLStudentsCriteria {
 
     public String enrolled;
+    public String title;
 
 }

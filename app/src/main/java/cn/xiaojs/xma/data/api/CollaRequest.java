@@ -58,9 +58,15 @@ public class CollaRequest extends ServiceRequest{
         enqueueRequest(APIType.GET_LIBRARY_OVERVIEW, call);
     }
 
-    public void getDocuments(String id, String subtype) {
-        Call<UserDoc> call = getService().getDocuments(id,subtype);
+    public void getDocuments(String id, String subtype,int page,int perPage) {
+        Call<UserDoc> call = getService().getDocuments(id,subtype,"createdOn","1",page,perPage);
         enqueueRequest(APIType.GET_DOCUMENTS, call);
+    }
+
+
+    public void convertDocument(String id) {
+        Call<ResponseBody> call = getService().convertDocument(id);
+        enqueueRequest(APIType.CONVERT_DOCUMENT, call);
     }
 
     public void deleteDocument(String documentId, boolean shared) {

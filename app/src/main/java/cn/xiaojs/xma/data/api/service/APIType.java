@@ -207,5 +207,6 @@ public class APIType {
     public static final int REMOVE_RECORDED_COURSE_STUDENT= 132;
     public static final int REMOVE_RECORDED_COURSE= 133;
     public static final int CANCEL_RECORDED_COURSE_ON_SHELVES= 134;
+    public static final int CONVERT_DOCUMENT= 135;
 
 }
