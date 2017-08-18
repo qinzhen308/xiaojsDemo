@@ -404,10 +404,11 @@ public class ImportVideoActivity extends BaseActivity {
         @Override
         protected void doRequest() {
 
+            String category=Collaboration.TypeName.MEDIA_IN_LIBRARY+","+Collaboration.TypeName.RECORDING_IN_LIBRARY;
             CollaManager.getDocuments(mContext,
                     AccountDataManager.getAccountID(mContext),
                     Collaboration.SubType.PERSON,
-                    Collaboration.TypeName.MEDIA_IN_LIBRARY,
+                    category,
                     mPagination,
                     new APIServiceCallback<UserDoc>() {
                 @Override

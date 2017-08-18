@@ -293,7 +293,7 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
         }
 
        if (status == DownloadInfo.DownloadStatus.STATUS_RUNNING) {
-            DownloadManager.cancelDownload(mContext, id, localPath);
+//            DownloadManager.cancelDownload(mContext, id, localPath);
         } else if (canResumeStatus(status)) {
             DownloadManager.resumeDownload(mContext, id);
         }

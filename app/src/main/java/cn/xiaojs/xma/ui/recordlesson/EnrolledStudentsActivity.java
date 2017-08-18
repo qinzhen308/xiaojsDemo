@@ -2,6 +2,8 @@ package cn.xiaojs.xma.ui.recordlesson;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -13,9 +15,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
@@ -26,6 +33,7 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.recordedlesson.RLStudentsCriteria;
+import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.xclass.SearchLessonActivity;
@@ -66,6 +74,9 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
     String keyword;
 
+    private final static int BEGIN_SEARCH=0xff;
+
+
 
     @Override
     protected void addViewContent() {
@@ -89,12 +100,13 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String query = searchInput.getText().toString();
+                /*String query = searchInput.getText().toString();
                 if (query.length() > 0) {
                     searchOk.setVisibility(View.VISIBLE);
                 } else {
                     searchOk.setVisibility(View.GONE);
-                }
+                }*/
+                toSearch();
             }
         });
         searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -258,6 +270,34 @@ public class EnrolledStudentsActivity extends BaseActivity {
         intent.putExtra(EXTRA_IM_OWNER, imOwner);
         context.startActivity(intent);
     }
+
+    private void toSearch() {
+        handler.removeMessages(BEGIN_SEARCH);
+        String query = searchInput.getText().toString();
+        Message msg=new Message();
+        msg.what=BEGIN_SEARCH;
+        msg.obj=query;
+        handler.sendMessageDelayed(msg,300);
+    }
+
+
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if(XiaojsConfig.DEBUG){
+                Logger.d("qz--handleMessage---what="+msg.what+"---key="+msg.obj);
+            }
+            if(msg.what==BEGIN_SEARCH){
+                String key=msg.obj.toString();
+                if(TextUtils.isEmpty(key)){
+                    keyword=null;
+                }else {
+                    keyword=key;
+                }
+                adapter.refresh();
+            }
+        }
+    };
 
 
 }
