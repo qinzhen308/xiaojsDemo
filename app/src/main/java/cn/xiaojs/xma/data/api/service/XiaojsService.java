@@ -816,6 +816,7 @@ public interface XiaojsService {
     @GET("/v1/collaboration/documents")
     Call<UserDoc> getDocuments(@Query("id") String id,
                                @Query("subtype") String subtype,
+                               @Query("category") String category,
                                @Query("sortBy") String sortBy,
                                @Query("reverse") String reverse,
                                @Query("page") int page,

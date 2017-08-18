@@ -237,7 +237,7 @@ public class ClassMaterialActivity extends BaseActivity {
                 mUploadingWrapper.setVisibility(View.GONE);
 
                 if (mAdapter != null) {
-                    mAdapter.doRequest();
+                    mAdapter.refresh();
                 }
 
                 ToastUtil.showToast(getApplicationContext(), R.string.up_load_success);
@@ -412,7 +412,7 @@ public class ClassMaterialActivity extends BaseActivity {
                 cancelProgress();
 
                 if (mAdapter != null) {
-                    mAdapter.doRequest();
+                    mAdapter.refresh();
                 }
 
                 Toast.makeText(ClassMaterialActivity.this, R.string.delete_success,Toast.LENGTH_SHORT).show();

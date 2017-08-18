@@ -21,6 +21,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Security;
 public class ThirdLoginUtil {
 
     public final static String KEY_UID="uid";
+    public final static String KEY_UNIONID="unionid";//qq和微信多应用打通，必须用unionid
     public final static String KEY_NAME="name";
     public final static String KEY_GENDER="gender";
     public final static String KEY_ICONURL="iconurl";
@@ -36,7 +37,8 @@ public class ThirdLoginUtil {
 
 
     public static String getUId(Map<String,String> data, SHARE_MEDIA type){
-        return data.get(KEY_UID);
+//        return data.get(KEY_UID);
+        return data.get(KEY_UNIONID);
     }
     public static String getName(Map<String,String> data, SHARE_MEDIA type){
         return data.get(KEY_NAME);

@@ -407,16 +407,14 @@ public class ImportVideoActivity extends BaseActivity {
             CollaManager.getDocuments(mContext,
                     AccountDataManager.getAccountID(mContext),
                     Collaboration.SubType.PERSON,
+                    Collaboration.TypeName.MEDIA_IN_LIBRARY,
                     mPagination,
                     new APIServiceCallback<UserDoc>() {
                 @Override
                 public void onSuccess(UserDoc object) {
 
-                    if (getList() !=null) {
-                        getList().clear();
-                    }
                     if (object != null && object.documents!=null && object.documents.size() > 0) {
-                        filterVideo(object.documents);
+//                        filterVideo(object.documents);
                         DataAdapter.this.onSuccess(object.documents);
                     } else {
                         DataAdapter.this.onSuccess(null);

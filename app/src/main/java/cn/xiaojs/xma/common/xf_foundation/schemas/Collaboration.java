@@ -90,6 +90,10 @@ public class Collaboration {
         public static final String RECORDING_IN_LIBRARY = "RecordingInLibrary";
         public static final String PICTURE_IN_LIBRARY = "PictureInLibrary";
         public static final String MEDIA_IN_LIBRARY = "MediaInLibrary";
+        public static final String ALL = "All";
+        public static final String PPT_IN_LIBRARY = "PPTInLibrary";
+        public static final String PDF_IN_LIBRARY = "PDFInLibrary";
+        public static final String WORD_IN_LIBRARY = "WordInLibrary";
     }
 
 

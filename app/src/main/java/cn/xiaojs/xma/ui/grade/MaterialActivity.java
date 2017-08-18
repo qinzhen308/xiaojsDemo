@@ -472,7 +472,7 @@ public class MaterialActivity extends FragmentActivity {
                 chooseUri = null;
 
                 if (materialFragment != null && materialFragment.mAdapter !=null) {
-                    materialFragment.mAdapter.doRequest();
+                    materialFragment.mAdapter.refresh();
                 }
 
                 ToastUtil.showToast(MaterialActivity.this, R.string.up_load_success);

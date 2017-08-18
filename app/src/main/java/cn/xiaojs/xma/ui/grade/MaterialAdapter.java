@@ -291,7 +291,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 
     @Override
     protected void doRequest() {
-        CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.PERSON, mPagination, new APIServiceCallback<UserDoc>() {
+        CollaManager.getDocuments(mContext, mOwner, Collaboration.SubType.PERSON,Collaboration.TypeName.ALL, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
 

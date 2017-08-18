@@ -139,6 +139,7 @@ public class CollaManager {
     public static void getDocuments(Context context,
                                     String id,
                                     String subtype,
+                                    String category,
                                     Pagination pagination,
                                     APIServiceCallback<UserDoc> callback) {
 
@@ -151,7 +152,7 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
+        request.getDocuments(id, subtype,category,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
     }
 
     /**
@@ -181,7 +182,7 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
+        request.getDocuments(id, subtype,Collaboration.TypeName.ALL,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
     }
 
     /**

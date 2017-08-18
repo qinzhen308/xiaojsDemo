@@ -434,7 +434,7 @@ public class MaterialFragment extends BaseFragment {
                 cancelProgress();
 
                 if (mAdapter != null) {
-                    mAdapter.doRequest();
+                    mAdapter.refresh();
                 }
 
                 Toast.makeText(mContext, R.string.delete_success, Toast.LENGTH_SHORT).show();
