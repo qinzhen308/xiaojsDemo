@@ -69,12 +69,8 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
     @BindView(R.id.doc_list)
     PullToRefreshSwipeListView mDocListView;
 
-    private DocumentAdapter mMyDocumentAdapter;
-    private DocumentAdapter mClassDocumentAdapter;
-    private DocumentAdapter mCurrDocumentAdapter;
-    private DocumentAdapter mFilterDocumentAdapter;
 
-    private List<LibDoc> mTempData;
+    private DocumentAdapter mAdapter;
 
     private String mLessonId;
     private String mMyAccountId;
@@ -135,7 +131,6 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
 
         mClassroomType = ClassroomEngine.getEngine().getClassroomType();
 
-        mTempData = new ArrayList<LibDoc>();
         Bundle data = null;
         if ((data = getArguments()) != null) {
             //mLessonId = getArguments().getString(Constants.KEY_LESSON_ID);
@@ -149,12 +144,9 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
 
         }
         mMyAccountId = AccountDataManager.getAccountID(mContext);
-
-        mMyDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mMyAccountId, Collaboration.SubType.PERSON);
-        mCurrDocumentAdapter = mMyDocumentAdapter;
-        mDocListView.setAdapter(mMyDocumentAdapter);
+        mAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mMyAccountId);
+        mDocListView.setAdapter(mAdapter);
         mDocListView.setOnItemClickListener(this);
-
         mAllTv.setSelected(true);
     }
 
@@ -163,15 +155,8 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         mClassDocumentTv.setBackgroundResource(R.drawable.cr_class_doc_stroke_bg);
         mMyDocumentTv.setTextColor(getResources().getColor(R.color.font_white));
         mClassDocumentTv.setTextColor(getResources().getColor(R.color.font_blue));
-
-        if (mMyDocumentAdapter == null) {
-            mMyDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mMyAccountId, Collaboration.SubType.PERSON);
-            mDocListView.setAdapter(mMyDocumentAdapter);
-            mDocListView.setOnItemClickListener(this);
-        } else {
-            mCurrDocumentAdapter = mMyDocumentAdapter;
-            switchDocumentType(mAllTv);
-        }
+        mAdapter.setType(Collaboration.SubType.PERSON);
+        switchDocumentType(mAllTv);
     }
 
     private void switchClassDocument() {
@@ -179,20 +164,12 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
         mClassDocumentTv.setBackgroundResource(R.drawable.cr_class_doc_bg);
         mMyDocumentTv.setTextColor(getResources().getColor(R.color.font_blue));
         mClassDocumentTv.setTextColor(getResources().getColor(R.color.font_white));
-
-        if (mClassDocumentAdapter == null) {
-            if (mClassroomType == ClassroomType.ClassLesson) {
-                mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.PRIVATE_CLASS);
-            } else {
-                mClassDocumentAdapter = new DocumentAdapter(mContext, mDocListView, mLessonId, mLessonId, Collaboration.SubType.STANDA_LONE_LESSON);
-            }
-
-            mDocListView.setAdapter(mClassDocumentAdapter);
-            mDocListView.setOnItemClickListener(this);
+        if (mClassroomType == ClassroomType.ClassLesson) {
+            mAdapter.setType(Collaboration.SubType.PRIVATE_CLASS);
         } else {
-            mCurrDocumentAdapter = mClassDocumentAdapter;
-            switchDocumentType(mAllTv);
+            mAdapter.setType(Collaboration.SubType.STANDA_LONE_LESSON);
         }
+        switchDocumentType(mAllTv);
     }
 
     /**
@@ -209,71 +186,34 @@ public class DocumentFragment extends BaseFragment implements AdapterView.OnItem
 
         v.setSelected(true);
 
-        mTempData.clear();
-        List<LibDoc> allData = mCurrDocumentAdapter.getData();
-        String type = mCurrDocumentAdapter.getType();
-        String lessonId = mCurrDocumentAdapter.getLessonId();
-        String ownerId = mCurrDocumentAdapter.getOwnerId();
-        String filterMineType = "";
+        String category = "";
 
         switch (v.getId()) {
             case R.id.all:
-                filterMineType = "";
+                category = Collaboration.TypeName.ALL;
                 break;
             case R.id.ppt:
-                filterMineType = Collaboration.OfficeMimeTypes.PPT;
+                category = Collaboration.TypeName.PPT_IN_LIBRARY;
                 break;
             case R.id.word:
+                category = Collaboration.TypeName.WORD_IN_LIBRARY;
                 break;
             case R.id.pdf:
+                category = Collaboration.TypeName.PDF_IN_LIBRARY;
                 break;
             case R.id.image:
-                filterMineType = Collaboration.PictureMimeTypes.ALL;
+                category = Collaboration.TypeName.PICTURE_IN_LIBRARY;
                 break;
             case R.id.hand_writing:
                 break;
             case R.id.video:
-                filterMineType = Collaboration.VideoMimeTypes.ALL;
+                category = Collaboration.TypeName.MEDIA_IN_LIBRARY+","+Collaboration.TypeName.RECORDING_IN_LIBRARY;
                 break;
             default:
                 break;
         }
-
-        if (TextUtils.isEmpty(filterMineType)) {
-            //all
-            if (allData != null) {
-                mTempData.addAll(allData);
-            } else {
-                mTempData = null;
-            }
-        } else if (allData != null) {
-            //filter all kind of types
-            for (LibDoc doc : allData) {
-                if (Collaboration.OfficeMimeTypes.PPT.equals(filterMineType)) {
-                    if (doc.mimeType.startsWith(Collaboration.OfficeMimeTypes.PPT)
-                            || doc.mimeType.startsWith(Collaboration.OfficeMimeTypes.PPTX)) {
-                        mTempData.add(doc);
-                    }
-                } else if (Collaboration.VideoMimeTypes.ALL.equals(filterMineType)) {
-                    if (Collaboration.isStreaming(doc.mimeType) || doc.mimeType.startsWith(filterMineType)) {
-                        mTempData.add(doc);
-                    }
-                } else {
-                    if (doc.mimeType.startsWith(filterMineType)) {
-                        mTempData.add(doc);
-                    }
-                }
-            }
-        }
-
-        if (mFilterDocumentAdapter == null) {
-            mFilterDocumentAdapter = new DocumentAdapter(mContext, mDocListView, lessonId, ownerId, type, mTempData);
-        } else {
-            mFilterDocumentAdapter.setData(mTempData, type);
-        }
-
-        mDocListView.setAdapter(mFilterDocumentAdapter);
-        mDocListView.setOnItemClickListener(this);
+        mAdapter.setCategory(category);
+        mAdapter.refresh();
     }
 
     @Override

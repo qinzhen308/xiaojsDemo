@@ -164,6 +164,7 @@ public class CollaManager {
      * @param limit
      * @param callback
      */
+    @Deprecated
     public static void getDocuments(Context context,
                                     String id,
                                     String subtype,

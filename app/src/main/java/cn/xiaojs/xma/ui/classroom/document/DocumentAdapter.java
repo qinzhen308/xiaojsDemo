@@ -54,6 +54,7 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
     private int mDefaultBgColor;
     private int mHoverBgColor;
     private String mOwnerId;
+    private String mCategory;
     private String mType;
     private int drawSize = 30;
 
@@ -62,20 +63,14 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
     private String mLessonId;
     private ClassroomType mClassroomType;
 
-    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView,String lessonId, String ownerId, String type, List<LibDoc> data) {
-        super(context, listView, data);
-        mLessonId = lessonId;
-        mOwnerId = ownerId;
-        mType = type;
-        init();
-    }
 
-    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView, String lessonId, String ownerId, String type) {
+
+    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView,String lessonId,String ownerId) {
         super(context, listView, true);
-
         mLessonId = lessonId;
         mOwnerId = ownerId;
-        mType = type;
+        mType = Collaboration.SubType.PERSON;
+        mCategory=Collaboration.TypeName.ALL;
         init();
     }
 
@@ -91,6 +86,16 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
     public String getLessonId() {
         return mLessonId;
     }
+
+    public void setType(String subType){
+        mType=subType;
+    }
+
+    public void setCategory(String category){
+        mCategory=category;
+    }
+
+
 
     public String getOwnerId() {
         return mOwnerId;
@@ -208,7 +213,13 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
     @Override
     protected void doRequest() {
-        CollaManager.getDocuments(mContext, mOwnerId, mType, mPagination, LIMIT_DATA, new APIServiceCallback<UserDoc>() {
+        String id="";
+        if(Collaboration.SubType.PRIVATE_CLASS.equals(mType)||Collaboration.SubType.STANDA_LONE_LESSON.equals(mType)){
+            id=mLessonId;
+        }else {
+            id=mOwnerId;
+        }
+        CollaManager.getDocuments(mContext, id, mType,mCategory, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
                 if (object != null && object.documents.size() > 0) {
