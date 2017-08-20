@@ -1,7 +1,9 @@
 package cn.xiaojs.xma.ui.lesson;
 
 import android.content.Intent;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -80,6 +82,30 @@ public class EnrollRegisterActivity extends BaseActivity {
 
         //init data
         loadData();
+        mPhoneNumEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String phone = mPhoneNumEdt.getText().toString();
+                if (phone.length() != 11) {
+                    return;
+                }
+                if (!VerifyUtils.checkPhoneNum(phone)) {
+                    return;
+                }
+
+                autoSearchUser(phone);
+            }
+        });
     }
 
     @OnClick({R.id.left_view, R.id.submit_btn})
@@ -102,7 +128,7 @@ public class EnrollRegisterActivity extends BaseActivity {
             mLessonId = intent.getStringExtra(KEY_LESSON);
             String coverKey = intent.getStringExtra(KEY_COVER);
             String title = intent.getStringExtra(KEY_TITLE);
-            int duration = intent.getIntExtra(KEY_DURATION, 0);
+            long duration = intent.getLongExtra(KEY_DURATION, 0);
             long startTime = intent.getLongExtra(KEY_START_TIME, 0);
 
             //set cover
@@ -251,5 +277,44 @@ public class EnrollRegisterActivity extends BaseActivity {
                 Toast.makeText(EnrollRegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void autoSearchUser(String phone) {
+
+        showProgress(true);
+        //因为已经注册的用户，需要上传用户的ID，所以在这里要检测是否注册，如果注册了就获取ID.
+
+        SearchManager.search(this,
+                Social.SearchType.PERSON,
+                phone,
+                1,
+                10,
+                new APIServiceCallback<CollectionResult<SearchResultV2>>() {
+                    @Override
+                    public void onSuccess(CollectionResult<SearchResultV2> result) {
+                        cancelProgress();
+                        boolean hasExist = false;
+                        SearchResultV2 searchResultV2 = null;
+
+                        if (result != null && result.results != null && !result.results.isEmpty()) {
+                            searchResultV2 = result.results.get(0);
+                            hasExist = true;
+                        }
+
+                        if (searchResultV2 == null || TextUtils.isEmpty(searchResultV2.id)) {
+                            hasExist = false;
+                        }
+                        if (hasExist) {
+                            mNameEdt.setText(searchResultV2.basic!=null?searchResultV2.basic.getName():"");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                    }
+                });
+
+
     }
 }
