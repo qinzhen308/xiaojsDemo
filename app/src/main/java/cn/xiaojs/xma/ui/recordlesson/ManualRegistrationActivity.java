@@ -213,6 +213,7 @@ public class ManualRegistrationActivity extends BaseActivity {
 
                 cancelProgress();
                 Toast.makeText(ManualRegistrationActivity.this, R.string.add_success, Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
             }
 

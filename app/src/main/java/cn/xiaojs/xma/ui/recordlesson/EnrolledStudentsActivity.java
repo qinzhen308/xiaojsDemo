@@ -76,6 +76,8 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
     private final static int BEGIN_SEARCH=0xff;
 
+    public final static int REQUEST_CODE_ADD_STUDENTS=10010;
+
 
 
     @Override
@@ -130,7 +132,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_image2:    //报名注册
-                startActivity(new Intent(this, ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID, lessonId));
+                startActivityForResult(new Intent(this, ManualRegistrationActivity.class).putExtra(CourseConstant.KEY_LESSON_ID, lessonId),REQUEST_CODE_ADD_STUDENTS);
                 break;
             case R.id.lay_veri:        //报名确认
                 EnrollConfirmActivity.invoke(this, lessonId);
@@ -299,5 +301,14 @@ public class EnrolledStudentsActivity extends BaseActivity {
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            if(requestCode==REQUEST_CODE_ADD_STUDENTS){
+                adapter.refresh();
+            }
+        }
 
+    }
 }
