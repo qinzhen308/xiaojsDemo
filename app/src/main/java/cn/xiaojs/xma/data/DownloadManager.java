@@ -4,6 +4,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import cn.xiaojs.xma.data.download.DownloadProvider;
 import cn.xiaojs.xma.data.download.UpdateService;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.model.material.DownloadCount;
+import cn.xiaojs.xma.util.StringUtil;
 
 /**
  * Created by maxiaobao on 2017/2/10.
@@ -65,6 +67,16 @@ public class DownloadManager {
                 Logger.d("the filename or key or url is null,so cancel download...");
             }
             return false;
+        }
+
+        //重命名相同文件
+        int count =getSameFileCount(context,url);
+        if(count>0){
+            if(fileName.contains(".")){
+                fileName=fileName.substring(0,fileName.lastIndexOf("."))+"("+System.currentTimeMillis()+")"+fileName.substring(fileName.lastIndexOf("."),fileName.length());
+            }else {
+                fileName+="("+System.currentTimeMillis()+")";
+            }
         }
 
         ContentValues values = new ContentValues();
@@ -203,4 +215,24 @@ public class DownloadManager {
 
         context.getContentResolver().delete(DownloadProvider.DOWNLOAD_URI, where, null);
     }
+
+
+    public static boolean isExist(Context context,String url){
+        int count=getSameFileCount(context,url);
+        Logger.d("------qz------重复下载："+count);
+        return count>0;
+    }
+
+    public static int getSameFileCount(Context context,String url){
+        String where = new StringBuilder(DBTables.TDownload.URL)
+                .append("=")
+                .append("?")
+                .toString();
+        Cursor cursor=context.getContentResolver().query(DownloadProvider.DOWNLOAD_URI,null , where, new String[]{url},null);
+        if(XiaojsConfig.DEBUG){
+            Logger.d("------qz------重名文件数量："+cursor.getCount());
+        }
+        return cursor.getCount();
+    }
+
 }
