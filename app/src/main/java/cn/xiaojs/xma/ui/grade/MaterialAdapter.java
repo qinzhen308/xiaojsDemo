@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.AbsSwipeAdapter;
@@ -112,9 +114,11 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             holder.desc.setText("转码失败");
         }else {
             holder.desc.setTextColor(mContext.getResources().getColor(R.color.common_text));
+            Date date=bean.uploadedOn!=null?bean.uploadedOn:bean.createdOn;
             StringBuilder sb = new StringBuilder();
-
-            sb.append(TimeUtil.format(bean.uploadedOn!=null?bean.uploadedOn:bean.createdOn, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+            if(date!=null){
+                sb.append(TimeUtil.format(date, TimeUtil.TIME_YYYY_MM_DD_HH_MM));
+            }
 
             if (bean.used <= 0) {
                 sb.append("");
