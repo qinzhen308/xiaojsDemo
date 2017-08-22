@@ -64,7 +64,7 @@ public class LessonOperateBoard<T> extends Dialog implements DialogInterface.OnC
             R.drawable.ic_op_share2,R.drawable.ic_op_database1,
             R.drawable.ic_op_agree_invite,R.drawable.ic_op_disagree_invite,
             R.drawable.ic_op_reject_reason,R.drawable.ic_op_recreate_lesson,
-            R.drawable.ic_op_apply_students_list
+            R.drawable.ic_op_apply_students_list,R.drawable.ic_op_abort_recorded_lesson
     };
 
     //请一定按顺序，并且和LOpModel里面的OP_..顺序保持一致
@@ -82,7 +82,7 @@ public class LessonOperateBoard<T> extends Dialog implements DialogInterface.OnC
             R.string.lesson_op_share,R.string.lesson_op_database,
             R.string.lesson_op_agree_invite,R.string.lesson_op_disagree_invite,
             R.string.lesson_op_reject_reason,R.string.lesson_op_recreate_lesson,
-            R.string.lesson_op_apply_students_list
+            R.string.lesson_op_apply_students_list,R.string.lesson_op_abort_recorded_lesson
     };
 
     private OnDialogCloseListener mOnDismissListener;

@@ -260,6 +260,7 @@ public class HomeRecordedLessonView extends RelativeLayout implements IViewModel
 //            list.add(new RLOpModel(AbsOpModel.OP_APPLY));
 //            list.add(new RLOpModel(AbsOpModel.OP_SIGNUP));
             list.add(new RLOpModel(AbsOpModel.OP_SHARE));
+            list.add(new RLOpModel(AbsOpModel.OP_ABORT_RECORDED_LESSON));
 
         } else if (Ctl.RecordedCourseState.REJECTED.equals(mData.state)) {//审核失败
 

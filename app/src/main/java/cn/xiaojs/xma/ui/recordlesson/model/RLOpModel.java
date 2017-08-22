@@ -7,8 +7,6 @@ import android.widget.Toast;
 
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.common.xf_foundation.LessonState;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
@@ -95,6 +93,9 @@ public class RLOpModel extends AbsOpModel<RLesson> {
                 break;
             case OP_APPLY_STUDENTS_LIST:
                 enterApplyStudents(context,data);
+                break;
+            case OP_ABORT_RECORDED_LESSON:
+                abortRecordedLesson(context,data,position);
                 break;
 
         }
@@ -459,6 +460,43 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     //删除
     private void deleteNativeLesson(final Activity context,final int pos) {
         ((IUpdateMethod)context).updateItem(pos,null,"remove");
+    }
+
+
+    //退课
+    private void abortRecordedLesson(final Activity context,final RLesson bean,final int pos){
+        final CommonDialog dialog = new CommonDialog(context);
+        dialog.setDesc(R.string.abort_recorded_lesson_tip);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+
+                dialog.dismiss();
+
+                showProgress(context);
+                LessonDataManager.abortRecordedCourse(context, bean.id, new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        cancelProgress(context);
+                        ToastUtil.showToast(context, R.string.logout_tips);
+                        removeJustItem(context, pos, bean);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress(context);
+                        ToastUtil.showToast(context, errorMessage);
+                    }
+                });
+            }
+        });
+        dialog.show();
     }
 
 }
