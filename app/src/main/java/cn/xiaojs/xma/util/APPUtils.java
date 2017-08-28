@@ -25,6 +25,7 @@ package cn.xiaojs.xma.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -44,7 +45,6 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
 import cn.xiaojs.xma.ui.account.LoginActivity;
-
 /**
  * Created by maxiaobao on 2016/10/26.
  */
@@ -267,6 +267,25 @@ public class APPUtils {
         }
 
         context.startActivity(intent);
+    }
+
+    public static String getValueInApplicationInfo(Context context,String name) {
+        String value = null;
+        try {
+            ApplicationInfo appInfo = context.getPackageManager()
+                    .getApplicationInfo(context.getPackageName(),
+                            PackageManager.GET_META_DATA);
+
+            value = appInfo.metaData.getString(name);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return value;
+
     }
 
 

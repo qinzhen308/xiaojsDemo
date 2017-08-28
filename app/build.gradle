@@ -19,6 +19,9 @@ android {
         versionCode 61
         versionName "2.1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [bugly_appid: rootProject.ext.bugly_appid,
+                                bugly_appkey: rootProject.ext.bugly_appkey]
     }
     signingConfigs {
         release_config {

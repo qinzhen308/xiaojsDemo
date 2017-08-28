@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -61,12 +62,12 @@ public class XiaojsApplication extends Application {
         }
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppChannel(XiaojsConfig.CHANNEL);
-        if (APPUtils.isProEvn()) {
-            CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID, false, strategy);
-        }else {
-            CrashReport.initCrashReport(getApplicationContext(), XiaojsConfig.BUGLY_APP_ID_DEV, false, strategy);
-        }
 
+        String buglyAppId = APPUtils.getValueInApplicationInfo(this, "BUGLY_APPID");
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("bugly appid is: %s", buglyAppId);
+        }
+        CrashReport.initCrashReport(getApplicationContext(), buglyAppId, false, strategy);
 
         //umeng release版本时，才加入统计
         MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(getApplicationContext(),
