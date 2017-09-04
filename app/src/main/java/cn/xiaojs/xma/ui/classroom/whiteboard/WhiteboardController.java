@@ -323,6 +323,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     private void updateGeometryStyle(int geometryId) {
         switch (geometryId) {
             case GeometryShape.ARROW:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
                 break;
 
             case GeometryShape.DOUBLE_ARROW:
@@ -342,6 +343,36 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
             case GeometryShape.TRIANGLE:
                 mGeoShape.setImageResource(R.drawable.wb_triangle_selector);
+                break;
+            case GeometryShape.SQUARE:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.ARC_LINE:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.TRAPEZOID:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.PENTAGON:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.HEXAGON:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.SINE_CURVE:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.DASH_LINE:
+                mGeoShape.setImageResource(R.drawable.wb_beelinel_selector);
+                break;
+            case GeometryShape.COORDINATE:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.RECTANGULAR_COORDINATE:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                break;
+            case GeometryShape.XYZ_COORDINATE:
+                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
                 break;
 
         }

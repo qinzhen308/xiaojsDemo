@@ -69,11 +69,21 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.ViewGestureListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.ArcLine;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Arrow;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Beeline;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Coordinate;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Dashline;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HandWriting;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Hexagon;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Oval;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Pentagon;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.RectangularCoordinate;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SineCurve;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Square;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Trapezoid;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
 
@@ -1001,6 +1011,39 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         break;
                     case GeometryShape.TRIANGLE:
                         mDoodle = new Triangle(this, paint);
+                        break;
+                    case GeometryShape.SQUARE:
+                        mDoodle = new Square(this, paint);
+                        break;
+                    case GeometryShape.ARC_LINE:
+                        mDoodle = new ArcLine(this, paint);
+                        break;
+                    case GeometryShape.TRAPEZOID:
+                        mDoodle = new Trapezoid(this, paint);
+                        break;
+                    case GeometryShape.PENTAGON:
+                        mDoodle = new Pentagon(this, paint);
+                        break;
+                    case GeometryShape.HEXAGON:
+                        mDoodle = new Hexagon(this, paint);
+                        break;
+                    case GeometryShape.SINE_CURVE:
+                        mDoodle = new SineCurve(this, paint);
+                        break;
+                    case GeometryShape.ARROW:
+                        mDoodle = new Arrow(this, paint);
+                        break;
+                    case GeometryShape.DASH_LINE:
+                        mDoodle = new Dashline(this, paint);
+                        break;
+                    case GeometryShape.COORDINATE:
+                        mDoodle = new Coordinate(this, paint);
+                        break;
+                    case GeometryShape.RECTANGULAR_COORDINATE:
+                        mDoodle = new RectangularCoordinate(this, paint);
+                        break;
+                    case GeometryShape.XYZ_COORDINATE:
+//                        mDoodle = new Arrow(this, paint);
                         break;
                 }
 

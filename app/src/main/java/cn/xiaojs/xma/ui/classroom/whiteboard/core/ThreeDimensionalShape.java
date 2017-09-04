@@ -17,9 +17,10 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
 public abstract class ThreeDimensionalShape extends GeometryShape {
-    protected ThreeDimensionalShape(Whiteboard whiteboard, int style, int geometryId) {
-        super(whiteboard, style, geometryId);
+    protected ThreeDimensionalShape(Whiteboard whiteboard, int geometryId) {
+        super(whiteboard, STYLE_GEOMETRY, geometryId);
     }
 
     protected abstract double computeVolume();
+
 }

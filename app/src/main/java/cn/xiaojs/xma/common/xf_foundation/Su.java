@@ -95,6 +95,9 @@ public class Su {
         public static final int MEDIA_DEVICES_REFRESHED = 670020;
         public static final int REFRESH_STREAMING_QUALITY = 670025;
 
+        public static final int SYNC_BOARD = 680001; // Live/Classroom events
+        public static final int IMAGE_DRAW = 680003;
+
     }
 
 

@@ -1,20 +1,8 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard.shape;
-/*  =======================================================================================
- *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
- *
- *  This computer program source code file is protected by copyright law and international
- *  treaties. Unauthorized distribution of source code files, programs, or portion of the
- *  package, may result in severe civil and criminal penalties, and will be prosecuted to
- *  the maximum extent under the law.
- *
- *  ---------------------------------------------------------------------------------------
- * Author:huangyong
- * Date:2016/10/18
- * Desc:
- *
- * ======================================================================================== */
+
 
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -26,27 +14,33 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.LineSegment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 
-public class Beeline extends TwoDimensionalShape {
+/**
+ * created by Paul Z on 2017/8/30
+ * 虚线
+ */
+public class Dashline extends TwoDimensionalShape {
     /**
      * 如果直线的第一个控制点坐标值比第二个控制点坐标值小，则表示该直线是正向
      */
+    private static final int FORWARD = 0;
+    private static final int REVERSE = 1;
 
     private LineSegment mLineSegment;
-    private int mOrientation = 0;
+    private int mOrientation = FORWARD;
 
-    private Beeline(Whiteboard whiteboard) {
-        super(whiteboard, GeometryShape.BEELINE);
+    private Dashline(Whiteboard whiteboard) {
+        super(whiteboard, GeometryShape.DASH_LINE);
     }
 
-    public Beeline(Whiteboard whiteboard, Paint paint) {
+    public Dashline(Whiteboard whiteboard, Paint paint) {
         this(whiteboard);
         setPaint(paint);
-
         init();
     }
 
-    public Beeline(Whiteboard whiteboard, Paint paint, String doodleId) {
+    public Dashline(Whiteboard whiteboard, Paint paint, String doodleId) {
         this(whiteboard);
         setDoodleId(doodleId);
         setPaint(paint);
@@ -56,6 +50,7 @@ public class Beeline extends TwoDimensionalShape {
 
     private void init() {
         mLineSegment = new LineSegment();
+        getPaint().setPathEffect(new DashPathEffect(new float[]{WhiteboardConfigs.BORDER_DASH_WIDTH, WhiteboardConfigs.BORDER_DASH_WIDTH}, 0));
     }
 
     @Override
@@ -78,19 +73,7 @@ public class Beeline extends TwoDimensionalShape {
             float x2 = Math.max(mPoints.get(0).x, mPoints.get(1).x);
             float y1 = Math.min(mPoints.get(0).y, mPoints.get(1).y);
             float y2 = Math.max(mPoints.get(0).y, mPoints.get(1).y);
-            if( mPoints.get(1).x >=  mPoints.get(0).x){
-                if(mPoints.get(1).y >=  mPoints.get(0).y){
-                    mOrientation=1;
-                }else {
-                    mOrientation=4;
-                }
-            }else {
-                if(mPoints.get(1).y >=  mPoints.get(0).y){
-                    mOrientation=2;
-                }else {
-                    mOrientation=3;
-                }
-            }
+            mOrientation = mPoints.get(1).x >=  mPoints.get(0).x && mPoints.get(1).y >=  mPoints.get(0).y ? FORWARD : REVERSE;
             mDoodleRect.set(x1, y1, x2, y2);
         }
     }
@@ -117,6 +100,7 @@ public class Beeline extends TwoDimensionalShape {
 
         mDrawingPath.moveTo(mPoints.get(0).x, mPoints.get(0).y);
         mDrawingPath.lineTo(mPoints.get(1).x, mPoints.get(1).y);
+
         mDrawingMatrix.postConcat(mTransformMatrix);
         mDrawingPath.transform(mDrawingMatrix);
 
@@ -153,26 +137,17 @@ public class Beeline extends TwoDimensionalShape {
     @Override
     public void updatePointByRect() {
         ////update control points
-        switch (mOrientation){
-            case 1://屏幕坐标系一象限，即右下
-                mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
-                mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
-                break;
-            case 2://屏幕坐标系二象限，即左下
-                mPoints.get(0).set(mDoodleRect.right, mDoodleRect.top);
-                mPoints.get(1).set(mDoodleRect.left, mDoodleRect.bottom);
-                break;
-            case 3://屏幕坐标系三象限，即左上
-                mPoints.get(0).set(mDoodleRect.right, mDoodleRect.bottom);
-                mPoints.get(1).set(mDoodleRect.left, mDoodleRect.top);
-                break;
-            case 4://屏幕坐标系四象限，即右上
-                mPoints.get(0).set(mDoodleRect.left, mDoodleRect.bottom);
-                mPoints.get(1).set(mDoodleRect.right, mDoodleRect.top);
-                break;
+        if (isForward()) {
+            mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
+            mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
+        } else {
+            mPoints.get(0).set(mDoodleRect.right, mDoodleRect.top);
+            mPoints.get(1).set(mDoodleRect.left, mDoodleRect.bottom);
         }
     }
 
-
+    public boolean isForward() {
+        return mOrientation == FORWARD;
+    }
 
 }

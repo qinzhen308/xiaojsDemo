@@ -21,6 +21,9 @@ import android.graphics.RectF;
 import android.graphics.Region;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Beeline;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Coordinate;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Dashline;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.RectangularCoordinate;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
 
 import java.util.ArrayList;
@@ -383,6 +386,17 @@ public class IntersectionHelper {
         if (d instanceof Beeline) {
             LineSegment beeLineSeg = ((Beeline) d).getLineSegment();
             intersect = Utils.intersect(transRect, beeLineSeg);
+        }else if (d instanceof Dashline) {
+            LineSegment beeLineSeg = ((Dashline) d).getLineSegment();
+            intersect = Utils.intersect(transRect, beeLineSeg);
+        }else if (d instanceof Coordinate) {
+            LineSegment xLineSeg = ((Coordinate) d).getXLineSegment();
+            LineSegment yLineSeg = ((Coordinate) d).getYLineSegment();
+            intersect = Utils.intersect(transRect, xLineSeg)||Utils.intersect(transRect, yLineSeg);
+        } else if (d instanceof RectangularCoordinate) {
+            LineSegment xLineSeg = ((RectangularCoordinate) d).getXLineSegment();
+            LineSegment yLineSeg = ((RectangularCoordinate) d).getYLineSegment();
+            intersect = Utils.intersect(transRect, xLineSeg)||Utils.intersect(transRect, yLineSeg);
         } else if (d instanceof Triangle) {
             LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
             for (LineSegment lineSegment : beeLineSeg) {
@@ -426,7 +440,30 @@ public class IntersectionHelper {
                         intersectCount++;
                         d.setState(Doodle.STATE_EDIT);
                     }
-                } else if (d instanceof Triangle) {
+                }else if (d instanceof Dashline) {
+                    LineSegment beeLineSeg = ((Dashline) d).getLineSegment();
+                    intersect = Utils.intersect(transRect, beeLineSeg);
+                    if (intersect) {
+                        intersectCount++;
+                        d.setState(Doodle.STATE_EDIT);
+                    }
+                } else if (d instanceof Coordinate) {
+                    LineSegment xLineSeg = ((Coordinate) d).getXLineSegment();
+                    LineSegment yLineSeg = ((Coordinate) d).getYLineSegment();
+                    intersect = Utils.intersect(transRect, xLineSeg)||Utils.intersect(transRect, yLineSeg);
+                    if (intersect) {
+                        intersectCount++;
+                        d.setState(Doodle.STATE_EDIT);
+                    }
+                } else if (d instanceof RectangularCoordinate) {
+                    LineSegment xLineSeg = ((RectangularCoordinate) d).getXLineSegment();
+                    LineSegment yLineSeg = ((RectangularCoordinate) d).getYLineSegment();
+                    intersect = Utils.intersect(transRect, xLineSeg)||Utils.intersect(transRect, yLineSeg);
+                    if (intersect) {
+                        intersectCount++;
+                        d.setState(Doodle.STATE_EDIT);
+                    }
+                }else if (d instanceof Triangle) {
                     LineSegment[] beeLineSeg = ((Triangle) d).getLineSegments();
                     for (LineSegment lineSegment : beeLineSeg) {
                         intersect = Utils.intersect(transRect, lineSegment);

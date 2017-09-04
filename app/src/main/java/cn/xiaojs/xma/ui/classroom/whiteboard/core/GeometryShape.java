@@ -26,6 +26,17 @@ public abstract class GeometryShape extends Doodle {
     public final static int TRIANGLE = 3;
     public final static int ARROW = 4;
     public final static int DOUBLE_ARROW = 5;
+    public final static int ARC_LINE = 6;
+    public final static int TRAPEZOID = 7;
+    public final static int PENTAGON = 8;
+    public final static int HEXAGON = 9;
+    public final static int SINE_CURVE = 10;
+    public final static int COORDINATE = 11;
+    public final static int RECTANGULAR_COORDINATE = 12;
+    public final static int DASH_LINE = 13;
+
+    public final static int SQUARE = 100;
+    public final static int XYZ_COORDINATE = 101;
 
     protected int mGeometryId;
 

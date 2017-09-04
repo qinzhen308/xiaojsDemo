@@ -51,6 +51,17 @@ public class GeometryPop extends SettingsPopupWindow implements View.OnClickList
                 (ImageView) mPopWindowLayout.findViewById(R.id.shape_oval),
                 (ImageView) mPopWindowLayout.findViewById(R.id.shape_beeline),
                 (ImageView) mPopWindowLayout.findViewById(R.id.shape_triangle),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_square),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_arc_line),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_trapezoid),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_pentagon),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_hexagon),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_sine_curve),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_arrow),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_dash_line),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_coordinate),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_rectangular_coordinate),
+                (ImageView) mPopWindowLayout.findViewById(R.id.shape_xyz_coordinate),
         };
         for (int i = 0; i < mShapeView.length; i++) {
             mShapeView[i].setOnClickListener(this);
@@ -103,6 +114,40 @@ public class GeometryPop extends SettingsPopupWindow implements View.OnClickList
             case R.id.shape_triangle:
                 mSelectedShape = GeometryShape.TRIANGLE;
                 break;
+            case R.id.shape_square:
+                mSelectedShape = GeometryShape.SQUARE;
+                break;
+            case R.id.shape_arc_line:
+                mSelectedShape = GeometryShape.ARC_LINE;
+                break;
+            case R.id.shape_trapezoid:
+                mSelectedShape = GeometryShape.TRAPEZOID;
+                break;
+            case R.id.shape_pentagon:
+                mSelectedShape = GeometryShape.PENTAGON;
+                break;
+            case R.id.shape_hexagon:
+                mSelectedShape = GeometryShape.HEXAGON;
+                break;
+            case R.id.shape_sine_curve:
+                mSelectedShape = GeometryShape.SINE_CURVE;
+                break;
+            case R.id.shape_arrow:
+                mSelectedShape = GeometryShape.ARROW;
+                break;
+            case R.id.shape_dash_line:
+                mSelectedShape = GeometryShape.DASH_LINE;
+                break;
+            case R.id.shape_coordinate:
+                mSelectedShape = GeometryShape.COORDINATE;
+                break;
+            case R.id.shape_rectangular_coordinate:
+                mSelectedShape = GeometryShape.RECTANGULAR_COORDINATE;
+                break;
+            case R.id.shape_xyz_coordinate:
+                mSelectedShape = GeometryShape.XYZ_COORDINATE;
+                break;
+
         }
 
         if (mListener != null) {
