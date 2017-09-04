@@ -15,6 +15,9 @@ import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMedia;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.Feedback;
+import cn.xiaojs.xma.model.socket.room.RequestShareboard;
+import cn.xiaojs.xma.model.socket.room.ShareboardAck;
+import cn.xiaojs.xma.model.socket.room.StopShareboard;
 import cn.xiaojs.xma.model.socket.room.StreamMode;
 import cn.xiaojs.xma.model.socket.room.StreamQuality;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
@@ -208,11 +211,47 @@ public class EventManager {
     }
 
 
+    public static void shareboardFeedback(Context context,boolean accept,
+                                          String board, EventCallback<EventResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        ShareboardAck ack = new ShareboardAck();
+        ack.accepted = accept;
+        ack.board = board;
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.SHARE_BOARD_ACK);
+        socketRequest.emit(event, ack, EventResponse.class);
+    }
 
 
+    public static void requestShareboard(Context context, RequestShareboard shareboard,
+                                         EventCallback<EventResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.SHARE_BOARD);
+        socketRequest.emit(event, shareboard, EventResponse.class);
+    }
 
 
+    public static void stopShareboard(Context context, String board,
+                                      String[] targetIds, EventCallback<EventResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
 
+        StopShareboard stopShareboard = new StopShareboard();
+        stopShareboard.board = board;
+        stopShareboard.to = targetIds;
 
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.STOP_SHARE_BOARD);
+        socketRequest.emit(event, stopShareboard, EventResponse.class);
+    }
 
 }

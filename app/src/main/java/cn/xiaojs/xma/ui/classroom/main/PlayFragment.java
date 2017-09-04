@@ -44,6 +44,7 @@ import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
+import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
@@ -655,6 +656,10 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         startPublishFragment(openMediaNotify.publishUrl, mCtlSession.playUrl, CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER);
     }
 
+    @Override
+    protected void onAcceptShareBoard(ShareboardReceive shareboard) {
+        //TODO 同意白板协作后的后续操作
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -802,6 +807,12 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                 mTimeProgressHelper.reloadLessonDuration();
 
             }
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD).equals(event)) {
+            showShareBoardDlg(classroomEngine.getInitSharedboardData());
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD).equals(event)) {
+            //TODO 收到停止白板协作的事件后的操作
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK).equals(event)) {
+            //TODO 收到白板协作的反馈事件（对方同意／拒绝）
         }
 
     }

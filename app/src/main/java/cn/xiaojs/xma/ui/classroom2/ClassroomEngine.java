@@ -28,6 +28,8 @@ import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.RequestShareboard;
+import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
@@ -152,6 +154,9 @@ public class ClassroomEngine {
         return stateMachine.getTitle();
     }
 
+    public ShareboardReceive getInitSharedboardData() {
+        return stateMachine.getSession().shareboardData;
+    }
 
     public boolean canForceIndividual() {
         return stateMachine.canForceIndividual();
@@ -263,6 +268,49 @@ public class ClassroomEngine {
 
         if (roomRequest != null) {
             roomRequest.mediaFeedback(mediaStatus, callback);
+        }
+    }
+
+
+    /**
+     * 发送是否接受白板协作反馈
+     * @param accept
+     * @param board
+     * @param callback
+     */
+    public void shareboardAck(boolean accept, String board,
+                              final EventCallback<EventResponse> callback) {
+
+
+        if (roomRequest != null) {
+            roomRequest.shareboradFeedback(accept, board, callback);
+        }
+    }
+
+
+    /**
+     * 请求白板协作
+     * @param shareboard
+     * @param callback
+     */
+    public void requestShareboard(RequestShareboard shareboard,
+                                         EventCallback<EventResponse> callback) {
+        if (roomRequest != null) {
+            roomRequest.requestShareboard(context,shareboard, callback);
+        }
+    }
+
+
+    /**
+     * 停止白板协作
+     * @param board
+     * @param to
+     * @param callback
+     */
+    public void stopShareboard(String board, String[] to, final EventCallback<EventResponse> callback) {
+
+        if (roomRequest != null) {
+            roomRequest.stopShareboard(board, to, callback);
         }
     }
 

@@ -3,7 +3,6 @@ package cn.xiaojs.xma.ui.classroom2;
 import android.content.Context;
 import android.os.Message;
 
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +31,23 @@ import cn.xiaojs.xma.model.socket.room.ModeSwitchReceive;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.PlaybackSavedReceive;
 import cn.xiaojs.xma.model.socket.room.ReclaimedReceive;
+import cn.xiaojs.xma.model.socket.room.ShareboardAckReceive;
+import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
+import cn.xiaojs.xma.model.socket.room.StopShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.StreamExpirationReceive;
 import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
+import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/7/4.
@@ -488,6 +496,43 @@ public abstract class ClassroomStateMachine extends StateMachine {
     }
 
 
+    protected void shareboardReceived(String event, ShareboardReceive message) {
+        getSession().shareboardData = message;
+        notifyEvent(event, message);
+    }
+
+    protected void shareboardAckReceived(String event, ShareboardAckReceive message) {
+
+        notifyEvent(event, message);
+    }
+
+    protected void stopShareboardReceived(String event, StopShareboardReceive message) {
+        notifyEvent(event, message);
+    }
+
+
+    protected void syncBoardReceived(final String event, SyncBoardReceive message) {
+
+        Observable.just(message)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<SyncBoardReceive>() {
+                    @Override
+                    public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
+                        SyncboardHelper.filterBoardData(syncBoardReceive);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<SyncBoardReceive>() {
+                    @Override
+                    public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
+                        notifyEvent(event, syncBoardReceive);
+                    }
+                });
+
+    }
+
+
 
 
 
@@ -556,6 +601,16 @@ public abstract class ClassroomStateMachine extends StateMachine {
                 Su.EventCategory.LIVE, Su.EventType.SYNC_STATE, SyncStateReceive.class,syncStateCallback);
         EventManager.onEvent(context,
                 Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class,talkCallback);
+
+        EventManager.onEvent(context,
+                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD, ShareboardReceive.class,sbrCallback);
+        EventManager.onEvent(context,
+                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK, ShareboardAckReceive.class,sbarCallback);
+        EventManager.onEvent(context,
+                Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD, StopShareboardReceive.class,ssbrCallback);
+        EventManager.onEvent(context,
+                Su.EventCategory.LIVE, Su.EventType.SYNC_BOARD, SyncBoardReceive.class,syncbrCallback);
+
 //        EventManager.onEvent(context,
 //                Su.EventCategory.LIVE, Su.EventType.PLAYBACK_SAVED, PlaybackSavedReceive.class,playbackSavedCallback);
 //        EventManager.onEvent(context,
@@ -573,6 +628,37 @@ public abstract class ClassroomStateMachine extends StateMachine {
     //
     // 定义接受事件回调
     //
+
+    private MessageCallback<SyncBoardReceive> syncbrCallback = new MessageCallback<SyncBoardReceive>() {
+        @Override
+        public void onMessage(String event, SyncBoardReceive message) {
+            syncBoardReceived(event, message);
+        }
+    };
+
+    private MessageCallback<StopShareboardReceive> ssbrCallback = new MessageCallback<StopShareboardReceive>() {
+        @Override
+        public void onMessage(String event, StopShareboardReceive message) {
+            stopShareboardReceived(event, message);
+        }
+    };
+
+
+    private MessageCallback<ShareboardAckReceive> sbarCallback = new MessageCallback<ShareboardAckReceive>() {
+        @Override
+        public void onMessage(String event, ShareboardAckReceive message) {
+            shareboardAckReceived(event, message);
+        }
+    };
+
+    private MessageCallback<ShareboardReceive> sbrCallback = new MessageCallback<ShareboardReceive>() {
+        @Override
+        public void onMessage(String event, ShareboardReceive message) {
+            shareboardReceived(event, message);
+        }
+    };
+
+
     private MessageCallback<CloseMediaReceive> cmCallback = new MessageCallback<CloseMediaReceive>() {
         @Override
         public void onMessage(String event, CloseMediaReceive message) {
