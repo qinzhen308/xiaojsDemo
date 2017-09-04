@@ -302,4 +302,11 @@
         <!--<item name="android:windowCloseOnTouchOutside">false</item>-->
         <!--<item name="android:windowAnimationStyle">@style/quick</item>-->
     </style>
+
+
+    <style name="PlayerVideoTheme" parent="android:Theme.Light.NoTitleBar.Fullscreen">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+
 </resources>

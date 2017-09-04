@@ -16,6 +16,7 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.RequestShareboard;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
@@ -230,6 +231,64 @@ public class RoomRequest {
                 callback.onFailure(errorCode, errorMessage);
             }
         });
+    }
+
+
+    protected void shareboradFeedback(boolean accepted,String board,
+                                 final EventCallback<EventResponse> callback) {
+
+        if (!accepted) {
+            stateMachine.getSession().shareboardData = null;
+        }
+
+        EventManager.shareboardFeedback(context, accepted, board, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                callback.onFailed(errorCode, errorMessage);
+            }
+        });
+
+    }
+
+    public static void requestShareboard(Context context, RequestShareboard shareboard,
+                                         final EventCallback<EventResponse> callback) {
+        EventManager.requestShareboard(context, shareboard, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                callback.onFailed(errorCode, errorMessage);
+            }
+        });
+    }
+
+
+    protected void stopShareboard(String board, String[] targetIds,
+                                      final EventCallback<EventResponse> callback) {
+
+
+        EventManager.stopShareboard(context, board, targetIds, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+                callback.onFailed(errorCode, errorMessage);
+            }
+        });
+
+
     }
 
 

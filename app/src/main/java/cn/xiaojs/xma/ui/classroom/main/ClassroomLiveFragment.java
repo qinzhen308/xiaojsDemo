@@ -48,6 +48,7 @@ import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
+import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
 import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
@@ -338,6 +339,36 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         mAgreeOpenCamera.show();
     }
 
+    public void showShareBoardDlg(final ShareboardReceive receive) {
+        final CommonDialog queryDlg = new CommonDialog(mContext);
+        queryDlg.setTitle(R.string.open_camera_tips);
+        queryDlg.setDesc(R.string.agree_open_camera);
+        queryDlg.setCancelable(false);
+
+        queryDlg.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                queryDlg.dismiss();
+                //FIXME  TODO 要传入正确的boardID
+                sendShareboardAck(true, "");
+                onAcceptShareBoard(receive);
+
+            }
+        });
+
+        queryDlg.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                queryDlg.dismiss();
+                //mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
+                //FIXME  TODO 要传入正确的boardID
+                sendShareboardAck(false, "");
+            }
+        });
+
+        queryDlg.show();
+    }
+
 
     /**
      * 申请打开学生视频
@@ -416,6 +447,26 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 if (XiaojsConfig.DEBUG) {
                     Toast.makeText(mContext, "拒绝失败", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+    }
+
+    protected void sendShareboardAck(final boolean accept, String board) {
+
+        classroomEngine.shareboardAck(accept, board, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+
+                if (XiaojsConfig.DEBUG && !accept) {
+                    Toast.makeText(mContext, "你已拒绝", Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
             }
         });
     }
@@ -581,6 +632,10 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
     }
 
     protected void onPeerPublishCallback(OpenMediaReceive openMediaNotify) {
+
+    }
+
+    protected void onAcceptShareBoard(ShareboardReceive shareboard) {
 
     }
 

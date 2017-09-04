@@ -40,6 +40,14 @@ public class Su {
 
         public static final int PRIMARY_SET = 610003;
 
+        public static final int SHARE_BOARD = 610020;                             // Live/Classroom events (StartMedia, StartStreaming)
+        public static final int STOP_SHARE_BOARD = 610021;                         // Live/Classroom events (StopStreaming, StopMedia)
+        public static final int SHARE_BOARD_ACK = 610022;                          // Live/Classroom events
+        public static final int SHARE_BOARD_ABORTED = 610023;                      // Live events
+        public static final int SYNC_SHARED_BOARD = 610024;                        // Live events
+
+
+
         //教室交流
         public static final int TALK = 690001;
         //绘制
