@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Message;
 
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,7 +175,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     /**
      * 恢复上课
-     * @param response
      */
     public void resumeLesson(ClassResponse response) {
         Message message = new Message();
@@ -224,10 +225,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
 //    public void stopPlayLiveShow() {
 //        sendMessage(CTLConstant.BaseChannel.STOP_PLAY_LIVE_SHOW);
 //    }
-
     protected void switchStateWhenReceiveSyncState(String state) {
 
-        if(Live.LiveSessionState.FINISHED.equals(state)) {
+        if (Live.LiveSessionState.FINISHED.equals(state)) {
             getSession().ctlSession.publishUrl = null;
             getSession().ctlSession.playUrl = null;
             getSession().ctlSession.streamType = Live.StreamType.NONE;
@@ -252,19 +252,16 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     /**
      * 是否能进行强制推流
-     * @return
      */
     protected abstract boolean canForceIndividual();
 
     /**
      * 是否可以直播秀状态
-     * @return
      */
     protected abstract boolean canIndividualByState();
 
     /**
      * 是否有教学能力
-     * @return
      */
     protected abstract boolean hasTeachingAbility();
 
@@ -273,12 +270,12 @@ public abstract class ClassroomStateMachine extends StateMachine {
     // 事件响应方法
     //
 
-    protected void closeMedia(String event, CloseMediaReceive message){
+    protected void closeMedia(String event, CloseMediaReceive message) {
         getSession().one2one = false;
-        notifyEvent(event,message);
+        notifyEvent(event, message);
     }
 
-    protected void streamStopped(String event, StreamStopReceive message){
+    protected void streamStopped(String event, StreamStopReceive message) {
         if (message == null) {
             return;
         }
@@ -299,7 +296,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void streamStartted(String event, StreamStartReceive message){
+    protected void streamStartted(String event, StreamStartReceive message) {
         if (message == null) {
             return;
         }
@@ -323,7 +320,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void streamReclaimed(String event, ReclaimedReceive message){
+    protected void streamReclaimed(String event, ReclaimedReceive message) {
         if (message == null) {
             return;
         }
@@ -339,7 +336,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void streamExpiration(String event, StreamExpirationReceive message){
+    protected void streamExpiration(String event, StreamExpirationReceive message) {
         if (message == null) {
             return;
         }
@@ -351,14 +348,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
             stopLiveShow();
-        }else if (message.streamType == Live.StreamType.LIVE) {
+        } else if (message.streamType == Live.StreamType.LIVE) {
             finishLesson(null);
         }
 
         notifyEvent(event, message);
     }
 
-    protected void modeSwitch(String event, ModeSwitchReceive message){
+    protected void modeSwitch(String event, ModeSwitchReceive message) {
         if (message == null) {
             return;
         }
@@ -369,7 +366,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void closePreviewByClassover(String event, ClosePreviewReceive message){
+    protected void closePreviewByClassover(String event, ClosePreviewReceive message) {
         if (message == null) {
             return;
         }
@@ -377,28 +374,28 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void remindFinal(String event, EmptyReceive message){
+    protected void remindFinal(String event, EmptyReceive message) {
         if (message == null) {
             return;
         }
         notifyEvent(event, message);
     }
 
-    protected void join(String event, Attendee message){
+    protected void join(String event, Attendee message) {
         if (message == null) {
             return;
         }
         notifyEvent(event, message);
     }
 
-    protected void leave(String event, Attendee message){
+    protected void leave(String event, Attendee message) {
         if (message == null) {
             return;
         }
         notifyEvent(event, message);
     }
 
-    protected void constraintKickout(String event, ConstraintKickoutReceive message){
+    protected void constraintKickout(String event, ConstraintKickoutReceive message) {
         if (message == null) {
             return;
         }
@@ -408,7 +405,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void logoutKickout(String event, LogoutKickoutReceive message){
+    protected void logoutKickout(String event, LogoutKickoutReceive message) {
         if (message == null) {
             return;
         }
@@ -417,7 +414,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void mediaAborted(String event, MediaAbortedReceive message){
+    protected void mediaAborted(String event, MediaAbortedReceive message) {
         if (message == null) {
             return;
         }
@@ -425,7 +422,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void mediaDeviceRefresh(String event, MediaDeviceRefreshReceive message){
+    protected void mediaDeviceRefresh(String event, MediaDeviceRefreshReceive message) {
         if (message == null) {
             return;
         }
@@ -433,7 +430,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void mediaFeedback(String event, MediaFeedbackReceive message){
+    protected void mediaFeedback(String event, MediaFeedbackReceive message) {
         if (message == null) {
             return;
         }
@@ -441,7 +438,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         if (message.status == Live.MediaStatus.READY) {
             getSession().ctlSession.playUrl = message.playUrl;
             getSession().one2one = true;
-        }else {
+        } else {
             getSession().ctlSession.playUrl = null;
             getSession().one2one = false;
         }
@@ -449,7 +446,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void openMeidaRecevied(String event, OpenMediaReceive message){
+    protected void openMeidaRecevied(String event, OpenMediaReceive message) {
         if (message == null) {
             return;
         }
@@ -459,14 +456,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void streamQualityChangedRecevied(String event, StreamQualityChangedReceive message){
+    protected void streamQualityChangedRecevied(String event, StreamQualityChangedReceive message) {
         if (message == null) {
             return;
         }
         notifyEvent(event, message);
     }
 
-    protected void syncClassStateRecevied(String event, SyncClassStateReceive message){
+    protected void syncClassStateRecevied(String event, SyncClassStateReceive message) {
         if (message == null) {
             return;
         }
@@ -476,7 +473,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void syncStateRecevied(String event, SyncStateReceive message){
+    protected void syncStateRecevied(String event, SyncStateReceive message) {
         if (message == null) {
             return;
         }
@@ -486,7 +483,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
         notifyEvent(event, message);
     }
 
-    protected void talkRecevied(String event, Talk message){
+    protected void talkRecevied(String event, Talk message) {
         if (message == null) {
             return;
         }
@@ -513,27 +510,36 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     protected void syncBoardReceived(final String event, SyncBoardReceive message) {
 
-        Observable.just(message)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .doOnNext(new Consumer<SyncBoardReceive>() {
-                    @Override
-                    public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
-                        SyncboardHelper.filterBoardData(syncBoardReceive);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<SyncBoardReceive>() {
-                    @Override
-                    public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
-                        notifyEvent(event, syncBoardReceive);
-                    }
-                });
+
+        if (message != null) {
+            if (message.stg != Live.SyncStage.FINISH){
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the stg is %d and not equal FINISH, so do not notify event", message.stg);
+                }
+                return;
+            }
+
+            Observable.just(message)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .doOnNext(new Consumer<SyncBoardReceive>() {
+                        @Override
+                        public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
+                            SyncboardHelper.filterBoardData(syncBoardReceive);
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<SyncBoardReceive>() {
+                        @Override
+                        public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
+                            notifyEvent(event, syncBoardReceive);
+                        }
+                    });
+
+        }
 
     }
-
-
-
 
 
 //    protected void playbackSavedRecevied(String event, PlaybackSavedReceive message){
@@ -543,9 +549,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
 //        //TODO
 //        notifyEvent(event, message);
 //    }
-
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -562,54 +565,54 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     private void monitEvent() {
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA, CloseMediaReceive.class,cmCallback);
+                Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA, CloseMediaReceive.class, cmCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED, StreamStopReceive.class,stpCallback);
+                Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED, StreamStopReceive.class, stpCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED, StreamStartReceive.class,staCallback);
+                Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED, StreamStartReceive.class, staCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED, ReclaimedReceive.class,reCallback);
+                Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED, ReclaimedReceive.class, reCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class,ssbeCallback);
+                Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class, ssbeCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH, ModeSwitchReceive.class,modeSwitchCallback);
+                Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH, ModeSwitchReceive.class, modeSwitchCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.CLOSE_PREVIEW_BY_CLASS_OVER, ClosePreviewReceive.class,closePreviewCallback);
+                Su.EventCategory.LIVE, Su.EventType.CLOSE_PREVIEW_BY_CLASS_OVER, ClosePreviewReceive.class, closePreviewCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION, EmptyReceive.class,remindFinalCallback);
+                Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION, EmptyReceive.class, remindFinalCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.JOIN, Attendee.class,joinCallback);
+                Su.EventCategory.LIVE, Su.EventType.JOIN, Attendee.class, joinCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.LEAVE, Attendee.class,leaveCallback);
+                Su.EventCategory.LIVE, Su.EventType.LEAVE, Attendee.class, leaveCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.KICK_OUT_BY_CONSTRAINT, ConstraintKickoutReceive.class,cKickoutCallback);
+                Su.EventCategory.LIVE, Su.EventType.KICK_OUT_BY_CONSTRAINT, ConstraintKickoutReceive.class, cKickoutCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.KICK_OUT_BY_LOGOUT, LogoutKickoutReceive.class,lKickoutCallback);
+                Su.EventCategory.LIVE, Su.EventType.KICK_OUT_BY_LOGOUT, LogoutKickoutReceive.class, lKickoutCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED, MediaAbortedReceive.class,mediaAbortedCallback);
+                Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED, MediaAbortedReceive.class, mediaAbortedCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.MEDIA_DEVICES_REFRESHED, MediaDeviceRefreshReceive.class,mediaDeviceRefreshCallback);
+                Su.EventCategory.LIVE, Su.EventType.MEDIA_DEVICES_REFRESHED, MediaDeviceRefreshReceive.class, mediaDeviceRefreshCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK, MediaFeedbackReceive.class,mediaFeedbackCallback);
+                Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK, MediaFeedbackReceive.class, mediaFeedbackCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA, OpenMediaReceive.class,openMediaCallback);
+                Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA, OpenMediaReceive.class, openMediaCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY, StreamQualityChangedReceive.class,streamQualityChangedCallback);
+                Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY, StreamQualityChangedReceive.class, streamQualityChangedCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class,syncClassStateCallback);
+                Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class, syncClassStateCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SYNC_STATE, SyncStateReceive.class,syncStateCallback);
+                Su.EventCategory.LIVE, Su.EventType.SYNC_STATE, SyncStateReceive.class, syncStateCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class,talkCallback);
+                Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class, talkCallback);
 
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD, ShareboardReceive.class,sbrCallback);
+                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD, ShareboardReceive.class, sbrCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK, ShareboardAckReceive.class,sbarCallback);
+                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK, ShareboardAckReceive.class, sbarCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD, StopShareboardReceive.class,ssbrCallback);
+                Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD, StopShareboardReceive.class, ssbrCallback);
         EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SYNC_BOARD, SyncBoardReceive.class,syncbrCallback);
+                Su.EventCategory.LIVE, Su.EventType.SYNC_BOARD, SyncBoardReceive.class, syncbrCallback);
 
 //        EventManager.onEvent(context,
 //                Su.EventCategory.LIVE, Su.EventType.PLAYBACK_SAVED, PlaybackSavedReceive.class,playbackSavedCallback);
@@ -619,7 +622,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
         //X2C_RECEIVE_SYNC_DRAW
         //X2C_RECEIVE_SYNC_NEXT
         //X2C_RECEIVE_TIMELINE_CHANGED_ON_CURRENT
-
 
 
     }
