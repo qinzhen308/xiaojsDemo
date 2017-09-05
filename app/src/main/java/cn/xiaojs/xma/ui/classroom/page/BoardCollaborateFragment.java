@@ -1,9 +1,11 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,7 +84,13 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
         LogUtil.d(firstData.board.drawing.stylus);
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
         mFadeAnimListener = new FadeAnimListener();
-        mBoardController.showWhiteboardLayout(null, mDoodleRatio);
+        mBoardController.showWhiteboardLayout(decodeBg(), mDoodleRatio);
+    }
+
+    private Bitmap decodeBg(){
+        byte[] bytes=Base64.decode(firstData.board.preview.substring(firstData.board.preview.indexOf(",")+1,firstData.board.preview.length()),Base64.DEFAULT);
+        Bitmap bg=BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        return bg;
     }
 
     @OnClick({R.id.back_btn, R.id.select_btn, R.id.handwriting_btn,
