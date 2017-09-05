@@ -88,4 +88,57 @@ public class Live {
         public static final int PREVIEW = 4;
     }
 
+    /**
+     * value of stg
+     */
+    public class SyncStage {
+        public static final int READY =0;// Tool or shape chosen
+        public static final int BEGIN = 1;// Draw or action began
+        public static final int ONGOING = 2;// Drawing in progress or being executed
+        public static final int FINISH = 3;// Finish or stop action
+    }
+
+    /**
+     * @summary Defines the board events which will be synchronized during board collaboration.
+     */
+    public class SyncEvent {
+        public static final int SELECT = 1;
+        public static final int UNDO = 2;
+        public static final int REDO = 3;
+        public static final int CLEAR = 4;
+        public static final int ERASER = 5;
+        public static final int COPY = 6;
+        public static final int CUT = 7;
+        public static final int PASTE = 8;
+        public static final int SHOT = 9;
+        public static final int GROUP = 10;
+        public static final int UNGROUP = 11;
+        public static final int STROKESTYLE = 12;
+        public static final int GRANTCONTROL = 13;
+        public static final int PAGING = 14;
+
+        public static final int PEN = 20;
+        public static final int TEXT = 21;
+        public static final int IMAGE = 22;
+        public static final int HANDSCALE = 23;
+        public static final int GAP = 24;
+
+
+        public static final int DASHEDLINE = 30;
+        public static final int PENTAGON = 31;
+        public static final int HEXAGON = 32;
+        public static final int LINE = 33;
+    }
+
+    /**
+     * @summary Defines the states of a board.
+     * @readonly
+     * @enum {Number}
+     */
+    public class BoardState {
+        public static final String OPEN ="Open";
+        public static final String CLOSED = "Closed";
+    }
+
+
 }

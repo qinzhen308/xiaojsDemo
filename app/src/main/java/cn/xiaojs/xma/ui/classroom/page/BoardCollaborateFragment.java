@@ -4,8 +4,10 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,10 +22,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
+import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.main.AnimData;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -34,6 +38,8 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.CacheUtil;
 
@@ -41,7 +47,7 @@ import cn.xiaojs.xma.util.CacheUtil;
 /**
  * created by Paul Z on 2017/9/4
  */
-public class BoardCollaborateFragment extends BaseFragment {
+public class BoardCollaborateFragment extends BaseFragment implements EventListener {
     public final static int TYPE_SINGLE_IMG = 1;
     public final static int TYPE_MULTI_IMG = 2;
 
@@ -101,10 +107,15 @@ public class BoardCollaborateFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ClassroomEngine.getEngine().addEvenListener(this);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     @Override
     public void onDestroyView() {
+        ClassroomEngine.getEngine().removeEvenListener(this);
         super.onDestroyView();
         mBoardController.hideWhiteboardLayout();
         if (mWhiteBoardPanel != null) {
@@ -159,4 +170,10 @@ public class BoardCollaborateFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void receivedEvent(String event, Object object) {
+        if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_BOARD).equals(event)){
+            LogUtil.d("----qz----"+((SyncBoardReceive)object).data.toString());
+        }
+    }
 }
