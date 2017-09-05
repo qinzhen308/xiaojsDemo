@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 
 /**
  * Created by maxiaobao on 2017/9/1.
@@ -17,7 +18,7 @@ public class SyncBoardReceive {
 
     public int evt;
     public int stg;
-    public Object data;
+    public SyncData data;
     public long time;
     public Ctx ctx;
 }

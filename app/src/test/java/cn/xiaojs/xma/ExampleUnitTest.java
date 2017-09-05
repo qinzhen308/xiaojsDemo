@@ -31,6 +31,7 @@ import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -250,12 +251,15 @@ public class ExampleUnitTest {
 //        }
 //    }
 
-//        String j = "{\"free\":false,\"type\":2,\"charge\":200,\"total\":400,\"discounted\":{\"applied\":[{\"discount\":9.8,\"quota\":2,\"before\":3}],\"subtotal\":392,\"ratio\":9.8,\"saved\":8}}";
+        //String j = "{\"temp\":\"nihao\", \"data\":[{\"x\":1,\"y\":11}, false, {\"x\":2,\"y\":22}]}";
+//String j = "{\"data\":{\"layer\":{\"id\":\"59ae4c9e36102905adca6998\",\"shape\":{\"data\":[{\"x\":-73,\"y\":-49},false,{\"x\":-73,\"y\":49},{\"x\":73,\"y\":49},{\"x\":73,\"y\":-49},{\"x\":-73,\"y\":-49}],\"type\":\"drawContinuous\",\"width\":146,\"height\":98,\"left\":1172,\"top\":1195},\"index\":0,\"visible\":true,\"owner\":\"59377e80b14a46b8911cde59\"}}}";
+//
+//
 //
 //        ObjectMapper mapper = new ObjectMapper();
-//        Price price = mapper.readValue(j, Price.class);
+//        SyncBoardReceive data = mapper.readValue(j, SyncBoardReceive.class);
 //
-//        System.out.println("=============="+price.charge);
+//        System.out.println("=============="+data.data);
 ////        ObjectMapper mapper = new ObjectMapper();
 //        String e = "{\"discount\":9.8,\"quota\":2,\"before\":3}";
 ////        Price.Applied p = mapper.readValue(e, Price.Applied.class);
