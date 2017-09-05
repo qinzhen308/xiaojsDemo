@@ -594,6 +594,8 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
 //                    mTimeProgressHelper.setTimeProgress(sep, syncState.to, false);
 //                    setControllerBtnStyle(syncState.to);
             }
+        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK).equals(event)) {
+            //TODO 收到白板协作的反馈事件（对方同意／拒绝）
         }
     }
 

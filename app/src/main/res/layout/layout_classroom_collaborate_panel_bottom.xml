@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fc_bottom_panel"
+        android:layout_width="match_parent"
+    android:layout_toRightOf="@+id/back_btn"
+    android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/px8">
+
+    <ImageView
+            android:id="@+id/fc_land_portrait_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:src="@drawable/ic_cr_land_portrait"/>
+
+    <cn.xiaojs.xma.ui.widget.MessageImageView
+            android:id="@+id/fc_open_contact_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:src="@drawable/ic_cr_fc_contact"
+            android:layout_toRightOf="@+id/fc_land_portrait_btn"/>
+
+
+
+    <ImageView
+            android:id="@+id/fc_open_talk_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_cr_fc_talk"/>
+
+    <cn.xiaojs.xma.ui.widget.MessageImageView
+            android:id="@+id/fc_hide_show_talk_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px20"
+            android:paddingBottom="@dimen/px20"
+            android:layout_toLeftOf="@id/fc_open_talk_btn"
+            android:src="@drawable/ic_cr_hide_talk"/>
+
+</RelativeLayout>

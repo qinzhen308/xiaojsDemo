@@ -41,7 +41,9 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.ui.classroom.document.DocumentFragment;
+import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom.page.ClassroomScheduleFragment;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
@@ -274,6 +276,18 @@ public class ClassroomController {
     }
 
     /**
+     * 白板协作打开
+     */
+    public void enterBoardCollaborateFragment(ShareboardReceive shareboardReceive) {
+        enterLandFullScreen(isPortrait(),(Activity) mContext);
+        ((ClassroomActivity) mContext).getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.board_collaborate_layout, BoardCollaborateFragment.createInstance(shareboardReceive))
+                .addToBackStack("board_collaborate")
+                .commit();
+    }
+
+    /**
      * 进入图片编辑
      */
     public void enterPhotoDoodle(final String url, final OnPhotoDoodleShareListener listener) {
@@ -462,6 +476,7 @@ public class ClassroomController {
                 .addToBackStack("canlender_layout")
                 .commit();
     }
+
 
     /**
      * 进入横屏状态下的全屏

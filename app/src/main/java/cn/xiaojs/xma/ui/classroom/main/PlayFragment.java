@@ -60,9 +60,11 @@ import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.ClassStateMachine;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.ClassroomType;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
+import cn.xiaojs.xma.ui.classroom2.RoomRequest;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -659,6 +661,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     @Override
     protected void onAcceptShareBoard(ShareboardReceive shareboard) {
         //TODO 同意白板协作后的后续操作
+
+        ClassroomController.getInstance(mContext).enterBoardCollaborateFragment(shareboard);
     }
 
     @Override
@@ -811,8 +815,6 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
             showShareBoardDlg(classroomEngine.getInitSharedboardData());
         } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD).equals(event)) {
             //TODO 收到停止白板协作的事件后的操作
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK).equals(event)) {
-            //TODO 收到白板协作的反馈事件（对方同意／拒绝）
         }
 
     }
