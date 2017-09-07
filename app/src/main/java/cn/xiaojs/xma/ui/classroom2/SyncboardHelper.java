@@ -7,9 +7,11 @@ import android.graphics.RectF;
 import com.facebook.stetho.common.LogUtil;
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
@@ -40,14 +42,17 @@ public class SyncboardHelper {
         if(syncBoard.ctx==null){
             syncBoard.ctx=ctx;
         }
-        if(syncBoard.data==null){
+        if(ArrayUtil.isEmpty(syncBoard.data)){
             return;
         }
-        if(syncBoard.data.layer!=null){
-            matrixLayerToUnit(syncBoard.data.layer);
+        if(syncBoard.evt== Live.SyncEvent.CLEAR||syncBoard.evt== Live.SyncEvent.ERASER){
+            return;
         }
-        if(!ArrayUtil.isEmpty(syncBoard.data.changedLayers)){
-            for(SyncLayer layer:syncBoard.data.changedLayers){
+        if(syncBoard.data.get(0).layer!=null){
+            matrixLayerToUnit(syncBoard.data.get(0).layer);
+        }
+        if(!ArrayUtil.isEmpty(syncBoard.data.get(0).changedLayers)){
+            for(SyncLayer layer:syncBoard.data.get(0).changedLayers){
                 matrixLayerToUnit(layer);
             }
         }

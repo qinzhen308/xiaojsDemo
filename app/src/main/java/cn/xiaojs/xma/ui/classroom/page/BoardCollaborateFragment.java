@@ -186,6 +186,8 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
 //            LogUtil.d("----qz----"+((SyncBoardReceive)object).data.layer.id);
 //            LogUtil.d("data="+((SyncBoardReceive)object).data.layer.shape.data+"----qz---end----");
             mBoardController.onReceive((SyncBoardReceive) object);
+        }else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD).equals(event)){
+            getFragmentManager().popBackStack();
         }
     }
 }

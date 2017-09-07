@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SyncData {
+    public String id;
     public SyncLayer layer;
     public ArrayList<SyncLayer> changedLayers;
 }

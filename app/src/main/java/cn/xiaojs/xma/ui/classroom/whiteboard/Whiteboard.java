@@ -52,6 +52,7 @@ import java.util.List;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.bean.Commend;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
@@ -86,6 +87,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.RectangularCoordinate;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SineCurve;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Square;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SyncRemoteImgLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SyncRemoteLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Trapezoid;
@@ -107,6 +109,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     //picker color by taking whiteboard pixel
     public final static int MODE_COLOR_PICKER = 5;
     public final static int MODE_SYNC_REMOTE = 6;
+    public final static int MODE_SYNC_REMOTE_IMG = 7;
 
     public final static int BG_SCALE_TYPE_FIT_XY = 1;
     public final static int BG_SCALE_TYPE_FIT_CENTER = 2;
@@ -1069,6 +1072,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             case MODE_SYNC_REMOTE:
                 mDoodle=new SyncRemoteLayer(this);
                 break;
+            case MODE_SYNC_REMOTE_IMG:
+                mDoodle=new SyncRemoteImgLayer(this);
+                break;
 
         }
 
@@ -1126,7 +1132,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
-    private void drawAllDoodlesCanvas() {
+    public void drawAllDoodlesCanvas() {
         eraserAllDoodle();
 
         if (mAllDoodles != null) {
@@ -1777,7 +1783,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private synchronized void handleReceiveLayerFinished(SyncBoardReceive data) {
-        if(data.data==null&&data.removeLayers==null){
+        if(ArrayUtil.isEmpty(data.data)){
             return;
         }
         int mode = Whiteboard.MODE_SYNC_REMOTE;
@@ -1786,21 +1792,35 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             //基本操作
             case Live.SyncEvent.SELECT:
                 //包括移动
-                syncChangeLayer(mode,data.ctx,data.data.changedLayers);
+                syncChangeLayer(mode,data.ctx,data.data.get(0).changedLayers);
                 break;
             case Live.SyncEvent.UNDO:
                 break;
             case Live.SyncEvent.REDO:
                 break;
             case Live.SyncEvent.CLEAR:
-                syncRemoveLayer(data.removeLayers);
+                syncRemoveLayer(data.data);
                 break;
             case Live.SyncEvent.ERASER:
-                syncRemoveLayer(data.removeLayers);
+                syncRemoveLayer(data.data);
+                break;
+
+            case Live.SyncEvent.CUT:
+                //正常剪切和添加图片都是这个事件,返回数据不同
+                if(data.data.size()>1||data.data.get(0).layer==null){//大于1，一定是剪切;等于1但layer字段是空，也是剪切
+                    syncRemoveLayer(data.data);
+                }else{//添加图片
+                    mode=Whiteboard.MODE_SYNC_REMOTE_IMG;
+                    syncCreateLayer(mode,data.ctx,data.data.get(0).layer);
+                }
+
+                break;
+            case Live.SyncEvent.PASTE:
+
                 break;
             //图形同步
             case Live.SyncEvent.PEN:
-                syncCreateLayer(mode,data.ctx,data.data.layer);
+                syncCreateLayer(mode,data.ctx,data.data.get(0).layer);
                 break;
             case Live.SyncEvent.TEXT:
                 break;
@@ -1813,7 +1833,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             default:
                 //目前大于30的为图形
                 if(event>=Live.SyncEvent.DASHEDLINE){
-                    syncCreateLayer(mode,data.ctx,data.data.layer);
+                    syncCreateLayer(mode,data.ctx,data.data.get(0).layer);
                 }
                 break;
 
@@ -1832,6 +1852,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         d.setPaint(paint);
         d.setState(Doodle.STATE_EDIT);
         d.setControlPoints(layer.shape.data);
+        if(mode==MODE_SYNC_REMOTE_IMG){
+            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info[0]);
+        }
         drawToDoodleCanvas();
         if (d != null) {
             d.setState(Doodle.STATE_IDLE);
@@ -1850,8 +1873,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
-    private synchronized void syncRemoveLayer(List<SyncLayer> layers){
-        for(SyncLayer layer:layers){
+    private synchronized void syncRemoveLayer(List<SyncData> layers){
+        for(SyncData layer:layers){
             Doodle d = findDoodleById(layer.id);
             if (d != null) {
                 d.setVisibility(View.GONE);
