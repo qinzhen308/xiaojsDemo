@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard.shape;
 
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -21,10 +22,10 @@ import cn.xiaojs.xma.util.ArrayUtil;
 public class SyncRemoteLayer extends Doodle {
 
 
-
     private PointF mHorizontalVector = new PointF();
     private PointF mVerticalVector = new PointF();
     private PointF mCurrVector = new PointF();
+
 
     public SyncRemoteLayer(Whiteboard whiteboard) {
         super(whiteboard, -1);

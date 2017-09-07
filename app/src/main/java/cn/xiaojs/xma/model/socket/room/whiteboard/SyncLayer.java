@@ -12,4 +12,5 @@ public class SyncLayer {
     public String id;
     public Shape shape;
 
+    public String[] info;
 }
