@@ -85,6 +85,8 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
         mFadeAnimListener = new FadeAnimListener();
         mBoardController.showWhiteboardLayout(decodeBg(), mDoodleRatio);
+        mBoardController.setCanReceive(true);
+        mBoardController.setCanSend(true);
     }
 
     private Bitmap decodeBg(){
@@ -181,7 +183,9 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
     @Override
     public void receivedEvent(String event, Object object) {
         if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_BOARD).equals(event)){
-            LogUtil.d("----qz----"+((SyncBoardReceive)object).data.toString());
+//            LogUtil.d("----qz----"+((SyncBoardReceive)object).data.layer.id);
+//            LogUtil.d("data="+((SyncBoardReceive)object).data.layer.shape.data+"----qz---end----");
+            mBoardController.onReceive((SyncBoardReceive) object);
         }
     }
 }

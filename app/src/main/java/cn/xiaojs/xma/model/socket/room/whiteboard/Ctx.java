@@ -12,7 +12,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Ctx implements Serializable{
 
-    public String lineWidth;
+    public int lineWidth;
     public String strokeStyle;
     public Viewport viewport;
 

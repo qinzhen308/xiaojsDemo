@@ -11,4 +11,5 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class SyncLayer {
     public String id;
     public Shape shape;
+
 }

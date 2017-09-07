@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.model.socket.room.whiteboard;
 
 import android.graphics.Point;
+import android.graphics.PointF;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -18,12 +19,12 @@ import cn.xiaojs.xma.data.api.serialize.PointDataDeserializer;
 public class Shape {
 
     @JsonDeserialize(using = PointDataDeserializer.class)
-    public ArrayList<Point> data;
+    public ArrayList<PointF> data;
 
     public String type;
-    public int width;
-    public int height;
-    public int left;
-    public int top;
+    public float width;
+    public float height;
+    public float left;
+    public float top;
 
 }

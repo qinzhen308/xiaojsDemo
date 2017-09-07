@@ -1,6 +1,6 @@
 package cn.xiaojs.xma.data.api.serialize;
 
-import android.graphics.Point;
+import android.graphics.PointF;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,12 +19,12 @@ import cn.xiaojs.xma.XiaojsConfig;
  * Created by maxiaobao on 2017/9/5.
  */
 
-public class PointDataDeserializer extends JsonDeserializer<ArrayList<Point>> {
+public class PointDataDeserializer extends JsonDeserializer<ArrayList<PointF>> {
 
     @Override
-    public ArrayList<Point> deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public ArrayList<PointF> deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 
-        ArrayList<Point> points = new ArrayList<>();
+        ArrayList<PointF> points = new ArrayList<>();
         boolean goon = true;
 
         while (goon) {
@@ -34,7 +34,7 @@ public class PointDataDeserializer extends JsonDeserializer<ArrayList<Point>> {
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("-node: start object ");
                     }
-                    Point point = jp.getCodec().readValue(jp, Point.class);
+                    PointF point = jp.getCodec().readValue(jp, PointF.class);
                     points.add(point);
                     break;
                 case JsonTokenId.ID_START_ARRAY:

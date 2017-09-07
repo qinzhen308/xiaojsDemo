@@ -5,6 +5,8 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
@@ -63,6 +65,7 @@ public class SocketListen<T> {
                 if (XiaojsConfig.DEBUG) {
                     String data = newMsg==null? "null" : ServiceRequest.objectToJsonString(newMsg);
                     Logger.d("received event:%s, with data:%s",event,data);
+                    Logger.d("------qz--------received event:%s, with data:%s",event,args[0]);
                 }
 
                 if (handler != null) {

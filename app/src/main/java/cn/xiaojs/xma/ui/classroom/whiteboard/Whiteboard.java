@@ -49,6 +49,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.bean.Commend;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Packer;
@@ -82,13 +86,15 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.RectangularCoordinate;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SineCurve;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Square;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SyncRemoteLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Trapezoid;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener,
-        Receiver<List<CommendLine>>, Sender<String> {
+        Receiver<SyncBoardReceive>, Sender<String> {
     /**
      * blackboard mode
      */
@@ -100,6 +106,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public final static int MODE_TEXT = 4;
     //picker color by taking whiteboard pixel
     public final static int MODE_COLOR_PICKER = 5;
+    public final static int MODE_SYNC_REMOTE = 6;
 
     public final static int BG_SCALE_TYPE_FIT_XY = 1;
     public final static int BG_SCALE_TYPE_FIT_CENTER = 2;
@@ -1059,6 +1066,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             case MODE_COLOR_PICKER:
 
                 break;
+            case MODE_SYNC_REMOTE:
+                mDoodle=new SyncRemoteLayer(this);
+                break;
 
         }
 
@@ -1757,24 +1767,120 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     @Override
-    public void onReceive(List<CommendLine> data) {
-        if (data != null && !data.isEmpty() && (mLayer != null && mLayer.isCanReceive())) {
-            for (CommendLine cmdl : data) {
-                List<Commend> cmdList = cmdl.whiteboardCommends;
-                if (cmdList != null && !cmdList.isEmpty()) {
-                    for (Commend cmd : cmdList) {
-                        Log.i("aaa", ">>>>>>>>>>>>>> receive=" + cmd);
-                        handleReceiveCmd(cmd);
-                    }
-                }
+    public void onReceive(SyncBoardReceive data) {
+        if ( (mLayer != null && mLayer.isCanReceive())&&data != null) {
+            if(data.stg== Live.SyncStage.FINISH){
+                handleReceiveLayerFinished(data);
             }
-
-            //draw
             postInvalidate();
         }
     }
 
-    @Override
+    private synchronized void handleReceiveLayerFinished(SyncBoardReceive data) {
+        if(data.data==null&&data.removeLayers==null){
+            return;
+        }
+        int mode = Whiteboard.MODE_SYNC_REMOTE;
+        int event=data.evt;
+        switch (event){
+            //基本操作
+            case Live.SyncEvent.SELECT:
+                //包括移动
+                syncChangeLayer(mode,data.ctx,data.data.changedLayers);
+                break;
+            case Live.SyncEvent.UNDO:
+                break;
+            case Live.SyncEvent.REDO:
+                break;
+            case Live.SyncEvent.CLEAR:
+                syncRemoveLayer(data.removeLayers);
+                break;
+            case Live.SyncEvent.ERASER:
+                syncRemoveLayer(data.removeLayers);
+                break;
+            //图形同步
+            case Live.SyncEvent.PEN:
+                syncCreateLayer(mode,data.ctx,data.data.layer);
+                break;
+            case Live.SyncEvent.TEXT:
+                break;
+            case Live.SyncEvent.IMAGE:
+                break;
+            case Live.SyncEvent.HANDSCALE:
+                break;
+            case Live.SyncEvent.GAP:
+                break;
+            default:
+                //目前大于30的为图形
+                if(event>=Live.SyncEvent.DASHEDLINE){
+                    syncCreateLayer(mode,data.ctx,data.data.layer);
+                }
+                break;
+
+        }
+    }
+
+    private synchronized void syncCreateLayer(int mode,Ctx ctx,SyncLayer layer){
+        if(layer==null||layer.shape==null)return;
+        Paint paint=null;
+        if(ctx!=null){
+            paint = Utils.createPaint(Color.parseColor(ctx.strokeStyle), ctx.lineWidth, Paint.Style.STROKE);
+        }else {
+            paint = Utils.createPaint(Color.parseColor("black"), 2, Paint.Style.STROKE);
+        }
+        Doodle d = buildDoodle(layer.id, mode);
+        d.setPaint(paint);
+        d.setState(Doodle.STATE_EDIT);
+        d.setControlPoints(layer.shape.data);
+        drawToDoodleCanvas();
+        if (d != null) {
+            d.setState(Doodle.STATE_IDLE);
+        }
+    }
+
+    private synchronized void syncCreateLayer(int mode,Paint paint,SyncLayer layer){
+        if(layer==null||layer.shape==null)return;
+        Doodle d = buildDoodle(layer.id, mode);
+        d.setPaint(paint);
+        d.setState(Doodle.STATE_EDIT);
+        d.setControlPoints(layer.shape.data);
+        drawToDoodleCanvas();
+        if (d != null) {
+            d.setState(Doodle.STATE_IDLE);
+        }
+    }
+
+    private synchronized void syncRemoveLayer(List<SyncLayer> layers){
+        for(SyncLayer layer:layers){
+            Doodle d = findDoodleById(layer.id);
+            if (d != null) {
+                d.setVisibility(View.GONE);
+                mAllDoodles.remove(d);
+            }
+        }
+        drawAllDoodlesCanvas();
+    }
+
+    private synchronized void syncChangeLayer(int mode,Ctx ctx,List<SyncLayer> layers){
+        if(ArrayUtil.isEmpty(layers))return;
+        boolean hasChange=false;
+        for(SyncLayer layer:layers){
+            if(layer==null)continue;
+            Doodle d = findDoodleById(layer.id);
+            if (d != null) {
+                hasChange=true;
+                d.setVisibility(View.GONE);
+                mAllDoodles.remove(d);
+                syncCreateLayer(mode,d.getPaint(),layer);
+            }
+        }
+        if(hasChange){
+            drawAllDoodlesCanvas();
+        }
+    }
+
+
+        @Override
     public void onSend(String cmd) {
         if (!TextUtils.isEmpty(cmd) && (mLayer != null && mLayer.isCanSend())) {
             Log.i("aaa", "************ send=" + cmd);

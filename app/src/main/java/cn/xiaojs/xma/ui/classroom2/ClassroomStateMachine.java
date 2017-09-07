@@ -512,6 +512,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
 
         if (message != null) {
+            if(message.stg==Live.SyncStage.BEGIN){
+                SyncboardHelper.init(message);
+            }
             if (message.stg != Live.SyncStage.FINISH){
 
                 if (XiaojsConfig.DEBUG) {

@@ -227,6 +227,10 @@ public abstract class Doodle implements Transformation {
         addControlPoint(new PointF(x, y));
     }
 
+    public void setControlPoints(ArrayList<PointF> src) {
+        mPoints=src;
+    }
+
     public PointF getFirstPoint() {
         return mPoints.get(0);
     }

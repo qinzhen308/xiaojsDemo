@@ -1,0 +1,202 @@
+[//为了格式化加的标签
+  //==========选择==========
+  {
+    "board": "59af5af914b94394f9791a88",
+    "evt": 1,
+    "stg": 1,
+    "ctx": {
+      "viewport": {
+        "width": 1440,
+        "height": 810
+      }
+    },
+    "data": {
+      "direction": 0
+    },
+    "time": 1504686463708,
+    "from": "59377e80b14a46b8911cde59"
+  },
+
+  //-----finished-----
+  {
+    "board": "59af5af914b94394f9791a88",
+    "evt": 1,
+    "stg": 3,
+    "data": {
+    },
+    "time": 1504686463887,
+    "from": "59377e80b14a46b8911cde59"
+  },
+
+
+  //===========移动=============//
+
+  {
+    "board": "59af5af914b94394f9791a88",
+    "evt": 1,
+    "stg": 3,
+    "data": {
+      "changedLayers": [
+        {
+          "id": "59afbc61361029e542f4c545",
+          "pos1": {
+            "x": -80,
+            "y": -66.5
+          },
+          "pos2": {
+            "x": 80,
+            "y": -66.5
+          },
+          "pos3": {
+            "x": -80,
+            "y": 66.5
+          },
+          "pos4": {
+            "x": 80,
+            "y": 66.5
+          },
+          "selDot1": {
+            "x": -100,
+            "y": -86.5
+          },
+          "selDot2": {
+            "x": 100,
+            "y": -86.5
+          },
+          "selDot3": {
+            "x": -100,
+            "y": 86.5
+          },
+          "selDot4": {
+            "x": 100,
+            "y": 86.5
+          },
+          "rotateDot": {
+            "x": 0,
+            "y": -126.5
+          },
+          "moveDot": {
+            "x": 840,
+            "y": 144.5
+          },
+          "angle": 0,
+          "info": [
+          ],
+          "grouped": false,
+          "groupId": null,
+          "left": 760,
+          "top": 78,
+          "width": 160,
+          "height": 133,
+          "size": {
+            "w": 160,
+            "h": 133
+          },
+          "lineWidth": 2,
+          "lineColor": "black",
+          "position": {
+            "x": 760,
+            "y": 78
+          },
+          "bounds": {
+            "leftBottom": {
+              "x": 760,
+              "y": 211
+            },
+            "rigthTop": {
+              "x": 920,
+              "y": 78
+            },
+            "leftTop": {
+              "x": 760,
+              "y": 78
+            },
+            "rightBottom": {
+              "x": 920,
+              "y": 211
+            },
+            "left": 760,
+            "right": 920,
+            "bottom": 211,
+            "top": 78
+          },
+          "shape": {
+            "data": [
+              {
+                "x": -80,
+                "y": -66.5
+              },
+              {
+                "x": -80,
+                "y": 66.5
+              },
+              {
+                "x": 80,
+                "y": 66.5
+              },
+              {
+                "x": 80,
+                "y": -66.5
+              },
+              {
+                "x": -80,
+                "y": -66.5
+              }
+            ],
+            "type": "drawContinuous",
+            "width": 160,
+            "height": 133,
+            "left": 760,
+            "top": 78
+          },
+          "index": 0,
+          "visible": true,
+          "owner": "59377e80b14a46b8911cde59"
+        }
+      ]
+    },
+    "time": 1504689289518,
+    "from": "59377e80b14a46b8911cde59"
+  },
+
+  //===========删除=============//
+  {
+    "board":"59af5af914b94394f9791a88",
+    "evt":5,
+    "stg":3,
+    "data":[
+      {
+        "grouped":false,
+        "id":"59b0badd3610291e9f51d757"
+      },
+      {
+        "grouped":false,
+        "id":"59b0bade3610291e9f51d75a"
+      }
+    ],
+    "time":1504754461883,
+    "from":"59377e80b14a46b8911cde59"
+  },
+
+
+  //===========clear=============//
+  {
+    "board":"59af5af914b94394f9791a88",
+    "evt":4,
+    "stg":3,
+    "data":[
+      {
+        "grouped":false,
+        "id":"59b0bb3e3610291e9f51d799"
+      },
+      {
+        "grouped":false,
+        "id":"59b0bb403610291e9f51d79c"
+      }
+    ],
+    "time":1504754724754,
+    "from":"59377e80b14a46b8911cde59"
+  }
+
+
+]//为了格式化
