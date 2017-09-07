@@ -252,10 +252,13 @@ public class ExampleUnitTest {
 //    }
 
         //String j = "{\"temp\":\"nihao\", \"data\":[{\"x\":1,\"y\":11}, false, {\"x\":2,\"y\":22}]}";
-//String j = "{\"data\":{\"layer\":{\"id\":\"59ae4c9e36102905adca6998\",\"shape\":{\"data\":[{\"x\":-73,\"y\":-49},false,{\"x\":-73,\"y\":49},{\"x\":73,\"y\":49},{\"x\":73,\"y\":-49},{\"x\":-73,\"y\":-49}],\"type\":\"drawContinuous\",\"width\":146,\"height\":98,\"left\":1172,\"top\":1195},\"index\":0,\"visible\":true,\"owner\":\"59377e80b14a46b8911cde59\"}}}";
+//String j = "{\"datax\":{\"layer\":{\"id\":\"59ae4c9e36102905adca6998\",\"shape\":{\"data\":[{\"x\":-73,\"y\":-49},false,{\"x\":-73,\"y\":49},{\"x\":73,\"y\":49},{\"x\":73,\"y\":-49},{\"x\":-73,\"y\":-49}],\"type\":\"drawContinuous\",\"width\":146,\"height\":98,\"left\":1172,\"top\":1195},\"index\":0,\"visible\":true,\"owner\":\"59377e80b14a46b8911cde59\"}}}";
 //
 //
-//
+
+
+//        String j = "{\"board\":\"59af5af914b94394f9791a88\",\"evt\":5,\"stg\":3,\"datax\":[{\"grouped\":false,\"id\":\"59b0badd3610291e9f51d757\"},{\"grouped\":false,\"id\":\"59b0bade3610291e9f51d75a\"}],\"time\":1504754461883,\"from\":\"59377e80b14a46b8911cde59\"}";
+//String j = "{\"board\": \"59af5af914b94394f9791a88\",\"evt\": 1,\"stg\": 1,\"ctx\": {\"viewport\": {\"width\": 1440,\"height\": 810}},\"datax\": {\"direction\": 0},\"time\": 1504686463708,\"from\": \"59377e80b14a46b8911cde59\"}";
 //        ObjectMapper mapper = new ObjectMapper();
 //        SyncBoardReceive data = mapper.readValue(j, SyncBoardReceive.class);
 //
