@@ -32,30 +32,30 @@ public class PointDataDeserializer extends JsonDeserializer<ArrayList<PointF>> {
             switch (t.id()) {
                 case JsonTokenId.ID_START_OBJECT:
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("-node: start object ");
+                        //Logger.d("-node: start object ");
                     }
                     PointF point = jp.getCodec().readValue(jp, PointF.class);
                     points.add(point);
                     break;
                 case JsonTokenId.ID_START_ARRAY:
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("-node: start array ");
+                        //Logger.d("-node: start array ");
                     }
                     break;
                 case JsonTokenId.ID_END_ARRAY:
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("-node: end array ");
+                        //Logger.d("-node: end array ");
                     }
                     goon = false;
                     break;
                 case JsonTokenId.ID_TRUE:
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("-node: true ");
+                        //Logger.d("-node: true ");
                     }
                     break;
                 case JsonTokenId.ID_FALSE:
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("-node: false ");
+                        //Logger.d("-node: false ");
                     }
                     points.add(null);
                     break;
