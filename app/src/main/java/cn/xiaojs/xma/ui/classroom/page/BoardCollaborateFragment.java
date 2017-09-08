@@ -95,13 +95,14 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
         return bg;
     }
 
-    @OnClick({R.id.back_btn, R.id.select_btn, R.id.handwriting_btn,
+    @OnClick({R.id.back_btn, R.id.select_btn, R.id.handwriting_btn,R.id.shape_btn,
             R.id.color_picker_btn,  R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.select_btn:
             case R.id.handwriting_btn:
             case R.id.eraser_btn:
+            case R.id.shape_btn:
             case R.id.text_btn:
             case R.id.color_picker_btn:
             case R.id.undo:
@@ -187,7 +188,7 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
 //            LogUtil.d("data="+((SyncBoardReceive)object).data.layer.shape.data+"----qz---end----");
             mBoardController.onReceive((SyncBoardReceive) object);
         }else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD).equals(event)){
-            getFragmentManager().popBackStack();
+            getFragmentManager().popBackStackImmediate();
         }
     }
 }
