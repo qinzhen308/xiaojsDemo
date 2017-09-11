@@ -14,6 +14,8 @@ import cn.xiaojs.xma.data.api.serialize.InfoDeserializer;
 public class SyncLayer {
     public String id;
     public Shape shape;
+    public int lineWidth;
+    public String lineColor;
 
     @JsonDeserialize(using = InfoDeserializer.class)
     public SyncInfo info;

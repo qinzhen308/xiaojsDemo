@@ -140,5 +140,10 @@ public class Live {
         public static final String CLOSED = "Closed";
     }
 
+    public class ShapeType {
+        public static final String DRAW_CONTINUOUS ="drawContinuous";
+        public static final String DRAW_IMAGE ="drawImage";
+    }
+
 
 }

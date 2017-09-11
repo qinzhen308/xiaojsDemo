@@ -37,6 +37,9 @@ public abstract class Doodle implements Transformation {
     public final static int STYLE_ERASER = 3;
     public final static int STYLE_TEXT = 4;
 
+    public final static int STYLE_SYNC_LAYER = 5;
+    public final static int STYLE_SYNC_LAYER_IMG = 6;
+
     public final static int STATE_IDLE = 0;
     public final static int STATE_DRAWING = 1;
     public final static int STATE_EDIT = 2;

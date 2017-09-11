@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -81,12 +82,18 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
     @Override
     protected void init() {
         firstData=(ShareboardReceive) getArguments().getSerializable(COLLABORATE_FIRST_DATA);
-        LogUtil.d(firstData.board.drawing.stylus);
+//        LogUtil.d(firstData.board.drawing.stylus);
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
         mFadeAnimListener = new FadeAnimListener();
-        mBoardController.showWhiteboardLayout(decodeBg(), mDoodleRatio);
+        mBoardController.showWhiteboardLayout(null, mDoodleRatio);
         mBoardController.setCanReceive(true);
         mBoardController.setCanSend(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBoardController.syncBoardLayerSet(firstData);
+            }
+        }, 500);
     }
 
     private Bitmap decodeBg(){
