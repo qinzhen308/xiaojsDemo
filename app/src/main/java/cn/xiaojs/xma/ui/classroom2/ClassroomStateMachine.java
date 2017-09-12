@@ -530,11 +530,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
 
         if (message != null) {
-            if(message.stg==Live.SyncStage.BEGIN){
-                SyncboardHelper.init(message);
-            }
             if (message.stg != Live.SyncStage.FINISH){
-
+                if(message.stg==Live.SyncStage.BEGIN){
+                    SyncboardHelper.init(message);
+                }
+                if(message.stg==Live.SyncStage.ONGOING&&message.evt==Live.SyncEvent.PEN){
+                    SyncboardHelper.going(message);
+                    notifyEvent(event, message);
+                }
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the stg is %d and not equal FINISH, so do not notify event", message.stg);
                 }

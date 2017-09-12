@@ -1780,6 +1780,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if ( (mLayer != null && mLayer.isCanReceive())&&data != null) {
             if(data.stg== Live.SyncStage.FINISH){
                 handleReceiveLayerFinished(data);
+            }else if(data.stg== Live.SyncStage.ONGOING){
+                handleReceiveLayerGoing(data);
             }
             postInvalidate();
         }
@@ -1790,6 +1792,18 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             syncCreateLayers(data.board.drawing.stylus.layers);
             postInvalidate();
         }
+    }
+
+
+    private synchronized void handleReceiveLayerGoing(SyncBoardReceive data) {
+        int event=data.evt;
+
+        switch (event){
+            case Live.SyncEvent.PEN:
+
+                break;
+        }
+        postInvalidate();
     }
 
     private synchronized void handleReceiveLayerFinished(SyncBoardReceive data) {

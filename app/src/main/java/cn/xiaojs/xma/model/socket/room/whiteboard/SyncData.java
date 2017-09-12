@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.model.socket.room.whiteboard;
 
+import android.graphics.PointF;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -32,4 +34,7 @@ public class SyncData {
     @JsonDeserialize(using = InfoDeserializer.class)
     @JsonProperty("info")
     public SyncInfo paste_info;
+
+    public PointF startPos;
+    public PointF endPos;
 }

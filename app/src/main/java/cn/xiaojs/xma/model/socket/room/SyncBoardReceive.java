@@ -29,6 +29,13 @@ public class SyncBoardReceive {
     public Ctx ctx;
 
 
+    /**
+     * 区分同步数据的唯一标识，目前用from（用户id）作为标识。
+     * @return
+     */
+    public String getId(){
+        return from;
+    }
 
 
 }
