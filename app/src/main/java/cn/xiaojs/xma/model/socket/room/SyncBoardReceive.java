@@ -1,7 +1,6 @@
 package cn.xiaojs.xma.model.socket.room;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import cn.xiaojs.xma.data.api.serialize.SyncDataDeserializer;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
-import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 
 /**
  * Created by maxiaobao on 2017/9/1.
@@ -31,6 +29,13 @@ public class SyncBoardReceive {
     public Ctx ctx;
 
 
+    /**
+     * 区分同步数据的唯一标识，目前用from（用户id）作为标识。
+     * @return
+     */
+    public String getId(){
+        return from;
+    }
 
 
 }

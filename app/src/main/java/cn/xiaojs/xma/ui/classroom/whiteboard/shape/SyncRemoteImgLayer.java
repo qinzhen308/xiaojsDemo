@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Base64;
 
@@ -31,7 +32,7 @@ public class SyncRemoteImgLayer extends SyncRemoteLayer {
 
 
     public SyncRemoteImgLayer(Whiteboard whiteboard) {
-        super(whiteboard);
+        super(whiteboard,STYLE_SYNC_LAYER_IMG);
     }
 
     public SyncRemoteImgLayer(Whiteboard whiteboard,String imgSrc) {
@@ -75,14 +76,12 @@ public class SyncRemoteImgLayer extends SyncRemoteLayer {
             mDrawingPath.reset();
             mDrawingPath.addRect(mTransRect, Path.Direction.CCW);
             mDrawingMatrix.postConcat(mTransformMatrix);
-            mDrawingPath.transform(mDisplayMatrix);
+            mDrawingPath.transform(mDrawingMatrix);
             canvas.drawPath(mDrawingPath,getPaint());
         }else {
-            Matrix matrix=new Matrix();
-            matrix.setTranslate(mTransRect.left,mTransRect.top);
-            matrix.postConcat(mDisplayMatrix);
-            matrix.postConcat(mTransformMatrix);
-            canvas.drawBitmap(layerBm,matrix,getPaint());
+            RectF rectF=new RectF();
+            mDrawingMatrix.mapRect(rectF,mTransRect);
+            canvas.drawBitmap(layerBm,new Rect(0,0,layerBm.getWidth(),layerBm.getHeight()),rectF,getPaint());
         }
 
         canvas.restore();

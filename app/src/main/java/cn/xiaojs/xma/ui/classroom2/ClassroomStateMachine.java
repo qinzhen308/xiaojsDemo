@@ -493,9 +493,27 @@ public abstract class ClassroomStateMachine extends StateMachine {
     }
 
 
-    protected void shareboardReceived(String event, ShareboardReceive message) {
+    protected void shareboardReceived(final String event, final ShareboardReceive message) {
         getSession().shareboardData = message;
-        notifyEvent(event, message);
+        if (message != null) {
+            Observable.just(message)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .doOnNext(new Consumer<ShareboardReceive>() {
+                        @Override
+                        public void accept(ShareboardReceive syncBoardReceive) throws Exception {
+                            SyncboardHelper.handleShareBoardData(syncBoardReceive);
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ShareboardReceive>() {
+                        @Override
+                        public void accept(ShareboardReceive syncBoardReceive) throws Exception {
+                            notifyEvent(event, message);
+                        }
+                    });
+
+        }
     }
 
     protected void shareboardAckReceived(String event, ShareboardAckReceive message) {
@@ -512,11 +530,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
 
         if (message != null) {
-            if(message.stg==Live.SyncStage.BEGIN){
-                SyncboardHelper.init(message);
-            }
             if (message.stg != Live.SyncStage.FINISH){
-
+                if(message.stg==Live.SyncStage.BEGIN){
+                    SyncboardHelper.init(message);
+                }
+                if(message.stg==Live.SyncStage.ONGOING&&message.evt==Live.SyncEvent.PEN){
+                    SyncboardHelper.going(message);
+                    notifyEvent(event, message);
+                }
                 if (XiaojsConfig.DEBUG) {
                     Logger.d("the stg is %d and not equal FINISH, so do not notify event", message.stg);
                 }

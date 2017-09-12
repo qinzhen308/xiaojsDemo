@@ -50,7 +50,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Command;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
@@ -93,6 +95,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Trapezoid;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 public class Whiteboard extends View implements ViewGestureListener.ViewRectChangedListener,
@@ -1777,9 +1780,30 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if ( (mLayer != null && mLayer.isCanReceive())&&data != null) {
             if(data.stg== Live.SyncStage.FINISH){
                 handleReceiveLayerFinished(data);
+            }else if(data.stg== Live.SyncStage.ONGOING){
+                handleReceiveLayerGoing(data);
             }
             postInvalidate();
         }
+    }
+
+    public void onInitReceive(ShareboardReceive data) {
+        if ( (mLayer != null && mLayer.isCanReceive())&&data != null&&data.board!=null&&data.board.drawing!=null&&data.board.drawing.stylus!=null) {
+            syncCreateLayers(data.board.drawing.stylus.layers);
+            postInvalidate();
+        }
+    }
+
+
+    private synchronized void handleReceiveLayerGoing(SyncBoardReceive data) {
+        int event=data.evt;
+
+        switch (event){
+            case Live.SyncEvent.PEN:
+
+                break;
+        }
+        postInvalidate();
     }
 
     private synchronized void handleReceiveLayerFinished(SyncBoardReceive data) {
@@ -1792,11 +1816,18 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             //基本操作
             case Live.SyncEvent.SELECT:
                 //包括移动
-                syncChangeLayer(mode,data.ctx,data.data.get(0).changedLayers);
+                syncChangeLayer(data.data.get(0).changedLayers);
                 break;
             case Live.SyncEvent.UNDO:
+                if(data.data.get(0).command!=null){
+                    syncUndo(data.data.get(0).command);
+                }
                 break;
             case Live.SyncEvent.REDO:
+                if(data.data.get(0).command!=null){
+                    syncUndo(data.data.get(0).command);
+//                    syncRedo(data.data.get(0).command);
+                }
                 break;
             case Live.SyncEvent.CLEAR:
                 syncRemoveLayer(data.data);
@@ -1811,16 +1842,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     syncRemoveLayer(data.data);
                 }else{//添加图片
                     mode=Whiteboard.MODE_SYNC_REMOTE_IMG;
-                    syncCreateLayer(mode,data.ctx,data.data.get(0).layer);
+                    syncCreateLayer(mode,2,Color.parseColor("black"),data.data.get(0).layer);
                 }
 
                 break;
             case Live.SyncEvent.PASTE:
-
+                syncCreateLayersForPaste(data.data);
                 break;
             //图形同步
             case Live.SyncEvent.PEN:
-                syncCreateLayer(mode,data.ctx,data.data.get(0).layer);
+                syncCreateLayer(mode,data.ctx.lineWidth,Color.parseColor(data.ctx.strokeStyle),data.data.get(0).layer);
                 break;
             case Live.SyncEvent.TEXT:
                 break;
@@ -1833,27 +1864,25 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             default:
                 //目前大于30的为图形
                 if(event>=Live.SyncEvent.DASHEDLINE){
-                    syncCreateLayer(mode,data.ctx,data.data.get(0).layer);
+                    syncCreateLayer(mode,data.ctx.lineWidth,Color.parseColor(data.ctx.strokeStyle),data.data.get(0).layer);
                 }
                 break;
 
         }
     }
 
-    private synchronized void syncCreateLayer(int mode,Ctx ctx,SyncLayer layer){
+    private synchronized void syncCreateLayer(int mode,int lineWidth,int color,SyncLayer layer){
         if(layer==null||layer.shape==null)return;
         Paint paint=null;
-        if(ctx!=null){
-            paint = Utils.createPaint(Color.parseColor(ctx.strokeStyle), ctx.lineWidth, Paint.Style.STROKE);
-        }else {
-            paint = Utils.createPaint(Color.parseColor("black"), 2, Paint.Style.STROKE);
-        }
+        paint = Utils.createPaint(color, lineWidth, Paint.Style.STROKE);
         Doodle d = buildDoodle(layer.id, mode);
         d.setPaint(paint);
         d.setState(Doodle.STATE_EDIT);
         d.setControlPoints(layer.shape.data);
         if(mode==MODE_SYNC_REMOTE_IMG){
-            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info[0]);
+            mDoodle.setDrawingMatrix(mDrawingMatrix);
+            mDoodle.setDisplayMatrix(mDisplayMatrix);
+            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl);
         }
         drawToDoodleCanvas();
         if (d != null) {
@@ -1867,24 +1896,104 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         d.setPaint(paint);
         d.setState(Doodle.STATE_EDIT);
         d.setControlPoints(layer.shape.data);
+        if(mode==MODE_SYNC_REMOTE_IMG){
+            mDoodle.setDrawingMatrix(mDrawingMatrix);
+            mDoodle.setDisplayMatrix(mDisplayMatrix);
+            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl);
+        }
         drawToDoodleCanvas();
         if (d != null) {
             d.setState(Doodle.STATE_IDLE);
         }
     }
 
+    private synchronized void syncCreateLayers(List<SyncLayer> layers){
+        if(ArrayUtil.isEmpty(layers))return;
+        int mode=-1;
+        for(SyncLayer layer:layers){
+            mode=Live.ShapeType.DRAW_IMAGE.equals(layer.shape.type)?MODE_SYNC_REMOTE_IMG:MODE_SYNC_REMOTE;
+            Doodle d = buildDoodle(layer.id, mode);
+            if (d != null) {
+                int color=Color.BLACK;
+                try {
+                    color=Color.parseColor(layer.lineColor);
+                }catch (Exception e){
+                    Logger.d(e);
+                }
+                d.setPaint(Utils.createPaint(color, layer.lineWidth, Paint.Style.STROKE));
+                d.setState(Doodle.STATE_EDIT);
+                d.setControlPoints(layer.shape.data);
+                if(mode==MODE_SYNC_REMOTE_IMG){
+                    mDoodle.setDrawingMatrix(mDrawingMatrix);
+                    mDoodle.setDisplayMatrix(mDisplayMatrix);
+                    ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl);
+                }
+                drawDoodle(mDoodleCanvas, d);
+                d.setState(Doodle.STATE_IDLE);
+            }
+        }
+        drawToDoodleCanvas();
+    }
+
+    private synchronized void syncCreateLayersForPaste(List<SyncData> layers){
+        if(ArrayUtil.isEmpty(layers))return;
+        int mode=-1;
+        for(SyncData layer:layers){
+            mode=Live.ShapeType.DRAW_IMAGE.equals(layer.paste_shape.type)?MODE_SYNC_REMOTE_IMG:MODE_SYNC_REMOTE;
+            Doodle d = buildDoodle(layer.id, mode);
+            if (d != null) {
+                int color=Color.BLACK;
+                try {
+                    color=Color.parseColor(layer.paste_lineColor);
+                }catch (Exception e){
+                    Logger.d(e);
+                }
+                d.setPaint(Utils.createPaint(color, layer.paste_lineWidth, Paint.Style.STROKE));
+                d.setState(Doodle.STATE_EDIT);
+                d.setControlPoints(layer.paste_shape.data);
+                if(mode==MODE_SYNC_REMOTE_IMG){
+                    mDoodle.setDrawingMatrix(mDrawingMatrix);
+                    mDoodle.setDisplayMatrix(mDisplayMatrix);
+                    ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.paste_info.imgUrl);
+                }
+                drawDoodle(mDoodleCanvas, d);
+                d.setState(Doodle.STATE_IDLE);
+            }
+        }
+        drawToDoodleCanvas();
+    }
+
     private synchronized void syncRemoveLayer(List<SyncData> layers){
+        boolean hasChange=false;
         for(SyncData layer:layers){
             Doodle d = findDoodleById(layer.id);
             if (d != null) {
+                hasChange=true;
                 d.setVisibility(View.GONE);
                 mAllDoodles.remove(d);
             }
         }
-        drawAllDoodlesCanvas();
+        if(hasChange){
+            drawAllDoodlesCanvas();
+        }
     }
 
-    private synchronized void syncChangeLayer(int mode,Ctx ctx,List<SyncLayer> layers){
+    private synchronized void syncRemoveLayers(List<SyncLayer> layers){
+        boolean hasChange=false;
+        for(SyncLayer layer:layers){
+            Doodle d = findDoodleById(layer.id);
+            if (d != null) {
+                hasChange=true;
+                d.setVisibility(View.GONE);
+                mAllDoodles.remove(d);
+            }
+        }
+        if(hasChange){
+            drawAllDoodlesCanvas();
+        }
+    }
+
+    private synchronized void syncChangeLayer(List<SyncLayer> layers){
         if(ArrayUtil.isEmpty(layers))return;
         boolean hasChange=false;
         for(SyncLayer layer:layers){
@@ -1894,11 +2003,45 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 hasChange=true;
                 d.setVisibility(View.GONE);
                 mAllDoodles.remove(d);
-                syncCreateLayer(mode,d.getPaint(),layer);
+                if(layer.lineWidth>0){
+                    d.getPaint().setStrokeWidth(layer.lineWidth);
+                }
+                try {
+                    int color=Color.parseColor(layer.lineColor);
+                    d.getPaint().setColor(color);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                syncCreateLayer(d.getStyle()==Doodle.STYLE_SYNC_LAYER_IMG?MODE_SYNC_REMOTE_IMG:MODE_SYNC_REMOTE,d.getPaint(),layer);
             }
         }
         if(hasChange){
             drawAllDoodlesCanvas();
+        }
+    }
+
+    private synchronized void syncUndo(Command command){
+        if(ArrayUtil.isEmpty(command.p)){
+            return;
+        }
+        syncRemoveLayers(command.p);
+        if(command.f==0){
+            syncCreateLayers(command.p);
+        }
+    }
+
+    private synchronized void syncRedo(Command command){
+        if(ArrayUtil.isEmpty(command.p)){
+            return;
+        }
+        if(command.f==0){
+            if("create".equals(command.m)){
+                syncCreateLayers(command.p);
+            }else {
+                syncRemoveLayers(command.p);
+            }
+        }else {
+            syncChangeLayer(command.p);
         }
     }
 

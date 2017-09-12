@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -81,12 +82,18 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
     @Override
     protected void init() {
         firstData=(ShareboardReceive) getArguments().getSerializable(COLLABORATE_FIRST_DATA);
-        LogUtil.d(firstData.board.drawing.stylus);
+//        LogUtil.d(firstData.board.drawing.stylus);
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
         mFadeAnimListener = new FadeAnimListener();
-        mBoardController.showWhiteboardLayout(decodeBg(), mDoodleRatio);
+        mBoardController.showWhiteboardLayout(null, mDoodleRatio);
         mBoardController.setCanReceive(true);
         mBoardController.setCanSend(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBoardController.syncBoardLayerSet(firstData);
+            }
+        }, 500);
     }
 
     private Bitmap decodeBg(){
@@ -95,13 +102,14 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
         return bg;
     }
 
-    @OnClick({R.id.back_btn, R.id.select_btn, R.id.handwriting_btn,
+    @OnClick({R.id.back_btn, R.id.select_btn, R.id.handwriting_btn,R.id.shape_btn,
             R.id.color_picker_btn,  R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.select_btn:
             case R.id.handwriting_btn:
             case R.id.eraser_btn:
+            case R.id.shape_btn:
             case R.id.text_btn:
             case R.id.color_picker_btn:
             case R.id.undo:
@@ -187,7 +195,7 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
 //            LogUtil.d("data="+((SyncBoardReceive)object).data.layer.shape.data+"----qz---end----");
             mBoardController.onReceive((SyncBoardReceive) object);
         }else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD).equals(event)){
-            getFragmentManager().popBackStack();
+            getFragmentManager().popBackStackImmediate();
         }
     }
 }

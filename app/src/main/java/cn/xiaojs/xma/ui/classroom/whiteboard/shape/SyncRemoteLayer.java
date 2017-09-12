@@ -28,7 +28,11 @@ public class SyncRemoteLayer extends Doodle {
 
 
     public SyncRemoteLayer(Whiteboard whiteboard) {
-        super(whiteboard, -1);
+        super(whiteboard, STYLE_SYNC_LAYER);
+    }
+
+    protected SyncRemoteLayer(Whiteboard whiteboard,int style) {
+        super(whiteboard, STYLE_SYNC_LAYER);
     }
 
 
