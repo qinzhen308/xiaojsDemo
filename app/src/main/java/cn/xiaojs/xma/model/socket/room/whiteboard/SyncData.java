@@ -35,6 +35,9 @@ public class SyncData {
     @JsonProperty("info")
     public SyncInfo paste_info;
 
+    @JsonProperty("angle")
+    public float paste_angle;
+
     public PointF startPos;
     public PointF endPos;
 }

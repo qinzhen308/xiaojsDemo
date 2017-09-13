@@ -30,24 +30,25 @@ public class SyncRemoteImgLayer extends SyncRemoteLayer {
 
     private boolean isLoading=false;
 
+    private float angle=0;
 
     public SyncRemoteImgLayer(Whiteboard whiteboard) {
         super(whiteboard,STYLE_SYNC_LAYER_IMG);
     }
 
     public SyncRemoteImgLayer(Whiteboard whiteboard,String imgSrc) {
-        super(whiteboard);
-        handleImgSource(imgSrc);
+        super(whiteboard,STYLE_SYNC_LAYER_IMG);
+        handleImgSource(imgSrc,0);
     }
 
 
-    public void handleImgSource(String imgSrc){
+    public void handleImgSource(String imgSrc,float angle){
+        this.angle=angle;
         if(isBase64(imgSrc)){
             layerBm=decodeBg(imgSrc);
         }else {
             loadImageByUrl(imgSrc);
         }
-
     }
 
     private boolean isBase64(String imgSrc){
@@ -81,6 +82,7 @@ public class SyncRemoteImgLayer extends SyncRemoteLayer {
         }else {
             RectF rectF=new RectF();
             mDrawingMatrix.mapRect(rectF,mTransRect);
+            canvas.rotate((float)( 180*angle/Math.PI),rectF.centerX(),rectF.centerY());
             canvas.drawBitmap(layerBm,new Rect(0,0,layerBm.getWidth(),layerBm.getHeight()),rectF,getPaint());
         }
 

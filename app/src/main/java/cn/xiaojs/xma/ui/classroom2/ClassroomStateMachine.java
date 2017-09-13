@@ -31,7 +31,6 @@ import cn.xiaojs.xma.model.socket.room.MediaDeviceRefreshReceive;
 import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.ModeSwitchReceive;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
-import cn.xiaojs.xma.model.socket.room.PlaybackSavedReceive;
 import cn.xiaojs.xma.model.socket.room.ReclaimedReceive;
 import cn.xiaojs.xma.model.socket.room.ShareboardAckReceive;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
@@ -44,10 +43,8 @@ import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
