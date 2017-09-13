@@ -32,6 +32,10 @@ import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -299,7 +303,57 @@ public class ExampleUnitTest {
 //
 //        System.out.println(datew);
 
+
+//        Observable observable = Observable.just("hello1", "hello2");
+//        observable.subscribe(observer1);
+//        observable.subscribe(observer2);
+
+
     }
+
+    private Observer<String> observer1 = new Observer<String>() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+            System.out.println("observer1: onSubscribe......");
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println("observer1: onNext......:"+ s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+            System.out.println("observer1: onError......");
+        }
+
+        @Override
+        public void onComplete() {
+            System.out.println("observer1: onComplete......");
+        }
+    };
+
+    private Observer<String> observer2 = new Observer<String>() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+            System.out.println("observer2: onSubscribe......");
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println("observer2: onNext......:"+ s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+            System.out.println("observer2: onError......");
+        }
+
+        @Override
+        public void onComplete() {
+            System.out.println("observer2: onComplete......");
+        }
+    };
 
 
 

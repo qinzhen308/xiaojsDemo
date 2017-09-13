@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.stetho.common.LogUtil;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,10 +26,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -45,12 +48,16 @@ import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.CacheUtil;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 
 /**
  * created by Paul Z on 2017/9/4
  */
-public class BoardCollaborateFragment extends BaseFragment implements EventListener {
+public class BoardCollaborateFragment extends BaseFragment {
     public final static int TYPE_SINGLE_IMG = 1;
     public final static int TYPE_MULTI_IMG = 2;
 
@@ -73,6 +80,7 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
     private FadeAnimListener mFadeAnimListener;
 
     public ShareboardReceive firstData;
+    private EventListener.Syncboard eventListener;
 
     @Override
     protected View getContentView() {
@@ -94,6 +102,9 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
                 mBoardController.syncBoardLayerSet(firstData);
             }
         }, 500);
+
+
+        eventListener = ClassroomEngine.getEngine().observerSyncboard(syncBoardConsumer);
     }
 
     private Bitmap decodeBg(){
@@ -127,18 +138,18 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ClassroomEngine.getEngine().addEvenListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onDestroyView() {
-        ClassroomEngine.getEngine().removeEvenListener(this);
         super.onDestroyView();
         mBoardController.hideWhiteboardLayout();
         if (mWhiteBoardPanel != null) {
             mWhiteBoardPanel.animate().cancel();
         }
+
+        eventListener.dispose();
     }
 
 
@@ -188,14 +199,23 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
     }
 
 
-    @Override
-    public void receivedEvent(String event, Object object) {
-        if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_BOARD).equals(event)){
-//            LogUtil.d("----qz----"+((SyncBoardReceive)object).data.layer.id);
-//            LogUtil.d("data="+((SyncBoardReceive)object).data.layer.shape.data+"----qz---end----");
-            mBoardController.onReceive((SyncBoardReceive) object);
-        }else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD).equals(event)){
-            getFragmentManager().popBackStackImmediate();
+    private Consumer<EventReceived> syncBoardConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ELSyncboard received eventType:%d", eventReceived.eventType);
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.SYNC_BOARD:
+                    mBoardController.onReceive((SyncBoardReceive) eventReceived.t);
+                    break;
+                case Su.EventType.STOP_SHARE_BOARD:
+                    getFragmentManager().popBackStackImmediate();
+                    break;
+
+            }
         }
-    }
+    };
 }

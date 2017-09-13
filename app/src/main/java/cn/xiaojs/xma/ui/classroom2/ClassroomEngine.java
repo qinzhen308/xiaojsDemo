@@ -16,6 +16,7 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -23,16 +24,43 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
+import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.ClosePreviewReceive;
+import cn.xiaojs.xma.model.socket.room.ConstraintKickoutReceive;
+import cn.xiaojs.xma.model.socket.room.EmptyReceive;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.LogoutKickoutReceive;
+import cn.xiaojs.xma.model.socket.room.MediaAbortedReceive;
+import cn.xiaojs.xma.model.socket.room.MediaDeviceRefreshReceive;
+import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
+import cn.xiaojs.xma.model.socket.room.ModeSwitchReceive;
+import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
+import cn.xiaojs.xma.model.socket.room.ReclaimedReceive;
 import cn.xiaojs.xma.model.socket.room.RequestShareboard;
+import cn.xiaojs.xma.model.socket.room.ShareboardAckReceive;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
+import cn.xiaojs.xma.model.socket.room.StopShareboardReceive;
+import cn.xiaojs.xma.model.socket.room.StreamExpirationReceive;
+import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
+import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
+import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
+import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
+import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
+import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -50,6 +78,9 @@ public class ClassroomEngine {
     private Context context;
     private RoomRequest roomRequest;
     private ClassroomStateMachine stateMachine;
+    private EventObservable eventObservable;
+
+    private EventListener eventListener;
 
     //此类可以不用单利模式，用单例主要是方便在不同Fragment中调用。
     public static ClassroomEngine getEngine() {
@@ -78,7 +109,10 @@ public class ClassroomEngine {
         }
         stateMachine.start();
 
+        eventObservable = new EventObservable();
+        observerAllEvent();
         roomRequest = new RoomRequest(context, stateMachine);
+
 
     }
 
@@ -89,24 +123,6 @@ public class ClassroomEngine {
         reset();
         context = null;
         classroomEngine = null;
-    }
-
-    /**
-     * 添加事件监听
-     */
-    public void addEvenListener(EventListener listener) {
-        if (stateMachine != null) {
-            stateMachine.addEventListener(listener);
-        }
-    }
-
-    /**
-     * 注销事件监听
-     */
-    public void removeEvenListener(EventListener listener) {
-        if (stateMachine != null) {
-            stateMachine.removeEventListener(listener);
-        }
     }
 
     /**
@@ -199,6 +215,73 @@ public class ClassroomEngine {
     public long getIndividualStreamDuration() {
         return  stateMachine.getSession().individualStreamDuration;
     }
+
+
+    public EventListener.Syncboard observerSyncboard(Consumer<EventReceived> consumer) {
+        EventListener.Syncboard syncboard = new EventListener.Syncboard(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(syncboard)
+                .subscribe(consumer);
+
+        return syncboard;
+    }
+
+    public EventListener.ELPlaylive observerPlaylive(Consumer<EventReceived> consumer) {
+        EventListener.ELPlaylive playlive = new EventListener.ELPlaylive(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(playlive)
+                .subscribe(consumer);
+        return playlive;
+    }
+
+    public EventListener.ELLiving observerLiving(Consumer<EventReceived> consumer) {
+        EventListener.ELLiving living = new EventListener.ELLiving(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(living)
+                .subscribe(consumer);
+        return living;
+    }
+
+    public EventListener.ELPVideoControl observerPVControl(Consumer<EventReceived> consumer) {
+        EventListener.ELPVideoControl pVideoControl = new EventListener.ELPVideoControl(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(pVideoControl)
+                .subscribe(consumer);
+        return pVideoControl;
+    }
+
+    public EventListener.ELLiveControl observerLiveControl(Consumer<EventReceived> consumer) {
+        EventListener.ELLiveControl elLiveControl = new EventListener.ELLiveControl(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(elLiveControl)
+                .subscribe(consumer);
+        return elLiveControl;
+    }
+
+    public EventListener.ELTalk observerTalk(Consumer<EventReceived> consumer) {
+        EventListener.ELTalk elTalk = new EventListener.ELTalk(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(elTalk)
+                .subscribe(consumer);
+        return elTalk;
+    }
+
+    public EventListener.ELContact observerContact(Consumer<EventReceived> consumer) {
+        EventListener.ELContact elContact = new EventListener.ELContact(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(elContact)
+                .subscribe(consumer);
+        return elContact;
+    }
+
+    public EventListener.ELRoom observerRoom(Consumer<EventReceived> consumer) {
+        EventListener.ELRoom elRoom = new EventListener.ELRoom(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(elRoom)
+                .subscribe(consumer);
+        return elRoom;
+    }
+
 
 
     /**
@@ -416,10 +499,110 @@ public class ClassroomEngine {
     }
 
     private void reset() {
+
+        if (eventListener != null) {
+            eventListener.dispose();
+        }
+
         roomRequest = null;
         if (stateMachine != null) {
             stateMachine.destoryAndQuitNow();
             stateMachine = null;
+        }
+    }
+
+    private void observerAllEvent() {
+        eventListener = new EventListener(context);
+        eventObservable.getEventObservable(context)
+                .eventListener(eventListener)
+                .subscribe(new Consumer<EventReceived>() {
+                    @Override
+                    public void accept(EventReceived eventReceived) throws Exception {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("ClassroomEngine received eventType:%d", eventReceived.eventType);
+                        }
+
+                        updateState(eventReceived);
+                    }
+                });
+    }
+
+
+    protected void updateState(EventReceived eventReceived) {
+        switch (eventReceived.eventType) {
+            case Su.EventType.CLOSE_MEDIA:
+                stateMachine.closeMedia((CloseMediaReceive) eventReceived.t);
+                break;
+            case Su.EventType.STREAMING_STOPPED:
+                stateMachine.streamStopped((StreamStopReceive) eventReceived.t);
+                break;
+            case Su.EventType.STREAMING_STARTED:
+                stateMachine.streamStartted((StreamStartReceive) eventReceived.t);
+                break;
+            case Su.EventType.STREAM_RECLAIMED:
+                stateMachine.streamReclaimed((ReclaimedReceive) eventReceived.t);
+                break;
+            case Su.EventType.STOP_STREAM_BY_EXPIRATION:
+                stateMachine.streamExpiration((StreamExpirationReceive) eventReceived.t);
+                break;
+            case Su.EventType.CLASS_MODE_SWITCH:
+                stateMachine.modeSwitch((ModeSwitchReceive) eventReceived.t);
+                break;
+            case Su.EventType.CLOSE_PREVIEW_BY_CLASS_OVER:
+                stateMachine.closePreviewByClassover((ClosePreviewReceive) eventReceived.t);
+                break;
+            case Su.EventType.REMIND_FINALIZATION:
+                stateMachine.remindFinal((EmptyReceive) eventReceived.t);
+                break;
+            case Su.EventType.JOIN:
+                stateMachine.join((Attendee) eventReceived.t);
+                break;
+            case Su.EventType.LEAVE:
+                stateMachine.leave((Attendee) eventReceived.t);
+                break;
+            case Su.EventType.KICK_OUT_BY_CONSTRAINT:
+                stateMachine.constraintKickout((ConstraintKickoutReceive) eventReceived.t);
+                break;
+            case Su.EventType.KICK_OUT_BY_LOGOUT:
+                stateMachine.logoutKickout((LogoutKickoutReceive) eventReceived.t);
+                break;
+            case Su.EventType.MEDIA_ABORTED:
+                stateMachine.mediaAborted((MediaAbortedReceive) eventReceived.t);
+                break;
+            case Su.EventType.MEDIA_DEVICES_REFRESHED:
+                stateMachine.mediaDeviceRefresh((MediaDeviceRefreshReceive) eventReceived.t);
+                break;
+            case Su.EventType.MEDIA_FEEDBACK:
+                stateMachine.mediaFeedback((MediaFeedbackReceive) eventReceived.t);
+                break;
+            case Su.EventType.OPEN_MEDIA:
+                stateMachine.openMeidaRecevied((OpenMediaReceive) eventReceived.t);
+                break;
+            case Su.EventType.REFRESH_STREAMING_QUALITY:
+                stateMachine.streamQualityChangedRecevied((StreamQualityChangedReceive) eventReceived.t);
+                break;
+            case Su.EventType.SYNC_CLASS_STATE:
+                stateMachine.syncClassStateRecevied((SyncClassStateReceive) eventReceived.t);
+                break;
+            case Su.EventType.SYNC_STATE:
+                stateMachine.syncStateRecevied((SyncStateReceive) eventReceived.t);
+                break;
+            case Su.EventType.TALK:
+                stateMachine.talkRecevied((Talk) eventReceived.t);
+                break;
+            case Su.EventType.SHARE_BOARD_ACK:
+                stateMachine.shareboardAckReceived((ShareboardAckReceive) eventReceived.t);
+                break;
+            case Su.EventType.STOP_SHARE_BOARD:
+                stateMachine.stopShareboardReceived((StopShareboardReceive) eventReceived.t);
+                break;
+            case Su.EventType.SHARE_BOARD:
+                stateMachine.shareboardReceived((ShareboardReceive) eventReceived.t);
+                break;
+            case Su.EventType.SYNC_BOARD:
+                stateMachine.syncBoardReceived((SyncBoardReceive) eventReceived.t);
+                break;
         }
     }
 

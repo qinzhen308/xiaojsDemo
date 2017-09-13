@@ -43,6 +43,7 @@ import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
@@ -65,6 +66,7 @@ import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
+import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
@@ -84,7 +86,7 @@ import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSE
  *
  * ======================================================================================== */
 
-public class PublishFragment extends ClassroomLiveFragment implements LiveRecordView.Listener, EventListener {
+public class PublishFragment extends ClassroomLiveFragment implements LiveRecordView.Listener {
     private final static float PLAY_VIDEO_RATION = 16 / 9.0f;
     public static final int MSG_WHAT_EXIT_PUBLISH = 0x4;
 
@@ -156,6 +158,8 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     private long mPlayOrPausePressTime = 0;
 
     private CommonDialog noPermissionDlg;
+
+    private EventListener.ELLiving eventListener;
 
     @Override
     protected View getContentView() {
@@ -498,14 +502,16 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        classroomEngine.addEvenListener(this);
+        eventListener = classroomEngine.observerLiving(receivedConsumer);
         return view;
     }
 
     @Override
     public void onDestroyView() {
-        classroomEngine.removeEvenListener(this);
         super.onDestroyView();
+        if (eventListener != null) {
+            eventListener.dispose();
+        }
     }
 
     @Override
@@ -543,61 +549,60 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
         }
     }
 
-    @Override
-    public void receivedEvent(String event, Object object) {
-        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION).equals(event)) {
-            Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA).equals(event)) {
 
-            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
-
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED).equals(event)) {
-            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA).equals(event)) {
-            if (object == null) {
-                return;
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ELLiving received eventType:%d", eventReceived.eventType);
             }
 
-            OpenMediaReceive receive = (OpenMediaReceive) object;
-            showOpenMediaDlg(receive);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE).equals(event)) {
+            switch (eventReceived.eventType) {
+                case Su.EventType.REMIND_FINALIZATION:
+                    Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
+                    break;
+                case Su.EventType.CLOSE_MEDIA:
+                    onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+                    break;
+                case Su.EventType.MEDIA_ABORTED:
+                    onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+                    break;
+                case Su.EventType.OPEN_MEDIA:
+                    OpenMediaReceive receive = (OpenMediaReceive) eventReceived.t;
+                    showOpenMediaDlg(receive);
+                    break;
+                case Su.EventType.SYNC_STATE:
+                    SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;
+                    handleSyncState(syncStateReceive);
+                    break;
+                case Su.EventType.SYNC_CLASS_STATE:
+                    SyncClassStateReceive syncState = (SyncClassStateReceive) eventReceived.t;
+                    if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
+                        updateTitle();
+                        //mTipsHelper.setTipsByState(syncState.to);
+                        mTimeProgressHelper.reloadLessonDuration();
+                        mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
+                        setControllerBtnStyle(syncState.to);
+                        updateFinishStreamingView();
+                    } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
+                        //班中当前课的信息
 
-            if (object == null) {
-                return;
-            }
-
-            SyncStateReceive receive = (SyncStateReceive) object;
-            handleSyncState(receive);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE).equals(event)) {
-
-            if (object == null)
-                return;
-
-            SyncClassStateReceive syncState = (SyncClassStateReceive) object;
-            if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
-                updateTitle();
-                //mTipsHelper.setTipsByState(syncState.to);
-                mTimeProgressHelper.reloadLessonDuration();
-                mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
-                setControllerBtnStyle(syncState.to);
-                updateFinishStreamingView();
-            } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
-                //班中当前课的信息
-
-                updateTitle();
-                mTimeProgressHelper.reloadLessonDuration();
-                updateFinishStreamingView();
-                //ClassroomController.getInstance().enterPlayFragment(null, true);
+                        updateTitle();
+                        mTimeProgressHelper.reloadLessonDuration();
+                        updateFinishStreamingView();
+                        //ClassroomController.getInstance().enterPlayFragment(null, true);
 //                    mTipsHelper.setTipsByState(syncState.to);
 //                    long sep = (syncState.current.schedule.start.getTime()-System.currentTimeMillis()) / 1000;
 //
 //                    mTimeProgressHelper.setTimeProgress(sep, syncState.to, false);
 //                    setControllerBtnStyle(syncState.to);
+                    }
+                    break;
+                case Su.EventType.SHARE_BOARD_ACK:
+                    break;
             }
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK).equals(event)) {
-            //TODO 收到白板协作的反馈事件（对方同意／拒绝）
         }
-    }
+    };
 
     private void handleSyncState(SyncStateReceive syncState) {
         boolean autoCountTime = false;
@@ -654,7 +659,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                             mIndividualName,
                             classroomEngine.getLiveState(),
                             true);
-                }else {
+                } else {
                     mTimeProgressHelper.setTimeProgress(mCountTime, liveState);
                 }
                 break;
@@ -798,7 +803,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                                 break;
                             case DISCONNECTED:
                                 if (extra != null && extra instanceof Integer) {
-                                    int flag = (int)extra;
+                                    int flag = (int) extra;
                                     if (flag == LiveRecordView.STREAMING_TIMEOUT) {
                                         exitCurrentFragment();
                                         sendExceptionNotify(R.string.streaming_occur_exception);
@@ -824,7 +829,7 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
     public void showNoCameraPermissDlg(final int type) {
 
         if (noPermissionDlg == null) {
-            noPermissionDlg =new CommonDialog(mContext);
+            noPermissionDlg = new CommonDialog(mContext);
             noPermissionDlg.setDesc(getString(R.string.permission_rationale_camera_audio_tip));
             noPermissionDlg.setRightBtnText(R.string.go_to_authorization);
             noPermissionDlg.setCancelable(false);
@@ -857,7 +862,6 @@ public class PublishFragment extends ClassroomLiveFragment implements LiveRecord
                 if (type == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL) {
                     pauseIndividual(true);
                 }
-
 
 
             }

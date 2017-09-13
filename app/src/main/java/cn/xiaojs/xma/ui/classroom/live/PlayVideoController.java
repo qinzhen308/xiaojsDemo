@@ -18,30 +18,37 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
+import io.reactivex.functions.Consumer;
 
-public class PlayVideoController extends VideoController implements EventListener{
+public class PlayVideoController extends VideoController{
+
+    private EventListener.ELPVideoControl eventListener;
+
 
     public PlayVideoController(Context context, View root, OnStreamChangeListener listener) {
         super(context, root, listener);
         listenerSocket();
 
-        ClassroomEngine.getEngine().addEvenListener(this);
+        eventListener = ClassroomEngine.getEngine().observerPVControl(receivedConsumer);
     }
 
     @Override
     public void onDestroy() {
-        ClassroomEngine.getEngine().removeEvenListener(this);
+        eventListener.dispose();
         super.onDestroy();
     }
 
@@ -123,37 +130,33 @@ public class PlayVideoController extends VideoController implements EventListene
         }
     }
 
-    @Override
-    public void receivedEvent(String event, Object object) {
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
 
-        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED)
-                .equals(event)) {
-
-            if (object == null) {
-                return;
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ELPVControl received eventType:%d", eventReceived.eventType);
             }
 
-            StreamStartReceive receive = (StreamStartReceive) object;
+            switch (eventReceived.eventType) {
+                case Su.EventType.STREAMING_STARTED:
+                    StreamStartReceive receive = (StreamStartReceive) eventReceived.t;
 
-            int type = Live.StreamType.INDIVIDUAL == receive.streamType?
-                    CTLConstant.StreamingType.PLAY_INDIVIDUAL : CTLConstant.StreamingType.PLAY_LIVE;
-            //FIXME 1对1流的类型是什么？
-            playStream(type, receive.RTMPPlayUrl, receive.finishOn);
-
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED).equals(event)) {
-
-            if (object == null) {
-                return;
+                    int type = Live.StreamType.INDIVIDUAL == receive.streamType?
+                            CTLConstant.StreamingType.PLAY_INDIVIDUAL : CTLConstant.StreamingType.PLAY_LIVE;
+                    //FIXME 1对1流的类型是什么？
+                    playStream(type, receive.RTMPPlayUrl, receive.finishOn);
+                    break;
+                case Su.EventType.STREAMING_STOPPED:
+                    pausePlayStream(mPlayType);
+                    break;
+                case Su.EventType.STREAM_RECLAIMED:
+                case Su.EventType.STOP_STREAM_BY_EXPIRATION:
+                    pausePublishStream(mPublishType);
+                    break;
             }
-            pausePlayStream(mPlayType);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event)
-                || Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION).equals(event)) {
-            if (object == null) {
-                return;
-            }
-            pausePublishStream(mPublishType);
         }
-    }
+    };
 
     @Override
     public void openOrCloseCamera() {

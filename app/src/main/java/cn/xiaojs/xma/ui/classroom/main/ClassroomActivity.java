@@ -45,6 +45,7 @@ import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.model.live.CtlSession;
 
 import cn.xiaojs.xma.model.socket.room.ConstraintKickoutReceive;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
@@ -58,6 +59,7 @@ import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 import cn.xiaojs.xma.util.ToastUtil;
 
+import io.reactivex.functions.Consumer;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -77,7 +79,7 @@ import io.socket.emitter.Emitter;
  *
  * ======================================================================================== */
 
-public class ClassroomActivity extends FragmentActivity implements EventListener {
+public class ClassroomActivity extends FragmentActivity {
     private final static int REQUEST_PERMISSION = 1000;
 
     private final int MAX_CONNECT_COUNT = 3;
@@ -101,6 +103,8 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
     private CtlSession tempSession;
 
     private int connectCount = 0;
+
+    private EventListener.ELRoom eventListener;
 
 
     private Handler handler = new Handler() {
@@ -177,8 +181,8 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
     private void reset() {
 
-        if (classroomEngine != null) {
-            classroomEngine.removeEvenListener(this);
+        if (eventListener != null) {
+            eventListener.dispose();
         }
 
         unRegisteNetwork();
@@ -356,7 +360,8 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
 
         classroomEngine = ClassroomEngine.getEngine();
         classroomEngine.init(this, ticket, new RoomSession(tempSession));
-        classroomEngine.addEvenListener(this);
+
+        eventListener = classroomEngine.observerRoom(receivedConsumer);
 
         String state = classroomEngine.getLiveState();
         if (classroomEngine.getClassroomType() == ClassroomType.StandaloneLesson
@@ -433,19 +438,24 @@ public class ClassroomActivity extends FragmentActivity implements EventListener
         }
     }
 
-    @Override
-    public void receivedEvent(String event, Object object) {
-        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.KICK_OUT_BY_CONSTRAINT).equals(event)) {
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
 
-            if (object == null) {
-                return;
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ELRoom received eventType:%d", eventReceived.eventType);
             }
-            ConstraintKickoutReceive receive = (ConstraintKickoutReceive) object;
-            String xaStr = getString(R.string.mobile_kick_out_tips, getNameByXa(receive.xa));
-            Toast.makeText(ClassroomActivity.this, xaStr, Toast.LENGTH_LONG).show();
-            finish();
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.KICK_OUT_BY_CONSTRAINT:
+                    ConstraintKickoutReceive receive = (ConstraintKickoutReceive) eventReceived.t;
+                    String xaStr = getString(R.string.mobile_kick_out_tips, getNameByXa(receive.xa));
+                    Toast.makeText(ClassroomActivity.this, xaStr, Toast.LENGTH_LONG).show();
+                    finish();
+                    break;
+            }
         }
-    }
+    };
 
     private String getNameByXa(int xa) {
         switch (xa) {
