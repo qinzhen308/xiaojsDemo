@@ -16,6 +16,7 @@ public class SyncLayer {
     public Shape shape;
     public int lineWidth;
     public String lineColor;
+    public float angle;
 
     @JsonDeserialize(using = InfoDeserializer.class)
     public SyncInfo info;

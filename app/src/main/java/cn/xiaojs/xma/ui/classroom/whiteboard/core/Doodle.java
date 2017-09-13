@@ -230,7 +230,7 @@ public abstract class Doodle implements Transformation {
         addControlPoint(new PointF(x, y));
     }
 
-    public void setControlPoints(ArrayList<PointF> src) {
+    public void setControlPoints(List<PointF> src) {
         mPoints=src;
     }
 

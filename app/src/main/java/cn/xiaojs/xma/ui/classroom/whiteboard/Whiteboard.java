@@ -27,6 +27,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -37,12 +38,14 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.StringSignature;
+import com.bumptech.glide.util.ExceptionCatchingInputStream;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -1782,6 +1785,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 handleReceiveLayerFinished(data);
             }else if(data.stg== Live.SyncStage.ONGOING){
                 handleReceiveLayerGoing(data);
+            }else if(data.stg== Live.SyncStage.BEGIN){
+                handleReceiveLayerBegin(data);
             }
             postInvalidate();
         }
@@ -1794,16 +1799,57 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
+    private synchronized void handleReceiveLayerBegin(SyncBoardReceive data) {
+        int event=data.evt;
+        switch (event){
+            case Live.SyncEvent.PEN:
+                Paint paint=null;
+                int color=Color.BLACK;
+                try {
+                    color=Color.parseColor(data.ctx.strokeStyle);
+                }catch (Exception e) {
+                    Logger.d(e);
+                }
+                paint = Utils.createPaint(color, data.ctx.lineWidth, Paint.Style.STROKE);
+                Doodle d = buildDoodle(data.getId(), MODE_SYNC_REMOTE);
+                d.setPaint(paint);
+                d.setState(Doodle.STATE_EDIT);
+                drawToDoodleCanvas();
+                if (d != null) {
+                    d.setState(Doodle.STATE_IDLE);
+                }
+                postInvalidate();
+                break;
+        }
+    }
+
 
     private synchronized void handleReceiveLayerGoing(SyncBoardReceive data) {
         int event=data.evt;
 
         switch (event){
             case Live.SyncEvent.PEN:
-
+                if(ArrayUtil.isEmpty(data.data))return;
+                Doodle d=findDoodleById(data.getId());
+                List<PointF> ps=d.getPoints();
+                if(ps==null){
+                    ps=new ArrayList<>();
+                    ps.add(data.data.get(0).endPos);
+                    ps.add(data.data.get(0).startPos);
+                }else if(ps.size()==0){
+                    ps.add(data.data.get(0).endPos);
+                    ps.add(data.data.get(0).startPos);
+                }else if(!ps.get(ps.size()-1).equals(data.data.get(0).startPos)){
+                    ps.add(data.data.get(0).endPos);
+                    ps.add(data.data.get(0).startPos);
+                }else {
+                    ps.add(data.data.get(0).startPos);
+                }
+                d.setControlPoints(ps);
+                drawAllDoodlesCanvas();
+                postInvalidate();
                 break;
         }
-        postInvalidate();
     }
 
     private synchronized void handleReceiveLayerFinished(SyncBoardReceive data) {
@@ -1851,6 +1897,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 break;
             //图形同步
             case Live.SyncEvent.PEN:
+                if(removeDoodleById(data.from)){
+                    drawAllDoodlesCanvas();
+                }
                 syncCreateLayer(mode,data.ctx.lineWidth,Color.parseColor(data.ctx.strokeStyle),data.data.get(0).layer);
                 break;
             case Live.SyncEvent.TEXT:
@@ -1882,7 +1931,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if(mode==MODE_SYNC_REMOTE_IMG){
             mDoodle.setDrawingMatrix(mDrawingMatrix);
             mDoodle.setDisplayMatrix(mDisplayMatrix);
-            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl);
+            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl,layer.angle);
         }
         drawToDoodleCanvas();
         if (d != null) {
@@ -1899,7 +1948,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if(mode==MODE_SYNC_REMOTE_IMG){
             mDoodle.setDrawingMatrix(mDrawingMatrix);
             mDoodle.setDisplayMatrix(mDisplayMatrix);
-            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl);
+            ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl,layer.angle);
         }
         drawToDoodleCanvas();
         if (d != null) {
@@ -1926,7 +1975,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if(mode==MODE_SYNC_REMOTE_IMG){
                     mDoodle.setDrawingMatrix(mDrawingMatrix);
                     mDoodle.setDisplayMatrix(mDisplayMatrix);
-                    ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl);
+                    ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.info.imgUrl,layer.angle);
                 }
                 drawDoodle(mDoodleCanvas, d);
                 d.setState(Doodle.STATE_IDLE);
@@ -1954,7 +2003,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if(mode==MODE_SYNC_REMOTE_IMG){
                     mDoodle.setDrawingMatrix(mDrawingMatrix);
                     mDoodle.setDisplayMatrix(mDisplayMatrix);
-                    ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.paste_info.imgUrl);
+                    ((SyncRemoteImgLayer)mDoodle).handleImgSource(layer.paste_info.imgUrl,layer.paste_angle);
                 }
                 drawDoodle(mDoodleCanvas, d);
                 d.setState(Doodle.STATE_IDLE);
@@ -2155,6 +2204,21 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
 
         return null;
+    }
+
+    private boolean removeDoodleById(String id) {
+        if (TextUtils.isEmpty(id) || mAllDoodles == null) {
+            return false;
+        }
+        Iterator<Doodle> iterator =mAllDoodles.iterator();
+        while (iterator.hasNext()) {
+            if (id.equals(iterator.next().getDoodleId())) {
+                iterator.remove();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void changePaintStyle(String[] params) {

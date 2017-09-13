@@ -32,12 +32,12 @@ public class SyncRemoteLayer extends Doodle {
     }
 
     protected SyncRemoteLayer(Whiteboard whiteboard,int style) {
-        super(whiteboard, STYLE_SYNC_LAYER);
+        super(whiteboard, style);
     }
 
 
     @Override
-    public void setControlPoints(ArrayList<PointF> src) {
+    public void setControlPoints(List<PointF> src) {
         super.setControlPoints(src);
         float maxX=Float.MIN_VALUE;
         float minX=Float.MAX_VALUE;

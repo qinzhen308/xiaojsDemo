@@ -31,7 +31,6 @@ import cn.xiaojs.xma.model.socket.room.MediaDeviceRefreshReceive;
 import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.ModeSwitchReceive;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
-import cn.xiaojs.xma.model.socket.room.PlaybackSavedReceive;
 import cn.xiaojs.xma.model.socket.room.ReclaimedReceive;
 import cn.xiaojs.xma.model.socket.room.ShareboardAckReceive;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
@@ -44,10 +43,8 @@ import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -530,19 +527,8 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
 
         if (message != null) {
-            if (message.stg != Live.SyncStage.FINISH){
-                if(message.stg==Live.SyncStage.BEGIN){
-                    SyncboardHelper.init(message);
-                }
-                if(message.stg==Live.SyncStage.ONGOING&&message.evt==Live.SyncEvent.PEN){
-                    SyncboardHelper.going(message);
-                    notifyEvent(event, message);
-                }
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("the stg is %d and not equal FINISH, so do not notify event", message.stg);
-                }
-                return;
-            }
+
+            boolean needNotify=SyncboardHelper.handleSyncEvent(message);
 
             Observable.just(message)
                     .subscribeOn(Schedulers.io())
@@ -550,7 +536,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
                     .doOnNext(new Consumer<SyncBoardReceive>() {
                         @Override
                         public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
-                            SyncboardHelper.filterBoardData(syncBoardReceive);
+                            // TODO: 2017/9/13
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())

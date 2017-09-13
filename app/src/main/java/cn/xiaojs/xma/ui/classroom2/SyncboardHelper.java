@@ -4,14 +4,12 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.facebook.stetho.common.LogUtil;
 import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
@@ -196,7 +194,7 @@ public class SyncboardHelper {
         return map.remove(tag);
     }
 
-    public synchronized static void init(SyncBoardReceive syncBoard) {
+    private synchronized static void begin(SyncBoardReceive syncBoard) {
         if(syncBoard==null)return;
         if(syncBoard.stg!=Live.SyncStage.BEGIN){
             return;
@@ -208,7 +206,7 @@ public class SyncboardHelper {
         }
     }
 
-    public synchronized static void going(SyncBoardReceive syncBoard) {
+    private synchronized static void going(SyncBoardReceive syncBoard) {
         if(syncBoard==null)return;
         if(syncBoard.stg!=Live.SyncStage.ONGOING){
             return;
@@ -218,7 +216,7 @@ public class SyncboardHelper {
         }
     }
 
-    public synchronized static void filterBoardData(SyncBoardReceive syncBoard) {
+    private synchronized static void finished(SyncBoardReceive syncBoard) {
         if(syncBoard==null)return;
         if(contain(syncBoard.getId())){
             get(syncBoard.getId()).finished(syncBoard);
@@ -229,6 +227,30 @@ public class SyncboardHelper {
 
     public synchronized static void handleShareBoardData(ShareboardReceive syncBoard) {
         new SyncboardHelperInstance(syncBoard.from).handleShareBoardData(syncBoard);
+    }
+
+    public static boolean handleSyncEvent(SyncBoardReceive syncBoard){
+        if(syncBoard==null)return false;
+        if (syncBoard.stg != Live.SyncStage.FINISH){
+            if(syncBoard.stg==Live.SyncStage.BEGIN){
+                SyncboardHelper.begin(syncBoard);
+                if(syncBoard.evt==Live.SyncEvent.PEN){
+                    return true;
+                }
+            }
+            if(syncBoard.stg==Live.SyncStage.ONGOING&&syncBoard.evt==Live.SyncEvent.PEN){
+                SyncboardHelper.going(syncBoard);
+                return true;
+            }
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the stg is %d and not equal FINISH, so do not notify event", syncBoard.stg);
+            }
+            return false;
+        }
+
+        finished(syncBoard);
+
+        return true;
     }
 
 }
