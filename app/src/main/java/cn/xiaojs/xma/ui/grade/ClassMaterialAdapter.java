@@ -99,7 +99,11 @@ public class ClassMaterialAdapter extends AbsSwipeAdapter<LibDoc, ClassMaterialA
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
             thumbnail(bean.key, R.drawable.ic_pdf, holder);
         } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)){
-            thumbnail(bean.key, R.drawable.ic_video_mine, holder);
+            if(Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName)&&!bean.key.contains("H264")){
+                thumbnail(bean.key, R.drawable.ic_record_video, holder);
+            }else {
+                thumbnail(bean.key, R.drawable.ic_video_mine, holder);
+            }
         } else if (FileUtil.STEAMIMG == FileUtil.getFileType(bean.mimeType)){
             thumbnail(bean.key, R.drawable.ic_record_video, holder);
         } else {
