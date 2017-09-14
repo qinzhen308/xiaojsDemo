@@ -33,6 +33,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
@@ -49,11 +50,14 @@ import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.util.XjsUtils;
+import io.reactivex.functions.Consumer;
 
-public class PublishVideoController extends VideoController implements EventListener {
+public class PublishVideoController extends VideoController{
 
     private int loadingSize = 36;
     private int loadingDesc = 20;
+
+    private EventListener.ELLiveControl eventListener;
 
     public PublishVideoController(Context context, View root, OnStreamChangeListener listener) {
         super(context, root, listener);
@@ -61,13 +65,13 @@ public class PublishVideoController extends VideoController implements EventList
         loadingSize = context.getResources().getDimensionPixelSize(R.dimen.px36);
         loadingDesc = context.getResources().getDimensionPixelSize(R.dimen.font_20px);
 
-        ClassroomEngine.getEngine().addEvenListener(this);
+        eventListener = ClassroomEngine.getEngine().observerLiveControl(receivedConsumer);
 
     }
 
     @Override
     public void onDestroy() {
-        ClassroomEngine.getEngine().removeEvenListener(this);
+        eventListener.dispose();
         super.onDestroy();
     }
 
@@ -314,91 +318,80 @@ public class PublishVideoController extends VideoController implements EventList
         }
     }
 
-    @Override
-    public void receivedEvent(String event, Object object) {
-        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED)
-                .equals(event)) {
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
 
-            if (object == null) {
-                return;
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ELLiveControl received eventType:%d", eventReceived.eventType);
             }
 
-            StreamStartReceive receive = (StreamStartReceive) object;
+            switch (eventReceived.eventType) {
+                case Su.EventType.STREAMING_STARTED:
+                    StreamStartReceive receive = (StreamStartReceive) eventReceived.t;
 
-            mPlayStreamUrl = receive.RTMPPlayUrl;
-            mExtraData = receive.finishOn;
+                    mPlayStreamUrl = receive.RTMPPlayUrl;
+                    mExtraData = receive.finishOn;
 
 
-            int type = Live.StreamType.INDIVIDUAL == receive.streamType?
-                    CTLConstant.StreamingType.PLAY_INDIVIDUAL : CTLConstant.StreamingType.PLAY_LIVE;
-            //FIXME 1对1流的类型是什么？
-            playStream(type, receive.RTMPPlayUrl, receive.finishOn);
+                    int type = Live.StreamType.INDIVIDUAL == receive.streamType?
+                            CTLConstant.StreamingType.PLAY_INDIVIDUAL : CTLConstant.StreamingType.PLAY_LIVE;
+                    //FIXME 1对1流的类型是什么？
+                    playStream(type, receive.RTMPPlayUrl, receive.finishOn);
 
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED).equals(event)) {
+                    break;
+                case Su.EventType.STREAMING_STOPPED:
 
-            Logger.d("STREAMING_STOPPED************************你妈");
-            if (object == null) {
-                return;
-            }
+                    Logger.d("STREAMING_STOPPED********************************000");
 
-            Logger.d("STREAMING_STOPPED********************************000");
+                    StreamStopReceive stopReceive = (StreamStopReceive) eventReceived.t;
+                    if (stopReceive.streamType == Live.StreamType.INDIVIDUAL) {
 
-            StreamStopReceive receive = (StreamStopReceive) object;
-            if (receive.streamType == Live.StreamType.INDIVIDUAL) {
+                        Logger.d("STREAMING_STOPPED********************************0001");
+                        //老师端的推流将学生端的个人推流，强制挤掉。
+                        if (mStreamChangeListener != null) {
+                            mStreamChangeListener.onStreamStopped(CTLConstant.StreamingType.PUBLISH_INDIVIDUAL, null);
+                        }
+                    } else {
+                        Logger.d("STREAMING_STOPPED********************************0002");
+                        pausePlayStream(mPlayType);
+                    }
+                    break;
+                case Su.EventType.STREAM_RECLAIMED:
+                    pausePublishStream(mPublishType);
+                    break;
+                case Su.EventType.STOP_STREAM_BY_EXPIRATION:
+                    if (mStreamChangeListener != null) {
+                        mStreamChangeListener.onStreamStopped(mPublishType, STREAM_EXPIRED);
+                    }
+                    mStreamPublishing = false;
+                    mPublishView.pause();
+                    mPublishView.setVisibility(View.GONE);
 
-                Logger.d("STREAMING_STOPPED********************************0001");
-                //老师端的推流将学生端的个人推流，强制挤掉。
-                if (mStreamChangeListener != null) {
-                    mStreamChangeListener.onStreamStopped(CTLConstant.StreamingType.PUBLISH_INDIVIDUAL, null);
-                }
-            } else {
-                Logger.d("STREAMING_STOPPED********************************0002");
-                pausePlayStream(mPlayType);
-            }
-
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED).equals(event)) {
-            if (object == null) {
-                return;
-            }
-            pausePublishStream(mPublishType);
-
-        } else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION).equals(event)) {
-            if (object == null) {
-                return;
-            }
-
-            if (mStreamChangeListener != null) {
-                mStreamChangeListener.onStreamStopped(mPublishType, STREAM_EXPIRED);
-            }
-            mStreamPublishing = false;
-            mPublishView.pause();
-            mPublishView.setVisibility(View.GONE);
-
-            if (mPlayView.getVisibility() == View.VISIBLE) {
-                mPlayView.pause();
-                mPlayView.setVisibility(View.GONE);
-            }
-        } else if(Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK).equals(event)) {
-
-            if (object == null) {
-                return;
-            }
-            MediaFeedbackReceive receive = (MediaFeedbackReceive) object;
-            if (Live.MediaStatus.READY == receive.status && !TextUtils.isEmpty(receive.playUrl)) {
-                Toast.makeText(mContext, R.string.success_one2one,Toast.LENGTH_SHORT).show();
-                mPlayStreamUrl = receive.playUrl;
-                playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, receive.playUrl);
-            }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == receive.status) {
-                Toast.makeText(mContext, R.string.user_refuse_one_to_one_tips,Toast.LENGTH_SHORT).show();
-            }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == receive.status) {
-                Toast.makeText(mContext, R.string.failed_one2one_network_issue,Toast.LENGTH_SHORT).show();
-            }else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY== receive.status) {
-                Toast.makeText(mContext, R.string.failed_one2one_privacy,Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(mContext, R.string.failed_one2one,Toast.LENGTH_SHORT).show();
+                    if (mPlayView.getVisibility() == View.VISIBLE) {
+                        mPlayView.pause();
+                        mPlayView.setVisibility(View.GONE);
+                    }
+                    break;
+                case Su.EventType.MEDIA_FEEDBACK:
+                    MediaFeedbackReceive feedbackReceive = (MediaFeedbackReceive) eventReceived.t;
+                    if (Live.MediaStatus.READY == feedbackReceive.status && !TextUtils.isEmpty(feedbackReceive.playUrl)) {
+                        Toast.makeText(mContext, R.string.success_one2one,Toast.LENGTH_SHORT).show();
+                        mPlayStreamUrl = feedbackReceive.playUrl;
+                        playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, feedbackReceive.playUrl);
+                    }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == feedbackReceive.status) {
+                        Toast.makeText(mContext, R.string.user_refuse_one_to_one_tips,Toast.LENGTH_SHORT).show();
+                    }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == feedbackReceive.status) {
+                        Toast.makeText(mContext, R.string.failed_one2one_network_issue,Toast.LENGTH_SHORT).show();
+                    }else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY== feedbackReceive.status) {
+                        Toast.makeText(mContext, R.string.failed_one2one_privacy,Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(mContext, R.string.failed_one2one,Toast.LENGTH_SHORT).show();
+                    }
+                    break;
             }
         }
-    }
+    };
 
 
     @Override

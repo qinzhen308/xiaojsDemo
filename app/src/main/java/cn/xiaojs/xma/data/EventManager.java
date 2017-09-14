@@ -32,30 +32,29 @@ import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
 
 public class EventManager {
 
-    public static <T> void onEvent(Context context,
-                                   int eventCategory,
-                                   int eventType,
-                                   final Class<T> valueType,
-                                   MessageCallback<T> callback) {
+    public static <T> SocketListen onEvent(Context context,
+                                           int eventCategory,
+                                           int eventType,
+                                           final Class<T> valueType,
+                                           MessageCallback<T> callback) {
 
         SocketManager socketManager = SocketManager.getSocketManager(context);
-        SocketListen socketListen = new SocketListen(socketManager,callback);
-        socketListen.on(Su.getEventSignature(eventCategory,eventType),valueType);
+        SocketListen socketListen = new SocketListen(socketManager, callback);
+        socketListen.on(eventCategory, eventType, valueType);
+
+        return socketListen;
     }
 
 
     /**
      * Claims to be on live before or after the scheduled class duration.
-     * @param context
-     * @param streamMode
-     * @param callback
      */
     public static void claimStreaming(Context context,
                                       int streamMode,
                                       EventCallback<ClaimReponse> callback) {
 
         SocketManager socketManager = SocketManager.getSocketManager(context);
-        SocketRequest<ClaimReponse> socketRequest = new SocketRequest<>(socketManager,callback);
+        SocketRequest<ClaimReponse> socketRequest = new SocketRequest<>(socketManager, callback);
 
         String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
                 Su.EventType.CLAIM_STREAMING);
@@ -68,13 +67,11 @@ public class EventManager {
 
     /**
      * Signals the live streaming has started and is available to play.
-     * @param context
-     * @param callback
      */
     public static void streamingStarted(Context context, EventCallback<EventResponse> callback) {
 
         SocketManager socketManager = SocketManager.getSocketManager(context);
-        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,callback);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager, callback);
 
         String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
                 Su.EventType.STREAMING_STARTED);
@@ -84,11 +81,8 @@ public class EventManager {
 
     /**
      * Signals the live streaming has stopped.
-     * @param context
-     * @param csOfCurrent
-     * @param callback
      */
-    public static void streamingStopped(Context context,String csOfCurrent,
+    public static void streamingStopped(Context context, String csOfCurrent,
                                         EventCallback<StreamStoppedResponse> callback) {
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketRequest<StreamStoppedResponse> socketRequest = new SocketRequest<>(socketManager,
@@ -107,12 +101,9 @@ public class EventManager {
 
     /**
      * Signals the video talk streaming has started or failed to start.
-     * @param context
-     * @param mediaStatus
-     * @param callback
      */
-    public static void mediaFeedback(Context context,int mediaStatus,
-                                        EventCallback<EventResponse> callback) {
+    public static void mediaFeedback(Context context, int mediaStatus,
+                                     EventCallback<EventResponse> callback) {
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
                 callback);
@@ -128,12 +119,9 @@ public class EventManager {
 
     /**
      * Signals that an established peer-to-peer video talk must be closed.
-     * @param context
-     * @param to
-     * @param callback
      */
-    public static void closeMedia(Context context,String to,
-                                     EventCallback<CloseMediaResponse> callback) {
+    public static void closeMedia(Context context, String to,
+                                  EventCallback<CloseMediaResponse> callback) {
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketRequest<CloseMediaResponse> socketRequest = new SocketRequest<>(socketManager,
                 callback);
@@ -152,12 +140,9 @@ public class EventManager {
 
     /**
      * Requests to establish peer-to-peer video talk with an attendant.
-     * @param context
-     * @param to
-     * @param callback
      */
-    public static void openMedia(Context context,String to,
-                                  EventCallback<EventResponse> callback) {
+    public static void openMedia(Context context, String to,
+                                 EventCallback<EventResponse> callback) {
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
                 callback);
@@ -175,12 +160,9 @@ public class EventManager {
 
     /**
      * Refreshes the live streaming or the on-live-side networking quality.
-     * @param context
-     * @param quality
-     * @param callback
      */
-    public static void streamQuality(Context context,int quality,
-                                 EventCallback<EventResponse> callback) {
+    public static void streamQuality(Context context, int quality,
+                                     EventCallback<EventResponse> callback) {
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
                 callback);
@@ -195,12 +177,9 @@ public class EventManager {
 
     /**
      * Talks to specific attendees in the class.
-     * @param context
-     * @param talk
-     * @param callback
      */
-    public static void sendTalk(Context context,Talk talk,
-                                     EventCallback<TalkResponse> callback) {
+    public static void sendTalk(Context context, Talk talk,
+                                EventCallback<TalkResponse> callback) {
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketRequest<TalkResponse> socketRequest = new SocketRequest<>(socketManager,
                 callback);
@@ -211,7 +190,7 @@ public class EventManager {
     }
 
 
-    public static void shareboardFeedback(Context context,boolean accept,
+    public static void shareboardFeedback(Context context, boolean accept,
                                           String board, EventCallback<EventResponse> callback) {
         SocketManager socketManager = SocketManager.getSocketManager(context);
         SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,

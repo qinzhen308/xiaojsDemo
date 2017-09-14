@@ -5,5 +5,5 @@ package cn.xiaojs.xma.data.api.socket;
  */
 
 public interface MessageCallback<T> {
-    void onMessage(String event, T message);
+    void onMessage(int eventCategory, int eventType, T message);
 }

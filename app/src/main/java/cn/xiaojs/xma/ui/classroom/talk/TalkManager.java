@@ -39,13 +39,15 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
+import io.reactivex.functions.Consumer;
 
-public class TalkManager implements EventListener {
+public class TalkManager {
     public final static int TYPE_FULL_SCREEN_MUlTI_TAlk = 1 << 1; //全屏模式下的教室交流
     public final static int TYPE_MSG_MUlTI_TAlk = 1 << 2; //消息模式下的教室交流
     //public final static int TYPE_MULTI_TALK = TYPE_MSG_MUlTI_TAlk | TYPE_FULL_SCREEN_MUlTI_TAlk;
@@ -75,6 +77,8 @@ public class TalkManager implements EventListener {
     private String mPeekTalkingAccount; //当account不为null时，是一对一聊天, 当为null时，就是教室交流
     private boolean mFullscreenMultiTalkVisible = true; //全屏模式时教室交流是否显示
 
+    private EventListener.ELTalk eventListener;
+
     private TalkManager() {
         mPeerTalkMsgAdapterMap = new HashMap<String, TalkMsgAdapter>();
         mOnTalkMsgReceiveListeners = new ArrayList<OnTalkMsgReceived>();
@@ -84,7 +88,7 @@ public class TalkManager implements EventListener {
 
     public void init(Context context, String ticket) {
 
-        ClassroomEngine.getEngine().addEvenListener(this);
+        eventListener = ClassroomEngine.getEngine().observerTalk(receivedConsumer);
 
         mTicket = ticket;
         mMyAccountId = AccountDataManager.getAccountID(context);
@@ -172,7 +176,7 @@ public class TalkManager implements EventListener {
 
     public void release() {
 
-        ClassroomEngine.getEngine().removeEvenListener(this);
+        eventListener.dispose();
 
         if (mMsgMultiTalkAdapter != null) {
             mMsgMultiTalkAdapter.release();
@@ -222,21 +226,18 @@ public class TalkManager implements EventListener {
     }
 
 
-    /**
-     * 接收到消息
-     */
-    @Override
-    public void receivedEvent(String event, Object object) {
-
-        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.TALK).equals(event)) {
-            if (object == null)
-                return;
-
-            Talk talk = (Talk) object;
-            //TODO fix同一条消息多次回调?
-            handleReceivedMsg(talk);
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+            switch (eventReceived.eventType) {
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+                    //TODO fix同一条消息多次回调?
+                    handleReceivedMsg(talk);
+                    break;
+            }
         }
-    }
+    };
 
     private Handler receivedHandler  = new Handler(Looper.getMainLooper()){
         @Override

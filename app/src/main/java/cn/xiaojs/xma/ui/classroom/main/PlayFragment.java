@@ -43,6 +43,7 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
@@ -68,6 +69,10 @@ import cn.xiaojs.xma.ui.classroom2.RoomRequest;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.XjsUtils;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
@@ -87,7 +92,7 @@ import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSE
  *
  * ======================================================================================== */
 
-public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkListener, EventListener {
+public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkListener {
     public final static int MSG_MODE_INPUT = 1;
     public final static int FULL_SCREEN_MODE_INPUT = 2;
 
@@ -174,6 +179,8 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     private String mBeforePeekAccountId;
     private long mPlayOrPausePressTime = 0;
 
+    private EventListener.ELPlaylive eventListener;
+
     @Override
     protected void initParams() {
         super.initParams();
@@ -189,14 +196,16 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Override
     public void onDestroyView() {
-        classroomEngine.removeEvenListener(this);
         super.onDestroyView();
+        if (eventListener != null) {
+            eventListener.dispose();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        classroomEngine.addEvenListener(this);
+        eventListener = classroomEngine.observerPlaylive(receivedConsumer);
         return view;
     }
 
@@ -746,78 +755,75 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     }
 
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
 
-    @Override
-    public void receivedEvent(String event, Object object) {
-        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION).equals(event)) {
-            Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA).equals(event)) {
-
-            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
-
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED).equals(event)) {
-            onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA).equals(event)) {
-            if (object == null) {
-                return;
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("ELPlaylive received eventType:%d", eventReceived.eventType);
             }
 
-            OpenMediaReceive receive = (OpenMediaReceive) object;
-            showOpenMediaDlg(receive);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY).equals(event)) {
+            switch (eventReceived.eventType) {
+                case Su.EventType.REMIND_FINALIZATION:
+                    Toast.makeText(mContext, R.string.remind_final_tips, Toast.LENGTH_LONG).show();
+                    break;
+                case Su.EventType.CLOSE_MEDIA:
+                    onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+                    break;
+                case Su.EventType.MEDIA_ABORTED:
+                    onStreamStopped(CTLConstant.StreamingType.PUBLISH_PEER_TO_PEER, STREAM_MEDIA_CLOSED);
+                    break;
+                case Su.EventType.OPEN_MEDIA:
+                    OpenMediaReceive receive = (OpenMediaReceive) eventReceived.t;
+                    showOpenMediaDlg(receive);
+                    break;
+                case Su.EventType.REFRESH_STREAMING_QUALITY:
+                    StreamQualityChangedReceive qualityChangedReceive =
+                            (StreamQualityChangedReceive) eventReceived.t;
+                    if (qualityChangedReceive.quality == 1 || qualityChangedReceive.quality == 2) {
+                        Toast.makeText(mContext, R.string.liver_bad_net_tips, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case Su.EventType.SYNC_STATE:
+                    SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;
+                    handleSyncState(syncStateReceive);
+                    break;
+                case Su.EventType.SYNC_CLASS_STATE:
+                    SyncClassStateReceive syncState = (SyncClassStateReceive) eventReceived.t;
 
-            if (object == null) {
-                return;
+                    if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
+
+                        updateTitle();
+                        mTipsHelper.setTipsByState(syncState.to);
+                        //FIXME 总是时间，应该显示为0；
+                        mTimeProgressHelper.reloadLessonDuration();
+                        mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
+                        setControllerBtnStyle(syncState.to);
+
+                        //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
+                        mVideoController.pausePlayStream(CTLConstant.StreamingType.PLAY_LIVE);
+
+
+                    } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
+                        //班中当前课的信息
+
+                        //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
+                        //mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
+
+                        updateTitle();
+                        mTimeProgressHelper.reloadLessonDuration();
+
+                    }
+                    break;
+                case Su.EventType.SHARE_BOARD:
+                    showShareBoardDlg((ShareboardReceive) eventReceived.t);
+                    break;
+                case Su.EventType.STOP_SHARE_BOARD:
+                    break;
             }
-            StreamQualityChangedReceive receive = (StreamQualityChangedReceive) object;
-            if (receive.quality == 1 || receive.quality == 2) {
-                Toast.makeText(mContext, R.string.liver_bad_net_tips, Toast.LENGTH_SHORT).show();
-            }
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_STATE).equals(event)) {
-            if (object == null) {
-                return;
-            }
-
-            SyncStateReceive receive = (SyncStateReceive) object;
-            handleSyncState(receive);
-
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE).equals(event)) {
-
-            if (object == null)
-                return;
-
-            SyncClassStateReceive syncState = (SyncClassStateReceive) object;
-
-            if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
-
-                updateTitle();
-                mTipsHelper.setTipsByState(syncState.to);
-                //FIXME 总是时间，应该显示为0；
-                mTimeProgressHelper.reloadLessonDuration();
-                mTimeProgressHelper.setTimeProgress(0, syncState.to, false);
-                setControllerBtnStyle(syncState.to);
-
-                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
-                mVideoController.pausePlayStream(CTLConstant.StreamingType.PLAY_LIVE);
-
-
-            } else if (Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
-                //班中当前课的信息
-
-                //FIXME 应该收到流暂停的消息，先临时放到这个地方处理
-                //mVideoController.pausePlayStream(StreamType.TYPE_STREAM_PLAY);
-
-                updateTitle();
-                mTimeProgressHelper.reloadLessonDuration();
-
-            }
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD).equals(event)) {
-            showShareBoardDlg(classroomEngine.getInitSharedboardData());
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD).equals(event)) {
-            //TODO 收到停止白板协作的事件后的操作
         }
+    };
 
-    }
 
     private void updateTitle() {
         mLessonTitle.setText(getLessonTitle());

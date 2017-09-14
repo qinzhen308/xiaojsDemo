@@ -24,7 +24,7 @@ public class BoardLayerSetDeserializer extends JsonDeserializer<BoardLayerSet> {
     public BoardLayerSet deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 
 //        String dest= URLDecoder.decode(jp.getValueAsString());
-        Logger.d("-----qz---decode----layers="+jp.getValueAsString());
+//        Logger.d("-----qz---decode----layers="+jp.getValueAsString());
         ObjectMapper om=new ObjectMapper();
         BoardLayerSet set=om.readValue(jp.getValueAsString(),BoardLayerSet.class);
         return set;

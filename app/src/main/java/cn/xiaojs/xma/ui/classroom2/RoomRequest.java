@@ -237,10 +237,6 @@ public class RoomRequest {
     protected void shareboradFeedback(boolean accepted,String board,
                                  final EventCallback<EventResponse> callback) {
 
-        if (!accepted) {
-            stateMachine.getSession().shareboardData = null;
-        }
-
         EventManager.shareboardFeedback(context, accepted, board, new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse response) {

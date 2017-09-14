@@ -57,20 +57,17 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     private Context context;
     private RoomSession roomSession;
-    private List<EventListener> eventListeners;
-
 
     public ClassroomStateMachine(Context context, String name, RoomSession session) {
         super(name);
         this.context = context.getApplicationContext();
         this.roomSession = session;
         setDbg(XiaojsConfig.DEBUG);
-        monitEvent();
+
     }
 
 
     public void destoryAndQuitNow() {
-        clearEventListeners();
         quitNow();
     }
 
@@ -82,29 +79,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
         return this.roomSession;
     }
 
-
-    public void addEventListener(EventListener listener) {
-        if (this.eventListeners == null) {
-            eventListeners = new ArrayList<>();
-        }
-
-        eventListeners.add(listener);
-
-    }
-
-    public void removeEventListener(EventListener listener) {
-        if (eventListeners != null) {
-            eventListeners.remove(listener);
-        }
-    }
-
-    protected void notifyEvent(String event, Object data) {
-        if (eventListeners != null && eventListeners.size() > 0) {
-            for (EventListener listener : eventListeners) {
-                listener.receivedEvent(event, data);
-            }
-        }
-    }
 
     public abstract String getLiveState();
 
@@ -267,12 +241,11 @@ public abstract class ClassroomStateMachine extends StateMachine {
     // 事件响应方法
     //
 
-    protected void closeMedia(String event, CloseMediaReceive message) {
+    protected void closeMedia(CloseMediaReceive message) {
         getSession().one2one = false;
-        notifyEvent(event, message);
     }
 
-    protected void streamStopped(String event, StreamStopReceive message) {
+    protected void streamStopped(StreamStopReceive message) {
         if (message == null) {
             return;
         }
@@ -289,11 +262,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
         } else if (message.streamType == Live.StreamType.LIVE) {
 
         }
-
-        notifyEvent(event, message);
     }
 
-    protected void streamStartted(String event, StreamStartReceive message) {
+    protected void streamStartted(StreamStartReceive message) {
         if (message == null) {
             return;
         }
@@ -313,11 +284,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
         } else if (message.streamType == Live.StreamType.LIVE) {
 
         }
-
-        notifyEvent(event, message);
     }
 
-    protected void streamReclaimed(String event, ReclaimedReceive message) {
+    protected void streamReclaimed(ReclaimedReceive message) {
         if (message == null) {
             return;
         }
@@ -329,11 +298,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
         ctlSession.claimedBy = null;
 
         stopLiveShow();
-
-        notifyEvent(event, message);
     }
 
-    protected void streamExpiration(String event, StreamExpirationReceive message) {
+    protected void streamExpiration(StreamExpirationReceive message) {
         if (message == null) {
             return;
         }
@@ -349,10 +316,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
             finishLesson(null);
         }
 
-        notifyEvent(event, message);
     }
 
-    protected void modeSwitch(String event, ModeSwitchReceive message) {
+    protected void modeSwitch(ModeSwitchReceive message) {
         if (message == null) {
             return;
         }
@@ -360,74 +326,64 @@ public abstract class ClassroomStateMachine extends StateMachine {
         CtlSession ctlSession = roomSession.ctlSession;
         ctlSession.mode = message.to;
 
-        notifyEvent(event, message);
     }
 
-    protected void closePreviewByClassover(String event, ClosePreviewReceive message) {
+    protected void closePreviewByClassover(ClosePreviewReceive message) {
         if (message == null) {
             return;
         }
         //TODO
-        notifyEvent(event, message);
     }
 
-    protected void remindFinal(String event, EmptyReceive message) {
+    protected void remindFinal(EmptyReceive message) {
         if (message == null) {
             return;
         }
-        notifyEvent(event, message);
     }
 
-    protected void join(String event, Attendee message) {
+    protected void join(Attendee message) {
         if (message == null) {
             return;
         }
-        notifyEvent(event, message);
     }
 
-    protected void leave(String event, Attendee message) {
+    protected void leave(Attendee message) {
         if (message == null) {
             return;
         }
-        notifyEvent(event, message);
     }
 
-    protected void constraintKickout(String event, ConstraintKickoutReceive message) {
+    protected void constraintKickout(ConstraintKickoutReceive message) {
         if (message == null) {
             return;
         }
 
         //TODO
-
-        notifyEvent(event, message);
     }
 
-    protected void logoutKickout(String event, LogoutKickoutReceive message) {
+    protected void logoutKickout(LogoutKickoutReceive message) {
         if (message == null) {
             return;
         }
         //TODO
 
-        notifyEvent(event, message);
     }
 
-    protected void mediaAborted(String event, MediaAbortedReceive message) {
+    protected void mediaAborted(MediaAbortedReceive message) {
         if (message == null) {
             return;
         }
         //TODO
-        notifyEvent(event, message);
     }
 
-    protected void mediaDeviceRefresh(String event, MediaDeviceRefreshReceive message) {
+    protected void mediaDeviceRefresh(MediaDeviceRefreshReceive message) {
         if (message == null) {
             return;
         }
         //TODO
-        notifyEvent(event, message);
     }
 
-    protected void mediaFeedback(String event, MediaFeedbackReceive message) {
+    protected void mediaFeedback(MediaFeedbackReceive message) {
         if (message == null) {
             return;
         }
@@ -440,382 +396,64 @@ public abstract class ClassroomStateMachine extends StateMachine {
             getSession().one2one = false;
         }
 
-        notifyEvent(event, message);
     }
 
-    protected void openMeidaRecevied(String event, OpenMediaReceive message) {
+    protected void openMeidaRecevied(OpenMediaReceive message) {
         if (message == null) {
             return;
         }
 
         getSession().ctlSession.publishUrl = message.publishUrl;
         getSession().one2one = true;
-        notifyEvent(event, message);
     }
 
-    protected void streamQualityChangedRecevied(String event, StreamQualityChangedReceive message) {
+    protected void streamQualityChangedRecevied(StreamQualityChangedReceive message) {
         if (message == null) {
             return;
         }
-        notifyEvent(event, message);
     }
 
-    protected void syncClassStateRecevied(String event, SyncClassStateReceive message) {
+    protected void syncClassStateRecevied(SyncClassStateReceive message) {
         if (message == null) {
             return;
         }
 
         dealReceiveSyncClassState(message);
 
-        notifyEvent(event, message);
     }
 
-    protected void syncStateRecevied(String event, SyncStateReceive message) {
+    protected void syncStateRecevied(SyncStateReceive message) {
         if (message == null) {
             return;
         }
 
         getSession().ctlSession.state = message.to;
         switchStateWhenReceiveSyncState(message.to);
-        notifyEvent(event, message);
     }
 
-    protected void talkRecevied(String event, Talk message) {
+    protected void talkRecevied(Talk message) {
         if (message == null) {
             return;
         }
 
         //TODO
-        notifyEvent(event, message);
     }
 
 
-    protected void shareboardReceived(final String event, final ShareboardReceive message) {
-        getSession().shareboardData = message;
-        if (message != null) {
-            Observable.just(message)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .doOnNext(new Consumer<ShareboardReceive>() {
-                        @Override
-                        public void accept(ShareboardReceive syncBoardReceive) throws Exception {
-                            SyncboardHelper.handleShareBoardData(syncBoardReceive);
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<ShareboardReceive>() {
-                        @Override
-                        public void accept(ShareboardReceive syncBoardReceive) throws Exception {
-                            notifyEvent(event, message);
-                        }
-                    });
-
-        }
+    protected void shareboardReceived(final ShareboardReceive message) {
     }
 
-    protected void shareboardAckReceived(String event, ShareboardAckReceive message) {
+    protected void shareboardAckReceived(ShareboardAckReceive message) {
 
-        notifyEvent(event, message);
     }
 
-    protected void stopShareboardReceived(String event, StopShareboardReceive message) {
-        notifyEvent(event, message);
-    }
-
-
-    protected void syncBoardReceived(final String event, SyncBoardReceive message) {
-
-
-        if (message != null) {
-
-            boolean needNotify=SyncboardHelper.handleSyncEvent(message);
-
-            Observable.just(message)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .doOnNext(new Consumer<SyncBoardReceive>() {
-                        @Override
-                        public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
-                            // TODO: 2017/9/13
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<SyncBoardReceive>() {
-                        @Override
-                        public void accept(SyncBoardReceive syncBoardReceive) throws Exception {
-                            notifyEvent(event, syncBoardReceive);
-                        }
-                    });
-
-        }
+    protected void stopShareboardReceived(StopShareboardReceive message) {
 
     }
 
 
-//    protected void playbackSavedRecevied(String event, PlaybackSavedReceive message){
-//        if (message == null) {
-//            return;
-//        }
-//        //TODO
-//        notifyEvent(event, message);
-//    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // private methods
-    //
-
-    private void clearEventListeners() {
-        if (eventListeners != null) {
-            eventListeners.clear();
-            eventListeners = null;
-        }
-    }
-
-    private void monitEvent() {
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.CLOSE_MEDIA, CloseMediaReceive.class, cmCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAMING_STOPPED, StreamStopReceive.class, stpCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAMING_STARTED, StreamStartReceive.class, staCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STREAM_RECLAIMED, ReclaimedReceive.class, reCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class, ssbeCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.CLASS_MODE_SWITCH, ModeSwitchReceive.class, modeSwitchCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.CLOSE_PREVIEW_BY_CLASS_OVER, ClosePreviewReceive.class, closePreviewCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.REMIND_FINALIZATION, EmptyReceive.class, remindFinalCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.JOIN, Attendee.class, joinCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.LEAVE, Attendee.class, leaveCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.KICK_OUT_BY_CONSTRAINT, ConstraintKickoutReceive.class, cKickoutCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.KICK_OUT_BY_LOGOUT, LogoutKickoutReceive.class, lKickoutCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.MEDIA_ABORTED, MediaAbortedReceive.class, mediaAbortedCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.MEDIA_DEVICES_REFRESHED, MediaDeviceRefreshReceive.class, mediaDeviceRefreshCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.MEDIA_FEEDBACK, MediaFeedbackReceive.class, mediaFeedbackCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.OPEN_MEDIA, OpenMediaReceive.class, openMediaCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.REFRESH_STREAMING_QUALITY, StreamQualityChangedReceive.class, streamQualityChangedCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class, syncClassStateCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SYNC_STATE, SyncStateReceive.class, syncStateCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class, talkCallback);
-
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD, ShareboardReceive.class, sbrCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SHARE_BOARD_ACK, ShareboardAckReceive.class, sbarCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.STOP_SHARE_BOARD, StopShareboardReceive.class, ssbrCallback);
-        EventManager.onEvent(context,
-                Su.EventCategory.LIVE, Su.EventType.SYNC_BOARD, SyncBoardReceive.class, syncbrCallback);
-
-//        EventManager.onEvent(context,
-//                Su.EventCategory.LIVE, Su.EventType.PLAYBACK_SAVED, PlaybackSavedReceive.class,playbackSavedCallback);
-//        EventManager.onEvent(context,
-//                Su.EventCategory.LIVE, Su.EventType.PRIMARY_SET,,);
-        //X2C_RECEIVE_PROVISION_RESULT
-        //X2C_RECEIVE_SYNC_DRAW
-        //X2C_RECEIVE_SYNC_NEXT
-        //X2C_RECEIVE_TIMELINE_CHANGED_ON_CURRENT
-
+    protected void syncBoardReceived(SyncBoardReceive message) {
 
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // 定义接受事件回调
-    //
-
-    private MessageCallback<SyncBoardReceive> syncbrCallback = new MessageCallback<SyncBoardReceive>() {
-        @Override
-        public void onMessage(String event, SyncBoardReceive message) {
-            syncBoardReceived(event, message);
-        }
-    };
-
-    private MessageCallback<StopShareboardReceive> ssbrCallback = new MessageCallback<StopShareboardReceive>() {
-        @Override
-        public void onMessage(String event, StopShareboardReceive message) {
-            stopShareboardReceived(event, message);
-        }
-    };
-
-
-    private MessageCallback<ShareboardAckReceive> sbarCallback = new MessageCallback<ShareboardAckReceive>() {
-        @Override
-        public void onMessage(String event, ShareboardAckReceive message) {
-            shareboardAckReceived(event, message);
-        }
-    };
-
-    private MessageCallback<ShareboardReceive> sbrCallback = new MessageCallback<ShareboardReceive>() {
-        @Override
-        public void onMessage(String event, ShareboardReceive message) {
-            shareboardReceived(event, message);
-        }
-    };
-
-
-    private MessageCallback<CloseMediaReceive> cmCallback = new MessageCallback<CloseMediaReceive>() {
-        @Override
-        public void onMessage(String event, CloseMediaReceive message) {
-            closeMedia(event, message);
-        }
-    };
-
-    private MessageCallback<StreamStopReceive> stpCallback = new MessageCallback<StreamStopReceive>() {
-        @Override
-        public void onMessage(String event, StreamStopReceive message) {
-            streamStopped(event, message);
-        }
-    };
-
-    private MessageCallback<StreamStartReceive> staCallback = new MessageCallback<StreamStartReceive>() {
-        @Override
-        public void onMessage(String event, StreamStartReceive message) {
-            streamStartted(event, message);
-        }
-    };
-
-    private MessageCallback<ReclaimedReceive> reCallback = new MessageCallback<ReclaimedReceive>() {
-        @Override
-        public void onMessage(String event, ReclaimedReceive message) {
-            streamReclaimed(event, message);
-        }
-    };
-
-    private MessageCallback<StreamExpirationReceive> ssbeCallback = new MessageCallback<StreamExpirationReceive>() {
-        @Override
-        public void onMessage(String event, StreamExpirationReceive message) {
-            streamExpiration(event, message);
-        }
-    };
-
-    private MessageCallback<ModeSwitchReceive> modeSwitchCallback = new MessageCallback<ModeSwitchReceive>() {
-        @Override
-        public void onMessage(String event, ModeSwitchReceive message) {
-            modeSwitch(event, message);
-        }
-    };
-
-    private MessageCallback<ClosePreviewReceive> closePreviewCallback = new MessageCallback<ClosePreviewReceive>() {
-        @Override
-        public void onMessage(String event, ClosePreviewReceive message) {
-            closePreviewByClassover(event, message);
-        }
-    };
-
-    private MessageCallback<EmptyReceive> remindFinalCallback = new MessageCallback<EmptyReceive>() {
-        @Override
-        public void onMessage(String event, EmptyReceive message) {
-            remindFinal(event, message);
-        }
-    };
-
-    private MessageCallback<Attendee> joinCallback = new MessageCallback<Attendee>() {
-        @Override
-        public void onMessage(String event, Attendee message) {
-            join(event, message);
-        }
-    };
-
-    private MessageCallback<Attendee> leaveCallback = new MessageCallback<Attendee>() {
-        @Override
-        public void onMessage(String event, Attendee message) {
-            leave(event, message);
-        }
-    };
-
-    private MessageCallback<ConstraintKickoutReceive> cKickoutCallback = new MessageCallback<ConstraintKickoutReceive>() {
-        @Override
-        public void onMessage(String event, ConstraintKickoutReceive message) {
-            constraintKickout(event, message);
-        }
-    };
-
-    private MessageCallback<LogoutKickoutReceive> lKickoutCallback = new MessageCallback<LogoutKickoutReceive>() {
-        @Override
-        public void onMessage(String event, LogoutKickoutReceive message) {
-            logoutKickout(event, message);
-        }
-    };
-
-    private MessageCallback<MediaAbortedReceive> mediaAbortedCallback = new MessageCallback<MediaAbortedReceive>() {
-        @Override
-        public void onMessage(String event, MediaAbortedReceive message) {
-            mediaAborted(event, message);
-        }
-    };
-
-    private MessageCallback<MediaDeviceRefreshReceive> mediaDeviceRefreshCallback = new MessageCallback<MediaDeviceRefreshReceive>() {
-        @Override
-        public void onMessage(String event, MediaDeviceRefreshReceive message) {
-            mediaDeviceRefresh(event, message);
-        }
-    };
-
-    private MessageCallback<MediaFeedbackReceive> mediaFeedbackCallback = new MessageCallback<MediaFeedbackReceive>() {
-        @Override
-        public void onMessage(String event, MediaFeedbackReceive message) {
-            mediaFeedback(event, message);
-        }
-    };
-
-    private MessageCallback<OpenMediaReceive> openMediaCallback = new MessageCallback<OpenMediaReceive>() {
-        @Override
-        public void onMessage(String event, OpenMediaReceive message) {
-            openMeidaRecevied(event, message);
-        }
-    };
-
-    private MessageCallback<StreamQualityChangedReceive> streamQualityChangedCallback = new MessageCallback<StreamQualityChangedReceive>() {
-        @Override
-        public void onMessage(String event, StreamQualityChangedReceive message) {
-            streamQualityChangedRecevied(event, message);
-        }
-    };
-
-    private MessageCallback<SyncClassStateReceive> syncClassStateCallback = new MessageCallback<SyncClassStateReceive>() {
-        @Override
-        public void onMessage(String event, SyncClassStateReceive message) {
-            syncClassStateRecevied(event, message);
-        }
-    };
-
-    private MessageCallback<SyncStateReceive> syncStateCallback = new MessageCallback<SyncStateReceive>() {
-        @Override
-        public void onMessage(String event, SyncStateReceive message) {
-            syncStateRecevied(event, message);
-        }
-    };
-
-    private MessageCallback<Talk> talkCallback = new MessageCallback<Talk>() {
-        @Override
-        public void onMessage(String event, Talk message) {
-            talkRecevied(event, message);
-        }
-    };
-
-//    private MessageCallback<PlaybackSavedReceive> playbackSavedCallback = new MessageCallback<PlaybackSavedReceive>() {
-//        @Override
-//        public void onMessage(String event, PlaybackSavedReceive message) {
-//            playbackSavedRecevied(event, message);
-//        }
-//    };
 
 }

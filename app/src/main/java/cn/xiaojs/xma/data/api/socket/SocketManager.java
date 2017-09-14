@@ -113,6 +113,12 @@ public class SocketManager {
 
     }
 
+    public void off(String event, Emitter.Listener listener) {
+        if (socket != null) {
+            socket.off(event, listener);
+        }
+    }
+
 
 
     private JSONObject wrapSocketBean(Object obj) {

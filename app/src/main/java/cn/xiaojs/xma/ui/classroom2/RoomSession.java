@@ -16,7 +16,6 @@ public class RoomSession {
     protected boolean playLiveShow;              //是否在播放直播秀
     protected boolean one2one;
     protected String csOfCurrent;
-    protected ShareboardReceive shareboardData;  //白板协作时初次打开白板的初始化数据
 
     protected long individualStreamDuration;     //直播秀时间
 

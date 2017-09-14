@@ -29,13 +29,15 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
 import cn.xiaojs.xma.util.XjsUtils;
+import io.reactivex.functions.Consumer;
 
-public class ContactManager implements EventListener{
+public class ContactManager{
     public final static int ACTION_JOIN = 1 << 1;
     public final static int ACTION_LEAVE = 1 << 2;
     public final static int ACTION_PSTYPE_CHANGE = 1 << 3;
@@ -48,6 +50,8 @@ public class ContactManager implements EventListener{
 
     private List<OnAttendsChangeListener> mOnAttendsChangeListeners;
     private final Object LOCK = new Object();
+
+    private EventListener.ELContact eventListener;
 
     public static synchronized ContactManager getInstance() {
         if (mInstance == null) {
@@ -63,12 +67,12 @@ public class ContactManager implements EventListener{
     }
 
     public void init() {
-        ClassroomEngine.getEngine().addEvenListener(this);
+        eventListener = ClassroomEngine.getEngine().observerContact(receivedConsumer);
     }
 
     public void release() {
 
-        ClassroomEngine.getEngine().removeEvenListener(this);
+        eventListener.dispose();
 
         if (mLiveCollection != null) {
             if (mLiveCollection.attendees != null) {
@@ -124,20 +128,24 @@ public class ContactManager implements EventListener{
     }
 
 
-    @Override
-    public void receivedEvent(String event, Object object) {
-        if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.JOIN).equals(event)) {
-            updateContactList(true, (Attendee)object);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.LEAVE).equals(event)) {
-            updateContactList(false, (Attendee)object);
-        } else if (Su.getEventSignature(Su.EventCategory.LIVE, Su.EventType.SYNC_CLASS_STATE).equals(event)) {
-            if (object == null)
-                return;
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
 
-            SyncClassStateReceive receive = (SyncClassStateReceive) object;
-            handleSyncClassState(receive);
+            switch (eventReceived.eventType) {
+                case Su.EventType.JOIN:
+                    updateContactList(true, (Attendee)eventReceived.t);
+                    break;
+                case Su.EventType.LEAVE:
+                    updateContactList(false, (Attendee)eventReceived.t);
+                    break;
+                case Su.EventType.SYNC_CLASS_STATE:
+                    SyncClassStateReceive receive = (SyncClassStateReceive) eventReceived.t;
+                    handleSyncClassState(receive);
+                    break;
+            }
         }
-    }
+    };
 
     private void handleSyncClassState(SyncClassStateReceive syncState) {
         if (syncState != null && syncState.volatiles != null && syncState.volatiles.length > 0) {
