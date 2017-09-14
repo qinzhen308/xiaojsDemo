@@ -103,13 +103,13 @@ public class ClassroomEngine {
 
         ClassroomType ctype = session == null ? ClassroomType.Unknown : session.classroomType;
         if (ctype == ClassroomType.ClassLesson) {
-            stateMachine = new ClassStateMachine(context,session);
+            stateMachine = new ClassStateMachine(context, session);
         } else {
             stateMachine = new StandloneStateMachine(context, session);
         }
         stateMachine.start();
 
-        eventObservable = new EventObservable();
+        eventObservable = EventObservable.createEventObservable();
         observerAllEvent();
         roomRequest = new RoomRequest(context, stateMachine);
 
@@ -129,7 +129,7 @@ public class ClassroomEngine {
      * 获取教室类型
      */
     public ClassroomType getClassroomType() {
-        RoomSession roomSession= stateMachine.getSession();
+        RoomSession roomSession = stateMachine.getSession();
         return roomSession == null ? ClassroomType.Unknown : roomSession.classroomType;
     }
 
@@ -170,10 +170,6 @@ public class ClassroomEngine {
         return stateMachine.getTitle();
     }
 
-    public ShareboardReceive getInitSharedboardData() {
-        return stateMachine.getSession().shareboardData;
-    }
-
     public boolean canForceIndividual() {
         return stateMachine.canForceIndividual();
     }
@@ -201,9 +197,11 @@ public class ClassroomEngine {
     public boolean one2one() {
         return stateMachine.getSession().one2one;
     }
+
     public void setOne2one(boolean one2one) {
         stateMachine.getSession().one2one = one2one;
     }
+
     public String getTicket() {
         return stateMachine.getSession().ticket;
     }
@@ -213,81 +211,11 @@ public class ClassroomEngine {
     }
 
     public long getIndividualStreamDuration() {
-        return  stateMachine.getSession().individualStreamDuration;
+        return stateMachine.getSession().individualStreamDuration;
     }
-
-
-    public EventListener.Syncboard observerSyncboard(Consumer<EventReceived> consumer) {
-        EventListener.Syncboard syncboard = new EventListener.Syncboard(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(syncboard)
-                .subscribe(consumer);
-
-        return syncboard;
-    }
-
-    public EventListener.ELPlaylive observerPlaylive(Consumer<EventReceived> consumer) {
-        EventListener.ELPlaylive playlive = new EventListener.ELPlaylive(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(playlive)
-                .subscribe(consumer);
-        return playlive;
-    }
-
-    public EventListener.ELLiving observerLiving(Consumer<EventReceived> consumer) {
-        EventListener.ELLiving living = new EventListener.ELLiving(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(living)
-                .subscribe(consumer);
-        return living;
-    }
-
-    public EventListener.ELPVideoControl observerPVControl(Consumer<EventReceived> consumer) {
-        EventListener.ELPVideoControl pVideoControl = new EventListener.ELPVideoControl(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(pVideoControl)
-                .subscribe(consumer);
-        return pVideoControl;
-    }
-
-    public EventListener.ELLiveControl observerLiveControl(Consumer<EventReceived> consumer) {
-        EventListener.ELLiveControl elLiveControl = new EventListener.ELLiveControl(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(elLiveControl)
-                .subscribe(consumer);
-        return elLiveControl;
-    }
-
-    public EventListener.ELTalk observerTalk(Consumer<EventReceived> consumer) {
-        EventListener.ELTalk elTalk = new EventListener.ELTalk(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(elTalk)
-                .subscribe(consumer);
-        return elTalk;
-    }
-
-    public EventListener.ELContact observerContact(Consumer<EventReceived> consumer) {
-        EventListener.ELContact elContact = new EventListener.ELContact(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(elContact)
-                .subscribe(consumer);
-        return elContact;
-    }
-
-    public EventListener.ELRoom observerRoom(Consumer<EventReceived> consumer) {
-        EventListener.ELRoom elRoom = new EventListener.ELRoom(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(elRoom)
-                .subscribe(consumer);
-        return elRoom;
-    }
-
-
 
     /**
      * 请求开始直播秀
-     * @param mode
-     * @param callback
      */
     public void claimStream(int mode, final EventCallback<ClaimReponse> callback) {
         if (roomRequest != null) {
@@ -297,7 +225,6 @@ public class ClassroomEngine {
 
     /**
      * 开始推流
-     * @param callback
      */
     public void startStreaming(final EventCallback<EventResponse> callback) {
         if (roomRequest != null) {
@@ -307,8 +234,6 @@ public class ClassroomEngine {
 
     /**
      * 停止推流
-     * @param csOfCurrent
-     * @param callback
      */
     public void stopStreaming(int streamType, String csOfCurrent,
                               final EventCallback<StreamStoppedResponse> callback) {
@@ -320,8 +245,6 @@ public class ClassroomEngine {
 
     /**
      * 发送申请一对一
-     * @param to
-     * @param callback
      */
     public void openMedia(String to, final EventCallback<EventResponse> callback) {
         if (roomRequest != null) {
@@ -331,8 +254,6 @@ public class ClassroomEngine {
 
     /**
      * 关闭1对1
-     * @param to
-     * @param callback
      */
     public void closeMedia(String to, final EventCallback<CloseMediaResponse> callback) {
         if (roomRequest != null) {
@@ -342,8 +263,6 @@ public class ClassroomEngine {
 
     /**
      * 一对一推流时候，推流成功后发送的socket事件
-     * @param mediaStatus
-     * @param callback
      */
     public void mediaFeedback(int mediaStatus,
                               final EventCallback<EventResponse> callback) {
@@ -357,9 +276,6 @@ public class ClassroomEngine {
 
     /**
      * 发送是否接受白板协作反馈
-     * @param accept
-     * @param board
-     * @param callback
      */
     public void shareboardAck(boolean accept, String board,
                               final EventCallback<EventResponse> callback) {
@@ -373,22 +289,17 @@ public class ClassroomEngine {
 
     /**
      * 请求白板协作
-     * @param shareboard
-     * @param callback
      */
     public void requestShareboard(RequestShareboard shareboard,
-                                         EventCallback<EventResponse> callback) {
+                                  EventCallback<EventResponse> callback) {
         if (roomRequest != null) {
-            roomRequest.requestShareboard(context,shareboard, callback);
+            roomRequest.requestShareboard(context, shareboard, callback);
         }
     }
 
 
     /**
      * 停止白板协作
-     * @param board
-     * @param to
-     * @param callback
      */
     public void stopShareboard(String board, String[] to, final EventCallback<EventResponse> callback) {
 
@@ -399,20 +310,16 @@ public class ClassroomEngine {
 
     /**
      * 发送交流
-     * @param talk
-     * @param callback
      */
     public void sendTalk(Talk talk,
-                              final EventCallback<TalkResponse> callback) {
+                         final EventCallback<TalkResponse> callback) {
         if (roomRequest != null) {
-            roomRequest.sendTalk(talk,callback);
+            roomRequest.sendTalk(talk, callback);
         }
     }
 
     /**
      * 开始上课
-     * @param ticket
-     * @param callback
      */
     public void beginClass(String ticket, final APIServiceCallback<ClassResponse> callback) {
         if (roomRequest != null) {
@@ -422,8 +329,6 @@ public class ClassroomEngine {
 
     /**
      * 下课
-     * @param ticket
-     * @param callback
      */
     public void finishClass(String ticket, final APIServiceCallback<ResponseBody> callback) {
         if (roomRequest != null) {
@@ -433,8 +338,6 @@ public class ClassroomEngine {
 
     /**
      * 恢复上课
-     * @param ticket
-     * @param callback
      */
     public void resumeClass(String ticket, final APIServiceCallback<ClassResponse> callback) {
         if (roomRequest != null) {
@@ -444,10 +347,8 @@ public class ClassroomEngine {
 
     /**
      * 暂停上课
-     * @param ticket
-     * @param callback
      */
-    public void pauseClass(String ticket, final APIServiceCallback<ResponseBody> callback){
+    public void pauseClass(String ticket, final APIServiceCallback<ResponseBody> callback) {
         if (roomRequest != null) {
             roomRequest.pauseClass(ticket, callback);
         }
@@ -488,6 +389,103 @@ public class ClassroomEngine {
         return null;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Event Observable
+    //
+
+    public EventListener.Syncboard observerSyncboard(Consumer<EventReceived> consumer) {
+        EventListener.Syncboard syncboard = new EventListener.Syncboard(context);
+        eventObservable.eventListener(syncboard)
+                .doAfterNext(new Consumer<EventReceived>() {
+                    @Override
+                    public void accept(EventReceived eventReceived) throws Exception {
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("Syncboard doAfterNext acceptted");
+                        }
+                        switch (eventReceived.eventType) {
+                            case Su.EventType.SYNC_BOARD:
+                                SyncboardHelper.handleSyncEvent((SyncBoardReceive) eventReceived.t);
+                                break;
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+
+        return syncboard;
+    }
+
+    public EventListener.ELPlaylive observerPlaylive(Consumer<EventReceived> consumer) {
+        EventListener.ELPlaylive playlive = new EventListener.ELPlaylive(context);
+        eventObservable.eventListener(playlive)
+                .doAfterNext(new Consumer<EventReceived>() {
+                    @Override
+                    public void accept(EventReceived eventReceived) throws Exception {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("playlive doAfterNext acceptted");
+                        }
+
+                        switch (eventReceived.eventType) {
+                            case Su.EventType.SHARE_BOARD:
+                                SyncboardHelper.handleShareBoardData((ShareboardReceive) eventReceived.t);
+                                break;
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return playlive;
+    }
+
+    public EventListener.ELLiving observerLiving(Consumer<EventReceived> consumer) {
+        EventListener.ELLiving living = new EventListener.ELLiving(context);
+        eventObservable.eventListener(living)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return living;
+    }
+
+    public EventListener.ELPVideoControl observerPVControl(Consumer<EventReceived> consumer) {
+        EventListener.ELPVideoControl pVideoControl = new EventListener.ELPVideoControl(context);
+        eventObservable.eventListener(pVideoControl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return pVideoControl;
+    }
+
+    public EventListener.ELLiveControl observerLiveControl(Consumer<EventReceived> consumer) {
+        EventListener.ELLiveControl elLiveControl = new EventListener.ELLiveControl(context);
+        eventObservable.eventListener(elLiveControl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return elLiveControl;
+    }
+
+    public EventListener.ELTalk observerTalk(Consumer<EventReceived> consumer) {
+        EventListener.ELTalk elTalk = new EventListener.ELTalk(context);
+        eventObservable.eventListener(elTalk)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return elTalk;
+    }
+
+    public EventListener.ELContact observerContact(Consumer<EventReceived> consumer) {
+        EventListener.ELContact elContact = new EventListener.ELContact(context);
+        eventObservable.eventListener(elContact)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return elContact;
+    }
+
+    public EventListener.ELRoom observerRoom(Consumer<EventReceived> consumer) {
+        EventListener.ELRoom elRoom = new EventListener.ELRoom(context);
+        eventObservable.eventListener(elRoom)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return elRoom;
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -513,8 +511,8 @@ public class ClassroomEngine {
 
     private void observerAllEvent() {
         eventListener = new EventListener(context);
-        eventObservable.getEventObservable(context)
-                .eventListener(eventListener)
+        eventObservable.eventListener(eventListener)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<EventReceived>() {
                     @Override
                     public void accept(EventReceived eventReceived) throws Exception {

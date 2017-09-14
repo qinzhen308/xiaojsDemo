@@ -816,7 +816,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
                     }
                     break;
                 case Su.EventType.SHARE_BOARD:
-                    showShareBoardDlg(classroomEngine.getInitSharedboardData());
+                    showShareBoardDlg((ShareboardReceive) eventReceived.t);
                     break;
                 case Su.EventType.STOP_SHARE_BOARD:
                     break;

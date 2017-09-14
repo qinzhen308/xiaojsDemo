@@ -441,7 +441,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
 
     protected void shareboardReceived(final ShareboardReceive message) {
-        getSession().shareboardData = message;
     }
 
     protected void shareboardAckReceived(ShareboardAckReceive message) {
