@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,6 +22,7 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.common.PlayStreamingActivity;
+import cn.xiaojs.xma.ui.common.PlayActivity;
 
 /**
  * Created by maxiaobao on 2017/4/12.
@@ -52,8 +53,8 @@ public class MaterialUtil {
 
     public static String getDownloadUrl(LibDoc libDoc) {
 
-        String key=libDoc.key;
-        String mimeType=libDoc.mimeType;
+        String key = libDoc.key;
+        String mimeType = libDoc.mimeType;
 //        return "https://file.vipkid.com.cn/apps/vipkid_v1.5.5_17106180_default_defaultChannel.apk";
 
         if (Collaboration.isImage(mimeType)) {
@@ -62,14 +63,14 @@ public class MaterialUtil {
 
         } else if (Collaboration.isVideo(mimeType)
                 || Collaboration.isPPT(mimeType)
-                ||Collaboration.isPDF(mimeType)
-                ||Collaboration.isDoc(mimeType)) {
+                || Collaboration.isPDF(mimeType)
+                || Collaboration.isDoc(mimeType)) {
             //要判断是不是转码的
             String url = "";
-            if(Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(libDoc.typeName)){//录播课转码的
-                url=new StringBuilder(ApiManager.getLiveBucket()).append("/").append(key).append(".mp4").toString();
-            }else {
-                url=new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
+            if (Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(libDoc.typeName)) {//录播课转码的
+                url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(key).append(".mp4").toString();
+            } else {
+                url = new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
             }
 
             return url;
@@ -77,7 +78,7 @@ public class MaterialUtil {
         } else if (Collaboration.isStreaming(mimeType)) {
 
             //下不了，可以忽略
-           return new StringBuilder(ApiManager.getLiveBucket())
+            return new StringBuilder(ApiManager.getLiveBucket())
                     .append("/")
                     .append(key)
                     .append(".m3u8")
@@ -96,23 +97,28 @@ public class MaterialUtil {
             ArrayList<String> urls = new ArrayList<>(1);
             urls.add(bean.key);
 
-            UIUtils.toImageViewActivity(activity, urls,bean.name);
+            UIUtils.toImageViewActivity(activity, urls, bean.name);
 
         } else if (Collaboration.isVideo(mimeType)) {
             String url = "";
 
-            if(Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName)){//录播课转码的
-                url=new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).append(".mp4").toString();
-            }else {
-                url=new StringBuilder(ApiManager.getFileBucket()).append("/").append(bean.key).toString();
+            if (Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName)) {//录播课转码的
+                url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).append(".mp4").toString();
+            } else {
+                url = new StringBuilder(ApiManager.getFileBucket()).append("/").append(bean.key).toString();
             }
 
-            Uri data = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(data, mimeType);
-            activity.startActivity(intent);
+            if (Build.VERSION.SDK_INT >= 16) {
+                lanuchPlay(activity, bean.name, url);
+            } else {
+                Uri data = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(data, mimeType);
+                activity.startActivity(intent);
+            }
 
-        } else if (Collaboration.isPPT(mimeType)||Collaboration.isPDF(mimeType)||Collaboration.isDoc(mimeType)) {
+
+        } else if (Collaboration.isPPT(mimeType) || Collaboration.isPDF(mimeType) || Collaboration.isDoc(mimeType)) {
 
             //LibDoc.ExportImg[] imgs = bean.exported.images;
             ArrayList<LibDoc.ExportImg> imgs = getSortImgs(bean.exported.images);
@@ -122,7 +128,7 @@ public class MaterialUtil {
                 for (LibDoc.ExportImg img : imgs) {
                     urls.add(img.name);
                 }
-                UIUtils.toImageViewActivity(activity, urls,bean.name);
+                UIUtils.toImageViewActivity(activity, urls, bean.name);
             }
 
         } else if (Collaboration.isStreaming(mimeType)) {
@@ -139,21 +145,24 @@ public class MaterialUtil {
                     .append(".m3u8")
                     .toString();
 
-            Uri data = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(data, mimeType);
-
-            List activities = activity.getPackageManager().queryIntentActivities(intent,
-                    PackageManager.MATCH_DEFAULT_ONLY);
-
-            if (activities != null && activities.size() > 0) {
-                activity.startActivity(intent);
+            if (Build.VERSION.SDK_INT >= 16) {
+                lanuchPlay(activity, bean.name, url);
             } else {
-                Intent i = new Intent(activity,PlayStreamingActivity.class);
-                i.putExtra(Constants.KEY_LIB_DOC, bean);
-                activity.startActivity(i);
-            }
+                Uri data = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(data, mimeType);
 
+                List activities = activity.getPackageManager().queryIntentActivities(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+
+                if (activities != null && activities.size() > 0) {
+                    activity.startActivity(intent);
+                } else {
+                    Intent i = new Intent(activity, PlayStreamingActivity.class);
+                    i.putExtra(Constants.KEY_LIB_DOC, bean);
+                    activity.startActivity(i);
+                }
+            }
         } else {
 
             Toast.makeText(activity, "暂不支持打开此格式的文件", Toast.LENGTH_SHORT).show();
@@ -179,7 +188,7 @@ public class MaterialUtil {
             for (LibDoc.ExportImg exportImg : imgs) {
                 //get index
                 String[] args = exportImg.name.split("-");
-                exportImg.index = Integer.parseInt(args[args.length-2]);
+                exportImg.index = Integer.parseInt(args[args.length - 2]);
 
                 sortImgs.add(exportImg);
             }
@@ -200,5 +209,21 @@ public class MaterialUtil {
         public int compare(LibDoc.ExportImg img1, LibDoc.ExportImg img2) {
             return img1.index > img2.index ? 1 : (img1.index == img2.index ? 0 : -1);
         }
+    }
+
+
+    public static void lanuchPlay(Context context, String name, String uri) {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("play target name: %s, uri: %s", name, uri);
+        }
+
+        Intent i = new Intent(context, PlayActivity.class);
+        i.putExtra(PlayActivity.PREFER_EXTENSION_DECODERS, false)
+                .putExtra(PlayActivity.EXTRA_PLAY_NAME, name)
+                .setData(Uri.parse(uri))
+                .setAction(PlayActivity.ACTION_VIEW);
+
+        context.startActivity(i);
     }
 }
