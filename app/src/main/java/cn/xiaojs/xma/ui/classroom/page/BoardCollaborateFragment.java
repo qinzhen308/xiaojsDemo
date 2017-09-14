@@ -40,6 +40,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardCollection;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom2.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.EventListener;
@@ -88,6 +89,22 @@ public class BoardCollaborateFragment extends BaseFragment implements EventListe
         mBoardController.showWhiteboardLayout(null, mDoodleRatio);
         mBoardController.setCanReceive(true);
         mBoardController.setCanSend(true);
+        mBoardController.setSyncDrawingListener(new SyncDrawingListener() {
+            @Override
+            public void onBegin(Object data) {
+
+            }
+
+            @Override
+            public void onGoing(Object data) {
+
+            }
+
+            @Override
+            public void onFinished(Object data) {
+
+            }
+        });
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

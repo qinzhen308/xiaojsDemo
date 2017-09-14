@@ -18,8 +18,9 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 
-public abstract class GeometryShape extends Doodle {
+public abstract class GeometryShape extends Doodle implements SyncCollector{
     public final static int BEELINE = 0;
     public final static int RECTANGLE = 1;
     public final static int OVAL = 2;
@@ -145,4 +146,8 @@ public abstract class GeometryShape extends Doodle {
         }
     }
 
+    @Override
+    public Object onCollect(int type) {
+        return null;
+    }
 }

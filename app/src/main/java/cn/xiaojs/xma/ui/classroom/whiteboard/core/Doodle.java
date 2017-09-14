@@ -29,8 +29,9 @@ import java.util.List;
 import java.util.Vector;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 
-public abstract class Doodle implements Transformation {
+public abstract class Doodle implements Transformation{
     public final static int SELECTION = 0;
     public final static int STYLE_HAND_WRITING = 1;
     public final static int STYLE_GEOMETRY = 2;

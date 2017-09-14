@@ -51,6 +51,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
@@ -59,6 +60,7 @@ import cn.xiaojs.xma.model.socket.room.whiteboard.Command;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Viewport;
 import cn.xiaojs.xma.ui.classroom.bean.Commend;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Packer;
@@ -97,6 +99,9 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SyncRemoteLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Trapezoid;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -209,6 +214,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private BitmapPool mDoodleBitmapPool;
     private int mBackgroundScaleType = BG_SCALE_TYPE_FIT_CENTER;
 
+    SyncGenerator syncGenerator=new SyncGenerator();
+
+    Viewport viewport=new Viewport();
+
+    private String whiteBoardId;
+
+
     public Whiteboard(Context context) {
         super(context);
         initParams(context);
@@ -256,6 +268,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mBlackboardHeight = mViewHeight;
             mBlackboardWidth = temp;
         }
+        //设置同步的viewport
+        viewport.height=mBlackboardHeight;
+        viewport.width=mBlackboardWidth;
 
         mBlackboardRect.set(0, 0, mBlackboardWidth, mBlackboardHeight);
         mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
@@ -517,6 +532,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void initParams(Context context) {
+        whiteBoardId= UUID.randomUUID().toString();
         mMeasureFinished = false;
         mContext = context;
         mDoodleBounds = new RectF();
@@ -689,6 +705,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         break;
                 }
             }
+            syncGenerator.onActionDown();
             return false;
         }
 
@@ -724,6 +741,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     //scale_rotate record
                                     mDoodleAction = Action.SCALE_ROTATE_ACTION;
                                     postInvalidate();
+                                    if(mDoodle instanceof SyncCollector){
+                                        syncGenerator.onActionMove((SyncCollector)mDoodle);
+                                    }
                                     break;
                                 case IntersectionHelper.RIGHT_BOTTOM_CORNER:
                                 case IntersectionHelper.RECT_BODY:
@@ -734,6 +754,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mDoodleAction = Action.MOVE_ACTION;
 
                                     postInvalidate();
+                                    if(mDoodle instanceof SyncCollector){
+                                        syncGenerator.onActionMove((SyncCollector)mDoodle);
+                                    }
                                     break;
                                 case IntersectionHelper.TOP_EDGE:
                                 case IntersectionHelper.RIGHT_EDGE:
@@ -744,6 +767,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mDoodleAction = Action.CHANGE_AREA_ACTION;
 
                                     postInvalidate();
+                                    if(mDoodle instanceof SyncCollector){
+                                        syncGenerator.onActionMove((SyncCollector)mDoodle);
+                                    }
                                     break;
 
                             }
@@ -897,6 +923,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 case MODE_COLOR_PICKER:
                     break;
             }
+            syncGenerator.onActionUp();
         }
 
         @Override
@@ -2313,6 +2340,19 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
 
         return false;
+    }
+
+
+    public void setSyncDrawingListener(SyncDrawingListener listener){
+        syncGenerator.setListener(listener);
+    }
+
+    public Viewport getViewport(){
+        return viewport;
+    }
+
+    public String getWhiteBoardId(){
+        return whiteBoardId;
     }
 }
 
