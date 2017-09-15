@@ -317,15 +317,18 @@ public class ClassroomController {
      * 进入视频播放页面
      */
     public void enterVideoPlayPage(LibDoc doc) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.KEY_LIB_DOC, doc);
-        VideoPlayFragment videoPlayFragment = new VideoPlayFragment();
-        videoPlayFragment.setArguments(bundle);
-        ((ClassroomActivity) mContext).getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.video_play_layout, videoPlayFragment)
-                .addToBackStack("video_player")
-                .commit();
+
+        MaterialUtil.openMaterial((Activity) mContext, doc);
+
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable(Constants.KEY_LIB_DOC, doc);
+//        VideoPlayFragment videoPlayFragment = new VideoPlayFragment();
+//        videoPlayFragment.setArguments(bundle);
+//        ((ClassroomActivity) mContext).getSupportFragmentManager()
+//                .beginTransaction()
+//                .add(R.id.video_play_layout, videoPlayFragment)
+//                .addToBackStack("video_player")
+//                .commit();
     }
 
     public void exitVideoPlayPage() {

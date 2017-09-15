@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,7 +135,14 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
                     LiveSchedule data = (LiveSchedule) object[1];
                     LibDoc doc=new LibDoc();
                     doc.key=data.playback;
-                    doc.mimeType= Collaboration.StreamingTypes.HLS;
+
+                    doc.mimeType= data.mimeType;
+
+                    if (TextUtils.isEmpty(doc.mimeType)) {
+                        doc.mimeType= Collaboration.StreamingTypes.HLS;
+                    }else{
+                        doc.typeName = Collaboration.TypeName.RECORDING_IN_LIBRARY;
+                    }
                     ClassroomController.getInstance(mContext).enterVideoPlayPage(doc);
                 }
             }
