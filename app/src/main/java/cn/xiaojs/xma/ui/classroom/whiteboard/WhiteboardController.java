@@ -698,6 +698,11 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         mWhiteboardLayer.setCanSend(needSend);
     }
 
+    public void setWhiteBoardId(String id){
+        mCurrWhiteboard.setWhiteBoardId(id);
+    }
+
+
     @Override
     public void onReceive(SyncBoardReceive receive) {
         mCurrWhiteboard.onReceive(receive);

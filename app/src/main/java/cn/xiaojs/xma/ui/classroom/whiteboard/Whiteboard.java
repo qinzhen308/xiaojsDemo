@@ -2357,5 +2357,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public String getWhiteBoardId(){
         return whiteBoardId;
     }
+
+    public void setWhiteBoardId(String id){
+        whiteBoardId=id;
+    }
 }
 

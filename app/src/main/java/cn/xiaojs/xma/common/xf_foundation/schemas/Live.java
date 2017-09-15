@@ -142,6 +142,7 @@ public class Live {
 
     public class ShapeType {
         public static final String DRAW_CONTINUOUS ="drawContinuous";
+        public static final String DRAW_INTERVAL ="drawInterval";
         public static final String DRAW_IMAGE ="drawImage";
     }
 

@@ -99,6 +99,8 @@ public class BoardCollaborateFragment extends BaseFragment {
         mBoardController.showWhiteboardLayout(null, mDoodleRatio);
         mBoardController.setCanReceive(true);
         mBoardController.setCanSend(true);
+        mBoardController.setCanSend(true);
+        mBoardController.setWhiteBoardId(firstData.board.id);
         mBoardController.setSyncDrawingListener(syncDrawingListener);
         new Handler().postDelayed(new Runnable() {
             @Override
