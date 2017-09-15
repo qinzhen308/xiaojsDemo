@@ -6,9 +6,9 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.sync;
 
 public interface SyncDrawingListener {
 
-    public void onBegin(Object data);
-    public void onGoing(Object data);
-    public void onFinished(Object data);
+    public void onBegin(String data);
+    public void onGoing(String data);
+    public void onFinished(String data);
 
 
 }

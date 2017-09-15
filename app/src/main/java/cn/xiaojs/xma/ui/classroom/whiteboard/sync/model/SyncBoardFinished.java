@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.data.api.serialize.SyncDataDeserializer;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 
@@ -27,5 +28,10 @@ public class SyncBoardFinished {
     public SyncData data;
     public long time;
     public Ctx ctx;
+
+    @Override
+    public String toString() {
+        return ServiceRequest.objectToJsonString(this);
+    }
 
 }

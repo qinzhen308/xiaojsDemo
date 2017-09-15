@@ -30,7 +30,9 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.api.service.QiniuService;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.material.UploadReponse;
+import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
@@ -97,22 +99,7 @@ public class BoardCollaborateFragment extends BaseFragment {
         mBoardController.showWhiteboardLayout(null, mDoodleRatio);
         mBoardController.setCanReceive(true);
         mBoardController.setCanSend(true);
-        mBoardController.setSyncDrawingListener(new SyncDrawingListener() {
-            @Override
-            public void onBegin(Object data) {
-
-            }
-
-            @Override
-            public void onGoing(Object data) {
-
-            }
-
-            @Override
-            public void onFinished(Object data) {
-
-            }
-        });
+        mBoardController.setSyncDrawingListener(syncDrawingListener);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -233,6 +220,54 @@ public class BoardCollaborateFragment extends BaseFragment {
                     break;
 
             }
+        }
+    };
+
+
+    private SyncDrawingListener syncDrawingListener=new SyncDrawingListener() {
+        @Override
+        public void onBegin(String data) {
+            ClassroomEngine.getEngine().syncBoard(data, new EventCallback<EventResponse>() {
+                @Override
+                public void onSuccess(EventResponse eventResponse) {
+                    Logger.d("----sync----onBegin---onSuccess");
+                }
+
+                @Override
+                public void onFailed(String errorCode, String errorMessage) {
+                    Logger.d("----sync----onBegin---onFailed:"+errorMessage);
+                }
+            });
+        }
+
+        @Override
+        public void onGoing(String data) {
+            ClassroomEngine.getEngine().syncBoard(data, new EventCallback<EventResponse>() {
+                @Override
+                public void onSuccess(EventResponse eventResponse) {
+                    Logger.d("----sync----onGoing---onSuccess");
+                }
+
+                @Override
+                public void onFailed(String errorCode, String errorMessage) {
+                    Logger.d("----sync----onGoing---onFailed:"+errorMessage);
+                }
+            });
+        }
+
+        @Override
+        public void onFinished(String data) {
+            ClassroomEngine.getEngine().syncBoard(data, new EventCallback<EventResponse>() {
+                @Override
+                public void onSuccess(EventResponse eventResponse) {
+                    Logger.d("----sync----onFinished---onSuccess");
+                }
+
+                @Override
+                public void onFailed(String errorCode, String errorMessage) {
+                    Logger.d("----sync----onFinished---onFailed:"+errorMessage);
+                }
+            });
         }
     };
 }

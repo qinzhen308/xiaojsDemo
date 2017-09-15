@@ -786,6 +786,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                             }
 
                             addLastPointIntoDoodle();
+                            if(mDoodle instanceof SyncCollector){
+                                syncGenerator.onActionMove((SyncCollector)mDoodle);
+                            }
                             postInvalidate();
                         }
                     }

@@ -1,10 +1,12 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard.sync.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cn.xiaojs.xma.data.api.serialize.SyncDataDeserializer;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 
@@ -24,4 +26,9 @@ public class SyncBoardEvtBegin {
     public long time;
     public Ctx ctx;
 
+
+    @Override
+    public String toString() {
+        return ServiceRequest.objectToJsonString(this);
+    }
 }

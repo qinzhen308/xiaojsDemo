@@ -41,6 +41,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtGoing;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
 
 public class Beeline extends TwoDimensionalShape {
@@ -199,7 +200,7 @@ public class Beeline extends TwoDimensionalShape {
             ctx.viewport=getWhiteboard().getViewport();
             evtBegin.ctx=ctx;
             evtBegin.stg= Live.SyncStage.BEGIN;
-            evtBegin.evt= Live.SyncEvent.PEN;
+            evtBegin.evt= Live.SyncEvent.LINE;
             evtBegin.time=System.currentTimeMillis();
             evtBegin.board= getWhiteboard().getWhiteBoardId();
             evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
@@ -208,8 +209,8 @@ public class Beeline extends TwoDimensionalShape {
 
         }else if(type== SyncGenerator.STATE_FINISHED){
             SyncBoardFinished evtFinished=new SyncBoardFinished();
-            evtFinished.stg= Live.SyncStage.BEGIN;
-            evtFinished.evt= Live.SyncEvent.PEN;
+            evtFinished.stg= Live.SyncStage.FINISH;
+            evtFinished.evt= Live.SyncEvent.LINE;
             evtFinished.time=System.currentTimeMillis();
             evtFinished.board= getWhiteboard().getWhiteBoardId();
             evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
@@ -226,24 +227,29 @@ public class Beeline extends TwoDimensionalShape {
             syncData.layer.shape.width=layerRect.width();
             syncData.layer.shape.left=layerRect.left;
             syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints();
+            syncData.layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY());
             syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
             return evtFinished;
         }
         return null;
     }
 
-    private ArrayList<PointF> getRealPoints(){
+    private ArrayList<PointF> getRealPoints(float transX,float transY){
         ArrayList<PointF> dest=new ArrayList<>(mPoints.size());
         float[] _p=new float[2];
         float[] p0=new float[2];
+        Matrix matrix=new Matrix();
+        matrix.postTranslate(-transX,-transY);
+        matrix.postConcat(mTransformMatrix);
+        matrix.postConcat(mDrawingMatrix);
         for(PointF p:mPoints){
             p0[0]=p.x;
             p0[1]=p.y;
-            mDisplayMatrix.mapPoints(_p,p0);
+            matrix.mapPoints(_p,p0);
             dest.add(new PointF(_p[0],_p[1]));
         }
         return dest;
     }
+
 
 }

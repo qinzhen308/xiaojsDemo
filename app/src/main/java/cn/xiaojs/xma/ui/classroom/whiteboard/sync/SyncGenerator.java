@@ -29,7 +29,7 @@ public class SyncGenerator {
             if(syncDrawingListener!=null){
                 Object data=collector.onCollect(STATE_BEGIN);
                 if(data!=null){
-                    syncDrawingListener.onBegin(data);
+                    syncDrawingListener.onBegin(data.toString());
                 }
             }
             state=STATE_BEGIN;
@@ -37,7 +37,7 @@ public class SyncGenerator {
             if(syncDrawingListener!=null){
                 Object data=collector.onCollect(STATE_DOING);
                 if(data!=null){
-                    syncDrawingListener.onGoing(data);
+                    syncDrawingListener.onGoing(data.toString());
                 }
             }
             state=STATE_DOING;
@@ -49,7 +49,7 @@ public class SyncGenerator {
         if(syncDrawingListener!=null&&tempCollector!=null){
             Object data=tempCollector.onCollect(STATE_FINISHED);
             if(data!=null){
-                syncDrawingListener.onFinished(data);
+                syncDrawingListener.onFinished(data.toString());
             }
         }
         state=STATE_FINISHED;

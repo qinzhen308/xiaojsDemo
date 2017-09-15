@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import cn.xiaojs.xma.data.api.serialize.SyncDataDeserializer;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 
@@ -29,6 +30,11 @@ public class SyncBoardEvtGoing {
     public static class GoingPoints{
         public PointF startPos;
         public PointF endPos;
+    }
+
+    @Override
+    public String toString() {
+        return ServiceRequest.objectToJsonString(this);
     }
 
 }
