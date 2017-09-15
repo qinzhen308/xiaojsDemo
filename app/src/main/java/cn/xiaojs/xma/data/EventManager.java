@@ -233,4 +233,15 @@ public class EventManager {
         socketRequest.emit(event, stopShareboard, EventResponse.class);
     }
 
+
+    public static void syncBoard(Context context,String data, EventCallback<EventResponse> callback) {
+        SocketManager socketManager = SocketManager.getSocketManager(context);
+        SocketRequest<EventResponse> socketRequest = new SocketRequest<>(socketManager,
+                callback);
+
+        String event = Su.getEventSignature(Su.EventCategory.CLASSROOM,
+                Su.EventType.SYNC_BOARD);
+        socketRequest.emit(event, data, EventResponse.class);
+    }
+
 }

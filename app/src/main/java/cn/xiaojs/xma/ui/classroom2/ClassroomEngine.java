@@ -1,13 +1,6 @@
 package cn.xiaojs.xma.ui.classroom2;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,13 +10,9 @@ import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
-import cn.xiaojs.xma.data.api.socket.SocketManager;
-import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -57,13 +46,7 @@ import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import okhttp3.ResponseBody;
 
 
@@ -71,7 +54,7 @@ import okhttp3.ResponseBody;
  * Created by maxiaobao on 2017/7/3.
  */
 
-public class ClassroomEngine {
+public final class ClassroomEngine {
 
     private volatile static ClassroomEngine classroomEngine;
 
@@ -305,6 +288,17 @@ public class ClassroomEngine {
 
         if (roomRequest != null) {
             roomRequest.stopShareboard(board, to, callback);
+        }
+    }
+
+    /**
+     * 上传白板同步数据
+     * @param data
+     * @param callback
+     */
+    public void syncBoard(String data, final EventCallback<EventResponse> callback) {
+        if (roomRequest != null) {
+            roomRequest.syncBoard(data, callback);
         }
     }
 

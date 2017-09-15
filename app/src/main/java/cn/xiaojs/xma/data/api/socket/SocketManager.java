@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.ApiManager;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -32,7 +33,7 @@ public class SocketManager {
     public static SocketManager getSocketManager(Context context) {
         if (socketManager == null) {
 
-            synchronized(SocketManager.class) {
+            synchronized (SocketManager.class) {
                 if (socketManager == null) {
                     socketManager = new SocketManager(context);
                 }
@@ -45,14 +46,13 @@ public class SocketManager {
         this.context = context.getApplicationContext();
     }
 
-    public void initSocket(String url, IO.Options options) throws Exception{
-        socket = IO.socket(url,options);
+    public void initSocket(String url, IO.Options options) throws Exception {
+        socket = IO.socket(url, options);
     }
 
-    public void connect() throws Exception{
+    public void connect() throws Exception {
         socket.connect();
     }
-
 
 
     public void disConnect() {
@@ -64,7 +64,7 @@ public class SocketManager {
     }
 
     public boolean connected() {
-        return socket == null? false : socket.connected();
+        return socket == null ? false : socket.connected();
     }
 
 
@@ -80,11 +80,11 @@ public class SocketManager {
         }
 
         if (data == null) {
-            socket.emit(event,ack);
-        }else {
+            socket.emit(event, ack);
+        } else {
             JSONObject[] jsonObjects = new JSONObject[1];
             jsonObjects[0] = wrapSocketBean(data);
-            socket.emit(event,jsonObjects,ack);
+            socket.emit(event, jsonObjects, ack);
         }
 
     }
@@ -120,12 +120,17 @@ public class SocketManager {
     }
 
 
-
     private JSONObject wrapSocketBean(Object obj) {
         JSONObject data = null;
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            String sendJson = mapper.writeValueAsString(obj);
+            String sendJson = null;
+            if (obj instanceof String) {
+                sendJson = (String) obj;
+            } else {
+                ObjectMapper mapper = new ObjectMapper();
+                sendJson = mapper.writeValueAsString(obj);
+            }
+
             if (sendJson == null) {
                 return null;
             }

@@ -26,7 +26,7 @@ import okhttp3.ResponseBody;
  * Created by maxiaobao on 2017/7/5.
  */
 
-public class RoomRequest {
+public final class RoomRequest {
 
     private Context context;
     private ClassroomStateMachine stateMachine;
@@ -285,6 +285,21 @@ public class RoomRequest {
         });
 
 
+    }
+
+    protected void syncBoard(String data, final EventCallback<EventResponse> callback) {
+        EventManager.syncBoard(context, data, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+                callback.onFailed(errorCode, errorMessage);
+            }
+        });
     }
 
 
