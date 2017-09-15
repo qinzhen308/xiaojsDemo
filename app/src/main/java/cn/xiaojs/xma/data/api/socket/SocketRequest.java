@@ -66,7 +66,8 @@ public class SocketRequest<T extends EventResponse> {
         this.event = event;
 
         if (XiaojsConfig.DEBUG) {
-            String dataStr = data == null ? "null" : ServiceRequest.objectToJsonString(data);
+            String dataStr = data == null ? "null" :
+                    data instanceof String? (String) data : ServiceRequest.objectToJsonString(data);
             Logger.d("the emit event:##%s##, and data:%s", event, dataStr);
         }
 

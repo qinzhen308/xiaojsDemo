@@ -349,8 +349,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             @Override
             public void onClick() {
                 queryDlg.dismiss();
-                //FIXME  TODO 要传入正确的boardID
-                sendShareboardAck(true, "");
+
+                sendShareboardAck(receive.from,true,receive.board.id);
                 onAcceptShareBoard(receive);
 
             }
@@ -361,8 +361,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
             public void onClick() {
                 queryDlg.dismiss();
                 //mVideoController.pausePublishStream(StreamType.TYPE_STREAM_PUBLISH_PEER_TO_PEER);
-                //FIXME  TODO 要传入正确的boardID
-                sendShareboardAck(false, "");
+                sendShareboardAck(receive.from,false,receive.board.id);
             }
         });
 
@@ -440,6 +439,8 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
                 if (XiaojsConfig.DEBUG) {
                     Toast.makeText(mContext, "你已拒绝", Toast.LENGTH_LONG).show();
                 }
+
+
             }
 
             @Override
@@ -451,16 +452,16 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         });
     }
 
-    protected void sendShareboardAck(final boolean accept, String board) {
+    protected void sendShareboardAck(String to, final boolean accept, String board) {
 
-        classroomEngine.shareboardAck(accept, board, new EventCallback<EventResponse>() {
+        classroomEngine.shareboardAck(to,accept, board, new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse response) {
+
 
                 if (XiaojsConfig.DEBUG && !accept) {
                     Toast.makeText(mContext, "你已拒绝", Toast.LENGTH_LONG).show();
                 }
-
 
             }
 

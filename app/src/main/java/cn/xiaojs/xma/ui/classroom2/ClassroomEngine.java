@@ -260,12 +260,12 @@ public final class ClassroomEngine {
     /**
      * 发送是否接受白板协作反馈
      */
-    public void shareboardAck(boolean accept, String board,
+    public void shareboardAck(String to, boolean accept, String board,
                               final EventCallback<EventResponse> callback) {
 
 
         if (roomRequest != null) {
-            roomRequest.shareboradFeedback(accept, board, callback);
+            roomRequest.shareboradFeedback(to, accept, board, callback);
         }
     }
 
