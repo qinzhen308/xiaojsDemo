@@ -11,4 +11,5 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class ShareboardAck {
     public boolean accepted;
     public String board;
+    public String to;
 }

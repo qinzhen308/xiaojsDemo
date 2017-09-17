@@ -234,10 +234,10 @@ public final class RoomRequest {
     }
 
 
-    protected void shareboradFeedback(boolean accepted,String board,
+    protected void shareboradFeedback(String to,boolean accepted,String board,
                                  final EventCallback<EventResponse> callback) {
 
-        EventManager.shareboardFeedback(context, accepted, board, new EventCallback<EventResponse>() {
+        EventManager.shareboardFeedback(context, to, accepted, board, new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse response) {
                 callback.onSuccess(response);

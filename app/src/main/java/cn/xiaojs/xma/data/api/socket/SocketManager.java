@@ -123,7 +123,7 @@ public class SocketManager {
     private JSONObject wrapSocketBean(Object obj) {
         JSONObject data = null;
         try {
-            String sendJson = null;
+            String sendJson;
             if (obj instanceof String) {
                 sendJson = (String) obj;
             } else {
