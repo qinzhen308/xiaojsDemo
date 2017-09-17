@@ -651,4 +651,8 @@ public abstract class Doodle implements Transformation{
         ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
         return mTranslateY - record.translateY;
     }
+
+    public Matrix getDrawingMatrixFromWhiteboard(){
+        return getWhiteboard().getDrawingMatrix();
+    }
 }

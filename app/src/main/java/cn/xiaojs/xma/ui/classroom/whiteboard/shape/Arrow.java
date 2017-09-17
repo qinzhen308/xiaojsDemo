@@ -121,9 +121,6 @@ public class Arrow extends TwoDimensionalShape {
         mDrawingPath.reset();
 
 
-        RectF rectF=new RectF();
-        mDrawingMatrix.mapRect(rectF,new RectF(0,0,1,1));
-
         PointF p1=mPoints.get(0);
         PointF p2=mPoints.get(1);
         float[] _p1=new float[2];
@@ -131,27 +128,11 @@ public class Arrow extends TwoDimensionalShape {
         mDrawingMatrix.mapPoints(_p1,new float[]{p1.x,p1.y});
         mDrawingMatrix.mapPoints(_p2,new float[]{p2.x,p2.y});
         float adx=(float) (Math.cos(Math.PI*30/180)*ARROW_LENGTH);
-
-
-        float arrawHeight=ARROW_LENGTH/rectF.height();
-        float arrawWidth=ARROW_LENGTH/rectF.width();
-
-//        mDrawingPath.moveTo(_p1[0],_p1[1]);
-//        mDrawingPath.lineTo(_p2[0],_p2[1]);
         float angle=(float) (180*Math.atan2((-_p2[1]+_p1[1]),(_p2[0]-_p1[0]))/Math.PI);
-//        float ap1y=(float)(_p2[1]+Math.sin(Math.PI*(30-angle)/180)*ARROW_LENGTH);
-//        float ap1x=(float)(_p2[0]-Math.cos(Math.PI*(30-angle)/180)*ARROW_LENGTH);
-//        float ap2y=(float)(_p2[1]+Math.cos(Math.PI*(90-angle-30)/180)*ARROW_LENGTH);
-//        float ap2x=(float)(_p2[0]-Math.sin(Math.PI*(90-angle-30)/180)*ARROW_LENGTH);
-//        mDrawingPath.lineTo(ap1x,ap1y);
-//        mDrawingPath.moveTo(_p2[0],_p2[1]);
-//        mDrawingPath.lineTo(ap2x,ap2y);
-//        mDrawingPath.lineTo(_p2[0],_p2[1]);
 
         Matrix matrix=new Matrix();
         RectF transRectInDrawing=new RectF();
         mDrawingMatrix.mapRect(transRectInDrawing,mTransRect);
-//        matrix.setRotate(angle,transRectInDrawing.centerX(),transRectInDrawing.centerY());
         matrix.setRotate(angle,_p1[0],_p1[1]);
         mDrawingPath.transform(matrix);
         float[] __p2=new float[2];
@@ -164,7 +145,6 @@ public class Arrow extends TwoDimensionalShape {
         mDrawingPath.lineTo(ap2.x,ap2.y);
         mDrawingPath.lineTo(__p2[0],__p2[1]);
 
-//        matrix.setRotate(-angle,transRectInDrawing.centerX(),transRectInDrawing.centerY());
         matrix.setRotate(-angle,_p1[0],_p1[1]);
         mDrawingPath.transform(matrix);
 
@@ -221,7 +201,7 @@ public class Arrow extends TwoDimensionalShape {
             ctx.viewport=getWhiteboard().getViewport();
             evtBegin.ctx=ctx;
             evtBegin.stg= Live.SyncStage.BEGIN;
-            evtBegin.evt= Live.SyncEvent.LINE;
+            evtBegin.evt= Live.SyncEvent.ONEWAY_ARROW;
             evtBegin.time=System.currentTimeMillis();
             evtBegin.board= getWhiteboard().getWhiteBoardId();
             evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
@@ -229,9 +209,10 @@ public class Arrow extends TwoDimensionalShape {
         }else if(type== SyncGenerator.STATE_DOING){
 
         }else if(type== SyncGenerator.STATE_FINISHED){
+            Matrix drawingMatrix=new Matrix(getDrawingMatrixFromWhiteboard());
             SyncBoardFinished evtFinished=new SyncBoardFinished();
             evtFinished.stg= Live.SyncStage.FINISH;
-            evtFinished.evt= Live.SyncEvent.LINE;
+            evtFinished.evt= Live.SyncEvent.ONEWAY_ARROW;
             evtFinished.time=System.currentTimeMillis();
             evtFinished.board= getWhiteboard().getWhiteBoardId();
             evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
@@ -242,32 +223,62 @@ public class Arrow extends TwoDimensionalShape {
             syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
             syncData.layer.shape=new Shape();
             RectF layerRect=new RectF();
-            mDisplayMatrix.mapRect(layerRect,mDoodleRect);
+            drawingMatrix.mapRect(layerRect,mDoodleRect);
             syncData.layer.id=getDoodleId();
             syncData.layer.shape.height=layerRect.height();
             syncData.layer.shape.width=layerRect.width();
             syncData.layer.shape.left=layerRect.left;
             syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY());
+            syncData.layer.shape.data=getRealPoints(layerRect.centerX(),layerRect.centerY(),drawingMatrix);
             syncData.layer.shape.type=Live.ShapeType.DRAW_INTERVAL;
             return evtFinished;
         }
         return null;
     }
 
-    private ArrayList<PointF> getRealPoints(float transX, float transY){
-        ArrayList<PointF> dest=new ArrayList<>(mPoints.size());
+    private ArrayList<PointF> getRealPoints(float transX, float transY,Matrix drawingMatrix){
+        ArrayList<PointF> dest=new ArrayList<>(6);
+        PointF p1=mPoints.get(0);
+        PointF p2=mPoints.get(1);
+        float[] _p1=new float[2];
+        float[] _p2=new float[2];
+        drawingMatrix.mapPoints(_p1,new float[]{p1.x,p1.y});
+        drawingMatrix.mapPoints(_p2,new float[]{p2.x,p2.y});
+        float adx=(float) (Math.cos(Math.PI*30/180)*ARROW_LENGTH);
+        float angle=(float) (180*Math.atan2((-_p2[1]+_p1[1]),(_p2[0]-_p1[0]))/Math.PI);
+        dest.add(new PointF(_p1[0],_p1[1]));
+        dest.add(new PointF(_p2[0],_p2[1]));
+        Matrix matrix=new Matrix();
+        RectF transRectInDrawing=new RectF();
+        drawingMatrix.mapRect(transRectInDrawing,mTransRect);
+        matrix.setRotate(angle,_p1[0],_p1[1]);
+        float[] __p2=new float[2];
+        matrix.mapPoints(__p2,_p2);
+        PointF ap1=new PointF(__p2[0]- adx,__p2[1]-ARROW_LENGTH/2);
+        PointF ap2=new PointF(__p2[0]- adx,__p2[1]+ARROW_LENGTH/2);
+        float[] _ap1=new float[2];
+        float[] _ap2=new float[2];
+        Matrix matrixRIn=new Matrix();
+        matrix.invert(matrixRIn);
+        matrixRIn.mapPoints(_ap1,new float[]{ap1.x,ap1.y});
+        matrixRIn.mapPoints(_ap2,new float[]{ap2.x,ap2.y});
+        dest.add(new PointF(_ap1[0],_ap1[1]));
+        dest.add(null);
+        dest.add(new PointF(_p2[0],_p2[1]));
+        dest.add(new PointF(_ap2[0],_ap2[1]));
+
         float[] _p=new float[2];
         float[] p0=new float[2];
-        Matrix matrix=new Matrix();
-        matrix.postTranslate(-transX,-transY);
-        matrix.postConcat(mTransformMatrix);
-        matrix.postConcat(mDrawingMatrix);
-        for(PointF p:mPoints){
+        Matrix matrixCenter=new Matrix();
+        matrixCenter.postTranslate(-transX,-transY);
+        matrixCenter.postConcat(mTransformMatrix);
+        for(PointF p:dest){
+            if(p==null)continue;
             p0[0]=p.x;
             p0[1]=p.y;
-            matrix.mapPoints(_p,p0);
-            dest.add(new PointF(_p[0],_p[1]));
+            matrixCenter.mapPoints(_p,p0);
+            p.x=_p[0];
+            p.y=_p[1];
         }
         return dest;
     }

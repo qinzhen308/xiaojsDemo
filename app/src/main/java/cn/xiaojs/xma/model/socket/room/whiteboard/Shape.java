@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.data.api.serialize.PointDataDeserializer;
+import cn.xiaojs.xma.data.api.serialize.PointDataSerializer;
 
 /**
  * Created by maxiaobao on 2017/9/5.
@@ -19,6 +20,7 @@ import cn.xiaojs.xma.data.api.serialize.PointDataDeserializer;
 public class Shape {
 
     @JsonDeserialize(using = PointDataDeserializer.class)
+    @JsonSerialize(using = PointDataSerializer.class)
     public ArrayList<PointF> data;
 
     public String type;

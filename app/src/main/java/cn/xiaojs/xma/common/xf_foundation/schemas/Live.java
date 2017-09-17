@@ -128,6 +128,22 @@ public class Live {
         public static final int PENTAGON = 31;
         public static final int HEXAGON = 32;
         public static final int LINE = 33;
+        public static final int CIRCLE = 34;
+        public static final int COORDINATE = 35;
+        public static final int RECTANGLE = 36;
+        public static final int RECTANGULAR_COORDINATES = 37;
+        public static final int ARC = 38;
+        public static final int TRIANGLE = 39;
+        public static final int TRAPEZOID = 41;
+        public static final int ONEWAY_ARROW = 42;
+        public static final int RHOMBUS = 43;
+        public static final int SINCOS_LINE = 44;
+        public static final int THREED_COORDINATE_SYSTEM = 45;
+        public static final int TRIANGULAR_PYRAMID = 46;
+        public static final int CUBOID = 47;
+        public static final int CONE = 48;
+        public static final int SPHERE = 49;
+        public static final int CYLINDER = 50;
     }
 
     /**

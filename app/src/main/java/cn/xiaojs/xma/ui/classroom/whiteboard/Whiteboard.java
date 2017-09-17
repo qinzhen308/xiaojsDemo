@@ -2361,5 +2361,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public void setWhiteBoardId(String id){
         whiteBoardId=id;
     }
+
+
+    public Matrix getDrawingMatrix(){
+        return mDrawingMatrix;
+    }
 }
 

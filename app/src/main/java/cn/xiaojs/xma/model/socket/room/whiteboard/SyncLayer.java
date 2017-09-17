@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.model.socket.room.whiteboard;
 
+import android.graphics.PointF;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,6 +19,7 @@ public class SyncLayer {
     public int lineWidth;
     public String lineColor;
     public float angle;
+
 
     @JsonDeserialize(using = InfoDeserializer.class)
     public SyncInfo info;
