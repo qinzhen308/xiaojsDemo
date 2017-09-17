@@ -30,11 +30,19 @@ import cn.xiaojs.xma.ui.common.PlayActivity;
 
 public class MaterialUtil {
 
-    public static void openFileBySystem(Context context, String path, String mimeType) {
+    public static void openFileBySystem(Context context, String name, String path, String mimeType) {
 
         if (XiaojsConfig.DEBUG) {
             Logger.d("the file mime type: %s, and path: %s", mimeType, path);
         }
+
+        if ((Collaboration.isVideo(mimeType) || Collaboration.isStreaming(mimeType)) && Build.VERSION.SDK_INT >= 16) {
+
+            lanuchPlay(context, name, path);
+
+            return;
+        }
+
 
         Uri data = Uri.parse("file://" + path);
         Intent intent = new Intent(Intent.ACTION_VIEW);

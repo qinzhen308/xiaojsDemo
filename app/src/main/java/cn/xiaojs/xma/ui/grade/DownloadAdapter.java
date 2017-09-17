@@ -31,6 +31,7 @@ import cn.xiaojs.xma.common.pulltorefresh.AbsCursorAdapter;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.StickyListHeadersAdapter;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.db.DBTables;
@@ -68,10 +69,11 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
     @Override
     protected void setViewContent(Holder holder, Context context, Cursor cursor) {
         String mimeType = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.MIME_TYPE));
+        String typename = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.TYPE_NAME));
         String key = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.KEY));
         final String path = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
 
-        thumbnail(mimeType, key, holder);
+        thumbnail(mimeType,typename, key, holder);
 
         String name = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME));
 
@@ -261,7 +263,8 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
             if (status == DownloadInfo.DownloadStatus.STATUS_SUCCESS) {
                 String mimeType = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.MIME_TYPE));
                 String local = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
-                MaterialUtil.openFileBySystem(mContext, local, mimeType);
+                String fileName = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME));
+                MaterialUtil.openFileBySystem(mContext, fileName,local, mimeType);
             }
         }
     }
@@ -305,7 +308,7 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
                 && status <= DownloadInfo.DownloadStatus.STATUS_CANCELED;
     }
 
-    private void thumbnail(String mimeType, String key, Holder holder) {
+    private void thumbnail(String mimeType,String typeName, String key, Holder holder) {
 
         String iconUrl = "";
         int errorResId;
@@ -322,7 +325,11 @@ public class DownloadAdapter extends AbsCursorAdapter<DownloadAdapter.Holder> im
         } else if (FileUtil.PDF == FileUtil.getFileType(mimeType)) {
             errorResId = R.drawable.ic_pdf;
         } else if (FileUtil.VIDEO == FileUtil.getFileType(mimeType)) {
-            errorResId = R.drawable.ic_video_mine;
+            if(Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(typeName) && !key.contains("H264")){
+                errorResId = R.drawable.ic_record_video;
+            }else {
+                errorResId = R.drawable.ic_video_mine;
+            }
         } else if (FileUtil.STEAMIMG == FileUtil.getFileType(mimeType)) {
             errorResId = R.drawable.ic_record_video;
         } else {

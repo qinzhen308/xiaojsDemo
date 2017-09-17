@@ -60,7 +60,8 @@ public class DownloadFragment extends BaseFragment
                         Cursor cursor = (Cursor) object;
                         String mimeType = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.MIME_TYPE));
                         String local = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.LOCAL));
-                        MaterialUtil.openFileBySystem(getActivity(), local, mimeType);
+                        String fileName = cursor.getString(cursor.getColumnIndex(DBTables.TDownload.FILE_NAME));
+                        MaterialUtil.openFileBySystem(getActivity(), fileName,local, mimeType);
                     }
                 }
             }
@@ -86,7 +87,8 @@ public class DownloadFragment extends BaseFragment
                 DBTables.TDownload.STATUS,
                 DBTables.TDownload.LAST_MOD,
                 DBTables.TDownload.TOTAL_BYTES,
-                DBTables.TDownload.CURRENT_BYTES
+                DBTables.TDownload.CURRENT_BYTES,
+                DBTables.TDownload.TYPE_NAME
         };
 
         String section = DBTables.TDownload.HIDDEN + " = ? and " + DBTables.TDownload.OWNER + " in (?,?)";

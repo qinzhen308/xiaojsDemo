@@ -61,6 +61,17 @@ public final class DBHelper extends SQLiteOpenHelper {
             db.execSQL(addOwnerColumnSql);
         }
 
+        if (oldVersion < 4) {
+            String addSql = new StringBuilder("ALTER TABLE ")
+                    .append(DBTables.TDownload.TABLE_NAME)
+                    .append(" ADD ")
+                    .append(DBTables.TDownload.TYPE_NAME)
+                    .append(" TEXT")
+                    .toString();
+
+            db.execSQL(addSql);
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

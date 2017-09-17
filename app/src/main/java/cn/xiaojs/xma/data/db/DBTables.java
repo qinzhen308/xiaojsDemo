@@ -22,6 +22,9 @@ public class DBTables {
      * version 3 :
      * add new column: hidden, owner
      *
+     * * version 4 :
+     * add new column: typename
+     *
      */
     public static final class TDownload implements BaseColumns {
         //Table name
@@ -53,6 +56,7 @@ public class DBTables {
         public static final String ERROR_MSG = "error";
         public static final String HIDDEN = "hidden";
         public static final String OWNER = "owner";
+        public static final String TYPE_NAME = "typename";
 
     }
 

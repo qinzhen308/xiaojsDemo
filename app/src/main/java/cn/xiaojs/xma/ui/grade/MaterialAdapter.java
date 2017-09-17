@@ -240,7 +240,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
                     bean.key,
                     MaterialUtil.getDownloadUrl(bean),
                     bean.mimeType,
-                    Social.getDrawing(bean.key, true));
+                    Social.getDrawing(bean.key, true),
+                    bean.typeName);
         Toast.makeText(mContext, "已添加到下载队列", Toast.LENGTH_SHORT).show();
 //        } else {
 //           Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
