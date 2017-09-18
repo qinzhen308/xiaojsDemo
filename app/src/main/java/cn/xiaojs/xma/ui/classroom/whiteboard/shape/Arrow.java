@@ -225,6 +225,8 @@ public class Arrow extends TwoDimensionalShape {
             RectF layerRect=new RectF();
             drawingMatrix.mapRect(layerRect,mDoodleRect);
             syncData.layer.id=getDoodleId();
+            syncData.startPos=new PointF(layerRect.left,layerRect.top);
+            syncData.endPos=new PointF(layerRect.right,layerRect.bottom);
             syncData.layer.shape.height=layerRect.height();
             syncData.layer.shape.width=layerRect.width();
             syncData.layer.shape.left=layerRect.left;

@@ -161,6 +161,7 @@ public class HandWriting extends Doodle implements SyncCollector{
             return evtBegin;
         }else if(type== SyncGenerator.STATE_DOING){
             if(mPoints==null||mPoints.size()<2)return null;
+            Matrix drawingMatrix=new Matrix(getWhiteboard().getDrawingMatrix());
             SyncBoardEvtGoing evtGoing=new SyncBoardEvtGoing();
             evtGoing.stg= Live.SyncStage.ONGOING;
             evtGoing.evt= Live.SyncEvent.PEN;
@@ -168,10 +169,11 @@ public class HandWriting extends Doodle implements SyncCollector{
             evtGoing.board= getWhiteboard().getWhiteBoardId();
             evtGoing.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             evtGoing.data=new SyncBoardEvtGoing.GoingPoints();
-            evtGoing.data.startPos=matrixToRealP(mPoints.get(mPoints.size()-1));
-            evtGoing.data.endPos=matrixToRealP(mPoints.get(mPoints.size()-2));
+            evtGoing.data.startPos=matrixToRealP(mPoints.get(mPoints.size()-1),drawingMatrix);
+            evtGoing.data.endPos=matrixToRealP(mPoints.get(mPoints.size()-2),drawingMatrix);
             return evtGoing;
         }else if(type== SyncGenerator.STATE_FINISHED){
+            Matrix drawingMatrix=new Matrix(getWhiteboard().getDrawingMatrix());
             SyncBoardFinished evtFinished=new SyncBoardFinished();
             evtFinished.stg= Live.SyncStage.FINISH;
             evtFinished.evt= Live.SyncEvent.PEN;
@@ -185,20 +187,22 @@ public class HandWriting extends Doodle implements SyncCollector{
             syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
             syncData.layer.shape=new Shape();
             RectF layerRect=new RectF();
-            mDrawingMatrix.mapRect(layerRect,mDoodleRect);
+            drawingMatrix.mapRect(layerRect,mDoodleRect);
             syncData.layer.id=getDoodleId();
+            syncData.startPos=new PointF(layerRect.left,layerRect.top);
+            syncData.endPos=new PointF(layerRect.right,layerRect.bottom);
             syncData.layer.shape.height=layerRect.height();
             syncData.layer.shape.width=layerRect.width();
             syncData.layer.shape.left=layerRect.left;
             syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY());
+            syncData.layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),drawingMatrix);
             syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
             return evtFinished;
         }
         return null;
     }
 
-    private ArrayList<PointF> getRealPoints(float transX,float transY){
+    private ArrayList<PointF> getRealPoints(float transX,float transY,Matrix drawingMatrix){
         ArrayList<PointF> dest=new ArrayList<>(mPoints.size());
         float[] _p=new float[2];
         float[] p0=new float[2];
@@ -215,7 +219,7 @@ public class HandWriting extends Doodle implements SyncCollector{
         return dest;
     }
 
-    private PointF matrixToRealP(PointF p){
+    private PointF matrixToRealP(PointF p,Matrix drawingMatrix){
         float[] _p=new float[2];
         float[] p0=new float[2];
         p0[0]=p.x;

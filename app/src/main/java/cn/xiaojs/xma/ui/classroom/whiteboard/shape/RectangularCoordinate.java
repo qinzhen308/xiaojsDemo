@@ -176,7 +176,6 @@ public class RectangularCoordinate extends TwoDimensionalShape {
             dy+=scaleH;
         }
 
-
         mDrawingMatrix.postConcat(mTransformMatrix);
         mDrawingPath.transform(mDrawingMatrix);
         canvas.drawPath(mDrawingPath, getPaint());
