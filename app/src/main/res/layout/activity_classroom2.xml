@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/constrant_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <FrameLayout
+            android:id="@+id/replace_lay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/black"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    <FrameLayout
+            android:id="@+id/bottom_lay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/light_gray"
+            app:layout_constraintTop_toBottomOf="@id/replace_lay"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <include
+            android:id="@+id/top_panel"
+            app:layout_constraintTop_toTopOf="parent"
+            layout="@layout/layout_classroom2_panel_top"
+            />
+
+    <ImageView
+            android:id="@+id/scale_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cr_full_screen"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginBottom="@dimen/px20"
+            app:layout_constraintBottom_toBottomOf="@id/replace_lay"
+            app:layout_constraintRight_toRightOf="@id/replace_lay"
+            />
+</android.support.constraint.ConstraintLayout>

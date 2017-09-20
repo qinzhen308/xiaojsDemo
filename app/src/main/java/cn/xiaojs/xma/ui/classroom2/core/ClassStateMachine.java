@@ -1,9 +1,8 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.content.Context;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 
@@ -97,7 +96,8 @@ public class ClassStateMachine extends ClassroomStateMachine{
     @Override
     public CTLConstant.UserIdentity getIdentity(){
         CtlSession session = getSession().ctlSession;
-        String psType = TextUtils.isEmpty(session.psTypeInLesson)? session.psType : session.psTypeInLesson;
+        String psType = TextUtils.isEmpty(session.psTypeInLesson)?
+                session.psType : session.psTypeInLesson;
         return getUserIdentity(psType);
     }
 
@@ -141,7 +141,8 @@ public class ClassStateMachine extends ClassroomStateMachine{
 
         if (Live.LiveSessionState.IDLE.equals(syncState.to)) {
             ctlSession.ctl = null;
-        }else if (syncState.current != null && Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
+        }else if (syncState.current != null
+                && Live.LiveSessionState.PENDING_FOR_LIVE.equals(syncState.to)) {
             if(ctlSession.ctl == null || !ctlSession.ctl.id.equals(syncState.current.id)) {
                 CtlSession.Ctl newCtl = new CtlSession.Ctl();
                 newCtl.title = syncState.current.title;

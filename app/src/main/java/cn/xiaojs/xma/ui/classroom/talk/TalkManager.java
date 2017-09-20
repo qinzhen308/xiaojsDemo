@@ -21,8 +21,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +41,8 @@ import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.EventListener;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
 
 public class TalkManager {

@@ -359,5 +359,13 @@ public class ApiManager {
     }
 
 
+    public static String getClassroomUrl(Context context, String ticket) {
+        return new StringBuilder(getXLSUrl(context))
+                .append("/")
+                .append(ticket)
+                .toString();
+    }
+
+
 
 }

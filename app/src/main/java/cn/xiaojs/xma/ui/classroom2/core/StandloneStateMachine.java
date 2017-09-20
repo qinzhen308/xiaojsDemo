@@ -1,8 +1,7 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.content.Context;
 import android.os.Message;
-import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
@@ -13,7 +12,6 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
-import cn.xiaojs.xma.ui.classroom2.CTLConstant.StandloneChannel;
 
 /**
  * Created by maxiaobao on 2017/7/4.
@@ -175,10 +173,10 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case CTLConstant.BaseChannel.TRANSITION_STATE:
                     transitionTo((State)msg.obj);
                     return HANDLED;
-                case StandloneChannel.JOIN_AVAILABLE:                      //进入pending for jion状态
+                case CTLConstant.StandloneChannel.JOIN_AVAILABLE:                      //进入pending for jion状态
                     transitionTo(pending4JoinState);
                     return true;
-                case StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
+                case CTLConstant.StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
                     ClaimReponse claimReponse = (ClaimReponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = claimReponse.publishUrl;
@@ -213,7 +211,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case CTLConstant.BaseChannel.TRANSITION_STATE:
                     transitionTo((State)msg.obj);
                     return HANDLED;
-                case StandloneChannel.START_LESSON:                        //开始上课
+                case CTLConstant.StandloneChannel.START_LESSON:                        //开始上课
                     ClassResponse response = (ClassResponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = response.publishUrl;
@@ -247,10 +245,10 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case CTLConstant.BaseChannel.TRANSITION_STATE:
                     transitionTo((State)msg.obj);
                     return HANDLED;
-                case StandloneChannel.DELAY_LESSON:                       //拖堂
+                case CTLConstant.StandloneChannel.DELAY_LESSON:                       //拖堂
                     transitionTo(delayedState);
                     return HANDLED;
-                case StandloneChannel.PAUSE_LESSON:                       //课间休息
+                case CTLConstant.StandloneChannel.PAUSE_LESSON:                       //课间休息
                 {
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.state = Live.LiveSessionState.RESET;
@@ -259,7 +257,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                     transitionTo(restState);
                     return HANDLED;
                 }
-                case StandloneChannel.FINISH_LESSON:                      //下课
+                case CTLConstant.StandloneChannel.FINISH_LESSON:                      //下课
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = null;
                     //如果下课，相应的1对1播放地址也要重制为空
@@ -296,7 +294,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case CTLConstant.BaseChannel.TRANSITION_STATE:
                     transitionTo((State)msg.obj);
                     return HANDLED;
-                case StandloneChannel.FINISH_LESSON:                        //下课
+                case CTLConstant.StandloneChannel.FINISH_LESSON:                        //下课
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = null;
                     //如果下课，相应的1对1播放地址也要重制为空
@@ -334,7 +332,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case CTLConstant.BaseChannel.TRANSITION_STATE:
                     transitionTo((State)msg.obj);
                     return HANDLED;
-                case StandloneChannel.RESUME_LESSON:                        //恢复上课
+                case CTLConstant.StandloneChannel.RESUME_LESSON:                        //恢复上课
 
                     CtlSession ctlSession = getSession().ctlSession;
                     ClassResponse response = (ClassResponse) msg.obj;
@@ -371,7 +369,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case CTLConstant.BaseChannel.TRANSITION_STATE:
                     transitionTo((State)msg.obj);
                     return HANDLED;
-                case StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
+                case CTLConstant.StandloneChannel.START_LIVE_SHOW:                     //开始直播秀
                     ClaimReponse claimReponse = (ClaimReponse) msg.obj;
                     CtlSession ctlSession = getSession().ctlSession;
                     ctlSession.publishUrl = claimReponse.publishUrl;
@@ -412,7 +410,7 @@ public class StandloneStateMachine extends ClassroomStateMachine {
                 case CTLConstant.BaseChannel.TRANSITION_STATE:
                     transitionTo((State)msg.obj);
                     return HANDLED;
-                case StandloneChannel.STOP_LIVE_SHOW:                      //停止直播秀
+                case CTLConstant.StandloneChannel.STOP_LIVE_SHOW:                      //停止直播秀
                     if (XiaojsConfig.DEBUG) {
                         Logger.d("LiveShowState: received STOP_LIVE_SHOW");
                     }

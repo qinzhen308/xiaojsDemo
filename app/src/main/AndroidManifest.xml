@@ -399,6 +399,11 @@
         <activity android:name=".ui.grade.MaterialFragmentActivity"
                   android:screenOrientation="portrait"/>
 
+        <activity android:name=".ui.classroom2.Classroom2Activity"
+                  android:screenOrientation="portrait"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+                  android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
+
         <activity android:name=".ui.common.PlayActivity"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
                   android:launchMode="singleTop"

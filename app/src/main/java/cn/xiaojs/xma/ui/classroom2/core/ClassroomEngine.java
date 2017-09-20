@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -284,7 +284,8 @@ public final class ClassroomEngine {
     /**
      * 停止白板协作
      */
-    public void stopShareboard(String board, String[] to, final EventCallback<EventResponse> callback) {
+    public void stopShareboard(String board,
+                               String[] to, final EventCallback<EventResponse> callback) {
 
         if (roomRequest != null) {
             roomRequest.stopShareboard(board, to, callback);
@@ -423,7 +424,8 @@ public final class ClassroomEngine {
 
                         switch (eventReceived.eventType) {
                             case Su.EventType.SHARE_BOARD:
-                                SyncboardHelper.handleShareBoardData((ShareboardReceive) eventReceived.t);
+                                SyncboardHelper.handleShareBoardData(
+                                        (ShareboardReceive) eventReceived.t);
                                 break;
                         }
                     }
@@ -512,7 +514,8 @@ public final class ClassroomEngine {
                     public void accept(EventReceived eventReceived) throws Exception {
 
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("ClassroomEngine received eventType:%d", eventReceived.eventType);
+                            Logger.d("ClassroomEngine received eventType:%d",
+                                    eventReceived.eventType);
                         }
 
                         updateState(eventReceived);
@@ -572,7 +575,8 @@ public final class ClassroomEngine {
                 stateMachine.openMeidaRecevied((OpenMediaReceive) eventReceived.t);
                 break;
             case Su.EventType.REFRESH_STREAMING_QUALITY:
-                stateMachine.streamQualityChangedRecevied((StreamQualityChangedReceive) eventReceived.t);
+                stateMachine.streamQualityChangedRecevied(
+                        (StreamQualityChangedReceive) eventReceived.t);
                 break;
             case Su.EventType.SYNC_CLASS_STATE:
                 stateMachine.syncClassStateRecevied((SyncClassStateReceive) eventReceived.t);

@@ -19,12 +19,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
-
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.ui.classroom2.CTLConstant;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 
 public class TipsHelper {
     private View mTipView;

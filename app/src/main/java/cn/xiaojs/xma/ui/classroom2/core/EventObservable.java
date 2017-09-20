@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import io.reactivex.Observable;

@@ -1,21 +1,13 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.content.Context;
 import android.os.Message;
 
 
-import com.orhanobut.logger.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.statemachine.State;
 import cn.xiaojs.xma.common.statemachine.StateMachine;
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.EventManager;
-import cn.xiaojs.xma.data.api.socket.MessageCallback;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
@@ -43,10 +35,6 @@ import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/7/4.

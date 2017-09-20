@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 /**
  * 教室状态回调

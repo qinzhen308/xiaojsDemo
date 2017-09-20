@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.content.Context;
 
@@ -75,7 +75,8 @@ public final class RoomRequest {
             stateMachine.stopLiveShow();
         }
 
-        EventManager.streamingStopped(context, csOfCurrent, new EventCallback<StreamStoppedResponse>() {
+        EventManager.streamingStopped(context,
+                csOfCurrent, new EventCallback<StreamStoppedResponse>() {
             @Override
             public void onSuccess(StreamStoppedResponse streamStoppedResponse) {
                 callback.onSuccess(streamStoppedResponse);
@@ -98,7 +99,8 @@ public final class RoomRequest {
             stateMachine.getSession().one2one = false;
         }
 
-        EventManager.mediaFeedback(context, mediaStatus, new EventCallback<EventResponse>() {
+        EventManager.mediaFeedback(context,
+                mediaStatus, new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse response) {
                 callback.onSuccess(response);
@@ -161,7 +163,8 @@ public final class RoomRequest {
     }
 
     protected void beginClass(String ticket, final APIServiceCallback<ClassResponse> callback) {
-        LiveManager.beginClass(context, ticket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+        LiveManager.beginClass(context, ticket,
+                Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
             @Override
             public void onSuccess(ClassResponse object) {
                 if (XiaojsConfig.DEBUG) {
@@ -186,7 +189,8 @@ public final class RoomRequest {
             public void onSuccess(ResponseBody object) {
                 FinishClassResponse response = null;
                 try {
-                    response = ClassroomEngine.parseSocketBean(object.string(),FinishClassResponse.class);
+                    response = ClassroomEngine.parseSocketBean(object.string(),
+                            FinishClassResponse.class);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -202,7 +206,8 @@ public final class RoomRequest {
     }
 
     protected void resumeClass(String ticket, final APIServiceCallback<ClassResponse> callback){
-        LiveManager.resumeClass(context, ticket, Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+        LiveManager.resumeClass(context, ticket,
+                Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
             @Override
             public void onSuccess(ClassResponse object) {
                 stateMachine.resumeLesson(object);
@@ -237,7 +242,8 @@ public final class RoomRequest {
     protected void shareboradFeedback(String to,boolean accepted,String board,
                                  final EventCallback<EventResponse> callback) {
 
-        EventManager.shareboardFeedback(context, to, accepted, board, new EventCallback<EventResponse>() {
+        EventManager.shareboardFeedback(context,
+                to, accepted, board, new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse response) {
                 callback.onSuccess(response);

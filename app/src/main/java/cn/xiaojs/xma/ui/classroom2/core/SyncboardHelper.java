@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -84,7 +84,8 @@ public class SyncboardHelper {
                 }
             }
             //转换command里面的图层
-            if(syncBoard.data.get(0).command!=null&&!ArrayUtil.isEmpty(syncBoard.data.get(0).command.p)){
+            if(syncBoard.data.get(0).command!=null
+                    && !ArrayUtil.isEmpty(syncBoard.data.get(0).command.p)){
                 for(SyncLayer layer:syncBoard.data.get(0).command.p){
                     matrixLayerToUnit(layer,matrixTransToUnit);
                 }
@@ -152,7 +153,11 @@ public class SyncboardHelper {
 
 
         public void handleShareBoardData(ShareboardReceive syncBoard) {
-            if(syncBoard==null||syncBoard.board==null||syncBoard.board.drawing==null||syncBoard.board.drawing.stylus==null)return;
+            if(syncBoard==null
+                    ||syncBoard.board==null
+                    ||syncBoard.board.drawing==null
+                    ||syncBoard.board.drawing.stylus==null)
+                return;
 
             int height=syncBoard.board.drawing.height;
             int width=syncBoard.board.drawing.width;
@@ -243,7 +248,8 @@ public class SyncboardHelper {
                 return true;
             }
             if (XiaojsConfig.DEBUG) {
-                Logger.d("the stg is %d and not equal FINISH, so do not notify event", syncBoard.stg);
+                Logger.d("the stg is %d and not equal FINISH, so do not notify event",
+                        syncBoard.stg);
             }
             return false;
         }
