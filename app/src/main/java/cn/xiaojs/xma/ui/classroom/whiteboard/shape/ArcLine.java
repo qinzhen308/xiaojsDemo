@@ -8,11 +8,21 @@ import android.graphics.RectF;
 
 import java.util.ArrayList;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Shape;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
 
 /**
  * created by Paul Z on 2017/8/25
@@ -143,8 +153,12 @@ public class ArcLine extends TwoDimensionalShape {
         if(!firstDrawing){
             if(arcPoints.size()>1){
                 Matrix matrix=new Matrix();
-                matrix.setRectToRect(srcRect,mDoodleRect, Matrix.ScaleToFit.FILL);
-                /*float[] temP=new float[2];
+                RectF srDest=new RectF();
+                RectF dooleDest=new RectF();
+                mDrawingMatrix.mapRect(srDest,srcRect);
+                mDrawingMatrix.mapRect(dooleDest,mTransRect);
+                matrix.setRectToRect(srDest,dooleDest, Matrix.ScaleToFit.FILL);
+                float[] temP=new float[2];
                 PointF p=arcPoints.get(0);
                 matrix.mapPoints(temP,new float[]{p.x,p.y});
                 mDrawingPath.moveTo(temP[0],temP[1]);
@@ -152,8 +166,8 @@ public class ArcLine extends TwoDimensionalShape {
                     p=arcPoints.get(i);
                     matrix.mapPoints(temP,new float[]{p.x,p.y});
                     mDrawingPath.lineTo(temP[0],temP[1]);
-                }*/
-                float[] temPs=new float[arcPoints.size()*2];
+                }
+                /*float[] temPs=new float[arcPoints.size()*2];
                 for(int i=0;i<arcPoints.size();i++) {
                     PointF p=arcPoints.get(i);
                     temPs[i*2]=p.x;
@@ -164,7 +178,7 @@ public class ArcLine extends TwoDimensionalShape {
                 mDrawingPath.moveTo(destPs[0],destPs[1]);
                 for(int i=1;i<arcPoints.size();i++) {
                     mDrawingPath.lineTo(destPs[2*i],destPs[2*i+1]);
-                }
+                }*/
             }
             mDrawingMatrix.postConcat(mTransformMatrix);
             mDrawingPath.transform(mTransformMatrix);
@@ -258,5 +272,81 @@ public class ArcLine extends TwoDimensionalShape {
                 mPoints.get(1).set(mDoodleRect.right, mDoodleRect.top);
                 break;
         }*/
+    }
+
+
+    @Override
+    public Object onCollect(int type) {
+        if(type== SyncGenerator.STATE_BEGIN){
+            SyncBoardEvtBegin evtBegin=new SyncBoardEvtBegin();
+            Ctx ctx=new Ctx();
+            ctx.lineWidth=(int)getPaint().getStrokeWidth();
+            ctx.strokeStyle= ColorUtil.getColorName(getPaint().getColor());
+            ctx.viewport=getWhiteboard().getViewport();
+            evtBegin.ctx=ctx;
+            evtBegin.stg= Live.SyncStage.BEGIN;
+            evtBegin.evt= Live.SyncEvent.ARC;
+            evtBegin.time=System.currentTimeMillis();
+            evtBegin.board= getWhiteboard().getWhiteBoardId();
+            evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            return evtBegin;
+        }else if(type== SyncGenerator.STATE_DOING){
+
+        }else if(type== SyncGenerator.STATE_FINISHED){
+            Matrix drawingMatrix=new Matrix(getDrawingMatrixFromWhiteboard());
+            SyncBoardFinished evtFinished=new SyncBoardFinished();
+            evtFinished.stg= Live.SyncStage.FINISH;
+            evtFinished.evt= Live.SyncEvent.ARC;
+            evtFinished.time=System.currentTimeMillis();
+            evtFinished.board= getWhiteboard().getWhiteBoardId();
+            evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            SyncData syncData=new SyncData();
+            syncData.layer=new SyncLayer();
+            evtFinished.data=syncData;
+            syncData.layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+            syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
+            syncData.layer.shape=new Shape();
+            RectF layerRect=new RectF();
+            drawingMatrix.mapRect(layerRect,mDoodleRect);
+            syncData.layer.id=getDoodleId();
+            calculatePosition(syncData,drawingMatrix);
+            syncData.layer.shape.height=layerRect.height();
+            syncData.layer.shape.width=layerRect.width();
+            syncData.layer.shape.left=layerRect.left;
+            syncData.layer.shape.top=layerRect.top;
+            syncData.layer.shape.data=getRealPoints(layerRect.centerX(),layerRect.centerY(),drawingMatrix);
+            syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+            return evtFinished;
+        }
+        return null;
+    }
+
+    private ArrayList<PointF> getRealPoints(float transX,float transY,Matrix drawingMatrix){
+        ArrayList<PointF> dest=new ArrayList<>();
+        Matrix matrix=new Matrix();
+        RectF srDest=new RectF();
+        RectF dooleDest=new RectF();
+        drawingMatrix.mapRect(srDest,srcRect);
+        drawingMatrix.mapRect(dooleDest,mTransRect);
+        matrix.setRectToRect(srDest,dooleDest, Matrix.ScaleToFit.FILL);
+        matrix.postTranslate(-transX ,-transY);
+        float[] temP=new float[2];
+        PointF p=arcPoints.get(0);
+        matrix.mapPoints(temP,new float[]{p.x,p.y});
+        dest.add(new PointF(temP[0],temP[1]));
+        for(int i=1;i<arcPoints.size();i++){
+            p=arcPoints.get(i);
+            matrix.mapPoints(temP,new float[]{p.x,p.y});
+            dest.add(new PointF(temP[0],temP[1]));
+        }
+        return dest;
+    }
+
+    private void calculatePosition(SyncData syncData,Matrix matrix){
+        float[] _p=new float[2];
+        matrix.mapPoints(_p,new float[]{mPoints.get(0).x,mPoints.get(0).y});
+        syncData.startPos=new PointF(_p[0],_p[1]);
+        matrix.mapPoints(_p,new float[]{mPoints.get(1).x,mPoints.get(1).y});
+        syncData.endPos=new PointF(_p[0],_p[1]);
     }
 }

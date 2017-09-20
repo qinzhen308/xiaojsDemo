@@ -8,12 +8,24 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import java.util.ArrayList;
+
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Shape;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.LineSegment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.TwoDimensionalShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
 
 /**
  * created by Paul Z on 2017/8/30
@@ -213,6 +225,138 @@ public class RectangularCoordinate extends TwoDimensionalShape {
                 mPoints.get(1).set(mDoodleRect.right, mDoodleRect.top);
                 break;
         }
+    }
+
+
+
+    @Override
+    public Object onCollect(int type) {
+        if(type== SyncGenerator.STATE_BEGIN){
+            SyncBoardEvtBegin evtBegin=new SyncBoardEvtBegin();
+            Ctx ctx=new Ctx();
+            ctx.lineWidth=(int)getPaint().getStrokeWidth();
+            ctx.strokeStyle= ColorUtil.getColorName(getPaint().getColor());
+            ctx.viewport=getWhiteboard().getViewport();
+            evtBegin.ctx=ctx;
+            evtBegin.stg= Live.SyncStage.BEGIN;
+            evtBegin.evt= Live.SyncEvent.RECTANGULAR_COORDINATES;
+            evtBegin.time=System.currentTimeMillis();
+            evtBegin.board= getWhiteboard().getWhiteBoardId();
+            evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            return evtBegin;
+        }else if(type== SyncGenerator.STATE_DOING){
+
+        }else if(type== SyncGenerator.STATE_FINISHED){
+            Matrix drawingMatrix=new Matrix(getDrawingMatrixFromWhiteboard());
+            SyncBoardFinished evtFinished=new SyncBoardFinished();
+            evtFinished.stg= Live.SyncStage.FINISH;
+            evtFinished.evt= Live.SyncEvent.RECTANGULAR_COORDINATES;
+            evtFinished.time=System.currentTimeMillis();
+            evtFinished.board= getWhiteboard().getWhiteBoardId();
+            evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            SyncData syncData=new SyncData();
+            syncData.layer=new SyncLayer();
+            evtFinished.data=syncData;
+            syncData.layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+            syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
+            syncData.layer.shape=new Shape();
+            RectF layerRect=new RectF();
+            drawingMatrix.mapRect(layerRect,mDoodleRect);
+            syncData.layer.id=getDoodleId();
+            calculatePosition(syncData,drawingMatrix);
+            syncData.layer.shape.height=layerRect.height();
+            syncData.layer.shape.width=layerRect.width();
+            syncData.layer.shape.left=layerRect.left;
+            syncData.layer.shape.top=layerRect.top;
+            syncData.layer.shape.data=getRealPoints(layerRect);
+            syncData.layer.shape.type=Live.ShapeType.DRAW_INTERVAL;
+            return evtFinished;
+        }
+        return null;
+    }
+
+    private ArrayList<PointF> getRealPoints(RectF layerRect){
+        ArrayList<PointF> dest=new ArrayList<>();
+        //x轴
+        int orienX=mOrientation==1||mOrientation==4?-1:1;
+        int orienY=mOrientation==1||mOrientation==2?-1:1;
+        dest.add(new PointF(orienX*layerRect.width()/2,orienY*layerRect.height()/2));
+        dest.add(new PointF(-orienX*layerRect.width()/2,orienY*layerRect.height()/2));
+        float adx=(float) (Math.cos(Math.PI*30/180)*ARROW_LENGTH*orienX);
+        PointF ap1=new PointF(-orienX*layerRect.width()/2+adx,orienY*layerRect.height()/2-ARROW_LENGTH/2);
+        PointF ap2=new PointF(-orienX*layerRect.width()/2+adx,orienY*layerRect.height()/2+ARROW_LENGTH/2);
+        dest.add(ap1);
+        dest.add(ap2);
+        dest.add(new PointF(-orienX*layerRect.width()/2,orienY*layerRect.height()/2));
+        dest.add(null);
+
+        //y轴
+        dest.add(new PointF(orienX*layerRect.width()/2,orienY*layerRect.height()/2));
+        dest.add(new PointF(orienX*layerRect.width()/2,-orienY*layerRect.height()/2));
+        float ady=(float) (Math.cos(Math.PI*30/180)*ARROW_LENGTH*orienY);
+        ap1=new PointF(orienX*layerRect.width()/2-ARROW_LENGTH/2,-orienY*layerRect.height()/2+ady);
+        ap2=new PointF(orienX*layerRect.width()/2+ARROW_LENGTH/2,-orienY*layerRect.height()/2+ady);
+        dest.add(ap1);
+        dest.add(ap2);
+        dest.add(new PointF(orienX*layerRect.width()/2,-orienY*layerRect.height()/2));
+        dest.add(null);
+
+
+
+        PointF p1=new PointF();
+        PointF p2=new PointF();
+
+        switch (mOrientation){
+            case 1://屏幕坐标系一象限，即右下
+                p1.set(-layerRect.width()/2, layerRect.height()/2);
+                p2.set(layerRect.width()/2, -layerRect.height()/2);
+                break;
+            case 2://屏幕坐标系二象限，即左下
+                p1.set(layerRect.width()/2, layerRect.height()/2);
+                p2.set(-layerRect.width()/2, -layerRect.height()/2);
+                break;
+            case 3://屏幕坐标系三象限，即左上
+                p1.set(layerRect.width()/2, -layerRect.height()/2);
+                p2.set(-layerRect.width()/2, layerRect.height()/2);
+                break;
+            case 4://屏幕坐标系四象限，即右上
+                p1.set(-layerRect.width()/2, -layerRect.height()/2);
+                p2.set(layerRect.width()/2, layerRect.height()/2);
+                break;
+        }
+
+        float scaleH=UNIT_SCALE;
+        float scaleW=UNIT_SCALE;
+        float scaleHL=UNIT_SCALE_LENGTH;
+        float scaleWL=UNIT_SCALE_LENGTH;
+        float dx=scaleW;
+        float dy=scaleH;
+        int xOri=p1.x-p2.x<=0?1:-1;
+        int yOri=p1.y-p2.y<=0?1:-1;
+        while (dx<layerRect.width()){
+            dest.add(new PointF(p1.x+xOri*dx,-p1.y));
+            dest.add(new PointF(p1.x+xOri*dx,-p1.y-yOri*scaleHL));
+            dest.add(null);
+            dx+=scaleW;
+        }
+        while (dy<layerRect.height()){
+            dest.add(new PointF(p1.x,-p1.y-yOri*dy));
+            dest.add(new PointF(p1.x+xOri*scaleWL,-p1.y-yOri*dy));
+            dest.add(null);
+            dy+=scaleH;
+        }
+        if(dest.get(dest.size()-1)==null){
+            dest.remove(dest.size()-1);
+        }
+        return dest;
+    }
+
+    private void calculatePosition(SyncData syncData,Matrix matrix){
+        float[] _p=new float[2];
+        matrix.mapPoints(_p,new float[]{mPoints.get(0).x,mPoints.get(0).y});
+        syncData.startPos=new PointF(_p[0],_p[1]);
+        matrix.mapPoints(_p,new float[]{mPoints.get(1).x,mPoints.get(1).y});
+        syncData.endPos=new PointF(_p[0],_p[1]);
     }
 
 }
