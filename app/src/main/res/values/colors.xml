@@ -55,6 +55,7 @@
     <color name="font_white">#ffffff</color>
     <color name="font_trans_white">#99ffffff</color>
     <color name="translucent_50_orange">#7dff9833</color>
+    <color name="font_class_name">#F6F8FA</color>
     <!-- 二维码 -->
     <color name="viewfinder_mask">#60000000</color>
     <color name="result_view">#b0000000</color>
@@ -168,5 +169,10 @@
     <color name="blue_gentle">#92c9ec</color>
 
     <color name="light_gray">#d1d5d8</color>
+
+    <color name="black_opacity_40">#66000000</color>
+    <color name="hint_color">#979797</color>
+    <color name="stork_color">#D0D0D0</color>
+    <color name="timeline_color">#CACACA</color>
 
 </resources>

@@ -22,16 +22,4 @@
             app:layout_constraintTop_toTopOf="parent"
             layout="@layout/layout_classroom_panel_top"
             />
-
-    <ImageView
-            android:id="@+id/scale_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_cr_full_screen"
-            android:layout_marginRight="@dimen/px30"
-            android:layout_marginBottom="@dimen/px20"
-            app:layout_constraintBottom_toBottomOf="@id/replace_lay"
-            app:layout_constraintRight_toRightOf="@id/replace_lay"
-            />
-
 </android.support.constraint.ConstraintLayout>

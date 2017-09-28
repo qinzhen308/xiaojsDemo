@@ -1043,7 +1043,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Keep
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)
-    private void playOrPauseLesson() {
+    public void playOrPauseLesson() {
         if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
             return;
         }

@@ -117,7 +117,7 @@
 # live
 -keep class com.qiniu.pili.droid.streaming.** { *; }
 -keep class com.pili.pldroid.player.** { *; }
--keep class tv.danmaku.ijk.media.player.** {*;}
+-keep class com.qiniu.qplayer.mediaEngine.MediaPlayer{*;}
 
 
 # bugly

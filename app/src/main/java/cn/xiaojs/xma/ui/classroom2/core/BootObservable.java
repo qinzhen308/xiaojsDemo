@@ -266,7 +266,7 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         private void connectError(Status status) {
 
             if (XiaojsConfig.DEBUG) {
-                Logger.d("connect socket classroom failed");
+                Logger.e("connect socket classroom failed");
             }
 
             offSocket();

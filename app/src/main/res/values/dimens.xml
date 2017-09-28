@@ -12,6 +12,10 @@
     <dimen name="header_footer_top_bottom_padding">12dp</dimen>
     <dimen name="dyn_thumbnail_size">68dp</dimen>
     <dimen name="contact_thumbnail_size">@dimen/px60</dimen>
+    <dimen name="chat_item_page_padding_lr">@dimen/px30</dimen>
+    <dimen name="chat_item_page_padding_tb">@dimen/px10</dimen>
+    <dimen name="chat_item_avator_size">@dimen/px80</dimen>
+    <dimen name="chat_item_content_rl">@dimen/px84</dimen>
 
     <!-- 全局使用的大小 -->
     <dimen name="title_bar_txt_size">20sp</dimen>

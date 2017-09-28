@@ -13,10 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.interceptor.CommonHeaderInterceptor;
+import cn.xiaojs.xma.data.api.service.Live2Service;
 import cn.xiaojs.xma.data.api.service.LiveService;
 import cn.xiaojs.xma.data.api.service.OtherService;
 import cn.xiaojs.xma.data.api.service.XiaojsService;
@@ -29,6 +28,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
@@ -76,6 +76,10 @@ public class ApiManager {
 
     public LiveService getLiveService() {
         return createLiveService();
+    }
+
+    public Live2Service getLive2Service() {
+        return createLive2Service();
     }
 
 
@@ -198,6 +202,24 @@ public class ApiManager {
                 .build();
 
         return retrofit.create(LiveService.class);
+    }
+
+    private Live2Service createLive2Service() {
+
+
+        String url = getXLSUrl(getAppContext());
+        if (XiaojsConfig.SHOW_DEMO) {
+            Log.d("HTTP_LOG", "XLS url:" + url);
+        }
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(JacksonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
+                .build();
+
+        return retrofit.create(Live2Service.class);
     }
 
 

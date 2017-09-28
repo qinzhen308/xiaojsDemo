@@ -1054,6 +1054,7 @@
     <string name="donwload_doc_conver_vedio_tip">该资料为直播录像视频，需先转码才能下载，是否立即转码？</string>
     <string name="hint_input_search_students">姓名/手机号</string>
     <string name="goto_apply">去声明</string>
+    <string name="start_live">开始直播</string>
 
 
 </resources>

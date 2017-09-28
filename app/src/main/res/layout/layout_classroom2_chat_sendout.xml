@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/chat_item_page_padding_lr"
+                android:paddingRight="@dimen/chat_item_page_padding_lr"
+                android:paddingTop="@dimen/chat_item_page_padding_tb"
+                android:paddingBottom="@dimen/chat_item_page_padding_tb"
+        >
+
+    <TextView
+            android:id="@+id/time_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/font_white"
+            android:background="@drawable/chat_item_timeline_bg_rect"
+            android:padding="@dimen/px4"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:maxLines="1"
+            android:visibility="gone"
+            />
+
+    <ImageView
+            android:id="@+id/avator"
+            android:layout_width="@dimen/chat_item_avator_size"
+            android:layout_height="@dimen/chat_item_avator_size"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_below="@id/time_line"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textSize="@dimen/font_24px"
+        android:textColor="@color/font_dark_gray"
+        android:layout_marginRight="@dimen/px22"
+        android:layout_alignTop="@id/avator"
+        android:layout_toLeftOf="@id/avator"
+        android:text="我"
+        />
+
+    <TextView
+            android:id="@+id/content_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_30px"
+            android:textColor="@color/font_gray"
+            android:layout_marginTop="@dimen/px10"
+            android:layout_marginRight="@dimen/px4"
+            android:layout_marginLeft="@dimen/chat_item_content_rl"
+            android:layout_toLeftOf="@id/avator"
+            android:layout_below="@id/name"
+            android:background="@drawable/cr_chat_my_speaker_bg"
+            android:visibility="gone"
+            />
+
+</RelativeLayout>

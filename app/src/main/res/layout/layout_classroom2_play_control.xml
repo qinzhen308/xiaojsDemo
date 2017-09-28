@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+        >
+
+
+    <android.support.constraint.Guideline
+            android:id="@+id/top_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_begin="@dimen/px9"
+            android:orientation="horizontal"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_begin="@dimen/px24"
+            android:orientation="vertical"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_end="@dimen/px24"
+            android:orientation="vertical"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_end="@dimen/px89"
+            android:orientation="horizontal"
+            />
+
+    <!-- top -->
+    <ImageView
+            android:id="@+id/top_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_back"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            />
+
+    <TextView
+            android:id="@+id/top_roominfo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_22px"
+            android:gravity="center"
+            android:paddingLeft="@dimen/px92"
+            android:paddingRight="@dimen/px24"
+            android:background="@drawable/bg_start_live_rect"
+            app:layout_constraintLeft_toLeftOf="@+id/top_photo"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@+id/top_photo"/>
+
+    <ImageView
+            android:id="@+id/top_photo"
+            android:layout_width="@dimen/px68"
+            android:layout_height="@dimen/px68"
+            android:background="@drawable/default_avatar"
+            android:layout_marginLeft="@dimen/px24"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintLeft_toRightOf="@id/top_back"
+            />
+
+    <ImageView
+            android:id="@+id/top_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_menu"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            />
+
+    <TextView
+            android:id="@+id/top_live"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/start_live"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_22px"
+            android:gravity="center"
+            android:padding="@dimen/px20"
+            android:layout_marginRight="@dimen/px24"
+            android:background="@drawable/bg_start_live_rect"
+            app:layout_constraintRight_toLeftOf="@id/top_more"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/top_more"/>
+
+    <ImageView
+            android:id="@+id/top_whiteboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_whiteboard"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            />
+
+    <ImageView
+            android:id="@+id/top_screenshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/px24"
+            android:src="@drawable/ic_class_screenshot"
+            app:layout_constraintRight_toLeftOf="@id/top_whiteboard"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/top_whiteboard"/>
+
+    <!-- bottom -->
+    <View
+            android:id="@+id/bottom_bg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/black_opacity_40"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    <ImageView
+            android:id="@+id/bottom_orient"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginRight="@dimen/px18"
+            android:src="@drawable/ic_class_crossscreen"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/bottom_class_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_class_name"
+            android:textSize="@dimen/font_30px"
+            android:layout_marginRight="@dimen/px10"
+            android:layout_marginTop="@dimen/px7"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintRight_toLeftOf="@id/bottom_orient"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            />
+
+    <TextView
+            android:id="@+id/bottom_class_state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_class_name"
+            android:textSize="@dimen/font_22px"
+            android:layout_marginTop="@dimen/px3"
+            app:layout_constraintTop_toBottomOf="@id/bottom_class_name"
+            app:layout_constraintLeft_toLeftOf="@id/bottom_class_name"
+            app:layout_constraintRight_toRightOf="@id/bottom_class_name"
+            />
+
+    <ImageView
+            android:id="@+id/bottom_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_chat"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            />
+
+    <ImageView
+            android:id="@+id/bottom_more"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_column"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            />
+
+    <!--left-->
+
+    <!--<ListView-->
+    <!--android:id="@+id/left_talklist"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:visibility="gone"-->
+    <!--/>-->
+
+    <!--right-->
+
+
+</android.support.constraint.ConstraintLayout>

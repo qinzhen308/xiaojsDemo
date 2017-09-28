@@ -69,7 +69,9 @@ public class ContactManager{
 
     public void release() {
 
-        eventListener.dispose();
+        if (eventListener !=null) {
+            eventListener.dispose();
+        }
 
         if (mLiveCollection != null) {
             if (mLiveCollection.attendees != null) {

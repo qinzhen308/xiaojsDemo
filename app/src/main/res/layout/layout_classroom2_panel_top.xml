@@ -1,88 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/top_panel"
-        android:layout_alignParentTop="true"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/px5"
-        android:paddingBottom="@dimen/px5"
-        android:clickable="true"
-        android:background="@color/classroom_main_black">
+        android:layout_height="@dimen/px88"
+        android:paddingTop="@dimen/px9"
+        android:paddingBottom="@dimen/px9"
+        android:layout_alignParentTop="true"
+        >
 
     <ImageView
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:paddingLeft="@dimen/px30"
-            android:paddingRight="@dimen/px30"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
-            android:src="@drawable/ic_back_pressed"/>
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/px24"
+            android:src="@drawable/ic_class_back"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     <ImageView
-            android:id="@+id/play_pause_btn"
+            android:id="@+id/menu_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/px30"
-            android:paddingRight="@dimen/px30"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
-            android:layout_toRightOf="@+id/back_btn"
-            android:src="@drawable/ic_cr_start"/>
+            android:layout_height="0dp"
+            android:layout_marginRight="@dimen/px24"
+            android:src="@drawable/ic_class_menu"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@+id/finish_btn"
-            android:layout_toRightOf="@+id/play_pause_btn"
+    <TextView
+            android:id="@+id/live_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/start_live"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_22px"
             android:gravity="center"
-            android:orientation="vertical">
+            android:padding="@dimen/px20"
+            android:layout_marginRight="@dimen/px24"
+            android:background="@drawable/bg_start_live_rect"
+            app:layout_constraintRight_toLeftOf="@id/menu_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-                android:id="@+id/lesson_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:textSize="@dimen/font_26px"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-
-        <TextView
-                android:id="@+id/lesson_time_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:layout_marginTop="@dimen/px4"
-                android:textSize="@dimen/font_18px"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-    </LinearLayout>
-
-    <ImageView
-            android:id="@+id/finish_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/px30"
-            android:paddingRight="@dimen/px30"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
-            android:visibility="invisible"
-            android:layout_toLeftOf="@+id/setting_btn"
-            android:src="@drawable/ic_cr_exit"/>
-
-    <ImageView
-            android:id="@+id/setting_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/px30"
-            android:paddingRight="@dimen/px30"
-            android:paddingTop="@dimen/px20"
-            android:paddingBottom="@dimen/px20"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_cr_setting"/>
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

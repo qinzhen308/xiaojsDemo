@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <com.pili.pldroid.player.widget.PLVideoTextureView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    <LinearLayout
+            android:id="@+id/loading_View"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:text="Movie waiting!"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_56px"/>
+            android:gravity="center"
+            android:background="@color/black_opacity_40"
+            android:orientation="horizontal">
+
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                style="@android:style/Widget.Holo.Light.ProgressBar.Small"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/video_loading"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/font_25px"
+                />
+    </LinearLayout>
+
+    <include
+            android:id="@+id/bottom_bar"
+            layout="@layout/layout_classroom2_play_control"
+            />
+
+
 
 </RelativeLayout>
