@@ -151,12 +151,12 @@ public class TextWriting extends Doodle {
         float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
         float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2 ;
         PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
-        float hPadding = p.x / mTotalScale * params.scale;
-        float vPadding = p.y / mTotalScale * params.scale;
+        float hPadding = p.x / mTotalScaleX * params.scale;
+        float vPadding = p.y / mTotalScaleY * params.scale;
         //add extra padding
         p = Utils.normalizeScreenPoint(WhiteboardConfigs.TEXT_BORDER_PADDING, WhiteboardConfigs.TEXT_BORDER_PADDING, params.drawingBounds);
-        hPadding = hPadding + p.x / mTotalScale;
-        vPadding = vPadding + p.y / mTotalScale;
+        hPadding = hPadding + p.x / mTotalScaleX;
+        vPadding = vPadding + p.y / mTotalScaleY;
 
         mBorderPadding.set(hPadding, vPadding);
     }

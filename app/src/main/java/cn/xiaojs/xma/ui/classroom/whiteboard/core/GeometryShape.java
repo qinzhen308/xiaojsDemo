@@ -90,8 +90,8 @@ public abstract class GeometryShape extends Doodle implements SyncCollector{
     private void updateDoodleRect(float oldX, float oldY, float x, float y, int edge) {
         RectF drawingBounds = getWhiteboard().getParams().drawingBounds;
         PointF p = Utils.normalizeScreenPoint(x - oldX, y - oldY, drawingBounds);
-        mCurrVector.x = p.x / mTotalScale;
-        mCurrVector.y = p.y / mTotalScale;
+        mCurrVector.x = p.x / mTotalScaleX;
+        mCurrVector.y = p.y / mTotalScaleY;
         float degree = mTotalDegree % 360;
 
         //使用向量变换求的delta值
@@ -144,6 +144,11 @@ public abstract class GeometryShape extends Doodle implements SyncCollector{
             mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
             mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
         }
+    }
+
+    @Override
+    public Object onCollect(int action,int type) {
+        return null;
     }
 
     @Override

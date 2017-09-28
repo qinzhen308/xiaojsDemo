@@ -111,8 +111,8 @@ public class SyncRemoteLayer extends Doodle {
     private void updateDoodleRect(float oldX, float oldY, float x, float y, int edge) {
         RectF drawingBounds = getWhiteboard().getParams().drawingBounds;
         PointF p = Utils.normalizeScreenPoint(x - oldX, y - oldY, drawingBounds);
-        mCurrVector.x = p.x / mTotalScale;
-        mCurrVector.y = p.y / mTotalScale;
+        mCurrVector.x = p.x / mTotalScaleX;
+        mCurrVector.y = p.y / mTotalScaleY;
         float degree = mTotalDegree % 360;
 
         //使用向量变换求的delta值

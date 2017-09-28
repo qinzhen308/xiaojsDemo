@@ -36,12 +36,14 @@ public class ActionRecord {
     public float translateX;
     public float translateY;
     //scale
-    public float scale;
+    public float scaleX;
+    public float scaleY;
     //rotate
     public float degree;
 
     //transform matrix
     public Matrix mTransMatrix;
+    public Matrix mBorderTransMatrix;
 
     public List<PointF> mPoints;
 
@@ -66,6 +68,13 @@ public class ActionRecord {
         if (transformMatrix != null) {
             mTransMatrix = new Matrix();
             mTransMatrix.set(transformMatrix);
+        }
+    }
+
+    public void setBorderMatrix(Matrix transformMatrix) {
+        if (transformMatrix != null) {
+            mBorderTransMatrix = new Matrix();
+            mBorderTransMatrix.set(transformMatrix);
         }
     }
 

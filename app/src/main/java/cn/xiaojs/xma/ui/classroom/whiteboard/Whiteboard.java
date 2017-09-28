@@ -53,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
@@ -686,9 +687,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     break;
             }
 
+            boolean isDeleteSelector=false;
             if (mSelectionRectRegion == IntersectionHelper.LEFT_BOTTOM_CORNER) {
                 switch (mCurrentMode) {
                     case MODE_SELECTION:
+                        isDeleteSelector=true;
                         mSelector.setVisibility(View.GONE);
                         mSelector.setBorderVisible(false);
                         mDoodleAction = Action.DELETE_ACTION;
@@ -698,6 +701,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     case MODE_TEXT:
                     case MODE_HAND_WRITING:
                     case MODE_GEOMETRY:
+                        isDeleteSelector=false;
                         mDoodle.setVisibility(View.GONE);
                         mDoodleAction = Action.DELETE_ACTION;
                         drawAllDoodlesCanvas();
@@ -705,7 +709,18 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         break;
                 }
             }
-            syncGenerator.onActionDown();
+            syncGenerator.onActionDown(mDoodleAction);
+            if(mDoodleAction== Action.DELETE_ACTION){
+                Doodle doodle=null;
+                if( isDeleteSelector){
+                    doodle=mSelector.getSelectedDoodle();
+                }else {
+                    doodle=mDoodle;
+                }
+                if(doodle instanceof SyncCollector){
+                    syncGenerator.onActionMove((SyncCollector)doodle);
+                }
+            }
             return false;
         }
 
@@ -742,6 +757,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mDoodleAction = Action.SCALE_ROTATE_ACTION;
                                     postInvalidate();
                                     if(mDoodle instanceof SyncCollector){
+                                        syncGenerator.updateAction(mDoodleAction);
                                         syncGenerator.onActionMove((SyncCollector)mDoodle);
                                     }
                                     break;
@@ -755,6 +771,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
                                     postInvalidate();
                                     if(mDoodle instanceof SyncCollector){
+                                        syncGenerator.updateAction(mDoodleAction);
                                         syncGenerator.onActionMove((SyncCollector)mDoodle);
                                     }
                                     break;
@@ -768,6 +785,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
                                     postInvalidate();
                                     if(mDoodle instanceof SyncCollector){
+                                        syncGenerator.updateAction(mDoodleAction);
                                         syncGenerator.onActionMove((SyncCollector)mDoodle);
                                     }
                                     break;
@@ -787,6 +805,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
                             addLastPointIntoDoodle();
                             if(mDoodle instanceof SyncCollector){
+                                syncGenerator.updateAction(mDoodleAction);
                                 syncGenerator.onActionMove((SyncCollector)mDoodle);
                             }
                             postInvalidate();
@@ -812,6 +831,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mSelector.scaleAndRotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     //scale_rotate record
                                     mDoodleAction = Action.SCALE_ROTATE_ACTION;
+                                    if(mSelector.getSelectedDoodle() instanceof SyncCollector){
+                                        syncGenerator.updateAction(mDoodleAction);
+                                        syncGenerator.onActionMove((SyncCollector)mSelector.getSelectedDoodle());
+                                    }
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
@@ -822,6 +845,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mSelector.changeByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
                                     //change area record
                                     mDoodleAction = Action.CHANGE_AREA_ACTION;
+                                    if(mSelector.getSelectedDoodle() instanceof SyncCollector){
+                                        syncGenerator.updateAction(mDoodleAction);
+                                        syncGenerator.onActionMove((SyncCollector)mSelector.getSelectedDoodle());
+                                    }
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
@@ -830,6 +857,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mSelector.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
                                     //add move record
                                     mDoodleAction = Action.MOVE_ACTION;
+                                    if(mSelector.getSelectedDoodle() instanceof SyncCollector){
+                                        syncGenerator.updateAction(mDoodleAction);
+                                        syncGenerator.onActionMove((SyncCollector)mSelector.getSelectedDoodle());
+                                    }
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
@@ -1515,8 +1546,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     doodle.setPoints(prevRecord.mPoints);
                     doodle.setDoodleRect(prevRecord.rect);
                     doodle.setTransformMatrix(prevRecord.mTransMatrix);
+                    doodle.setBorderTransformMatrix(prevRecord.mBorderTransMatrix);
                     doodle.setTotalDegree(prevRecord.degree);
-                    doodle.setTotalScale(prevRecord.scale);
+                    doodle.setTotalScaleX(prevRecord.scaleX);
+                    doodle.setTotalScaleY(prevRecord.scaleY);
                     doodle.setTranslateX(prevRecord.translateX);
                     doodle.setTranslateY(prevRecord.translateY);
 
@@ -1529,10 +1562,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if (!mReDoStack.contains(doodle)) {
                     mReDoStack.add(doodle);
                 }
-
-                String cmd = getUndoRedoSendCommend(doodle, lastRecord, true, false);
-                sb.append(cmd);
-                sb.append(" ");
             }
 
             if (hasUndo) {
@@ -1548,11 +1577,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
             }
 
-            if (hasUndo) {
-                sb.append("#");
-                sb.append(System.currentTimeMillis());
-                onSend(sb.toString());
-            }
         }
     }
 
@@ -1577,8 +1601,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 doodle.setPoints(record.mPoints);
                 doodle.setDoodleRect(record.rect);
                 doodle.setTransformMatrix(record.mTransMatrix);
+                doodle.setBorderTransformMatrix(record.mBorderTransMatrix);
                 doodle.setTotalDegree(record.degree);
-                doodle.setTotalScale(record.scale);
+                doodle.setTotalScaleX(record.scaleX);
+                doodle.setTotalScaleY(record.scaleY);
                 doodle.setTranslateX(record.translateX);
                 doodle.setTranslateY(record.translateY);
 
@@ -1682,38 +1708,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
-    private String getSendCommend(final Doodle d, int action, boolean whitTime) {
-        if (d == null) {
-            return null;
-        }
-
-        String cmd = null;
-        switch (action) {
-            case Action.ADD_ACTION:
-                cmd = Packer.getBuildDoodleCmd(d, whitTime);
-                break;
-            case Action.DELETE_ACTION:
-                cmd = Packer.getDeleteCmd(d, whitTime);
-                break;
-            case Action.MOVE_ACTION:
-                float deltaX = d.getDeltaTransX();
-                float deltaY = d.getDeltaTransY();
-                cmd = Packer.getMoveCmd(d, deltaX, deltaY, mBlackboardWidth, mBlackboardHeight, whitTime);
-                break;
-            case Action.SCALE_ROTATE_ACTION:
-                cmd = Packer.getScaleAndRotateCmd(d, d.getDeltaScale(), d.getDeltaDegree(), whitTime);
-                break;
-            case Action.SCALE_ACTION:
-                cmd = Packer.getScaleCmd(d, d.getDeltaScale(), whitTime);
-                break;
-            case Action.ROTATE_ACTION:
-                cmd = Packer.getRotateCmd(d, d.getDeltaDegree(), whitTime);
-                break;
-        }
-
-        return cmd;
-    }
-
     private String getUndoRedoSendCommend(final Doodle d, ActionRecord actRd, boolean undo, boolean whitTime) {
         if (d == null || actRd == null) {
             return null;
@@ -1741,11 +1735,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 cmd = Packer.getMoveCmd(d, moveX, moveY, mBlackboardWidth, mBlackboardHeight, whitTime);
                 break;
             case Action.SCALE_ROTATE_ACTION:
-                cmd = Packer.getScaleAndRotateCmd(d, undo ? 1.f / actRd.scale : actRd.scale,
-                        undo ? -actRd.degree : actRd.degree, whitTime);
+                /*cmd = Packer.getScaleAndRotateCmd(d, undo ? 1.f / actRd.scale : actRd.scale,
+                        undo ? -actRd.degree : actRd.degree, whitTime);*/
                 break;
             case Action.SCALE_ACTION:
-                cmd = Packer.getScaleCmd(d, undo ? 1.f / actRd.scale : actRd.scale, whitTime);
+//                cmd = Packer.getScaleCmd(d, undo ? 1.f / actRd.scale : actRd.scale, whitTime);
                 break;
             case Action.ROTATE_ACTION:
                 cmd = Packer.getRotateCmd(d, undo ? -actRd.degree : actRd.degree, whitTime);

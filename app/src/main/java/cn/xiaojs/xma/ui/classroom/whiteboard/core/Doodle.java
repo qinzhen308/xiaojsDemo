@@ -21,7 +21,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.Vector;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
-import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 
 public abstract class Doodle implements Transformation{
     public final static int SELECTION = 0;
@@ -54,7 +52,8 @@ public abstract class Doodle implements Transformation{
     protected Paint mDelBtnPaint;
 
     protected float mTotalDegree = 0;
-    protected float mTotalScale = 1.0f;
+    protected float mTotalScaleX = 1.0f;
+    protected float mTotalScaleY = 1.0f;
     protected float mTranslateX = 0;
     protected float mTranslateY = 0;
 
@@ -73,6 +72,7 @@ public abstract class Doodle implements Transformation{
 
     protected Matrix mDrawingMatrix;
     protected Matrix mTransformMatrix;
+    protected Matrix mBorderTransformMatrix=new Matrix();
     protected Matrix mDisplayMatrix;
     protected int mState = STATE_IDLE;
 
@@ -155,12 +155,19 @@ public abstract class Doodle implements Transformation{
         return mWhiteboard;
     }
 
-    public float getTotalScale() {
-        return mTotalScale;
+    public float getTotalScaleX() {
+        return mTotalScaleX;
     }
 
-    public void setTotalScale(float totalScale) {
-        mTotalScale = totalScale;
+    public float getTotalScaleY() {
+        return mTotalScaleY;
+    }
+
+    public void setTotalScaleX(float totalScaleX) {
+        mTotalScaleX = totalScaleX;
+    }
+    public void setTotalScaleY(float totalScaleY) {
+        mTotalScaleY = totalScaleY;
     }
 
     public float getTotalDegree() {
@@ -275,7 +282,12 @@ public abstract class Doodle implements Transformation{
     protected abstract void onDrawSelf(Canvas canvas);
 
     public void reset() {
-
+        mBorderTransformMatrix.reset();
+        mDrawingPath.computeBounds(mDoodleRect,false);
+        Matrix matrix=new Matrix();
+        getWhiteboard().getDrawingMatrix().invert(matrix);
+        matrix.mapRect(mDoodleRect);
+        mDrawingMatrix.set(getWhiteboard().getDrawingMatrix());
     }
 
     public void drawBorder(Canvas canvas) {
@@ -286,7 +298,7 @@ public abstract class Doodle implements Transformation{
 
     protected void onDrawBorder(Canvas canvas) {
         computeBorderPadding();
-
+        mDrawingMatrix.set(getWhiteboard().getDrawingMatrix());
         Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
         float hPadding = mBorderPadding.x;
         float vPadding = mBorderPadding.y;
@@ -300,8 +312,7 @@ public abstract class Doodle implements Transformation{
         canvas.drawPath(mBorderDrawingPath, mBorderPaint);
 
         //draw controller
-        float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
-        PointF p = Utils.normalizeScreenPoint(radius, radius, params.drawingBounds);
+        PointF p = Utils.normalizeScreenPoint(mControllerPaint.getStrokeWidth() / mTotalScaleX, mControllerPaint.getStrokeWidth() / mTotalScaleY, params.drawingBounds);
         mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
                 mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
         mBorderDrawingPath.reset();
@@ -329,12 +340,12 @@ public abstract class Doodle implements Transformation{
         float paintStrokeWidth = mPaint != null ? mPaint.getStrokeWidth() : 0;
         float padding = (paintStrokeWidth + mBorderPaint.getStrokeWidth()) / 2;
         PointF p = Utils.normalizeScreenPoint(padding, padding, params.drawingBounds);
-        float hPadding = p.x / mTotalScale * params.scale;
-        float vPadding = p.y / mTotalScale * params.scale;
+        float hPadding = p.x / mTotalScaleX * params.scale;
+        float vPadding = p.y / mTotalScaleY * params.scale;
         //add extra padding
         p = Utils.normalizeScreenPoint(WhiteboardConfigs.BORDER_PADDING, WhiteboardConfigs.BORDER_PADDING, params.drawingBounds);
-        hPadding = hPadding + p.x / mTotalScale;
-        vPadding = vPadding + p.y / mTotalScale;
+        hPadding = hPadding + p.x / mTotalScaleX;
+        vPadding = vPadding + p.y / mTotalScaleY;
         mBorderPadding.set(hPadding, vPadding);
     }
 
@@ -409,14 +420,24 @@ public abstract class Doodle implements Transformation{
         }
     }
 
+    public void setBorderTransformMatrix(Matrix matrix) {
+        if (mBorderTransformMatrix != null) {
+            mBorderTransformMatrix.set(matrix);
+        } else {
+            mBorderTransformMatrix = matrix;
+        }
+    }
+
     public void addRecords(int action, int groupId) {
         ActionRecord record = new ActionRecord(getDoodleId(), groupId, action);
-        record.scale = getTotalScale();
+        record.scaleX = getTotalScaleX();
+        record.scaleY = getTotalScaleY();
         record.degree = getTotalDegree();
         record.translateX = getTranslateX();
         record.translateY = getTranslateY();
         record.setRect(mDoodleRect);
         record.setMatrix(getTransformMatrix());
+        record.setBorderMatrix(mBorderTransformMatrix);
         record.setPoints(getPoints());
 
         mUndoRecords.add(record);
@@ -518,6 +539,7 @@ public abstract class Doodle implements Transformation{
         return 1;
     }
 
+
     @Override
     public void rotate(float degree) {
         if (mPoints.size() > 1) {
@@ -541,6 +563,7 @@ public abstract class Doodle implements Transformation{
 
         return 0;
     }
+
 
     @Override
     public void scaleAndRotate(float scale, float degree) {
@@ -590,8 +613,30 @@ public abstract class Doodle implements Transformation{
     }
 
     public void scale(float scale, float px, float py) {
-        mTotalScale = mTotalScale * scale;
+        mTotalScaleX = mTotalScaleX * scale;
+        mTotalScaleY = mTotalScaleY * scale;
         mTransformMatrix.postScale(scale, scale, px, py);
+    }
+
+    public void scaleInSelector(float scaleX, float scaleY, float px, float py) {
+        mTotalScaleX = mTotalScaleX * scaleX;
+        mTotalScaleY = mTotalScaleY * scaleY;
+        mTransformMatrix.postScale(scaleX, scaleY, px, py);
+//        mGroupTransformMatrix.postScale(scaleX, scaleY, px, py);
+    }
+    public void preScaleInSelector(float scaleX, float scaleY, float px, float py,float selectorRoute,float cx,float cy) {
+        mTotalScaleX = mTotalScaleX * scaleX;
+        mTotalScaleY = mTotalScaleY * scaleY;
+        float[] transedCenter=new float[]{cx,cy};
+        mTransformMatrix.postRotate(-selectorRoute, transedCenter[0], transedCenter[1]);
+        float[] transedP=new float[]{px,py};
+//        mTransformMatrix.mapPoints(transedP);
+        mTransformMatrix.postScale(scaleX, scaleY, transedP[0], transedP[1]);
+//        Matrix matrix=new Matrix();
+//        matrix.postScale(scaleX,scaleY,px,py);
+//        matrix.postRotate(-selectorRoute, transedCenter[0], transedCenter[1]);
+//        matrix.mapPoints(transedCenter);
+        mTransformMatrix.postRotate(selectorRoute, transedCenter[0], transedCenter[1]);
     }
 
     public void rotate(float degree, float px, float py) {
@@ -619,13 +664,21 @@ public abstract class Doodle implements Transformation{
     /**
      * 获取距上一次变换的缩放变化值
      */
-    public float getDeltaScale() {
+    public float getDeltaScaleX() {
         if (mUndoRecords == null || mUndoRecords.size() < 1) {
             return 1;
         }
 
         ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
-        return mTotalScale / record.scale;
+        return mTotalScaleX / record.scaleX;
+    }
+    public float getDeltaScaleY() {
+        if (mUndoRecords == null || mUndoRecords.size() < 1) {
+            return 1;
+        }
+
+        ActionRecord record = mUndoRecords.get(mUndoRecords.size() - 2);
+        return mTotalScaleY / record.scaleY;
     }
 
     /**

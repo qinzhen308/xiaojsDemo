@@ -98,19 +98,23 @@ public class Selector extends Doodle {
         }
 
         mDoodleRect.set(0, 0, 0, 0);
-        mTotalScale = 1.0f;
+        mTotalScaleX = 1.0f;
+        mTotalScaleY = 1.0f;
         mTotalDegree = 0;
         mSelectedDoodle = null;
         mTransformMatrix.reset();
+        mBorderTransformMatrix.reset();
         ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
         if (allDoodles != null) {
             for (Doodle d : allDoodles) {
                 d.setState(Doodle.STATE_IDLE);
             }
         }
-
+        transInOneSelecting=false;
         setState(Doodle.STATE_IDLE);
     }
+
+    boolean transInOneSelecting=false;
 
     @Override
     public void drawSelf(Canvas canvas) {
@@ -128,6 +132,7 @@ public class Selector extends Doodle {
             mTransRect.set(x1, y1, x2, y2);
             mDrawingPath.reset();
             mDrawingPath.addRect(mTransRect, Path.Direction.CCW);
+//            mDrawingPath.transform(mGroupTransformMatrix);
             mDrawingPath.transform(mDrawingMatrix);
 
             canvas.drawPath(mDrawingPath, mSelectingBgPaint);
@@ -161,28 +166,33 @@ public class Selector extends Doodle {
                 }
 
                 Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
-                float padding = params.paintStrokeWidth / 2 / mTotalScale;
-                float exPadding = WhiteboardConfigs.BORDER_PADDING / mTotalScale;
-                padding = padding * params.scale + exPadding;
+                float paddingX = params.paintStrokeWidth / 2 / mTotalScaleX;
+                float paddingY = params.paintStrokeWidth / 2 / mTotalScaleY;
+                float exPaddingX = WhiteboardConfigs.BORDER_PADDING / mTotalScaleX;
+                float exPaddingY = WhiteboardConfigs.BORDER_PADDING / mTotalScaleY;
+                paddingX = paddingX * params.scale + exPaddingX;
+                paddingY = paddingY * params.scale + exPaddingY;
 
-                mBorderRect.set(mDoodleRect.left - padding, mDoodleRect.top - padding, mDoodleRect.right + padding, mDoodleRect.bottom + padding);
+                mBorderRect.set(mDoodleRect.left - paddingX, mDoodleRect.top - paddingY, mDoodleRect.right + paddingX, mDoodleRect.bottom + paddingY);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
+//                mBorderDrawingPath.transform(mGroupTransformMatrix);
                 mBorderDrawingPath.transform(mTransformMatrix);
                 canvas.drawPath(mBorderDrawingPath, mBorderPaint);
 
                 //draw controller
-                float radius = mControllerPaint.getStrokeWidth() / mTotalScale;
-                mBorderRect.set(mDoodleRect.right + padding - radius, mDoodleRect.top - padding- radius,
-                        mDoodleRect.right + padding + radius, mDoodleRect.top - padding + radius);
+                float radiusX = mControllerPaint.getStrokeWidth() / mTotalScaleX;
+                float radiusY = mControllerPaint.getStrokeWidth() / mTotalScaleY;
+                mBorderRect.set(mDoodleRect.right + paddingX - radiusX, mDoodleRect.top - paddingY- radiusY,
+                        mDoodleRect.right + paddingX + radiusX, mDoodleRect.top - paddingY + radiusY);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
                 mBorderDrawingPath.transform(mTransformMatrix);
                 canvas.drawPath(mBorderDrawingPath, mControllerPaint);
 
                 //draw del btn
-                mBorderRect.set(mDoodleRect.left - padding - radius, mDoodleRect.bottom + padding - radius,
-                        mDoodleRect.left - padding + radius, mDoodleRect.bottom + padding + radius);
+                mBorderRect.set(mDoodleRect.left - paddingX - radiusX, mDoodleRect.bottom + paddingY - radiusY,
+                        mDoodleRect.left - paddingX + radiusX, mDoodleRect.bottom + paddingY + radiusY);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
                 mBorderDrawingPath.transform(mTransformMatrix);
@@ -299,6 +309,10 @@ public class Selector extends Doodle {
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
             } else {
+                int edge = IntersectionHelper.whichEdgePressed(p.x, p.y, mDoodleRect, matrix);
+                if (edge != IntersectionHelper.RECT_NO_SELECTED) {
+                    return edge;
+                }
                 return IntersectionHelper.checkRectPressed(p.x, p.y, mDoodleRect, matrix);
             }
         }
@@ -315,7 +329,134 @@ public class Selector extends Doodle {
     public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
         if (mSelectedDoodle instanceof GeometryShape) {
             mSelectedDoodle.changeByEdge(oldX, oldY, x, y, edge);
+            return;
         }
+
+        ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+        if (allDoodles != null) {
+            int count = 0;
+            for (Doodle d : allDoodles) {
+                if (d.getState() == Doodle.STATE_EDIT) {
+                    count++;
+                    break;
+                }
+            }
+
+            if (count > 0) {
+                Whiteboard.WhiteboardParams params = getWhiteboard().getParams();
+                mTransRect.set(mDoodleRect);
+                mTransformMatrix.mapRect(mTransRect);
+                PointF p = Utils.mapScreenToDoodlePoint(mTransRect.left, mTransRect.top, params.drawingBounds);
+                float left = p.x;
+                float top = p.y;
+                p = Utils.mapScreenToDoodlePoint(mTransRect.right, mTransRect.bottom, params.drawingBounds);
+                float right = p.x;
+                float bottom = p.y;
+
+                mTransRect.set(left, top, right, bottom);
+                Matrix matrix = Utils.transformScreenMatrix(mDrawingMatrix, mDisplayMatrix);
+                float[] arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mTransRect, matrix);
+                float scale = arr[0];
+                float degree = arr[1];
+
+                computeTransformCenterPoint(mTransRect);
+                float scaleX=1;
+                float scaleY=1;
+                float cx=mDoodleRect.centerX();
+                float cy=mDoodleRect.centerY();
+                float[] _c=new float[]{cx,cy};
+                float[] _p=new float[]{x,y};
+                float[] _pOld=new float[]{oldX,oldY};
+
+                //从屏幕坐标映射到画布rect里
+                matrix.reset();
+                mDisplayMatrix.invert(matrix);
+                matrix.mapPoints(_p);
+                matrix.mapPoints(_pOld);
+                matrix.mapPoints(_c);
+
+               /* //算出变换后的位置
+                mTransformMatrix.mapPoints(_p);
+                mTransformMatrix.mapPoints(_pOld);
+                mTransformMatrix.mapPoints(_c);*/
+
+//                routeM.preConcat(matrix);
+//                routeM.mapPoints(_p);
+//                routeM.mapPoints(_pOld);
+                Matrix rotateM=new Matrix();
+                mTransformMatrix.invert(rotateM);
+                rotateM.mapPoints(_p);
+                rotateM.mapPoints(_pOld);
+
+                switch (edge) {
+                    case IntersectionHelper.TOP_EDGE:
+                        if(_p[1]>=_c[1]){
+                            scaleY = 1f;
+                        }else {
+                            scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+                        }
+                        break;
+                    case IntersectionHelper.RIGHT_EDGE:
+
+                        if(_p[0]<=_c[0]){
+                            scaleX = 1f;
+                        }else {
+                            scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        }
+                        break;
+                    case IntersectionHelper.BOTTOM_EDGE:
+                        if(_p[1]<=_c[1]){
+                            scaleY = 1f;
+                        }else {
+                            scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+                        }
+                        break;
+                    case IntersectionHelper.LEFT_EDGE:
+
+                        if(_p[0]>=_c[0]){
+                            scaleX = 1f;
+                        }else {
+                            scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        }
+                        break;
+                }
+
+                mTransformMatrix.mapPoints(_c);
+
+                for (Doodle d : allDoodles) {
+                    if (d.getState() == Doodle.STATE_EDIT) {
+                        if(Float.compare(getTotalDegree(),0.0f)==0){
+                            d.scaleInSelector(scaleX,scaleY,_c[0],_c[1]);
+                            d.reset();
+                        }else {
+                            d.preScaleInSelector(scaleX,scaleY,_c[0],_c[1],getTotalDegree(),_c[0],_c[1]);
+                            d.reset();
+                        }
+                    }
+                }
+                matrix = Utils.transformScreenMatrix(mTransformMatrix, null);
+                arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mDoodleRect, matrix);
+                scale = arr[0];
+                degree = arr[1];
+                computeCenterPoint(mDoodleRect);
+//                scaleInSelector(scaleX,scaleY,_c[0],_c[1]);
+                scaleInSelector(scaleX,scaleY,cx,cy);
+
+
+                float[] result = new float[2];
+                result[0] = scale;
+                result[1] = degree;
+
+            }
+        }
+    }
+
+
+    @Override
+    public void scaleInSelector(float scaleX, float scaleY, float px, float py) {
+        mTotalScaleX = mTotalScaleX * scaleX;
+        mTotalScaleY = mTotalScaleY * scaleY;
+        mTransformMatrix.preScale(scaleX, scaleY, px, py);
     }
 
     public int checkIntersect() {

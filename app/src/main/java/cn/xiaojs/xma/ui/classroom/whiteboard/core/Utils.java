@@ -47,6 +47,7 @@ public class Utils {
     public final static Paint mControllerPaint = buildControllerPaint();
 
     private final static String CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private final static String CHARACTERS_LOWCASE = "0123456789abcdefghijklmnopqrstuvwxyz";
 
     /**
      * map the point of specified canvas to screen point
@@ -670,6 +671,28 @@ public class Utils {
         return mPointArr;
     }
 
+    /*public static float[] calcRectScalesXY(float oldX, float oldY, float x, float y, RectF rect,
+                                                   Matrix mapMatrix) {
+        RectF transRect = transformToScreenRect(rect, mapMatrix);
+        return calcRectScalesXY(oldX, oldY, x, y, transRect);
+    }
+
+    public static float[] calcRectScalesXY(float oldX, float oldY, float x, float y, RectF transRect) {
+        float centerX = (transRect.left + transRect.right) / 2.0f;
+        float centerY = (transRect.top + transRect.bottom) / 2.0f;
+
+        //屏幕坐标系和标准坐标系的Y轴方向相反
+        float preDeltaX = oldX - centerX;
+        float preDeltaY = -(oldY - centerY);
+        float deltaX = x - centerX;
+        float deltaY = -(y - centerY);
+
+        double preDistance = Math.sqrt(preDeltaX * preDeltaX + preDeltaY * preDeltaY);
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        float deltaScale = (float) (distance / preDistance);
+
+    }*/
+
     public static float getDefaultTextHeight(Doodle doodle) {
         Paint paint = doodle.getPaint();
         Whiteboard.WhiteboardParams params = doodle.getWhiteboard().getParams();
@@ -735,12 +758,12 @@ public class Utils {
     }
 
     public static String buildDoodleId() {
-        int size = CHARACTERS.length() - 1;
+        int size = CHARACTERS_LOWCASE.length();
         StringBuilder sb = new StringBuilder(ProtocolConfigs.SHAPE_ID_LENGTH);
-        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
-        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
-        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
-        sb.append(CHARACTERS.charAt((int)(Math.random() * size)));
+        Random random=new Random();
+        for(int i=0;i<size;i++){
+            sb.append(CHARACTERS_LOWCASE.charAt(random.nextInt(size)));
+        }
         return sb.toString();
     }
 

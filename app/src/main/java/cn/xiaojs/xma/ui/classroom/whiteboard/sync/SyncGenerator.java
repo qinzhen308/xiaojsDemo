@@ -1,7 +1,8 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard.sync;
 
 
-import java.util.Date;
+
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 
 /**
  * Created by Paul Z on 2017/9/13.
@@ -18,8 +19,10 @@ public class SyncGenerator {
 
     private SyncCollector tempCollector;
 
-    public void onActionDown(){
+    private int action= Action.NO_ACTION;
 
+    public void onActionDown(int action){
+        this.action=action;
         state=STATE_READY;
         tempCollector=null;
     }
@@ -27,7 +30,15 @@ public class SyncGenerator {
     public void onActionMove(SyncCollector collector){
         if(state==STATE_READY){
             if(syncDrawingListener!=null){
-                Object data=collector.onCollect(STATE_BEGIN);
+                Object data=null;
+                switch (action){
+                    case Action.ADD_ACTION:
+                        data=collector.onCollect(STATE_BEGIN);
+                        break;
+                    default:
+                        data=collector.onCollect(action,STATE_BEGIN);
+                        break;
+                }
                 if(data!=null){
                     syncDrawingListener.onBegin(data.toString());
                 }
@@ -35,7 +46,15 @@ public class SyncGenerator {
             state=STATE_BEGIN;
         }else {
             if(syncDrawingListener!=null){
-                Object data=collector.onCollect(STATE_DOING);
+                Object data=null;
+                switch (action){
+                    case Action.ADD_ACTION:
+                        data=collector.onCollect(STATE_DOING);
+                        break;
+                    default:
+                        data=collector.onCollect(action,STATE_DOING);
+                        break;
+                }
                 if(data!=null){
                     syncDrawingListener.onGoing(data.toString());
                 }
@@ -47,7 +66,15 @@ public class SyncGenerator {
 
     public void onActionUp(){
         if(syncDrawingListener!=null&&tempCollector!=null){
-            Object data=tempCollector.onCollect(STATE_FINISHED);
+            Object data=null;
+            switch (action){
+                case Action.ADD_ACTION:
+                    data=tempCollector.onCollect(STATE_FINISHED);
+                    break;
+                default:
+                    data=tempCollector.onCollect(action,STATE_FINISHED);
+                    break;
+            }
             if(data!=null){
                 syncDrawingListener.onFinished(data.toString());
             }
@@ -56,6 +83,9 @@ public class SyncGenerator {
         tempCollector=null;
     }
 
+    public void updateAction(int action){
+        this.action=action;
+    }
 
 
     public int getState(){

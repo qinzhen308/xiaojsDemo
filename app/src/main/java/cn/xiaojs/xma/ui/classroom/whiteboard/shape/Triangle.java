@@ -28,6 +28,7 @@ import cn.xiaojs.xma.model.socket.room.whiteboard.Shape;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.LineSegment;
@@ -37,6 +38,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinishedDelete;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -275,6 +277,44 @@ public class Triangle extends TwoDimensionalShape {
         syncData.startPos=new PointF(_p[0],_p[1]);
         matrix.mapPoints(_p,new float[]{mPoints.get(1).x,mPoints.get(1).y});
         syncData.endPos=new PointF(_p[0],_p[1]);
+    }
+
+    @Override
+    public Object onCollect(int action,int type) {
+        if(type== SyncGenerator.STATE_BEGIN){
+
+            SyncBoardEvtBegin evtBegin=new SyncBoardEvtBegin();
+            Ctx ctx=new Ctx();
+            ctx.lineWidth=(int)getPaint().getStrokeWidth();
+            ctx.strokeStyle= ColorUtil.getColorName(getPaint().getColor());
+            ctx.viewport=getWhiteboard().getViewport();
+            evtBegin.ctx=ctx;
+            evtBegin.stg= Live.SyncStage.BEGIN;
+            evtBegin.time=System.currentTimeMillis();
+            evtBegin.board= getWhiteboard().getWhiteBoardId();
+            evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            if(action== Action.DELETE_ACTION){
+                evtBegin.evt= Live.SyncEvent.ERASER;
+            }
+            return evtBegin;
+        }else if(type== SyncGenerator.STATE_DOING){
+
+        }else if(type== SyncGenerator.STATE_FINISHED){
+            if(action== Action.DELETE_ACTION) {
+                SyncBoardFinishedDelete evtFinished=new SyncBoardFinishedDelete();
+                evtFinished.stg= Live.SyncStage.FINISH;
+                evtFinished.evt= Live.SyncEvent.ERASER;
+                evtFinished.time=System.currentTimeMillis();
+                evtFinished.board= getWhiteboard().getWhiteBoardId();
+                evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+                evtFinished.data=new ArrayList<SyncLayer>();
+                SyncLayer layer=new SyncLayer();
+                layer.id=getDoodleId();
+                evtFinished.data.add(layer);
+                return evtFinished;
+            }
+        }
+        return null;
     }
 
 }

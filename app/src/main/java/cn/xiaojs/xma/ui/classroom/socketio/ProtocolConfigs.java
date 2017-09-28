@@ -26,7 +26,7 @@ public class ProtocolConfigs {
     /**
      * 图形的id的长度
      */
-    public final static int SHAPE_ID_LENGTH = 4;
+    public final static int SHAPE_ID_LENGTH = 24;
 
     //=======================Constants for commend======================
     /**
