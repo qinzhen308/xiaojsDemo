@@ -79,7 +79,7 @@ public class Selector extends Doodle {
     }
 
     @Override
-    public void addControlPoint(PointF point) {
+    public void computeRectByCreate(PointF point) {
         //clamp to [0, 1]
         point.set(Utils.clamp(point.x, 0, 1), Utils.clamp(point.y, 0, 1));
         if (mPoints.isEmpty()) {

@@ -54,7 +54,7 @@ public class SineCurve extends TwoDimensionalShape {
     }
 
     @Override
-    public void addControlPoint(PointF point) {
+    public void computeRectByCreate(PointF point) {
         if (mPoints.isEmpty()) {
             mPoints.add(point);
         } else if (mPoints.size() == 1) {

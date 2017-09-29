@@ -55,7 +55,7 @@ public class SyncRemoteLayer extends Doodle {
     }
 
     @Override
-    public void addControlPoint(PointF point) {
+    public void computeRectByCreate(PointF point) {
 
     }
 

@@ -76,7 +76,7 @@ public class HandWriting extends Doodle implements SyncCollector{
      * automatically set to (0,0)
      */
     @Override
-    public void addControlPoint(PointF point) {
+    public void computeRectByCreate(PointF point) {
         if (!mPoints.isEmpty()) {
             PointF last = mPoints.get(mPoints.size() - 1);
             mNormalizedPath.quadTo(last.x, last.y, (last.x + point.x) / 2, (last.y + point.y) / 2);

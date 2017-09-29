@@ -232,17 +232,24 @@ public abstract class Doodle implements Transformation{
 
     //==========================getter and setter==========================================
 
-    public void addControlPoint(PointF point) {
-        mPoints.add(point);
+    public final void addControlPoint(PointF point) {
+        computeRectByCreate(point);
+        mBorderRect.set(mDoodleRect);
     }
 
-    public void addControlPoint(float x, float y) {
+    public final void addControlPoint(float x, float y) {
         addControlPoint(new PointF(x, y));
     }
 
     public void setControlPoints(List<PointF> src) {
         mPoints=src;
     }
+
+    public void computeRectByCreate(PointF point){
+        mPoints.add(point);
+
+    }
+
 
     public PointF getFirstPoint() {
         return mPoints.get(0);
@@ -285,52 +292,46 @@ public abstract class Doodle implements Transformation{
 
     public void reset() {
         mBorderTransformMatrix.reset();
-        mDrawingPath.computeBounds(mDoodleRect,false);
+        mDrawingPath.computeBounds(mBorderRect,false);
         Matrix matrix=new Matrix();
         getWhiteboard().getDrawingMatrix().invert(matrix);
-        matrix.mapRect(mDoodleRect);
-        mDrawingMatrix.set(getWhiteboard().getDrawingMatrix());
+        matrix.mapRect(mBorderRect);
     }
 
     public void drawBorder(Canvas canvas) {
-        if (isShow() && mPoints.size() > 1 && !mDoodleRect.isEmpty()) {
+        if (isShow() && mPoints.size() > 1 && !mBorderRect.isEmpty()) {
             onDrawBorder(canvas);
         }
     }
 
     protected void onDrawBorder(Canvas canvas) {
-        // TODO: 2017/9/28 paulz
-        computeBorderPadding();
-        mBorderTransformMatrix.set(getWhiteboard().getDrawingMatrix());
         Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
-        float hPadding = mBorderPadding.x;
-        float vPadding = mBorderPadding.y;
-        mBorderRect.set(mDoodleRect.left - hPadding, mDoodleRect.top - vPadding,
-                mDoodleRect.right + hPadding, mDoodleRect.bottom + vPadding);
+        float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
+        mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
+        mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
 
+        Matrix unitToScreenMatrix=new Matrix(mBorderTransformMatrix);
+        unitToScreenMatrix.postConcat(getWhiteboard().getDrawingMatrix());
+
+        float paddingH=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalHeight;
+        float paddingW=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalWidth;
         //draw border
         mBorderDrawingPath.reset();
-        mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
-        mBorderDrawingPath.transform(mDrawingMatrix);
+        RectF realBorderRect=new RectF(mBorderRect.left-paddingW,mBorderRect.top-paddingH,mBorderRect.right+paddingW,mBorderRect.bottom+paddingH);
+        mBorderDrawingPath.addRect(realBorderRect, Path.Direction.CCW);
+        mBorderDrawingPath.transform(unitToScreenMatrix);
         canvas.drawPath(mBorderDrawingPath, mBorderPaint);
 
         //draw controller
-        PointF p = Utils.normalizeScreenPoint(mControllerPaint.getStrokeWidth() / mTotalScaleX, mControllerPaint.getStrokeWidth() / mTotalScaleY, params.drawingBounds);
-        mBorderRect.set(mDoodleRect.right + hPadding - p.x, mDoodleRect.top - vPadding - p.y,
-                mDoodleRect.right + hPadding + p.x, mDoodleRect.top - vPadding + p.y);
-        mBorderDrawingPath.reset();
-        mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
-        mBorderDrawingPath.transform(mDrawingMatrix);
-        canvas.drawPath(mBorderDrawingPath, mControllerPaint);
 
-        //draw del btn
-        mBorderRect.set(mDoodleRect.left - hPadding - p.x, mDoodleRect.bottom + vPadding - p.y,
-                mDoodleRect.left - hPadding + p.x, mDoodleRect.bottom + vPadding + p.y);
         mBorderDrawingPath.reset();
-        mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
-        mBorderDrawingPath.transform(mDrawingMatrix);
+        mBorderDrawingPath.addOval(ControlPointUtil.getRotatePoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
+        mBorderDrawingPath.addOval(ControlPointUtil.getDeletePoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
+        mBorderDrawingPath.addOval(ControlPointUtil.getLeftPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
+        mBorderDrawingPath.addOval(ControlPointUtil.getTopPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
+        mBorderDrawingPath.addOval(ControlPointUtil.getRightPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
+        mBorderDrawingPath.addOval(ControlPointUtil.getBottomPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
         canvas.drawPath(mBorderDrawingPath, mControllerPaint);
-        Utils.drawDelBtn(canvas, mBorderRect, mBorderDrawingPath, mDrawingMatrix, params);
     }
 
     protected void computeBorderPadding() {
