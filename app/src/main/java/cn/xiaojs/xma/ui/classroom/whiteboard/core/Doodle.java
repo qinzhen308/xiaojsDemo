@@ -59,6 +59,7 @@ public abstract class Doodle implements Transformation{
 
     protected int mStyle;
 
+    //创建完成后，就不会再变大小，绘制标准内容--->matrix transform
     protected final RectF mDoodleRect;
     protected RectF mTransRect;
     protected RectF mBorderRect;
@@ -68,6 +69,7 @@ public abstract class Doodle implements Transformation{
     protected Path mScreenPath;
 
     protected PointF mBorderPadding;
+    //单元框中，图层rect的中心坐标，
     protected float[] mRectCenter;
 
     protected Matrix mDrawingMatrix;
@@ -297,8 +299,9 @@ public abstract class Doodle implements Transformation{
     }
 
     protected void onDrawBorder(Canvas canvas) {
+        // TODO: 2017/9/28 paulz
         computeBorderPadding();
-        mDrawingMatrix.set(getWhiteboard().getDrawingMatrix());
+        mBorderTransformMatrix.set(getWhiteboard().getDrawingMatrix());
         Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
         float hPadding = mBorderPadding.x;
         float vPadding = mBorderPadding.y;
@@ -610,21 +613,24 @@ public abstract class Doodle implements Transformation{
         mTranslateX += moveX;
         mTranslateY += moveY;
         mTransformMatrix.postTranslate(moveX, moveY);
+        mBorderTransformMatrix.postTranslate(moveX, moveY);
     }
 
     public void scale(float scale, float px, float py) {
         mTotalScaleX = mTotalScaleX * scale;
         mTotalScaleY = mTotalScaleY * scale;
         mTransformMatrix.postScale(scale, scale, px, py);
+        mBorderTransformMatrix.postScale(scale, scale, px, py);
     }
 
     public void scaleInSelector(float scaleX, float scaleY, float px, float py) {
         mTotalScaleX = mTotalScaleX * scaleX;
         mTotalScaleY = mTotalScaleY * scaleY;
         mTransformMatrix.postScale(scaleX, scaleY, px, py);
-//        mGroupTransformMatrix.postScale(scaleX, scaleY, px, py);
+        mBorderTransformMatrix.postScale(scaleX, scaleY, px, py);
     }
     public void preScaleInSelector(float scaleX, float scaleY, float px, float py,float selectorRoute,float cx,float cy) {
+        // TODO: 2017/9/28 paulz
         mTotalScaleX = mTotalScaleX * scaleX;
         mTotalScaleY = mTotalScaleY * scaleY;
         float[] transedCenter=new float[]{cx,cy};
@@ -642,6 +648,7 @@ public abstract class Doodle implements Transformation{
     public void rotate(float degree, float px, float py) {
         mTotalDegree += degree;
         mTransformMatrix.postRotate(degree, px, py);
+        mBorderTransformMatrix.postRotate(degree, px, py);
     }
 
     public void scaleRotateByAnchor(float scale, float degree, float px, float py) {
