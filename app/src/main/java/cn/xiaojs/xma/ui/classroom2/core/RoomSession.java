@@ -1,6 +1,9 @@
 package cn.xiaojs.xma.ui.classroom2.core;
 
+import java.util.Map;
+
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 
 /**
@@ -19,6 +22,9 @@ public class RoomSession {
     protected long individualStreamDuration;                          //直播秀时间
 
     protected CtlSession ctlSession;                                  //当前教室的状态值
+
+    protected Map<String, Attendee> classMembers;                     //教室中的成员
+
 
     public RoomSession(CtlSession session) {
         ctlSession = session;

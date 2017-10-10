@@ -12,6 +12,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDoc {
 
+    public String libId;
     public String id;
     public long used;
     public long quota;

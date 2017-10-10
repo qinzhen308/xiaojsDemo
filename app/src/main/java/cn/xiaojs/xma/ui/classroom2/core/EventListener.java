@@ -11,6 +11,7 @@ import cn.xiaojs.xma.data.EventManager;
 import cn.xiaojs.xma.data.api.socket.MessageCallback;
 import cn.xiaojs.xma.data.api.socket.SocketListen;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
 import cn.xiaojs.xma.model.socket.room.ClosePreviewReceive;
 import cn.xiaojs.xma.model.socket.room.ConstraintKickoutReceive;
@@ -279,10 +280,13 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
             super(context);
         }
 
+
         @Override
         public void onEvent() {
             socketListeners.add(EventManager.onEvent(context,
                     Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class, this));
+
+
         }
     }
 

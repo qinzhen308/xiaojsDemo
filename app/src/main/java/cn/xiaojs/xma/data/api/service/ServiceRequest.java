@@ -498,7 +498,12 @@ public class ServiceRequest<T> implements ContextLifecycle {
 
         int responseCode = response.code();
         if (XiaojsConfig.DEBUG) {
-            Logger.d("the request has onResponse, the code:%d", responseCode);
+            if (responseCode != SUCCESS_CODE) {
+                Logger.e("the request has onResponse, the code:%d", responseCode);
+            }else {
+                Logger.d("the request has onResponse, the code:%d", responseCode);
+            }
+
         }
 
         if (responseCode == SUCCESS_CODE) {
@@ -551,7 +556,7 @@ public class ServiceRequest<T> implements ContextLifecycle {
     private void onFailures(int apiType, Throwable t) {
         if (XiaojsConfig.DEBUG) {
             String exception = t.getMessage();
-            Logger.d("the request has occur exception:\n %s", exception);
+            Logger.e("the request has occur exception:\n %s", exception);
         }
 
 

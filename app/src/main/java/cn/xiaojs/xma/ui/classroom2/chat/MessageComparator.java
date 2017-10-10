@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
 import java.util.Comparator;
+import java.util.Set;
 
 import cn.xiaojs.xma.model.live.TalkItem;
 
@@ -9,6 +10,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
  */
 
 public class MessageComparator implements Comparator<TalkItem> {
+
     @Override
     public int compare(TalkItem o1, TalkItem o2) {
         if (o1 == null || o2 == null) {

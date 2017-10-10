@@ -13,6 +13,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 
 /**
@@ -35,7 +36,6 @@ public class ReceivedViewHolder extends ChatViewHolder {
     ImageView contentImgView;
 
 
-
     public ReceivedViewHolder(Context context, View itemView) {
         super(context, itemView);
         this.context = context;
@@ -53,6 +53,16 @@ public class ReceivedViewHolder extends ChatViewHolder {
                 .error(R.drawable.default_avatar_grey)
                 .into(avatorView);
 
+
+        if (item.showTime) {
+            String timeStr = TimeUtil.getTimeShowString(item.time, false);
+            timeLineView.setText(timeStr);
+            timeLineView.setVisibility(View.VISIBLE);
+        } else {
+            timeLineView.setVisibility(View.GONE);
+        }
+
+
         nameView.setText(item.from.name);
 
         if (item.body.contentType == Communications.ContentType.TEXT) {
@@ -61,16 +71,32 @@ public class ReceivedViewHolder extends ChatViewHolder {
             contentTextView.setVisibility(View.VISIBLE);
             contentImgView.setVisibility(View.GONE);
 
-        }else if (item.body.drawing !=null && !TextUtils.isEmpty(item.body.drawing.name)) {
-            loadImg(item.body.text, item.body.drawing.name, contentImgView);
+        } else if (item.body.contentType == Communications.ContentType.STYLUS) {
+
+
+            if (!TextUtils.isEmpty(item.body.text)) {
+
+                byte[] imgData = ClassroomBusiness.base64ToByteData(item.body.text);
+                Glide.with(context)
+                        .load(imgData)
+                        .into(getImgViewTarget(0, contentImgView));
+
+            }else {
+
+                String imgUrl = ClassroomBusiness.getSnapshot(item.body.drawing.name, MAX_SIZE);
+                Glide.with(context)
+                        .load(imgUrl)
+                        .into(getImgViewTarget(0, contentImgView));
+            }
 
             contentTextView.setVisibility(View.GONE);
             contentImgView.setVisibility(View.VISIBLE);
 
-        }else {
+        } else {
             contentTextView.setVisibility(View.GONE);
             contentImgView.setVisibility(View.GONE);
         }
+
 
     }
 }

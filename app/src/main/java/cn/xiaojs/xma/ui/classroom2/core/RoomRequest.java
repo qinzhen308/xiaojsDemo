@@ -6,6 +6,7 @@ import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.statemachine.IState;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.EventManager;
 import cn.xiaojs.xma.data.LiveManager;
@@ -16,6 +17,7 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.RequestShareboard;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.model.socket.room.Talk;
@@ -145,8 +147,8 @@ public final class RoomRequest {
         });
     }
 
-    protected void sendTalk(Talk talk,
-                              final EventCallback<TalkResponse> callback) {
+    protected void sendTalk(final Talk talk,
+                            final EventCallback<TalkResponse> callback) {
 
         EventManager.sendTalk(context, talk, new EventCallback<TalkResponse>() {
             @Override

@@ -75,6 +75,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.material.CDirectory;
+import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
@@ -839,8 +840,12 @@ public interface XiaojsService {
     Call<ShareDoc> shareDocuments(@Path("targetId") String targetId, @Body ShareResource resource);
 
     //Create Directory
-    @POST("/v1/collaboration/documents/directory")
-    Call<UploadReponse> createDirectory(@Body CDirectory directory);
+    @POST("/v1/collaboration/{parent}/directory")
+    Call<UploadReponse> createDirectory(@Path("parent") String parent, @Body CDirectory directory);
+
+    //Edit Document
+    @PATCH("/v1/collaboration/documents/{document}")
+    Call<ResponseBody> editDocument(@Path("document") String document, @Body EditDoc editDoc);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

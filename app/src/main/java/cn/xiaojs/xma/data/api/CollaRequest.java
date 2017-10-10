@@ -10,6 +10,7 @@ import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.material.CDirectory;
+import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
@@ -84,8 +85,13 @@ public class CollaRequest extends ServiceRequest{
         enqueueRequest(APIType.SHARE_DOCUMENTS, call);
     }
 
-    public void createDirectory(CDirectory directory) {
-        Call<UploadReponse> call = getService().createDirectory(directory);
+    public void createDirectory(String parent, CDirectory directory) {
+        Call<UploadReponse> call = getService().createDirectory(parent, directory);
         enqueueRequest(APIType.CREATE_DIRECTORY, call);
+    }
+
+    public void editDocument(String docId, EditDoc doc) {
+        Call<ResponseBody> call = getService().editDocument(docId, doc);
+        enqueueRequest(APIType.EDIT_DOCUMENT, call);
     }
 }

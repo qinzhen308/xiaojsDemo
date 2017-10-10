@@ -21,6 +21,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     private Context context;
     private ArrayList<TalkItem> messages;
     private String myAccountId;
+    private FetchMoreListener fetchMoreListener;
+    private int autoFetchMoreSize = 3;
+    private int perpageMaxCount = 0;
+    private boolean firstLoad = true;
+
+
+    public interface FetchMoreListener {
+        void onFetchMoreRequested();
+    }
+
 
     public ChatAdapter(Context context, ArrayList<TalkItem> messages) {
         this.context = context;
@@ -28,8 +38,28 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         this.myAccountId = AccountDataManager.getAccountID(context);
     }
 
+
+    public void setFetchMoreListener(FetchMoreListener listener) {
+        this.fetchMoreListener = listener;
+    }
+
+    public void setFirstLoad(boolean firstLoad) {
+        this.firstLoad = firstLoad;
+    }
+
+    public void setAutoFetchMoreSize(int size) {
+        this.autoFetchMoreSize = size;
+    }
+
+    public void setPerpageMaxCount(int count) {
+        this.perpageMaxCount = count;
+    }
+
     @Override
     public int getItemViewType(int position) {
+
+        autoRequestFetchMoreData(position);
+
         TalkItem talkItem = messages.get(position);
         if (talkItem.from == null || myAccountId.equals(talkItem.from.accountId)) {
             return MessageType.SEND_OUT;
@@ -58,6 +88,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
                 holder = new TipsViewHolder(context,
                         inflater.inflate(R.layout.layout_classroom2_chat_tips,parent,false));
                 break;
+            case MessageType.LAND:
+                holder = new LandViewHolder(context,
+                        inflater.inflate(R.layout.layout_classroom2_chat_land,parent,false));
+                break;
+
         }
 
         return holder;
@@ -72,6 +107,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     @Override
     public int getItemCount() {
         return messages == null? 0 : messages.size();
+    }
+
+
+    private void autoRequestFetchMoreData(int position) {
+
+        if (firstLoad)
+            return;
+
+        if (getItemCount() == 0 // 都还没有数据，不自动触发加载
+                || getItemCount() < perpageMaxCount) {
+            return;
+        }
+
+        if (position > autoFetchMoreSize - 1) {
+            return;
+        }
+
+        if (fetchMoreListener != null) {
+            fetchMoreListener.onFetchMoreRequested();
+        }
     }
 
 }

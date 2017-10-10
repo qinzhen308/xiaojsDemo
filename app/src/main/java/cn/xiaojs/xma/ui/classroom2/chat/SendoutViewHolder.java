@@ -11,7 +11,9 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 
 /**
@@ -29,6 +31,8 @@ public class SendoutViewHolder extends ChatViewHolder {
     TextView nameView;
     @BindView(R.id.content_text)
     TextView contentTextView;
+    @BindView(R.id.content_img)
+    ImageView contentImgView;
 
 
     public SendoutViewHolder(Context context, View itemView) {
@@ -48,18 +52,46 @@ public class SendoutViewHolder extends ChatViewHolder {
                 .error(R.drawable.default_avatar_grey)
                 .into(avatorView);
 
-        nameView.setText(item.from.name);
 
-        if (!TextUtils.isEmpty(item.body.text)) {
+        if (item.showTime) {
+            String timeStr = TimeUtil.getTimeShowString(item.time, false);
+            timeLineView.setText(timeStr);
+            timeLineView.setVisibility(View.VISIBLE);
+        } else {
+            timeLineView.setVisibility(View.GONE);
+        }
+
+        //nameView.setText(item.from.name);
+
+        if (item.body.contentType == Communications.ContentType.TEXT) {
 
             contentTextView.setText(item.body.text);
             contentTextView.setVisibility(View.VISIBLE);
+            contentImgView.setVisibility(View.GONE);
 
-        }else if (item.body.drawing !=null && !TextUtils.isEmpty(item.body.drawing.name)) {
-            //TODO 图片
+        }else if (item.body.contentType == Communications.ContentType.STYLUS) {
+
+            if (!TextUtils.isEmpty(item.body.text)) {
+
+                byte[] imgData = ClassroomBusiness.base64ToByteData(item.body.text);
+                Glide.with(context)
+                        .load(imgData)
+                        .into(getImgViewTarget(0, contentImgView));
+
+            }else {
+
+                String imgUrl = ClassroomBusiness.getSnapshot(item.body.drawing.name, MAX_SIZE);
+                Glide.with(context)
+                        .load(imgUrl)
+                        .into(getImgViewTarget(0, contentImgView));
+            }
+
+            contentTextView.setVisibility(View.GONE);
+            contentImgView.setVisibility(View.VISIBLE);
+
         }else {
             contentTextView.setVisibility(View.GONE);
+            contentImgView.setVisibility(View.GONE);
         }
-
     }
 }

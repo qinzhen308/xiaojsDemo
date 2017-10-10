@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+        >
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/px88"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bottomsheet_bg_white_rect">
+
+
+        <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_class_database_close_1"
+                android:layout_marginRight="@dimen/px28"
+                android:layout_marginTop="@dimen/px34"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                />
+
+        <TextView
+                android:id="@+id/upload_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传文件"
+                android:drawableTop="@drawable/ic_class_database_file"
+                android:drawablePadding="@dimen/px20"
+                android:textSize="@dimen/px32"
+                android:gravity="center"
+                android:textColor="@color/classroom_dark_gray"
+                android:layout_marginTop="@dimen/px184"
+                app:layout_constraintTop_toBottomOf="@id/back_btn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        <TextView
+                android:id="@+id/folder_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="新建文件夹"
+                android:drawableTop="@drawable/ic_class_database_newfolder"
+                android:drawablePadding="@dimen/px20"
+                android:textSize="@dimen/px32"
+                android:gravity="center"
+                android:textColor="@color/classroom_dark_gray"
+                android:layout_marginTop="@dimen/px90"
+                app:layout_constraintTop_toBottomOf="@id/upload_btn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+
+        <LinearLayout
+                android:id="@+id/upload_lay"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/px30"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:visibility="gone">
+
+            <TextView
+                    android:id="@+id/upload_name"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_30px"
+                    android:text="@string/up_loading"
+                    android:layout_marginLeft="@dimen/px50"
+                    android:layout_marginRight="@dimen/px50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/uploading"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/font_black"
+                    android:textSize="@dimen/font_26px"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px50"
+                    />
+
+            <ProgressBar
+                    android:id="@+id/upload_progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:minHeight="@dimen/px4"
+                    android:maxHeight="@dimen/px4"
+                    android:max="100"
+                    android:progress="0"
+                    android:layout_marginTop="@dimen/px25"
+                    android:progressDrawable="@drawable/progress_live"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/px50"
+                    android:layout_marginRight="@dimen/px50"
+                    android:layout_height="wrap_content"/>
+
+            <ImageView
+                    android:id="@+id/upload_close"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/px80"
+                    android:src="@drawable/ic_class_database_close_1"
+                    android:scaleType="fitXY"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px40"/>
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

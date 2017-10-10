@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    <ImageView
+            android:id="@+id/icon"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_word"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="@dimen/px39"
+            android:layout_marginLeft="@dimen/px30"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/px30"/>
+
+    <ImageView
+            android:id="@+id/expand_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:paddingLeft="@dimen/px20"
+            android:paddingRight="@dimen/px20"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/expand_top_line"
+            />
+
+    <TextView
+            android:id="@+id/name"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_32px"
+            android:text="人力资源管理实务"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px25"
+            android:layout_marginLeft="@dimen/px29"
+            app:layout_constraintLeft_toRightOf="@+id/icon"
+            app:layout_constraintRight_toLeftOf="@+id/expand_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/px29"/>
+
+    <TextView
+            android:id="@+id/desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/hint_color"
+            android:text="0.8M 2017-11-11 20:22"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_marginTop="@dimen/px16"
+            app:layout_constraintLeft_toLeftOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintRight_toLeftOf="@+id/expand_btn"/>
+
+
+    <View
+            android:id="@+id/expand_top_line"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px1"
+            android:background="@color/gray_line"
+            android:layout_marginTop="@dimen/px16"
+            app:layout_constraintTop_toBottomOf="@id/desc"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    <LinearLayout
+            android:id="@+id/opera_wrapper"
+            android:visibility="visible"
+            android:orientation="horizontal"
+            android:background="@color/moment_write_comment_bg"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px100"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/expand_top_line"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            >
+
+        <TextView
+                android:id="@+id/opera1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_20px"
+                android:drawableTop="@drawable/ic_class_database_mydownload_1"
+                android:drawablePadding="@dimen/px13"
+                android:text="@string/download"
+                android:gravity="center"
+                android:visibility="visible"/>
+
+        <TextView
+                android:id="@+id/opera2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_20px"
+                android:drawableTop="@drawable/ic_class_database_share_1"
+                android:drawablePadding="@dimen/px13"
+                android:text="@string/share"
+                android:gravity="center"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/opera3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_20px"
+                android:drawableTop="@drawable/ic_class_database_delete_1"
+                android:drawablePadding="@dimen/px13"
+                android:text="@string/delete"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:visibility="visible"/>
+
+        <TextView
+                android:id="@+id/opera4"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_20px"
+                android:drawablePadding="@dimen/px13"
+                android:drawableTop="@drawable/ic_class_database_more_1"
+                android:text="@string/more"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:visibility="visible"/>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

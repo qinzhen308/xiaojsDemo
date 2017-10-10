@@ -10,6 +10,9 @@ public class CTLConstant {
     public static final String EXTRA_EXCEPTION_TIPS = "exception_tips";
     public static final String EXTRA_TICKET = "ticket";
 
+    public static final String EXTRA_DIRECTORY_ID = "dir_id";
+    public static final int REQUEST_MATERIAL_ADD_NEW = 1;
+
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课
         public static final int NO_LESSON= 0x002;                    //无课

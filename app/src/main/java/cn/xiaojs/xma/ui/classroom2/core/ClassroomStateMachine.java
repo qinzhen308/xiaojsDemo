@@ -4,14 +4,22 @@ import android.content.Context;
 import android.os.Message;
 
 
+import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.statemachine.State;
 import cn.xiaojs.xma.common.statemachine.StateMachine;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
 import cn.xiaojs.xma.model.socket.room.ClosePreviewReceive;
@@ -35,6 +43,10 @@ import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.ui.classroom2.live.MemberAdapter;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/7/4.
@@ -52,7 +64,12 @@ public abstract class ClassroomStateMachine extends StateMachine {
         this.roomSession = session;
         setDbg(XiaojsConfig.DEBUG);
 
+        //加载教室成员
+        loadMemberList();
+
     }
+
+
 
 
     public void destoryAndQuitNow() {
@@ -184,6 +201,34 @@ public abstract class ClassroomStateMachine extends StateMachine {
 //    public void stopPlayLiveShow() {
 //        sendMessage(CTLConstant.BaseChannel.STOP_PLAY_LIVE_SHOW);
 //    }
+
+
+
+    public void addMember(Attendee attendee) {
+        if (roomSession.classMembers == null) {
+            roomSession.classMembers = new HashMap<>();
+        }
+
+        roomSession.classMembers.put(attendee.accountId, attendee);
+
+    }
+
+    public void removeMember(String accountId) {
+        if (roomSession.classMembers != null) {
+            roomSession.classMembers.remove(accountId);
+        }
+    }
+
+    public Attendee getMember(String accountId) {
+        if (roomSession.classMembers != null) {
+            return roomSession.classMembers.get(accountId);
+        }
+
+        return null;
+    }
+
+
+
     protected void switchStateWhenReceiveSyncState(String state) {
 
         if (Live.LiveSessionState.FINISHED.equals(state)) {
@@ -442,6 +487,52 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     protected void syncBoardReceived(SyncBoardReceive message) {
 
+    }
+
+    private void loadMemberList() {
+
+        LiveManager.getAttendees(getContext(), roomSession.ticket,
+                new APIServiceCallback<LiveCollection<Attendee>>() {
+                    @Override
+                    public void onSuccess(LiveCollection<Attendee> liveCollection) {
+
+                        if (liveCollection != null
+                                && liveCollection.attendees != null
+                                && liveCollection.attendees.size()>0) {
+
+                            addMembersInSession(liveCollection.attendees);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.e("load class members failed....");
+                        }
+                    }
+                });
+    }
+
+    private void addMembersInSession(ArrayList<Attendee> attendees){
+        Observable.fromArray(attendees)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<ArrayList<Attendee>>() {
+                    @Override
+                    public void accept(ArrayList<Attendee> attendees) throws Exception {
+                        if(roomSession.classMembers == null) {
+                            roomSession.classMembers = new HashMap<>();
+                        }
+
+                        for (Attendee attendee : attendees) {
+                            roomSession.classMembers.put(attendee.accountId, attendee);
+                        }
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("load class members over....");
+                        }
+                    }
+                });
     }
 
 }

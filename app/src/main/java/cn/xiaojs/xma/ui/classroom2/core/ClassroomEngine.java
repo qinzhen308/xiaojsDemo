@@ -8,6 +8,9 @@ import com.orhanobut.logger.Logger;
 
 import org.json.JSONObject;
 
+
+import java.util.HashMap;
+
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -45,6 +48,7 @@ import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom2.live.MemberAdapter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
@@ -95,6 +99,7 @@ public final class ClassroomEngine {
         eventObservable = EventObservable.createEventObservable();
         observerAllEvent();
         roomRequest = new RoomRequest(context, stateMachine);
+
 
 
     }
@@ -195,6 +200,18 @@ public final class ClassroomEngine {
 
     public long getIndividualStreamDuration() {
         return stateMachine.getSession().individualStreamDuration;
+    }
+
+    public void addMember(Attendee attendee) {
+        stateMachine.addMember(attendee);
+    }
+
+    public void removeMember(String accountId) {
+        stateMachine.removeMember(accountId);
+    }
+
+    public Attendee getMember(String accountId) {
+        return stateMachine.getMember(accountId);
     }
 
     /**
@@ -306,10 +323,9 @@ public final class ClassroomEngine {
     /**
      * 发送交流
      */
-    public void sendTalk(Talk talk,
-                         final EventCallback<TalkResponse> callback) {
+    public void sendTalk(Talk talk,final EventCallback<TalkResponse> callback) {
         if (roomRequest != null) {
-            roomRequest.sendTalk(talk, callback);
+            roomRequest.sendTalk(talk,callback);
         }
     }
 

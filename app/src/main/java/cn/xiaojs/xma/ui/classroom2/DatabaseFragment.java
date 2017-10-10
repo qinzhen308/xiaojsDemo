@@ -1,12 +1,10 @@
 package cn.xiaojs.xma.ui.classroom2;
 
-import android.app.Dialog;
-import android.graphics.Color;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -14,18 +12,20 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
-import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.material.AddNewFragment;
+import cn.xiaojs.xma.ui.classroom2.material.DatabaseListFragment;
+import cn.xiaojs.xma.ui.classroom2.material.DownloadListFragment;
 
 /**
  * Created by maxiaobao on 2017/9/26.
@@ -40,6 +40,8 @@ public class DatabaseFragment extends BottomSheetFragment {
 
     private ArrayList<Fragment> fragmentList;
 
+    private DatabaseListFragment databaseListFragment;
+
 
     @Override
     public View createView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -53,7 +55,10 @@ public class DatabaseFragment extends BottomSheetFragment {
         super.onActivityCreated(savedInstanceState);
 
         fragmentList = new ArrayList<>(2);
-        fragmentList.add(new DatabaseListFragment());
+
+        databaseListFragment = new DatabaseListFragment();
+
+        fragmentList.add(databaseListFragment);
         fragmentList.add(new DatabaseListFragment());
 
         FrgStatePageAdapter  pageAdapter = new FrgStatePageAdapter(getChildFragmentManager());
@@ -87,7 +92,7 @@ public class DatabaseFragment extends BottomSheetFragment {
     }
 
 
-    @OnClick({R.id.tab_my, R.id.tab_class})
+    @OnClick({R.id.tab_my, R.id.tab_class, R.id.download_btn, R.id.add_btn})
     void onViewClick(View view) {
         switch(view.getId()) {
             case R.id.tab_my:
@@ -96,9 +101,27 @@ public class DatabaseFragment extends BottomSheetFragment {
             case R.id.tab_class:
                 viewPager.setCurrentItem(1);
                 break;
+            case R.id.download_btn:
+                DownloadListFragment listFragment = new DownloadListFragment();
+                listFragment.show(getFragmentManager(),"downloadlist");
+                break;
+            case R.id.add_btn:
+                openAddNew();
+                break;
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+
+            switch (requestCode) {
+                case CTLConstant.REQUEST_MATERIAL_ADD_NEW:
+                    databaseListFragment.refreshData();
+                    break;
+            }
+        }
+    }
 
     class FrgStatePageAdapter extends FragmentStatePagerAdapter {
 
@@ -135,5 +158,15 @@ public class DatabaseFragment extends BottomSheetFragment {
         @Override
         public void restoreState(Parcelable state, ClassLoader loader) {
         }
+    }
+
+
+    private void openAddNew() {
+        AddNewFragment addNewFragment = new AddNewFragment();
+        Bundle data = new Bundle();
+        data.putString(CTLConstant.EXTRA_DIRECTORY_ID, databaseListFragment.getCurrentDirectoryId());
+        addNewFragment.setArguments(data);
+        addNewFragment.setTargetFragment(this, CTLConstant.REQUEST_MATERIAL_ADD_NEW);
+        addNewFragment.show(getFragmentManager(),"addnew");
     }
 }

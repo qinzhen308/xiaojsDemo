@@ -11,6 +11,7 @@ import cn.xiaojs.xma.data.api.service.QiniuService;
 
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.material.CDirectory;
+import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
 import cn.xiaojs.xma.model.material.ShareDoc;
@@ -32,6 +33,19 @@ public class CollaManager {
     /**
      * Provides access to collaboration interfaces accessible to the Xiaojs client applications.
      */
+
+    public void addToLibraryWithParent(Context context,
+                             String parent,
+                             @NonNull final String filePath,
+                             @NonNull final String fileName,
+                             @NonNull QiniuService qiniuService) {
+        UploadParam param = new UploadParam();
+        param.fileName = fileName;
+        param.parent = parent;
+
+        addToLibrary(context, filePath, param, qiniuService);
+    }
+
     public void addToLibrary(Context context,
                              @NonNull final String filePath,
                              @NonNull final String fileName,
@@ -262,10 +276,19 @@ public class CollaManager {
 
         CDirectory directory = new CDirectory();
         directory.name = name;
-        directory.parent = parent;
 
         CollaRequest request = new CollaRequest(context,callback);
-        request.createDirectory(directory);
+        request.createDirectory(parent, directory);
+    }
+
+    public static void editDocument(Context context, String docId,
+                                    String newName, APIServiceCallback<ResponseBody> callback) {
+
+        EditDoc editDoc = new EditDoc();
+        editDoc.name = newName;
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.editDocument(docId, editDoc);
     }
 
 }
