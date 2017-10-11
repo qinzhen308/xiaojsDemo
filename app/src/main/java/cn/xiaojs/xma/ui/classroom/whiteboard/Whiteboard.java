@@ -1544,7 +1544,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                         doodle.setVisibility(View.VISIBLE);
                     }
                     doodle.setPoints(prevRecord.mPoints);
-                    doodle.setDoodleRect(prevRecord.rect);
+                    doodle.setBorderRect(prevRecord.rect);
                     doodle.setTransformMatrix(prevRecord.mTransMatrix);
                     doodle.setBorderTransformMatrix(prevRecord.mBorderTransMatrix);
                     doodle.setTotalDegree(prevRecord.degree);
@@ -1599,7 +1599,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     doodle.setVisibility(View.GONE);
                 }
                 doodle.setPoints(record.mPoints);
-                doodle.setDoodleRect(record.rect);
+                doodle.setBorderRect(record.rect);
                 doodle.setTransformMatrix(record.mTransMatrix);
                 doodle.setBorderTransformMatrix(record.mBorderTransMatrix);
                 doodle.setTotalDegree(record.degree);

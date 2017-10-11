@@ -175,6 +175,12 @@ public class IntersectionHelper {
         return whichCornerPressed(x, y, transRect);
     }
 
+/*    public static int whichCornerPressed(float x, float y, RectF rect, Matrix mapMatrix) {
+        float[] pIn2=new float[]{x,y};
+        mapMatrix.mapPoints(pIn2);
+        return whichCornerPressed(pIn2[0], pIn2[1], rect);
+    }*/
+
     /**
      * 判断哪个矩形的哪个角被按下了
      */

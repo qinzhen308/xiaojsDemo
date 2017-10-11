@@ -111,7 +111,7 @@ public class HandWriting extends Doodle implements SyncCollector{
         return mScreenPath;
     }
 
-    @Override
+/*    @Override
     public int onCheckPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT) {
             PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
@@ -126,7 +126,7 @@ public class HandWriting extends Doodle implements SyncCollector{
         }
 
         return IntersectionHelper.RECT_NO_SELECTED;
-    }
+    }*/
 
     @Override
     public boolean onCheckSelected(float x, float y) {

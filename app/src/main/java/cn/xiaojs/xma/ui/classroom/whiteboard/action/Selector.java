@@ -10,6 +10,8 @@ import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
@@ -18,6 +20,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HandWriting;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -327,7 +330,7 @@ public class Selector extends Doodle {
 
     @Override
     public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
-        if (mSelectedDoodle instanceof GeometryShape) {
+        if (mSelectedDoodle instanceof GeometryShape||mSelectedDoodle instanceof HandWriting) {
             mSelectedDoodle.changeByEdge(oldX, oldY, x, y, edge);
             return;
         }
@@ -368,6 +371,8 @@ public class Selector extends Doodle {
                 float[] _p=new float[]{x,y};
                 float[] _pOld=new float[]{oldX,oldY};
 
+                mTransformMatrix.mapPoints(_c);
+
                 //从屏幕坐标映射到画布rect里
                 matrix.reset();
                 mDisplayMatrix.invert(matrix);
@@ -384,7 +389,8 @@ public class Selector extends Doodle {
 //                routeM.mapPoints(_p);
 //                routeM.mapPoints(_pOld);
                 Matrix rotateM=new Matrix();
-                mTransformMatrix.invert(rotateM);
+//                mTransformMatrix.invert(rotateM);
+                rotateM.postRotate(-getTotalDegree(),_c[0],_c[1]);
                 rotateM.mapPoints(_p);
                 rotateM.mapPoints(_pOld);
 
@@ -421,8 +427,6 @@ public class Selector extends Doodle {
                         break;
                 }
 
-                mTransformMatrix.mapPoints(_c);
-
                 for (Doodle d : allDoodles) {
                     if (d.getState() == Doodle.STATE_EDIT) {
                         if(Float.compare(getTotalDegree(),0.0f)==0){
@@ -434,6 +438,7 @@ public class Selector extends Doodle {
                         }
                     }
                 }
+                Logger.d("-----qz-----_c("+_c[0]+","+_c[1]+")"+"----scaleX="+scaleX+",scaleY="+scaleY);
                 matrix = Utils.transformScreenMatrix(mTransformMatrix, null);
                 arr = Utils.calcRectDegreesAndScales(oldX, oldY, x, y, mDoodleRect, matrix);
                 scale = arr[0];

@@ -23,12 +23,31 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.View;
 
+import com.facebook.stetho.common.LogUtil;
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
+/**
+ * 坐标系或者rect有三个参照系：
+ * 1、屏幕坐标系---（0,0,screenW,screenH）
+ * 2、白板坐标系---（0,0,boardW,boardH），boardH可能有多屏
+ * 3、单元坐标系---（0,0,1,1） h也可以为2,3,4...根据具体扩展了多少屏白板来确定。
+ *
+ * 关系：
+ * <1>中的点或rect等可以通过mDisplayMatrix映射到<2>中
+ * <3>中的点或rect可通过mDrawingMatrix映射到<2>中
+ *
+ * whiteboard.ondraw(canvas)中绘制完图形后作mDisplayMatrix变换，得到最终画面；
+ * doodle中的绘制是相对于白板的图形绘制，所以doodle中的绘制不作mDisplayMatrix变换；
+ * 对于doodle中的坐标或rect计算一般是相对于<3>中来处理的，
+ * 但有可能传入到doodle某函数的点坐标属于<1>，所以需要进行映射，使得所有参与计算的参数都在一个参照系。
+ *
+ */
 public abstract class Doodle implements Transformation{
     public final static int SELECTION = 0;
     public final static int STYLE_HAND_WRITING = 1;
@@ -222,6 +241,12 @@ public abstract class Doodle implements Transformation{
         }
     }
 
+    public void setBorderRect(RectF rect) {
+        if (rect != null) {
+            mBorderRect.set(rect);
+        }
+    }
+
     public RectF getDoodleRect() {
         return mDoodleRect;
     }
@@ -291,6 +316,11 @@ public abstract class Doodle implements Transformation{
     protected abstract void onDrawSelf(Canvas canvas);
 
     public void reset() {
+        mTotalDegree=0;
+        mTotalScaleX=0;
+        mTotalScaleY=0;
+        mTranslateX=0;
+        mTranslateY=0;
         mBorderTransformMatrix.reset();
         mDrawingPath.computeBounds(mBorderRect,false);
         Matrix matrix=new Matrix();
@@ -310,8 +340,8 @@ public abstract class Doodle implements Transformation{
         mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
         mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
 
-        Matrix unitToScreenMatrix=new Matrix(mBorderTransformMatrix);
-        unitToScreenMatrix.postConcat(getWhiteboard().getDrawingMatrix());
+        Matrix unitToScreenMatrix=new Matrix(getWhiteboard().getDrawingMatrix());
+        unitToScreenMatrix.postConcat(mBorderTransformMatrix);
 
         float paddingH=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalHeight;
         float paddingW=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalWidth;
@@ -363,9 +393,15 @@ public abstract class Doodle implements Transformation{
 
     protected int onCheckPressedRegion(float x, float y) {
         if (getState() == STATE_EDIT && mPoints.size() > 1) {
-            mTransRect.set(mDoodleRect);
-            PointF p = Utils.transformPoint(x, y, mRectCenter, mTotalDegree);
-            Matrix matrix = Utils.transformMatrix(mDrawingMatrix, mDisplayMatrix, mRectCenter, mTotalDegree);
+            mTransRect.set(mBorderRect);
+            Matrix drawingMatrix=new Matrix(getWhiteboard().getDrawingMatrix());
+            drawingMatrix.postConcat(mBorderTransformMatrix);
+            float[] center=new float[]{mTransRect.centerX(),mTransRect.centerY()};
+            Matrix matrixC=new Matrix(drawingMatrix);
+            matrixC.postConcat(mDisplayMatrix);
+            matrixC.mapPoints(center);
+            PointF p = Utils.transformPoint(x, y, center, mTotalDegree);
+            Matrix matrix = Utils.transformMatrix(drawingMatrix, mDisplayMatrix, center, mTotalDegree);
             int corner = IntersectionHelper.whichCornerPressed(p.x, p.y, mTransRect, matrix);
             if (corner != IntersectionHelper.RECT_NO_SELECTED) {
                 return corner;
@@ -374,7 +410,6 @@ public abstract class Doodle implements Transformation{
                 if (edge != IntersectionHelper.RECT_NO_SELECTED) {
                     return edge;
                 }
-
                 return IntersectionHelper.checkRectPressed(p.x, p.y, mTransRect, matrix);
             }
         }
@@ -439,7 +474,7 @@ public abstract class Doodle implements Transformation{
         record.degree = getTotalDegree();
         record.translateX = getTranslateX();
         record.translateY = getTranslateY();
-        record.setRect(mDoodleRect);
+        record.setRect(mBorderRect);
         record.setMatrix(getTransformMatrix());
         record.setBorderMatrix(mBorderTransformMatrix);
         record.setPoints(getPoints());
@@ -599,9 +634,103 @@ public abstract class Doodle implements Transformation{
         return null;
     }
 
-    @Override
+    /**
+     * 保证最终变换是基于 “白板标准坐标系<2>”
+     * @param oldX   上一次按下的x坐标
+     * @param oldY   上一次按下的y坐标
+     * @param x      当前按下的x坐标
+     * @param y      当前按下的y坐标
+     * @param edge
+     */
+  /*  @Override
     public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
         //empty
+        float[] p1=new float[]{oldX,oldY};
+        float[] p2=new float[]{x,y};
+        float[] center=new float[]{mBorderRect.centerX(),mBorderRect.centerY()};
+        Matrix matrixC=new Matrix(getWhiteboard().getDrawingMatrix());
+        matrixC.postConcat(mBorderTransformMatrix);
+        matrixC.mapPoints(center);
+        mRectCenter[0]=center[0];
+        mRectCenter[1]=center[1];
+
+        Matrix matrixP=new Matrix(getWhiteboard().getDrawingMatrix());
+        matrixP.postConcat(mBorderTransformMatrix);
+        matrixP.postConcat(mDisplayMatrix);
+        matrixP.invert(matrixP);
+        matrixP.mapPoints(p1);
+        matrixP.mapPoints(p2);
+
+        if(edge==IntersectionHelper.BOTTOM_EDGE||edge==IntersectionHelper.TOP_EDGE){
+            p2[0]=p1[0];
+        }else if(edge==IntersectionHelper.LEFT_EDGE||edge==IntersectionHelper.RIGHT_EDGE){
+            p2[1]=p1[1];
+        }
+
+        matrixP.set(getWhiteboard().getDrawingMatrix());
+        matrixP.postConcat(mBorderTransformMatrix);
+        matrixP.mapPoints(p1);
+        matrixP.mapPoints(p2);
+
+        float sx=(p2[0]-mRectCenter[0])/(p1[0]-mRectCenter[0]);
+        float sy=(p2[1]-mRectCenter[1])/(p1[1]-mRectCenter[1]);
+        if(Float.isNaN(sx)){
+            sx=1;
+        }
+        if(Float.isNaN(sy)){
+            sy=1;
+        }
+
+        mBorderTransformMatrix.postScale(sx,sy,mRectCenter[0],mRectCenter[1]);
+        Logger.d("-----qz---mBorderTransformMatrix-------"+mBorderTransformMatrix.toString());
+        mTransformMatrix.postScale(sx,sy,mRectCenter[0],mRectCenter[1]);
+        Logger.d("-----qz---mTransformMatrix-------"+mTransformMatrix.toString());
+    }*/
+
+    @Override
+    public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
+        float[] p1=new float[]{oldX,oldY};
+        float[] p2=new float[]{x,y};
+        float[] center=new float[]{mBorderRect.centerX(),mBorderRect.centerY()};
+        Matrix matrixC=new Matrix(getWhiteboard().getDrawingMatrix());
+//        matrixC.postConcat(mBorderTransformMatrix);
+        matrixC.mapPoints(center);
+//        mRectCenter[0]=center[0];
+//        mRectCenter[1]=center[1];
+
+        Matrix matrixP=new Matrix(getWhiteboard().getDrawingMatrix());
+        matrixP.postConcat(mBorderTransformMatrix);
+        matrixP.postConcat(mDisplayMatrix);
+        matrixP.invert(matrixP);
+        matrixP.mapPoints(p1);
+        matrixP.mapPoints(p2);
+
+        mBorderTransformMatrix.invert(matrixC);
+
+        if(edge==IntersectionHelper.BOTTOM_EDGE||edge==IntersectionHelper.TOP_EDGE){
+            float sx=1;
+            float sy=(p2[1]-mBorderRect.centerY())/(p1[1]-mBorderRect.centerY());
+
+            if(Float.isNaN(sy)){
+                sy=1;
+            }
+            mBorderTransformMatrix.preScale(sx,sy,center[0],center[1]);
+        }else if(edge==IntersectionHelper.LEFT_EDGE||edge==IntersectionHelper.RIGHT_EDGE){
+            float sx=(p2[0]-mBorderRect.centerX())/(p1[0]- mBorderRect.centerX());
+            float sy=1;
+            if(Float.isNaN(sx)){
+                sx=1;
+            }
+            mBorderTransformMatrix.preScale(sx,sy,center[0],center[1]);
+        }
+
+        mTransformMatrix.postConcat(matrixC);
+        mTransformMatrix.postConcat(mBorderTransformMatrix);
+//        mTransformMatrix.postScale(sx,sy,mRectCenter[0],mRectCenter[1]);
+
+
+        Logger.d("-----qz---mBorderTransformMatrix-------"+mBorderTransformMatrix.toString());
+        Logger.d("-----qz---mTransformMatrix-------"+mTransformMatrix.toString());
     }
 
     @Override
