@@ -14,6 +14,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 
 /**
@@ -95,5 +96,20 @@ public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
 //        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 //
 //    }
+
+    /**
+     * 显示loading状态
+     */
+    public void showProgress(boolean cancelable) {
+        ((Classroom2Activity) getActivity()).showProgress(cancelable);
+    }
+
+    /**
+     * 退出loading状态
+     */
+    public void cancelProgress() {
+        ((Classroom2Activity) getActivity()).cancelProgress();
+    }
+
 
 }

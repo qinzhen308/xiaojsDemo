@@ -13,6 +13,7 @@ import cn.xiaojs.xma.model.material.CDirectory;
 import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.MoveParam;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.TokenPair;
@@ -64,6 +65,25 @@ public class CollaRequest extends ServiceRequest{
         enqueueRequest(APIType.GET_DOCUMENTS, call);
     }
 
+    public void getDocuments(String id, String subtype,String category,String sort,String reverse, int page,int perPage) {
+        Call<UserDoc> call = getService().getDocuments(id,subtype,category,sort, reverse,page,perPage);
+        enqueueRequest(APIType.GET_DOCUMENTS, call);
+    }
+
+    public void getDocuments(String id, String parent, String subtype,String category,
+                             String sort,String reverse, int page,int perPage) {
+        Call<UserDoc> call = getService().getDocuments(id, parent, subtype,
+                category,sort,reverse,page,perPage);
+        enqueueRequest(APIType.GET_DOCUMENTS, call);
+    }
+
+    public void getDocuments(String id, String parent, String subtype,String name, String category,
+                             String sort,String reverse, int page,int perPage) {
+        Call<UserDoc> call = getService().getDocuments(id, parent, subtype,name,
+                category,sort,reverse,page,perPage);
+        enqueueRequest(APIType.GET_DOCUMENTS, call);
+    }
+
 
     public void convertDocument(String id) {
         Call<ResponseBody> call = getService().convertDocument(id);
@@ -93,5 +113,10 @@ public class CollaRequest extends ServiceRequest{
     public void editDocument(String docId, EditDoc doc) {
         Call<ResponseBody> call = getService().editDocument(docId, doc);
         enqueueRequest(APIType.EDIT_DOCUMENT, call);
+    }
+
+    public void moveDocuments(String targetId, MoveParam param) {
+        Call<ResponseBody> call = getService().moveDocuments(targetId, param);
+        enqueueRequest(APIType.MOVE_DOCUMENT, call);
     }
 }

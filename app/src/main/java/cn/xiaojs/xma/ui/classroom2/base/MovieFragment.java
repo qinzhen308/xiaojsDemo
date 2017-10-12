@@ -26,7 +26,7 @@ import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public abstract class MovieFragment extends Fragment {
+public abstract class MovieFragment extends BaseRoomFragment {
 
     public final static int REQUEST_PERMISSION = 3;
 
@@ -66,20 +66,6 @@ public abstract class MovieFragment extends Fragment {
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         getActivity().setRequestedOrientation(changeRequest);
 
-    }
-
-    /**
-     * 显示loading状态
-     */
-    public void showProgress(boolean cancelable) {
-        ((Classroom2Activity) getActivity()).showProgress(cancelable);
-    }
-
-    /**
-     * 退出loading状态
-     */
-    public void cancelProgress() {
-        ((Classroom2Activity) getActivity()).cancelProgress();
     }
 
 

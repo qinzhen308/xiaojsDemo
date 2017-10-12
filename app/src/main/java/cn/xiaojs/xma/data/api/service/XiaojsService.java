@@ -10,7 +10,6 @@ import cn.xiaojs.xma.model.AccessLesson;
 import cn.xiaojs.xma.model.CollectionCalendar;
 import cn.xiaojs.xma.model.CollectionPageData;
 import cn.xiaojs.xma.model.CollectionResult;
-import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.Registrant;
@@ -56,11 +55,9 @@ import cn.xiaojs.xma.model.ctl.ClassCollectionPageData;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassSchedule;
-import cn.xiaojs.xma.model.ctl.Enroll;
 import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.PrivateClass;
-import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollPage;
@@ -77,6 +74,7 @@ import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.material.CDirectory;
 import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.MoveParam;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.TokenPair;
@@ -86,11 +84,9 @@ import cn.xiaojs.xma.model.material.UserDoc;
 import cn.xiaojs.xma.model.order.EnrollOrder;
 import cn.xiaojs.xma.model.order.Orderp;
 import cn.xiaojs.xma.model.order.PaymentOrder;
-import cn.xiaojs.xma.model.recordedlesson.RLChapter;
 import cn.xiaojs.xma.model.recordedlesson.RLCollectionPageData;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
-import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
 import cn.xiaojs.xma.model.recordedlesson.Section;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
@@ -823,6 +819,27 @@ public interface XiaojsService {
                                @Query("page") int page,
                                @Query("limit") int limit);
 
+    @GET("/v1/collaboration/documents")
+    Call<UserDoc> getDocuments(@Query("id") String id,
+                               @Query("parent") String parent,
+                               @Query("subtype") String subtype,
+                               @Query("category") String category,
+                               @Query("sortBy") String sortBy,
+                               @Query("reverse") String reverse,
+                               @Query("page") int page,
+                               @Query("limit") int limit);
+
+    @GET("/v1/collaboration/documents")
+    Call<UserDoc> getDocuments(@Query("id") String id,
+                               @Query("parent") String parent,
+                               @Query("subtype") String subtype,
+                               @Query("name") String name,
+                               @Query("category") String category,
+                               @Query("sortBy") String sortBy,
+                               @Query("reverse") String reverse,
+                               @Query("page") int page,
+                               @Query("limit") int limit);
+
     //Convert document (recorded m3u8 for now) to mp4.
     @PATCH("/v1/collaboration/documents/{documentId}/conversion")
     Call<ResponseBody> convertDocument(@Path("documentId") String documentId);
@@ -846,6 +863,10 @@ public interface XiaojsService {
     //Edit Document
     @PATCH("/v1/collaboration/documents/{document}")
     Call<ResponseBody> editDocument(@Path("document") String document, @Body EditDoc editDoc);
+
+    //Move Documents
+    @PATCH("/v1/collaboration/library/{targetId}/move")
+    Call<ResponseBody> moveDocuments(@Path("targetId") String targetId, @Body MoveParam param);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

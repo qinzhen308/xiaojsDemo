@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.CollaRequest;
@@ -14,6 +15,7 @@ import cn.xiaojs.xma.model.material.CDirectory;
 import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.MoveParam;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UploadParam;
@@ -166,7 +168,46 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype,category,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
+        request.getDocuments(id, subtype,category,pagination.getPage(),
+                pagination.getMaxNumOfObjectsPerPage());
+    }
+
+    public static void getDocuments(Context context,
+                                    String id,
+                                    String parent,
+                                    String subtype,
+                                    String name,
+                                    String category,
+                                    String sort,
+                                    int reverse,
+                                    Pagination pagination,
+                                    APIServiceCallback<UserDoc> callback) {
+
+
+        int page = 1;
+        int limit = 10;
+        if (pagination != null) {
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        CollaRequest request = new CollaRequest(context, callback);
+
+        if (TextUtils.isEmpty(parent)) {
+            request.getDocuments(id, subtype,category,sort, String.valueOf(reverse), pagination.getPage(),
+                    pagination.getMaxNumOfObjectsPerPage());
+        }else {
+            if (TextUtils.isEmpty(name)) {
+                request.getDocuments(id, parent, subtype,category,sort, String.valueOf(reverse),pagination.getPage(),
+                        pagination.getMaxNumOfObjectsPerPage());
+            }else {
+                request.getDocuments(id, parent, subtype,name, category,sort, String.valueOf(reverse),pagination.getPage(),
+                        pagination.getMaxNumOfObjectsPerPage());
+            }
+
+        }
+
+
     }
 
     /**
@@ -289,6 +330,17 @@ public class CollaManager {
 
         CollaRequest request = new CollaRequest(context,callback);
         request.editDocument(docId, editDoc);
+    }
+
+
+    public static void moveDocuments(Context context, String targetId,
+                                     String[] docs, APIServiceCallback<ResponseBody> callback) {
+
+        MoveParam param = new MoveParam();
+        param.documents = docs;
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.moveDocuments(targetId, param);
     }
 
 }

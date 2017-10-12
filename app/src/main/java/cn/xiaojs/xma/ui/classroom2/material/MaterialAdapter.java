@@ -17,6 +17,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.util.FileUtil;
+import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 import cn.xiaojs.xma.util.XjsUtils;
 
@@ -112,6 +113,12 @@ public class MaterialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 mholder.descView.setText(sb);
             }
 
+            if (Collaboration.TypeName.DIRECTORY_IN_LIBRARY.equals(doc.typeName)) {
+                mholder.opera1View.setVisibility(View.GONE);
+            }else {
+                mholder.opera1View.setVisibility(View.VISIBLE);
+            }
+
 
             mholder.expandView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,7 +139,7 @@ public class MaterialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
 
-                    //materialFragment.chooseShare(new String[]{bean.id});
+                    fragment.chooseClasses(doc, position);
 
                 }
             });
@@ -153,6 +160,20 @@ public class MaterialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     fragment.showMoreDlg(doc, position);
                 }
             });
+
+            mholder.rootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Collaboration.TypeName.DIRECTORY_IN_LIBRARY.equals(doc.typeName)) {
+                        fragment.enterNext(doc, position);
+                    }else {
+                        MaterialUtil.openMaterial(fragment.getActivity(),doc);
+                    }
+
+                }
+            });
+
+
         } else {
 //            LoadmoreViewHolder loadmoreViewHolder = (LoadmoreViewHolder) holder;
 //

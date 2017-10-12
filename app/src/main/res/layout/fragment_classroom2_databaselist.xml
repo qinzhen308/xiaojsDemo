@@ -39,6 +39,46 @@
             />
 
 
+    <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px60"
+            android:text="@string/cancel"
+            android:gravity="center"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/white"
+            android:paddingLeft="@dimen/px20"
+            android:paddingRight="@dimen/px20"
+            android:paddingTop="@dimen/px5"
+            android:paddingBottom="@dimen/px5"
+            android:background="@drawable/cr_chat_send_bg"
+            app:layout_constraintLeft_toLeftOf="@id/filter_btn"
+            app:layout_constraintRight_toRightOf="@id/sort_btn"
+            app:layout_constraintTop_toTopOf="@id/filter_btn"
+            app:layout_constraintBottom_toBottomOf="@id/filter_btn"
+            android:visibility="gone"/>
+
+
+    <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px60"
+            android:paddingLeft="@dimen/px7"
+            android:paddingRight="@dimen/px7"
+            android:hint="搜索"
+            android:textSize="@dimen/font_26px"
+            android:textColorHint="@color/hint_color"
+            android:gravity="left|center_vertical"
+            android:background="@drawable/bg_rectrangle_rect"
+            android:layout_marginLeft="@dimen/px27"
+            android:layout_marginRight="@dimen/px27"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/filter_btn"
+            app:layout_constraintTop_toTopOf="@id/filter_btn"
+            app:layout_constraintBottom_toBottomOf="@id/filter_btn"
+            android:visibility="gone"/>
+
+
     <View
             android:id="@+id/search_bottom_line"
             android:layout_width="0dp"

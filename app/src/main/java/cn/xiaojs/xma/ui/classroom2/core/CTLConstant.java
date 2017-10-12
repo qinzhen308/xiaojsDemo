@@ -11,7 +11,12 @@ public class CTLConstant {
     public static final String EXTRA_TICKET = "ticket";
 
     public static final String EXTRA_DIRECTORY_ID = "dir_id";
+    public static final String EXTRA_CONTACT = "econtact";
+    public static final String EXTRA_DOC_ID= "edoc_id";
+    public static final String EXTRA_DOC= "edoc";
     public static final int REQUEST_MATERIAL_ADD_NEW = 1;
+    public static final int REQUEST_CHOOSE_CLASSES = 2;
+    public static final int REQUEST_MATERIAL_MOVE = 3;
 
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课

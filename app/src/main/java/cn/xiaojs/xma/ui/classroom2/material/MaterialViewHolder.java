@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.classroom2.material;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,8 @@ import cn.xiaojs.xma.R;
 
 public class MaterialViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.root_lay)
+    ConstraintLayout rootLayout;
     @BindView(R.id.icon)
     ImageView iconView;
     @BindView(R.id.name)

@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -9,9 +10,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
@@ -31,12 +34,15 @@ import cn.xiaojs.xma.ui.classroom2.material.DownloadListFragment;
  * Created by maxiaobao on 2017/9/26.
  */
 
-public class DatabaseFragment extends BottomSheetFragment {
+public class DatabaseFragment extends BottomSheetFragment
+        implements DatabaseListFragment.OnOperatingListener, DialogInterface.OnKeyListener{
 
     @BindView(R.id.tab_bar)
     RadioGroup tabGroup;
     @BindView(R.id.tab_viewpager)
     ViewPager viewPager;
+    @BindView(R.id.download_btn)
+    ImageView downloadBtn;
 
     private ArrayList<Fragment> fragmentList;
 
@@ -54,10 +60,12 @@ public class DatabaseFragment extends BottomSheetFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getDialog().setOnKeyListener(this);
+
         fragmentList = new ArrayList<>(2);
 
         databaseListFragment = new DatabaseListFragment();
-
+        databaseListFragment.setOnOperatingListener(this);
         fragmentList.add(databaseListFragment);
         fragmentList.add(new DatabaseListFragment());
 
@@ -102,8 +110,8 @@ public class DatabaseFragment extends BottomSheetFragment {
                 viewPager.setCurrentItem(1);
                 break;
             case R.id.download_btn:
-                DownloadListFragment listFragment = new DownloadListFragment();
-                listFragment.show(getFragmentManager(),"downloadlist");
+                downloadOrBack();
+
                 break;
             case R.id.add_btn:
                 openAddNew();
@@ -121,6 +129,36 @@ public class DatabaseFragment extends BottomSheetFragment {
                     break;
             }
         }
+    }
+
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP){
+            handleBackKey();
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onEnterFolder() {
+        downloadBtn.setImageResource(R.drawable.ic_back);
+    }
+
+    @Override
+    public void onEnterSearch() {
+        downloadBtn.setImageResource(R.drawable.ic_back);
+    }
+
+    @Override
+    public void onBackSuper() {
+        if (databaseListFragment.canBackSuper()) {
+            return;
+        }
+
+        downloadBtn.setImageResource(R.drawable.ic_class_database_mydownload_1);
     }
 
     class FrgStatePageAdapter extends FragmentStatePagerAdapter {
@@ -168,5 +206,24 @@ public class DatabaseFragment extends BottomSheetFragment {
         addNewFragment.setArguments(data);
         addNewFragment.setTargetFragment(this, CTLConstant.REQUEST_MATERIAL_ADD_NEW);
         addNewFragment.show(getFragmentManager(),"addnew");
+    }
+
+    private void downloadOrBack() {
+
+        if (databaseListFragment.canBackSuper()) {
+            databaseListFragment.backSuper();
+        }else {
+            DownloadListFragment listFragment = new DownloadListFragment();
+            listFragment.show(getFragmentManager(),"downloadlist");
+        }
+    }
+
+    private void handleBackKey() {
+
+        if (databaseListFragment.canBackSuper()) {
+            databaseListFragment.backSuper();
+        }else {
+            dismiss();
+        }
     }
 }
