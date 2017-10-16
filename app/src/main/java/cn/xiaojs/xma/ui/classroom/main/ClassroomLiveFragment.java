@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 
 import java.util.ArrayList;
@@ -38,10 +37,8 @@ import java.util.Map;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
-import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
-import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.EventResponse;
@@ -50,31 +47,20 @@ import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.bean.MediaFeedback;
-import cn.xiaojs.xma.ui.classroom.bean.OpenMedia;
-import cn.xiaojs.xma.ui.classroom.bean.OpenMediaNotify;
-import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingResponse;
-import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
-import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.OnStreamChangeListener;
 import cn.xiaojs.xma.ui.classroom.live.VideoController;
 import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom.page.OnSettingChangedListener;
 import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
-import cn.xiaojs.xma.ui.classroom.socketio.Event;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
 import cn.xiaojs.xma.ui.classroom.talk.ExitPeerTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.OnTalkItemClickListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
-import cn.xiaojs.xma.ui.classroom2.CTLConstant;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.EventListener;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
-
-import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements
         OnSettingChangedListener,

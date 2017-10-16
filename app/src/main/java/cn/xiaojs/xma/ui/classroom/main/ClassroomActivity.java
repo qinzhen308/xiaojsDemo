@@ -34,7 +34,6 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
-import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
@@ -49,15 +48,13 @@ import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.ui.classroom.page.PhotoDoodleFragment;
 import cn.xiaojs.xma.ui.classroom.talk.ContactManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
-import cn.xiaojs.xma.ui.classroom2.CTLConstant;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.ClassroomType;
-import cn.xiaojs.xma.ui.classroom2.EventListener;
-import cn.xiaojs.xma.ui.classroom2.RoomSession;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomType;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.classroom2.core.RoomSession;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
-
-import cn.xiaojs.xma.util.ToastUtil;
 
 import io.reactivex.functions.Consumer;
 import io.socket.client.IO;

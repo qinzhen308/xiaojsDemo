@@ -19,12 +19,19 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.OnImeBackListener;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.ClosableEditDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
 import cn.xiaojs.xma.util.XjsUtils;
@@ -145,6 +152,7 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+
         Fragment target = getTargetFragment();
         if (target != null) {
             Intent intent = new Intent();
@@ -155,5 +163,7 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
 
         XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
         MsgInputFragment.this.dismiss();
+
+
     }
 }

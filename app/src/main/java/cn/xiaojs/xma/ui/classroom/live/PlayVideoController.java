@@ -29,9 +29,9 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
-import cn.xiaojs.xma.ui.classroom2.CTLConstant;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.EventListener;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
 
 public class PlayVideoController extends VideoController{

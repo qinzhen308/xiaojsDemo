@@ -17,14 +17,12 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
 import android.Manifest;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -33,9 +31,7 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
-import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
@@ -51,7 +47,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
-import cn.xiaojs.xma.ui.classroom2.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.util.CacheUtil;
 
 public class WhiteboardController implements EraserPop.EraserChangeListener,

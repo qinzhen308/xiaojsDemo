@@ -16,14 +16,11 @@ package cn.xiaojs.xma.ui.classroom.talk;
 
 import android.content.Context;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -32,8 +29,8 @@ import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.EventListener;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.util.XjsUtils;
 import io.reactivex.functions.Consumer;
 
@@ -72,7 +69,9 @@ public class ContactManager{
 
     public void release() {
 
-        eventListener.dispose();
+        if (eventListener !=null) {
+            eventListener.dispose();
+        }
 
         if (mLiveCollection != null) {
             if (mLiveCollection.attendees != null) {

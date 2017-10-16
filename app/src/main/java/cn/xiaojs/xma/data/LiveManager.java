@@ -53,13 +53,14 @@ public class LiveManager {
      * @param ticket
      * @param callback
      */
-    public static void bootSession(Context context,
+    public static LiveRequest bootSession(Context context,
                                    String ticket,
                                    APIServiceCallback<CtlSession> callback) {
 
 
         LiveRequest request = new LiveRequest(context,callback);
         request.bootSession(ticket);
+        return request;
     }
 
     /**

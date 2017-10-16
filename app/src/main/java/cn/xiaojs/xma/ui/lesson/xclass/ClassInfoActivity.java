@@ -34,6 +34,8 @@ import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
 import cn.xiaojs.xma.ui.grade.ClassMaterialActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
@@ -201,8 +203,9 @@ public class ClassInfoActivity extends BaseActivity {
     //进入教室
     private void enterClass(Activity context, String ticket) {
         Intent i = new Intent();
-        i.putExtra(Constants.KEY_TICKET, ticket);
-        i.setClass(context, ClassroomActivity.class);
+        //i.putExtra(Constants.KEY_TICKET, ticket);
+        i.putExtra(CTLConstant.EXTRA_TICKET, ticket);
+        i.setClass(context, Classroom2Activity.class);
         context.startActivity(i);
     }
 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:orientation="vertical"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="@dimen/px89"
+                                             android:background="@color/black_opacity_40"
+                                             android:layout_alignParentBottom="true"
+                                             android:padding="@dimen/px7">
+
+    <ImageView
+            android:id="@+id/orient_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginRight="@dimen/px18"
+            android:src="@drawable/ic_class_crossscreen"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/class_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_class_name"
+            android:textSize="@dimen/font_30px"
+            android:layout_marginLeft="@dimen/px23"
+            android:layout_marginRight="@dimen/px10"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/orient_btn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/class_state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_class_name"
+            android:textSize="@dimen/font_22px"
+            android:layout_marginTop="@dimen/px3"
+            app:layout_constraintTop_toBottomOf="@id/class_name"
+            app:layout_constraintLeft_toLeftOf="@id/class_name"
+            app:layout_constraintRight_toRightOf="@id/class_name"
+            />
+
+</android.support.constraint.ConstraintLayout>

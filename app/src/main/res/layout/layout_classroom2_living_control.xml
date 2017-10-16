@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+        >
+
+
+    <android.support.constraint.Guideline
+            android:id="@+id/top_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_begin="@dimen/px9"
+            android:orientation="horizontal"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_begin="@dimen/px24"
+            android:orientation="vertical"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_end="@dimen/px24"
+            android:orientation="vertical"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_end="@dimen/px89"
+            android:orientation="horizontal"
+            />
+
+    <!-- top -->
+    <ImageView
+            android:id="@+id/top_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_back"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            />
+
+    <TextView
+            android:id="@+id/top_roominfo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_22px"
+            android:gravity="center"
+            android:paddingLeft="@dimen/px92"
+            android:paddingRight="@dimen/px24"
+            android:background="@drawable/bg_start_live_rect"
+            app:layout_constraintLeft_toLeftOf="@+id/top_photo"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@+id/top_photo"/>
+
+    <ImageView
+            android:id="@+id/top_photo"
+            android:layout_width="@dimen/px68"
+            android:layout_height="@dimen/px68"
+            android:background="@drawable/default_avatar"
+            android:layout_marginLeft="@dimen/px24"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintLeft_toRightOf="@id/top_back"
+            />
+
+    <ImageView
+            android:id="@+id/top_switchcamera"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_cameraswitching"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/top_back"
+            />
+
+    <TextView
+            android:id="@+id/top_start_or_stop_living"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="停止直播"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_22px"
+            android:gravity="center"
+            android:padding="@dimen/px20"
+            android:background="@drawable/bg_start_live_rect"
+            android:layout_marginRight="@dimen/px24"
+            app:layout_constraintRight_toLeftOf="@id/top_switchcamera"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/top_back"/>
+
+    <!-- bottom -->
+
+    <ImageView
+            android:id="@+id/bottom_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_chat"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            />
+
+    <ImageView
+            android:id="@+id/bottom_more"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_column"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            />
+
+    <!--left-->
+
+    <!--<ListView-->
+    <!--android:id="@+id/left_talklist"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:visibility="gone"-->
+    <!--/>-->
+
+    <!--right-->
+
+
+</android.support.constraint.ConstraintLayout>

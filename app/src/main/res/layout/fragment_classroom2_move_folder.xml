@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+        >
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/px88"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bottomsheet_bg_white_rect">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px88"
+                android:layout_marginTop="@dimen/px21"
+                android:layout_marginBottom="@dimen/px21"
+                android:textSize="@dimen/px32"
+                android:gravity="center"
+                android:textColor="@color/classroom_dark_gray"
+                android:text="移动到文件夹"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_back"
+                android:layout_marginLeft="@dimen/px27"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintLeft_toLeftOf="parent"
+                />
+
+        <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:text="取消"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/main_blue"
+                app:layout_constraintBaseline_toBaselineOf="@id/title"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <View
+                android:id="@+id/top_line"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px1"
+                android:background="@color/gray_line"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+        
+        <TextView
+                android:id="@+id/tips"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px70"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                android:background="@color/chat_gray"
+                android:paddingBottom="@dimen/px15"
+                android:paddingLeft="@dimen/px27"
+                android:paddingTop="@dimen/px15"
+                android:paddingRight="@dimen/px27"
+                android:text="选择目标文件"
+                app:layout_constraintTop_toBottomOf="@id/top_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+
+        <cn.xiaojs.xma.ui.classroom2.widget.LoadmoreRecyclerView
+                android:id="@+id/rlist"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:dividerHeight="@dimen/px1"
+                android:scrollbars="none"
+                android:divider="@color/hor_divide_line"
+                app:layout_constraintTop_toBottomOf="@id/tips"
+                app:layout_constraintBottom_toBottomOf="@+id/bottom_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+
+        <View
+                android:id="@+id/bottom_line"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px1"
+                android:background="@color/gray_line"
+                android:layout_marginBottom="@dimen/px101"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <TextView
+                android:id="@+id/create_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px100"
+                android:paddingLeft="@dimen/px82"
+                android:paddingRight="@dimen/px82"
+                android:gravity="center"
+                android:text="新建文件夹"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/main_blue"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bottom_line"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+        <Button
+                android:id="@+id/move_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px90"
+                android:text="移动"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/font_white"
+                android:background="@drawable/bg_orange_rect"
+                app:layout_constraintLeft_toRightOf="@id/create_btn"
+                app:layout_constraintBaseline_toBaselineOf="@id/create_btn"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

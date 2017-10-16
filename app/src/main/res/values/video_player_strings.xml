@@ -31,4 +31,6 @@
 
     <string name="ima_not_loaded">Playing sample without ads, as the IMA extension was not loaded</string>
 
+    <string name="empty_uri">播放地址不能为空</string>
+
 </resources>

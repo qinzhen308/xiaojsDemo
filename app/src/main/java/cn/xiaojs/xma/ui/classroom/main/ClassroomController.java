@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -56,7 +55,7 @@ import cn.xiaojs.xma.ui.classroom.talk.ContactFragment;
 import cn.xiaojs.xma.ui.classroom.talk.SlideTalkFragment;
 import cn.xiaojs.xma.ui.classroom.talk.SlidingTalkDialogFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.MaterialUtil;

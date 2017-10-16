@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Keep;
@@ -36,7 +35,6 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshListView;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
@@ -50,8 +48,6 @@ import cn.xiaojs.xma.model.socket.room.StreamQualityChangedReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.StreamingQuality;
-import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
-import cn.xiaojs.xma.ui.classroom.bean.SyncStateResponse;
 import cn.xiaojs.xma.ui.classroom.live.PlayVideoController;
 import cn.xiaojs.xma.ui.classroom.live.view.BaseMediaView;
 import cn.xiaojs.xma.ui.classroom.live.view.PlayerTextureView;
@@ -60,20 +56,14 @@ import cn.xiaojs.xma.ui.classroom.talk.OnAttendItemClick;
 import cn.xiaojs.xma.ui.classroom.talk.OnGetTalkListener;
 import cn.xiaojs.xma.ui.classroom.talk.TalkManager;
 import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
-import cn.xiaojs.xma.ui.classroom2.CTLConstant;
-import cn.xiaojs.xma.ui.classroom2.ClassStateMachine;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.ClassroomType;
-import cn.xiaojs.xma.ui.classroom2.EventListener;
-import cn.xiaojs.xma.ui.classroom2.RoomRequest;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomType;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.XjsUtils;
-import io.reactivex.Observer;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import okhttp3.ResponseBody;
 
 import static cn.xiaojs.xma.ui.classroom.live.VideoController.STREAM_MEDIA_CLOSED;
 
@@ -1053,7 +1043,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
 
     @Keep
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)
-    private void playOrPauseLesson() {
+    public void playOrPauseLesson() {
         if (System.currentTimeMillis() - mPlayOrPausePressTime < BTN_PRESS_INTERVAL) {
             return;
         }

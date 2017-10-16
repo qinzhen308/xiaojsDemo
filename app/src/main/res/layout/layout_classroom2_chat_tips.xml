@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/chat_item_page_padding_lr"
+                android:paddingRight="@dimen/chat_item_page_padding_lr"
+                android:paddingTop="@dimen/chat_item_page_padding_tb"
+                android:paddingBottom="@dimen/chat_item_page_padding_tb"
+        >
+
+    <TextView
+            android:id="@+id/time_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/font_white"
+            android:background="@drawable/chat_item_timeline_bg_rect"
+            android:padding="@dimen/px4"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:maxLines="1"
+            />
+
+    <TextView
+            android:id="@+id/context_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/font_white"
+            android:background="@drawable/chat_item_timeline_bg_rect"
+            android:paddingLeft="@dimen/px18"
+            android:paddingRight="@dimen/px18"
+            android:paddingBottom="@dimen/px5"
+            android:paddingTop="@dimen/px5"
+            android:layout_marginTop="@dimen/px30"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/time_line"
+            />
+
+</RelativeLayout>
