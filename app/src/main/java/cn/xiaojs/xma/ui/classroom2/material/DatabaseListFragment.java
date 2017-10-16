@@ -819,7 +819,8 @@ public class DatabaseListFragment extends BaseRoomFragment
                 bean.key,
                 MaterialUtil.getDownloadUrl(bean),
                 bean.mimeType,
-                Social.getDrawing(bean.key, true));
+                Social.getDrawing(bean.key, true),
+                bean.typeName);
         Toast.makeText(getContext(), "已添加到下载队列", Toast.LENGTH_SHORT).show();
 
     }
