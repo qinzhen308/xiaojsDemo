@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/px88"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bottomsheet_bg_white_rect">
+
+
+        <RadioGroup
+                android:id="@+id/tab_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px88"
+                android:orientation="horizontal"
+                android:checkedButton="@+id/tab_my"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                >
+
+            <RadioButton
+                    android:id="@+id/tab_my"
+                    android:layout_width="@dimen/px170"
+                    android:layout_height="match_parent"
+                    android:text="我的"
+                    android:gravity="center"
+                    android:background="@drawable/selector_line_bottom_orange"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/selector_btn_orange_black"
+                    android:button="@null"
+                    />
+
+            <RadioButton
+                    android:id="@+id/tab_class"
+                    android:layout_width="@dimen/px170"
+                    android:layout_height="match_parent"
+                    android:text="教室的"
+                    android:gravity="center"
+                    android:background="@drawable/selector_line_bottom_orange"
+                    android:drawableBottom="@color/main_orange"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/selector_btn_orange_black"
+                    android:button="@null"
+                    />
+        </RadioGroup>
+
+        <ImageView
+                android:id="@+id/download_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_class_database_mydownload_1"
+                android:layout_marginLeft="@dimen/px30"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tab_bar"
+                app:layout_constraintLeft_toLeftOf="parent"
+                />
+
+        <ImageView
+                android:id="@+id/add_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_class_add_1"
+                android:layout_marginRight="@dimen/px30"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tab_bar"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <View
+                android:id="@+id/top_line"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px1"
+                android:background="@color/gray_line"
+                app:layout_constraintTop_toBottomOf="@id/tab_bar"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <android.support.v4.view.ViewPager
+                android:id="@+id/tab_viewpager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/top_line"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

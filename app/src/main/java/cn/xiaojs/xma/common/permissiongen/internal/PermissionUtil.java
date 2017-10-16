@@ -70,7 +70,7 @@ final public class PermissionUtil {
 
   public static <A extends Annotation> Method findMethodWithRequestCode(Class clazz,
       Class<A> annotation, int requestCode) {
-    for(Method method : clazz.getDeclaredMethods()){
+    for(Method method : clazz.getMethods()){
       if(method.isAnnotationPresent(annotation)){
         if(isEqualRequestCodeFromAnntation(method, annotation, requestCode)){
           return method;
@@ -82,7 +82,7 @@ final public class PermissionUtil {
 
   public static <A extends Annotation> Method findMethodPermissionSuccessWithRequestCode(Class clazz,
       Class<A> permissionFailClass, int requestCode) {
-    for(Method method : clazz.getDeclaredMethods()){
+    for(Method method : clazz.getMethods()){
       if(method.isAnnotationPresent(permissionFailClass)){
         if(requestCode == method.getAnnotation(PermissionSuccess.class).requestCode()){
           return method;

@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -20,15 +16,14 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.core.PullToRefreshSwipeListView;
 import cn.xiaojs.xma.common.pulltorefresh.stickylistheaders.AdapterWrapper;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.ClassroomType;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomType;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.

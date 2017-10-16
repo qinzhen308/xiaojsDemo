@@ -94,6 +94,7 @@ public class Collaboration {
         public static final String PPT_IN_LIBRARY = "PPTInLibrary";
         public static final String PDF_IN_LIBRARY = "PDFInLibrary";
         public static final String WORD_IN_LIBRARY = "WordInLibrary";
+        public static final String DIRECTORY_IN_LIBRARY = "DirectoryInLibrary";
     }
 
 

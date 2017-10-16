@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.api.CollaRequest;
@@ -11,8 +12,10 @@ import cn.xiaojs.xma.data.api.service.QiniuService;
 
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.material.CDirectory;
+import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibCriteria;
 import cn.xiaojs.xma.model.material.LibOverview;
+import cn.xiaojs.xma.model.material.MoveParam;
 import cn.xiaojs.xma.model.material.ShareDoc;
 import cn.xiaojs.xma.model.material.ShareResource;
 import cn.xiaojs.xma.model.material.UploadParam;
@@ -32,6 +35,19 @@ public class CollaManager {
     /**
      * Provides access to collaboration interfaces accessible to the Xiaojs client applications.
      */
+
+    public void addToLibraryWithParent(Context context,
+                             String parent,
+                             @NonNull final String filePath,
+                             @NonNull final String fileName,
+                             @NonNull QiniuService qiniuService) {
+        UploadParam param = new UploadParam();
+        param.fileName = fileName;
+        param.parent = parent;
+
+        addToLibrary(context, filePath, param, qiniuService);
+    }
+
     public void addToLibrary(Context context,
                              @NonNull final String filePath,
                              @NonNull final String fileName,
@@ -152,7 +168,46 @@ public class CollaManager {
         }
 
         CollaRequest request = new CollaRequest(context, callback);
-        request.getDocuments(id, subtype,category,pagination.getPage(),pagination.getMaxNumOfObjectsPerPage());
+        request.getDocuments(id, subtype,category,pagination.getPage(),
+                pagination.getMaxNumOfObjectsPerPage());
+    }
+
+    public static void getDocuments(Context context,
+                                    String id,
+                                    String parent,
+                                    String subtype,
+                                    String name,
+                                    String category,
+                                    String sort,
+                                    int reverse,
+                                    Pagination pagination,
+                                    APIServiceCallback<UserDoc> callback) {
+
+
+        int page = 1;
+        int limit = 10;
+        if (pagination != null) {
+            page = pagination.getPage();
+            limit = pagination.getMaxNumOfObjectsPerPage();
+        }
+
+        CollaRequest request = new CollaRequest(context, callback);
+
+        if (TextUtils.isEmpty(parent)) {
+            request.getDocuments(id, subtype,category,sort, String.valueOf(reverse), pagination.getPage(),
+                    pagination.getMaxNumOfObjectsPerPage());
+        }else {
+            if (TextUtils.isEmpty(name)) {
+                request.getDocuments(id, parent, subtype,category,sort, String.valueOf(reverse),pagination.getPage(),
+                        pagination.getMaxNumOfObjectsPerPage());
+            }else {
+                request.getDocuments(id, parent, subtype,name, category,sort, String.valueOf(reverse),pagination.getPage(),
+                        pagination.getMaxNumOfObjectsPerPage());
+            }
+
+        }
+
+
     }
 
     /**
@@ -262,10 +317,30 @@ public class CollaManager {
 
         CDirectory directory = new CDirectory();
         directory.name = name;
-        directory.parent = parent;
 
         CollaRequest request = new CollaRequest(context,callback);
-        request.createDirectory(directory);
+        request.createDirectory(parent, directory);
+    }
+
+    public static void editDocument(Context context, String docId,
+                                    String newName, APIServiceCallback<ResponseBody> callback) {
+
+        EditDoc editDoc = new EditDoc();
+        editDoc.name = newName;
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.editDocument(docId, editDoc);
+    }
+
+
+    public static void moveDocuments(Context context, String targetId,
+                                     String[] docs, APIServiceCallback<ResponseBody> callback) {
+
+        MoveParam param = new MoveParam();
+        param.documents = docs;
+
+        CollaRequest request = new CollaRequest(context,callback);
+        request.moveDocuments(targetId, param);
     }
 
 }

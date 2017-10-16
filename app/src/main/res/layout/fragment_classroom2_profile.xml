@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+        >
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/px88"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bottomsheet_bg_white_rect">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px88"
+                android:layout_marginTop="@dimen/px21"
+                android:layout_marginBottom="@dimen/px21"
+                android:text="教室成员"
+                android:textSize="@dimen/px32"
+                android:gravity="center"
+                android:textColor="@color/classroom_dark_gray"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_back"
+                android:layout_marginRight="@dimen/px32"
+                android:layout_marginLeft="@dimen/px27"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                />
+
+        <View
+                android:id="@+id/top_line"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px1"
+                android:background="@color/gray_line"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <ImageView
+                android:id="@+id/avator"
+                android:layout_width="@dimen/px120"
+                android:layout_height="@dimen/px120"
+                android:src="@drawable/default_avatar_grey"
+                android:layout_margin="@dimen/px40"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/top_line"/>
+
+        <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="任命"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_34px"
+                android:drawableRight="@drawable/ic_male"
+                android:layout_marginTop="@dimen/px52"
+                android:layout_marginLeft="@dimen/px30"
+                android:drawablePadding="@dimen/px10"
+                app:layout_constraintTop_toBottomOf="@id/top_line"
+                app:layout_constraintLeft_toRightOf="@id/avator"
+                />
+
+        <TextView
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="18989898989"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_26px"
+                android:layout_marginLeft="@dimen/px28"
+                app:layout_constraintBaseline_toBaselineOf="@id/name"
+                app:layout_constraintLeft_toRightOf="@id/name"
+                />
+
+        <TextView
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="勇敢的心"
+                android:textColor="@color/hint_color"
+                android:textSize="@dimen/font_28px"
+                android:layout_marginTop="@dimen/px10"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintLeft_toLeftOf="@id/name"
+                />
+
+        <TextView
+                android:id="@+id/home_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px100"
+                android:text="个人主页"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_30px"
+                android:paddingRight="@dimen/px30"
+                android:paddingLeft="@dimen/px30"
+                android:layout_marginTop="@dimen/px30"
+                android:drawableRight="@drawable/ic_entrance"
+                android:gravity="left|center_vertical"
+                app:layout_constraintTop_toBottomOf="@id/avator"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <View
+                android:id="@+id/home_line"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px1"
+                android:background="@color/gray_line"
+                app:layout_constraintTop_toBottomOf="@id/home_btn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+        
+        <Button
+                android:id="@id/send_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px88"
+                android:background="@drawable/cr_chat_send_bg"
+                android:paddingLeft="@dimen/px172"
+                android:paddingRight="@dimen/px172"
+                android:drawablePadding="@dimen/px15"
+                android:drawableLeft="@drawable/ic_message"
+                android:text="发消息"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_32px"
+                android:layout_marginTop="@dimen/px117"
+                app:layout_constraintTop_toBottomOf="@id/home_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        <Button
+                android:id="@+id/follow_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px88"
+                android:background="@drawable/orange_round_bg"
+                android:paddingLeft="@dimen/px172"
+                android:paddingRight="@dimen/px172"
+                android:drawablePadding="@dimen/px15"
+                android:drawableLeft="@drawable/ic_add"
+                android:text="关注ta"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_32px"
+                android:layout_marginTop="@dimen/px34"
+                app:layout_constraintTop_toBottomOf="@id/send_btn"
+                app:layout_constraintLeft_toLeftOf="@id/send_btn"
+                app:layout_constraintRight_toRightOf="@id/send_btn"
+                />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

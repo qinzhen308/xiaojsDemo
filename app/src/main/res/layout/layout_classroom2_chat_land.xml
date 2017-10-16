@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/px17"
+                android:paddingTop="@dimen/px17"
+                android:paddingLeft="@dimen/px22"
+                android:paddingRight="@dimen/px22"
+                android:background="@drawable/bg_chat_land_list_rect"
+        >
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/font_28px"
+        android:textColor="@color/font_white"
+        android:layout_alignParentLeft="true"
+        />
+
+    <ImageView
+            android:id="@+id/content_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/name"
+            android:layout_alignParentTop="true"
+            />
+
+    <TextView
+            android:id="@+id/content_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_28px"
+            android:textColor="@color/font_white"
+            android:layout_toRightOf="@id/name"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            />
+
+</RelativeLayout>

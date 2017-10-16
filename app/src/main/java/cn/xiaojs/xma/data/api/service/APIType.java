@@ -210,5 +210,8 @@ public class APIType {
     public static final int CONVERT_DOCUMENT= 135;
     public static final int ABORT_RECORDED_COURSE= 136;
     public static final int ABORT_CLASS= 137;
+    public static final int EDIT_DOCUMENT = 138;
+    public static final int MOVE_DOCUMENT = 139;
+
 
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        >
+
+    <ImageView
+            android:id="@+id/icon"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_folder"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="@dimen/px39"
+            android:layout_marginLeft="@dimen/px30"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/px30"/>
+
+    <TextView
+            android:id="@+id/name"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_32px"
+            android:text="人力资源管理实务"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px25"
+            android:layout_marginLeft="@dimen/px29"
+            android:layout_marginRight="@dimen/px29"
+            app:layout_constraintLeft_toRightOf="@+id/icon"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/hint_color"
+            android:text="0.8M 2017-11-11 20:22"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_marginTop="@dimen/px16"
+            android:layout_marginRight="@dimen/px29"
+            app:layout_constraintLeft_toLeftOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

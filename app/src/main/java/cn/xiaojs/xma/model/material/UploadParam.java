@@ -13,5 +13,6 @@ public class UploadParam {
     public String fileName;
     public boolean toOrgLib;
     public String ticket;
+    public String parent;
 
 }

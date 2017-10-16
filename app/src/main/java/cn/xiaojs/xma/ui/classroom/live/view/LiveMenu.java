@@ -26,8 +26,7 @@ import android.widget.PopupWindow;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomPopupWindowLayout;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 
 public class LiveMenu extends PopupWindow {
 

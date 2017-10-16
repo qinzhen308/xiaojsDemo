@@ -201,4 +201,30 @@
         <item>重命名</item>
         <item>移动到</item>
     </string-array>
+    <string-array name="material_filters">
+        <item>全部</item>
+        <item>图片</item>
+        <item>PPT</item>
+        <item>PDF</item>
+        <item>Word</item>
+        <item>视频</item>
+        <item>文件夹</item>
+    </string-array>
+    <string-array name="material_sorts">
+        <item>按文件名称排序</item>
+        <item>按时间倒序排序</item>
+    </string-array>
+    <string-array name="classroom2_more_item">
+        <item>教室设置</item>
+        <item>分享</item>
+        <item>教室详情</item>
+    </string-array>
+    <string-array name="classroom2_add_student">
+        <item>手机号添加</item>
+        <item>从通讯录中添加</item>
+    </string-array>
+    <string-array name="classroom2_chat_more">
+        <item>个人主页</item>
+        <item>取消关注</item>
+    </string-array>
 </resources>

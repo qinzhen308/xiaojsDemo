@@ -29,6 +29,10 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="SlideDialog">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
     <style name="BottomSheetAnim" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
@@ -308,5 +312,6 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/black</item>
     </style>
+
 
 </resources>

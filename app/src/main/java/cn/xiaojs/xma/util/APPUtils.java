@@ -77,7 +77,7 @@ public class APPUtils {
         }
 
         return channel;
-//        return "pro";
+        //return "pro";
     }
 
     public static boolean isBackgroundThread(){
@@ -287,6 +287,5 @@ public class APPUtils {
         return value;
 
     }
-
 
 }

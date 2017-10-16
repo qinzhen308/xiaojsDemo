@@ -35,7 +35,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
-import cn.xiaojs.xma.ui.classroom2.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.lesson.xclass.AbsClassScheduleFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;

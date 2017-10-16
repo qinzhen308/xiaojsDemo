@@ -321,6 +321,79 @@ public class ContactDao extends BaseDao<ArrayList<ContactGroup>> {
         return contactsMap;
     }
 
+
+
+
+
+
+    /**
+     * @param context
+     * @return
+     */
+    public ArrayList<Contact> getContacts(Context context) {
+
+        SQLiteDatabase db = DBHelper.getReadDatabase(context);
+        ArrayList<Contact> contacts = null;
+        Cursor cursor = null;
+        try{
+
+            String sql = new StringBuilder("select * from ")
+                    .append(DBTables.TContact.TABLE_NAME)
+                    .append(" where ")
+                    .append(DBTables.TContact.GID)
+                    .append(" <> '")
+                    .append(CLASSES)
+                    .append("'")
+                    .toString();
+
+            cursor = db.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                contacts = new ArrayList<>(cursor.getCount());
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+
+//                    long gid = cursor.getLong(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.GID));
+                    String id = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.CID));
+//                    int followType = cursor.getInt(cursor
+//                            .getColumnIndexOrThrow(DBTables.TContact.FOLLOW_TYPE));
+                    String name = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.NAME));
+
+                    String avatar = cursor.getString(cursor
+                            .getColumnIndexOrThrow(DBTables.TContact.AVATOR));
+
+                    Contact contact = new Contact();
+                    contact.account = id;
+                    contact.alias = name;
+                    contact.avatar = avatar;
+
+                    contacts.add(contact);
+
+                    cursor.moveToNext();
+                }
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor !=null) {
+                cursor.close();
+            }
+        }
+
+        return contacts;
+    }
+
+
+
+
+
+
+
+
+
     /**
      * @param context
      * @return

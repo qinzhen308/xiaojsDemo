@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px88">
+
+        <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_back"
+                android:padding="@dimen/px28"/>
+
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/px88"
+                android:layout_weight="1.0"
+                android:text="教室详情"
+                android:gravity="center"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"/>
+
+
+        <ImageView
+                android:id="@+id/more_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_more"
+                android:padding="@dimen/px28"/>
+
+
+    </LinearLayout>
+    
+    
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <View
+                    android:id="@+id/sep_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <TextView
+                    android:id="@+id/class_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/px99"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_dark_gray"
+                    android:gravity="left|center_vertical"
+                    android:drawableRight="@drawable/ic_entrance"
+                    android:paddingRight="@dimen/px30"
+                    android:drawablePadding="@dimen/px8"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sep_line"
+                    />
+
+            <TextView
+                    android:id="@+id/class_name_title"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="@string/live_class_name"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@id/class_name"
+                    />
+
+            <View
+                    android:id="@+id/title_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_name_title"/>
+
+
+            <TextView
+                    android:id="@+id/class_qrcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/px99"
+                    android:drawableRight="@drawable/ic_entrance"
+                    android:drawableLeft="@drawable/ic_qrcode"
+                    android:paddingRight="@dimen/px30"
+                    android:drawablePadding="@dimen/px8"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title_line"
+                    />
+
+
+            <TextView
+                    android:id="@+id/class_qrcode_title"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="教室二维码"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/class_qrcode"
+                    />
+
+            <View
+                    android:id="@+id/qrcode_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px20"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_qrcode"/>
+
+
+            <TextView
+                    android:id="@+id/class_canlender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/px99"
+                    android:textSize="@dimen/font_28px"
+                    android:textColor="@color/font_dark_gray"
+                    android:gravity="left|center_vertical"
+                    android:drawableRight="@drawable/ic_entrance"
+                    android:paddingRight="@dimen/px30"
+                    android:drawablePadding="@dimen/px8"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/qrcode_line"
+                    />
+
+            <TextView
+                    android:id="@+id/class_canlender_title"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="课表"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBaseline_toBaselineOf="@id/class_canlender"
+                    />
+
+            <View
+                    android:id="@+id/canlender_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_canlender_title"/>
+
+
+            <TextView
+                    android:id="@+id/class_material_title"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="教室二维码"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:drawableRight="@drawable/ic_entrance"
+                    android:gravity="left|center_vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/canlender_line"
+                    />
+
+            <View
+                    android:id="@+id/material_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px20"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_material_title"/>
+
+            <TextView
+                    android:id="@+id/class_member_title"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="成员"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/material_line"
+                    />
+
+            <!--TODO 此处需加入成员-->
+
+            <View
+                    android:id="@+id/member_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px20"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_member_title"/>
+
+
+            <CheckedTextView
+                    android:id="@+id/class_top_check"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="设置消息置顶"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    android:checkMark="@drawable/toggle_btn_selector"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/member_line"
+                    />
+
+            <View
+                    android:id="@+id/top_check_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_top_check"/>
+
+            <CheckedTextView
+                    android:id="@+id/class_disturb_check"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="消息免打扰"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    android:checkMark="@drawable/toggle_btn_selector"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/top_check_line"
+                    />
+
+            <View
+                    android:id="@+id/disturb_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px20"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_disturb_check"/>
+
+
+            <CheckedTextView
+                    android:id="@+id/class_verify_check"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="加入教室是否需要验证"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    android:checkMark="@drawable/toggle_btn_selector"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/disturb_line"
+                    />
+
+            <View
+                    android:id="@+id/verify_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_verify_check"/>
+
+            <CheckedTextView
+                    android:id="@+id/class_public_check"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="教室是否公开"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    android:checkMark="@drawable/toggle_btn_selector"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/verify_line"
+                    />
+
+            <View
+                    android:id="@+id/public_line"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px1"
+                    android:background="@color/hor_divide_line"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/class_public_check"/>
+
+            <CheckedTextView
+                    android:id="@+id/class_anonymous_check"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/px99"
+                    android:text="是否允许陌生人进入教室"
+                    android:textSize="@dimen/font_32px"
+                    android:textColor="@color/font_black"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:gravity="left|center_vertical"
+                    android:checkMark="@drawable/toggle_btn_selector"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/public_line"
+                    />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</LinearLayout>
