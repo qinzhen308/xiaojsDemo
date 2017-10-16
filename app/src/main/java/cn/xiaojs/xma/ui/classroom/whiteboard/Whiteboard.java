@@ -561,8 +561,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mInputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         mPreviousPoint = new PointF();
-        mSelector = new Selector(this);
         WhiteboardConfigs.init(getContext());
+        mSelector = new Selector(this);
 
         bmControllDelete= BitmapFactory.decodeResource(getResources(), R.drawable.ic_board_layer_controll_delete);
         bmControllRotate= BitmapFactory.decodeResource(getResources(), R.drawable.ic_board_layer_control_rotate);

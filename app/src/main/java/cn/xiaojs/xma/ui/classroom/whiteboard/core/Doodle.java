@@ -321,8 +321,8 @@ public abstract class Doodle implements Transformation{
 
     public void reset() {
         mTotalDegree=0;
-        mTotalScaleX=0;
-        mTotalScaleY=0;
+        mTotalScaleX=1;
+        mTotalScaleY=1;
         mTranslateX=0;
         mTranslateY=0;
         mBorderTransformMatrix.reset();
@@ -352,8 +352,8 @@ public abstract class Doodle implements Transformation{
 
 //        float paddingH=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalHeight;
 //        float paddingW=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalWidth;
-        float paddingW=mBorderPadding.x;
-        float paddingH=mBorderPadding.y;
+        float paddingW=Math.abs(mBorderPadding.x);
+        float paddingH=Math.abs(mBorderPadding.y);
         //draw border
         mBorderDrawingPath.reset();
         RectF realBorderRect=new RectF(mBorderRect.left-paddingW,mBorderRect.top-paddingH,mBorderRect.right+paddingW,mBorderRect.bottom+paddingH);
