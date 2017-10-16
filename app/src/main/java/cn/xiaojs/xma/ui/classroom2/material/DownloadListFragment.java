@@ -17,14 +17,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.AccountDataManager;
-import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.db.DBTables;
 import cn.xiaojs.xma.data.download.DownloadProvider;
-import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
-import cn.xiaojs.xma.ui.classroom2.live.MemberAdapter;
 
 /**
  * Created by maxiaobao on 2017/9/26.

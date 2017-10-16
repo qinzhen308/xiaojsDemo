@@ -40,6 +40,7 @@ import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatLandAdapter;
 import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.classroom2.member.SlideMemberlistFragment;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import io.reactivex.Observable;
@@ -104,6 +105,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 switchCamera();
                 break;
             case R.id.bottom_more:
+                SlideMemberlistFragment slideMemberlistFragment = new SlideMemberlistFragment();
+                slideMemberlistFragment.show(getFragmentManager(),"sm");
                 break;
             case R.id.bottom_chat:
                 break;

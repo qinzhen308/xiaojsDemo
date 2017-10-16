@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
@@ -19,8 +20,11 @@ import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
+import cn.xiaojs.xma.ui.classroom2.ClassDetailFragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.classroom2.SettingFragment;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 
 /**
  * Created by maxiaobao on 2017/9/18.
@@ -114,6 +118,39 @@ public abstract class MovieFragment extends BaseRoomFragment {
 
     public void enterPlayback() {
         ((Classroom2Activity) getActivity()).enterPlayback();
+    }
+
+
+    public void showMoreMenu(View targetView) {
+        CommonPopupMenu menu = new CommonPopupMenu(getContext());
+        String[] items = this.getResources().getStringArray(R.array.classroom2_more_item);
+        menu.setBg(R.drawable.popup_menu_bg);
+        menu.setWidth(this.getResources().getDimensionPixelSize(R.dimen.px280));
+        menu.addTextItems(items);
+        menu.addImgItems(new Integer[]{R.drawable.ic_setting,
+                R.drawable.ic_class_database_share_1,
+                R.drawable.ic_add_class1});
+        menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                switch (i) {
+                    case 2:
+                        ClassDetailFragment classDetailFragment = new ClassDetailFragment();
+                        classDetailFragment.show(getFragmentManager(), "detail");
+                        break;
+                    case 1:
+                        break;
+                    case 0:
+                        SettingFragment settingFragment = new SettingFragment();
+                        settingFragment.show(getFragmentManager(), "setting");
+                        break;
+                }
+
+            }
+        });
+        int offset = getResources().getDimensionPixelSize(R.dimen.px68);
+        menu.show(targetView, offset);
     }
 
 

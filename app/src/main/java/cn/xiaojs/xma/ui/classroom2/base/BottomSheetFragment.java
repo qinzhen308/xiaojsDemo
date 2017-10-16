@@ -111,5 +111,4 @@ public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
         ((Classroom2Activity) getActivity()).cancelProgress();
     }
 
-
 }

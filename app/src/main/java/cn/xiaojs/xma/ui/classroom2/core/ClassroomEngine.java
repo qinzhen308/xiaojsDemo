@@ -9,8 +9,6 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 
-import java.util.HashMap;
-
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -48,7 +46,6 @@ import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
-import cn.xiaojs.xma.ui.classroom2.live.MemberAdapter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;

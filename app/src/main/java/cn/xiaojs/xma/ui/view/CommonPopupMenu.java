@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.view;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,10 @@ public class CommonPopupMenu {
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 
+    }
+
+    public void setBg(@DrawableRes int drawable) {
+        mListView.setBackgroundResource(drawable);
     }
 
     public void setWidth(int px){

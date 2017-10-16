@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.classroom2;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -41,11 +40,10 @@ public class IdleFragment extends MovieFragment {
                 back();
                 break;
             case R.id.top_more:
+                showMoreMenu(view);
                 break;
             case R.id.top_live:                      //开始直播
                 requestLive();
-                break;
-            case R.id.bottom_more:
                 break;
             case R.id.bottom_orient:
                 changeOrientation();
@@ -68,6 +66,8 @@ public class IdleFragment extends MovieFragment {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 }

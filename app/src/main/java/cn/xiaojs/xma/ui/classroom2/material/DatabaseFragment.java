@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.material;
 
 import android.app.Activity;
 import android.content.DialogInterface;

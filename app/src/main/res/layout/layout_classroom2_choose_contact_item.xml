@@ -8,6 +8,16 @@
                 android:clickable="true"
         >
 
+    <CheckBox
+            android:id="@+id/check_btn"
+            android:layout_width="@dimen/px36"
+            android:layout_height="@dimen/px36"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:button="@drawable/mul_check_selector"
+            />
+
 
     <cn.xiaojs.xma.ui.widget.MessageImageView
             android:id="@+id/avator"
@@ -15,8 +25,8 @@
             android:layout_height="@dimen/px86"
             android:layout_marginTop="@dimen/px17"
             android:layout_marginBottom="@dimen/px17"
-            android:layout_marginLeft="@dimen/px30"
-            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_toRightOf="@id/check_btn"
             android:layout_centerVertical="true"
             app:oval="true"
             app:isCircle="true"

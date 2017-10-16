@@ -1,10 +1,9 @@
-package cn.xiaojs.xma.ui.classroom2;
+package cn.xiaojs.xma.ui.classroom2.chat;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,15 +38,11 @@ import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
-import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
-import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
-import cn.xiaojs.xma.ui.classroom2.chat.ProfileFragment;
+import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
-import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
-import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
+import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -57,7 +52,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by maxiaobao on 2017/9/25.
  */
 
-public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListener{
+public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapter.FetchMoreListener {
 
     @BindView(R.id.chat_list)
     RecyclerView recyclerView;
@@ -81,25 +76,21 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_classroom2_chat, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        View view = inflater.inflate(R.layout.fragment_classroom2_chat_session, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
 
-    @OnClick({R.id.bottom_input, R.id.bottom_members, R.id.bottom_database, R.id.bottom_schedule})
+    @OnClick({R.id.back_btn, R.id.more_btn})
     void onViewClick(View view) {
         switch (view.getId()) {
-            case R.id.bottom_input:
-                popInput();
+            case R.id.back_btn:
+                dismiss();
                 break;
-            case R.id.bottom_members:               //教室成员
-                popMembers();
-                break;
-            case R.id.bottom_database:              //资料库
-                popDatabase();
-                break;
-            case R.id.bottom_schedule:              //课表
-                popClassSchedule();
+            case R.id.more_btn:
+                showMoreMenu();
                 break;
         }
     }
@@ -172,7 +163,7 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
                         @Override
                         public void onFailed(String errorCode, String errorMessage) {
 
-                            Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -255,9 +246,9 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
                             RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
-                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size()-1);
-                        }else {
-                            adapter.notifyItemRangeInserted(0,talkItems.size());
+                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
+                        } else {
+                            adapter.notifyItemRangeInserted(0, talkItems.size());
                             recyclerView.scrollToPosition(talkItems.size());
                         }
                         pagination.setPage(++currentPage);
@@ -273,20 +264,20 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
 
         TalkItem talkItem = new TalkItem();
         talkItem.time = talk.time;
-        talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
-        talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
+        talkItem.body = new TalkItem.TalkContent();
+        talkItem.from = new TalkItem.TalkPerson();
         talkItem.body.text = talk.body.text;
         talkItem.body.contentType = talk.body.contentType;
         talkItem.from.accountId = talk.from;
         //获取名字
         Attendee attendee = classroomEngine.getMember(talk.from);
-        talkItem.from.name = attendee == null? "nil" : attendee.name;
+        talkItem.from.name = attendee == null ? "nil" : attendee.name;
 
         timeline(talkItem);
 
         messageData.add(talkItem);
         adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(messageData.size()-1);
+        recyclerView.smoothScrollToPosition(messageData.size() - 1);
 
     }
 
@@ -300,32 +291,32 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
 
     }
 
-    private void popInput() {
 
-        MsgInputFragment inputFragment = new MsgInputFragment();
-        Bundle data = new Bundle();
-        data.putInt(Constants.KEY_MSG_INPUT_FROM, 1);
-        inputFragment.setArguments(data);
-        inputFragment.setTargetFragment(this, ClassroomController.REQUEST_INPUT);
-        inputFragment.show(getFragmentManager(), "input");
+    private void showMoreMenu() {
+
+        ListBottomDialog dialog = new ListBottomDialog(getContext());
+
+        String[] items = getResources().getStringArray(R.array.classroom2_chat_more);
+        dialog.setItems(items);
+        dialog.setTitleVisibility(View.GONE);
+        dialog.setRightBtnVisibility(View.GONE);
+        dialog.setLeftBtnVisibility(View.GONE);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                switch (position) {
+                    case 0://个人主页
+
+                        break;
+                    case 1://取消关注
+
+                        break;
+                }
+
+            }
+
+        });
+        dialog.show();
+
     }
-
-
-    private void popMembers() {
-        MemberListFragment memberListfragment = new MemberListFragment();
-        memberListfragment.show(getFragmentManager(), "member");
-    }
-
-    private void popDatabase() {
-        DatabaseFragment databaseFragment = new DatabaseFragment();
-        databaseFragment.show(getFragmentManager(), "database");
-
-    }
-
-    private void popClassSchedule(){
-        ProfileFragment profileFragment = new ProfileFragment();
-        profileFragment.show(getFragmentManager(), "profile");
-    }
-
-
 }

@@ -18,16 +18,11 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataManager;
-import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.loader.DataLoder;
-import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
-import cn.xiaojs.xma.ui.classroom2.live.MemberAdapter;
 
 /**
  * Created by maxiaobao on 2017/9/26.
