@@ -101,6 +101,7 @@ public class DownloadProvider extends ContentProvider {
         copyString(DBTables.TDownload.KEY, values, filteredValues);
         copyString(DBTables.TDownload.STATUS, values, filteredValues);
         copyString(DBTables.TDownload.OWNER, values, filteredValues);
+        copyString(DBTables.TDownload.TYPE_NAME, values, filteredValues);
 
         if (!values.containsKey(DBTables.TDownload.OWNER)) {
             filteredValues.put(DBTables.TDownload.OWNER, AccountDataManager.getAccountID(getContext()));

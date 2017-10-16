@@ -64,13 +64,12 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
     private ClassroomType mClassroomType;
 
 
-
-    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView,String lessonId,String ownerId) {
+    public DocumentAdapter(Context context, PullToRefreshSwipeListView listView, String lessonId, String ownerId) {
         super(context, listView, true);
         mLessonId = lessonId;
         mOwnerId = ownerId;
         mType = Collaboration.SubType.PERSON;
-        mCategory=Collaboration.TypeName.ALL;
+        mCategory = Collaboration.TypeName.ALL;
         init();
     }
 
@@ -87,14 +86,13 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         return mLessonId;
     }
 
-    public void setType(String subType){
-        mType=subType;
+    public void setType(String subType) {
+        mType = subType;
     }
 
-    public void setCategory(String category){
-        mCategory=category;
+    public void setCategory(String category) {
+        mCategory = category;
     }
-
 
 
     public String getOwnerId() {
@@ -150,7 +148,13 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
         } else if (FileUtil.PDF == FileUtil.getFileType(bean.mimeType)) {
             drawId = R.drawable.ic_pdf;
         } else if (FileUtil.VIDEO == FileUtil.getFileType(bean.mimeType)) {
-            drawId = R.drawable.ic_video_mine;
+
+            if (Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName) && !bean.key.contains("H264")) {
+                drawId = R.drawable.ic_record_video;
+            } else {
+                drawId = R.drawable.ic_video_mine;
+            }
+
         } else if (Collaboration.isStreaming(bean.mimeType)) {
             drawId = R.drawable.ic_record_video;
         } else {
@@ -213,13 +217,13 @@ public class DocumentAdapter extends AbsSwipeAdapter<LibDoc, DocumentAdapter.Hol
 
     @Override
     protected void doRequest() {
-        String id="";
-        if(Collaboration.SubType.PRIVATE_CLASS.equals(mType)||Collaboration.SubType.STANDA_LONE_LESSON.equals(mType)){
-            id=mLessonId;
-        }else {
-            id=mOwnerId;
+        String id = "";
+        if (Collaboration.SubType.PRIVATE_CLASS.equals(mType) || Collaboration.SubType.STANDA_LONE_LESSON.equals(mType)) {
+            id = mLessonId;
+        } else {
+            id = mOwnerId;
         }
-        CollaManager.getDocuments(mContext, id, mType,mCategory, mPagination, new APIServiceCallback<UserDoc>() {
+        CollaManager.getDocuments(mContext, id, mType, mCategory, mPagination, new APIServiceCallback<UserDoc>() {
             @Override
             public void onSuccess(UserDoc object) {
                 if (object != null && object.documents.size() > 0) {

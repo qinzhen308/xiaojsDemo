@@ -102,7 +102,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
             holder.opera2.setText(R.string.share);
         }
 
-        thumbnail(bean.mimeType, bean.key, holder);
+        thumbnail(bean.mimeType, bean.key, holder,bean);
 
         holder.name.setText(bean.name);
 
@@ -240,7 +240,8 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
                     bean.key,
                     MaterialUtil.getDownloadUrl(bean),
                     bean.mimeType,
-                    Social.getDrawing(bean.key, true));
+                    Social.getDrawing(bean.key, true),
+                    bean.typeName);
         Toast.makeText(mContext, "已添加到下载队列", Toast.LENGTH_SHORT).show();
 //        } else {
 //           Toast.makeText(mContext, "当前有下载任务，不能新建下载", Toast.LENGTH_SHORT).show();
@@ -250,7 +251,7 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
 //        mContext.startActivity(intent);
     }
 
-    private void thumbnail(String mimeType, String key,Holder holder) {
+    private void thumbnail(String mimeType, String key,Holder holder,LibDoc bean) {
 
         String iconUrl = "";
         int errorResId;
@@ -267,7 +268,11 @@ public class MaterialAdapter extends AbsSwipeAdapter<LibDoc, MaterialAdapter.Hol
         } else if (FileUtil.PDF == FileUtil.getFileType(mimeType)) {
             errorResId = R.drawable.ic_pdf;
         } else if (FileUtil.VIDEO == FileUtil.getFileType(mimeType)){
-            errorResId = R.drawable.ic_video_mine;
+            if(Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName)&&!bean.key.contains("H264")){
+                errorResId = R.drawable.ic_record_video;
+            }else {
+                errorResId = R.drawable.ic_video_mine;
+            }
         } else if(FileUtil.STEAMIMG == FileUtil.getFileType(mimeType)){
             errorResId = R.drawable.ic_record_video;
         }else {

@@ -31,6 +31,7 @@ import cn.xiaojs.xma.model.ctl.Adviser;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.ClassInfoData;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
+import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -41,6 +42,8 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.TimeUtil;
+import cn.xiaojs.xma.util.ToastUtil;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/5/21.
@@ -161,6 +164,8 @@ public class ClassInfoActivity extends BaseActivity {
             case R.id.right_image:
                 if(Ctl.ClassState.IDLE.equals(classInfo.state) &&AccountDataManager.getAccountID(this).equals(classInfo.owner!=null?classInfo.owner.getId():"")){
                     showMoreDlg();
+                }else if(!AccountDataManager.getAccountID(this).equals(classInfo.owner!=null?classInfo.owner.getId():"")){//不是创建者
+                    showMoreDlgByStudent();
                 }
                 break;
             case R.id.teacher_name:
@@ -216,6 +221,8 @@ public class ClassInfoActivity extends BaseActivity {
         String mid = AccountDataManager.getAccountID(this);
         //创建者
         if (Ctl.ClassState.IDLE.equals(classInfo.state) && mid.equals(classInfo.owner!=null?classInfo.owner.getId():"")) {
+            setRightImage(R.drawable.ic_title_more_selector);
+        }else if (!mid.equals(classInfo.owner!=null?classInfo.owner.getId():"")){//学生
             setRightImage(R.drawable.ic_title_more_selector);
         }
 
@@ -395,6 +402,24 @@ public class ClassInfoActivity extends BaseActivity {
         dialog.show();
     }
 
+    //学生操作
+    private void showMoreDlgByStudent() {
+        ListBottomDialog dialog = new ListBottomDialog(this);
+        String[] items = new String[]{getString(R.string.abort_class)};
+        dialog.setItems(items);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                switch (position) {
+                    case 0://退出
+                        abortClass();
+                        break;
+                }
+            }
+        });
+        dialog.show();
+    }
+
     //删除
     private void showDisbandConfirmDlg(final String classId) {
         final CommonDialog dialog = new CommonDialog(this);
@@ -536,4 +561,42 @@ public class ClassInfoActivity extends BaseActivity {
         }
         return false;
     }
+
+    //退出班级--学生
+    private void abortClass(){
+        final CommonDialog dialog = new CommonDialog(this);
+        dialog.setDesc(R.string.abort_class_tip);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.cancel();
+            }
+        });
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+
+                dialog.dismiss();
+
+                showProgress(true);
+                LessonDataManager.abortClass(ClassInfoActivity.this, classId, new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        cancelProgress();
+                        ToastUtil.showToast(getApplicationContext(), R.string.logout_tips);
+                        DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                        ToastUtil.showToast(getApplicationContext(), errorMessage);
+                    }
+                });
+            }
+        });
+        dialog.show();
+    }
+
 }

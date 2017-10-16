@@ -34,6 +34,8 @@ public class CLesson implements Serializable{
     public boolean accessible;
     public String playback;
     public boolean recordable;
+    public String mimeType;
+
 
     public CLesson() {
     }

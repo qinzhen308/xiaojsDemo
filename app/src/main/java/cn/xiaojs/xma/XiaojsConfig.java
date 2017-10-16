@@ -59,15 +59,15 @@ public class XiaojsConfig {
 
     ///////////////外网预发布环境域名/////////////
     //XAS
-    public static String XAS_PRE_BASE_URL = "http://xas.xiaojs.edu";
+    public static String XAS_PRE_BASE_URL = "http://xastest.xiaojs.cn";
     //XLS
-    public static String XLS_PRE_BASE_URL = "http://xls.xiaojs.edu";
+    public static String XLS_PRE_BASE_URL = "http://xlstest.xiaojs.cn";
 
     //七牛存储空间
     //华东:存储空间列表(图片和文档存储)Bucket (xiaojs-test) 测试域名:
-    public static final String PRE_FILES_BUCKET_URL = "http://omjsoavuo.bkt.clouddn.com";
+    public static final String PRE_FILES_BUCKET_URL = "http://xcfs.xiaojs.cn";
     //华北:存储空间列表(视频存储)Bucket (xiaojs)
-    public static final String PRE_LIVE_BUCKET_URL = "http://oi29a0dpo.bkt.clouddn.com";
+    public static final String PRE_LIVE_BUCKET_URL = "http://live.xiaojs.cn";
 
 
 
@@ -104,7 +104,7 @@ public class XiaojsConfig {
     //DB name
     public static final String DB_NAME = "xdb";
     //DB current version
-    public static final int DB_VERSION = 3;
+    public static final int DB_VERSION = 4;
 
 
 
