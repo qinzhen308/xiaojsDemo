@@ -216,6 +216,11 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
     }
 
     @Override
+    public void onTopbackClick(View view, boolean land) {
+
+    }
+
+    @Override
     public void onVisibilityChange(int visibility) {
 
         //debugRootView.setVisibility(visibility);
@@ -656,5 +661,8 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
         }
         return false;
     }
+
+
+
 
 }

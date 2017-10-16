@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:id="@+id/control_land"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+        >
+
+
+    <android.support.constraint.Guideline
+            android:id="@+id/top_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_begin="@dimen/px9"
+            android:orientation="horizontal"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_begin="@dimen/px24"
+            android:orientation="vertical"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_end="@dimen/px24"
+            android:orientation="vertical"
+            />
+
+    <android.support.constraint.Guideline
+            android:id="@+id/bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_end="@dimen/px89"
+            android:orientation="horizontal"
+            />
+
+    <!-- top -->
+    <ImageView
+            android:id="@+id/l_top_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_back"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            />
+
+    <TextView
+            android:id="@+id/l_top_roominfo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_22px"
+            android:gravity="center"
+            android:paddingLeft="@dimen/px92"
+            android:paddingRight="@dimen/px24"
+            android:background="@drawable/bg_start_live_rect"
+            app:layout_constraintLeft_toLeftOf="@+id/l_top_photo"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@+id/l_top_photo"/>
+
+    <ImageView
+            android:id="@+id/l_top_photo"
+            android:layout_width="@dimen/px68"
+            android:layout_height="@dimen/px68"
+            android:background="@drawable/default_avatar"
+            android:layout_marginLeft="@dimen/px24"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintLeft_toRightOf="@id/l_top_back"
+            />
+
+    <TextView
+            android:id="@+id/l_top_start_or_stop_living"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="停止直播"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_22px"
+            android:gravity="center"
+            android:padding="@dimen/px20"
+            android:background="@drawable/bg_start_live_rect"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/l_top_back"/>
+
+    <!-- bottom -->
+
+    <ImageView
+            android:id="@+id/l_bottom_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_chat"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            />
+
+    <ImageView
+            android:id="@+id/l_bottom_session"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_whiteboard"
+            android:layout_marginLeft="@dimen/px20"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/l_bottom_chat"
+            />
+
+    <ImageView
+            android:id="@+id/l_bottom_more"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_class_column"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            />
+
+    <!--left-->
+
+    <!--<ListView-->
+    <!--android:id="@+id/left_talklist"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:visibility="gone"-->
+    <!--/>-->
+
+    <!--right-->
+
+    <ImageView
+            android:id="@+id/l_right_switchcamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_cameraswitching"
+            android:layout_marginTop="@dimen/px20"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@id/l_top_start_or_stop_living"
+            />
+
+    <ImageView
+            android:id="@+id/l_right_screenshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_screenshot"
+            android:layout_marginBottom="@dimen/px20"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            app:layout_constraintBottom_toTopOf="@id/bottom_guideline"
+            />
+
+    <ImageView
+            android:id="@+id/l_right_switch_vb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_class_switchtowhiteboard"
+            android:layout_marginBottom="@dimen/px20"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
+            app:layout_constraintBottom_toTopOf="@id/l_right_screenshot"
+            />
+
+
+    <!--center-->
+    <View
+            android:id="@+id/center_panel"
+            android:layout_width="@dimen/px520"
+            android:layout_height="@dimen/px520"
+            android:background="@drawable/classroom2_control_center_bg_rect"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            />
+    
+    <TextView
+            android:id="@+id/center_one2one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一对一音视频"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_white"
+            android:drawableTop="@drawable/ic_class_oneonevideo"
+            android:drawablePadding="@dimen/px12"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/px39"
+            android:layout_marginLeft="@dimen/px54"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="@id/center_panel"
+            app:layout_constraintTop_toTopOf="@id/center_panel"
+            android:visibility="gone"/>
+
+    <TextView
+            android:id="@+id/center_board_opera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="白板协作"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_white"
+            android:drawableTop="@drawable/ic_class_whiteboardcollaboration"
+            android:drawablePadding="@dimen/px12"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/px39"
+            android:layout_marginLeft="@dimen/px54"
+            android:gravity="center"
+            app:layout_constraintLeft_toRightOf="@id/center_one2one"
+            app:layout_constraintTop_toTopOf="@id/center_panel"
+            android:visibility="gone"/>
+
+    <TextView
+            android:id="@+id/center_board_mgr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="白板管理"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_white"
+            android:drawableTop="@drawable/ic_class_whiteboardmanagement"
+            android:drawablePadding="@dimen/px12"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/px39"
+            android:layout_marginLeft="@dimen/px71"
+            android:gravity="center"
+            app:layout_constraintLeft_toRightOf="@id/center_board_opera"
+            app:layout_constraintTop_toTopOf="@id/center_panel"
+            android:visibility="gone"/>
+
+
+    <TextView
+            android:id="@+id/center_new_board"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新增白板"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_white"
+            android:drawableTop="@drawable/ic_class_newwhiteboard"
+            android:drawablePadding="@dimen/px12"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/px39"
+            android:layout_marginLeft="@dimen/px54"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="@id/center_panel"
+            app:layout_constraintTop_toBottomOf="@id/center_one2one"
+            android:visibility="gone"/>
+
+    <TextView
+            android:id="@+id/center_member"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="教室成员"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_white"
+            android:drawableTop="@drawable/ic_class_operation_members"
+            android:drawablePadding="@dimen/px12"
+            android:singleLine="true"
+            android:layout_marginLeft="@dimen/px71"
+            android:gravity="center"
+            app:layout_constraintLeft_toRightOf="@id/center_new_board"
+            app:layout_constraintTop_toTopOf="@id/center_new_board"
+            android:visibility="gone"/>
+    <TextView
+            android:id="@+id/center_database"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="资料库"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_white"
+            android:drawableTop="@drawable/ic_class_operation_database"
+            android:drawablePadding="@dimen/px12"
+            android:singleLine="true"
+            android:layout_marginLeft="@dimen/px71"
+            android:gravity="center"
+            app:layout_constraintLeft_toRightOf="@id/center_member"
+            app:layout_constraintTop_toTopOf="@id/center_new_board"
+            android:visibility="gone"/>
+
+    <TextView
+            android:id="@+id/center_canlender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="课表"
+            android:textSize="@dimen/font_22px"
+            android:textColor="@color/font_white"
+            android:drawableTop="@drawable/ic_class_operation_schedule"
+            android:drawablePadding="@dimen/px12"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/px39"
+            android:layout_marginLeft="@dimen/px54"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="@id/center_panel"
+            app:layout_constraintTop_toBottomOf="@id/center_new_board"
+            android:visibility="gone"/>
+
+</android.support.constraint.ConstraintLayout>
