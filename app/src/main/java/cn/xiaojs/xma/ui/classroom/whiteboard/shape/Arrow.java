@@ -169,29 +169,6 @@ public class Arrow extends TwoDimensionalShape {
         return false;
     }
 
-    @Override
-    public void updatePointByRect() {
-        ////update control points
-        switch (mOrientation){
-            case 1://屏幕坐标系一象限，即右下
-                mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
-                mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
-                break;
-            case 2://屏幕坐标系二象限，即左下
-                mPoints.get(0).set(mDoodleRect.right, mDoodleRect.top);
-                mPoints.get(1).set(mDoodleRect.left, mDoodleRect.bottom);
-                break;
-            case 3://屏幕坐标系三象限，即左上
-                mPoints.get(0).set(mDoodleRect.right, mDoodleRect.bottom);
-                mPoints.get(1).set(mDoodleRect.left, mDoodleRect.top);
-                break;
-            case 4://屏幕坐标系四象限，即右上
-                mPoints.get(0).set(mDoodleRect.left, mDoodleRect.bottom);
-                mPoints.get(1).set(mDoodleRect.right, mDoodleRect.top);
-                break;
-        }
-    }
-
 
     @Override
     public Object onCollect(int type) {

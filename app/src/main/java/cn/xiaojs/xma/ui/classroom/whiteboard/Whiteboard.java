@@ -17,8 +17,10 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -49,10 +51,12 @@ import com.bumptech.glide.util.ExceptionCatchingInputStream;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
@@ -100,6 +104,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SyncRemoteLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Trapezoid;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
@@ -220,6 +225,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     Viewport viewport=new Viewport();
 
     private String whiteBoardId;
+
+    Bitmap bmControllDelete;
+    Bitmap bmControllRotate;
 
 
     public Whiteboard(Context context) {
@@ -555,6 +563,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mPreviousPoint = new PointF();
         mSelector = new Selector(this);
         WhiteboardConfigs.init(getContext());
+
+        bmControllDelete= BitmapFactory.decodeResource(getResources(), R.drawable.ic_board_layer_controll_delete);
+        bmControllRotate= BitmapFactory.decodeResource(getResources(), R.drawable.ic_board_layer_control_rotate);
     }
 
     @Override
@@ -574,7 +585,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         canvas.save();
         //clip
+
         canvas.clipRect(mDoodleBounds);
+//        canvas.clipRect(new RectF(mDoodleBounds.left,mDoodleBounds.top,mDoodleBounds.right,mDoodleBounds.bottom*boardCount));
 
         //1. draw background
         canvas.drawColor(BG_COLOR);
@@ -616,6 +629,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         drawSelector(canvas, mSelector);
         canvas.restore();
 
+        //每一屏的分割线
+        /*Paint dividerPaint=new Paint();
+        dividerPaint.setPathEffect(new DashPathEffect(new float[]{10,10,10},0));
+        dividerPaint.setColor(Color.BLACK);
+        for(int i=1;i<boardCount;i++){
+            canvas.drawLine(mDoodleBounds.left,mDoodleBounds.bottom*i,mDoodleBounds.right,mDoodleBounds.bottom*i,dividerPaint);
+        }*/
+
         //6. draw border(selected doodle or selector)
         if (!onViewChanged) {
             if (mCurrentMode == MODE_SELECTION) {
@@ -634,6 +655,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         onViewChanged = true;
         postInvalidate();
     }
+
+    private int boardCount=1;
 
     private class TouchEventListener extends SimpleTouchEventListener {
         @Override
@@ -719,6 +742,17 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 }
                 if(doodle instanceof SyncCollector){
                     syncGenerator.onActionMove((SyncCollector)doodle);
+                }
+            }
+            if(mCurrentMode==MODE_GEOMETRY||mCurrentMode==MODE_HAND_WRITING){
+                float[] downIn2=new float[]{mDownPoint.x,mDownPoint.y};
+                Matrix matrix=new Matrix();
+                mDisplayMatrix.invert(matrix);
+                matrix.mapPoints(downIn2);
+                Logger.d("-----qz-----add board count-----downIn2="+ Arrays.toString(downIn2));
+                if(downIn2[1]/mBlackboardHeight>boardCount-0.3){
+                    boardCount++;
+                    Logger.d("-----qz-----add board count-----boardCount="+boardCount);
                 }
             }
             return false;
@@ -831,10 +865,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mSelector.scaleAndRotate(mPreviousPoint.x, mPreviousPoint.y, x, y);
                                     //scale_rotate record
                                     mDoodleAction = Action.SCALE_ROTATE_ACTION;
-                                    if(mSelector.getSelectedDoodle() instanceof SyncCollector){
-                                        syncGenerator.updateAction(mDoodleAction);
-                                        syncGenerator.onActionMove((SyncCollector)mSelector.getSelectedDoodle());
-                                    }
+                                    syncGenerator.updateAction(mDoodleAction);
+                                    syncGenerator.onActionMove(mSelector);
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
@@ -845,10 +877,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mSelector.changeByEdge(mPreviousPoint.x, mPreviousPoint.y, x, y, mSelectionRectRegion);
                                     //change area record
                                     mDoodleAction = Action.CHANGE_AREA_ACTION;
-                                    if(mSelector.getSelectedDoodle() instanceof SyncCollector){
-                                        syncGenerator.updateAction(mDoodleAction);
-                                        syncGenerator.onActionMove((SyncCollector)mSelector.getSelectedDoodle());
-                                    }
+                                    syncGenerator.updateAction(mDoodleAction);
+                                    syncGenerator.onActionMove(mSelector);
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
@@ -857,10 +887,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                                     mSelector.move((x - mPreviousPoint.x), (y - mPreviousPoint.y));
                                     //add move record
                                     mDoodleAction = Action.MOVE_ACTION;
-                                    if(mSelector.getSelectedDoodle() instanceof SyncCollector){
-                                        syncGenerator.updateAction(mDoodleAction);
-                                        syncGenerator.onActionMove((SyncCollector)mSelector.getSelectedDoodle());
-                                    }
+                                    syncGenerator.updateAction(mDoodleAction);
+                                    syncGenerator.onActionMove(mSelector);
                                     drawAllDoodlesCanvas();
                                     postInvalidate();
                                     break;
@@ -1912,7 +1940,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     syncRemoveLayer(data.data);
                 }else{//添加图片
                     mode=Whiteboard.MODE_SYNC_REMOTE_IMG;
-                    syncCreateLayer(mode,2,Color.parseColor("black"),data.data.get(0).layer);
+                    syncCreateLayer(mode,data.data.get(0).layer);
                 }
 
                 break;
@@ -1924,7 +1952,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if(removeDoodleById(data.from)){
                     drawAllDoodlesCanvas();
                 }
-                syncCreateLayer(mode,data.ctx.lineWidth,Color.parseColor(data.ctx.strokeStyle),data.data.get(0).layer);
+                syncCreateLayer(mode,data.data.get(0).layer);
                 break;
             case Live.SyncEvent.TEXT:
                 break;
@@ -1937,17 +1965,17 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             default:
                 //目前大于30的为图形
                 if(event>=Live.SyncEvent.DASHEDLINE){
-                    syncCreateLayer(mode,data.ctx.lineWidth,Color.parseColor(data.ctx.strokeStyle),data.data.get(0).layer);
+                    syncCreateLayer(mode,data.data.get(0).layer);
                 }
                 break;
 
         }
     }
 
-    private synchronized void syncCreateLayer(int mode,int lineWidth,int color,SyncLayer layer){
+    private synchronized void syncCreateLayer(int mode,SyncLayer layer){
         if(layer==null||layer.shape==null)return;
         Paint paint=null;
-        paint = Utils.createPaint(color, lineWidth, Paint.Style.STROKE);
+        paint = Utils.createPaint(ColorUtil.parseColor(layer.lineColor), layer.lineWidth, Paint.Style.STROKE);
         Doodle d = buildDoodle(layer.id, mode);
         d.setPaint(paint);
         d.setState(Doodle.STATE_EDIT);
@@ -2177,6 +2205,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public Matrix getDrawingMatrix(){
         return mDrawingMatrix;
+    }
+
+    public Bitmap getControllDeleteBm() {
+        return bmControllDelete;
+    }
+
+    public Bitmap getControllRotateBm() {
+        return bmControllRotate;
     }
 }
 

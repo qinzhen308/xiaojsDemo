@@ -204,7 +204,7 @@ public class RectangularCoordinate extends TwoDimensionalShape {
         return false;
     }
 
-    @Override
+    /*@Override
     public void updatePointByRect() {
         ////update control points
         switch (mOrientation){
@@ -225,7 +225,7 @@ public class RectangularCoordinate extends TwoDimensionalShape {
                 mPoints.get(1).set(mDoodleRect.right, mDoodleRect.top);
                 break;
         }
-    }
+    }*/
 
 
 

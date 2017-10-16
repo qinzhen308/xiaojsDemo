@@ -19,12 +19,15 @@ public class SyncBoardEvtBegin {
 
     public String from;
     public String board;
+    public String id;
 
     public int evt;
     public int stg;
 
     public long time;
     public Ctx ctx;
+
+    public SyncData data;
 
 
     @Override

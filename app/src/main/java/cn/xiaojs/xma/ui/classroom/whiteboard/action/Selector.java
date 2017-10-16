@@ -14,13 +14,26 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Shape;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HandWriting;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinishedDelete;
 
 /*  =======================================================================================
  *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
@@ -37,7 +50,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HandWriting;
  *
  * ======================================================================================== */
 
-public class Selector extends Doodle {
+public class Selector extends Doodle implements SyncCollector{
     private Paint mSelectingBgPaint;
     private Paint mSelectingDashPaint;
     private Doodle mSelectedDoodle;
@@ -632,5 +645,103 @@ public class Selector extends Doodle {
 
     public void setBorderVisible(boolean visible) {
         mBorderVisible = visible;
+    }
+
+    @Override
+    public Object onCollect(int type) {
+        return null;
+    }
+
+    @Override
+    public Object onCollect(int action, int type) {
+
+        if(type== SyncGenerator.STATE_BEGIN){
+            SyncBoardEvtBegin evtBegin=new SyncBoardEvtBegin();
+            Ctx ctx=new Ctx();
+            ctx.lineWidth=0;
+            ctx.viewport=getWhiteboard().getViewport();
+            evtBegin.ctx=ctx;
+            evtBegin.stg= Live.SyncStage.BEGIN;
+            if(action==Action.CLEAR_ACTION){
+                evtBegin.evt= Live.SyncEvent.CLEAR;
+            }else if(action==Action.DELETE_ACTION){
+                evtBegin.evt= Live.SyncEvent.ERASER;
+            }else if(action== Action.MOVE_ACTION||action==Action.CHANGE_AREA_ACTION||
+                    action==Action.ROTATE_ACTION||action==Action.SCALE_ACTION||
+                    action==Action.SCALE_ROTATE_ACTION){
+                evtBegin.evt= Live.SyncEvent.SELECT;
+            }
+            evtBegin.time=System.currentTimeMillis();
+            evtBegin.board= getWhiteboard().getWhiteBoardId();
+            evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            return evtBegin;
+        }else if(type== SyncGenerator.STATE_DOING){
+
+        }else if(type== SyncGenerator.STATE_FINISHED){
+
+            if(action== Action.MOVE_ACTION||action==Action.CHANGE_AREA_ACTION||
+                    action==Action.ROTATE_ACTION||action==Action.SCALE_ACTION||
+                    action==Action.SCALE_ROTATE_ACTION){
+                SyncBoardFinished evtFinished=new SyncBoardFinished();
+                evtFinished.stg= Live.SyncStage.FINISH;
+                evtFinished.evt= Live.SyncEvent.SELECT;
+                evtFinished.time=System.currentTimeMillis();
+                evtFinished.board= getWhiteboard().getWhiteBoardId();
+                evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+                evtFinished.data=new SyncData();
+                evtFinished.data.changedLayers=new ArrayList<>();
+                if (mSelectedDoodle instanceof GeometryShape||mSelectedDoodle instanceof HandWriting) {
+                    if(mSelectedDoodle instanceof SyncCollector){
+                        evtFinished.data.changedLayers.add((SyncLayer) ((SyncCollector)mSelectedDoodle).onCollect(action,type));
+                    }
+                }else {
+                    ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+                    if (allDoodles != null) {
+                        int count = 0;
+                        for (Doodle d : allDoodles) {
+                            if (d.getState() == Doodle.STATE_EDIT) {
+                                count++;
+                                break;
+                            }
+                        }
+
+                        if (count > 0) {
+                            for (Doodle d : allDoodles) {
+                                if (d.getState() == Doodle.STATE_EDIT&&mSelectedDoodle instanceof SyncCollector) {
+                                    Object changeLayer=((SyncCollector)mSelectedDoodle).onCollect(action,type);
+                                    evtFinished.data.changedLayers.add((SyncLayer)changeLayer);
+                                }
+                            }
+
+                        }
+                    }
+                    return evtFinished;
+                }
+            }else if(action==Action.DELETE_ACTION||action==Action.CLEAR_ACTION){
+                SyncBoardFinishedDelete evtFinished=new SyncBoardFinishedDelete();
+                evtFinished.stg= Live.SyncStage.FINISH;
+                if(action==Action.CLEAR_ACTION){
+                    evtFinished.evt= Live.SyncEvent.CLEAR;
+                }else {
+                    evtFinished.evt= Live.SyncEvent.ERASER;
+                }
+                evtFinished.time=System.currentTimeMillis();
+                evtFinished.board= getWhiteboard().getWhiteBoardId();
+                evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+                evtFinished.data=new ArrayList<>();
+                ArrayList<Doodle> allDoodles = getWhiteboard().getAllDoodles();
+                if (allDoodles != null) {
+                    for (Doodle d : allDoodles) {
+                        if (d.getState() == Doodle.STATE_EDIT) {
+                            SyncLayer layerData=new SyncLayer();
+                            layerData.id=d.getDoodleId();
+                            evtFinished.data.add(layerData);
+                        }
+                    }
+                }
+                return evtFinished;
+            }
+        }
+        return null;
     }
 }

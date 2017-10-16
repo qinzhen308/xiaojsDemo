@@ -147,17 +147,7 @@ public class Dashline extends TwoDimensionalShape {
 
     }
 
-    @Override
-    public void updatePointByRect() {
-        ////update control points
-        if (isForward()) {
-            mPoints.get(0).set(mDoodleRect.left, mDoodleRect.top);
-            mPoints.get(1).set(mDoodleRect.right, mDoodleRect.bottom);
-        } else {
-            mPoints.get(0).set(mDoodleRect.right, mDoodleRect.top);
-            mPoints.get(1).set(mDoodleRect.left, mDoodleRect.bottom);
-        }
-    }
+
 
     public boolean isForward() {
         return mOrientation == FORWARD;

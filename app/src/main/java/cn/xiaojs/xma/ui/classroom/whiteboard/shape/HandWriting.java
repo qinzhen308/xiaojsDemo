@@ -149,6 +149,7 @@ public class HandWriting extends Doodle implements SyncCollector{
     @Override
     public Object onCollect(int type) {
         if(type== SyncGenerator.STATE_BEGIN){
+            if(mPoints==null||mPoints.size()==0)return null;
             SyncBoardEvtBegin evtBegin=new SyncBoardEvtBegin();
             Ctx ctx=new Ctx();
             ctx.lineWidth=(int)getPaint().getStrokeWidth();
@@ -158,17 +159,21 @@ public class HandWriting extends Doodle implements SyncCollector{
             evtBegin.stg= Live.SyncStage.BEGIN;
             evtBegin.evt= Live.SyncEvent.PEN;
             evtBegin.time=System.currentTimeMillis();
-            evtBegin.board= getWhiteboard().getWhiteBoardId();
+            evtBegin.id=evtBegin.board= getWhiteboard().getWhiteBoardId();
             evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            evtBegin.data=new SyncData();
+            Matrix drawingMatrix=new Matrix(getWhiteboard().getDrawingMatrix());
+            evtBegin.data.startPos=matrixToRealP(mPoints.get(0),drawingMatrix);
             return evtBegin;
         }else if(type== SyncGenerator.STATE_DOING){
             if(mPoints==null||mPoints.size()<2)return null;
             Matrix drawingMatrix=new Matrix(getWhiteboard().getDrawingMatrix());
+            drawingMatrix.postConcat(mTransformMatrix);
             SyncBoardEvtGoing evtGoing=new SyncBoardEvtGoing();
             evtGoing.stg= Live.SyncStage.ONGOING;
             evtGoing.evt= Live.SyncEvent.PEN;
             evtGoing.time=System.currentTimeMillis();
-            evtGoing.board= getWhiteboard().getWhiteBoardId();
+            evtGoing.id=evtGoing.board= getWhiteboard().getWhiteBoardId();
             evtGoing.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             evtGoing.data=new SyncBoardEvtGoing.GoingPoints();
             evtGoing.data.startPos=matrixToRealP(mPoints.get(mPoints.size()-1),drawingMatrix);
@@ -181,7 +186,7 @@ public class HandWriting extends Doodle implements SyncCollector{
             evtFinished.evt= Live.SyncEvent.PEN;
             evtFinished.time=System.currentTimeMillis();
             evtFinished.board= getWhiteboard().getWhiteBoardId();
-            evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            evtFinished.id=evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             SyncData syncData=new SyncData();
             syncData.layer=new SyncLayer();
             evtFinished.data=syncData;
@@ -226,7 +231,7 @@ public class HandWriting extends Doodle implements SyncCollector{
         float[] p0=new float[2];
         p0[0]=p.x;
         p0[1]=p.y;
-        mDrawingMatrix.mapPoints(_p,p0);
+        drawingMatrix.mapPoints(_p,p0);
         PointF dest=new PointF(_p[0],_p[1]);
         return dest;
     }
@@ -244,7 +249,7 @@ public class HandWriting extends Doodle implements SyncCollector{
             evtBegin.stg= Live.SyncStage.BEGIN;
             evtBegin.time=System.currentTimeMillis();
             evtBegin.board= getWhiteboard().getWhiteBoardId();
-            evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
+            evtBegin.id=evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             if(action== Action.DELETE_ACTION){
                 evtBegin.evt= Live.SyncEvent.ERASER;
             }
@@ -257,13 +262,29 @@ public class HandWriting extends Doodle implements SyncCollector{
                 evtFinished.stg= Live.SyncStage.FINISH;
                 evtFinished.evt= Live.SyncEvent.ERASER;
                 evtFinished.time=System.currentTimeMillis();
-                evtFinished.board= getWhiteboard().getWhiteBoardId();
+                evtFinished.id=evtFinished.board= getWhiteboard().getWhiteBoardId();
                 evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
                 evtFinished.data=new ArrayList<SyncLayer>();
                 SyncLayer layer=new SyncLayer();
                 layer.id=getDoodleId();
                 evtFinished.data.add(layer);
                 return evtFinished;
+            }else if(action== Action.SCALE_ACTION||action== Action.MOVE_ACTION||action== Action.ROTATE_ACTION
+                    ||action== Action.SCALE_ROTATE_ACTION||action== Action.CHANGE_AREA_ACTION){
+                SyncLayer layer=new SyncLayer();
+                layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+                layer.lineWidth=(int)getPaint().getStrokeWidth();
+                layer.shape=new Shape();
+                RectF layerRect=new RectF();
+                getDrawingMatrixFromWhiteboard().mapRect(layerRect,mDoodleRect);
+                layer.id=getDoodleId();
+                layer.shape.height=layerRect.height();
+                layer.shape.width=layerRect.width();
+                layer.shape.left=layerRect.left;
+                layer.shape.top=layerRect.top;
+                layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),getDrawingMatrixFromWhiteboard());
+                layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+                return layer;
             }
         }
         return null;

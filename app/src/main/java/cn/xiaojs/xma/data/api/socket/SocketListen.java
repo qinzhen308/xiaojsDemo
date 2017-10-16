@@ -134,6 +134,10 @@ public class SocketListen<T> {
 
         @Override
         public void call(Object... args) {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("---------qz--------socketOriData="+args[0]);
+            }
             T newMsg =null;
             if (args != null && args.length > 0) {
                 newMsg = parseSocketResponse(args[0],valueType);

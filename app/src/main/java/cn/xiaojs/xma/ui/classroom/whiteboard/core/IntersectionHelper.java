@@ -83,7 +83,7 @@ public class IntersectionHelper {
         RectF transRect = Utils.transformToScreenRect(rect, mapMatrix);
         int scope = WhiteboardConfigs.PRESSED_SCOPE;
 
-        transRect.set(transRect.left - scope, transRect.top - scope, transRect.right + scope, transRect.bottom + scope);
+        transRect.set(Math.min(transRect.left ,transRect.right)- scope, Math.min(transRect.top ,transRect.bottom) - scope, Math.max(transRect.left ,transRect.right)+ scope, Math.max(transRect.top ,transRect.bottom) + scope);
         return transRect.contains(x, y) ? RECT_BODY : RECT_NO_SELECTED;
     }
 

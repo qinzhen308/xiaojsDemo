@@ -58,14 +58,14 @@ public class WhiteboardConfigs {
         CORNER_EDGE_SIZE = rs.getDimensionPixelOffset(R.dimen.px30);
         TEXT_BORDER_PADDING = rs.getDimensionPixelOffset(R.dimen.px12);
 
-        BORDER_COLOR = rs.getColor(R.color.main_blue);
+        BORDER_COLOR = rs.getColor(R.color.green_grass);
         DEFAULT_PAINT_COLOR = rs.getColor(R.color.wb_color_4);
         BORDER_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px4);
         BORDER_DASH_WIDTH = rs.getDimensionPixelOffset(R.dimen.px10);
         BORDER_PADDING = rs.getDimensionPixelOffset(R.dimen.px10);
         SELECTOR_DASH_WIDTH = rs.getDimensionPixelOffset(R.dimen.px5);
         SELECTOR_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px2);
-        CONTROLLER_RADIUS = rs.getDimensionPixelOffset(R.dimen.px30);
+        CONTROLLER_RADIUS = rs.getDimensionPixelOffset(R.dimen.px20);
         DEL_BTN_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px8);
 
         PAINT_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px20);

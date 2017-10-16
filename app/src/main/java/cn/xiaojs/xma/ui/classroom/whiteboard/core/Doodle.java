@@ -14,12 +14,15 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
  *
  * ======================================================================================== */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.View;
 
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 
 /**
@@ -335,16 +339,21 @@ public abstract class Doodle implements Transformation{
     }
 
     protected void onDrawBorder(Canvas canvas) {
-        Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
+        /*Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
         float dashW = WhiteboardConfigs.BORDER_DASH_WIDTH / params.scale;
         mBorderPaint.setStrokeWidth(WhiteboardConfigs.BORDER_STROKE_WIDTH / params.scale);
-        mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));
+        mBorderPaint.setPathEffect(new DashPathEffect(new float[]{dashW, dashW}, 0));*/
+        Whiteboard.WhiteboardParams params = mWhiteboard.getParams();
+
+        computeBorderPadding();
 
         Matrix unitToScreenMatrix=new Matrix(getWhiteboard().getDrawingMatrix());
         unitToScreenMatrix.postConcat(mBorderTransformMatrix);
 
-        float paddingH=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalHeight;
-        float paddingW=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalWidth;
+//        float paddingH=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalHeight;
+//        float paddingW=WhiteboardConfigs.BORDER_PADDING/params.scale/(float)params.originalWidth;
+        float paddingW=mBorderPadding.x;
+        float paddingH=mBorderPadding.y;
         //draw border
         mBorderDrawingPath.reset();
         RectF realBorderRect=new RectF(mBorderRect.left-paddingW,mBorderRect.top-paddingH,mBorderRect.right+paddingW,mBorderRect.bottom+paddingH);
@@ -355,13 +364,17 @@ public abstract class Doodle implements Transformation{
         //draw controller
 
         mBorderDrawingPath.reset();
-        mBorderDrawingPath.addOval(ControlPointUtil.getRotatePoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
-        mBorderDrawingPath.addOval(ControlPointUtil.getDeletePoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
         mBorderDrawingPath.addOval(ControlPointUtil.getLeftPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
         mBorderDrawingPath.addOval(ControlPointUtil.getTopPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
         mBorderDrawingPath.addOval(ControlPointUtil.getRightPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
         mBorderDrawingPath.addOval(ControlPointUtil.getBottomPoint(realBorderRect,unitToScreenMatrix,params.scale), Path.Direction.CCW);
         canvas.drawPath(mBorderDrawingPath, mControllerPaint);
+        int icWidth=getWhiteboard().getControllDeleteBm().getWidth();
+        int icHeight=getWhiteboard().getControllDeleteBm().getHeight();
+        canvas.drawBitmap(getWhiteboard().getControllDeleteBm(),new Rect(0,0,icWidth,icHeight),ControlPointUtil.getDeletePoint(realBorderRect,unitToScreenMatrix,params.scale),mControllerPaint);
+        icWidth=getWhiteboard().getControllRotateBm().getWidth();
+        icHeight=getWhiteboard().getControllRotateBm().getHeight();
+        canvas.drawBitmap(getWhiteboard().getControllRotateBm(),new Rect(0,0,icWidth,icHeight),ControlPointUtil.getRotatePoint(realBorderRect,unitToScreenMatrix,params.scale),mControllerPaint);
     }
 
     protected void computeBorderPadding() {
@@ -715,6 +728,7 @@ public abstract class Doodle implements Transformation{
                 sy=1;
             }
             mBorderTransformMatrix.preScale(sx,sy,center[0],center[1]);
+            mTotalScaleY*=sy;
         }else if(edge==IntersectionHelper.LEFT_EDGE||edge==IntersectionHelper.RIGHT_EDGE){
             float sx=(p2[0]-mBorderRect.centerX())/(p1[0]- mBorderRect.centerX());
             float sy=1;
@@ -722,6 +736,7 @@ public abstract class Doodle implements Transformation{
                 sx=1;
             }
             mBorderTransformMatrix.preScale(sx,sy,center[0],center[1]);
+            mTotalScaleX*=sx;
         }
 
         mTransformMatrix.postConcat(matrixC);

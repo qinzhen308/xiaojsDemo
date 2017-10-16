@@ -1,6 +1,9 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard.sync;
 
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
+
+import com.orhanobut.logger.Logger;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,5 +71,14 @@ public class ColorUtil {
             }
         }
         return "black";
+    }
+
+    public static int parseColor(String colorStr){
+        try {
+            return Color.parseColor(colorStr);
+        }catch (Exception e){
+            Logger.d(e);
+            return Color.BLACK;
+        }
     }
 }

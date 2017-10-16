@@ -21,6 +21,7 @@ public class SyncBoardFinishedDelete {
 
     public String from;
     public String board;
+    public String id;
 
     public int evt;
     public int stg;
