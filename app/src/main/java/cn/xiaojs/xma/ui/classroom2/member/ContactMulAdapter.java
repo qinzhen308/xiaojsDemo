@@ -2,26 +2,18 @@ package cn.xiaojs.xma.ui.classroom2.member;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.afollestad.dragselectrecyclerview.IDragSelectAdapter;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
-import cn.xiaojs.xma.ui.widget.MessageImageView;
 
 /**
  * Created by maxiaobao on 2017/9/27.
