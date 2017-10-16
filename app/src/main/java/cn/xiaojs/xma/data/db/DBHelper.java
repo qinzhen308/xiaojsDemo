@@ -61,6 +61,17 @@ public final class DBHelper extends SQLiteOpenHelper {
             db.execSQL(addOwnerColumnSql);
         }
 
+        if (oldVersion < 4) {
+            String addSql = new StringBuilder("ALTER TABLE ")
+                    .append(DBTables.TDownload.TABLE_NAME)
+                    .append(" ADD ")
+                    .append(DBTables.TDownload.TYPE_NAME)
+                    .append(" TEXT")
+                    .toString();
+
+            db.execSQL(addSql);
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,6 +205,8 @@ public final class DBHelper extends SQLiteOpenHelper {
                 .append(DBTables.TDownload.ICON)
                 .append(" TEXT, ")
                 .append(DBTables.TDownload.MIME_TYPE)
+                .append(" TEXT, ")
+                .append(DBTables.TDownload.TYPE_NAME)
                 .append(" TEXT, ")
                 .append(DBTables.TDownload.CONTROL)
                 .append(" INTEGER, ")

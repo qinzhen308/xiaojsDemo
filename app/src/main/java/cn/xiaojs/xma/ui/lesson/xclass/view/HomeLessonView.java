@@ -396,7 +396,15 @@ public class HomeLessonView extends RelativeLayout implements IViewModel<CLesson
             //其余地方课表的逻辑
             LibDoc doc=new LibDoc();
             doc.key=mData.playback;
-            doc.mimeType= Collaboration.StreamingTypes.HLS;
+
+            doc.mimeType= mData.mimeType;
+
+            if (TextUtils.isEmpty(doc.mimeType)) {
+                doc.mimeType= Collaboration.StreamingTypes.HLS;
+            }else{
+                doc.typeName = Collaboration.TypeName.RECORDING_IN_LIBRARY;
+            }
+
             MaterialUtil.openMaterial((Activity) getContext(),doc);
         }
     }

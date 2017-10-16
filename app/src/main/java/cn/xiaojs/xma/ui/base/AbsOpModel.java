@@ -102,6 +102,8 @@ public abstract class AbsOpModel<T>{
     public static final int OP_RECREATE_LESSON=25;
     //报名学生名单
     public static final int OP_APPLY_STUDENTS_LIST=26;
+    //学生退出录播课
+    public static final int OP_ABORT_RECORDED_LESSON=27;
 
     private int id;
 

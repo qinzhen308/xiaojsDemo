@@ -872,6 +872,7 @@
     <string name="lesson_op_reject_reason">查看原因</string>
     <string name="lesson_op_create_lesson_again">再次开课</string>
     <string name="lesson_op_apply_students_list">学生名单</string>
+    <string name="lesson_op_abort_recorded_lesson">退课</string>
 
     <string name="create_class_success">创建班成功</string>
     <string name="class_name_not_null">班级名称不能为空</string>
@@ -1055,6 +1056,10 @@
     <string name="hint_input_search_students">姓名/手机号</string>
     <string name="goto_apply">去声明</string>
     <string name="start_live">开始直播</string>
+
+    <string name="abort_class_tip">你确定要退出该班级吗？</string>
+    <string name="abort_recorded_lesson_tip">你确定要退出该录播课吗？</string>
+    <string name="abort_class">退出班</string>
 
 
 </resources>

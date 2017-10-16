@@ -19,6 +19,7 @@ public class LiveSchedule {
     public String next;
     public String playback;
     public String state;
+    public String mimeType;
     public Room classroom;
 
 //    imAssistant

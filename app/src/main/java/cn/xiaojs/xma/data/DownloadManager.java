@@ -60,7 +60,8 @@ public class DownloadManager {
                                         @NonNull String key,
                                         @NonNull String url,
                                         @Nullable String mimeType,
-                                        @Nullable String iconUrl) {
+                                        @Nullable String iconUrl,
+                                          String typeName) {
 
         if (TextUtils.isEmpty(fileName) || TextUtils.isEmpty(key) || TextUtils.isEmpty(url)) {
             if (XiaojsConfig.DEBUG) {
@@ -85,6 +86,7 @@ public class DownloadManager {
         values.put(DBTables.TDownload.URL,url);
         values.put(DBTables.TDownload.MIME_TYPE,mimeType);
         values.put(DBTables.TDownload.ICON,iconUrl);
+        values.put(DBTables.TDownload.TYPE_NAME,typeName);
         values.put(DBTables.TDownload.STATUS, DownloadInfo.DownloadStatus.STATUS_PENDING);
 
         return startDownload(context, values);

@@ -30,11 +30,19 @@ import cn.xiaojs.xma.ui.common.PlayActivity;
 
 public class MaterialUtil {
 
-    public static void openFileBySystem(Context context, String path, String mimeType) {
+    public static void openFileBySystem(Context context, String name, String path, String mimeType) {
 
         if (XiaojsConfig.DEBUG) {
             Logger.d("the file mime type: %s, and path: %s", mimeType, path);
         }
+
+        if ((Collaboration.isVideo(mimeType) || Collaboration.isStreaming(mimeType)) && Build.VERSION.SDK_INT >= 16) {
+
+            lanuchPlay(context, name, path);
+
+            return;
+        }
+
 
         Uri data = Uri.parse("file://" + path);
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -68,7 +76,12 @@ public class MaterialUtil {
             //要判断是不是转码的
             String url = "";
             if (Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(libDoc.typeName)) {//录播课转码的
-                url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(key).append(".mp4").toString();
+                if(key!=null&&key.contains("H264")){//录播课转码的(老版本)
+                    url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(key).append(".mp4").toString();
+
+                }else {//录播课(新版本)
+                    url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(key).toString();
+                }
             } else {
                 url = new StringBuilder(ApiManager.getFileBucket()).append("/").append(key).toString();
             }
@@ -102,9 +115,13 @@ public class MaterialUtil {
         } else if (Collaboration.isVideo(mimeType)) {
             String url = "";
 
-            if (Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName)) {//录播课转码的
-                url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).append(".mp4").toString();
-            } else {
+            if (Collaboration.TypeName.RECORDING_IN_LIBRARY.equals(bean.typeName)) {
+                if(bean.key!=null&&bean.key.contains("H264")){//录播课转码的(老版本)
+                    url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).append(".mp4").toString();
+                }else {//录播课(新版本)
+                    url = new StringBuilder(ApiManager.getLiveBucket()).append("/").append(bean.key).toString();
+                }
+            } else {//普通多媒体
                 url = new StringBuilder(ApiManager.getFileBucket()).append("/").append(bean.key).toString();
             }
 

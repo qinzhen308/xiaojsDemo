@@ -559,6 +559,16 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.REVIEW_RECORDED_COURSE_ENROLL, call);
     }
 
+    public void abortClass(String id) {
+        Call<ResponseBody> call = getService().abortClassOrRecordedCourse("class",id);
+        enqueueRequest(APIType.ABORT_CLASS, call);
+    }
+
+    public void abortRecordedCourse(String id) {
+        Call<ResponseBody> call = getService().abortClassOrRecordedCourse("recordedCourse",id);
+        enqueueRequest(APIType.ABORT_RECORDED_COURSE, call);
+    }
+
 
     @Override
     public void doTask(int apiType, Object responseBody) {

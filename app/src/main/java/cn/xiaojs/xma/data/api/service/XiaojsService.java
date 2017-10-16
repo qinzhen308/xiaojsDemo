@@ -533,6 +533,11 @@ public interface XiaojsService {
     Call<ResponseBody> reviewRecordedCourseEnroll(@Path("enroll") String enroll,
                                        @Body DecisionReason reason);
 
+    //Abort the learn class or recordedCourse.
+    @DELETE("/v1/ctl/learn/{type}/{id}")
+    Call<ResponseBody> abortClassOrRecordedCourse(@Path("type") String type,
+                                                  @Path("id") String id);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     //Categories

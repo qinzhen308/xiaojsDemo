@@ -1030,4 +1030,33 @@ public class LessonDataManager {
         return lessonRequest;
     }
 
+    /**
+     * Abort the learn class
+     * @param context
+     * @param id
+     * @param callback
+     * @return
+     */
+    public static ServiceRequest abortClass(Context context,
+                                                            String id,
+                                                            APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.abortClass(id);
+        return lessonRequest;
+    }
+    /**
+     * Abort the learn recordedCourse
+     * @param context
+     * @param id
+     * @param callback
+     * @return
+     */
+    public static ServiceRequest abortRecordedCourse(Context context,
+                                            String id,
+                                            APIServiceCallback<ResponseBody> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.abortRecordedCourse(id);
+        return lessonRequest;
+    }
+
 }
