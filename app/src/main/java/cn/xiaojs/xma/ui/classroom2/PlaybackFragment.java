@@ -73,4 +73,5 @@ public class PlaybackFragment extends PlayerFragment {
         topBarLay.setVisibility(visibility);
 
     }
+
 }

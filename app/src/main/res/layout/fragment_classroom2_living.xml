@@ -18,10 +18,13 @@
             android:layout_marginLeft="@dimen/px30"
             />
 
+    <include
+            layout="@layout/layout_classroom2_control_port"
+            android:visibility="gone"
+            />
 
     <include
-            android:id="@+id/bottom_bar"
-            layout="@layout/layout_classroom2_living_control"
+            layout="@layout/layout_classroom2_control_land"
             />
 
 

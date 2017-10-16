@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 
@@ -19,7 +18,7 @@ import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 public class IdleFragment extends MovieFragment {
 
 
-    @BindView(R.id.bottom_class_name)
+    @BindView(R.id.p_bottom_class_name)
     TextView classNameView;
 
 
@@ -33,22 +32,11 @@ public class IdleFragment extends MovieFragment {
         return view;
     }
 
-    @OnClick({R.id.top_back,R.id.top_more, R.id.top_live, R.id.bottom_orient})
-    void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.top_back:
-                back();
-                break;
-            case R.id.top_more:
-                showMoreMenu(view);
-                break;
-            case R.id.top_live:                      //开始直播
-                requestLive();
-                break;
-            case R.id.bottom_orient:
-                changeOrientation();
-                break;
-        }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        controlLand.setVisibility(View.GONE);
     }
 
 
@@ -59,11 +47,18 @@ public class IdleFragment extends MovieFragment {
 
     @Override
     public void onRotate(int orientation) {
-
-        //do nothing
+        controlHandleOnRotate(orientation);
     }
 
+    @Override
+    public void onTopbackClick(View view, boolean land) {
+        back();
+    }
 
+    @Override
+    public void onStartLiveClick(View view) {
+        requestLive();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 

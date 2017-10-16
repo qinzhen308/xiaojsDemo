@@ -53,7 +53,6 @@ public class PlayFragment extends MovieFragment {
     TextView bottomStateView;
 
 
-
     //land
     @BindView(R.id.top_photo)
     ImageView topPhotoView;
@@ -67,7 +66,6 @@ public class PlayFragment extends MovieFragment {
     ImageView bottomChatView;
     @BindView(R.id.bottom_more)
     ImageView bottomMoreView;
-
 
 
     @Nullable
@@ -131,6 +129,10 @@ public class PlayFragment extends MovieFragment {
 
     }
 
+    @Override
+    public void onTopbackClick(View view, boolean land) {
+
+    }
 
     private void bindPlayinfo() {
 

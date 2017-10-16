@@ -60,15 +60,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     @BindView(R.id.chat_list)
     RecyclerView recyclerView;
 
-    @BindView(R.id.top_roominfo)
-    TextView topRoominfoView;
-    @BindView(R.id.top_photo)
-    ImageView topPhotoView;
-    @BindView(R.id.top_switchcamera)
-    ImageView topSwitchcameraView;
-    @BindView(R.id.top_start_or_stop_living)
-    TextView topStartstopView;
-
     private boolean streaming;
 
 
@@ -92,25 +83,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         View view = inflater.inflate(R.layout.fragment_classroom2_living, container, false);
         ButterKnife.bind(this, view);
         return view;
-    }
-
-    @OnClick({R.id.top_back, R.id.top_switchcamera, R.id.bottom_more, R.id.bottom_chat, R.id.top_start_or_stop_living})
-    void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.top_back:
-            case R.id.top_start_or_stop_living:
-                back();
-                break;
-            case R.id.top_switchcamera:
-                switchCamera();
-                break;
-            case R.id.bottom_more:
-                SlideMemberlistFragment slideMemberlistFragment = new SlideMemberlistFragment();
-                slideMemberlistFragment.show(getFragmentManager(),"sm");
-                break;
-            case R.id.bottom_chat:
-                break;
-        }
     }
 
     @Override
@@ -158,6 +130,23 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         if (talkObserver != null) {
             talkObserver.dispose();
         }
+    }
+
+    @Override
+    public void onTopbackClick(View view, boolean land) {
+        back();
+    }
+
+
+    @Override
+    public void onSwitchCamera(View view) {
+        switchCamera();
+    }
+
+
+    @Override
+    public void onStartOrStopLiveClick(View view) {
+        back();
     }
 
     @Override
