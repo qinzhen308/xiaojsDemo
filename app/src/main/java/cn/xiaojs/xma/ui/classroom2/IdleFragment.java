@@ -52,12 +52,9 @@ public class IdleFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         controlLand.setVisibility(View.GONE);
-<<<<<<< HEAD
         initDefaultBoard();
-=======
         pBottomClassnameView.setText(classroomEngine.getRoomTitle());
         startOrStopLiveView.setText("开始直播");
->>>>>>> 5ede3e477a9094db8b033e8f0793f51c8995e1f6
     }
 
 
