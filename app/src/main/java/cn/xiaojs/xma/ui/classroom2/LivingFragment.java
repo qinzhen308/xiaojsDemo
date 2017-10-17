@@ -8,14 +8,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import java.util.ArrayList;
@@ -23,11 +27,14 @@ import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -37,10 +44,12 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom2.base.AVFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
@@ -48,10 +57,11 @@ import cn.xiaojs.xma.ui.classroom2.chat.ChatLandAdapter;
 import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.classroom2.member.ChooseMemberFragment;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
-import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
+import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -67,6 +77,12 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     CameraPreviewFrameView cameraPreviewFrameView;
     @BindView(R.id.chat_list)
     RecyclerView recyclerView;
+    @BindView(R.id.video_play)
+    PLVideoTextureView playView;
+    @BindView(R.id.video_root)
+    FrameLayout videoRootView;
+    @BindView(R.id.close_video)
+    ImageView closeVideoView;
 
     private boolean streaming;
 
@@ -80,8 +96,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private MessageComparator messageComparator;
     private boolean loading = false;
 
-    private EventListener.ELTalk talkObserver;
+    private EventListener.ELLiving livingObserver;
     private long lastTimeline = 0;
+
+    private Attendee one2oneAttendee;
 
 
     @Nullable
@@ -100,21 +118,37 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         initControlView();
         initTalkData();
 
-        talkObserver = classroomEngine.observerTalk(receivedConsumer);
+        livingObserver = classroomEngine.observerLiving(receivedConsumer);
+
+        configVideoView(playView);
 
     }
+
+    @OnClick({R.id.close_video, R.id.overlay_mask})
+    void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.close_video:
+                stopPlay(true);
+                break;
+            case R.id.overlay_mask:
+                closeVideoView.setVisibility(View.VISIBLE);
+                break;
+
+        }
+    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (talkObserver != null) {
-            talkObserver.dispose();
+        if (livingObserver != null) {
+            livingObserver.dispose();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && data != null) {
+        if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case CTLConstant.REQUEST_INPUT_MESSAGE:
 
@@ -144,6 +178,15 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                     });
 
                     break;
+                case CTLConstant.REQUEST_CHOOSE_MEMBER:
+                    exitSlidePanel();
+
+                    Attendee attendee = (Attendee) data.getSerializableExtra(CTLConstant.EXTRA_MEMBER);
+                    if (attendee != null) {
+                        requestOne2One(attendee);
+                    }
+
+                    break;
             }
         }
 
@@ -169,7 +212,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void onOne2OneClick(View view) {
-        showSlidePanel(new ChatFragment(), "chat_slide");
+
+        ChooseMemberFragment chooseMemberFragment = new ChooseMemberFragment();
+        chooseMemberFragment.setTargetFragment(this,CTLConstant.REQUEST_CHOOSE_MEMBER);
+        showSlidePanel(chooseMemberFragment, "chat_slide");
     }
 
 
@@ -209,6 +255,12 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void back() {
+
+        if (one2oneAttendee !=null) {
+            stopPlay(true);
+        }
+
+
         stopStreaming();
         super.back();
         enterIdle();
@@ -238,24 +290,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         loadTalk();
     }
-
-    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
-        @Override
-        public void accept(EventReceived eventReceived) throws Exception {
-
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("receivedConsumer talk .....");
-            }
-
-            switch (eventReceived.eventType) {
-                case Su.EventType.TALK:
-                    Talk talk = (Talk) eventReceived.t;
-                    //TODO fix同一条消息多次回调?
-                    handleReceivedMsg(talk);
-                    break;
-            }
-        }
-    };
 
     private void initControlView() {
 
@@ -396,4 +430,130 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
 
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 一对一
+    //
+
+    private void requestOne2One(final Attendee attendee) {
+        showProgress(true);
+        classroomEngine.openMedia(attendee.accountId, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                cancelProgress();
+                one2oneAttendee = attendee;
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+                cancelProgress();
+
+                if (Errors.MEDIA_ALREADY_OPENED.equals(errorCode)) {
+                    errorMessage = "你已经正在一对一";
+                } else if (Errors.PENDING_FOR_OPEN_ACK.equals(errorCode)) {
+                    errorMessage = getContext().getResources().getString(R.string.has_send_one_to_noe_tips);
+                } else if (Errors.NOT_ON_LIVE.equals(errorCode)) {
+                    errorMessage = getContext().getResources().getString(R.string.send_one_to_one_offline_tips);
+                } else {
+                    errorMessage = getContext().getResources().getString(R.string.send_one_to_one_failed);
+                }
+
+                ToastUtil.showToast(getContext(),errorMessage);
+            }
+        });
+    }
+
+
+    private void feedback(EventReceived eventReceived) {
+        MediaFeedbackReceive feedbackReceive = (MediaFeedbackReceive) eventReceived.t;
+
+        String msg = getContext().getString(R.string.failed_one2one);
+
+        if (Live.MediaStatus.READY == feedbackReceive.status && !TextUtils.isEmpty(feedbackReceive.playUrl)) {
+            msg = getContext().getString(R.string.success_one2one);
+
+            showPlay();
+
+           // mPlayStreamUrl = feedbackReceive.playUrl;
+           // playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, feedbackReceive.playUrl);
+        }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == feedbackReceive.status) {
+            msg = getContext().getString(R.string.user_refuse_one_to_one_tips);
+        }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == feedbackReceive.status) {
+            msg = getContext().getString(R.string.failed_one2one_network_issue);
+        }else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY== feedbackReceive.status) {
+            msg = getContext().getString(R.string.failed_one2one_privacy);
+        }
+
+        ToastUtil.showToast(getContext(),msg);
+    }
+
+    private void showPlay() {
+        videoRootView.setVisibility(View.VISIBLE);
+
+        playView.setVideoPath(classroomEngine.getPlayUrl());
+        playView.start();
+    }
+
+
+    private void stopPlay(boolean send) {
+
+        if (send) {
+            sendCloseMedia();
+        }
+
+        playView.pause();
+        videoRootView.setVisibility(View.GONE);
+        closeVideoView.setVisibility(View.GONE);
+        one2oneAttendee = null;
+    }
+
+
+    protected void sendCloseMedia() {
+
+        classroomEngine.closeMedia(one2oneAttendee.accountId, new EventCallback<CloseMediaResponse>() {
+            @Override
+            public void onSuccess(CloseMediaResponse closeMediaResponse) {
+                if (XiaojsConfig.DEBUG) {
+                    ToastUtil.showToast(getContext(),"close open peer to peer video success");
+                }
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                ToastUtil.showToast(getContext(), errorMessage);
+            }
+        });
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 事件监听
+    //
+
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("receivedConsumer .....");
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+                    //TODO fix同一条消息多次回调?
+                    handleReceivedMsg(talk);
+                    break;
+                case Su.EventType.MEDIA_FEEDBACK:
+                    feedback(eventReceived);
+                    break;
+                case Su.EventType.CLOSE_MEDIA:
+                    stopPlay(false);
+                    break;
+            }
+        }
+    };
+
 }

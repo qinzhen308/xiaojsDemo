@@ -16,10 +16,12 @@ public class CTLConstant {
     public static final String EXTRA_DOC= "edoc";
     public static final String EXTRA_INPUT_FROM= "einput_from";
     public static final String EXTRA_INPUT_MESSAGE= "einput_message";
+    public static final String EXTRA_MEMBER= "emember";
     public static final int REQUEST_MATERIAL_ADD_NEW = 1;
     public static final int REQUEST_CHOOSE_CLASSES = 2;
     public static final int REQUEST_MATERIAL_MOVE = 3;
     public static final int REQUEST_INPUT_MESSAGE = 4;
+    public static final int REQUEST_CHOOSE_MEMBER = 5;
 
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课

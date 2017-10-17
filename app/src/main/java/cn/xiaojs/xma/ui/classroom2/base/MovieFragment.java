@@ -16,9 +16,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+import com.pili.pldroid.player.AVOptions;
+import com.pili.pldroid.player.PLMediaPlayer;
+import com.pili.pldroid.player.widget.PLVideoTextureView;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
@@ -434,6 +440,189 @@ public abstract class MovieFragment extends BaseRoomFragment
                 break;
         }
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 播放
+    //
+
+    public void configVideoView(PLVideoTextureView videoTextureView) {
+        //videoTextureView.setBufferingIndicator(loadingView);
+        //mVideoView.setCoverView(coverView);
+
+        // If you want to fix display orientation such as landscape, you can use the code show as follow
+        //
+        // if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        //     mVideoView.setPreviewOrientation(0);
+        // }
+        // else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        //     mVideoView.setPreviewOrientation(270);
+        // }
+
+        // 1 -> hw codec enable, 0 -> disable [recommended]
+        int codec = AVOptions.MEDIA_CODEC_SW_DECODE;
+        AVOptions options = new AVOptions();
+        // the unit of timeout is ms
+        options.setInteger(AVOptions.KEY_PREPARE_TIMEOUT, 10 * 1000);
+        // 1 -> hw codec enable, 0 -> disable [recommended]
+        options.setInteger(AVOptions.KEY_MEDIACODEC, codec);
+
+        videoTextureView.setAVOptions(options);
+        videoTextureView.setDebugLoggingEnabled(true);
+
+        // You can mirror the display
+        // mVideoView.setMirror(true);
+
+        // You can also use a custom `MediaController` widget
+//        MediaController mediaController = new MediaController(this, !isLiveStreaming, isLiveStreaming);
+//        mediaController.setOnClickSpeedAdjustListener(mOnClickSpeedAdjustListener);
+//        videoView.setMediaController(mediaController);
+
+        videoTextureView.setOnInfoListener(mOnInfoListener);
+        videoTextureView.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
+        videoTextureView.setOnBufferingUpdateListener(mOnBufferingUpdateListener);
+        videoTextureView.setOnCompletionListener(mOnCompletionListener);
+        videoTextureView.setOnErrorListener(mOnErrorListener);
+
+        videoTextureView.setLooping(false);
+
+    }
+
+
+    private PLMediaPlayer.OnCompletionListener mOnCompletionListener =
+            new PLMediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(PLMediaPlayer plMediaPlayer) {
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("Play Completed !");
+                    }
+                }
+            };
+
+    private PLMediaPlayer.OnBufferingUpdateListener mOnBufferingUpdateListener =
+            new PLMediaPlayer.OnBufferingUpdateListener() {
+                @Override
+                public void onBufferingUpdate(PLMediaPlayer plMediaPlayer, int precent) {
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("onBufferingUpdate: %d", precent);
+                    }
+                }
+            };
+
+    private PLMediaPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener =
+            new PLMediaPlayer.OnVideoSizeChangedListener() {
+                @Override
+                public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height) {
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("onVideoSizeChanged: width = %d, height = %d", width, height);
+                    }
+                }
+            };
+
+
+    private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.i("OnInfo, what = %d, extra = %d", what, extra);
+            }
+
+            switch (what) {
+                case PLMediaPlayer.MEDIA_INFO_BUFFERING_START:
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_BUFFERING_END:
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.i("First video render time: %d ms", extra);
+                    }
+
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.i("First audio render time: %d ms", extra);
+                    }
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_FRAME_RENDERING:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.i("video frame rendering, ts = %d", extra);
+                    }
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_AUDIO_FRAME_RENDERING:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.i("audio frame rendering, ts = %d", extra);
+                    }
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_GOP_TIME:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.i("Gop Time: %d", extra);
+                    }
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_SWITCHING_SW_DECODE:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.i("Hardware decoding failure, switching software decoding!");
+                    }
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_METADATA:
+                    if (XiaojsConfig.DEBUG) {
+                        //Logger.i(videoView.getMetadata().toString());
+                    }
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_BITRATE:
+                case PLMediaPlayer.MEDIA_INFO_VIDEO_FPS:
+                    //updateStatInfo();
+                    break;
+                case PLMediaPlayer.MEDIA_INFO_CONNECTED:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.i("Connected !");
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    };
+
+    private PLMediaPlayer.OnErrorListener mOnErrorListener = new PLMediaPlayer.OnErrorListener() {
+        @Override
+        public boolean onError(PLMediaPlayer mp, int errorCode) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.e("Error happened, errorCode = %d", errorCode);
+            }
+
+            switch (errorCode) {
+                case PLMediaPlayer.ERROR_CODE_IO_ERROR:
+                    /**
+                     * SDK will do reconnecting automatically
+                     */
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.e("IO Error !");
+                    }
+
+                    return false;
+                case PLMediaPlayer.ERROR_CODE_OPEN_FAILED:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.e("failed to open player !");
+                    }
+                    break;
+                case PLMediaPlayer.ERROR_CODE_SEEK_FAILED:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.e("failed to seek !");
+                    }
+                    break;
+                default:
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.e("unknown error !");
+                    }
+                    break;
+            }
+            return true;
+        }
+    };
+
 
 
 

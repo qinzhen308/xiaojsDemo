@@ -83,7 +83,11 @@ public class PlayFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        configVideoView();
+        configVideoView(videoView);
+        videoView.setVideoPath(classroomEngine.getPlayUrl());
+        videoView.start();
+
+
         bindPlayinfo();
         handleRotate(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
@@ -151,51 +155,6 @@ public class PlayFragment extends MovieFragment {
         topRoominfoView.setText(classroomEngine.getRoomTitle());
     }
 
-    private void configVideoView() {
-        videoView.setBufferingIndicator(loadingView);
-        //mVideoView.setCoverView(coverView);
-
-        // If you want to fix display orientation such as landscape, you can use the code show as follow
-        //
-        // if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        //     mVideoView.setPreviewOrientation(0);
-        // }
-        // else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-        //     mVideoView.setPreviewOrientation(270);
-        // }
-
-        // 1 -> hw codec enable, 0 -> disable [recommended]
-        int codec = AVOptions.MEDIA_CODEC_SW_DECODE;
-        AVOptions options = new AVOptions();
-        // the unit of timeout is ms
-        options.setInteger(AVOptions.KEY_PREPARE_TIMEOUT, 10 * 1000);
-        // 1 -> hw codec enable, 0 -> disable [recommended]
-        options.setInteger(AVOptions.KEY_MEDIACODEC, codec);
-
-        videoView.setAVOptions(options);
-        videoView.setDebugLoggingEnabled(true);
-
-        // You can mirror the display
-        // mVideoView.setMirror(true);
-
-        // You can also use a custom `MediaController` widget
-//        MediaController mediaController = new MediaController(this, !isLiveStreaming, isLiveStreaming);
-//        mediaController.setOnClickSpeedAdjustListener(mOnClickSpeedAdjustListener);
-//        videoView.setMediaController(mediaController);
-
-        videoView.setOnInfoListener(mOnInfoListener);
-        videoView.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
-        videoView.setOnBufferingUpdateListener(mOnBufferingUpdateListener);
-        videoView.setOnCompletionListener(mOnCompletionListener);
-        videoView.setOnErrorListener(mOnErrorListener);
-
-        videoView.setLooping(false);
-
-        videoView.setVideoPath(classroomEngine.getPlayUrl());
-        videoView.start();
-
-    }
-
     private void handleRotate(int orientation) {
 
         switch (orientation) {
@@ -237,137 +196,5 @@ public class PlayFragment extends MovieFragment {
     }
 
 
-    private PLMediaPlayer.OnInfoListener mOnInfoListener = new PLMediaPlayer.OnInfoListener() {
-        @Override
-        public boolean onInfo(PLMediaPlayer plMediaPlayer, int what, int extra) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.i("OnInfo, what = %d, extra = %d", what, extra);
-            }
-
-            switch (what) {
-                case PLMediaPlayer.MEDIA_INFO_BUFFERING_START:
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i("First video render time: %d ms", extra);
-                    }
-
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i("First audio render time: %d ms", extra);
-                    }
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_VIDEO_FRAME_RENDERING:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i("video frame rendering, ts = %d", extra);
-                    }
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_AUDIO_FRAME_RENDERING:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i("audio frame rendering, ts = %d", extra);
-                    }
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_VIDEO_GOP_TIME:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i("Gop Time: %d", extra);
-                    }
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_SWITCHING_SW_DECODE:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i("Hardware decoding failure, switching software decoding!");
-                    }
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_METADATA:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i(videoView.getMetadata().toString());
-                    }
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_VIDEO_BITRATE:
-                case PLMediaPlayer.MEDIA_INFO_VIDEO_FPS:
-                    //updateStatInfo();
-                    break;
-                case PLMediaPlayer.MEDIA_INFO_CONNECTED:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.i("Connected !");
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-    };
-
-    private PLMediaPlayer.OnErrorListener mOnErrorListener = new PLMediaPlayer.OnErrorListener() {
-        @Override
-        public boolean onError(PLMediaPlayer mp, int errorCode) {
-            if (XiaojsConfig.DEBUG) {
-                Logger.e("Error happened, errorCode = %d", errorCode);
-            }
-
-            switch (errorCode) {
-                case PLMediaPlayer.ERROR_CODE_IO_ERROR:
-                    /**
-                     * SDK will do reconnecting automatically
-                     */
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.e("IO Error !");
-                    }
-
-                    return false;
-                case PLMediaPlayer.ERROR_CODE_OPEN_FAILED:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.e("failed to open player !");
-                    }
-                    break;
-                case PLMediaPlayer.ERROR_CODE_SEEK_FAILED:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.e("failed to seek !");
-                    }
-                    break;
-                default:
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.e("unknown error !");
-                    }
-                    break;
-            }
-            return true;
-        }
-    };
-
-    private PLMediaPlayer.OnCompletionListener mOnCompletionListener =
-            new PLMediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(PLMediaPlayer plMediaPlayer) {
-
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("Play Completed !");
-                    }
-                }
-            };
-
-    private PLMediaPlayer.OnBufferingUpdateListener mOnBufferingUpdateListener =
-            new PLMediaPlayer.OnBufferingUpdateListener() {
-                @Override
-                public void onBufferingUpdate(PLMediaPlayer plMediaPlayer, int precent) {
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("onBufferingUpdate: %d", precent);
-                    }
-                }
-            };
-
-    private PLMediaPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener =
-            new PLMediaPlayer.OnVideoSizeChangedListener() {
-                @Override
-                public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int width, int height) {
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("onVideoSizeChanged: width = %d, height = %d", width, height);
-                    }
-                }
-            };
 
 }
