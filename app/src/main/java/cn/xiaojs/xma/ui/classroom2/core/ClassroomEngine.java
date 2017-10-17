@@ -9,6 +9,8 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 
+import java.util.Map;
+
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -209,6 +211,9 @@ public final class ClassroomEngine {
 
     public Attendee getMember(String accountId) {
         return stateMachine.getMember(accountId);
+    }
+    public Map<String,Attendee> getMembers() {
+        return stateMachine.getSession().classMembers;
     }
 
     /**

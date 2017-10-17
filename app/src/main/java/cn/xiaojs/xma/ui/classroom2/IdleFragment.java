@@ -52,7 +52,12 @@ public class IdleFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         controlLand.setVisibility(View.GONE);
+<<<<<<< HEAD
         initDefaultBoard();
+=======
+        pBottomClassnameView.setText(classroomEngine.getRoomTitle());
+        startOrStopLiveView.setText("开始直播");
+>>>>>>> 5ede3e477a9094db8b033e8f0793f51c8995e1f6
     }
 
 
@@ -82,6 +87,16 @@ public class IdleFragment extends MovieFragment {
     }
 
     @Override
+    public void onClosed() {
+        exitSlidePanel();
+    }
+
+    @Override
+    public void onOpened() {
+
+    }
+
+    @Override
     public void onTopbackClick(View view, boolean land) {
         back();
     }
@@ -95,6 +110,9 @@ public class IdleFragment extends MovieFragment {
     public void onNewboardClick(View view) {
 
     }
+    public void onStartOrStopLiveClick(View view) {
+        requestLive();
+    }
 
     private void initDefaultBoard(){
         /*getChildFragmentManager()
@@ -104,8 +122,6 @@ public class IdleFragment extends MovieFragment {
                 .commit();*/
         ivWhiteboardPreview.setImageDrawable(new ColorDrawable());
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     @Override

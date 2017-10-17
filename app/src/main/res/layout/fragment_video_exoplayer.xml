@@ -37,4 +37,9 @@
             layout="@layout/layout_classroom2_panel_top"
             />
 
+    <include
+            layout="@layout/layout_classroom2_right_slide_panel"
+            android:visibility="gone"
+            />
+
 </RelativeLayout>

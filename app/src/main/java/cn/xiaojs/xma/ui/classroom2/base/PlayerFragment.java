@@ -663,6 +663,13 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
     }
 
 
+    @Override
+    public void onClosed() {
 
+    }
 
+    @Override
+    public void onOpened() {
+
+    }
 }

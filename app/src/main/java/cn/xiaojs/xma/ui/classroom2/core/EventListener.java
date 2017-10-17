@@ -230,6 +230,10 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
                     Su.EventType.SHARE_BOARD, ShareboardReceive.class, this));
             socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SHARE_BOARD_ACK, ShareboardAckReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
+                    Su.EventType.MEDIA_FEEDBACK, MediaFeedbackReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class, this));
         }
     }
 
