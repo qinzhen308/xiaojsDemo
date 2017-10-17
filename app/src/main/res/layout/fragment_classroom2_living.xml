@@ -27,6 +27,9 @@
             layout="@layout/layout_classroom2_control_land"
             />
 
-
+    <include
+            layout="@layout/layout_classroom2_right_slide_panel"
+            android:visibility="gone"
+            />
 
 </RelativeLayout>

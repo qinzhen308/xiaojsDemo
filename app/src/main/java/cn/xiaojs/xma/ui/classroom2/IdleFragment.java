@@ -37,6 +37,8 @@ public class IdleFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         controlLand.setVisibility(View.GONE);
+        pBottomClassnameView.setText(classroomEngine.getRoomTitle());
+        startOrStopLiveView.setText("开始直播");
     }
 
 
@@ -51,12 +53,27 @@ public class IdleFragment extends MovieFragment {
     }
 
     @Override
+    public void onClosed() {
+        exitSlidePanel();
+    }
+
+    @Override
+    public void onOpened() {
+
+    }
+
+    @Override
     public void onTopbackClick(View view, boolean land) {
         back();
     }
 
     @Override
     public void onStartLiveClick(View view) {
+        requestLive();
+    }
+
+    @Override
+    public void onStartOrStopLiveClick(View view) {
         requestLive();
     }
 

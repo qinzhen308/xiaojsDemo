@@ -172,6 +172,7 @@
 
     <color name="green_grass">#33DECC</color>
     <color name="black_opacity_40">#66000000</color>
+    <color name="black_opacity_50">#80000000</color>
     <color name="hint_color">#979797</color>
     <color name="stork_color">#D0D0D0</color>
     <color name="timeline_color">#CACACA</color>

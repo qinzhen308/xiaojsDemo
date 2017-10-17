@@ -43,6 +43,7 @@ import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
 import cn.xiaojs.xma.ui.classroom2.chat.ProfileFragment;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
@@ -149,12 +150,12 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
             switch (requestCode) {
-                case ClassroomController.REQUEST_INPUT:
+                case CTLConstant.REQUEST_INPUT_MESSAGE:
 
                     final Talk talkBean = new Talk();
                     talkBean.from = AccountDataManager.getAccountID(getContext());
                     talkBean.body = new Talk.TalkContent();
-                    talkBean.body.text = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
+                    talkBean.body.text = data.getStringExtra(CTLConstant.EXTRA_INPUT_MESSAGE);
                     talkBean.body.contentType = Communications.ContentType.TEXT;
                     talkBean.time = System.currentTimeMillis();
                     talkBean.to = String.valueOf(Communications.TalkType.OPEN);
@@ -304,9 +305,9 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
 
         MsgInputFragment inputFragment = new MsgInputFragment();
         Bundle data = new Bundle();
-        data.putInt(Constants.KEY_MSG_INPUT_FROM, 1);
+        data.putInt(CTLConstant.EXTRA_INPUT_FROM, 1);
         inputFragment.setArguments(data);
-        inputFragment.setTargetFragment(this, ClassroomController.REQUEST_INPUT);
+        inputFragment.setTargetFragment(this, CTLConstant.REQUEST_INPUT_MESSAGE);
         inputFragment.show(getFragmentManager(), "input");
     }
 

@@ -130,6 +130,16 @@ public class PlayFragment extends MovieFragment {
     }
 
     @Override
+    public void onClosed() {
+        exitSlidePanel();
+    }
+
+    @Override
+    public void onOpened() {
+
+    }
+
+    @Override
     public void onTopbackClick(View view, boolean land) {
 
     }

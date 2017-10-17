@@ -74,4 +74,13 @@ public class PlaybackFragment extends PlayerFragment {
 
     }
 
+    @Override
+    public void onClosed() {
+        exitSlidePanel();
+    }
+
+    @Override
+    public void onOpened() {
+
+    }
 }

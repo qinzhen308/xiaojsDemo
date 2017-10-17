@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,10 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
@@ -21,13 +23,15 @@ import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -35,25 +39,29 @@ import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom2.base.AVFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatLandAdapter;
 import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
-import cn.xiaojs.xma.ui.classroom2.member.SlideMemberlistFragment;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-
 /**
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreListener{
+public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreListener {
 
     @BindView(R.id.camera_preview)
     CameraPreviewFrameView cameraPreviewFrameView;
@@ -89,36 +97,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        messageData = new ArrayList<>();
-        messageComparator = new MessageComparator();
-
-
-        int maxNumOfObjectPerPage = 50;
-
-        GridLayoutManager layoutManager =
-                new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatLandAdapter(getContext(), messageData);
-        adapter.setAutoFetchMoreSize(8);
-        adapter.setPerpageMaxCount(maxNumOfObjectPerPage);
-        adapter.setFetchMoreListener(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
-                outRect.bottom = getResources().getDimensionPixelSize(R.dimen.px20);
-            }
-        });
-
-
-        pagination = new Pagination();
-        pagination.setMaxNumOfObjectsPerPage(maxNumOfObjectPerPage);
-        pagination.setPage(currentPage);
-
-        liveCriteria = new LiveCriteria();
-        liveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
-
-        loadData();
+        initControlView();
+        initTalkData();
 
         talkObserver = classroomEngine.observerTalk(receivedConsumer);
 
@@ -131,6 +111,44 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             talkObserver.dispose();
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            switch (requestCode) {
+                case CTLConstant.REQUEST_INPUT_MESSAGE:
+
+                    final Talk talkBean = new Talk();
+                    talkBean.from = AccountDataManager.getAccountID(getContext());
+                    talkBean.body = new Talk.TalkContent();
+                    talkBean.body.text = data.getStringExtra(CTLConstant.EXTRA_INPUT_MESSAGE);
+                    talkBean.body.contentType = Communications.ContentType.TEXT;
+                    talkBean.time = System.currentTimeMillis();
+                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
+
+
+                    classroomEngine.sendTalk(talkBean, new EventCallback<TalkResponse>() {
+                        @Override
+                        public void onSuccess(TalkResponse talkResponse) {
+                            if (talkResponse != null) {
+                                talkBean.time = talkResponse.time;
+                            }
+                            handleReceivedMsg(talkBean);
+                        }
+
+                        @Override
+                        public void onFailed(String errorCode, String errorMessage) {
+
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    break;
+            }
+        }
+
+    }
+
 
     @Override
     public void onTopbackClick(View view, boolean land) {
@@ -147,6 +165,22 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     @Override
     public void onStartOrStopLiveClick(View view) {
         back();
+    }
+
+    @Override
+    public void onOne2OneClick(View view) {
+        showSlidePanel(new ChatFragment(), "chat_slide");
+    }
+
+
+    @Override
+    public void onClosed() {
+        exitSlidePanel();
+    }
+
+    @Override
+    public void onOpened() {
+
     }
 
     @Override
@@ -182,12 +216,27 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         sendStopStreaming();
     }
 
+    @Override
+    public void onTalkVisibilityClick(View view) {
+        int vis = recyclerView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE;
+        recyclerView.setVisibility(vis);
+    }
+
+    @Override
+    public void onInputMessageClick(View view) {
+        MsgInputFragment inputFragment = new MsgInputFragment();
+        Bundle data = new Bundle();
+        data.putInt(CTLConstant.EXTRA_INPUT_FROM, 1);
+        inputFragment.setArguments(data);
+        inputFragment.setTargetFragment(this, CTLConstant.REQUEST_INPUT_MESSAGE);
+        inputFragment.show(getFragmentManager(), "input");
+    }
 
     @Override
     public void onFetchMoreRequested() {
         if (loading) return;
 
-        loadData();
+        loadTalk();
     }
 
     private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
@@ -208,8 +257,55 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
     };
 
+    private void initControlView() {
 
-    private void loadData() {
+        String avatorUrl = Account.getAvatar(AccountDataManager.getAccountID(getContext()),
+                lTopPhotoView.getMeasuredWidth());
+        Glide.with(getContext())
+                .load(avatorUrl)
+                .transform(new CircleTransform(getContext()))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(lTopPhotoView);
+
+        lTopRoominfoView.setText("直播中");
+        lRightScreenshortView.setVisibility(View.GONE);
+    }
+
+    private void initTalkData() {
+
+        messageData = new ArrayList<>();
+        messageComparator = new MessageComparator();
+        int maxNumOfObjectPerPage = 50;
+
+        GridLayoutManager layoutManager =
+                new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ChatLandAdapter(getContext(), messageData);
+        adapter.setAutoFetchMoreSize(8);
+        adapter.setPerpageMaxCount(maxNumOfObjectPerPage);
+        adapter.setFetchMoreListener(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
+                outRect.bottom = getResources().getDimensionPixelSize(R.dimen.px20);
+            }
+        });
+
+
+        pagination = new Pagination();
+        pagination.setMaxNumOfObjectsPerPage(maxNumOfObjectPerPage);
+        pagination.setPage(currentPage);
+
+        liveCriteria = new LiveCriteria();
+        liveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
+
+        loadTalk();
+    }
+
+
+    private void loadTalk() {
         loading = true;
         LiveManager.getTalks(getContext(), classroomEngine.getTicket(),
                 liveCriteria, pagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
@@ -256,9 +352,9 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
                             RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
-                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size()-1);
-                        }else {
-                            adapter.notifyItemRangeInserted(0,talkItems.size());
+                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
+                        } else {
+                            adapter.notifyItemRangeInserted(0, talkItems.size());
                             recyclerView.scrollToPosition(talkItems.size());
                         }
                         pagination.setPage(++currentPage);
@@ -281,13 +377,13 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         talkItem.from.accountId = talk.from;
         //获取名字
         Attendee attendee = classroomEngine.getMember(talk.from);
-        talkItem.from.name = attendee == null? "nil" : attendee.name;
+        talkItem.from.name = attendee == null ? "nil" : attendee.name;
 
         timeline(talkItem);
 
         messageData.add(talkItem);
         adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(messageData.size()-1);
+        recyclerView.smoothScrollToPosition(messageData.size() - 1);
 
     }
 

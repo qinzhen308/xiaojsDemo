@@ -31,6 +31,7 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.OnImeBackListener;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.ClosableEditDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
@@ -73,7 +74,7 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
 
         Bundle data = getArguments();
         if (data != null) {
-            mFrom = data.getInt(Constants.KEY_MSG_INPUT_FROM, PlayFragment.MSG_MODE_INPUT);
+            mFrom = data.getInt(CTLConstant.EXTRA_INPUT_FROM, PlayFragment.MSG_MODE_INPUT);
         }
     }
 
@@ -156,9 +157,9 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
         Fragment target = getTargetFragment();
         if (target != null) {
             Intent intent = new Intent();
-            intent.putExtra(Constants.KEY_MSG_INPUT_TXT, mMsgInputEdt.getText().toString());
-            intent.putExtra(Constants.KEY_MSG_INPUT_FROM, mFrom);
-            target.onActivityResult(ClassroomController.REQUEST_INPUT, Activity.RESULT_OK, intent);
+            intent.putExtra(CTLConstant.EXTRA_INPUT_MESSAGE, mMsgInputEdt.getText().toString());
+            intent.putExtra(CTLConstant.EXTRA_INPUT_FROM, mFrom);
+            target.onActivityResult(CTLConstant.REQUEST_INPUT_MESSAGE, Activity.RESULT_OK, intent);
         }
 
         XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
