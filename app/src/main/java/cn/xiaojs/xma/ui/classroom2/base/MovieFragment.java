@@ -103,13 +103,12 @@ public abstract class MovieFragment extends BaseRoomFragment {
             case R.id.center_one2one:                                             //一对一音视频
                 break;
             case R.id.center_board_opera:                                         //百般协作
-                onNewboardClick(view);
                 break;
             case R.id.center_board_mgr:                                           //白板管理
                 onBoardMgrClick(view);
                 break;
             case R.id.center_new_board:                                           //新增白板
-                onStartLiveClick(view);
+                onNewboardClick(view);
                 break;
             case R.id.center_member:                                              //教室成员
                 break;
@@ -197,7 +196,7 @@ public abstract class MovieFragment extends BaseRoomFragment {
      * 返回
      */
     public void back() {
-        ((Classroom2Activity) getActivity()).onBackPressed();
+        getActivity().onBackPressed();
     }
 
 

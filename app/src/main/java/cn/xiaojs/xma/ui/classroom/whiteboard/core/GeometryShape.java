@@ -35,6 +35,7 @@ public abstract class GeometryShape extends Doodle implements SyncCollector{
     public final static int COORDINATE = 11;
     public final static int RECTANGULAR_COORDINATE = 12;
     public final static int DASH_LINE = 13;
+    public final static int RHOMBUS = 14;
 
     public final static int SQUARE = 100;
     public final static int XYZ_COORDINATE = 101;

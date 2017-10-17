@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.UUID;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
@@ -68,6 +69,7 @@ import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Viewport;
 import cn.xiaojs.xma.ui.classroom.bean.Commend;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
+import cn.xiaojs.xma.ui.classroom.live.core.Config;
 import cn.xiaojs.xma.ui.classroom.socketio.Packer;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.ProtocolConfigs;
@@ -97,6 +99,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Oval;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Pentagon;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.RectangularCoordinate;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rhombus;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SineCurve;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Square;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.SyncRemoteImgLayer;
@@ -209,6 +212,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     private boolean mIsRecordedParams;
     private boolean mMeasureFinished = false;
     private boolean mInitLayer = false;
+    private boolean sizeChanged = false;
     private boolean mNeedBitmapPool = true;
 
     private UndoRedoListener mUndoRedoListener;
@@ -228,6 +232,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     Bitmap bmControllDelete;
     Bitmap bmControllRotate;
+
+
+    boolean readOnly;
 
 
     public Whiteboard(Context context) {
@@ -257,6 +264,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(readOnly)return false;
         mViewGestureListener.onTouchEvent(event);
         return true;
     }
@@ -571,6 +579,14 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        //为了解决切换横竖屏，但图层doodle对象中的matrix都是根据横屏算的，所以变换后位置有问题，暂时弃置此方案
+//        sizeChanged=true;
+//        updateDoodleCanvas();
+
+        if(XiaojsConfig.DEBUG){
+            Logger.d("------qz-----onSizeChanged-----new("+w+","+h+")---old("+oldw+","+oldh+")");
+        }
+
     }
 
     @Override
@@ -578,7 +594,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         if (!mInitLayer && mMeasureFinished) {
             mInitLayer = true;
             drawAllDoodlesCanvas();
-        }
+        }/*else if(sizeChanged&&mMeasureFinished){
+            sizeChanged = false;
+            drawAllDoodlesCanvas();
+        }*/
 
         RectF destF = mViewGestureListener.getDestRect();
         mDoodleBounds.set(destF.left, destF.top, destF.right, destF.bottom);
@@ -1141,6 +1160,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     case GeometryShape.DASH_LINE:
                         mDoodle = new Dashline(this, paint);
                         break;
+                    case GeometryShape.RHOMBUS:
+                        mDoodle = new Rhombus(this, paint);
+                        break;
                     case GeometryShape.COORDINATE:
                         mDoodle = new Coordinate(this, paint);
                         break;
@@ -1236,6 +1258,25 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 d.setDisplayMatrix(mDisplayMatrix);
                 d.drawSelf(mDoodleCanvas);
             }
+        }
+    }
+
+    private void updateDoodleCanvas() {
+        if (mDoodleCanvas != null && mLayer != null) {
+            int w = mBlackboardWidth;
+            int h = mBlackboardHeight;
+            mLayer.setWidth(mBlackboardWidth);
+            mLayer.setHeight(mBlackboardHeight);
+
+            mDoodleBitmap = mDoodleBitmapPool != null ? mDoodleBitmapPool.getBitmap(w, h) : null;
+            if (mDoodleBitmap == null) {
+                mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
+            }
+            mDoodleCanvas = new Canvas(mDoodleBitmap);
+
+            mBlackboardRect.set(0, 0, w, h);
+            mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
+            mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
         }
     }
 
@@ -2213,6 +2254,21 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public Bitmap getControllRotateBm() {
         return bmControllRotate;
+    }
+
+    public void setNeedReadOnly(boolean readOnly) {
+        this.readOnly=readOnly;
+    }
+
+    public Bitmap getPreviewBitmap(){
+        setDrawingCacheEnabled(true);
+        Bitmap bm=getDrawingCache();
+        if(bm!=null){
+            bm=Bitmap.createBitmap(bm);
+            return bm;
+        }
+        setDrawingCacheEnabled(false);
+        return null;
     }
 }
 

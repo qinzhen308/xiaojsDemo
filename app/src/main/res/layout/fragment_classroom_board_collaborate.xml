@@ -1,105 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/main_bg"
-                android:clickable="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    android:clickable="true">
 
     <!--白板,本地手绘-->
     <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayout
-            android:id="@+id/white_board_layout"
-            android:background="#FAEEEEEE"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="match_parent"/>
+        android:id="@+id/white_board_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FAEEEEEE"
+        android:visibility="gone" />
 
     <!--白板列表-->
     <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView
-            android:id="@+id/white_board_scrollview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:visibility="gone">
-    </cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
-
-
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/cr_video_edit_back_btn"
-        android:padding="@dimen/px20"/>
-
-    <include
-        android:id="@+id/layout_control_panel"
-        layout="@layout/layout_classroom_collaborate_panel_bottom"
-        />
+        android:id="@+id/white_board_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"></cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
 
 
     <LinearLayout
-            android:id="@+id/white_board_panel"
+        android:id="@+id/white_board_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_wb_tool_panel"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/select_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@color/classroom_main_gray">
+            android:background="@drawable/wb_selection_left"
+            android:padding="@dimen/px25"
+            android:src="@drawable/ic_wb_selection" />
 
         <ImageView
-                android:id="@+id/select_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/px25"
-                android:src="@drawable/wb_selection_selector"/>
+            android:id="@+id/handwriting_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wb_selection_middle"
+            android:padding="@dimen/px25"
+            android:src="@drawable/ic_wb_brush" />
 
         <ImageView
-                android:id="@+id/handwriting_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/wb_brush_selector"
-                android:padding="@dimen/px25"/>
+            android:id="@+id/shape_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wb_selection_middle"
+            android:padding="@dimen/px25" />
 
         <ImageView
-                android:id="@+id/shape_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/px25"/>
+            android:id="@+id/eraser_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wb_selection_middle"
+            android:padding="@dimen/px25"
+            android:src="@drawable/ic_wb_tool_rubber" />
 
-        <ImageView
-                android:id="@+id/eraser_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/wb_eraser_selector"
-                android:padding="@dimen/px25"/>
-
-        <ImageView
-                android:id="@+id/text_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/wb_text_selector"
-                android:padding="@dimen/px25"/>
+        <!--<ImageView
+            android:id="@+id/text_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wb_selection_middle"
+            android:padding="@dimen/px25"
+            android:src="@drawable/wb_text_selector" />-->
 
         <cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView
-                android:id="@+id/color_picker_btn"
-                android:layout_width="@dimen/px40"
-                android:layout_height="@dimen/px40"
-                android:layout_marginLeft="@dimen/px25"
-                android:layout_marginRight="@dimen/px25"/>
+            android:id="@+id/color_picker_btn"
+            android:layout_width="@dimen/px40"
+            android:layout_height="@dimen/px40"
+            android:layout_marginLeft="@dimen/px25"
+            android:layout_marginRight="@dimen/px25" />
 
         <ImageView
-                android:id="@+id/undo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/wb_undo_selector"
-                android:padding="@dimen/px25"/>
+            android:id="@+id/undo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wb_selection_middle"
+            android:padding="@dimen/px25"
+
+            android:src="@drawable/wb_undo_selector" />
 
         <ImageView
-                android:id="@+id/redo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/wb_redo_selector"
-                android:padding="@dimen/px25"/>
+            android:id="@+id/redo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wb_selection_right"
+            android:padding="@dimen/px25"
+            android:src="@drawable/wb_redo_selector" />
 
     </LinearLayout>
 

@@ -1,113 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_wb_tool_shape_pop"
+    android:orientation="vertical">
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/px30">
 
-    <ImageView
-            android:id="@+id/shape_rectangle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_wb_rectangle"/>
-
-    <ImageView
-            android:id="@+id/shape_oval"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/px30"
-            android:src="@drawable/ic_wb_oval"/>
-
-    <ImageView
+        <ImageView
             android:id="@+id/shape_beeline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
             android:layout_marginLeft="@dimen/px30"
-            android:src="@drawable/ic_wb_beeline"/>
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_beeline" />
 
-    <ImageView
+        <ImageView
+            android:id="@+id/shape_dash_line"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_dashline" />
+
+        <ImageView
+            android:id="@+id/shape_arrow"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_arrow" />
+
+
+        <ImageView
+            android:id="@+id/shape_arc_line"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_arc" />
+
+        <ImageView
+            android:id="@+id/shape_sine_curve"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_sinline" />
+
+        <ImageView
+            android:id="@+id/shape_rectangle"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_rectangle" />
+
+        <ImageView
+            android:id="@+id/shape_rhombus"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_diamond" />
+
+        <ImageView
+            android:id="@+id/shape_oval"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_oval" />
+
+
+        <ImageView
+            android:id="@+id/shape_trapezoid"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_trapezoid" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/px30">
+
+
+        <ImageView
             android:id="@+id/shape_triangle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
             android:layout_marginLeft="@dimen/px30"
-            android:src="@drawable/ic_wb_triangle"/>
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_triangle" />
 
-    <ImageView
-        android:id="@+id/shape_square"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
 
-    <ImageView
-        android:id="@+id/shape_arc_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
+        <ImageView
+            android:id="@+id/shape_pentagon"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_pentagon" />
 
-    <ImageView
-        android:id="@+id/shape_trapezoid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
+        <ImageView
+            android:id="@+id/shape_hexagon"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_hexgon" />
 
-    <ImageView
-        android:id="@+id/shape_pentagon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
+        <ImageView
+            android:id="@+id/shape_coordinate"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_coordinate" />
 
-    <ImageView
-        android:id="@+id/shape_hexagon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
-    <ImageView
-        android:id="@+id/shape_sine_curve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
-    <ImageView
-        android:id="@+id/shape_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
+        <ImageView
+            android:id="@+id/shape_rectangular_coordinate"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:layout_marginLeft="@dimen/px30"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_rectangle_coordinates" />
 
-    <ImageView
-        android:id="@+id/shape_dash_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
+        <!-- <ImageView
+       android:id="@+id/shape_square"
+       android:layout_width="@dimen/px60"
+       android:layout_height="@dimen/px60"
+       android:layout_marginLeft="@dimen/px30"
+       android:src="@drawable/ic_scale"/>-->
 
-    <ImageView
-        android:id="@+id/shape_coordinate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
+        <!--   <ImageView
+               android:id="@+id/shape_xyz_coordinate"
+               android:layout_width="@dimen/px60"
+               android:layout_height="@dimen/px60"
+               android:layout_marginLeft="@dimen/px30"
+               android:src="@drawable/ic_wb_"/>-->
 
-    <ImageView
-        android:id="@+id/shape_rectangular_coordinate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
-
-    <ImageView
-        android:id="@+id/shape_xyz_coordinate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px30"
-        android:src="@drawable/ic_scale"/>
-
+    </LinearLayout>
 
 
 </LinearLayout>
