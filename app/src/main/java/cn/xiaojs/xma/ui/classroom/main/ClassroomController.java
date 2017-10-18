@@ -504,7 +504,7 @@ public class ClassroomController {
      * 是否是竖屏
      */
     public boolean isPortrait() {
-        if (mContext instanceof ClassroomActivity) {
+        if (mContext instanceof FragmentActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
             return activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }

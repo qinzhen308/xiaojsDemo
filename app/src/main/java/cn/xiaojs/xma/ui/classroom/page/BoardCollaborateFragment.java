@@ -1,9 +1,12 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.main.AnimData;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.FadeAnimListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
@@ -33,6 +37,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.util.StringUtil;
 import io.reactivex.functions.Consumer;
 
 
@@ -44,14 +49,17 @@ public class BoardCollaborateFragment extends BaseFragment {
     public final static int TYPE_MULTI_IMG = 2;
 
     public static final String COLLABORATE_FIRST_DATA="extra_collaborate_first_data";
+    public static final String EXTRA_BOARD_ID="extra_board_id";
 
 
     @BindView(R.id.white_board_panel)
     View mWhiteBoardPanel;
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mBoardScrollerView;
-    @BindView(R.id.back_btn)
-    ImageView mBackBtn;
+
+    private int boardMode=BOARD_MODE_MINE;
+    private final static int BOARD_MODE_MINE=0;//面向发起者
+    private final static int BOARD_MODE_YOUR=1;//面向被动者
 
 
     private WhiteboardController mBoardController;
@@ -79,16 +87,22 @@ public class BoardCollaborateFragment extends BaseFragment {
         mBoardController.setCanReceive(true);
         mBoardController.setCanSend(true);
         mBoardController.setCanSend(true);
-        mBoardController.setWhiteBoardId(firstData.board.id);
-        mBoardController.setSyncDrawingListener(syncDrawingListener);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mBoardController.syncBoardLayerSet(firstData);
+        if(firstData!=null){
+            boardMode=BOARD_MODE_YOUR;
+            mBoardController.setWhiteBoardId(firstData.board.id);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mBoardController.syncBoardLayerSet(firstData);
+                }
+            }, 500);
+        }else {
+            String boardId=getArguments().getString(EXTRA_BOARD_ID);
+            if(TextUtils.isEmpty(boardId)){
+                mBoardController.setWhiteBoardId(boardId);
             }
-        }, 500);
-
-
+        }
+        mBoardController.setSyncDrawingListener(syncDrawingListener);
         eventListener = ClassroomEngine.getEngine().observerSyncboard(syncBoardConsumer);
     }
 
@@ -98,22 +112,19 @@ public class BoardCollaborateFragment extends BaseFragment {
         return bg;
     }
 
-    @OnClick({R.id.back_btn, R.id.select_btn, R.id.handwriting_btn,R.id.shape_btn,
-            R.id.color_picker_btn,  R.id.eraser_btn, R.id.text_btn, R.id.undo, R.id.redo})
+
+    @OnClick({ R.id.select_btn, R.id.handwriting_btn,R.id.shape_btn,
+            R.id.color_picker_btn,  R.id.eraser_btn, R.id.undo, R.id.redo})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.select_btn:
             case R.id.handwriting_btn:
             case R.id.eraser_btn:
             case R.id.shape_btn:
-            case R.id.text_btn:
             case R.id.color_picker_btn:
             case R.id.undo:
             case R.id.redo:
                 mBoardController.handlePanelItemClick(v);
-                break;
-            case R.id.back_btn:
-                getFragmentManager().popBackStackImmediate();
                 break;
 
             default:
@@ -126,6 +137,7 @@ public class BoardCollaborateFragment extends BaseFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -135,6 +147,19 @@ public class BoardCollaborateFragment extends BaseFragment {
         }
 
         eventListener.dispose();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initView();
+    }
+
+    private void initView(){
+        if(ClassroomController.getInstance(getContext()).isPortrait()){
+            mWhiteBoardPanel.setVisibility(View.GONE);
+            mBoardController.setWhiteBoardReadOnly(true);
+        }
     }
 
 
@@ -179,6 +204,16 @@ public class BoardCollaborateFragment extends BaseFragment {
         BoardCollaborateFragment fragment = new BoardCollaborateFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(COLLABORATE_FIRST_DATA,shareboardReceive);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static BoardCollaborateFragment createInstance(String boardID) {
+        BoardCollaborateFragment fragment = new BoardCollaborateFragment();
+        Bundle bundle = new Bundle();
+        if(!TextUtils.isEmpty(boardID)){
+            bundle.putString(EXTRA_BOARD_ID,boardID);
+        }
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -251,4 +286,23 @@ public class BoardCollaborateFragment extends BaseFragment {
             });
         }
     };
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            mBoardController.setWhiteBoardReadOnly(false);
+            mWhiteBoardPanel.setVisibility(View.VISIBLE);
+        }else {
+            mBoardController.setWhiteBoardReadOnly(true);
+            mWhiteBoardPanel.setVisibility(View.GONE);
+        }
+    }
+
+    public Bitmap preview(){
+        if(mBoardController!=null){
+            return mBoardController.getPreviewWhiteBoard();
+        }
+        return null;
+    }
 }

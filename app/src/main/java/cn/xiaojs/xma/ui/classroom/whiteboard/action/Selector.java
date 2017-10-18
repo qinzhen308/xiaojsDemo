@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.orhanobut.logger.Logger;
@@ -22,6 +23,7 @@ import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.ControlPointUtil;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
@@ -190,6 +192,8 @@ public class Selector extends Doodle implements SyncCollector{
                 paddingY = paddingY * params.scale + exPaddingY;
 
                 mBorderRect.set(mDoodleRect.left - paddingX, mDoodleRect.top - paddingY, mDoodleRect.right + paddingX, mDoodleRect.bottom + paddingY);
+                RectF realBorderRect=new RectF(mBorderRect);
+
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addRect(mBorderRect, Path.Direction.CCW);
 //                mBorderDrawingPath.transform(mGroupTransformMatrix);
@@ -197,23 +201,36 @@ public class Selector extends Doodle implements SyncCollector{
                 canvas.drawPath(mBorderDrawingPath, mBorderPaint);
 
                 //draw controller
-                float radiusX = mControllerPaint.getStrokeWidth() / mTotalScaleX;
+                /*float radiusX = mControllerPaint.getStrokeWidth() / mTotalScaleX;
                 float radiusY = mControllerPaint.getStrokeWidth() / mTotalScaleY;
                 mBorderRect.set(mDoodleRect.right + paddingX - radiusX, mDoodleRect.top - paddingY- radiusY,
                         mDoodleRect.right + paddingX + radiusX, mDoodleRect.top - paddingY + radiusY);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
-                mBorderDrawingPath.transform(mTransformMatrix);
+                mBorderDrawingPath.transform(mTransformMatrix);*/
+
+                mBorderDrawingPath.reset();
+                Matrix matrix=new Matrix(mTransformMatrix);
+                mBorderDrawingPath.addOval(ControlPointUtil.getLeftPoint(realBorderRect,matrix,params.scale), Path.Direction.CCW);
+                mBorderDrawingPath.addOval(ControlPointUtil.getTopPoint(realBorderRect,matrix,params.scale), Path.Direction.CCW);
+                mBorderDrawingPath.addOval(ControlPointUtil.getRightPoint(realBorderRect,matrix,params.scale), Path.Direction.CCW);
+                mBorderDrawingPath.addOval(ControlPointUtil.getBottomPoint(realBorderRect,matrix,params.scale), Path.Direction.CCW);
+
                 canvas.drawPath(mBorderDrawingPath, mControllerPaint);
 
                 //draw del btn
-                mBorderRect.set(mDoodleRect.left - paddingX - radiusX, mDoodleRect.bottom + paddingY - radiusY,
+                /*mBorderRect.set(mDoodleRect.left - paddingX - radiusX, mDoodleRect.bottom + paddingY - radiusY,
                         mDoodleRect.left - paddingX + radiusX, mDoodleRect.bottom + paddingY + radiusY);
                 mBorderDrawingPath.reset();
                 mBorderDrawingPath.addOval(mBorderRect, Path.Direction.CCW);
                 mBorderDrawingPath.transform(mTransformMatrix);
-                canvas.drawPath(mBorderDrawingPath, mControllerPaint);
-                Utils.drawDelBtn(canvas, mBorderRect, mBorderDrawingPath, mTransformMatrix, params);
+                canvas.drawPath(mBorderDrawingPath, mControllerPaint);*/
+                int icWidth=getWhiteboard().getControllDeleteBm().getWidth();
+                int icHeight=getWhiteboard().getControllDeleteBm().getHeight();
+                canvas.drawBitmap(getWhiteboard().getControllDeleteBm(),new Rect(0,0,icWidth,icHeight),ControlPointUtil.getDeletePoint(realBorderRect,matrix,params.scale),mControllerPaint);
+                icWidth=getWhiteboard().getControllRotateBm().getWidth();
+                icHeight=getWhiteboard().getControllRotateBm().getHeight();
+                canvas.drawBitmap(getWhiteboard().getControllRotateBm(),new Rect(0,0,icWidth,icHeight),ControlPointUtil.getRotatePoint(realBorderRect,matrix,params.scale),mControllerPaint);
             }
         } catch (Exception e) {
 

@@ -159,13 +159,12 @@ public abstract class MovieFragment extends BaseRoomFragment
                 onOne2OneClick(view);
                 break;
             case R.id.center_board_opera:                                         //百般协作
-                onNewboardClick(view);
                 break;
             case R.id.center_board_mgr:                                           //白板管理
                 onBoardMgrClick(view);
                 break;
             case R.id.center_new_board:                                           //新增白板
-                onStartLiveClick(view);
+                onNewboardClick(view);
                 break;
             case R.id.center_member:                                              //教室成员
                 break;
@@ -227,13 +226,6 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 响应屏幕横竖屏方向改变
      */
     public abstract void onRotate(int orientation);
-
-    /**
-     * 返回
-     */
-    public void back() {
-        ((Classroom2Activity) getActivity()).onBackPressed();
-    }
 
 
 
@@ -330,6 +322,11 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onTalkVisibilityClick(View view) {
 
+    }
+
+
+    public void back() {
+        getActivity().onBackPressed();
     }
 
     /**

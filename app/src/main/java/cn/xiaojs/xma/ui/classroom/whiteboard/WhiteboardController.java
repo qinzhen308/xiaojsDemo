@@ -121,7 +121,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
         mHandWriting = (ImageView) root.findViewById(R.id.handwriting_btn);
         mGeoShape = (ImageView) root.findViewById(R.id.shape_btn);
-        mTextWriting = (ImageView) root.findViewById(R.id.text_btn);
+//        mTextWriting = (ImageView) root.findViewById(R.id.text_btn);
         mEraser = (ImageView) root.findViewById(R.id.eraser_btn);
         mColorPicker = (CircleView) root.findViewById(R.id.color_picker_btn);
         mUndo = (ImageView) root.findViewById(R.id.undo);
@@ -198,7 +198,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         mSelection.setSelected(false);
         mHandWriting.setSelected(false);
         mGeoShape.setSelected(false);
-        mTextWriting.setSelected(false);
+//        mTextWriting.setSelected(false);
         mEraser.setSelected(false);
         //mColorPicker.setSelected(false);
         v.setSelected(true);
@@ -327,58 +327,60 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     private void updateGeometryStyle(int geometryId) {
         switch (geometryId) {
             case GeometryShape.ARROW:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_arrow);
                 break;
 
             case GeometryShape.DOUBLE_ARROW:
                 break;
 
             case GeometryShape.RECTANGLE:
-                mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
+                mGeoShape.setImageResource(R.drawable.ic_wb_rectangle);
                 break;
 
             case GeometryShape.BEELINE:
-                mGeoShape.setImageResource(R.drawable.wb_beelinel_selector);
+                mGeoShape.setImageResource(R.drawable.ic_wb_beeline);
                 break;
 
             case GeometryShape.OVAL:
-                mGeoShape.setImageResource(R.drawable.wb_oval_selector);
+                mGeoShape.setImageResource(R.drawable.ic_wb_oval);
                 break;
 
             case GeometryShape.TRIANGLE:
-                mGeoShape.setImageResource(R.drawable.wb_triangle_selector);
+                mGeoShape.setImageResource(R.drawable.ic_wb_triangle);
                 break;
-            case GeometryShape.SQUARE:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
-                break;
+            /*case GeometryShape.SQUARE:
+                mGeoShape.setImageResource(R.drawable.ic_wb_arrow);
+                break;*/
             case GeometryShape.ARC_LINE:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_arc);
                 break;
             case GeometryShape.TRAPEZOID:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_trapezoid);
                 break;
             case GeometryShape.PENTAGON:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_pentagon);
                 break;
             case GeometryShape.HEXAGON:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_hexgon);
                 break;
             case GeometryShape.SINE_CURVE:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_sinline);
                 break;
             case GeometryShape.DASH_LINE:
-                mGeoShape.setImageResource(R.drawable.wb_beelinel_selector);
+                mGeoShape.setImageResource(R.drawable.ic_wb_dashline);
+                break;
+            case GeometryShape.RHOMBUS:
+                mGeoShape.setImageResource(R.drawable.ic_wb_diamond);
                 break;
             case GeometryShape.COORDINATE:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_coordinate);
                 break;
             case GeometryShape.RECTANGULAR_COORDINATE:
-                mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
+                mGeoShape.setImageResource(R.drawable.ic_wb_rectangle_coordinates);
                 break;
-            case GeometryShape.XYZ_COORDINATE:
+            /*case GeometryShape.XYZ_COORDINATE:
                 mGeoShape.setImageResource(R.drawable.ic_scale_pressed);
-                break;
-
+                break;*/
         }
     }
 
@@ -476,7 +478,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
     private void reset() {
         onGeometryChange(GeometryShape.RECTANGLE);
         onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
-        onTextOrientation(TextWriting.TEXT_HORIZONTAL);
+//        onTextOrientation(TextWriting.TEXT_HORIZONTAL);
 
         mSelection.setSelected(false);
         mHandWriting.setSelected(false);
@@ -712,5 +714,13 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     public void setSyncDrawingListener(SyncDrawingListener listener) {
         mCurrWhiteboard.setSyncDrawingListener(listener);
+    }
+
+    public void setWhiteBoardReadOnly(boolean readOnly){
+        mCurrWhiteboard.setNeedReadOnly(readOnly);
+    }
+
+    public Bitmap getPreviewWhiteBoard(){
+        return mCurrWhiteboard.getPreviewBitmap();
     }
 }

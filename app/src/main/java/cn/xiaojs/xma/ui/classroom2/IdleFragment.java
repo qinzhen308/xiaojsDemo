@@ -1,10 +1,13 @@
 package cn.xiaojs.xma.ui.classroom2;
 
+import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -18,6 +21,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
@@ -31,12 +35,22 @@ public class IdleFragment extends MovieFragment {
 
     @BindView(R.id.p_bottom_class_name)
     TextView classNameView;
+    @BindView(R.id.iv_whiteboard_preview)
+    ImageView ivWhiteboardPreview;
 
     private EventListener.ELIdle idleObserver;
 
+    BoardCollaborateFragment whiteboardFragment;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        whiteboardFragment = BoardCollaborateFragment.createInstance("");
+    }
 
     @Nullable
     @Override
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
@@ -50,6 +64,7 @@ public class IdleFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initControlPanel();
+        initDefaultBoard();
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
     }
 
@@ -70,7 +85,28 @@ public class IdleFragment extends MovieFragment {
     @Override
     public void onRotate(int orientation) {
         controlHandleOnRotate(orientation);
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ivWhiteboardPreview.setImageBitmap(null);
+            ivWhiteboardPreview.setVisibility(View.GONE);
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.layout_idle_container, whiteboardFragment)
+                    .addToBackStack("board_default")
+                    .commit();
+        } else {
+            if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
+                getChildFragmentManager().popBackStack();
+            }
+            ivWhiteboardPreview.setImageBitmap(whiteboardFragment.preview());
+            ivWhiteboardPreview.setVisibility(View.VISIBLE);
+        }
     }
+
+    @Override
+    public void back() {
+        super.back();
+    }
+
 
     @Override
     public void onClosed() {
@@ -104,9 +140,29 @@ public class IdleFragment extends MovieFragment {
     }
 
     @Override
+    public void onNewboardClick(View view) {
+
+    }
+
     public void onStartOrStopLiveClick(View view) {
         requestLive();
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 白板
+    //
+
+
+    private void initDefaultBoard() {
+        /*getChildFragmentManager()
+                .beginTransaction()
+                .add(R.id.layout_idle_container, BoardCollaborateFragment.createInstance(""))
+                .addToBackStack("board_default")
+                .commit();*/
+        ivWhiteboardPreview.setImageDrawable(new ColorDrawable());
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 操作面板
@@ -120,12 +176,12 @@ public class IdleFragment extends MovieFragment {
         if (classroomEngine.canIndividualByState()) {
             startOrStopLiveView.setText("开始直播");
             startOrStopLiveView.setVisibility(View.VISIBLE);
-        }else {
+        } else {
 
             if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
                 startOrStopLiveView.setText("开始上课");
                 startOrStopLiveView.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 startOrStopLiveView.setVisibility(View.GONE);
             }
 
@@ -176,8 +232,4 @@ public class IdleFragment extends MovieFragment {
             }
         }
     };
-
-
-
-
 }
