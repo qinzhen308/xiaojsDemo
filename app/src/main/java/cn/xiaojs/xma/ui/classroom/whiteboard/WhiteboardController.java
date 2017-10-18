@@ -45,6 +45,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.GeometryPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.HandwritingPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.PushPreviewBoardListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
@@ -722,5 +723,9 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     public Bitmap getPreviewWhiteBoard(){
         return mCurrWhiteboard.getPreviewBitmap();
+    }
+
+    public void setPushPreviewBoardListener(PushPreviewBoardListener pushPreviewBoardListener){
+        mCurrWhiteboard.setPushPreviewBoardListener(pushPreviewBoardListener);
     }
 }

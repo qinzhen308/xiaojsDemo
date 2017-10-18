@@ -86,16 +86,19 @@ public class IdleFragment extends MovieFragment {
     public void onRotate(int orientation) {
         controlHandleOnRotate(orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(whiteboardFragment.isAdded()){
+                getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
+            }else {
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.layout_idle_container, whiteboardFragment)
+                        .commitAllowingStateLoss();
+            }
             ivWhiteboardPreview.setImageBitmap(null);
             ivWhiteboardPreview.setVisibility(View.GONE);
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.layout_idle_container, whiteboardFragment)
-                    .addToBackStack("board_default")
-                    .commit();
         } else {
             if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
-                getChildFragmentManager().popBackStack();
+                getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
             }
             ivWhiteboardPreview.setImageBitmap(whiteboardFragment.preview());
             ivWhiteboardPreview.setVisibility(View.VISIBLE);
@@ -104,6 +107,10 @@ public class IdleFragment extends MovieFragment {
 
     @Override
     public void back() {
+        if(!whiteboardFragment.isDetached()){
+            getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+            return;
+        }
         super.back();
     }
 

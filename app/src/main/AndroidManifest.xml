@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.xiaojs.xma"
-          android:versionCode="61"
-          android:versionName="2.1.3">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cn.xiaojs.xma"
+    android:versionCode="61"
+    android:versionName="2.1.3">
 
     <!-- Required -->
     <permission
@@ -106,6 +107,15 @@
                 <action android:name="cn.xiaojs.xma.action_new_push_opened"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="xjs"
+                    android:host="www.xjs.cn"
+                    />
+            </intent-filter>
+
         </activity>
         <activity
                 android:name=".common.crop.CropImageActivity"
