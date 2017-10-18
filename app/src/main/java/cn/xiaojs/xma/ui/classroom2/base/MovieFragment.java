@@ -412,7 +412,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 点击了新增白板
      */
     public void onNewboardClick(View view) {
-
+        // TODO: 2017/10/18 新增白板
     }
 
     /**
@@ -420,6 +420,9 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onBoardMgrClick(View view) {
 
+        if(whiteboardFragment!=null&&!whiteboardFragment.isDetached()){
+            whiteboardFragment.showWhiteboardManager();
+        }
     }
 
     /**

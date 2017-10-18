@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -319,5 +320,15 @@ public class BoardCollaborateFragment extends BaseFragment {
     public void onDestroy() {
         mBoardController.setPushPreviewBoardListener(null);
         super.onDestroy();
+    }
+
+
+    public void showWhiteboardManager(){
+        Fragment fragment=WhiteboardManagerFragment.createInstance("");
+        fragment.setTargetFragment(this,200);
+        getChildFragmentManager().beginTransaction().
+                add(R.id.layout_dialog_container,fragment).
+                addToBackStack("dialog_fragment").
+                commitAllowingStateLoss();
     }
 }

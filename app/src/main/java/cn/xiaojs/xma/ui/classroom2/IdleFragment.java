@@ -118,10 +118,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         requestLive();
     }
 
-    @Override
-    public void onNewboardClick(View view) {
 
-    }
 
     public void onStartOrStopLiveClick(View view) {
         requestLive();
