@@ -18,10 +18,12 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
+import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
 
@@ -29,7 +31,7 @@ import io.reactivex.functions.Consumer;
  * Created by maxiaobao on 2017/9/25.
  */
 
-public class IdleFragment extends MovieFragment {
+public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMoreListener {
 
 
     @BindView(R.id.p_bottom_class_name)
@@ -56,6 +58,9 @@ public class IdleFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initControlPanel();
+
+        initTalkData(this);
+
         initDefaultBoard();
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
     }
@@ -66,6 +71,11 @@ public class IdleFragment extends MovieFragment {
         if (idleObserver != null) {
             idleObserver.dispose();
         }
+    }
+
+    @Override
+    public void onFetchMoreRequested() {
+        loadTalk();
     }
 
 
@@ -87,6 +97,7 @@ public class IdleFragment extends MovieFragment {
         }
     }
 
+
     @Override
     public void onClosed() {
         exitSlidePanel();
@@ -104,18 +115,7 @@ public class IdleFragment extends MovieFragment {
 
     @Override
     public void onStartLiveClick(View view) {
-        if (classroomEngine.canIndividualByState()) {
-            requestLive();
-        } else {
-
-            if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
-
-                //开始上课
-
-
-            }
-        }
-
+        requestLive();
     }
 
     @Override
@@ -149,19 +149,36 @@ public class IdleFragment extends MovieFragment {
 
     private void initControlPanel() {
 
-        controlLand.setVisibility(View.GONE);
+        int changeRequest = getActivity().getRequestedOrientation();
+        controlHandleOnRotate(changeRequest);
+
+        lRightSwitchcameraView.setVisibility(View.GONE);
+        lTopPhotoView.setVisibility(View.GONE);
+        lTopRoominfoView.setVisibility(View.GONE);
+
         pBottomClassnameView.setText(classroomEngine.getRoomTitle());
 
+        configStartOrPausedLiveButton();
+
+    }
+
+    private void configStartOrPausedLiveButton() {
         if (classroomEngine.canIndividualByState()) {
             startOrStopLiveView.setText("开始直播");
             startOrStopLiveView.setVisibility(View.VISIBLE);
+            pTopLiveView.setText("开始直播");
+            pTopLiveView.setVisibility(View.VISIBLE);
         } else {
 
             if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
                 startOrStopLiveView.setText("开始上课");
                 startOrStopLiveView.setVisibility(View.VISIBLE);
+
+                pTopLiveView.setText("开始上课");
+                pTopLiveView.setVisibility(View.VISIBLE);
             } else {
                 startOrStopLiveView.setVisibility(View.GONE);
+                pTopLiveView.setVisibility(View.GONE);
             }
 
 
@@ -169,22 +186,16 @@ public class IdleFragment extends MovieFragment {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // 开始上课
+    //  响应事件
     //
 
-    private void requestBeginClass() {
-        showProgress(true);
-        classroomEngine.beginClass(classroomEngine.getTicket(), new APIServiceCallback<ClassResponse>() {
-            @Override
-            public void onSuccess(ClassResponse object) {
-                cancelProgress();
-            }
+    private void handleStreamstartted(StreamStartReceive receive) {
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                cancelProgress();
-            }
-        });
+        enterPlay();
+    }
+
+    private void handleSyncState(SyncStateReceive syncStateReceive) {
+        configStartOrPausedLiveButton();
     }
 
 
@@ -202,11 +213,19 @@ public class IdleFragment extends MovieFragment {
 
             switch (eventReceived.eventType) {
                 case Su.EventType.STREAMING_STARTED:
+                    StreamStartReceive receive = (StreamStartReceive) eventReceived.t;
+                    handleStreamstartted(receive);
                     break;
                 case Su.EventType.SYNC_CLASS_STATE:
                     break;
                 case Su.EventType.SYNC_STATE:
-
+                    SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;
+                    handleSyncState(syncStateReceive);
+                    break;
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+                    //TODO fix同一条消息多次回调?
+                    handleReceivedMsg(talk);
                     break;
             }
         }

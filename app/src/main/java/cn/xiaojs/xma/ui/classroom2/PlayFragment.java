@@ -1,72 +1,43 @@
 package cn.xiaojs.xma.ui.classroom2;
 
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.orhanobut.logger.Logger;
-import com.pili.pldroid.player.AVOptions;
-import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
+import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class PlayFragment extends MovieFragment {
+public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMoreListener{
 
     @BindView(R.id.video_view)
     PLVideoTextureView videoView;
     @BindView(R.id.loading_View)
     LinearLayout loadingView;
-    @BindView(R.id.top_back)
-    ImageView nameView;
 
-    //port
-    @BindView(R.id.top_more)
-    ImageView topMoreView;
-    @BindView(R.id.top_live)
-    TextView topLiveView;
-    @BindView(R.id.bottom_bg)
-    View bottomBgView;
-    @BindView(R.id.bottom_orient)
-    ImageView bottomOrientView;
-    @BindView(R.id.bottom_class_name)
-    TextView bottomNameView;
-    @BindView(R.id.bottom_class_state)
-    TextView bottomStateView;
-
-
-    //land
-    @BindView(R.id.top_photo)
-    ImageView topPhotoView;
-    @BindView(R.id.top_roominfo)
-    TextView topRoominfoView;
-    @BindView(R.id.top_whiteboard)
-    ImageView topWhiteboardView;
-    @BindView(R.id.top_screenshot)
-    ImageView topScreenshotView;
-    @BindView(R.id.bottom_chat)
-    ImageView bottomChatView;
-    @BindView(R.id.bottom_more)
-    ImageView bottomMoreView;
-
+    private EventListener.ELPlaylive playLiveObserver;
 
     @Nullable
     @Override
@@ -83,25 +54,20 @@ public class PlayFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        lRightSwitchcameraView.setVisibility(View.GONE);
+
+        int changeRequest = getActivity().getRequestedOrientation();
+        controlHandleOnRotate(changeRequest);
+
+        initTalkData(this);
+
+        configPortLandOperaButton();
         configVideoView(videoView);
         videoView.setVideoPath(classroomEngine.getPlayUrl());
         videoView.start();
 
+        playLiveObserver = classroomEngine.observerPlaylive(receivedConsumer);
 
-        bindPlayinfo();
-        handleRotate(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-
-    @OnClick({R.id.bottom_orient, R.id.top_back})
-    void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.top_back:                    //返回
-                back();
-                break;
-            case R.id.bottom_orient:               //改变屏幕方向
-                changeOrientation();
-                break;
-        }
     }
 
     @Override
@@ -119,14 +85,20 @@ public class PlayFragment extends MovieFragment {
     public void onDestroy() {
         super.onDestroy();
         videoView.stopPlayback();
+
+        if (playLiveObserver != null) {
+            playLiveObserver.dispose();
+        }
+    }
+
+
+    public void onFetchMoreRequested() {
+        loadTalk();
     }
 
     @Override
     public void onRotate(int orientation) {
-//        mVideoView.setDisplayOrientation(mRotation);
-        handleRotate(orientation);
-        onRotateToInitBoard(orientation);
-
+        controlHandleOnRotate(orientation);
     }
 
     @Override
@@ -146,56 +118,153 @@ public class PlayFragment extends MovieFragment {
 
     @Override
     public void onTopbackClick(View view, boolean land) {
-
+        back();
     }
 
-    private void bindPlayinfo() {
-
-        bottomNameView.setText("XXX的教室");
-        bottomStateView.setText(classroomEngine.getRoomTitle());
-        topRoominfoView.setText(classroomEngine.getRoomTitle());
+    @Override
+    public void onStartLiveClick(View view) {
+        requestPublish();
     }
 
-    private void handleRotate(int orientation) {
+    @Override
+    public void onStartOrStopLiveClick(View view) {
+        requestPublish();
+    }
 
-        switch (orientation) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-                //port
-                topMoreView.setVisibility(View.GONE);
-                topLiveView.setVisibility(View.GONE);
-                bottomBgView.setVisibility(View.GONE);
-                bottomOrientView.setVisibility(View.GONE);
-                bottomNameView.setVisibility(View.GONE);
-                bottomStateView.setVisibility(View.GONE);
-                //land
-                topPhotoView.setVisibility(View.VISIBLE);
-                topRoominfoView.setVisibility(View.VISIBLE);
-                topWhiteboardView.setVisibility(View.VISIBLE);
-                topScreenshotView.setVisibility(View.VISIBLE);
-                bottomChatView.setVisibility(View.VISIBLE);
-                bottomMoreView.setVisibility(View.VISIBLE);
-                break;
-            case Configuration.ORIENTATION_PORTRAIT:
-                //port
-                topMoreView.setVisibility(View.VISIBLE);
-                topLiveView.setVisibility(View.VISIBLE);
-                bottomBgView.setVisibility(View.VISIBLE);
-                bottomOrientView.setVisibility(View.VISIBLE);
-                bottomNameView.setVisibility(View.VISIBLE);
-                bottomStateView.setVisibility(View.VISIBLE);
-                //land
-                topPhotoView.setVisibility(View.GONE);
-                topRoominfoView.setVisibility(View.GONE);
-                topWhiteboardView.setVisibility(View.GONE);
-                topScreenshotView.setVisibility(View.GONE);
-                bottomChatView.setVisibility(View.GONE);
-                bottomMoreView.setVisibility(View.GONE);
-                break;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 开始直播
+    //
+
+    private void requestPublish() {
+        if (classroomEngine.canForceIndividual()) {
+            requestLive();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 操作面板
+    //
+    public void configPortLandOperaButton() {
+
+        int streamType = classroomEngine.getCtlSession().streamType;
+
+        if (classroomEngine.getLiveState().equals(Live.LiveSessionState.LIVE)
+                || streamType == Live.StreamType.LIVE) {
+
+            pTopLiveView.setVisibility(View.GONE);
+            startOrStopLiveView.setVisibility(View.GONE);
+
+        } else if (streamType == Live.StreamType.INDIVIDUAL) {
+
+            if (classroomEngine.canForceIndividual()) {//如果是老师或者管理员或者班主任可以强行抢占直播
+                pTopLiveView.setText("开始直播");
+                pTopLiveView.setVisibility(View.VISIBLE);
+
+                startOrStopLiveView.setText("开始直播");
+                startOrStopLiveView.setVisibility(View.VISIBLE);
+
+            } else {
+                pTopLiveView.setVisibility(View.GONE);
+                startOrStopLiveView.setVisibility(View.GONE);
+            }
+
         }
 
+    }
+
+
+    private void updateStartOrPausedLiveButtonWhenSyncStateChanged(SyncStateReceive syncStateReceive) {
+
+        int streamType = classroomEngine.getCtlSession().streamType;
+
+        switch (streamType) {
+            case Live.StreamType.INDIVIDUAL:
+                if (classroomEngine.canForceIndividual()) {
+
+                    String liveState = classroomEngine.getLiveState();
+
+                    if (liveState.equals(Live.LiveSessionState.PENDING_FOR_JOIN)
+                            || liveState.equals(Live.LiveSessionState.PENDING_FOR_LIVE)) {
+                        pTopLiveView.setText("开始上课");
+                        pTopLiveView.setVisibility(View.VISIBLE);
+
+                        startOrStopLiveView.setText("开始上课");
+                        startOrStopLiveView.setVisibility(View.VISIBLE);
+                    } else {
+                        pTopLiveView.setText("开始直播");
+                        pTopLiveView.setVisibility(View.VISIBLE);
+
+                        startOrStopLiveView.setText("开始直播");
+                        startOrStopLiveView.setVisibility(View.VISIBLE);
+                    }
+
+                }
+                break;
+            case Live.StreamType.LIVE:
+                break;
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 事件响应
+    //
+
+    private void handleStreamStop(StreamStopReceive streamStopReceive) {
+
+        String myId = AccountDataManager.getAccountID(getContext());
+
+        if (!TextUtils.isEmpty(streamStopReceive.deprivedBy)
+                && myId.equals(streamStopReceive.deprivedBy)) {
+            return;//老师自己抢占别人的直播，会收到流停止事件，此时不需处理；
+        }
+
+        enterIdle();
+    }
+
+    private void handleSyncState(SyncStateReceive syncStateReceive) {
+
+        updateStartOrPausedLiveButtonWhenSyncStateChanged(syncStateReceive);
 
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 事件监听
+    //
+
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("receivedConsumer .....");
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.SYNC_CLASS_STATE:
+                    break;
+                case Su.EventType.SYNC_STATE:
+                    SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;
+                    handleSyncState(syncStateReceive);
+                    break;
+                case Su.EventType.STREAM_RECLAIMED:
+                    enterIdle();
+                    break;
+                case Su.EventType.STOP_STREAM_BY_EXPIRATION:
+                    enterIdle();
+                    break;
+                case Su.EventType.STREAMING_STOPPED:
+                    handleStreamStop((StreamStopReceive) eventReceived.t);
+                    break;
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+                    //TODO fix同一条消息多次回调?
+                    handleReceivedMsg(talk);
+                    break;
+            }
+        }
+    };
 
 
 }
