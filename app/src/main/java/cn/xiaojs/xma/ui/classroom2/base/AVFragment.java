@@ -136,7 +136,7 @@ public abstract class AVFragment extends MovieFragment implements StreamingSessi
 
     @Override
     public void onRotate(int orientation) {
-        //do nothing
+        onRotateToInitBoard(orientation);
     }
 
     @Override

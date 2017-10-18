@@ -21,7 +21,6 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
-import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
@@ -40,13 +39,6 @@ public class IdleFragment extends MovieFragment {
 
     private EventListener.ELIdle idleObserver;
 
-    BoardCollaborateFragment whiteboardFragment;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        whiteboardFragment = BoardCollaborateFragment.createInstance("");
-    }
 
     @Nullable
     @Override
@@ -85,35 +77,15 @@ public class IdleFragment extends MovieFragment {
     @Override
     public void onRotate(int orientation) {
         controlHandleOnRotate(orientation);
+        onRotateToInitBoard(orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(whiteboardFragment.isAdded()){
-                getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
-            }else {
-                getChildFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.layout_idle_container, whiteboardFragment)
-                        .commitAllowingStateLoss();
-            }
             ivWhiteboardPreview.setImageBitmap(null);
             ivWhiteboardPreview.setVisibility(View.GONE);
         } else {
-            if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
-                getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
-            }
             ivWhiteboardPreview.setImageBitmap(whiteboardFragment.preview());
             ivWhiteboardPreview.setVisibility(View.VISIBLE);
         }
     }
-
-    @Override
-    public void back() {
-        if(!whiteboardFragment.isDetached()){
-            getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
-            return;
-        }
-        super.back();
-    }
-
 
     @Override
     public void onClosed() {

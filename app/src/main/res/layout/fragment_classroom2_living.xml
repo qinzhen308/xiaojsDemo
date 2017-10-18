@@ -3,10 +3,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/layout_idle_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView
             android:id="@+id/camera_preview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_list"

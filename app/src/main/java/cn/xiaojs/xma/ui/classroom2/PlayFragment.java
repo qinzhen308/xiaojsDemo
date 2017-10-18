@@ -125,6 +125,7 @@ public class PlayFragment extends MovieFragment {
     public void onRotate(int orientation) {
 //        mVideoView.setDisplayOrientation(mRotation);
         handleRotate(orientation);
+        onRotateToInitBoard(orientation);
 
     }
 

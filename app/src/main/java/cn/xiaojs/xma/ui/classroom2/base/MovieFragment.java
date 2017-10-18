@@ -34,6 +34,8 @@ import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.ChatFragment;
 import cn.xiaojs.xma.ui.classroom2.ClassDetailFragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
@@ -102,16 +104,23 @@ public abstract class MovieFragment extends BaseRoomFragment
     @BindView(R.id.slide_layout)
     public ClosableAdapterSlidingLayout slideLayout;
 
-
     public final static int REQUEST_PERMISSION = 3;
 
     protected ClassroomEngine classroomEngine;
     protected Fragment slideFragment;
 
+    //这个白板fragment对象的留存时间依赖于Activity
+    //但生命周期取决于使用他的fragment
+    protected BoardCollaborateFragment whiteboardFragment;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         classroomEngine = ClassroomEngine.getEngine();
+
+        if(getActivity() instanceof Classroom2Activity){
+            whiteboardFragment=((Classroom2Activity)getActivity()).getCollaBorateFragment();
+        }
     }
 
     @Override
@@ -119,7 +128,21 @@ public abstract class MovieFragment extends BaseRoomFragment
         super.onActivityCreated(savedInstanceState);
 
         slideLayout.setSlideListener(this);
+        if(!ClassroomController.getInstance(getActivity()).isPortrait()){
+            onRotateToInitBoard(Configuration.ORIENTATION_LANDSCAPE);
+        }
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        //
+        whiteboardFragment=null;
+        super.onDestroy();
     }
 
     @OnClick({R.id.l_top_back, R.id.l_top_start_or_stop_living,
@@ -745,6 +768,52 @@ public abstract class MovieFragment extends BaseRoomFragment
 
                     }
                 });
+    }
+
+    //====================================全局白板====================================
+    protected void addWhiteboardFragment(){
+        getChildFragmentManager()
+                .beginTransaction()
+                .add(R.id.layout_idle_container, whiteboardFragment)
+                .commitAllowingStateLoss();
+    }
+
+    protected void showWhiteboardFragment(){
+        if(whiteboardFragment.isAdded()){
+            getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
+        }else {
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.layout_idle_container, whiteboardFragment)
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    protected void hideWhiteboardFragment(){
+        if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
+            getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+        }
+    }
+    protected void removeWhiteboardFragment(){
+        getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
+    }
+
+    protected void onRotateToInitBoard(int orientation){
+        if(whiteboardFragment==null)return;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(whiteboardFragment.isAdded()){
+                getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
+            }else {
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.layout_idle_container, whiteboardFragment)
+                        .commitAllowingStateLoss();
+            }
+        } else {
+            if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
+                getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+            }
+        }
     }
 
 
