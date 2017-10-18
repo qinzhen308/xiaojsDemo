@@ -5,6 +5,7 @@
     android:background="@color/main_bg"
     android:clickable="true">
 
+
     <!--白板,本地手绘-->
     <cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayout
         android:id="@+id/white_board_layout"
@@ -20,6 +21,15 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:visibility="gone"></cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView>
+
+    <ImageView
+        android:id="@+id/test_preview"
+        android:layout_width="@dimen/px330"
+        android:layout_height="@dimen/px190"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/black"
+        android:scaleType="fitXY"/>
 
 
     <LinearLayout

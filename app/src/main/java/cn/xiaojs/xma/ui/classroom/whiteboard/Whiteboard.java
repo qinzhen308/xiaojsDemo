@@ -108,6 +108,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.TextWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Trapezoid;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Triangle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.PushPreviewBoardListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
@@ -235,6 +236,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
 
     boolean readOnly;
+    PushPreviewBoardListener pushPreviewBoardListener;
 
 
     public Whiteboard(Context context) {
@@ -1005,6 +1007,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     break;
             }
             syncGenerator.onActionUp();
+            if(pushPreviewBoardListener!=null){
+                onTouchPreview();
+            }
         }
 
         @Override
@@ -2270,5 +2275,27 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         setDrawingCacheEnabled(false);
         return null;
     }
+
+
+    /**
+     * 触发推白板
+     */
+    public void onTouchPreview(){
+        post(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap preview=getPreviewBitmap();
+                Logger.d("-----qz----ontouchPreview---preview="+preview);
+                if(preview!=null){
+                    pushPreviewBoardListener.onPush(preview);
+                }
+            }
+        });
+    }
+
+    public void setPushPreviewBoardListener(PushPreviewBoardListener pushPreviewBoardListener){
+        this.pushPreviewBoardListener=pushPreviewBoardListener;
+    }
+
 }
 

@@ -33,6 +33,7 @@ import cn.xiaojs.xma.ui.classroom.main.FadeAnimListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.PushPreviewBoardListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
@@ -56,6 +57,8 @@ public class BoardCollaborateFragment extends BaseFragment {
     View mWhiteBoardPanel;
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mBoardScrollerView;
+    @BindView(R.id.test_preview)
+    ImageView testPreview;
 
     private int boardMode=BOARD_MODE_MINE;
     private final static int BOARD_MODE_MINE=0;//面向发起者
@@ -104,6 +107,12 @@ public class BoardCollaborateFragment extends BaseFragment {
         }
         mBoardController.setSyncDrawingListener(syncDrawingListener);
         eventListener = ClassroomEngine.getEngine().observerSyncboard(syncBoardConsumer);
+        mBoardController.setPushPreviewBoardListener(new PushPreviewBoardListener() {
+            @Override
+            public void onPush(Bitmap bitmap) {
+                testPreview.setImageBitmap(bitmap);
+            }
+        });
     }
 
     private Bitmap decodeBg(){
@@ -156,10 +165,10 @@ public class BoardCollaborateFragment extends BaseFragment {
     }
 
     private void initView(){
-        if(ClassroomController.getInstance(getContext()).isPortrait()){
+        /*if(ClassroomController.getInstance(getContext()).isPortrait()){
             mWhiteBoardPanel.setVisibility(View.GONE);
             mBoardController.setWhiteBoardReadOnly(true);
-        }
+        }*/
     }
 
 
@@ -290,13 +299,13 @@ public class BoardCollaborateFragment extends BaseFragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+        /*if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
             mBoardController.setWhiteBoardReadOnly(false);
             mWhiteBoardPanel.setVisibility(View.VISIBLE);
         }else {
             mBoardController.setWhiteBoardReadOnly(true);
             mWhiteBoardPanel.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     public Bitmap preview(){
@@ -304,5 +313,11 @@ public class BoardCollaborateFragment extends BaseFragment {
             return mBoardController.getPreviewWhiteBoard();
         }
         return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        mBoardController.setPushPreviewBoardListener(null);
+        super.onDestroy();
     }
 }

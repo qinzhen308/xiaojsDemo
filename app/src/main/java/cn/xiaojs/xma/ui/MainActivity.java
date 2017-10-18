@@ -68,6 +68,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
 
     //private MessageFragment conversationFragment;
 
+    SchemeProcessor mSchemeProcessor;
+
 
     @Override
     protected void initView() {
@@ -128,6 +130,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 doAction(intent.getAction(),intent);
             }
         }
+        //集中处理scheme协议
+        mSchemeProcessor.handle(intent);
     }
 
     @Override
@@ -319,7 +323,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
         upgradeReceiver = new UpgradeReceiver();
 
         registerReceiver(upgradeReceiver, filter);
-
+        mSchemeProcessor=new SchemeProcessor(this);
+        mSchemeProcessor.handle(getIntent());
     }
 
     @Override
@@ -499,7 +504,6 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 RLDirListActivity.invoke(this,id,isEpired);
                 break;
         }
-
     }
 
     @Keep
