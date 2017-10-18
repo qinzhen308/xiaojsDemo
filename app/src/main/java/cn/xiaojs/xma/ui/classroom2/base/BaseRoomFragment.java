@@ -14,6 +14,8 @@ public class BaseRoomFragment extends Fragment {
      * 显示loading状态
      */
     public void showProgress(boolean cancelable) {
+        if (getActivity() == null)
+            return;
         ((Classroom2Activity) getActivity()).showProgress(cancelable);
     }
 
@@ -21,6 +23,8 @@ public class BaseRoomFragment extends Fragment {
      * 退出loading状态
      */
     public void cancelProgress() {
+        if (getActivity() == null)
+            return;
         ((Classroom2Activity) getActivity()).cancelProgress();
     }
 

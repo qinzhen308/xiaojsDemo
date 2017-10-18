@@ -313,8 +313,13 @@ public class Classroom2Activity extends FragmentActivity {
             }
         }
 
-        enterIdle();
+        String roomState = classroomEngine.getCtlSession().state;
 
+        if (!TextUtils.isEmpty(classroomEngine.getPlayUrl())) {
+            enterPlay();
+        }else {
+            enterIdle();
+        }
 
 //        String roomState = classroomEngine.getCtlSession().state;
 //        if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&

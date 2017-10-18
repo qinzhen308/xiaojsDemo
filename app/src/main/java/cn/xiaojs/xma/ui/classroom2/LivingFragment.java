@@ -48,6 +48,8 @@ import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
+import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
+import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
@@ -100,6 +102,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private long lastTimeline = 0;
 
     private Attendee one2oneAttendee;
+
+    private String streamDeprivedBy;
 
 
     @Nullable
@@ -304,6 +308,20 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         lTopRoominfoView.setText("直播中");
         lRightScreenshortView.setVisibility(View.GONE);
+
+        configStopButton();
+
+    }
+
+    private void configStopButton() {
+
+        if (classroomEngine.getLiveState().equals(Live.LiveSessionState.LIVE)) {
+            startOrStopLiveView.setText("下课");
+        }else{
+            startOrStopLiveView.setText("停止直播");
+        }
+
+
     }
 
     private void initTalkData() {
@@ -527,6 +545,37 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         });
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 直播被老师强制挤掉
+    //
+
+    private void handleStreamStop(StreamStopReceive streamStopReceive) {
+
+        String myId = AccountDataManager.getAccountID(getContext());
+
+
+        if (streamStopReceive.streamType == Live.StreamType.INDIVIDUAL
+                && myId.equals(streamStopReceive.claimedBy)
+                && !TextUtils.isEmpty(streamStopReceive.deprivedBy)) {
+            streamDeprivedBy = streamStopReceive.deprivedBy;
+
+            Attendee attendee = classroomEngine.getMember(streamDeprivedBy);
+            if (attendee !=null) {
+                ToastUtil.showToast(getContext(), "你的直播已被" + attendee.name+"中断");
+            }
+
+
+        }
+    }
+
+    private void handleStreamStart(StreamStartReceive streamStartReceive) {
+        if (!TextUtils.isEmpty(streamDeprivedBy)
+                && streamDeprivedBy.equals(streamStartReceive.claimedBy)) {
+            enterPlay();
+        }
+    }
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 事件监听
@@ -551,6 +600,12 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                     break;
                 case Su.EventType.CLOSE_MEDIA:
                     stopPlay(false);
+                    break;
+                case Su.EventType.STREAMING_STOPPED:
+                    handleStreamStop((StreamStopReceive) eventReceived.t);
+                    break;
+                case Su.EventType.STREAMING_STARTED:
+                    handleStreamStart((StreamStartReceive) eventReceived.t);
                     break;
             }
         }

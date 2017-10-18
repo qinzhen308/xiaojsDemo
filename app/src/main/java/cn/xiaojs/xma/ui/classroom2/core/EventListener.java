@@ -62,7 +62,7 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
         return true;
     }
 
-    protected boolean send(EventReceived eventReceived){
+    protected boolean send(EventReceived eventReceived) {
         return true;
     }
 
@@ -89,54 +89,54 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
     public void onEvent() {
 
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.CLOSE_MEDIA, CloseMediaReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.STREAMING_STOPPED, StreamStopReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.STREAMING_STARTED, StreamStartReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.STREAM_RECLAIMED, ReclaimedReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.CLASS_MODE_SWITCH, ModeSwitchReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.CLOSE_PREVIEW_BY_CLASS_OVER, ClosePreviewReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.REMIND_FINALIZATION, EmptyReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.JOIN, Attendee.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.LEAVE, Attendee.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.KICK_OUT_BY_CONSTRAINT, ConstraintKickoutReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.KICK_OUT_BY_LOGOUT, LogoutKickoutReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.MEDIA_ABORTED, MediaAbortedReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.MEDIA_DEVICES_REFRESHED, MediaDeviceRefreshReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.MEDIA_FEEDBACK, MediaFeedbackReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.OPEN_MEDIA, OpenMediaReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.REFRESH_STREAMING_QUALITY, StreamQualityChangedReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.SYNC_STATE, SyncStateReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.TALK, Talk.class, this));
 
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.SHARE_BOARD_ACK, ShareboardAckReceive.class, this));
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.STOP_SHARE_BOARD, StopShareboardReceive.class, this));
 
 
-        socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.SHARE_BOARD, ShareboardReceive.class, this));
 
     }
@@ -187,11 +187,11 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
         @Override
         public void onEvent() {
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SYNC_STATE, SyncStateReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.STREAMING_STARTED, StreamStartReceive.class, this));
         }
 
@@ -206,22 +206,28 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
         @Override
         public void onEvent() {
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.REMIND_FINALIZATION, EmptyReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.CLOSE_MEDIA, CloseMediaReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.MEDIA_ABORTED, MediaAbortedReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.OPEN_MEDIA, OpenMediaReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.REFRESH_STREAMING_QUALITY, StreamQualityChangedReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SYNC_STATE, SyncStateReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SHARE_BOARD, ShareboardReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
+                    Su.EventType.STREAMING_STOPPED, StreamStopReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
+                    Su.EventType.STREAM_RECLAIMED, ReclaimedReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
+                    Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class, this));
         }
 
     }
@@ -234,19 +240,19 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
         @Override
         public void onEvent() {
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.REMIND_FINALIZATION, EmptyReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.CLOSE_MEDIA, CloseMediaReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.MEDIA_ABORTED, MediaAbortedReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.OPEN_MEDIA, OpenMediaReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SYNC_STATE, SyncStateReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SHARE_BOARD, ShareboardReceive.class, this));
             socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.SHARE_BOARD_ACK, ShareboardAckReceive.class, this));
@@ -254,6 +260,10 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
                     Su.EventType.MEDIA_FEEDBACK, MediaFeedbackReceive.class, this));
             socketListeners.add(EventManager.onEvent(context,
                     Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class, this));
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
+                    Su.EventType.STREAMING_STOPPED, StreamStopReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
+                    Su.EventType.STREAMING_STARTED, StreamStartReceive.class, this));
         }
     }
 
@@ -265,11 +275,11 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
         @Override
         public void onEvent() {
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.STREAMING_STOPPED, StreamStopReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.STREAMING_STARTED, StreamStartReceive.class, this));
-            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+            socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.STREAM_RECLAIMED, ReclaimedReceive.class, this));
             socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class, this));

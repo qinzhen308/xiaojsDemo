@@ -30,7 +30,9 @@ import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
@@ -50,7 +52,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
  */
 
 public abstract class MovieFragment extends BaseRoomFragment
-        implements ClosableSlidingLayout.SlideListener{
+        implements ClosableSlidingLayout.SlideListener {
 
     @BindView(R.id.control_port)
     public ConstraintLayout controlPort;
@@ -94,6 +96,9 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     @BindView(R.id.p_bottom_class_name)
     public TextView pBottomClassnameView;
+    @BindView(R.id.p_top_live)
+    public TextView pTopLiveView;
+
 
 
     /////////////
@@ -207,9 +212,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
-
-
-
     /**
      * 点击了返回
      *
@@ -226,7 +228,6 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 响应屏幕横竖屏方向改变
      */
     public abstract void onRotate(int orientation);
-
 
 
     public void enterIdle() {
@@ -331,7 +332,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     /**
      * 点击了输入聊天消息
-     * @param view
      */
     public void onInputMessageClick(View view) {
 
@@ -621,9 +621,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     };
 
 
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 直播
     //
@@ -641,18 +638,18 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     private void showNetworkTips() {
-            final CommonDialog tipsDialog= new CommonDialog(getContext());
+        final CommonDialog tipsDialog = new CommonDialog(getContext());
         tipsDialog.setDesc("您正在使用非WI-FI网络，直播将产生流量费用");
         tipsDialog.setLefBtnText(R.string.cancel);
         tipsDialog.setRightBtnText(R.string.mobile_network_allow);
         tipsDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    requestLivePermission();
-                    tipsDialog.dismiss();
+            @Override
+            public void onClick() {
+                requestLivePermission();
+                tipsDialog.dismiss();
 
-                }
-            });
+            }
+        });
         tipsDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
@@ -662,7 +659,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         tipsDialog.show();
     }
 
-    private void requestLivePermission(){
+    private void requestLivePermission() {
         String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
         PermissionGen.needPermission(this, REQUEST_PERMISSION, permissions);
     }
@@ -684,9 +681,38 @@ public abstract class MovieFragment extends BaseRoomFragment
     @Keep
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)
     public void toLive() {
-        //个人推流
-        personPublishStream();
+        if (classroomEngine.canIndividualByState()) {
+            //个人推流
+            personPublishStream();
+        } else {
+            if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
+                //开始上课
+                requestBeginClass();
+            }
+        }
 
+
+    }
+
+
+    /**
+     * 开始上课
+     */
+    protected void requestBeginClass() {
+        showProgress(true);
+        classroomEngine.beginClass(classroomEngine.getTicket(), new APIServiceCallback<ClassResponse>() {
+            @Override
+            public void onSuccess(ClassResponse object) {
+                cancelProgress();
+                goonLive();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -701,10 +727,8 @@ public abstract class MovieFragment extends BaseRoomFragment
                     @Override
                     public void onSuccess(ClaimReponse claimReponse) {
                         cancelProgress();
+                        goonLive();
 
-                        changeOrientationToLand();
-
-                        enterLiving();
                     }
 
                     @Override
@@ -714,6 +738,13 @@ public abstract class MovieFragment extends BaseRoomFragment
                     }
                 });
     }
+
+
+    private void goonLive() {
+        changeOrientationToLand();
+        enterLiving();
+    }
+
 
     public void sendStartStreaming() {
 
