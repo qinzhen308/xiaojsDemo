@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/right_slide_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_opacity_50"
+        >
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        <ImageView
+                android:id="@+id/o2o_avator"
+                android:layout_width="@dimen/px140"
+                android:layout_height="@dimen/px140"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                />
+        <TextView
+                android:id="@+id/o2o_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/px12"
+                android:layout_below="@id/o2o_avator"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_44px"
+                android:text="dsdg"
+                />
+
+        <TextView
+                android:id="@+id/o2o_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/px46"
+                android:layout_below="@id/o2o_name"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_30px"
+                android:text="邀请您一对一音视频，其他人看不见"
+                />
+
+        <TextView
+                android:id="@+id/o2o_outtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/px5"
+                android:layout_below="@id/o2o_tips"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_30px"
+                android:text="18s"
+                />
+
+        <View
+                android:id="@+id/o2o_space"
+                android:layout_width="@dimen/px154"
+                android:layout_height="@dimen/px1"
+                android:layout_below="@id/o2o_outtime"
+                android:layout_marginTop="@dimen/px110"
+                android:layout_centerHorizontal="true"
+                />
+
+        <ImageView
+                android:id="@+id/o2o_refused"
+                android:layout_width="@dimen/px110"
+                android:layout_height="@dimen/px110"
+                android:src="@drawable/ic_videoinitiation_refuse"
+                android:layout_marginTop="@dimen/px55"
+                android:layout_below="@id/o2o_outtime"
+                android:layout_alignLeft="@id/o2o_space"
+                />
+
+        <ImageView
+                android:id="@+id/o2o_argee"
+                android:layout_width="@dimen/px110"
+                android:layout_height="@dimen/px110"
+                android:src="@drawable/ic_videoinitiation_agree"
+                android:layout_marginTop="@dimen/px55"
+                android:layout_marginLeft="@dimen/px110"
+                android:layout_below="@id/o2o_outtime"
+                android:layout_toRightOf="@id/o2o_space"
+                />
+
+
+
+    </RelativeLayout>
+
+</FrameLayout>

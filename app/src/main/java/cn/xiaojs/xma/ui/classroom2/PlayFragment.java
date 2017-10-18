@@ -1,37 +1,28 @@
 package cn.xiaojs.xma.ui.classroom2;
 
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.orhanobut.logger.Logger;
-import com.pili.pldroid.player.AVOptions;
-import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
-import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
 
@@ -39,7 +30,7 @@ import io.reactivex.functions.Consumer;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class PlayFragment extends MovieFragment {
+public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMoreListener{
 
     @BindView(R.id.video_view)
     PLVideoTextureView videoView;
@@ -63,8 +54,12 @@ public class PlayFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        lRightSwitchcameraView.setVisibility(View.GONE);
+
         int changeRequest = getActivity().getRequestedOrientation();
         controlHandleOnRotate(changeRequest);
+
+        initTalkData(this);
 
         configPortLandOperaButton();
         configVideoView(videoView);
@@ -94,6 +89,11 @@ public class PlayFragment extends MovieFragment {
         if (playLiveObserver != null) {
             playLiveObserver.dispose();
         }
+    }
+
+    @Override
+    public void onFetchMoreRequested() {
+        loadTalk();
     }
 
     @Override
@@ -256,6 +256,11 @@ public class PlayFragment extends MovieFragment {
                     break;
                 case Su.EventType.STREAMING_STOPPED:
                     handleStreamStop((StreamStopReceive) eventReceived.t);
+                    break;
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+                    //TODO fix同一条消息多次回调?
+                    handleReceivedMsg(talk);
                     break;
             }
         }

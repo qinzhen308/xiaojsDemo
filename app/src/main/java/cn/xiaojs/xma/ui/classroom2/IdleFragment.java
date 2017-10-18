@@ -21,8 +21,10 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
 
@@ -30,7 +32,7 @@ import io.reactivex.functions.Consumer;
  * Created by maxiaobao on 2017/9/25.
  */
 
-public class IdleFragment extends MovieFragment {
+public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMoreListener {
 
 
     @BindView(R.id.p_bottom_class_name)
@@ -64,6 +66,9 @@ public class IdleFragment extends MovieFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initControlPanel();
+
+        initTalkData(this);
+
         initDefaultBoard();
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
     }
@@ -76,6 +81,11 @@ public class IdleFragment extends MovieFragment {
         }
     }
 
+    @Override
+    public void onFetchMoreRequested() {
+        loadTalk();
+    }
+
 
     @Override
     public void closeMovie() {
@@ -86,9 +96,11 @@ public class IdleFragment extends MovieFragment {
     public void onRotate(int orientation) {
         controlHandleOnRotate(orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(whiteboardFragment.isAdded()){
-                getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
-            }else {
+            if (whiteboardFragment.isAdded()) {
+                getChildFragmentManager().beginTransaction()
+                        .attach(whiteboardFragment)
+                        .commitAllowingStateLoss();
+            } else {
                 getChildFragmentManager()
                         .beginTransaction()
                         .add(R.id.layout_idle_container, whiteboardFragment)
@@ -98,7 +110,9 @@ public class IdleFragment extends MovieFragment {
             ivWhiteboardPreview.setVisibility(View.GONE);
         } else {
             if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
-                getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+                getChildFragmentManager().beginTransaction()
+                        .detach(whiteboardFragment)
+                        .commitAllowingStateLoss();
             }
             ivWhiteboardPreview.setImageBitmap(whiteboardFragment.preview());
             ivWhiteboardPreview.setVisibility(View.VISIBLE);
@@ -107,8 +121,10 @@ public class IdleFragment extends MovieFragment {
 
     @Override
     public void back() {
-        if(!whiteboardFragment.isDetached()){
-            getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+        if (!whiteboardFragment.isDetached()) {
+            getChildFragmentManager().beginTransaction().
+                    detach(whiteboardFragment)
+                    .commitAllowingStateLoss();
             return;
         }
         super.back();
@@ -168,6 +184,11 @@ public class IdleFragment extends MovieFragment {
 
         int changeRequest = getActivity().getRequestedOrientation();
         controlHandleOnRotate(changeRequest);
+
+        lRightSwitchcameraView.setVisibility(View.GONE);
+        lTopPhotoView.setVisibility(View.GONE);
+        lTopRoominfoView.setVisibility(View.GONE);
+
         pBottomClassnameView.setText(classroomEngine.getRoomTitle());
 
         configStartOrPausedLiveButton();
@@ -233,6 +254,11 @@ public class IdleFragment extends MovieFragment {
                 case Su.EventType.SYNC_STATE:
                     SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;
                     handleSyncState(syncStateReceive);
+                    break;
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+                    //TODO fix同一条消息多次回调?
+                    handleReceivedMsg(talk);
                     break;
             }
         }

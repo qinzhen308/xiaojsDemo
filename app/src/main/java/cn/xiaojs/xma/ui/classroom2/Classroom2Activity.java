@@ -185,7 +185,7 @@ public class Classroom2Activity extends FragmentActivity {
 
             resetSizeWhenOrientationChanged(newConfig.orientation);
 
-            if (movieFragment != null) {
+            if (movieFragment != null && movieFragment.isAdded()) {
                 movieFragment.onRotate(newConfig.orientation);
             }
         }

@@ -1,14 +1,20 @@
 package cn.xiaojs.xma.ui.classroom2.base;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -21,6 +27,9 @@ import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -29,23 +38,42 @@ import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.model.live.LiveCriteria;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
-import cn.xiaojs.xma.ui.classroom2.ChatFragment;
+import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom2.ClassDetailFragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.SettingFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatLandAdapter;
+import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
+import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/9/18.
@@ -68,9 +96,10 @@ public abstract class MovieFragment extends BaseRoomFragment
     @BindView(R.id.l_bottom_session)
     public ImageView lBottomSessionView;
 
-
     @BindView(R.id.l_right_screenshot)
     public ImageView lRightScreenshortView;
+    @BindView(R.id.l_right_switchcamera)
+    public ImageView lRightSwitchcameraView;
 
 
     @BindView(R.id.center_panel)
@@ -108,6 +137,20 @@ public abstract class MovieFragment extends BaseRoomFragment
     public ClosableAdapterSlidingLayout slideLayout;
 
 
+    ////////////
+    @BindView(R.id.chat_list)
+    public RecyclerView recyclerView;
+    private LiveCriteria liveCriteria;
+    private Pagination pagination;
+    private int currentPage = 1;
+    private ArrayList<TalkItem> messageData;
+    private ChatLandAdapter adapter;
+    private MessageComparator messageComparator;
+    private boolean loading = false;
+    private long lastTimeline = 0;
+
+
+
     public final static int REQUEST_PERMISSION = 3;
 
     protected ClassroomEngine classroomEngine;
@@ -126,6 +169,44 @@ public abstract class MovieFragment extends BaseRoomFragment
         slideLayout.setSlideListener(this);
 
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case CTLConstant.REQUEST_INPUT_MESSAGE:
+
+                    final Talk talkBean = new Talk();
+                    talkBean.from = AccountDataManager.getAccountID(getContext());
+                    talkBean.body = new Talk.TalkContent();
+                    talkBean.body.text = data.getStringExtra(CTLConstant.EXTRA_INPUT_MESSAGE);
+                    talkBean.body.contentType = Communications.ContentType.TEXT;
+                    talkBean.time = System.currentTimeMillis();
+                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
+
+
+                    classroomEngine.sendTalk(talkBean, new EventCallback<TalkResponse>() {
+                        @Override
+                        public void onSuccess(TalkResponse talkResponse) {
+                            if (talkResponse != null) {
+                                talkBean.time = talkResponse.time;
+                            }
+                            handleReceivedMsg(talkBean);
+                        }
+
+                        @Override
+                        public void onFailed(String errorCode, String errorMessage) {
+
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    break;
+            }
+        }
+
+    }
+
 
     @OnClick({R.id.l_top_back, R.id.l_top_start_or_stop_living,
             R.id.l_bottom_chat, R.id.l_bottom_session, R.id.l_bottom_more,
@@ -322,7 +403,8 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 点击了显示或者隐藏聊天列表
      */
     public void onTalkVisibilityClick(View view) {
-
+        int vis = recyclerView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE;
+        recyclerView.setVisibility(vis);
     }
 
 
@@ -334,6 +416,12 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 点击了输入聊天消息
      */
     public void onInputMessageClick(View view) {
+        MsgInputFragment inputFragment = new MsgInputFragment();
+        Bundle data = new Bundle();
+        data.putInt(CTLConstant.EXTRA_INPUT_FROM, 1);
+        inputFragment.setArguments(data);
+        inputFragment.setTargetFragment(this, CTLConstant.REQUEST_INPUT_MESSAGE);
+        inputFragment.show(getFragmentManager(), "input");
 
     }
 
@@ -421,6 +509,10 @@ public abstract class MovieFragment extends BaseRoomFragment
                     controlLand.setVisibility(View.VISIBLE);
                 }
 
+                if (recyclerView != null) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+
                 if (controlPort != null) {
                     controlPort.setVisibility(View.GONE);
                 }
@@ -431,12 +523,154 @@ public abstract class MovieFragment extends BaseRoomFragment
                     controlLand.setVisibility(View.GONE);
                 }
 
+                if (recyclerView != null) {
+                    recyclerView.setVisibility(View.GONE);
+                }
+
                 if (controlPort != null) {
                     controlPort.setVisibility(View.VISIBLE);
                 }
                 break;
         }
     }
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 交流
+    //
+
+    public void initTalkData(ChatAdapter.FetchMoreListener listener) {
+
+        messageData = new ArrayList<>();
+        messageComparator = new MessageComparator();
+        int maxNumOfObjectPerPage = 50;
+
+        GridLayoutManager layoutManager =
+                new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ChatLandAdapter(getContext(), messageData);
+        adapter.setAutoFetchMoreSize(8);
+        adapter.setPerpageMaxCount(maxNumOfObjectPerPage);
+        adapter.setFetchMoreListener(listener);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
+                outRect.bottom = getResources().getDimensionPixelSize(R.dimen.px20);
+            }
+        });
+
+
+        pagination = new Pagination();
+        pagination.setMaxNumOfObjectsPerPage(maxNumOfObjectPerPage);
+        pagination.setPage(currentPage);
+
+        liveCriteria = new LiveCriteria();
+        liveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
+
+        loadTalk();
+    }
+
+
+    public void loadTalk() {
+
+        if (loading) return;
+
+        loading = true;
+        LiveManager.getTalks(getContext(), classroomEngine.getTicket(),
+                liveCriteria, pagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
+                    @Override
+                    public void onSuccess(CollectionPage<TalkItem> object) {
+                        if (object != null && object.objectsOfPage != null
+                                && object.objectsOfPage.size() > 0) {
+                            handleNewData(object);
+                        }
+
+                        loading = false;
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+
+                        Toast.makeText(getContext(), "获取消息列表失败", Toast.LENGTH_SHORT).show();
+
+                        loading = false;
+                    }
+                });
+    }
+
+    public void handleNewData(CollectionPage<TalkItem> object) {
+        Observable.just(object.objectsOfPage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .doAfterNext(new Consumer<ArrayList<TalkItem>>() {
+                    @Override
+                    public void accept(ArrayList<TalkItem> talkItems) throws Exception {
+                        Collections.sort(talkItems, messageComparator);
+
+                        for (TalkItem item : talkItems) {
+                            timeline(item);
+                        }
+                        messageData.addAll(0, talkItems);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ArrayList<TalkItem>>() {
+                    @Override
+                    public void accept(ArrayList<TalkItem> talkItems) throws Exception {
+
+                        if (currentPage == 1) {
+                            adapter.notifyDataSetChanged();
+                            RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
+                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
+                        } else {
+                            adapter.notifyItemRangeInserted(0, talkItems.size());
+                            recyclerView.scrollToPosition(talkItems.size());
+                        }
+                        pagination.setPage(++currentPage);
+
+                        adapter.setFirstLoad(false);
+
+                    }
+                });
+    }
+
+
+    public void handleReceivedMsg(Talk talk) {
+
+        TalkItem talkItem = new TalkItem();
+        talkItem.time = talk.time;
+        talkItem.body = new cn.xiaojs.xma.model.live.TalkItem.TalkContent();
+        talkItem.from = new cn.xiaojs.xma.model.live.TalkItem.TalkPerson();
+        talkItem.body.text = talk.body.text;
+        talkItem.body.contentType = talk.body.contentType;
+        talkItem.from.accountId = talk.from;
+        //获取名字
+        Attendee attendee = classroomEngine.getMember(talk.from);
+        talkItem.from.name = attendee == null ? "nil" : attendee.name;
+
+        timeline(talkItem);
+
+        messageData.add(talkItem);
+        adapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(messageData.size() - 1);
+
+    }
+
+    private void timeline(TalkItem item) {
+        long time = item.time;
+        if (lastTimeline == 0
+                || time - lastTimeline >= (long) (5 * 60 * 1000)) {
+            item.showTime = true;
+            lastTimeline = time;
+        }
+
+    }
+
+
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
