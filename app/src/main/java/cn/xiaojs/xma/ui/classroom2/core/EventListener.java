@@ -178,6 +178,26 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
         }
     }
 
+
+    public static class ELIdle extends EventListener {
+
+        public ELIdle(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onEvent() {
+            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+                    Su.EventType.SYNC_STATE, SyncStateReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+                    Su.EventType.SYNC_CLASS_STATE, SyncClassStateReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context,Su.EventCategory.LIVE,
+                    Su.EventType.STREAMING_STARTED, StreamStartReceive.class, this));
+        }
+
+    }
+
+
     public static class ELPlaylive extends EventListener {
 
         public ELPlaylive(Context context) {

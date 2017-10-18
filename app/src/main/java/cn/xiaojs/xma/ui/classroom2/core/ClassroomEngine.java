@@ -429,6 +429,33 @@ public final class ClassroomEngine {
         return syncboard;
     }
 
+
+
+    public EventListener.ELIdle observerIdle(Consumer<EventReceived> consumer) {
+        EventListener.ELIdle elIdle = new EventListener.ELIdle(context);
+        eventObservable.eventListener(elIdle)
+                .doAfterNext(new Consumer<EventReceived>() {
+                    @Override
+                    public void accept(EventReceived eventReceived) throws Exception {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("observerIdle doAfterNext acceptted");
+                        }
+
+                        switch (eventReceived.eventType) {
+                            case Su.EventType.SHARE_BOARD:
+                                SyncboardHelper.handleShareBoardData(
+                                        (ShareboardReceive) eventReceived.t);
+                                break;
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return elIdle;
+    }
+
+
     public EventListener.ELPlaylive observerPlaylive(Consumer<EventReceived> consumer) {
         EventListener.ELPlaylive playlive = new EventListener.ELPlaylive(context);
         eventObservable.eventListener(playlive)
