@@ -26,6 +26,8 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
     TextView tvTitle;
     @BindView(R.id.btn_more)
     ImageView btnMore;
+    @BindView(R.id.selector)
+    View selector;
 
 
     public WhiteboardManagerItemView(Context context) {
@@ -38,6 +40,14 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
         init();
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width=MeasureSpec.getSize(widthMeasureSpec);
+        int height=(int)(9*width/16.0f);
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height,MeasureSpec.EXACTLY));
+        setMeasuredDimension(width,height);
+    }
+
     private void init() {
         inflate(getContext(), R.layout.layout_whiteboard_manager_item, this);
         ButterKnife.bind(this);
@@ -47,7 +57,11 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
     @Override
     public void bindData(int position, WhiteboardModel data) {
         mData = data;
-
+        if(data.isSelected){
+            selector.setVisibility(VISIBLE);
+        }else {
+            selector.setVisibility(GONE);
+        }
     }
 
 

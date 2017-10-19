@@ -5,4 +5,6 @@ package cn.xiaojs.xma.ui.classroom.page;
  */
 
 public class WhiteboardModel {
+
+    public boolean isSelected;
 }

@@ -9,6 +9,7 @@
         android:id="@+id/iv_white_board"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:scaleType="fitXY"
         />
 
@@ -21,9 +22,10 @@
         android:layout_alignLeft="@+id/iv_white_board"
         android:layout_alignRight="@+id/iv_white_board"
         android:padding="@dimen/px10"
-        android:text="我的标题"
+        android:text="白板-1"
         android:maxLines="1"
         android:layout_toRightOf="@+id/tv_label"
+        android:background="@color/cancel_fllow_btn_color"
         android:textColor="@color/font_black"
         android:textSize="@dimen/font_34px" />
 
@@ -36,7 +38,15 @@
         android:layout_alignRight="@+id/tv_title"
         android:paddingLeft="@dimen/px10"
         android:paddingRight="@dimen/px10"
-        android:src="@drawable/ic_more"
+        android:src="@drawable/selector_btn_more1"
+        />
+
+    <View
+        android:id="@+id/selector"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_select_frame"
+        android:visibility="gone"
         />
 
 

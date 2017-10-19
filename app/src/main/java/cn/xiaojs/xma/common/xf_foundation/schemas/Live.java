@@ -20,7 +20,7 @@ public class Live {
     //
     // Defines the board types.
     //
-    public class BoardType {
+   /* public class BoardType {
         public static final int NOT_SPECIFIED = 0;
         // Whiteboard
         public static final int WHITE = 1;
@@ -35,6 +35,18 @@ public class Live {
         // A split board to contain reflection of other boards
         public static final int SPLIT = 10;
 
+    }*/
+
+    public class BoardType {
+        public static final int NOTSPECIFIED =0;
+        public static final int WHITE =1;
+        public static final int SLIDES =2;
+        public static final int MEDIA =3;
+        public static final int STREAMING =4;
+        public static final int TEST =5;
+        public static final int COLLABORATION =6;
+        public static final int SNAPSHOT =7;
+        public static final int SPLIT =100;
     }
 
 
@@ -161,6 +173,8 @@ public class Live {
         public static final String DRAW_INTERVAL ="drawInterval";
         public static final String DRAW_IMAGE ="drawImage";
     }
+
+
 
 
 }

@@ -10,6 +10,7 @@ import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.classroom.page.WhiteboardManagerItemView;
+import cn.xiaojs.xma.ui.classroom.page.WhiteboardModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
@@ -113,7 +114,7 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     break;
             }
             return viewtype;
-        }else if(o instanceof LastEmptyModel){
+        }else if(o instanceof WhiteboardModel){
             return VIEW_TYPE_CLASSROOM_WHITEBOARD_MANAGER;
         }else if(o instanceof LastEmptyModel){
             return VIEW_TYPE_LAST_EMPTY;

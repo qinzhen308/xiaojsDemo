@@ -324,11 +324,13 @@ public class BoardCollaborateFragment extends BaseFragment {
 
 
     public void showWhiteboardManager(){
-        Fragment fragment=WhiteboardManagerFragment.createInstance("");
+        /*Fragment fragment=WhiteboardManagerFragment.createInstance("");
         fragment.setTargetFragment(this,200);
         getChildFragmentManager().beginTransaction().
                 add(R.id.layout_dialog_container,fragment).
                 addToBackStack("dialog_fragment").
-                commitAllowingStateLoss();
+                commitAllowingStateLoss();*/
+
+        WhiteboardManagerFragment.createInstance("").show(getChildFragmentManager(),"dialog_fragment");
     }
 }
