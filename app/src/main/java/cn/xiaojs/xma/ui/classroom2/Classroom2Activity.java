@@ -17,19 +17,26 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.socket.SocketManager;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.ui.classroom.main.*;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.core.BootObservable;
@@ -37,6 +44,7 @@ import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomType;
 import cn.xiaojs.xma.ui.classroom2.core.RoomSession;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -52,6 +60,13 @@ public class Classroom2Activity extends FragmentActivity {
 
     @BindView(R.id.constrant_root)
     ConstraintLayout rootLayout;
+
+    @BindView(R.id.o2o_root)
+    FrameLayout o2oLayout;
+    @BindView(R.id.o2o_avator)
+    ImageView o2oAvatorView;
+    @BindView(R.id.o2o_name)
+    TextView o2oNameView;
 
 
     private BootObservable.BootListener bootListener;
@@ -317,7 +332,7 @@ public class Classroom2Activity extends FragmentActivity {
 
         if (!TextUtils.isEmpty(classroomEngine.getPlayUrl())) {
             enterPlay();
-        }else {
+        } else {
             enterIdle();
         }
 
@@ -501,14 +516,10 @@ public class Classroom2Activity extends FragmentActivity {
     }
 
 
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // movie fragments control
     //
-
 
 
     public void enterIdle() {
@@ -591,6 +602,49 @@ public class Classroom2Activity extends FragmentActivity {
         if (movieFragment != null) {
             transaction.remove(movieFragment);
         }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 一对一的面板操作
+    //
+
+    @OnClick({R.id.o2o_argee, R.id.o2o_refused})
+    void onO2oClick(View view) {
+        switch (view.getId()) {
+            case R.id.o2o_argee:
+                argeeO2o(true);
+                break;
+            case R.id.o2o_refused:
+                argeeO2o(false);
+                break;
+        }
+    }
+
+    public void showO2oPanel(Attendee attendee) {
+
+        String avatorUrl = Account.getAvatar(attendee.accountId, o2oAvatorView.getMeasuredWidth());
+        Glide.with(this)
+                .load(avatorUrl)
+                .transform(new CircleTransform(this))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(o2oAvatorView);
+        o2oNameView.setText(attendee.name);
+        o2oLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void argeeO2o(boolean argee) {
+
+        o2oLayout.setVisibility(View.GONE);
+
+        if (argee) {
+            movieFragment.argeeO2o();
+        } else {
+            movieFragment.refuseO2o();
+        }
+
     }
 
 }

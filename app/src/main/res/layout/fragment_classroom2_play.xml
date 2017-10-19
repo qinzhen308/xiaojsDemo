@@ -3,36 +3,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.pili.pldroid.player.widget.PLVideoTextureView
+    <cn.xiaojs.xma.ui.classroom2.live.PlayLiveView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-    <LinearLayout
-            android:id="@+id/loading_View"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:background="@color/black_opacity_40"
-            android:orientation="horizontal">
-
-        <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                style="@android:style/Widget.Holo.Light.ProgressBar.Small"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="@string/video_loading"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/font_25px"
-                />
-    </LinearLayout>
+            android:layout_height="match_parent"/>
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_list"

@@ -9,17 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
-import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
@@ -40,6 +35,8 @@ import cn.xiaojs.xma.ui.classroom2.base.AVFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
+import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
 import cn.xiaojs.xma.ui.classroom2.member.ChooseMemberFragment;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -50,21 +47,16 @@ import io.reactivex.functions.Consumer;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreListener {
+public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreListener, PlayLiveView.ControlListener {
 
-    @BindView(R.id.camera_preview)
-    CameraPreviewFrameView cameraPreviewFrameView;
+    @BindView(R.id.videostream_view)
+    VideoStreamView videoStreamView;
     @BindView(R.id.video_play)
-    PLVideoTextureView playView;
-    @BindView(R.id.video_root)
-    FrameLayout videoRootView;
-    @BindView(R.id.close_video)
-    ImageView closeVideoView;
+    PlayLiveView playView;
 
     private boolean streaming;
 
     private EventListener.ELLiving livingObserver;
-
 
     private Attendee one2oneAttendee;
 
@@ -87,25 +79,22 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         initControlView();
         initTalkData(this);
 
+        playView.setControlListener(this);
+        playView.setCloseEnabled(true);
+
         livingObserver = classroomEngine.observerLiving(receivedConsumer);
 
-        configVideoView(playView);
-
     }
 
-    @OnClick({R.id.close_video, R.id.overlay_mask})
-    void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.close_video:
-                stopPlay(true);
-                break;
-            case R.id.overlay_mask:
-                closeVideoView.setVisibility(View.VISIBLE);
-                break;
-
-        }
+    @Override
+    protected CameraPreviewFrameView createCameraPreview() {
+        return videoStreamView.getCameraPreviewView();
     }
 
+    @Override
+    public void onPlayClosed() {
+        sendCloseMedia();
+    }
 
     @Override
     public void onDestroy() {
@@ -171,15 +160,11 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     }
 
-    @Override
-    protected CameraPreviewFrameView createCameraPreview() {
-        return cameraPreviewFrameView;
-    }
+
 
 
     @Override
     public void onStateChanged(StreamingState streamingState, Object extra) {
-        super.onStateChanged(streamingState, extra);
         switch (streamingState) {
             case STREAMING:
                 if (XiaojsConfig.DEBUG) {
@@ -303,10 +288,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     }
 
     private void showPlay() {
-        videoRootView.setVisibility(View.VISIBLE);
-
-        playView.setVideoPath(classroomEngine.getPlayUrl());
-        playView.start();
+        playView.setVisibility(View.VISIBLE);
+        playView.startPlay(classroomEngine.getPlayUrl());
     }
 
 
@@ -316,9 +299,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             sendCloseMedia();
         }
 
-        playView.pause();
-        videoRootView.setVisibility(View.GONE);
-        closeVideoView.setVisibility(View.GONE);
+        playView.stopPlay();
+        playView.setVisibility(View.GONE);
         one2oneAttendee = null;
     }
 

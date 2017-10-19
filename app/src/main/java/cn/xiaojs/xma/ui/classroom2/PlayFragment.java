@@ -6,9 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import com.orhanobut.logger.Logger;
-import com.pili.pldroid.player.widget.PLVideoTextureView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,13 +15,16 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -33,9 +34,7 @@ import io.reactivex.functions.Consumer;
 public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMoreListener{
 
     @BindView(R.id.video_view)
-    PLVideoTextureView videoView;
-    @BindView(R.id.loading_View)
-    LinearLayout loadingView;
+    PlayLiveView videoView;
 
     private EventListener.ELPlaylive playLiveObserver;
 
@@ -62,9 +61,8 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
         initTalkData(this);
 
         configPortLandOperaButton();
-        configVideoView(videoView);
-        videoView.setVideoPath(classroomEngine.getPlayUrl());
-        videoView.start();
+
+        videoView.startPlay(classroomEngine.getPlayUrl());
 
         playLiveObserver = classroomEngine.observerPlaylive(receivedConsumer);
 
@@ -78,13 +76,13 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
     @Override
     public void onResume() {
         super.onResume();
-        videoView.start();
+        videoView.resume();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        videoView.stopPlayback();
+        videoView.destroy();
 
         if (playLiveObserver != null) {
             playLiveObserver.dispose();
@@ -130,6 +128,18 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
     public void onStartOrStopLiveClick(View view) {
         requestPublish();
     }
+
+    @Override
+    protected void handleArgeedO2o(Attendee attendee) {
+        super.handleArgeedO2o(attendee);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 响应1队1
+    //
+
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 开始直播
@@ -228,6 +238,13 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     }
 
+    private void handleO2o(OpenMediaReceive receive) {
+        Attendee attendee = classroomEngine.getMember(receive.from);
+        if (attendee != null) {
+            receivedO2o(attendee);
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 事件监听
@@ -261,6 +278,12 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
                     Talk talk = (Talk) eventReceived.t;
                     //TODO fix同一条消息多次回调?
                     handleReceivedMsg(talk);
+                    break;
+                case Su.EventType.OPEN_MEDIA:
+                    if (eventReceived.t == null)
+                        return;
+                    OpenMediaReceive receive = (OpenMediaReceive) eventReceived.t;
+                    handleO2o(receive);
                     break;
             }
         }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,9 @@ import cn.xiaojs.xma.ui.classroom2.material.DownloadListFragment;
 
 public class DatabaseFragment extends BottomSheetFragment
         implements DatabaseListFragment.OnOperatingListener, DialogInterface.OnKeyListener{
+
+    @BindView(R.id.cl_root)
+    ConstraintLayout rootLay;
 
     @BindView(R.id.tab_bar)
     RadioGroup tabGroup;
@@ -60,7 +65,14 @@ public class DatabaseFragment extends BottomSheetFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDialog().setOnKeyListener(this);
+        if (getDialog()==null) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
+            params.setMargins(0,0,0,0);
+            rootLay.setBackgroundColor(getResources().getColor(R.color.white));
+        }else {
+            getDialog().setOnKeyListener(this);
+        }
+
 
         fragmentList = new ArrayList<>(2);
 
@@ -111,7 +123,6 @@ public class DatabaseFragment extends BottomSheetFragment
                 break;
             case R.id.download_btn:
                 downloadOrBack();
-
                 break;
             case R.id.add_btn:
                 openAddNew();

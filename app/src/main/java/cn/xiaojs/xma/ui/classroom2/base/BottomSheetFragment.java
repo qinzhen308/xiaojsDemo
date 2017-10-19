@@ -49,6 +49,9 @@ public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onGlobalLayout() {
 
+                        if (getDialog() == null)
+                            return;
+
                         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
                         FrameLayout bottomSheet = (FrameLayout) dialog.findViewById(

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/right_slide_layout"
+        android:id="@+id/o2o_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_opacity_50"
+        android:background="@color/black_opacity_30"
         >
     <RelativeLayout
             android:layout_width="wrap_content"
@@ -70,7 +70,8 @@
                 android:src="@drawable/ic_videoinitiation_refuse"
                 android:layout_marginTop="@dimen/px55"
                 android:layout_below="@id/o2o_outtime"
-                android:layout_alignLeft="@id/o2o_space"
+                android:layout_alignLeft="@id/o2o_tips"
+                android:layout_marginLeft="@dimen/px55"
                 />
 
         <ImageView
@@ -79,9 +80,9 @@
                 android:layout_height="@dimen/px110"
                 android:src="@drawable/ic_videoinitiation_agree"
                 android:layout_marginTop="@dimen/px55"
-                android:layout_marginLeft="@dimen/px110"
                 android:layout_below="@id/o2o_outtime"
-                android:layout_toRightOf="@id/o2o_space"
+                android:layout_alignRight="@id/o2o_tips"
+                android:layout_marginRight="@dimen/px55"
                 />
 
 
