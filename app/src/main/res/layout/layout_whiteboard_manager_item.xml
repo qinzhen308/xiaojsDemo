@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/px15"
+    >
+
+    <ImageView
+        android:id="@+id/iv_white_board"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/iv_white_board"
+        android:layout_alignLeft="@+id/iv_white_board"
+        android:layout_alignRight="@+id/iv_white_board"
+        android:padding="@dimen/px10"
+        android:text="我的标题"
+        android:maxLines="1"
+        android:layout_toRightOf="@+id/tv_label"
+        android:textColor="@color/font_black"
+        android:textSize="@dimen/font_34px" />
+
+    <ImageView
+        android:id="@+id/btn_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_title"
+        android:layout_alignTop="@+id/tv_title"
+        android:layout_alignRight="@+id/tv_title"
+        android:paddingLeft="@dimen/px10"
+        android:paddingRight="@dimen/px10"
+        android:src="@drawable/ic_more"
+        />
+
+
+
+</RelativeLayout>

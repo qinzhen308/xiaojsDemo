@@ -22,7 +22,6 @@ import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
-import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
@@ -42,13 +41,6 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     private EventListener.ELIdle idleObserver;
 
-    BoardCollaborateFragment whiteboardFragment;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        whiteboardFragment = BoardCollaborateFragment.createInstance("");
-    }
 
     @Nullable
     @Override
@@ -95,39 +87,14 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     @Override
     public void onRotate(int orientation) {
         controlHandleOnRotate(orientation);
+        onRotateToInitBoard(orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (whiteboardFragment.isAdded()) {
-                getChildFragmentManager().beginTransaction()
-                        .attach(whiteboardFragment)
-                        .commitAllowingStateLoss();
-            } else {
-                getChildFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.layout_idle_container, whiteboardFragment)
-                        .commitAllowingStateLoss();
-            }
             ivWhiteboardPreview.setImageBitmap(null);
             ivWhiteboardPreview.setVisibility(View.GONE);
         } else {
-            if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
-                getChildFragmentManager().beginTransaction()
-                        .detach(whiteboardFragment)
-                        .commitAllowingStateLoss();
-            }
             ivWhiteboardPreview.setImageBitmap(whiteboardFragment.preview());
             ivWhiteboardPreview.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void back() {
-        if (!whiteboardFragment.isDetached()) {
-            getChildFragmentManager().beginTransaction().
-                    detach(whiteboardFragment)
-                    .commitAllowingStateLoss();
-            return;
-        }
-        super.back();
     }
 
 
@@ -151,10 +118,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         requestLive();
     }
 
-    @Override
-    public void onNewboardClick(View view) {
 
-    }
 
     public void onStartOrStopLiveClick(View view) {
         requestLive();

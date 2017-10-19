@@ -9,6 +9,7 @@ import java.util.List;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.search.SearchResultV2;
+import cn.xiaojs.xma.ui.classroom.page.WhiteboardManagerItemView;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
@@ -34,6 +35,8 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int VIEW_TYPE_SEARCH_RESULT_ORGANIZATION =3;
     public static final int VIEW_TYPE_SEARCH_RESULT_LIVE_LESSON=4;
     public static final int VIEW_TYPE_SEARCH_RESULT_RECORDED_LESSON=5;
+
+    public static final int VIEW_TYPE_CLASSROOM_WHITEBOARD_MANAGER=11;
 
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
@@ -70,6 +73,8 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder=new CommonHolder(new SRLiveLessonView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_SEARCH_RESULT_RECORDED_LESSON){
             holder=new CommonHolder(new SRRecordedLessonView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_CLASSROOM_WHITEBOARD_MANAGER){
+            holder=new CommonHolder(new WhiteboardManagerItemView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -108,6 +113,8 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     break;
             }
             return viewtype;
+        }else if(o instanceof LastEmptyModel){
+            return VIEW_TYPE_CLASSROOM_WHITEBOARD_MANAGER;
         }else if(o instanceof LastEmptyModel){
             return VIEW_TYPE_LAST_EMPTY;
         }

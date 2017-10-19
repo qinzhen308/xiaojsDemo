@@ -63,7 +63,7 @@ public abstract class AVFragment extends MovieFragment implements StreamingEngin
 
     @Override
     public void onRotate(int orientation) {
-        //do nothing
+        onRotateToInitBoard(orientation);
     }
 
     @Override

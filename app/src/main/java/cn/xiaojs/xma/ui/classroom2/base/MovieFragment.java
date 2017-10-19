@@ -22,11 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
-import com.pili.pldroid.player.AVOptions;
-import com.pili.pldroid.player.PLMediaPlayer;
-import com.pili.pldroid.player.widget.PLVideoTextureView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -53,6 +48,8 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
@@ -138,7 +135,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     public ClosableAdapterSlidingLayout slideLayout;
 
 
-    ////////////
     @BindView(R.id.chat_list)
     public RecyclerView recyclerView;
     private LiveCriteria liveCriteria;
@@ -158,10 +154,18 @@ public abstract class MovieFragment extends BaseRoomFragment
     protected Fragment slideFragment;
     protected Attendee o2oAttendee;
 
+    //这个白板fragment对象的留存时间依赖于Activity
+    //但生命周期取决于使用他的fragment
+    protected BoardCollaborateFragment whiteboardFragment;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         classroomEngine = ClassroomEngine.getEngine();
+
+        if(getActivity() instanceof Classroom2Activity){
+            whiteboardFragment=((Classroom2Activity)getActivity()).getCollaBorateFragment();
+        }
     }
 
     @Override
@@ -169,7 +173,21 @@ public abstract class MovieFragment extends BaseRoomFragment
         super.onActivityCreated(savedInstanceState);
 
         slideLayout.setSlideListener(this);
+        if(!ClassroomController.getInstance(getActivity()).isPortrait()){
+            onRotateToInitBoard(Configuration.ORIENTATION_LANDSCAPE);
+        }
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        //
+        whiteboardFragment=null;
+        super.onDestroy();
     }
 
 
@@ -392,7 +410,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 点击了新增白板
      */
     public void onNewboardClick(View view) {
-
+        // TODO: 2017/10/18 新增白板
     }
 
     /**
@@ -400,6 +418,9 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onBoardMgrClick(View view) {
 
+        if(whiteboardFragment!=null&&!whiteboardFragment.isDetached()){
+            whiteboardFragment.showWhiteboardManager();
+        }
     }
 
     /**
@@ -841,6 +862,52 @@ public abstract class MovieFragment extends BaseRoomFragment
 
                     }
                 });
+    }
+
+    //====================================全局白板====================================
+    protected void addWhiteboardFragment(){
+        getChildFragmentManager()
+                .beginTransaction()
+                .add(R.id.layout_idle_container, whiteboardFragment)
+                .commitAllowingStateLoss();
+    }
+
+    protected void showWhiteboardFragment(){
+        if(whiteboardFragment.isAdded()){
+            getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
+        }else {
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.layout_idle_container, whiteboardFragment)
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    protected void hideWhiteboardFragment(){
+        if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
+            getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+        }
+    }
+    protected void removeWhiteboardFragment(){
+        getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
+    }
+
+    protected void onRotateToInitBoard(int orientation){
+        if(whiteboardFragment==null)return;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if(whiteboardFragment.isAdded()){
+                getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
+            }else {
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.layout_idle_container, whiteboardFragment)
+                        .commitAllowingStateLoss();
+            }
+        } else {
+            if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
+                getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+            }
+        }
     }
 
 

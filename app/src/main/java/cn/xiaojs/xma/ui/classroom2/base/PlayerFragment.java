@@ -207,7 +207,7 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
 
     @Override
     public void onRotate(int orientation) {
-        //Do nothing
+        //do nothing
     }
 
     @Override

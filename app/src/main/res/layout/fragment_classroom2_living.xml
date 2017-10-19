@@ -3,10 +3,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+    <FrameLayout
+            android:id="@+id/layout_idle_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     <cn.xiaojs.xma.ui.classroom2.live.VideoStreamView
             android:id="@+id/videostream_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_list"
