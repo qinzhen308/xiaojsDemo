@@ -22,7 +22,10 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
@@ -40,6 +43,7 @@ import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.functions.Consumer;
 
 
@@ -76,6 +80,8 @@ public class BoardCollaborateFragment extends BaseFragment {
     public ShareboardReceive firstData;
     private EventListener.Syncboard eventListener;
 
+    private String boardId;
+
     @Override
     protected View getContentView() {
         return LayoutInflater.from(mContext).inflate(R.layout.fragment_classroom_board_collaborate, null);
@@ -91,6 +97,13 @@ public class BoardCollaborateFragment extends BaseFragment {
         mBoardController.setCanReceive(true);
         mBoardController.setCanSend(true);
         mBoardController.setCanSend(true);
+        boardId=getArguments().getString(EXTRA_BOARD_ID);
+        if(TextUtils.isEmpty(boardId)){
+            registBoard();
+        }else {
+            openBoard(boardId);
+        }
+
         if(firstData!=null){
             boardMode=BOARD_MODE_YOUR;
             mBoardController.setWhiteBoardId(firstData.board.id);
@@ -332,5 +345,40 @@ public class BoardCollaborateFragment extends BaseFragment {
                 commitAllowingStateLoss();*/
 
         WhiteboardManagerFragment.createInstance("").show(getChildFragmentManager(),"dialog_fragment");
+    }
+
+
+    public void registBoard(){
+        final Board board=new Board();
+        board.title="新的白板";
+        ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
+            @Override
+            public void onSuccess(BoardItem object) {
+                openBoard(object.id);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(getActivity(),errorMessage+",后续操作无法保存");
+            }
+        });
+    }
+
+    public void openBoard(final String boardId){
+        if(!TextUtils.isEmpty(boardId)){
+            ClassroomEngine.getEngine().openBoard(ClassroomEngine.getEngine().getTicket(), boardId, new APIServiceCallback<BoardItem>() {
+                @Override
+                public void onSuccess(BoardItem object) {
+                    BoardCollaborateFragment.this.boardId=object.id;
+                    mBoardController.setWhiteBoardId(boardId);
+                }
+
+                @Override
+                public void onFailure(String errorCode, String errorMessage) {
+                    ToastUtil.showToast(getActivity(),errorMessage+",后续操作无法保存");
+                }
+            });
+        }
+
     }
 }

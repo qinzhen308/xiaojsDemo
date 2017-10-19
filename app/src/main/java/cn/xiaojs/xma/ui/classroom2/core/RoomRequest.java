@@ -328,5 +328,21 @@ public final class RoomRequest {
                 });
     }
 
+    protected void openBoard(String ticket, String boardId, final APIServiceCallback<BoardItem> callback){
+        LiveManager.openBoard(context, ticket,
+                boardId, new APIServiceCallback<BoardItem>() {
+                    @Override
+                    public void onSuccess(BoardItem object) {
+                        callback.onSuccess(object);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
+    }
+
+
 
 }

@@ -17,6 +17,8 @@ import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.EventResponse;
@@ -526,6 +528,25 @@ public final class ClassroomEngine {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
         return elRoom;
+    }
+
+
+    /**
+     * 注册白板
+     */
+    public void registerBoard(String ticket, Board board, final APIServiceCallback<BoardItem> callback) {
+        if (roomRequest != null) {
+            roomRequest.registerBoard(ticket,board,callback);
+        }
+    }
+
+    /**
+     * 打开白板
+     */
+    public void openBoard(String ticket, String board, final APIServiceCallback<BoardItem> callback) {
+        if (roomRequest != null) {
+            roomRequest.openBoard(ticket,board,callback);
+        }
     }
 
 

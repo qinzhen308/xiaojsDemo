@@ -34,8 +34,11 @@ import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.ui.classroom.main.*;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
@@ -132,7 +135,6 @@ public class Classroom2Activity extends FragmentActivity {
         initTicket = getIntent().getStringExtra(CTLConstant.EXTRA_TICKET);
 
         onBootlistener(initTicket);
-        // TODO: 2017/10/18 需要加上白板id
         collaborateFragment=BoardCollaborateFragment.createInstance("");
     }
 
