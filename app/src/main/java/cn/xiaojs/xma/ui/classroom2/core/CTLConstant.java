@@ -22,6 +22,7 @@ public class CTLConstant {
     public static final int REQUEST_MATERIAL_MOVE = 3;
     public static final int REQUEST_INPUT_MESSAGE = 4;
     public static final int REQUEST_CHOOSE_MEMBER = 5;
+    public static final int REQUEST_OPEN_MATERIAL = 6;
 
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课

@@ -3,16 +3,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/layout_idle_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
-    <cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView
-            android:id="@+id/camera_preview"
+    <FrameLayout
+            android:id="@+id/layout_idle_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    <cn.xiaojs.xma.ui.classroom2.live.VideoStreamView
+            android:id="@+id/videostream_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-        android:visibility="gone"/>
+            />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_list"
@@ -24,38 +25,17 @@
             android:layout_marginLeft="@dimen/px30"
             />
 
-    <FrameLayout
-            android:id="@+id/video_root"
+
+    <cn.xiaojs.xma.ui.classroom2.live.PlayLiveView
+            android:id="@+id/video_play"
             android:layout_width="@dimen/px285"
             android:layout_height="@dimen/px160"
             android:layout_marginLeft="@dimen/px30"
             android:layout_marginBottom="@dimen/px125"
             android:layout_alignParentBottom="true"
             android:layout_above="@id/chat_list"
-            android:visibility="gone">
-
-        <com.pili.pldroid.player.widget.PLVideoTextureView
-                android:id="@+id/video_play"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-
-        <View
-                android:id="@+id/overlay_mask"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-        <ImageView
-                android:id="@+id/close_video"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white_opacity_35"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_class_videoshutdown"
-                android:visibility="gone"/>
-
-
-    </FrameLayout>
+            android:visibility="gone"
+            />
 
     <include
             layout="@layout/layout_classroom2_control_port"
