@@ -645,6 +645,7 @@ public class Classroom2Activity extends FragmentActivity {
         } else {
             movieFragment.refuseO2o();
         }
+    }
 
     BoardCollaborateFragment collaborateFragment;
     public BoardCollaborateFragment getCollaBorateFragment(){
