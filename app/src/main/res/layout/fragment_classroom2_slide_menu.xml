@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root_lay"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px75"
+        android:textSize="@dimen/font_28px"
+        android:textColor="@color/font_black"
+        android:gravity="center"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px2"
+        android:layout_marginTop="@dimen/px75"
+        android:background="@color/top_line"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_slide_menu"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/px77"
+        android:padding="@dimen/px30"
+        android:layout_height="match_parent"/>
+
+
+</cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout>
+

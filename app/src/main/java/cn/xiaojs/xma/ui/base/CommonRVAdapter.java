@@ -9,8 +9,10 @@ import java.util.List;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.search.SearchResultV2;
+import cn.xiaojs.xma.ui.classroom.page.SlideImgModel;
 import cn.xiaojs.xma.ui.classroom.page.WhiteboardManagerItemView;
 import cn.xiaojs.xma.ui.classroom.page.WhiteboardModel;
+import cn.xiaojs.xma.ui.classroom.page.WhiteboardSlideItemView;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
@@ -38,6 +40,7 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int VIEW_TYPE_SEARCH_RESULT_RECORDED_LESSON=5;
 
     public static final int VIEW_TYPE_CLASSROOM_WHITEBOARD_MANAGER=11;
+    public static final int VIEW_TYPE_CLASSROOM_WHITEBOARD_SLIDE=12;
 
     public static final int VIEW_TYPE_LAST_EMPTY=100;
 
@@ -76,6 +79,8 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder=new CommonHolder(new SRRecordedLessonView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_CLASSROOM_WHITEBOARD_MANAGER){
             holder=new CommonHolder(new WhiteboardManagerItemView(parent.getContext()));
+        }else if(viewType== VIEW_TYPE_CLASSROOM_WHITEBOARD_SLIDE){
+            holder=new CommonHolder(new WhiteboardSlideItemView(parent.getContext()));
         }else {
             View v=new View(parent.getContext());
             v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200));
@@ -116,6 +121,8 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return viewtype;
         }else if(o instanceof WhiteboardModel){
             return VIEW_TYPE_CLASSROOM_WHITEBOARD_MANAGER;
+        }else if(o instanceof SlideImgModel){
+            return VIEW_TYPE_CLASSROOM_WHITEBOARD_SLIDE;
         }else if(o instanceof LastEmptyModel){
             return VIEW_TYPE_LAST_EMPTY;
         }

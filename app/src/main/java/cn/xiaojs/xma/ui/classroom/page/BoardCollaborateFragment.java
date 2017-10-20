@@ -17,6 +17,8 @@ import android.widget.ImageView;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -346,7 +348,6 @@ public class BoardCollaborateFragment extends BaseFragment {
 
         WhiteboardManagerFragment.createInstance("").show(getChildFragmentManager(),"dialog_fragment");
     }
-
 
     public void registBoard(){
         final Board board=new Board();

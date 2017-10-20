@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2.base;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -55,7 +56,6 @@ public abstract class RightSheetFragment extends DialogFragment
         WindowManager.LayoutParams params = dialogWindow.getAttributes();
         params.dimAmount = 0;
         dialogWindow.setAttributes(params);
-
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
