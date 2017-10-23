@@ -13,6 +13,8 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
+import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
@@ -309,6 +311,38 @@ public final class RoomRequest {
             }
         });
     }
+
+
+    protected void registerBoard(String ticket, Board board, final APIServiceCallback<BoardItem> callback){
+        LiveManager.registerBoard(context, ticket,
+                board, new APIServiceCallback<BoardItem>() {
+                    @Override
+                    public void onSuccess(BoardItem object) {
+                        callback.onSuccess(object);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
+    }
+
+    protected void openBoard(String ticket, String boardId, final APIServiceCallback<BoardItem> callback){
+        LiveManager.openBoard(context, ticket,
+                boardId, new APIServiceCallback<BoardItem>() {
+                    @Override
+                    public void onSuccess(BoardItem object) {
+                        callback.onSuccess(object);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
+    }
+
 
 
 }

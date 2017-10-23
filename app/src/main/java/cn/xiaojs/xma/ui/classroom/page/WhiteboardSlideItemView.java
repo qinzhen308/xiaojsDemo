@@ -7,6 +7,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -17,25 +20,27 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
  * Created by Paul Z on 2017/5/23.
  */
 
-public class WhiteboardManagerItemView extends RelativeLayout implements IViewModel<WhiteboardModel> {
+public class WhiteboardSlideItemView extends RelativeLayout implements IViewModel<SlideImgModel> {
 
-    WhiteboardModel mData;
-    @BindView(R.id.iv_white_board)
-    ImageView ivWhiteBoard;
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-    @BindView(R.id.btn_more)
-    ImageView btnMore;
+    SlideImgModel mData;
+    @BindView(R.id.iv_slide_img)
+    ImageView ivSlideImg;
+    @BindView(R.id.tv_page)
+    TextView tvPage;
+
     @BindView(R.id.selector)
     View selector;
 
 
-    public WhiteboardManagerItemView(Context context) {
+    @BindDimen(R.dimen.px70)
+    int pageViewHeight;
+
+    public WhiteboardSlideItemView(Context context) {
         super(context);
         init();
     }
 
-    public WhiteboardManagerItemView(Context context, AttributeSet attrs) {
+    public WhiteboardSlideItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -43,35 +48,36 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width=MeasureSpec.getSize(widthMeasureSpec);
-        int height=(int)(9*width/16.0f);
+        int height=(int)(9*width/16.0f)+pageViewHeight;
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height,MeasureSpec.EXACTLY));
         setMeasuredDimension(width,height);
     }
 
     private void init() {
-        inflate(getContext(), R.layout.layout_whiteboard_manager_item, this);
+        inflate(getContext(), R.layout.layout_whiteboard_slide_item, this);
         ButterKnife.bind(this);
     }
 
 
     @Override
-    public void bindData(int position, WhiteboardModel data) {
+    public void bindData(int position, SlideImgModel data) {
         mData = data;
         if(data.isSelected){
             selector.setVisibility(VISIBLE);
         }else {
             selector.setVisibility(GONE);
         }
+
+        Glide.with(getContext()).load(data.url).into(ivSlideImg);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 
-    @OnClick({R.id.iv_white_board, R.id.btn_more})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.iv_white_board:
-                break;
-            case R.id.btn_more:
-                break;
-        }
-    }
+
 }

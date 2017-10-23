@@ -59,6 +59,7 @@ import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
+import cn.xiaojs.xma.ui.classroom.page.SlideMenuFragment;
 import cn.xiaojs.xma.ui.classroom2.ClassDetailFragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.SettingFragment;
@@ -549,6 +550,14 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onNewboardClick(View view) {
         // TODO: 2017/10/18 新增白板
+        showSlideImgPageMenu();
+    }
+
+    public void showSlideImgPageMenu(){
+        ArrayList<String> imgs=new ArrayList<String>();
+        imgs.add("http://www.51edu.com/ueditor2014/php/upload/image/20150216/1424069121411681.png");
+        imgs.add("http://www.51edu.com/ueditor2014/php/upload/image/20150216/1424069121411681.png");
+        showSlidePanel( SlideMenuFragment.createInstance(imgs), "menu_fragment");
     }
 
     /**

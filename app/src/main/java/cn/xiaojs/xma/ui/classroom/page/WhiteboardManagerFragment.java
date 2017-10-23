@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,34 +15,48 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.base.CommonRVAdapter;
+import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
 
 /**
  * Created by Paul Z on 2017/10/18.
  */
 
-public class WhiteboardManagerFragment extends BaseFragment {
+public class WhiteboardManagerFragment extends BaseDialogFragment {
     @BindView(R.id.rv_whiteboard)
     RecyclerView rvWhiteboard;
     @BindView(R.id.middle_view)
     TextView middleView;
+    @BindView(R.id.right_view)
+    TextView rightView;
 
     CommonRVAdapter mAdapter;
 
     public static final String EXTRA_SELECTED_BOARD_ID="extra_selected_board_id";
 
+
+    @Nullable
     @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        View view = getContentView();
+        ButterKnife.bind(this, view);
+        init();
+        return view;
+    }
+
     protected View getContentView() {
         return LayoutInflater.from(getActivity()).inflate(R.layout.fragment_classroom_board_manager, null);
     }
 
-    @Override
     protected void init() {
         middleView.setText("白板");
-        rvWhiteboard.setLayoutManager(new GridLayoutManager(getActivity(),4,GridLayoutManager.VERTICAL,false));
+        rightView.setText("新增");
+        rvWhiteboard.setLayoutManager(new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false));
         mAdapter=new CommonRVAdapter(rvWhiteboard);
         rvWhiteboard.setAdapter(mAdapter);
         //test
@@ -50,6 +65,11 @@ public class WhiteboardManagerFragment extends BaseFragment {
         datas.add(new WhiteboardModel());
         datas.add(new WhiteboardModel());
         datas.add(new WhiteboardModel());
+        datas.add(new WhiteboardModel());
+        datas.add(new WhiteboardModel());
+        datas.add(new WhiteboardModel());
+        datas.add(new WhiteboardModel());
+        datas.get(3).isSelected=true;
         mAdapter.setList(datas);
         mAdapter.notifyDataSetChanged();
     }
@@ -61,7 +81,7 @@ public class WhiteboardManagerFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.left_image:
-                getTargetFragment().getChildFragmentManager().popBackStack();
+                dismiss();
                 break;
             case R.id.right_view:
                 break;

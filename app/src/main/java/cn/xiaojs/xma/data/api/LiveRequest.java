@@ -23,6 +23,8 @@ import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.LiveSchedule;
+import cn.xiaojs.xma.model.live.RegisterBoardParams;
+import cn.xiaojs.xma.model.live.RegisterBoardResponse;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.live.Ticket;
 import cn.xiaojs.xma.model.Pagination;
@@ -141,4 +143,5 @@ public class LiveRequest extends ServiceRequest{
 
         enqueueRequest(APIType.GET_LIVE_SCHEDULE,call);
     }
+
 }
