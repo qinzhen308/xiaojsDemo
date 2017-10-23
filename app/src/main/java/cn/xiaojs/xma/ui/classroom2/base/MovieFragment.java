@@ -147,6 +147,10 @@ public abstract class MovieFragment extends BaseRoomFragment
     public ClosableAdapterSlidingLayout slideLayout;
 
 
+    @BindView(R.id.control_click)
+    public View controlClickView;
+
+
     @BindView(R.id.chat_list)
     public RecyclerView recyclerView;
     private LiveCriteria liveCriteria;
@@ -331,6 +335,16 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
+    @OnClick({R.id.control_click})
+    void onControlClick(View view) {
+        switch (view.getId()) {
+            case R.id.control_click:
+                hiddeOrshowControl();
+                break;
+        }
+    }
+
+
     /**
      * 点击了返回
      *
@@ -435,14 +449,17 @@ public abstract class MovieFragment extends BaseRoomFragment
         showControlAnim.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                View view = (View) showControlAnim.getTarget();
+                if (view != null) {
+                    view.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 View view = (View) showControlAnim.getTarget();
                 if (view != null) {
-                    view.setVisibility(View.VISIBLE);
+                    autoStartHiddeAnim(view);
                 }
             }
 
@@ -458,7 +475,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         });
     }
 
-    private void showControlAnim(final View target) {
+    public void showControlAnim(final View target) {
         showControlAnim.setTarget(target);
         showControlAnim.start();
     }
@@ -468,56 +485,43 @@ public abstract class MovieFragment extends BaseRoomFragment
         hiddeControlAnim.start();
     }
 
-    private void startAnim(final View view, final boolean hidden) {
-        Observable.timer(2000, TimeUnit.MILLISECONDS)
+    private void autoStartHiddeAnim(final View view) {
+        Observable.timer(3000, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        if (hidden) {
-                            hiddeControlAnim(view);
-                        }else {
-                            showControlAnim(view);
-                        }
-
+                        hiddeControlAnim(view);
                     }
                 });
     }
 
 
-    private void showLandControl() {
-        if (controlLand != null) {
-            controlLand.setVisibility(View.VISIBLE);
-            startAnim(controlLand, true);
-        }
-    }
-
-    private void showPortControl() {
-        if (controlPort != null) {
-            controlPort.setVisibility(View.VISIBLE);
-            startAnim(controlPort, true);
-        }
-    }
-
-    private void hiddeLandControl() {
-        if (controlLand != null) {
-            controlLand.setVisibility(View.GONE);
-            startAnim(controlLand, true);
-        }
-    }
-
-    private void hiddePortControl() {
-        if (controlPort != null) {
-            controlPort.setVisibility(View.GONE);
-            startAnim(controlPort, true);
-        }
-    }
-
     public void hiddeOrshowControl() {
 
-        switch (controlLand.getVisibility()) {
-            case View.VISIBLE:
+        int currentOrient = getActivity().getRequestedOrientation();
+        switch (currentOrient) {
+            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
+                if (controlLand == null)
+                    return;
+
+                int vis = controlLand.getVisibility();
+                if (vis == View.VISIBLE) {
+                    hiddeControlAnim(controlLand);
+                } else {
+                    showControlAnim(controlLand);
+                }
+
+                break;
+            default:
+                if (controlPort == null)
+                    return;
+                if (controlPort.getVisibility() == View.VISIBLE) {
+                    hiddeControlAnim(controlPort);
+                } else {
+                    showControlAnim(controlPort);
+                }
                 break;
 
         }
@@ -553,11 +557,11 @@ public abstract class MovieFragment extends BaseRoomFragment
         showSlideImgPageMenu();
     }
 
-    public void showSlideImgPageMenu(){
-        ArrayList<String> imgs=new ArrayList<String>();
+    public void showSlideImgPageMenu() {
+        ArrayList<String> imgs = new ArrayList<String>();
         imgs.add("http://www.51edu.com/ueditor2014/php/upload/image/20150216/1424069121411681.png");
         imgs.add("http://www.51edu.com/ueditor2014/php/upload/image/20150216/1424069121411681.png");
-        showSlidePanel( SlideMenuFragment.createInstance(imgs), "menu_fragment");
+        showSlidePanel(SlideMenuFragment.createInstance(imgs), "menu_fragment");
     }
 
     /**
@@ -689,7 +693,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         switch (orientation) {
             case Configuration.ORIENTATION_LANDSCAPE:
 
-                showLandControl();
+                showControlAnim(controlLand);
 
                 if (recyclerView != null) {
                     recyclerView.setVisibility(View.VISIBLE);
@@ -709,7 +713,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                     recyclerView.setVisibility(View.GONE);
                 }
 
-                showPortControl();
+                showControlAnim(controlPort);
                 break;
         }
     }

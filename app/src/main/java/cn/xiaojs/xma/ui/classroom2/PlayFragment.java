@@ -74,9 +74,6 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
 
         initControlPanel();
 
-        int changeRequest = getActivity().getRequestedOrientation();
-        controlHandleOnRotate(changeRequest);
-
         initTalkData(this);
 
         configPortLandOperaButton();
@@ -193,6 +190,10 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
     }
 
     private void initControlPanel() {
+
+        int changeRequest = getActivity().getRequestedOrientation();
+        controlHandleOnRotate(changeRequest);
+
         lRightSwitchcameraView.setVisibility(View.GONE);
         pBottomClassnameView.setText(classroomEngine.getRoomTitle());
 

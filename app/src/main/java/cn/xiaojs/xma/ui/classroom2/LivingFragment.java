@@ -25,7 +25,6 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.socket.EventResponse;
-import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
@@ -207,7 +206,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     }
 
     private void initControlView() {
-
         String avatorUrl = Account.getAvatar(AccountDataManager.getAccountID(getContext()),
                 lTopPhotoView.getMeasuredWidth());
         Glide.with(getContext())
@@ -221,6 +219,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         configStopButton();
 
         requestUpdateMemberCount();
+
+        showControlAnim(controlLand);
 
     }
 
