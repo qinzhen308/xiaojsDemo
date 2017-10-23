@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -47,23 +50,35 @@ public class MemberListFragment extends BottomSheetFragment {
                 new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        LiveManager.getAttendees(getContext(), classroomEngine.getTicket(),
-                new APIServiceCallback<LiveCollection<Attendee>>() {
-            @Override
-            public void onSuccess(LiveCollection<Attendee> liveCollection) {
+        ArrayList<Attendee> attendees = new ArrayList<>();
+        Map<String, Attendee> attendeeMap = classroomEngine.getMembers();
+        if (attendeeMap != null && attendeeMap.size()>0) {
+            attendees.addAll(attendeeMap.values());
+        }
+
+        MemberAdapter memberAdapter = new MemberAdapter(MemberListFragment.this
+                ,getContext(), attendees);
+
+        recyclerView.setAdapter(memberAdapter);
 
 
-                MemberAdapter memberAdapter = new MemberAdapter(MemberListFragment.this
-                        ,getContext(), liveCollection.attendees);
-
-                recyclerView.setAdapter(memberAdapter);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-
-            }
-        });
+//        LiveManager.getAttendees(getContext(), classroomEngine.getTicket(),
+//                new APIServiceCallback<LiveCollection<Attendee>>() {
+//            @Override
+//            public void onSuccess(LiveCollection<Attendee> liveCollection) {
+//
+//
+//                MemberAdapter memberAdapter = new MemberAdapter(MemberListFragment.this
+//                        ,getContext(), liveCollection.attendees);
+//
+//                recyclerView.setAdapter(memberAdapter);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorCode, String errorMessage) {
+//
+//            }
+//        });
 
     }
 

@@ -253,6 +253,10 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
                     @Override
                     public void accept(ArrayList<TalkItem> talkItems) throws Exception {
 
+                        if (getActivity() == null) {
+                            return;
+                        }
+
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
                             RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();

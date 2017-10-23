@@ -212,6 +212,15 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     }
 
+    public void offlineMember(Attendee attendee) {
+        if (roomSession.classMembers != null) {
+            Attendee a = roomSession.classMembers.get(attendee.accountId);
+            if (a != null) {
+                a.xa = 0;
+            }
+        }
+    }
+
     public void removeMember(String accountId) {
         if (roomSession.classMembers != null) {
             roomSession.classMembers.remove(accountId);
@@ -377,12 +386,15 @@ public abstract class ClassroomStateMachine extends StateMachine {
         if (message == null) {
             return;
         }
+
+        addMember(message);
     }
 
     protected void leave(Attendee message) {
         if (message == null) {
             return;
         }
+        offlineMember(message);
     }
 
     protected void constraintKickout(ConstraintKickoutReceive message) {

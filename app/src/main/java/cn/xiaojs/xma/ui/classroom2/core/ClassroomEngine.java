@@ -201,19 +201,27 @@ public final class ClassroomEngine {
         return stateMachine.getSession().individualStreamDuration;
     }
 
-    public void addMember(Attendee attendee) {
-        stateMachine.addMember(attendee);
-    }
-
-    public void removeMember(String accountId) {
-        stateMachine.removeMember(accountId);
-    }
-
     public Attendee getMember(String accountId) {
         return stateMachine.getMember(accountId);
     }
     public Map<String,Attendee> getMembers() {
         return stateMachine.getSession().classMembers;
+    }
+
+    public int getOnlineMemberCount() {
+        int count = 0;
+
+        Map<String,Attendee> membersMap = getMembers();
+        if (membersMap != null && membersMap.size()>0) {
+
+            for (Attendee attendee : membersMap.values()) {
+                if (attendee.xa != 0) {
+                    count ++;
+                }
+            }
+
+        }
+        return count;
     }
 
     /**

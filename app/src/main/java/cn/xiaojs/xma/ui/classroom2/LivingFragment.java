@@ -93,7 +93,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void onPlayClosed() {
-        sendCloseMedia();
+        closeMedia();
     }
 
     @Override
@@ -145,8 +145,16 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     public void onOne2OneClick(View view) {
 
         ChooseMemberFragment chooseMemberFragment = new ChooseMemberFragment();
-        chooseMemberFragment.setTargetFragment(this,CTLConstant.REQUEST_CHOOSE_MEMBER);
+        chooseMemberFragment.setTargetFragment(this, CTLConstant.REQUEST_CHOOSE_MEMBER);
         showSlidePanel(chooseMemberFragment, "chat_slide");
+    }
+
+    @Override
+    public void onUpdateMembersCount(int count) {
+        super.onUpdateMembersCount(count);
+
+        lTopRoominfoView.setText("直播中（" + count + "人观看）");
+
     }
 
 
@@ -159,8 +167,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     public void onOpened() {
 
     }
-
-
 
 
     @Override
@@ -183,7 +189,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     @Override
     public void back() {
 
-        if (one2oneAttendee !=null) {
+        if (one2oneAttendee != null) {
             stopPlay(true);
         }
 
@@ -210,11 +216,11 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(lTopPhotoView);
-
-        lTopRoominfoView.setText("直播中");
         lRightScreenshortView.setVisibility(View.GONE);
 
         configStopButton();
+
+        requestUpdateMemberCount();
 
     }
 
@@ -222,7 +228,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         if (classroomEngine.getLiveState().equals(Live.LiveSessionState.LIVE)) {
             startOrStopLiveView.setText("下课");
-        }else{
+        } else {
             startOrStopLiveView.setText("停止直播");
         }
 
@@ -258,7 +264,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                     errorMessage = getContext().getResources().getString(R.string.send_one_to_one_failed);
                 }
 
-                ToastUtil.showToast(getContext(),errorMessage);
+                ToastUtil.showToast(getContext(), errorMessage);
             }
         });
     }
@@ -274,17 +280,17 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
             showPlay();
 
-           // mPlayStreamUrl = feedbackReceive.playUrl;
-           // playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, feedbackReceive.playUrl);
-        }else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == feedbackReceive.status) {
+            // mPlayStreamUrl = feedbackReceive.playUrl;
+            // playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, feedbackReceive.playUrl);
+        } else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == feedbackReceive.status) {
             msg = getContext().getString(R.string.user_refuse_one_to_one_tips);
-        }else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == feedbackReceive.status) {
+        } else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == feedbackReceive.status) {
             msg = getContext().getString(R.string.failed_one2one_network_issue);
-        }else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY== feedbackReceive.status) {
+        } else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY == feedbackReceive.status) {
             msg = getContext().getString(R.string.failed_one2one_privacy);
         }
 
-        ToastUtil.showToast(getContext(),msg);
+        ToastUtil.showToast(getContext(), msg);
     }
 
     private void showPlay() {
@@ -296,7 +302,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private void stopPlay(boolean send) {
 
         if (send) {
-            sendCloseMedia();
+            closeMedia();
         }
 
         playView.stopPlay();
@@ -305,21 +311,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     }
 
 
-    protected void sendCloseMedia() {
-
-        classroomEngine.closeMedia(one2oneAttendee.accountId, new EventCallback<CloseMediaResponse>() {
-            @Override
-            public void onSuccess(CloseMediaResponse closeMediaResponse) {
-                if (XiaojsConfig.DEBUG) {
-                    ToastUtil.showToast(getContext(),"close open peer to peer video success");
-                }
-            }
-
-            @Override
-            public void onFailed(String errorCode, String errorMessage) {
-                ToastUtil.showToast(getContext(), errorMessage);
-            }
-        });
+    protected void closeMedia() {
+        sendCloseMedia(one2oneAttendee.accountId);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -337,8 +330,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             streamDeprivedBy = streamStopReceive.deprivedBy;
 
             Attendee attendee = classroomEngine.getMember(streamDeprivedBy);
-            if (attendee !=null) {
-                ToastUtil.showToast(getContext(), "你的直播已被" + attendee.name+"中断");
+            if (attendee != null) {
+                ToastUtil.showToast(getContext(), "你的直播已被" + attendee.name + "中断");
             }
 
 
@@ -351,7 +344,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             enterPlay();
         }
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,6 +375,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                     break;
                 case Su.EventType.STREAMING_STARTED:
                     handleStreamStart((StreamStartReceive) eventReceived.t);
+                    break;
+                case Su.EventType.JOIN:
+                case Su.EventType.LEAVE:
+                    requestUpdateMemberCount();
                     break;
             }
         }

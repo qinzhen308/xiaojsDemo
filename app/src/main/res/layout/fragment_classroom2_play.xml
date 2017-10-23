@@ -24,6 +24,17 @@
             android:layout_marginLeft="@dimen/px30"
             />
 
+    <cn.xiaojs.xma.ui.classroom2.live.VideoStreamView
+            android:id="@+id/video_stream"
+            android:layout_width="@dimen/px285"
+            android:layout_height="@dimen/px160"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginBottom="@dimen/px125"
+            android:layout_alignParentBottom="true"
+            android:layout_above="@id/chat_list"
+            android:visibility="gone"
+            />
+
     <include
             layout="@layout/layout_classroom2_control_port"
             />

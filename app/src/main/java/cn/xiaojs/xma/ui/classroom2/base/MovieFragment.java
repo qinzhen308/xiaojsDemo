@@ -1,6 +1,10 @@
 package cn.xiaojs.xma.ui.classroom2.base;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,6 +52,7 @@ import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
+import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
@@ -68,7 +74,10 @@ import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -121,11 +130,13 @@ public abstract class MovieFragment extends BaseRoomFragment
     @BindView(R.id.control_land)
     public ConstraintLayout controlLand;
 
+
+    @BindView(R.id.p_bottom_avator)
+    public ImageView pBottomAvatorView;
     @BindView(R.id.p_bottom_class_name)
     public TextView pBottomClassnameView;
     @BindView(R.id.p_top_live)
     public TextView pTopLiveView;
-
 
 
     /////////////
@@ -147,7 +158,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     private long lastTimeline = 0;
 
 
-
     public final static int REQUEST_PERMISSION = 3;
 
     protected ClassroomEngine classroomEngine;
@@ -158,13 +168,16 @@ public abstract class MovieFragment extends BaseRoomFragment
     //但生命周期取决于使用他的fragment
     protected BoardCollaborateFragment whiteboardFragment;
 
+    private ObjectAnimator hiddeControlAnim;
+    private ObjectAnimator showControlAnim;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         classroomEngine = ClassroomEngine.getEngine();
 
-        if(getActivity() instanceof Classroom2Activity){
-            whiteboardFragment=((Classroom2Activity)getActivity()).getCollaBorateFragment();
+        if (getActivity() instanceof Classroom2Activity) {
+            whiteboardFragment = ((Classroom2Activity) getActivity()).getCollaBorateFragment();
         }
     }
 
@@ -173,9 +186,12 @@ public abstract class MovieFragment extends BaseRoomFragment
         super.onActivityCreated(savedInstanceState);
 
         slideLayout.setSlideListener(this);
-        if(!ClassroomController.getInstance(getActivity()).isPortrait()){
+        if (!ClassroomController.getInstance(getActivity()).isPortrait()) {
             onRotateToInitBoard(Configuration.ORIENTATION_LANDSCAPE);
         }
+
+        initControlAnim();
+
     }
 
     @Override
@@ -186,7 +202,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     @Override
     public void onDestroy() {
         //
-        whiteboardFragment=null;
+        whiteboardFragment = null;
         super.onDestroy();
     }
 
@@ -385,6 +401,128 @@ public abstract class MovieFragment extends BaseRoomFragment
     // control
     //
 
+    private void initControlAnim() {
+        hiddeControlAnim = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(),
+                R.animator.classroom2_control_alpha_hide);
+        hiddeControlAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                View view = (View) hiddeControlAnim.getTarget();
+                if (view != null) {
+                    view.setAlpha(1.0f);
+                    view.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        showControlAnim = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(),
+                R.animator.classroom2_control_alpha_show);
+        showControlAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                View view = (View) showControlAnim.getTarget();
+                if (view != null) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    private void showControlAnim(final View target) {
+        showControlAnim.setTarget(target);
+        showControlAnim.start();
+    }
+
+    private void hiddeControlAnim(View target) {
+        hiddeControlAnim.setTarget(target);
+        hiddeControlAnim.start();
+    }
+
+    private void startAnim(final View view, final boolean hidden) {
+        Observable.timer(2000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        if (hidden) {
+                            hiddeControlAnim(view);
+                        }else {
+                            showControlAnim(view);
+                        }
+
+                    }
+                });
+    }
+
+
+    private void showLandControl() {
+        if (controlLand != null) {
+            controlLand.setVisibility(View.VISIBLE);
+            startAnim(controlLand, true);
+        }
+    }
+
+    private void showPortControl() {
+        if (controlPort != null) {
+            controlPort.setVisibility(View.VISIBLE);
+            startAnim(controlPort, true);
+        }
+    }
+
+    private void hiddeLandControl() {
+        if (controlLand != null) {
+            controlLand.setVisibility(View.GONE);
+            startAnim(controlLand, true);
+        }
+    }
+
+    private void hiddePortControl() {
+        if (controlPort != null) {
+            controlPort.setVisibility(View.GONE);
+            startAnim(controlPort, true);
+        }
+    }
+
+    public void hiddeOrshowControl() {
+
+        switch (controlLand.getVisibility()) {
+            case View.VISIBLE:
+                break;
+
+        }
+    }
+
+
     /**
      * 切换前后摄像头
      */
@@ -418,7 +556,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onBoardMgrClick(View view) {
 
-        if(whiteboardFragment!=null&&!whiteboardFragment.isDetached()){
+        if (whiteboardFragment != null && !whiteboardFragment.isDetached()) {
             whiteboardFragment.showWhiteboardManager();
         }
     }
@@ -451,7 +589,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     /**
      * 点击了一对一
-     * @param view
      */
     public void onOne2OneClick(View view) {
 
@@ -459,11 +596,10 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     /**
      * 点击资料库
-     * @param view
      */
     public void onMaterialClick(View view) {
         DatabaseFragment databaseFragment = new DatabaseFragment();
-        databaseFragment.setTargetFragment(this,CTLConstant.REQUEST_OPEN_MATERIAL);
+        databaseFragment.setTargetFragment(this, CTLConstant.REQUEST_OPEN_MATERIAL);
         showSlidePanel(databaseFragment, "database");
     }
 
@@ -543,9 +679,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     protected void controlHandleOnRotate(int orientation) {
         switch (orientation) {
             case Configuration.ORIENTATION_LANDSCAPE:
-                if (controlLand != null) {
-                    controlLand.setVisibility(View.VISIBLE);
-                }
+
+                showLandControl();
 
                 if (recyclerView != null) {
                     recyclerView.setVisibility(View.VISIBLE);
@@ -565,13 +700,10 @@ public abstract class MovieFragment extends BaseRoomFragment
                     recyclerView.setVisibility(View.GONE);
                 }
 
-                if (controlPort != null) {
-                    controlPort.setVisibility(View.VISIBLE);
-                }
+                showPortControl();
                 break;
         }
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -657,6 +789,10 @@ public abstract class MovieFragment extends BaseRoomFragment
                 .subscribe(new Consumer<ArrayList<TalkItem>>() {
                     @Override
                     public void accept(ArrayList<TalkItem> talkItems) throws Exception {
+
+
+                        if (getActivity() == null)
+                            return;
 
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
@@ -865,17 +1001,17 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     //====================================全局白板====================================
-    protected void addWhiteboardFragment(){
+    protected void addWhiteboardFragment() {
         getChildFragmentManager()
                 .beginTransaction()
                 .add(R.id.layout_idle_container, whiteboardFragment)
                 .commitAllowingStateLoss();
     }
 
-    protected void showWhiteboardFragment(){
-        if(whiteboardFragment.isAdded()){
+    protected void showWhiteboardFragment() {
+        if (whiteboardFragment.isAdded()) {
             getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
-        }else {
+        } else {
             getChildFragmentManager()
                     .beginTransaction()
                     .add(R.id.layout_idle_container, whiteboardFragment)
@@ -883,21 +1019,22 @@ public abstract class MovieFragment extends BaseRoomFragment
         }
     }
 
-    protected void hideWhiteboardFragment(){
+    protected void hideWhiteboardFragment() {
         if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
             getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
         }
     }
-    protected void removeWhiteboardFragment(){
+
+    protected void removeWhiteboardFragment() {
         getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
     }
 
-    protected void onRotateToInitBoard(int orientation){
-        if(whiteboardFragment==null)return;
+    protected void onRotateToInitBoard(int orientation) {
+        if (whiteboardFragment == null) return;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(whiteboardFragment.isAdded()){
+            if (whiteboardFragment.isAdded()) {
                 getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
-            }else {
+            } else {
                 getChildFragmentManager()
                         .beginTransaction()
                         .add(R.id.layout_idle_container, whiteboardFragment)
@@ -916,9 +1053,10 @@ public abstract class MovieFragment extends BaseRoomFragment
     // 一对一
     //
 
+
     protected void receivedO2o(Attendee attendee) {
         o2oAttendee = attendee;
-        ((Classroom2Activity)getActivity()).showO2oPanel(attendee);
+        ((Classroom2Activity) getActivity()).showO2oPanel(attendee);
     }
 
     public void argeeO2o() {
@@ -928,6 +1066,7 @@ public abstract class MovieFragment extends BaseRoomFragment
             public void onSuccess(EventResponse response) {
 
                 changeOrientationToLand();
+
                 handleArgeedO2o(o2oAttendee);
 
             }
@@ -943,24 +1082,79 @@ public abstract class MovieFragment extends BaseRoomFragment
     public void refuseO2o() {
         classroomEngine.mediaFeedback(Live.MediaStatus.FAILED_DUE_TO_DENIED,
                 new EventCallback<EventResponse>() {
+                    @Override
+                    public void onSuccess(EventResponse response) {
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(getContext(), "你已拒绝", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(String errorCode, String errorMessage) {
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(getContext(), "拒绝失败", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    public void sendCloseMedia(String to) {
+
+        classroomEngine.closeMedia(to, new EventCallback<CloseMediaResponse>() {
             @Override
-            public void onSuccess(EventResponse response) {
+            public void onSuccess(CloseMediaResponse closeMediaResponse) {
                 if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(getContext(), "你已拒绝", Toast.LENGTH_LONG).show();
+                    ToastUtil.showToast(getContext(), "close open peer to peer video success");
                 }
             }
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(getContext(), "拒绝失败", Toast.LENGTH_LONG).show();
-                }
+                ToastUtil.showToast(getContext(), errorMessage);
             }
         });
     }
 
 
     protected void handleArgeedO2o(Attendee attendee) {
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 成员操作
+    //
+
+    protected void requestUpdateMemberCount() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(
+                    @io.reactivex.annotations.NonNull ObservableEmitter<Integer> e) throws Exception {
+
+                int count = classroomEngine.getOnlineMemberCount();
+                e.onNext(count);
+                e.onComplete();
+
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        if (getActivity() == null)
+                            return;
+
+                        //排除直播人
+                        int realcount = integer.intValue() <= 0 ? 0 : integer.intValue() - 1;
+
+                        onUpdateMembersCount(realcount);
+
+                    }
+                });
+    }
+
+    public void onUpdateMembersCount(int count) {
 
     }
 

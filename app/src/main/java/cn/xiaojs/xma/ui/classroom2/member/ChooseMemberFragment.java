@@ -115,6 +115,11 @@ public class ChooseMemberFragment extends BaseRoomFragment {
                 .subscribe(new Consumer<ArrayList<Attendee>>() {
                     @Override
                     public void accept(ArrayList<Attendee> attendees) throws Exception {
+
+                        if (getActivity() == null) {
+                            return;
+                        }
+
                         memberAdapter = new ChooseMemberAdapter(getContext(), attendees);
                         recyclerView.setAdapter(memberAdapter);
                     }

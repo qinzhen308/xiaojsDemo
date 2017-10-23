@@ -15,8 +15,15 @@ import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 
 public class VideoStreamView extends BaseLiveView{
 
+
+    public interface ControlListener{
+        void onPlayClosed();
+    }
+
+
     private CameraPreviewFrameView cameraPreviewView;
 
+    private ControlListener controlListener;
 
     public VideoStreamView(Context context) {
         super(context);
@@ -39,7 +46,19 @@ public class VideoStreamView extends BaseLiveView{
         return cameraPreviewView;
     }
 
+    @Override
+    protected void onCloseClick(View view) {
+        super.onCloseClick(view);
+        if (controlListener != null) {
+            controlListener.onPlayClosed();
+        }
+    }
+
     public CameraPreviewFrameView getCameraPreviewView() {
         return cameraPreviewView;
+    }
+
+    public void setControlListener(ControlListener listener) {
+        this.controlListener = listener;
     }
 }
