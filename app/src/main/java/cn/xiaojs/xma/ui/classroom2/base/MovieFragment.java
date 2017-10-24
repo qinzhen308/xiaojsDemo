@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Keep;
@@ -21,6 +22,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +48,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
@@ -52,6 +56,7 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom.page.IBoardManager;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom.page.SlideMenuFragment;
 import cn.xiaojs.xma.ui.classroom2.ClassDetailFragment;
@@ -79,7 +84,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public abstract class MovieFragment extends BaseRoomFragment
-        implements ClosableSlidingLayout.SlideListener {
+        implements ClosableSlidingLayout.SlideListener ,IBoardManager{
 
     @BindView(R.id.control_port)
     public ConstraintLayout controlPort;
@@ -174,7 +179,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         super.onActivityCreated(savedInstanceState);
 
         slideLayout.setSlideListener(this);
-        if(!ClassroomController.getInstance(getActivity()).isPortrait()){
+        if(ClassroomController.getInstance(getActivity()).isLandscape()){
             onRotateToInitBoard(Configuration.ORIENTATION_LANDSCAPE);
         }
     }
@@ -412,15 +417,10 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onNewboardClick(View view) {
         // TODO: 2017/10/18 新增白板
-        showSlideImgPageMenu();
+
+
     }
 
-    public void showSlideImgPageMenu(){
-        ArrayList<String> imgs=new ArrayList<String>();
-        imgs.add("http://www.51edu.com/ueditor2014/php/upload/image/20150216/1424069121411681.png");
-        imgs.add("http://www.51edu.com/ueditor2014/php/upload/image/20150216/1424069121411681.png");
-        showSlidePanel( SlideMenuFragment.createInstance(imgs), "menu_fragment");
-    }
 
     /**
      * 点击了白板管理
@@ -903,6 +903,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     protected void onRotateToInitBoard(int orientation){
         if(whiteboardFragment==null)return;
+        Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation="+orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if(whiteboardFragment.isAdded()){
                 getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
@@ -973,5 +974,23 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     }
 
+    @Override
+    public void onPushPreview(Bitmap bitmap) {
+        // TODO: 2017/10/24  推白板
+    }
 
+    @Override
+    public void openBoard(String boardId) {
+
+    }
+
+    @Override
+    public void addNewBoard(String title) {
+
+    }
+
+    @Override
+    public void openSlideMenu(ArrayList<LibDoc.ExportImg> slides,int curPage) {
+        showSlidePanel( SlideMenuFragment.createInstance(slides,curPage), "menu_fragment");
+    }
 }

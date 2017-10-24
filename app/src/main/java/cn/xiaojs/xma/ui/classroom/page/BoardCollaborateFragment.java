@@ -14,7 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -24,10 +29,15 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.SlidePage;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
@@ -44,6 +54,9 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.widget.banner.PageNumView;
+import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.functions.Consumer;
@@ -66,6 +79,8 @@ public class BoardCollaborateFragment extends BaseFragment {
     WhiteboardScrollerView mBoardScrollerView;
     @BindView(R.id.test_preview)
     ImageView testPreview;
+    @BindView(R.id.text_pager_points)
+    TextView textPagerPoints;
 
     private int boardMode=BOARD_MODE_MINE;
     private final static int BOARD_MODE_MINE=0;//面向发起者
@@ -83,6 +98,15 @@ public class BoardCollaborateFragment extends BaseFragment {
     private EventListener.Syncboard eventListener;
 
     private String boardId;
+
+    private LibDoc doc;
+    private int boardType=Live.BoardType.WHITE;
+
+    ArrayList<LibDoc.ExportImg> slides=null;
+
+    private int curPage=-1;
+
+    private OnPushPreviewListener onPushPreviewListener;
 
     @Override
     protected View getContentView() {
@@ -127,6 +151,9 @@ public class BoardCollaborateFragment extends BaseFragment {
             @Override
             public void onPush(Bitmap bitmap) {
                 testPreview.setImageBitmap(bitmap);
+                if(onPushPreviewListener!=null){
+                    onPushPreviewListener.onPushPreview(bitmap);
+                }
             }
         });
     }
@@ -139,7 +166,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
 
     @OnClick({ R.id.select_btn, R.id.handwriting_btn,R.id.shape_btn,
-            R.id.color_picker_btn,  R.id.eraser_btn, R.id.undo, R.id.redo})
+            R.id.color_picker_btn,  R.id.eraser_btn, R.id.undo, R.id.redo,R.id.text_pager_points})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.select_btn:
@@ -150,6 +177,12 @@ public class BoardCollaborateFragment extends BaseFragment {
             case R.id.undo:
             case R.id.redo:
                 mBoardController.handlePanelItemClick(v);
+                break;
+            case R.id.text_pager_points:
+                Fragment fragment=getTargetFragment();
+                if(fragment instanceof IBoardManager){
+                    ((IBoardManager)fragment).openSlideMenu(slides,curPage);
+                }
                 break;
 
             default:
@@ -380,6 +413,87 @@ public class BoardCollaborateFragment extends BaseFragment {
                 }
             });
         }
-
     }
+
+    public void openDocInBoard(final LibDoc doc){
+        if(doc==null){
+            ToastUtil.showToast(getActivity(),"该文件无效，无法打开");
+            return;
+        }
+        final Board board=new Board();
+        ArrayList<LibDoc.ExportImg> imgs=null;
+        if(Collaboration.isImage(doc.mimeType)){
+            imgs=new ArrayList<>(1);
+            LibDoc.ExportImg img=new LibDoc.ExportImg();
+            img.name=doc.key;
+            imgs.add(img);
+        }else if(Collaboration.isVideo(doc.mimeType)){
+            if(doc.exported==null|| ArrayUtil.isEmpty(doc.exported.images)){
+                ToastUtil.showToast(getActivity(),"该文件无效，无法打开");
+                return;
+            }
+            imgs=MaterialUtil.getSortImgs(doc.exported.images);
+            board.pages=imgs;
+        }
+        slides=imgs;
+        board.title=doc.name;
+        board.type= Live.BoardType.SLIDES;
+        board.drawing=new Board.DrawDimension();
+        board.drawing.height=1080;
+        board.drawing.width=1920;
+
+        BoardCollaborateFragment.this.doc=doc;
+        loadNewPage(0);
+       /* ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
+            @Override
+            public void onSuccess(BoardItem object) {
+                BoardCollaborateFragment.this.doc=doc;
+                loadNewPage(0);
+                openBoard(object.id);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(getActivity(),errorMessage+",后续操作无法保存");
+            }
+        });*/
+    }
+
+
+    public void loadNewPage(int page){
+        String url=null;
+       /* if(Collaboration.isImage(doc.mimeType)){
+            url=Social.getDrawing(doc.key, false);
+        }else if(Collaboration.isPPT(doc.mimeType) || Collaboration.isPDF(doc.mimeType) || Collaboration.isDoc(doc.mimeType)){
+        }else {
+            return;
+        }*/
+        curPage=page;
+        url=Social.getDrawing(slides.get(page).name, false);
+        if(XiaojsConfig.DEBUG){
+            Logger.d("-----qz------loadBoardImg----url="+url);
+        }
+        textPagerPoints.setVisibility(View.VISIBLE);
+        textPagerPoints.setText((page+1)+"/"+slides.size());
+        Glide.with(this).load(url).asBitmap().into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                mBoardController.replaceNewWhiteboardLayout(resource,mDoodleRatio);
+            }
+        });
+    }
+
+
+
+
+    public void setOnPushPreviewListener(OnPushPreviewListener onPushPreviewListener){
+        this.onPushPreviewListener=onPushPreviewListener;
+    }
+
+
+    public interface OnPushPreviewListener{
+        public void onPushPreview(Bitmap bitmap);
+    }
+
+
 }

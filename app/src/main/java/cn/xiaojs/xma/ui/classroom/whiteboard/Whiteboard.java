@@ -555,7 +555,6 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mMeasureFinished = false;
         mContext = context;
         mDoodleBounds = new RectF();
-        mDoodleBounds = new RectF();
 
         mDownPoint = new PointF();
         mLastPoint = new PointF();
@@ -2295,6 +2294,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public void setPushPreviewBoardListener(PushPreviewBoardListener pushPreviewBoardListener){
         this.pushPreviewBoardListener=pushPreviewBoardListener;
+    }
+
+    public void reset(){
+        clearWhiteboard();
+        syncGenerator=new SyncGenerator();
+        mViewGestureListener.reset();
     }
 
 }

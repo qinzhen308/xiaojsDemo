@@ -79,7 +79,10 @@ public class XiaojsConfig {
     public static String LIVE_PORT = "3004";
 
     //七牛存储空间
-    //华东华北跟预发布的相同
+    //华东:存储空间列表(图片和文档存储)Bucket (xiaojs-test) 测试域名:
+    public static final String TEST_FILES_BUCKET_URL = "http://omjsoavuo.bkt.clouddn.com";
+    //华北:存储空间列表(视频存储)Bucket (xiaojs)
+    public static final String TEST_LIVE_BUCKET_URL = "http://oi29a0dpo.bkt.clouddn.com";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

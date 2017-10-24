@@ -31,6 +31,24 @@
         android:background="@color/black"
         android:scaleType="fitXY"/>
 
+    <TextView
+        android:id="@+id/text_pager_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/px10"
+        android:layout_marginBottom="@dimen/px50"
+        android:orientation="horizontal"
+        android:textColor="@color/white"
+        android:paddingLeft="@dimen/px15"
+        android:paddingRight="@dimen/px15"
+        android:paddingTop="@dimen/px7"
+        android:paddingBottom="@dimen/px7"
+        android:background="@drawable/trans_50_half_circle"
+        android:visibility="gone"
+        />
+
 
     <LinearLayout
         android:id="@+id/white_board_panel"

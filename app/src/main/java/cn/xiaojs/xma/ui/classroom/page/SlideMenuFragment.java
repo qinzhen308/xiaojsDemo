@@ -14,6 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.base.CommonRVAdapter;
 import cn.xiaojs.xma.ui.classroom2.base.RightSheetFragment;
@@ -35,7 +37,9 @@ public class SlideMenuFragment extends BaseFragment {
     CommonRVAdapter mAdapter;
 
     public static final String EXTRA_DOC_IMGS="extra_doc_imgs";
+    public static final String EXTRA_CUR_PAGE="extra_cur_page";
     ArrayList<SlideImgModel> datas = new ArrayList<>();
+    private int curPage;
 
 
     @Override
@@ -50,7 +54,14 @@ public class SlideMenuFragment extends BaseFragment {
         rvSlideMenu.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
         mAdapter = new CommonRVAdapter(rvSlideMenu);
         rvSlideMenu.setAdapter(mAdapter);
+        curPage=getArguments().getInt(EXTRA_CUR_PAGE);
         createSlides(getArguments().getStringArrayList(EXTRA_DOC_IMGS));
+        mAdapter.setCallback(new EventCallback() {
+            @Override
+            public void onEvent(int what, Object... object) {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
         mAdapter.setList(datas);
         mAdapter.notifyDataSetChanged();
     }
@@ -66,15 +77,31 @@ public class SlideMenuFragment extends BaseFragment {
             model.url=img;
             datas.add(model);
         }
-        datas.get(0).isSelected = true;
+        datas.get(curPage).isSelected = true;
     }
 
 
-    public static SlideMenuFragment createInstance(ArrayList<String> imgs){
+    /*public static SlideMenuFragment createInstance(ArrayList<String> imgs,int curPage){
         SlideMenuFragment fragment=new SlideMenuFragment();
         if(!ArrayUtil.isEmpty(imgs)){
             Bundle data=new Bundle();
             data.putStringArrayList(EXTRA_DOC_IMGS,imgs);
+            fragment.setArguments(data);
+        }
+        return fragment;
+    }*/
+
+    public static SlideMenuFragment createInstance(ArrayList<LibDoc.ExportImg> imgs, int curPage){
+        SlideMenuFragment fragment=new SlideMenuFragment();
+
+        if(!ArrayUtil.isEmpty(imgs)){
+            ArrayList<String> urls=new ArrayList<>();
+            for(LibDoc.ExportImg img:imgs){
+                urls.add(img.name);
+            }
+            Bundle data=new Bundle();
+            data.putStringArrayList(EXTRA_DOC_IMGS,urls);
+            data.putInt(EXTRA_CUR_PAGE,curPage);
             fragment.setArguments(data);
         }
         return fragment;

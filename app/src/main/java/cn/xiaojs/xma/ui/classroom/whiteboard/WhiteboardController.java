@@ -158,6 +158,27 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         }
     }
 
+    public void replaceNewWhiteboardLayout(Bitmap bmp, float boardRatio) {
+        if (mWhiteboardSv != null) {
+            mWhiteboardSv.setVisibility(View.GONE);
+        }
+
+        if (mWhiteboardLayout != null) {
+            mCurrWhiteboard = mWhiteboardLayout.getWhiteboard();
+            mWhiteboardLayout.setVisibility(View.VISIBLE);
+            mWhiteboardLayer = new WhiteboardLayer();
+            mCurrWhiteboard.setLayer(mWhiteboardLayer);
+            mCurrWhiteboard.setDoodleBackground(bmp);
+            mCurrWhiteboard.setCanvasRatio(boardRatio);
+            mCurrWhiteboard.setUndoRedoListener(this);
+            mUndo.setEnabled(false);
+            mRedo.setEnabled(false);
+            onGeometryChange(GeometryShape.RECTANGLE);
+            onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
+            mCurrWhiteboard.reset();
+        }
+    }
+
     public void hideWhiteboardLayout() {
         if (mWhiteboardLayout != null) {
             mWhiteboardLayout.setVisibility(View.GONE);

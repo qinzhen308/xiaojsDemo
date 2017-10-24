@@ -3,7 +3,10 @@ package cn.xiaojs.xma.model.live;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.ArrayList;
+
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.social.Dimension;
 
 /**
@@ -16,7 +19,7 @@ public class Board {
     public long sort = System.currentTimeMillis();
     public int type = Live.BoardType.WHITE;
     public DrawDimension drawing;
-    public SlidePage[] pages;
+    public ArrayList<LibDoc.ExportImg> pages;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
