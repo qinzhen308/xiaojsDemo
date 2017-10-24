@@ -3,6 +3,8 @@ package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,8 @@ import io.reactivex.android.MainThreadDisposable;
  * Created by maxiaobao on 2017/7/4.
  */
 
-public class EventListener extends MainThreadDisposable implements MessageCallback {
+public class EventListener extends MainThreadDisposable implements MessageCallback,
+        LiveTimerObserver.OnTimeChangedListener {
 
     protected Context context;
     protected Observer<? super EventReceived> observer;
@@ -64,6 +67,19 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
     protected boolean send(EventReceived eventReceived) {
         return true;
+    }
+
+    @Override
+    public void onTimeChanged(long time, long reverseTime) {
+
+        EventReceived eventReceived = new EventReceived(
+                Su.EventCategory.TIME, Su.EventType.TIME_UPDATE, null);
+        eventReceived.value1 = time;
+        eventReceived.value2 = reverseTime;
+
+        if (observer != null) {
+            observer.onNext(eventReceived);
+        }
     }
 
     @Override

@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -121,12 +123,22 @@ public class BoardCollaborateFragment extends BaseFragment {
                 mBoardController.setWhiteBoardId(boardId);
             }
         }
-        mBoardController.setSyncDrawingListener(syncDrawingListener);
+//        mBoardController.setSyncDrawingListener(syncDrawingListener);
         eventListener = ClassroomEngine.getEngine().observerSyncboard(syncBoardConsumer);
         mBoardController.setPushPreviewBoardListener(new PushPreviewBoardListener() {
             @Override
             public void onPush(Bitmap bitmap) {
-                testPreview.setImageBitmap(bitmap);
+                //testPreview.setImageBitmap(bitmap);
+
+                Fragment target = getTargetFragment();
+                if (target != null) {
+                    Intent intent = new Intent();
+                    intent.putExtra(CTLConstant.EXTRA_BITMAP, bitmap);
+                    target.onActivityResult(CTLConstant.REQUEST_RECEIVE_WHITEBOARD_DATA,
+                            Activity.RESULT_OK, intent);
+                }
+
+
             }
         });
     }

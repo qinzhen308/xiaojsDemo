@@ -40,7 +40,7 @@ import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
  * Created by maxiaobao on 2017/10/19.
  */
 
-public class StreamingEngine implements CameraPreviewFrameView.Listener,
+public class CameraStreamingEngine implements CameraPreviewFrameView.Listener,
         StreamingSessionListener,
         StreamingStateChangedListener,
         StreamStatusCallback,
@@ -50,7 +50,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
 
 
     public interface AVStreamingStateListener {
-        void onAVStateChanged(StreamingState streamingState, Object extra);
+        void onStateChanged(StreamingState streamingState, Object extra);
     }
 
 
@@ -65,32 +65,11 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     private AVStreamingStateListener stateListener;
 
 
-    private boolean canStreaming = false;
-
-    public StreamingEngine(Context context,CameraPreviewFrameView cameraStreamView) {
+    public CameraStreamingEngine(Context context, CameraPreviewFrameView cameraStreamView) {
         this.context = context;
         initProfile();
         mediaStreamingManager = new MediaStreamingManager(context,
                 cameraStreamView, AVCodecType.SW_VIDEO_WITH_SW_AUDIO_CODEC);
-    }
-
-
-    public void preparePublish(CameraPreviewFrameView cameraStreamView) {
-        MicrophoneStreamingSetting microphoneStreamingSetting = new MicrophoneStreamingSetting();
-        microphoneStreamingSetting.setBluetoothSCOEnabled(false);//麦克风蓝牙支持
-
-        mediaStreamingManager.prepare(cameraStreamingSetting(),
-                microphoneStreamingSetting, buildWatermarkSetting(), profile);
-
-//        if (cameraConfig.mIsCustomFaceBeauty) {
-        //            mediaStreamingManager.setSurfaceTextureCallback(this);
-//        }
-
-        cameraStreamView.setListener(this);
-        mediaStreamingManager.setStreamingSessionListener(this);
-        mediaStreamingManager.setStreamStatusCallback(this);
-        mediaStreamingManager.setAudioSourceCallback(this);
-        mediaStreamingManager.setStreamingStateListener(this);
     }
 
     public void setStreamingUrl(String url) {
@@ -121,13 +100,25 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
 
         profile.setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2);
 
-        profile.setDnsManager(StreamingUtil.getMyDnsManager())
+        profile.setDnsManager(getMyDnsManager())
                 .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
                 .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f,
                         0.8f, 3.0f, 20 * 1000));
 
 
 
+    }
+
+    private static DnsManager getMyDnsManager() {
+        IResolver r0 = null;
+        IResolver r1 = new DnspodFree();
+        IResolver r2 = AndroidDnsServer.defaultResolver();
+        try {
+            r0 = new Resolver(InetAddress.getByName("119.29.29.29"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return new DnsManager(NetworkInfo.normal, new IResolver[]{r0, r1, r2});
     }
 
 
@@ -140,14 +131,25 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
         this.stateListener = listener;
     }
 
-    public void startStreamingAV() {
-        canStreaming = true;
-        startStreamingAVInternal();
+    public void configAV(CameraPreviewFrameView cameraStreamView) {
+        MicrophoneStreamingSetting microphoneStreamingSetting = new MicrophoneStreamingSetting();
+        microphoneStreamingSetting.setBluetoothSCOEnabled(false);//麦克风蓝牙支持
 
+        mediaStreamingManager.prepare(cameraStreamingSetting(),
+                microphoneStreamingSetting, buildWatermarkSetting(), profile);
+
+//        if (cameraConfig.mIsCustomFaceBeauty) {
+ //            mediaStreamingManager.setSurfaceTextureCallback(this);
+//        }
+
+        cameraStreamView.setListener(this);
+        mediaStreamingManager.setStreamingSessionListener(this);
+        mediaStreamingManager.setStreamStatusCallback(this);
+        mediaStreamingManager.setAudioSourceCallback(this);
+        mediaStreamingManager.setStreamingStateListener(this);
     }
 
-
-    public void startStreamingAVInternal() {
+    public void startStreamingAV() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -158,7 +160,6 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     }
 
     public void stopStreamingAV() {
-        canStreaming = false;
         mediaStreamingManager.stopStreaming();
     }
 
@@ -306,12 +307,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
                 isReady = true;
                 mMaxZoom = mediaStreamingManager.getMaxZoom();
 
-                if (canStreaming) {
-                    startStreamingAVInternal();
-                }else {
-                    stopStreamingAV();
-                }
-
+                startStreamingAV();
                 break;
             case CONNECTING:
                 if (XiaojsConfig.DEBUG) {
@@ -375,7 +371,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
         }
 
         if (stateListener != null) {
-            stateListener.onAVStateChanged(streamingState, extra);
+            stateListener.onStateChanged(streamingState, extra);
         }
     }
 

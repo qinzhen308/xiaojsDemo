@@ -15,6 +15,9 @@ public class EventReceived {
     @JsonIgnore
     public Object t;
 
+    public long value1;
+    public long value2;
+
 
     public EventReceived(int eventCategory,int eventType, Object t) {
         this.eventType = eventType;

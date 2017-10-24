@@ -33,9 +33,13 @@ public class Su {
         public static final int LIVE = 6000;
         //Class-side in-class events (emitted by classroom clients)
         public static final int CLASSROOM = 6001;
+
+        public static final int TIME = -5555;
     }
 
     public class EventType {//参考su.js
+
+        public static final int TIME_UPDATE = -5555;
 
 
         public static final int PRIMARY_SET = 610003;

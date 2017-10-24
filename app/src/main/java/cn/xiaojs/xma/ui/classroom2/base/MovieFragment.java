@@ -108,6 +108,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     public ImageView lRightScreenshortView;
     @BindView(R.id.l_right_switchcamera)
     public ImageView lRightSwitchcameraView;
+    @BindView(R.id.l_right_switch_vb)
+    public ImageView lRightSwitchVbView;
 
 
     @BindView(R.id.center_panel)
@@ -149,6 +151,8 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     @BindView(R.id.control_click)
     public View controlClickView;
+    @BindView(R.id.layout_idle_container)
+    FrameLayout whiteboardContainerLayout;
 
 
     @BindView(R.id.chat_list)
@@ -183,6 +187,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         if (getActivity() instanceof Classroom2Activity) {
             whiteboardFragment = ((Classroom2Activity) getActivity()).getCollaBorateFragment();
+            whiteboardFragment.setTargetFragment(this, CTLConstant.REQUEST_RECEIVE_WHITEBOARD_DATA);
         }
     }
 
@@ -271,6 +276,9 @@ public abstract class MovieFragment extends BaseRoomFragment
                 break;
             case R.id.l_bottom_chat:
                 onInputMessageClick(view);
+                break;
+            case R.id.l_right_switch_vb:
+                onSwitchStreamingClick(view);
                 break;
 
         }
@@ -475,12 +483,21 @@ public abstract class MovieFragment extends BaseRoomFragment
         });
     }
 
-    public void showControlAnim(final View target) {
-        showControlAnim.setTarget(target);
-        showControlAnim.start();
+
+    public void clearControlAnim() {
+        showControlAnim.cancel();
+        hiddeControlAnim.cancel();
     }
 
-    private void hiddeControlAnim(View target) {
+    public void showControlAnim(final View target) {
+        showControlAnim.cancel();
+        showControlAnim.setTarget(target);
+        showControlAnim.start();
+
+    }
+
+    public void hiddeControlAnim(View target) {
+        hiddeControlAnim.cancel();
         hiddeControlAnim.setTarget(target);
         hiddeControlAnim.start();
     }
@@ -492,6 +509,11 @@ public abstract class MovieFragment extends BaseRoomFragment
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
+
+                        if (whiteboardContainerLayout.getVisibility() == View.VISIBLE) {
+                            return;
+                        }
+
                         hiddeControlAnim(view);
                     }
                 });
@@ -525,6 +547,21 @@ public abstract class MovieFragment extends BaseRoomFragment
                 break;
 
         }
+    }
+
+    public int onSwitchStreamingClick(View view) {
+        int vis =  whiteboardContainerLayout.getVisibility() == View.VISIBLE?
+                View.GONE : View.VISIBLE;
+
+        if (vis == View.VISIBLE) {
+            lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
+        }else {
+            lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
+        }
+
+        whiteboardContainerLayout.setVisibility(vis);
+
+        return vis;
     }
 
 
@@ -579,6 +616,13 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onTalkVisibilityClick(View view) {
         int vis = recyclerView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE;
+
+        if (vis == View.VISIBLE) {
+            lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
+        }else {
+            lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_display);
+        }
+
         recyclerView.setVisibility(vis);
     }
 
@@ -979,8 +1023,6 @@ public abstract class MovieFragment extends BaseRoomFragment
         changeOrientationToLand();
         enterLiving();
     }
-
-
     public void sendStartStreaming() {
 
         classroomEngine.startStreaming(new EventCallback<EventResponse>() {

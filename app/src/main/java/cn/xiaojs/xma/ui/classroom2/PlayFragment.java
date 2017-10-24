@@ -33,6 +33,7 @@ import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
 import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
 import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
+import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
@@ -53,6 +54,10 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
     private StreamingEngine streamingEngine;
 
     private boolean streaming;
+
+    private int memCount;
+    private long liveTime;
+    private long reserveliveTime;
 
     @Nullable
     @Override
@@ -81,13 +86,13 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
         videoView.startPlay(classroomEngine.getPlayUrl());
 
         playLiveObserver = classroomEngine.observerPlaylive(receivedConsumer);
-
+        classroomEngine.setLiveTimerObserver(playLiveObserver);
 
 
     }
 
     @OnClick({R.id.video_view})
-    void onViewClick(View view){
+    void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.video_view:
 
@@ -185,7 +190,22 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
     public void onUpdateMembersCount(int count) {
         super.onUpdateMembersCount(count);
 
-        lTopRoominfoView.setText(count + "人观看");
+        memCount = count;
+        updateRoomInfo();
+
+    }
+
+    private void updateRoomInfo() {
+
+        if (classroomEngine.getCtlSession().streamType == Live.StreamType.LIVE) {
+            long liveDur = classroomEngine.getCtlSession().ctl.duration * 60;
+            String totalStr = TimeUtil.formatSecondTime(liveDur);
+            String livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
+            lTopRoominfoView.setText(livetimeStr + "/" + totalStr + "  " + memCount + "人观看");
+        } else {
+            String livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
+            lTopRoominfoView.setText(livetimeStr + "  " + memCount + "人观看");
+        }
 
     }
 
@@ -238,7 +258,7 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
             streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
             streamingEngine.setStateListener(new StreamingEngine.AVStreamingStateListener() {
                 @Override
-                public void onStateChanged(StreamingState streamingState, Object extra) {
+                public void onAVStateChanged(StreamingState streamingState, Object extra) {
                     switch (streamingState) {
                         case STREAMING:
                             if (XiaojsConfig.DEBUG) {
@@ -259,7 +279,7 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
                     }
                 }
             });
-            streamingEngine.configAV(streamView.getCameraPreviewView());
+            streamingEngine.preparePublish(streamView.getCameraPreviewView());
             streamingEngine.resumeAV();
         } else {
             streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
@@ -359,6 +379,8 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
             return;//老师自己抢占别人的直播，会收到流停止事件，此时不需处理；
         }
 
+        classroomEngine.cannelLiveTimerObserver();
+
         enterIdle();
     }
 
@@ -396,9 +418,11 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
                     handleSyncState(syncStateReceive);
                     break;
                 case Su.EventType.STREAM_RECLAIMED:
+                    classroomEngine.cannelLiveTimerObserver();
                     enterIdle();
                     break;
                 case Su.EventType.STOP_STREAM_BY_EXPIRATION:
+                    classroomEngine.cannelLiveTimerObserver();
                     enterIdle();
                     break;
                 case Su.EventType.STREAMING_STOPPED:
@@ -423,6 +447,11 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
                 case Su.EventType.JOIN:
                 case Su.EventType.LEAVE:
                     requestUpdateMemberCount();
+                    break;
+                case Su.EventType.TIME_UPDATE:
+                    liveTime = eventReceived.value1;
+                    reserveliveTime = eventReceived.value2;
+                    updateRoomInfo();
                     break;
             }
         }

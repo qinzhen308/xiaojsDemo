@@ -152,6 +152,13 @@ public class Classroom2Activity extends FragmentActivity {
     @Override
     public void onBackPressed() {
 
+
+        if (movieFragment !=null
+                && movieFragment.isAdded()
+                && movieFragment instanceof LivingFragment) {
+            movieFragment.back();
+        }
+
         if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             changeOrientation();
             return;

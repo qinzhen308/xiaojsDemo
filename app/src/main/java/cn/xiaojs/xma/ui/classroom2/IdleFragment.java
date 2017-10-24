@@ -1,6 +1,9 @@
 package cn.xiaojs.xma.ui.classroom2;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +28,7 @@ import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import io.reactivex.functions.Consumer;
 
@@ -65,6 +69,24 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         initDefaultBoard();
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == Activity.RESULT_OK) {
+//            switch (requestCode) {
+//                case CTLConstant.REQUEST_RECEIVE_WHITEBOARD_DATA:
+//                    Bitmap bitmap = data.getParcelableExtra(CTLConstant.EXTRA_BITMAP);
+//
+//                    if (XiaojsConfig.DEBUG) {
+//                        Logger.d("received whiteboard data(%d, %d): %s, ",
+//                                bitmap.getWidth(),bitmap.getHeight(), bitmap);
+//                    }
+//
+//                    break;
+//            }
+//        }
+//    }
 
     @Override
     public void onDestroy() {

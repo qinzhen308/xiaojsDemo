@@ -538,6 +538,14 @@ public final class ClassroomEngine {
         return elRoom;
     }
 
+    public void setLiveTimerObserver(LiveTimerObserver.OnTimeChangedListener listener) {
+        stateMachine.getLiveTimerObserver().setOnTimeChangedListener(listener);
+    }
+
+    public void cannelLiveTimerObserver() {
+        stateMachine.getLiveTimerObserver().stopObserver();
+    }
+
 
     /**
      * 注册白板
@@ -574,6 +582,7 @@ public final class ClassroomEngine {
 
         roomRequest = null;
         if (stateMachine != null) {
+            stateMachine.getLiveTimerObserver().destoryObserver();
             stateMachine.destoryAndQuitNow();
             stateMachine = null;
         }
@@ -595,6 +604,7 @@ public final class ClassroomEngine {
                         updateState(eventReceived);
                     }
                 });
+
     }
 
 

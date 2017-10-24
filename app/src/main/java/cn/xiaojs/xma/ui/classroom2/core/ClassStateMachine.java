@@ -37,6 +37,14 @@ public class ClassStateMachine extends ClassroomStateMachine{
         super(context, "ClassStateMachine",session);
         initStateTree();
         initialState();
+
+        if (session.ctlSession.finishOn >0 &&
+                (session.ctlSession.streamType == Live.StreamType.INDIVIDUAL
+                        || session.ctlSession.streamType == Live.StreamType.LIVE)) {
+
+            liveTimerObserver.startCounter();
+
+        }
     }
 
     public void initStateTree() {

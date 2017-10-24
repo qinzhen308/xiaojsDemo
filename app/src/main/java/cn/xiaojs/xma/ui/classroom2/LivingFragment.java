@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
-import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +37,7 @@ import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
 import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
 import cn.xiaojs.xma.ui.classroom2.member.ChooseMemberFragment;
+import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -46,20 +47,23 @@ import io.reactivex.functions.Consumer;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreListener, PlayLiveView.ControlListener {
+public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreListener,
+        PlayLiveView.ControlListener{
 
     @BindView(R.id.videostream_view)
     VideoStreamView videoStreamView;
     @BindView(R.id.video_play)
     PlayLiveView playView;
 
-    private boolean streaming;
-
     private EventListener.ELLiving livingObserver;
 
     private Attendee one2oneAttendee;
 
     private String streamDeprivedBy;
+
+    private int memCount;
+    private long liveTime;
+
 
 
     @Nullable
@@ -82,8 +86,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         playView.setCloseEnabled(true);
 
         livingObserver = classroomEngine.observerLiving(receivedConsumer);
+        classroomEngine.setLiveTimerObserver(livingObserver);
 
     }
+
 
     @Override
     protected CameraPreviewFrameView createCameraPreview() {
@@ -117,6 +123,18 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                     }
 
                     break;
+
+                case CTLConstant.REQUEST_RECEIVE_WHITEBOARD_DATA:
+                    Bitmap bitmap = data.getParcelableExtra(CTLConstant.EXTRA_BITMAP);
+                    if (XiaojsConfig.DEBUG) {
+                        Logger.d("received whiteboard data(%d, %d): %s, ",
+                                bitmap.getWidth(),bitmap.getHeight(), bitmap);
+
+                        Logger.d("publish_url: %s", classroomEngine.getPublishUrl());
+                    }
+
+                    receivedWhiteboardData(bitmap);
+                    break;
             }
         }
 
@@ -148,11 +166,42 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         showSlidePanel(chooseMemberFragment, "chat_slide");
     }
 
+
+    @Override
+    public int onSwitchStreamingClick(View view) {
+        int whiteboardVis = super.onSwitchStreamingClick(view);
+
+        if (whiteboardVis == View.VISIBLE) {
+            controlClickView.setVisibility(View.GONE);
+            controlLand.setVisibility(View.VISIBLE);
+            clearControlAnim();
+        }else {
+            controlClickView.setVisibility(View.VISIBLE);
+            hiddeControlAnim(controlLand);
+        }
+
+        return whiteboardVis;
+    }
+
     @Override
     public void onUpdateMembersCount(int count) {
         super.onUpdateMembersCount(count);
+        memCount = count;
+        updateRoomInfo();
 
-        lTopRoominfoView.setText("直播中（" + count + "人观看）");
+    }
+
+    private void updateRoomInfo() {
+
+        if (classroomEngine.getLiveState().equals(Live.LiveSessionState.LIVE)) {
+
+            long liveDur = classroomEngine.getCtlSession().ctl.duration * 60;
+            String totalStr = TimeUtil.formatSecondTime(liveDur);
+            String livetimeStr = TimeUtil.formatSecondTime(liveTime);
+            lTopRoominfoView.setText(livetimeStr + "/" +totalStr+"  " + memCount + "人观看");
+        }else {
+            lTopRoominfoView.setText("直播中（" + memCount + "人观看）");
+        }
 
     }
 
@@ -169,34 +218,16 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
 
     @Override
-    public void onStateChanged(StreamingState streamingState, Object extra) {
-        switch (streamingState) {
-            case STREAMING:
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("STREAMING");
-                }
-
-                if (!streaming) {
-                    sendStartStreaming();
-                    streaming = true;
-                }
-                break;
-        }
-    }
-
-
-    @Override
     public void back() {
 
         if (one2oneAttendee != null) {
             stopPlay(true);
         }
 
-
         stopStreaming();
-        super.back();
-        enterIdle();
 
+        changeOrientation();
+        enterIdle();
         sendStopStreaming();
     }
 
@@ -219,8 +250,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         configStopButton();
 
         requestUpdateMemberCount();
-
-        showControlAnim(controlLand);
 
     }
 
@@ -379,6 +408,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 case Su.EventType.JOIN:
                 case Su.EventType.LEAVE:
                     requestUpdateMemberCount();
+                    break;
+                case Su.EventType.TIME_UPDATE:
+                    liveTime = eventReceived.value1;
+                    updateRoomInfo();
                     break;
             }
         }

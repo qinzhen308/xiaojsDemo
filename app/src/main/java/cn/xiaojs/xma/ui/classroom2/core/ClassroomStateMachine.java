@@ -56,11 +56,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     private Context context;
     private RoomSession roomSession;
+    protected LiveTimerObserver liveTimerObserver;
 
     public ClassroomStateMachine(Context context, String name, RoomSession session) {
         super(name);
         this.context = context.getApplicationContext();
         this.roomSession = session;
+        this.liveTimerObserver = new LiveTimerObserver(this);
+
         setDbg(XiaojsConfig.DEBUG);
 
         //加载教室成员
@@ -83,6 +86,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
         return this.roomSession;
     }
 
+    public LiveTimerObserver getLiveTimerObserver() {
+        return liveTimerObserver;
+    }
 
     public abstract String getLiveState();
 
@@ -318,10 +324,10 @@ public abstract class ClassroomStateMachine extends StateMachine {
         ctlSession.mode = message.mode;
         ctlSession.claimedBy = message.claimedBy;
 
+        liveTimerObserver.startCounter();
+
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
-
             roomSession.individualStreamDuration = message.finishOn;
-
         } else if (message.streamType == Live.StreamType.LIVE) {
 
         }
