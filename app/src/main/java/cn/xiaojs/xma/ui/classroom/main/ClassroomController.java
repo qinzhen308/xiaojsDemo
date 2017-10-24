@@ -508,7 +508,17 @@ public class ClassroomController {
             FragmentActivity activity = (FragmentActivity) mContext;
             return activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         }
+        return false;
+    }
 
+    /**
+     * 是否是竖屏
+     */
+    public boolean isLandscape() {
+        if (mContext instanceof FragmentActivity) {
+            FragmentActivity activity = (FragmentActivity) mContext;
+            return activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        }
         return false;
     }
 

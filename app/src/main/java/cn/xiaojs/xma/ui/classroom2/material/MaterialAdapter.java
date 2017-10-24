@@ -16,6 +16,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.TimeUtil;
@@ -166,6 +167,8 @@ public class MaterialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 public void onClick(View v) {
                     if (Collaboration.TypeName.DIRECTORY_IN_LIBRARY.equals(doc.typeName)) {
                         fragment.enterNext(doc, position);
+                    }else if(context instanceof Classroom2Activity){
+                        ((Classroom2Activity)context).getCollaBorateFragment().openDocInBoard(doc);
                     }else {
                         MaterialUtil.openMaterial(fragment.getActivity(),doc);
                     }

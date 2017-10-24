@@ -357,8 +357,9 @@ public class ApiManager {
     public static String getFileBucket() {
 
         String channel = XiaojsConfig.CHANNEL;
-        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
-                || channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
+            return XiaojsConfig.TEST_FILES_BUCKET_URL;
+        }else if(channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
             return XiaojsConfig.PRE_FILES_BUCKET_URL;
         }
 
@@ -372,8 +373,9 @@ public class ApiManager {
      */
     public static String getLiveBucket() {
         String channel = XiaojsConfig.CHANNEL;
-        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)
-                || channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)) {
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
+            return XiaojsConfig.TEST_LIVE_BUCKET_URL;
+        } else if(channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
             return XiaojsConfig.PRE_LIVE_BUCKET_URL;
         }
 

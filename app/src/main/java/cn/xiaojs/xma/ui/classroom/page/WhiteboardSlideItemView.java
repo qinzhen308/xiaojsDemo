@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
 import android.content.Context;
+import android.hardware.input.InputManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,13 +15,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 
 /**
  * Created by Paul Z on 2017/5/23.
  */
 
-public class WhiteboardSlideItemView extends RelativeLayout implements IViewModel<SlideImgModel> {
+public class WhiteboardSlideItemView extends RelativeLayout implements IViewModel<SlideImgModel> ,IEventer{
 
     SlideImgModel mData;
     @BindView(R.id.iv_slide_img)
@@ -60,7 +64,7 @@ public class WhiteboardSlideItemView extends RelativeLayout implements IViewMode
 
 
     @Override
-    public void bindData(int position, SlideImgModel data) {
+    public void bindData(final int position, final SlideImgModel data) {
         mData = data;
         if(data.isSelected){
             selector.setVisibility(VISIBLE);
@@ -73,11 +77,21 @@ public class WhiteboardSlideItemView extends RelativeLayout implements IViewMode
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                data.isSelected=true;
+                if(getContext() instanceof Classroom2Activity){
+                    ((Classroom2Activity)getContext()).getCollaBorateFragment().loadNewPage(position);
+                }
+                if(callback!=null){
+                    callback.onEvent(EventCallback.EVENT_1,position);
+                }
             }
         });
     }
 
 
-
+    EventCallback callback;
+    @Override
+    public void setEventCallback(EventCallback callback) {
+        this.callback=callback;
+    }
 }

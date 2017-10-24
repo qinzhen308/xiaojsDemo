@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.classroom.page.SlideImgModel;
@@ -93,6 +94,9 @@ public class CommonRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if(holder.itemView instanceof IViewModel){
             ((IViewModel) holder.itemView).bindData(position,getItem(position));
+        }
+        if(holder.itemView instanceof IEventer){
+            ((IEventer) holder.itemView).setEventCallback(mEventCallback);
         }
     }
 
