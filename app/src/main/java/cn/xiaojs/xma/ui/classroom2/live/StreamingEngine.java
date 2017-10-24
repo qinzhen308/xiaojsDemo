@@ -65,9 +65,22 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     private AVStreamingStateListener stateListener;
 
 
-    public StreamingEngine(Context context, String streamUrl) {
+    public StreamingEngine(Context context,CameraPreviewFrameView cameraStreamView) {
         this.context = context;
-        initProfile(streamUrl);
+        initProfile();
+        mediaStreamingManager = new MediaStreamingManager(context,
+                cameraStreamView, AVCodecType.SW_VIDEO_WITH_SW_AUDIO_CODEC);
+    }
+
+    public void setStreamingUrl(String url) {
+        try {
+            profile.setPublishUrl(url);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            if (XiaojsConfig.DEBUG) {
+                Logger.e("setPublishUrl exception: %s", e.getMessage());
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +88,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     // streaming profile
     //
 
-    private void initProfile(String streamUrl) {
+    private void initProfile() {
         profile = new StreamingProfile();
         profile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3);
         profile.setEncodingSizeLevel(StreamingProfile.VIDEO_ENCODING_HEIGHT_480);
@@ -92,14 +105,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
                 .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f,
                         0.8f, 3.0f, 20 * 1000));
 
-        try {
-            profile.setPublishUrl(streamUrl);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            if (XiaojsConfig.DEBUG) {
-                Logger.e("setPublishUrl exception: %s", e.getMessage());
-            }
-        }
+
 
     }
 
@@ -126,9 +132,6 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     }
 
     public void configAV(CameraPreviewFrameView cameraStreamView) {
-        mediaStreamingManager = new MediaStreamingManager(context,
-                cameraStreamView, AVCodecType.SW_VIDEO_WITH_SW_AUDIO_CODEC);
-
         MicrophoneStreamingSetting microphoneStreamingSetting = new MicrophoneStreamingSetting();
         microphoneStreamingSetting.setBluetoothSCOEnabled(false);//麦克风蓝牙支持
 
@@ -187,6 +190,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     public void destoryAV() {
         if (mediaStreamingManager != null) {
             mediaStreamingManager.destroy();
+            mediaStreamingManager = null;
         }
     }
 

@@ -226,6 +226,10 @@ public class MoveFolderFragment extends BottomSheetFragment implements
                                         .subscribe(new Consumer<List<LibDoc>>() {
                                             @Override
                                             public void accept(List<LibDoc> libDocsx) throws Exception {
+
+                                                if (getActivity() == null)
+                                                    return;
+
                                                 libDocs.addAll(libDocsx);
                                                 pagination.setPage(pagination.getPage() + 1);
                                                 folderAdapter.notifyDataSetChanged();

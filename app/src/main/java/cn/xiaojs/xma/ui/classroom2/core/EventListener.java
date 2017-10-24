@@ -232,6 +232,10 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
                     Su.EventType.STOP_STREAM_BY_EXPIRATION, StreamExpirationReceive.class, this));
             socketListeners.add(EventManager.onEvent(context,
                     Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class, this));
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.LEAVE, Talk.class, this));
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.JOIN, Talk.class, this));
         }
 
     }
@@ -268,6 +272,10 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
                     Su.EventType.STREAMING_STOPPED, StreamStopReceive.class, this));
             socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                     Su.EventType.STREAMING_STARTED, StreamStartReceive.class, this));
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.LEAVE, Talk.class, this));
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.JOIN, Talk.class, this));
         }
     }
 

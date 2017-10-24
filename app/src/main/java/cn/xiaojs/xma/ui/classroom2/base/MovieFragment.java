@@ -1,6 +1,10 @@
 package cn.xiaojs.xma.ui.classroom2.base;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -27,6 +31,7 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -51,6 +56,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
+import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
@@ -74,7 +80,10 @@ import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -127,11 +136,13 @@ public abstract class MovieFragment extends BaseRoomFragment
     @BindView(R.id.control_land)
     public ConstraintLayout controlLand;
 
+
+    @BindView(R.id.p_bottom_avator)
+    public ImageView pBottomAvatorView;
     @BindView(R.id.p_bottom_class_name)
     public TextView pBottomClassnameView;
     @BindView(R.id.p_top_live)
     public TextView pTopLiveView;
-
 
 
     /////////////
@@ -139,6 +150,10 @@ public abstract class MovieFragment extends BaseRoomFragment
     public FrameLayout rightSlideLayout;
     @BindView(R.id.slide_layout)
     public ClosableAdapterSlidingLayout slideLayout;
+
+
+    @BindView(R.id.control_click)
+    public View controlClickView;
 
 
     @BindView(R.id.chat_list)
@@ -153,7 +168,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     private long lastTimeline = 0;
 
 
-
     public final static int REQUEST_PERMISSION = 3;
 
     protected ClassroomEngine classroomEngine;
@@ -164,13 +178,16 @@ public abstract class MovieFragment extends BaseRoomFragment
     //但生命周期取决于使用他的fragment
     protected BoardCollaborateFragment whiteboardFragment;
 
+    private ObjectAnimator hiddeControlAnim;
+    private ObjectAnimator showControlAnim;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         classroomEngine = ClassroomEngine.getEngine();
 
-        if(getActivity() instanceof Classroom2Activity){
-            whiteboardFragment=((Classroom2Activity)getActivity()).getCollaBorateFragment();
+        if (getActivity() instanceof Classroom2Activity) {
+            whiteboardFragment = ((Classroom2Activity) getActivity()).getCollaBorateFragment();
         }
     }
 
@@ -180,8 +197,11 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         slideLayout.setSlideListener(this);
         if(ClassroomController.getInstance(getActivity()).isLandscape()){
+
             onRotateToInitBoard(Configuration.ORIENTATION_LANDSCAPE);
         }
+        initControlAnim();
+
     }
 
     @Override
@@ -192,7 +212,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     @Override
     public void onDestroy() {
         //
-        whiteboardFragment=null;
+        whiteboardFragment = null;
         super.onDestroy();
     }
 
@@ -320,6 +340,16 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
+    @OnClick({R.id.control_click})
+    void onControlClick(View view) {
+        switch (view.getId()) {
+            case R.id.control_click:
+                hiddeOrshowControl();
+                break;
+        }
+    }
+
+
     /**
      * 点击了返回
      *
@@ -391,6 +421,118 @@ public abstract class MovieFragment extends BaseRoomFragment
     // control
     //
 
+    private void initControlAnim() {
+        hiddeControlAnim = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(),
+                R.animator.classroom2_control_alpha_hide);
+        hiddeControlAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                View view = (View) hiddeControlAnim.getTarget();
+                if (view != null) {
+                    view.setAlpha(1.0f);
+                    view.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        showControlAnim = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(),
+                R.animator.classroom2_control_alpha_show);
+        showControlAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                View view = (View) showControlAnim.getTarget();
+                if (view != null) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                View view = (View) showControlAnim.getTarget();
+                if (view != null) {
+                    autoStartHiddeAnim(view);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    public void showControlAnim(final View target) {
+        showControlAnim.setTarget(target);
+        showControlAnim.start();
+    }
+
+    private void hiddeControlAnim(View target) {
+        hiddeControlAnim.setTarget(target);
+        hiddeControlAnim.start();
+    }
+
+    private void autoStartHiddeAnim(final View view) {
+        Observable.timer(3000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        hiddeControlAnim(view);
+                    }
+                });
+    }
+
+
+    public void hiddeOrshowControl() {
+
+        int currentOrient = getActivity().getRequestedOrientation();
+        switch (currentOrient) {
+            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
+                if (controlLand == null)
+                    return;
+
+                int vis = controlLand.getVisibility();
+                if (vis == View.VISIBLE) {
+                    hiddeControlAnim(controlLand);
+                } else {
+                    showControlAnim(controlLand);
+                }
+
+                break;
+            default:
+                if (controlPort == null)
+                    return;
+                if (controlPort.getVisibility() == View.VISIBLE) {
+                    hiddeControlAnim(controlPort);
+                } else {
+                    showControlAnim(controlPort);
+                }
+                break;
+
+        }
+    }
+
+
     /**
      * 切换前后摄像头
      */
@@ -418,7 +560,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     public void onNewboardClick(View view) {
         // TODO: 2017/10/18 新增白板
 
-
     }
 
 
@@ -427,7 +568,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onBoardMgrClick(View view) {
 
-        if(whiteboardFragment!=null&&!whiteboardFragment.isDetached()){
+        if (whiteboardFragment != null && !whiteboardFragment.isDetached()) {
             whiteboardFragment.showWhiteboardManager();
         }
     }
@@ -460,7 +601,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     /**
      * 点击了一对一
-     * @param view
      */
     public void onOne2OneClick(View view) {
 
@@ -468,11 +608,10 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     /**
      * 点击资料库
-     * @param view
      */
     public void onMaterialClick(View view) {
         DatabaseFragment databaseFragment = new DatabaseFragment();
-        databaseFragment.setTargetFragment(this,CTLConstant.REQUEST_OPEN_MATERIAL);
+        databaseFragment.setTargetFragment(this, CTLConstant.REQUEST_OPEN_MATERIAL);
         showSlidePanel(databaseFragment, "database");
     }
 
@@ -552,9 +691,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     protected void controlHandleOnRotate(int orientation) {
         switch (orientation) {
             case Configuration.ORIENTATION_LANDSCAPE:
-                if (controlLand != null) {
-                    controlLand.setVisibility(View.VISIBLE);
-                }
+
+                showControlAnim(controlLand);
 
                 if (recyclerView != null) {
                     recyclerView.setVisibility(View.VISIBLE);
@@ -574,13 +712,10 @@ public abstract class MovieFragment extends BaseRoomFragment
                     recyclerView.setVisibility(View.GONE);
                 }
 
-                if (controlPort != null) {
-                    controlPort.setVisibility(View.VISIBLE);
-                }
+                showControlAnim(controlPort);
                 break;
         }
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -666,6 +801,10 @@ public abstract class MovieFragment extends BaseRoomFragment
                 .subscribe(new Consumer<ArrayList<TalkItem>>() {
                     @Override
                     public void accept(ArrayList<TalkItem> talkItems) throws Exception {
+
+
+                        if (getActivity() == null)
+                            return;
 
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
@@ -874,17 +1013,17 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     //====================================全局白板====================================
-    protected void addWhiteboardFragment(){
+    protected void addWhiteboardFragment() {
         getChildFragmentManager()
                 .beginTransaction()
                 .add(R.id.layout_idle_container, whiteboardFragment)
                 .commitAllowingStateLoss();
     }
 
-    protected void showWhiteboardFragment(){
-        if(whiteboardFragment.isAdded()){
+    protected void showWhiteboardFragment() {
+        if (whiteboardFragment.isAdded()) {
             getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
-        }else {
+        } else {
             getChildFragmentManager()
                     .beginTransaction()
                     .add(R.id.layout_idle_container, whiteboardFragment)
@@ -892,22 +1031,23 @@ public abstract class MovieFragment extends BaseRoomFragment
         }
     }
 
-    protected void hideWhiteboardFragment(){
+    protected void hideWhiteboardFragment() {
         if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
             getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
         }
     }
-    protected void removeWhiteboardFragment(){
+
+    protected void removeWhiteboardFragment() {
         getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
     }
 
     protected void onRotateToInitBoard(int orientation){
         if(whiteboardFragment==null)return;
-        Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation="+orientation);
+            Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation="+orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(whiteboardFragment.isAdded()){
+            if (whiteboardFragment.isAdded()) {
                 getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
-            }else {
+            } else {
                 getChildFragmentManager()
                         .beginTransaction()
                         .add(R.id.layout_idle_container, whiteboardFragment)
@@ -926,9 +1066,10 @@ public abstract class MovieFragment extends BaseRoomFragment
     // 一对一
     //
 
+
     protected void receivedO2o(Attendee attendee) {
         o2oAttendee = attendee;
-        ((Classroom2Activity)getActivity()).showO2oPanel(attendee);
+        ((Classroom2Activity) getActivity()).showO2oPanel(attendee);
     }
 
     public void argeeO2o() {
@@ -938,6 +1079,7 @@ public abstract class MovieFragment extends BaseRoomFragment
             public void onSuccess(EventResponse response) {
 
                 changeOrientationToLand();
+
                 handleArgeedO2o(o2oAttendee);
 
             }
@@ -953,18 +1095,35 @@ public abstract class MovieFragment extends BaseRoomFragment
     public void refuseO2o() {
         classroomEngine.mediaFeedback(Live.MediaStatus.FAILED_DUE_TO_DENIED,
                 new EventCallback<EventResponse>() {
+                    @Override
+                    public void onSuccess(EventResponse response) {
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(getContext(), "你已拒绝", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(String errorCode, String errorMessage) {
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(getContext(), "拒绝失败", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    public void sendCloseMedia(String to) {
+
+        classroomEngine.closeMedia(to, new EventCallback<CloseMediaResponse>() {
             @Override
-            public void onSuccess(EventResponse response) {
+            public void onSuccess(CloseMediaResponse closeMediaResponse) {
                 if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(getContext(), "你已拒绝", Toast.LENGTH_LONG).show();
+                    ToastUtil.showToast(getContext(), "close open peer to peer video success");
                 }
             }
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
-                if (XiaojsConfig.DEBUG) {
-                    Toast.makeText(getContext(), "拒绝失败", Toast.LENGTH_LONG).show();
-                }
+                ToastUtil.showToast(getContext(), errorMessage);
             }
         });
     }
@@ -993,4 +1152,41 @@ public abstract class MovieFragment extends BaseRoomFragment
     public void openSlideMenu(ArrayList<LibDoc.ExportImg> slides,int curPage) {
         showSlidePanel( SlideMenuFragment.createInstance(slides,curPage), "menu_fragment");
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 成员操作
+    //
+
+    protected void requestUpdateMemberCount() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(
+                    @io.reactivex.annotations.NonNull ObservableEmitter<Integer> e) throws Exception {
+
+                int count = classroomEngine.getOnlineMemberCount();
+                e.onNext(count);
+                e.onComplete();
+
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        if (getActivity() == null)
+                            return;
+
+                        //排除直播人
+                        int realcount = integer.intValue() <= 0 ? 0 : integer.intValue() - 1;
+
+                        onUpdateMembersCount(realcount);
+
+                    }
+                });
+    }
+
+    public void onUpdateMembersCount(int count) {
+
+    }
+
 }

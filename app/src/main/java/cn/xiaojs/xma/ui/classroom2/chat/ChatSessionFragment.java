@@ -243,6 +243,10 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
                     @Override
                     public void accept(ArrayList<TalkItem> talkItems) throws Exception {
 
+                        if (getActivity() == null) {
+                            return;
+                        }
+
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
                             RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();

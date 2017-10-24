@@ -95,6 +95,10 @@ public class ChooseContactFragment extends BottomSheetFragment {
                     @Override
                     public void accept(ArrayList<Contact> contacts) throws Exception {
 
+                        if (getActivity() == null) {
+                            return;
+                        }
+
                         if (contacts !=null && contacts.size()>0) {
                             contactList.clear();
                             contactList.addAll(contacts);

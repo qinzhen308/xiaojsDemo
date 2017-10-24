@@ -23,7 +23,8 @@ public abstract class AVFragment extends MovieFragment implements StreamingEngin
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        streamingEngine = new StreamingEngine(getContext(), classroomEngine.getPublishUrl());
+        streamingEngine = new StreamingEngine(getContext(),createCameraPreview());
+        streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
         streamingEngine.setStateListener(this);
         streamingEngine.configAV(createCameraPreview());
 

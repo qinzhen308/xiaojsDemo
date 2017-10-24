@@ -6,13 +6,19 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.VideoView;
+
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -25,18 +31,28 @@ import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
+import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
+import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
+import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
 /**
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMoreListener{
+public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMoreListener, VideoStreamView.ControlListener {
 
     @BindView(R.id.video_view)
     PlayLiveView videoView;
+    @BindView(R.id.video_stream)
+    VideoStreamView streamView;
 
     private EventListener.ELPlaylive playLiveObserver;
+
+    private StreamingEngine streamingEngine;
+
+    private boolean streaming;
 
     @Nullable
     @Override
@@ -53,10 +69,10 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        lRightSwitchcameraView.setVisibility(View.GONE);
+        streamView.setCloseEnabled(true);
+        streamView.setControlListener(this);
 
-        int changeRequest = getActivity().getRequestedOrientation();
-        controlHandleOnRotate(changeRequest);
+        initControlPanel();
 
         initTalkData(this);
 
@@ -66,23 +82,46 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
 
         playLiveObserver = classroomEngine.observerPlaylive(receivedConsumer);
 
+
+
+    }
+
+    @OnClick({R.id.video_view})
+    void onViewClick(View view){
+        switch (view.getId()) {
+            case R.id.video_view:
+
+                break;
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (streamingEngine != null) {
+            streamingEngine.pauseAV();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         videoView.resume();
+        if (streamingEngine != null) {
+            streamingEngine.resumeAV();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         videoView.destroy();
+
+        if (streamingEngine != null) {
+            streamingEngine.stopStreamingAV();
+            streamingEngine.destoryAV();
+            streamingEngine = null;
+        }
 
         if (playLiveObserver != null) {
             playLiveObserver.dispose();
@@ -132,13 +171,104 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
     @Override
     protected void handleArgeedO2o(Attendee attendee) {
         super.handleArgeedO2o(attendee);
+        setupStream();
+    }
+
+    @Override
+    public void onPlayClosed() {
+        closeStreaming();
+        sendCloseMedia(o2oAttendee.accountId);
+    }
+
+
+    @Override
+    public void onUpdateMembersCount(int count) {
+        super.onUpdateMembersCount(count);
+
+        lTopRoominfoView.setText(count + "人观看");
+
+    }
+
+    private void initControlPanel() {
+
+        int changeRequest = getActivity().getRequestedOrientation();
+        controlHandleOnRotate(changeRequest);
+
+        lRightSwitchcameraView.setVisibility(View.GONE);
+        pBottomClassnameView.setText(classroomEngine.getRoomTitle());
+
+        String avatorUrl = Account.getAvatar(classroomEngine.getCtlSession().claimedBy,
+                lTopPhotoView.getMeasuredWidth());
+        Glide.with(getContext())
+                .load(avatorUrl)
+                .transform(new CircleTransform(getContext()))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(pBottomAvatorView);
+        pBottomAvatorView.setVisibility(View.VISIBLE);
+
+        Glide.with(getContext())
+                .load(avatorUrl)
+                .transform(new CircleTransform(getContext()))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(lTopPhotoView);
+
+        requestUpdateMemberCount();
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 响应1队1
     //
 
+    private void closeStreaming() {
+        if (streamingEngine != null) {
+            streamingEngine.pauseAV();
+            streamingEngine.stopStreamingAV();
+        }
+        streamView.setVisibility(View.GONE);
+        streaming = false;
+    }
 
+    private void setupStream() {
+        streamView.setVisibility(View.VISIBLE);
+        if (streamingEngine == null) {
+            streamingEngine = new StreamingEngine(getContext(), streamView.getCameraPreviewView());
+            streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
+            streamingEngine.setStateListener(new StreamingEngine.AVStreamingStateListener() {
+                @Override
+                public void onStateChanged(StreamingState streamingState, Object extra) {
+                    switch (streamingState) {
+                        case STREAMING:
+                            if (XiaojsConfig.DEBUG) {
+                                Logger.d("STREAMING");
+                            }
+
+                            if (!streaming) {
+                                sendStartStreaming();
+                                streaming = true;
+                            }
+                            break;
+                        case READY:
+                            if (XiaojsConfig.DEBUG) {
+                                Logger.d("READY");
+                            }
+                            streamingEngine.startStreamingAV();
+                            break;
+                    }
+                }
+            });
+            streamingEngine.configAV(streamView.getCameraPreviewView());
+            streamingEngine.resumeAV();
+        } else {
+            streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
+            streamingEngine.resumeAV();
+            streamingEngine.startStreamingAV();
+        }
+
+
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,6 +414,15 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
                         return;
                     OpenMediaReceive receive = (OpenMediaReceive) eventReceived.t;
                     handleO2o(receive);
+                    break;
+                case Su.EventType.CLOSE_MEDIA:
+                    if (eventReceived.t == null)
+                        return;
+                    closeStreaming();
+                    break;
+                case Su.EventType.JOIN:
+                case Su.EventType.LEAVE:
+                    requestUpdateMemberCount();
                     break;
             }
         }
