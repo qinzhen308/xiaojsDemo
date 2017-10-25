@@ -168,4 +168,10 @@ public abstract class AVFragment extends MovieFragment implements
 
         receivedWhiteboardData(bitmap);
     }
+
+    //需要推白板就返回true
+    @Override
+    public boolean pushPreviewEnable() {
+        return true;
+    }
 }

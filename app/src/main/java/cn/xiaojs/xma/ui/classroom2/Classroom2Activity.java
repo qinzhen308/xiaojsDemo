@@ -341,10 +341,10 @@ public class Classroom2Activity extends FragmentActivity {
         }
 
 
-        if (true) {
-            enterPlayback();
-            return;
-        }
+//        if (true) {
+//            enterPlayback();
+//            return;
+//        }
 
 
         String roomState = classroomEngine.getCtlSession().state;

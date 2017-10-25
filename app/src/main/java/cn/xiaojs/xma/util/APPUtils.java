@@ -76,8 +76,8 @@ public class APPUtils {
             channel = XiaojsConfig.CHANNEL_ENV_DEVTEST;
         }
 
-        return channel;
-        //return "pro";
+        //return channel;
+        return "pro";
     }
 
     public static boolean isBackgroundThread(){
