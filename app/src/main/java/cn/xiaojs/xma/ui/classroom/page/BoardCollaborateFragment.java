@@ -216,6 +216,12 @@ public class BoardCollaborateFragment extends BaseFragment {
     }
 
     @Override
+    public void onDetach() {
+        setTargetFragment(null,1);
+        super.onDetach();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();

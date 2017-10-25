@@ -193,7 +193,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         if (getActivity() instanceof Classroom2Activity) {
             whiteboardFragment = ((Classroom2Activity) getActivity()).getCollaBorateFragment();
-            whiteboardFragment.setTargetFragment(this, 1);
         }
     }
 
@@ -218,7 +217,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     @Override
     public void onDestroy() {
         //
-        whiteboardFragment.setTargetFragment(null,1);
         whiteboardFragment = null;
         super.onDestroy();
     }
@@ -1095,6 +1093,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         if (whiteboardFragment == null) return;
         Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation=" + orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            whiteboardFragment.setTargetFragment(this, 1);
             if (whiteboardFragment.isAdded()) {
                 getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
             } else {
