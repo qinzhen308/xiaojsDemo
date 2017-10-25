@@ -417,4 +417,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
     };
 
+    //需要推白板就返回true
+    @Override
+    public boolean pushPreviewEnable() {
+        return true;
+    }
+
 }

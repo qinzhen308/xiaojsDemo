@@ -17,6 +17,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.IEventer;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 
@@ -71,13 +72,13 @@ public class WhiteboardSlideItemView extends RelativeLayout implements IViewMode
         }else {
             selector.setVisibility(GONE);
         }
+        tvPage.setText(""+(position+1));
 
-        Glide.with(getContext()).load(data.url).into(ivSlideImg);
+        Glide.with(getContext()).load(Social.getDrawing(data.url,true)).into(ivSlideImg);
 
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.isSelected=true;
                 if(getContext() instanceof Classroom2Activity){
                     ((Classroom2Activity)getContext()).getCollaBorateFragment().loadNewPage(position);
                 }

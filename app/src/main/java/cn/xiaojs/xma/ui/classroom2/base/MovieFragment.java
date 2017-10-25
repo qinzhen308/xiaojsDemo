@@ -1095,6 +1095,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                         .add(R.id.layout_idle_container, whiteboardFragment)
                         .commitAllowingStateLoss();
             }
+            controlClickView.setVisibility(View.GONE);
         } else {
             if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
                 getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
@@ -1191,9 +1192,15 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     @Override
-    public void openSlideMenu(ArrayList<LibDoc.ExportImg> slides,int curPage) {
-        showSlidePanel( SlideMenuFragment.createInstance(slides,curPage), "menu_fragment");
+    public void openSlideMenu(LibDoc doc,ArrayList<LibDoc.ExportImg> slides,int curPage) {
+        showSlidePanel( SlideMenuFragment.createInstance(doc.name,slides,curPage), "menu_fragment");
     }
+
+    @Override
+    public boolean pushPreviewEnable() {
+        return false;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // 成员操作

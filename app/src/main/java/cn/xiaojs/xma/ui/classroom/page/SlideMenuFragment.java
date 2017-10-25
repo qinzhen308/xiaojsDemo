@@ -38,6 +38,7 @@ public class SlideMenuFragment extends BaseFragment {
 
     public static final String EXTRA_DOC_IMGS="extra_doc_imgs";
     public static final String EXTRA_CUR_PAGE="extra_cur_page";
+    public static final String EXTRA_DOC_TITLE="extra_doc_title";
     ArrayList<SlideImgModel> datas = new ArrayList<>();
     private int curPage;
 
@@ -50,7 +51,7 @@ public class SlideMenuFragment extends BaseFragment {
 
     @Override
     protected void init() {
-        titleView.setText("标题");
+        titleView.setText(getArguments().getString(EXTRA_DOC_TITLE));
         rvSlideMenu.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
         mAdapter = new CommonRVAdapter(rvSlideMenu);
         rvSlideMenu.setAdapter(mAdapter);
@@ -59,6 +60,13 @@ public class SlideMenuFragment extends BaseFragment {
         mAdapter.setCallback(new EventCallback() {
             @Override
             public void onEvent(int what, Object... object) {
+                for(int i=0;i<datas.size();i++){
+                    if(i==(int)object[0]){
+                        datas.get(i).isSelected=true;
+                    }else {
+                        datas.get(i).isSelected=false;
+                    }
+                }
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -91,7 +99,7 @@ public class SlideMenuFragment extends BaseFragment {
         return fragment;
     }*/
 
-    public static SlideMenuFragment createInstance(ArrayList<LibDoc.ExportImg> imgs, int curPage){
+    public static SlideMenuFragment createInstance(String title,ArrayList<LibDoc.ExportImg> imgs, int curPage){
         SlideMenuFragment fragment=new SlideMenuFragment();
 
         if(!ArrayUtil.isEmpty(imgs)){
@@ -102,6 +110,7 @@ public class SlideMenuFragment extends BaseFragment {
             Bundle data=new Bundle();
             data.putStringArrayList(EXTRA_DOC_IMGS,urls);
             data.putInt(EXTRA_CUR_PAGE,curPage);
+            data.putString(EXTRA_DOC_TITLE,title);
             fragment.setArguments(data);
         }
         return fragment;

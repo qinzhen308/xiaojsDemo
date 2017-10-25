@@ -18,6 +18,8 @@ public interface IBoardManager {
 
     public void openBoard(String boardId);
 
-    public void openSlideMenu(ArrayList<LibDoc.ExportImg> slides, int curPage);
+    public boolean pushPreviewEnable();
+
+    public void openSlideMenu(LibDoc doc,ArrayList<LibDoc.ExportImg> slides, int curPage);
 
 }

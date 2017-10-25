@@ -157,6 +157,11 @@ public class BoardCollaborateFragment extends BaseFragment {
                     onPushPreviewListener.onPushPreview(bitmap);
                 }
 
+                Fragment fragment=getTargetFragment();
+                if(fragment instanceof IBoardManager&&((IBoardManager)fragment).pushPreviewEnable()){
+                    ((IBoardManager)fragment).onPushPreview(bitmap);
+                }
+
             }
         });
     }
@@ -184,7 +189,7 @@ public class BoardCollaborateFragment extends BaseFragment {
             case R.id.text_pager_points:
                 Fragment fragment=getTargetFragment();
                 if(fragment instanceof IBoardManager){
-                    ((IBoardManager)fragment).openSlideMenu(slides,curPage);
+                    ((IBoardManager)fragment).openSlideMenu(doc,slides,curPage);
                 }
                 break;
 
@@ -430,13 +435,16 @@ public class BoardCollaborateFragment extends BaseFragment {
             LibDoc.ExportImg img=new LibDoc.ExportImg();
             img.name=doc.key;
             imgs.add(img);
-        }else if(Collaboration.isVideo(doc.mimeType)){
+        }else if(Collaboration.isPPT(doc.mimeType)||Collaboration.isDoc(doc.mimeType)||Collaboration.isPDF(doc.mimeType)){
             if(doc.exported==null|| ArrayUtil.isEmpty(doc.exported.images)){
                 ToastUtil.showToast(getActivity(),"该文件无效，无法打开");
                 return;
             }
             imgs=MaterialUtil.getSortImgs(doc.exported.images);
             board.pages=imgs;
+        }else {
+            ToastUtil.showToast(getActivity(),"无法打开该类型文件");
+            return;
         }
         slides=imgs;
         board.title=doc.name;
