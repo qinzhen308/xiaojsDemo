@@ -407,6 +407,7 @@ public class ClassStateMachine extends ClassroomStateMachine{
                     //如果下课，相应的1对1播放地址也要重制为空
                     ctlSession.playUrl = "";
                     ctlSession.streamType = Live.StreamType.NONE;
+                    ctlSession.state = Live.LiveSessionState.IDLE;
                     //TODO 处理csOfCurrent
                     //TODO 回到Pending4Live、IDLE。。。。。
                     transitionTo(getStateBySession(getLiveState()));

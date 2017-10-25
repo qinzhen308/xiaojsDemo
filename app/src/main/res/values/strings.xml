@@ -1060,6 +1060,8 @@
     <string name="abort_class_tip">你确定要退出该班级吗？</string>
     <string name="abort_recorded_lesson_tip">你确定要退出该录播课吗？</string>
     <string name="abort_class">退出班</string>
+    <string name="continue_live">继续上课</string>
+    <string name="finish_class">下课</string>
 
 
 </resources>

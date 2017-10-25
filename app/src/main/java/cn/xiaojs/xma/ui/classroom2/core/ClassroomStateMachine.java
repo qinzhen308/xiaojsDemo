@@ -324,10 +324,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
         ctlSession.mode = message.mode;
         ctlSession.claimedBy = message.claimedBy;
 
-        liveTimerObserver.startCounter();
-
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
             roomSession.individualStreamDuration = message.finishOn;
+            liveTimerObserver.startCounter();
         } else if (message.streamType == Live.StreamType.LIVE) {
 
         }
@@ -479,6 +478,13 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
         getSession().ctlSession.state = message.to;
         switchStateWhenReceiveSyncState(message.to);
+
+        if (Live.LiveSessionState.LIVE.equals(message.to)) {
+            liveTimerObserver.startCounter();
+        }else if(Live.LiveSessionState.FINISHED.equals(message.to)) {
+            liveTimerObserver.stopObserver();
+        }
+
     }
 
     protected void talkRecevied(Talk message) {

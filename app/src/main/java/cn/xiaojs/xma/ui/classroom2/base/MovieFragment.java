@@ -87,13 +87,14 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/9/18.
  */
 
 public abstract class MovieFragment extends BaseRoomFragment
-        implements ClosableSlidingLayout.SlideListener ,IBoardManager{
+        implements ClosableSlidingLayout.SlideListener, IBoardManager {
 
     @BindView(R.id.control_port)
     public ConstraintLayout controlPort;
@@ -192,7 +193,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         if (getActivity() instanceof Classroom2Activity) {
             whiteboardFragment = ((Classroom2Activity) getActivity()).getCollaBorateFragment();
-            whiteboardFragment.setTargetFragment(this, CTLConstant.REQUEST_RECEIVE_WHITEBOARD_DATA);
         }
     }
 
@@ -201,7 +201,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         super.onActivityCreated(savedInstanceState);
 
         slideLayout.setSlideListener(this);
-        if(ClassroomController.getInstance(getActivity()).isLandscape()){
+        if (ClassroomController.getInstance(getActivity()).isLandscape()) {
 
             onRotateToInitBoard(Configuration.ORIENTATION_LANDSCAPE);
         }
@@ -352,6 +352,11 @@ public abstract class MovieFragment extends BaseRoomFragment
     void onControlClick(View view) {
         switch (view.getId()) {
             case R.id.control_click:
+                if (centerPanelView.getVisibility() == View.VISIBLE) {
+                    showOrHiddenCenterPanel();
+                    return;
+                }
+
                 hiddeOrshowControl();
                 break;
         }
@@ -555,12 +560,12 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     public int onSwitchStreamingClick(View view) {
-        int vis =  whiteboardContainerLayout.getVisibility() == View.VISIBLE?
+        int vis = whiteboardContainerLayout.getVisibility() == View.VISIBLE ?
                 View.GONE : View.VISIBLE;
 
         if (vis == View.VISIBLE) {
             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
-        }else {
+        } else {
             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
         }
 
@@ -618,7 +623,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         if (vis == View.VISIBLE) {
             lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
-        }else {
+        } else {
             lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_display);
         }
 
@@ -1022,6 +1027,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         changeOrientationToLand();
         enterLiving();
     }
+
     public void sendStartStreaming() {
 
         classroomEngine.startStreaming(new EventCallback<EventResponse>() {
@@ -1083,9 +1089,9 @@ public abstract class MovieFragment extends BaseRoomFragment
         getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
     }
 
-    protected void onRotateToInitBoard(int orientation){
-        if(whiteboardFragment==null)return;
-            Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation="+orientation);
+    protected void onRotateToInitBoard(int orientation) {
+        if (whiteboardFragment == null) return;
+        Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation=" + orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (whiteboardFragment.isAdded()) {
                 getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
@@ -1191,8 +1197,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     @Override
-    public void openSlideMenu(ArrayList<LibDoc.ExportImg> slides,int curPage) {
-        showSlidePanel( SlideMenuFragment.createInstance(slides,curPage), "menu_fragment");
+    public void openSlideMenu(ArrayList<LibDoc.ExportImg> slides, int curPage) {
+        showSlidePanel(SlideMenuFragment.createInstance(slides, curPage), "menu_fragment");
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

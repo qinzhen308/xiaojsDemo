@@ -5,6 +5,7 @@ import com.orhanobut.logger.Logger;
 import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -42,6 +43,21 @@ public class LiveTimerObserver {
         stopObserver();
 
         long taketime = stateMachine.getSession().ctlSession.finishOn;
+
+        if (stateMachine.getLiveState().equals(Live.LiveSessionState.LIVE)
+                && stateMachine.getIdentityInLesson() == CTLConstant.UserIdentity.LEAD
+                && stateMachine.getSession().ctlSession.ctl !=null) {
+            long dur = stateMachine.getSession().ctlSession.ctl.duration;
+            if (dur > 0) {
+                taketime = dur * 60;
+            }
+
+        }
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the LiveTimer startCounter taketime:%d", taketime);
+        }
+
         disposable = observable.take(taketime, TimeUnit.SECONDS)
                 .subscribe(new Consumer<Long>() {
                     @Override

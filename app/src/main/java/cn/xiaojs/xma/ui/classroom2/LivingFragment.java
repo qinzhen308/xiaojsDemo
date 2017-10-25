@@ -9,6 +9,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
@@ -22,6 +25,7 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.socket.EventResponse;
@@ -40,15 +44,17 @@ import cn.xiaojs.xma.ui.classroom2.member.ChooseMemberFragment;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.functions.Consumer;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/9/18.
  */
 
 public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreListener,
-        PlayLiveView.ControlListener{
+        PlayLiveView.ControlListener {
 
     @BindView(R.id.videostream_view)
     VideoStreamView videoStreamView;
@@ -63,7 +69,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     private int memCount;
     private long liveTime;
-
 
 
     @Nullable
@@ -90,6 +95,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     protected CameraPreviewFrameView createCameraPreview() {
@@ -122,18 +131,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                         requestOne2One(attendee);
                     }
 
-                    break;
-
-                case CTLConstant.REQUEST_RECEIVE_WHITEBOARD_DATA:
-                    Bitmap bitmap = data.getParcelableExtra(CTLConstant.EXTRA_BITMAP);
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("received whiteboard data(%d, %d): %s, ",
-                                bitmap.getWidth(),bitmap.getHeight(), bitmap);
-
-                        Logger.d("publish_url: %s", classroomEngine.getPublishUrl());
-                    }
-
-                    receivedWhiteboardData(bitmap);
                     break;
             }
         }
@@ -175,7 +172,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             controlClickView.setVisibility(View.GONE);
             controlLand.setVisibility(View.VISIBLE);
             clearControlAnim();
-        }else {
+        } else {
             controlClickView.setVisibility(View.VISIBLE);
             hiddeControlAnim(controlLand);
         }
@@ -198,8 +195,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             long liveDur = classroomEngine.getCtlSession().ctl.duration * 60;
             String totalStr = TimeUtil.formatSecondTime(liveDur);
             String livetimeStr = TimeUtil.formatSecondTime(liveTime);
-            lTopRoominfoView.setText(livetimeStr + "/" +totalStr+"  " + memCount + "人观看");
-        }else {
+            lTopRoominfoView.setText(livetimeStr + "/" + totalStr + "  " + memCount + "人观看");
+        } else {
             lTopRoominfoView.setText("直播中（" + memCount + "人观看）");
         }
 
@@ -219,6 +216,21 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void back() {
+
+        if (Live.LiveSessionState.LIVE.equals(classroomEngine.getLiveState())
+                && classroomEngine.getIdentityInLesson() == CTLConstant.UserIdentity.LEAD) {
+            showFinishClassDlg();
+            return;
+        }
+
+        handleBack();
+
+
+    }
+
+    private void handleBack() {
+
+        classroomEngine.cannelLiveTimerObserver();
 
         if (one2oneAttendee != null) {
             stopPlay(true);
@@ -262,6 +274,53 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
 
 
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 下课
+    //
+
+    protected void showFinishClassDlg() {
+
+        final CommonDialog finishDialog = new CommonDialog(getContext());
+        finishDialog.setTitle(R.string.finish_classroom);
+        finishDialog.setDesc(R.string.finish_classroom_tips);
+        finishDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                finishDialog.dismiss();
+            }
+        });
+
+        finishDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                finishDialog.dismiss();
+                requestFinishClass();
+            }
+        });
+
+        finishDialog.show();
+    }
+
+    protected void requestFinishClass() {
+
+        showProgress(true);
+        classroomEngine.finishClass(classroomEngine.getTicket(),
+                new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        cancelProgress();
+                        handleBack();
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                        ToastUtil.showToast(getContext(), errorMessage);
+                    }
+                });
     }
 
 
@@ -358,9 +417,13 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 && !TextUtils.isEmpty(streamStopReceive.deprivedBy)) {
             streamDeprivedBy = streamStopReceive.deprivedBy;
 
+            classroomEngine.cannelLiveTimerObserver();
+
             Attendee attendee = classroomEngine.getMember(streamDeprivedBy);
-            if (attendee != null) {
-                ToastUtil.showToast(getContext(), "你的直播已被" + attendee.name + "中断");
+            if (attendee == null) {
+                ToastUtil.showToast(getContext(), "你的直播已被老师中断");
+            } else {
+                showStopTips(attendee);
             }
 
 
@@ -370,8 +433,41 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private void handleStreamStart(StreamStartReceive streamStartReceive) {
         if (!TextUtils.isEmpty(streamDeprivedBy)
                 && streamDeprivedBy.equals(streamStartReceive.claimedBy)) {
+
+            classroomEngine.cannelLiveTimerObserver();
             enterPlay();
         }
+    }
+
+
+    private void showStopTips(Attendee attendee) {
+        final CommonDialog tipsDialog = new CommonDialog(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_classroom2_dlg_tips_stopped_live, null);
+
+        ImageView avatorView = (ImageView) view.findViewById(R.id.avator);
+        TextView titleView = (TextView) view.findViewById(R.id.title);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+
+        String avatorUrl = Account.getAvatar(attendee.accountId, avatorView.getMeasuredWidth());
+        Glide.with(getContext())
+                .load(avatorUrl)
+                .transform(new CircleTransform(getContext()))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(avatorView);
+
+
+        titleView.setText(attendee.name + "老师正在直播分享");
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipsDialog.dismiss();
+            }
+        });
+
+        tipsDialog.setCustomView(view);
+        tipsDialog.show();
     }
 
 

@@ -155,5 +155,17 @@ public abstract class AVFragment extends MovieFragment implements
         }
     }
 
+    @Override
+    public void onPushPreview(Bitmap bitmap) {
+        super.onPushPreview(bitmap);
 
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("received whiteboard data(%d, %d): %s",
+                    bitmap.getWidth(),bitmap.getHeight(), bitmap);
+
+            Logger.d("publish_url: %s", classroomEngine.getPublishUrl());
+        }
+
+        receivedWhiteboardData(bitmap);
+    }
 }

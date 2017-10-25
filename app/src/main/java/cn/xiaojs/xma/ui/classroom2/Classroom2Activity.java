@@ -52,6 +52,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/9/18.
@@ -135,7 +136,7 @@ public class Classroom2Activity extends FragmentActivity {
         initTicket = getIntent().getStringExtra(CTLConstant.EXTRA_TICKET);
 
         onBootlistener(initTicket);
-        collaborateFragment=BoardCollaborateFragment.createInstance("");
+        collaborateFragment = BoardCollaborateFragment.createInstance("");
     }
 
     @Override
@@ -153,10 +154,11 @@ public class Classroom2Activity extends FragmentActivity {
     public void onBackPressed() {
 
 
-        if (movieFragment !=null
+        if (movieFragment != null
                 && movieFragment.isAdded()
                 && movieFragment instanceof LivingFragment) {
             movieFragment.back();
+            return;
         }
 
         if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -338,38 +340,26 @@ public class Classroom2Activity extends FragmentActivity {
             }
         }
 
-        String roomState = classroomEngine.getCtlSession().state;
 
-        if (!TextUtils.isEmpty(classroomEngine.getPlayUrl())) {
+        if (true) {
+            enterPlayback();
+            return;
+        }
+
+
+        String roomState = classroomEngine.getCtlSession().state;
+        if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
+                (Live.LiveSessionState.DELAY.equals(roomState) ||
+                        Live.LiveSessionState.LIVE.equals(roomState))) {
+
+            showLivingClassDlg();
+
+        } else if (!TextUtils.isEmpty(classroomEngine.getPlayUrl())) {
             enterPlay();
         } else {
             enterIdle();
         }
 
-//        String roomState = classroomEngine.getCtlSession().state;
-//        if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
-//                (Live.LiveSessionState.DELAY.equals(roomState) ||
-//                        Live.LiveSessionState.LIVE.equals(roomState))) {
-//
-//            switch (classroomEngine.getClassroomType()) {
-//                case ClassLesson:                        //如果是班课，则进入播放页面
-//                    enterPlay();
-//                    break;
-//                default:                                 //进入直播推流页面
-//                    enterLiving();
-//                    break;
-//            }
-//
-//            return;
-//
-//        }
-//
-//
-//        if (Live.LiveSessionState.LIVE.equals(roomState)) {
-//            enterPlay();
-//        } else {
-//            //fragment nothing
-//        }
     }
 
     private void initChatFragment() {
@@ -380,6 +370,46 @@ public class Classroom2Activity extends FragmentActivity {
                 .add(R.id.bottom_lay, chatFragment)
                 .commitAllowingStateLoss();
     }
+
+
+    protected void showLivingClassDlg() {
+
+        final CommonDialog dialog = new CommonDialog(this);
+        dialog.setDesc("您的课还没有结束，是否继续上课？");
+        dialog.setRightBtnText(R.string.continue_live);
+        dialog.setLefBtnText(R.string.finish_class);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                classroomEngine.finishClass(
+                        classroomEngine.getTicket(), new APIServiceCallback<ResponseBody>() {
+                            @Override
+                            public void onSuccess(ResponseBody object) {
+                                enterIdle();
+                            }
+
+                            @Override
+                            public void onFailure(String errorCode, String errorMessage) {
+                                enterIdle();
+                            }
+                        });
+
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                changeOrientation();
+                enterLiving();
+            }
+        });
+
+        dialog.show();
+    }
+
 
     private void changeOrientation() {
         if (movieFragment != null) {
@@ -657,7 +687,8 @@ public class Classroom2Activity extends FragmentActivity {
     }
 
     BoardCollaborateFragment collaborateFragment;
-    public BoardCollaborateFragment getCollaBorateFragment(){
+
+    public BoardCollaborateFragment getCollaBorateFragment() {
         return collaborateFragment;
     }
 

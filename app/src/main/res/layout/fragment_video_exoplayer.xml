@@ -6,6 +6,13 @@
              android:layout_height="match_parent"
              android:keepScreenOn="true">
 
+    <View
+            android:id="@+id/control_click"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            />
+
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/player_view"
             android:layout_width="match_parent"
@@ -43,13 +50,15 @@
 
 
     <include
-            android:id="@+id/top_bar"
-            layout="@layout/layout_classroom2_panel_top"
+            layout="@layout/layout_classroom2_control_port"
+            />
+
+    <include
+            layout="@layout/layout_classroom2_control_land"
             />
 
     <include
             layout="@layout/layout_classroom2_right_slide_panel"
             android:visibility="gone"
             />
-
 </RelativeLayout>

@@ -35,6 +35,7 @@ import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
 import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
@@ -297,9 +298,45 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     private void requestPublish() {
         if (classroomEngine.canForceIndividual()) {
+
+            if (classroomEngine.canIndividualByState()) {
+                showFroceDlg();
+                return;
+            }
             requestLive();
         }
     }
+
+
+    private void showFroceDlg() {
+        final CommonDialog tipsDialog = new CommonDialog(getContext());
+
+        String name = "当前用户";
+        Attendee attendee = classroomEngine.getMember(classroomEngine.getCtlSession().claimedBy);
+        if (attendee != null) {
+            name = attendee.name;
+        }
+
+
+        tipsDialog.setDesc(name + "的直播将被终止，你确定要直播么？");
+        tipsDialog.setLefBtnText(R.string.cancel);
+        tipsDialog.setRightBtnText(R.string.start_live);
+        tipsDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                tipsDialog.dismiss();
+                requestLive();
+            }
+        });
+        tipsDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                tipsDialog.dismiss();
+            }
+        });
+        tipsDialog.show();
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 操作面板
