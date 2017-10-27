@@ -4,43 +4,64 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/px50"
         android:gravity="center"
         >
+
+    <LinearLayout
+            android:id="@+id/root_lay"
+            android:layout_width="@dimen/px560"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/px50"
+            >
+
+        <ImageView
+                android:id="@+id/avator"
+                android:layout_width="@dimen/px95"
+                android:layout_height="@dimen/px95"/>
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                android:text="d"
+                android:layout_marginTop="@dimen/px35"
+                />
+
+        <TextView
+                android:id="@+id/tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/hint_color"
+                android:textSize="@dimen/font_28px"
+                android:text="你的直播已被终止"
+                android:layout_marginTop="@dimen/px8"
+                />
+
+        <Button
+                android:id="@+id/ok_btn"
+                android:layout_width="@dimen/px440"
+                android:layout_height="@dimen/px88"
+                android:text="好的，我知道了"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_30px"
+                android:layout_marginTop="@dimen/px34"
+                android:background="@drawable/orange_round_bg_selector"/>
+
+    </LinearLayout>
+
+
     <ImageView
-            android:id="@+id/avator"
-            android:layout_width="@dimen/px95"
-            android:layout_height="@dimen/px95"/>
-
-    <TextView
-            android:id="@+id/title"
+            android:id="@+id/close_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/font_black"
-            android:textSize="@dimen/font_32px"
-            android:text="d"
-            android:layout_marginTop="@dimen/px35"
+            android:layout_marginTop="@dimen/px33"
+            android:src="@drawable/ic_close"
+            android:visibility="gone"
             />
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/hint_color"
-            android:textSize="@dimen/font_28px"
-            android:text="你的直播已被终止"
-            android:layout_marginTop="@dimen/px8"
-            />
-    
-    <Button
-            android:id="@+id/ok_btn"
-            android:layout_width="@dimen/px440"
-            android:layout_height="@dimen/px88"
-            android:text="好的，我知道了"
-            android:textColor="@color/font_white"
-            android:textSize="@dimen/font_30px"
-            android:layout_marginTop="@dimen/px34"
-            android:background="@drawable/orange_round_bg_selector"/>
 
-
-    
 </LinearLayout>

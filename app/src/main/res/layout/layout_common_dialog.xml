@@ -9,6 +9,7 @@
              android:id="@+id/common_dialog_root">
 
     <LinearLayout
+            android:id="@+id/root_lay"
             android:background="@drawable/common_white_bg_corner"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -60,9 +61,11 @@
                 />
 
         <View
+                android:id="@+id/bottom_line"
                 style="@style/DividerHorizontal"/>
 
         <LinearLayout
+                android:id="@+id/bottom_lay"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

@@ -65,7 +65,6 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.exoplayer.EventLogger;
 import cn.xiaojs.xma.common.exoplayer.ExoUtil;
@@ -87,6 +86,7 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
     public static final String URI_LIST_EXTRA = "uris";
     public static final String EXTENSION_LIST_EXTRA = "extension_list";
     public static final String AUTO_PLAY = "aplay";
+    public static final String EXTRA_OBJECT = "object";
 
 
     @BindView(R.id.debug_text_view)
@@ -95,8 +95,6 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
     ProgressBar loadingView;
     @BindView(R.id.player_view)
     SimpleExoPlayerView playerView;
-
-
 
 
     private DataSource.Factory mediaDataSourceFactory;
@@ -115,7 +113,6 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
     private Uri loadedAdTagUri;
     private ViewGroup adOverlayViewGroup;
     private boolean inErrorState;
-
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
     private static final CookieManager DEFAULT_COOKIE_MANAGER;
@@ -223,7 +220,6 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
     @Override
     public void onVisibilityChange(int visibility) {
 
-        //debugRootView.setVisibility(visibility);
     }
 
     @Override
@@ -264,12 +260,11 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
             case Player.STATE_ENDED:
                 //hide loading
                 showOrHiddenLoading(View.GONE);
-
                 showControls();
                 break;
             case Player.STATE_BUFFERING:
                 //show loading
-                showOrHiddenLoading(View.VISIBLE);
+                //showOrHiddenLoading(View.VISIBLE);
                 break;
             case Player.STATE_IDLE:
             case Player.STATE_READY:
@@ -422,6 +417,7 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
             player.setPlayWhenReady(shouldAutoPlay);
             debugViewHelper = new DebugTextViewHelper(player, debugTextView);
             debugViewHelper.start();
+
         }
 
         Uri[] uris;

@@ -16,6 +16,11 @@
         android:scaleType="fitXY"
         />
 
+    <include
+            layout="@layout/layout_classroom2_lesson_tips"
+            android:visibility="gone"
+            />
+
     <View
             android:id="@+id/control_click"
             android:layout_width="match_parent"
@@ -32,14 +37,6 @@
             android:layout_marginLeft="@dimen/px30"
             />
 
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="@dimen/font_25px"
-            android:textColor="@color/font_white"
-            android:text="Idle status"/>
 
     <include
             layout="@layout/layout_classroom2_control_port"

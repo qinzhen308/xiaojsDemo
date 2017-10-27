@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.support.annotation.ColorRes;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -27,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,6 +50,9 @@ public class CommonDialog extends Dialog {
     private String descStr;
     private String okStr;
     private Context mContext;
+    private LinearLayout bottomLay;
+    private LinearLayout rootLay;
+    private View bottomLineView;
 
     public CommonDialog(Context context) {
         super(context, R.style.CommonDialog);
@@ -72,6 +77,9 @@ public class CommonDialog extends Dialog {
         mTitle = (TextView) findViewById(R.id.common_dialog_title);
         mDesc = (TextView) findViewById(R.id.common_dialog_desc);
         mContainer = (FrameLayout) findViewById(R.id.common_dialog_container);
+        bottomLay = (LinearLayout) findViewById(R.id.bottom_lay);
+        rootLay = (LinearLayout) findViewById(R.id.root_lay);
+        bottomLineView = findViewById(R.id.bottom_line);
 
 //        FrameLayout rootLay = (FrameLayout) findViewById(R.id.common_dialog_root);
 //        rootLay.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +136,15 @@ public class CommonDialog extends Dialog {
         dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialogWindow.setAttributes(params);
         dialogWindow.setLayout(w, h);
+    }
+
+    public void setRootBackgroud(@ColorRes int color) {
+        rootLay.setBackgroundColor(getContext().getResources().getColor(color));
+    }
+
+    public void setBottomButtonVisibility(int visibility) {
+        bottomLineView.setVisibility(visibility);
+        bottomLay.setVisibility(visibility);
     }
 
     public void setCustomView(View customView) {

@@ -168,7 +168,12 @@ public class MaterialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (Collaboration.TypeName.DIRECTORY_IN_LIBRARY.equals(doc.typeName)) {
                         fragment.enterNext(doc, position);
                     }else if(context instanceof Classroom2Activity){
-                        ((Classroom2Activity)context).getCollaBorateFragment().openDocInBoard(doc);
+                        if (Collaboration.isStreaming(doc.mimeType) || Collaboration.isVideo(doc.mimeType)) {
+                            ((Classroom2Activity)context).enterPlayback(doc);
+                        }else {
+                            ((Classroom2Activity)context).getCollaBorateFragment().openDocInBoard(doc);
+                        }
+
                     }else {
                         MaterialUtil.openMaterial(fragment.getActivity(),doc);
                     }

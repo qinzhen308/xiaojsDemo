@@ -1,36 +1,46 @@
 package cn.xiaojs.xma.ui.classroom2;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
-import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
-import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.ui.classroom2.live.filter.IFilter;
+import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.util.StringUtil;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/9/25.
@@ -44,7 +54,19 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     @BindView(R.id.iv_whiteboard_preview)
     ImageView ivWhiteboardPreview;
 
+    @BindView(R.id.lessontip_lay)
+    LinearLayout lessonTipsLayout;
+    @BindView(R.id.lessontip_title)
+    TextView lessonTipsTitleView;
+    @BindView(R.id.lessontip_desc)
+    TextView lessonTipsDescView;
+    @BindView(R.id.lessontip_desc_time)
+    TextView lessonTipsDesctimeView;
+
     private EventListener.ELIdle idleObserver;
+
+    private Observable<Long> durationObservable;
+    private Disposable timerDisposable;
 
 
     @Nullable
@@ -62,7 +84,14 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         initControlPanel();
+
+        try {
+            updateLessonTips();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         initTalkData(this);
 
@@ -95,6 +124,8 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         if (idleObserver != null) {
             idleObserver.dispose();
         }
+
+        cancelDurationObserver();
     }
 
     @Override
@@ -143,13 +174,9 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     }
 
 
-
     public void onStartOrStopLiveClick(View view) {
         requestLive();
     }
-
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,6 +193,119 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         ivWhiteboardPreview.setImageDrawable(new ColorDrawable());
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 课提示
+    //
+
+    private void cancelDurationObserver() {
+        if (timerDisposable != null) {
+            timerDisposable.dispose();
+            timerDisposable = null;
+        }
+    }
+
+    private boolean canShowLessonTips() {
+        CtlSession.Ctl ctl = classroomEngine.getCtlSession().ctl;
+        CtlSession.Cls cls = classroomEngine.getCtlSession().cls;
+
+        if (ctl != null
+                && cls != null
+                && cls.state.equals(Live.LiveSessionState.PENDING_FOR_LIVE)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void updateLessonTips() throws Exception {
+
+
+        if (canShowLessonTips()) {
+
+            CtlSession.Ctl ctl = classroomEngine.getCtlSession().ctl;
+
+            String d = ctl.startedOn.replace("Z", "UTC");
+            Date startDate = ScheduleUtil.simpleUTCFormat.parse(d);
+            startTimer(startDate);
+
+            lessonTipsTitleView.setText(ctl.title);
+            lessonTipsDescView.setText(TimeUtil.getFormatDate(startDate, "yyyy.MM.dd HH:mm") + "   主讲：丹阳");
+            lessonTipsLayout.setVisibility(View.VISIBLE);
+
+
+        } else {
+            lessonTipsLayout.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void startTimer(final Date startDate) {
+        if (durationObservable == null) {
+            durationObservable = Observable.interval(
+                    1 * 1000, TimeUnit.MILLISECONDS, Schedulers.io());
+        }
+
+        cancelDurationObserver();
+
+        long takeTime = startDate.getTime() - System.currentTimeMillis();
+
+        if (takeTime <= 0) {
+            lessonTipsDesctimeView.setText("已到上课时间");
+            return;
+        }
+
+
+        takeTime = (takeTime / 1000);
+
+        final long finalTakeTime = takeTime;
+        timerDisposable = durationObservable.take(takeTime + 1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+
+                        if (getActivity() == null) {
+                            return;
+                        }
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("the total time: %d, now taketime:%d",finalTakeTime, aLong);
+                        }
+
+                        if (aLong >= finalTakeTime) {
+                            lessonTipsDesctimeView.setText("已到上课时间");
+                            return;
+                        }
+
+                        long sep = startDate.getTime() - System.currentTimeMillis();
+
+                        String str = TimeUtil.getElapseTimeForShow(sep);
+
+                        Spannable spannable = StringUtil.getSpecialString(
+                                "距离上课 " + str, str, getResources().getColor(R.color.main_orange));
+
+                        lessonTipsDesctimeView.setText(spannable);
+
+                    }
+                });
+    }
+
+    @Override
+    protected void controlHandleOnRotate(int orientation) {
+        super.controlHandleOnRotate(orientation);
+
+        switch (orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                lessonTipsLayout.setVisibility(View.GONE);
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                if (canShowLessonTips()) {
+                    lessonTipsLayout.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
+
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 操作面板
@@ -180,7 +320,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         lTopPhotoView.setVisibility(View.GONE);
         lTopRoominfoView.setVisibility(View.GONE);
 
-        pBottomClassnameView.setText(classroomEngine.getRoomTitle());
+        pBottomClassnameView.setText(classroomEngine.getClassTitle());
 
         configStartOrPausedLiveButton();
 
@@ -241,6 +381,11 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                     handleStreamstartted(receive);
                     break;
                 case Su.EventType.SYNC_CLASS_STATE:
+                    try {
+                        updateLessonTips();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case Su.EventType.SYNC_STATE:
                     SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;

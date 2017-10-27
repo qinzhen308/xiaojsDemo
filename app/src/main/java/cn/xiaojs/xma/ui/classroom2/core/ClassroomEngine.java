@@ -159,6 +159,10 @@ public final class ClassroomEngine {
         return stateMachine.getTitle();
     }
 
+    public String getClassTitle() {
+        return stateMachine.getClassTitle();
+    }
+
     public boolean canForceIndividual() {
         return stateMachine.canForceIndividual();
     }

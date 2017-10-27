@@ -64,6 +64,10 @@ public class StandloneStateMachine extends ClassroomStateMachine {
         return getSession().ctlSession.ctl.title;
     }
 
+    @Override
+    protected String getClassTitle() {
+        return getSession().ctlSession.ctl.title;
+    }
 
     @Override
     protected boolean canForceIndividual() {

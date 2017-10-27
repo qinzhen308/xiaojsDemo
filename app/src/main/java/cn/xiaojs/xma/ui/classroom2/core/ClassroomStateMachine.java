@@ -262,6 +262,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
      * 获取教室的标题
      */
     protected abstract String getTitle();
+    protected abstract String getClassTitle();
 
     protected abstract CTLConstant.UserIdentity getIdentity();
 

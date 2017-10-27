@@ -37,16 +37,16 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.model.live.Board;
-import cn.xiaojs.xma.model.live.BoardItem;
-import cn.xiaojs.xma.ui.classroom.main.*;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
+import cn.xiaojs.xma.ui.classroom2.base.PlayerFragment;
 import cn.xiaojs.xma.ui.classroom2.core.BootObservable;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomType;
 import cn.xiaojs.xma.ui.classroom2.core.RoomSession;
+import cn.xiaojs.xma.ui.classroom2.util.MaterialUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
@@ -341,12 +341,6 @@ public class Classroom2Activity extends FragmentActivity {
         }
 
 
-//        if (true) {
-//            enterPlayback();
-//            return;
-//        }
-
-
         String roomState = classroomEngine.getCtlSession().state;
         if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
                 (Live.LiveSessionState.DELAY.equals(roomState) ||
@@ -614,7 +608,7 @@ public class Classroom2Activity extends FragmentActivity {
 
     }
 
-    public void enterPlayback() {
+    public void enterPlayback(LibDoc doc) {
 
         if (movieFragment != null && movieFragment instanceof PlaybackFragment) {
             return;
@@ -624,8 +618,9 @@ public class Classroom2Activity extends FragmentActivity {
         removeOldFragment(fragmentTransaction);
 
         movieFragment = new PlaybackFragment();
-        String[] urlData = {"https://html5demos.com/assets/dizzy.mp4"};
+        String[] urlData = {MaterialUtil.getVideoUrl(doc)};
         Bundle bundle = new Bundle();
+        bundle.putSerializable(PlayerFragment.EXTRA_OBJECT, doc);
         bundle.putBoolean(PlaybackFragment.AUTO_PLAY, false);
         bundle.putStringArray(PlaybackFragment.URI_LIST_EXTRA, urlData);
 

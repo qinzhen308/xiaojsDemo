@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:id="@+id/exo_play_root"
                                              android:orientation="vertical"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent">
@@ -46,7 +47,7 @@
             android:id="@+id/control_bg"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#CC000000"
+            android:background="@color/black_opacity_60"
             app:layout_constraintTop_toTopOf="@id/bottom_guideline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -57,10 +58,11 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/px24"
+            android:src="@drawable/ic_close"
             app:layout_constraintTop_toTopOf="@id/bottom_guideline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:visibility="gone"
+            android:visibility="visible"
             />
 
     <TextView
@@ -81,10 +83,11 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginRight="@dimen/px24"
+            android:src="@drawable/ic_class_crossscreen"
             app:layout_constraintTop_toTopOf="@id/bottom_guideline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:visibility="gone"
+            android:visibility="visible"
             />
 
 

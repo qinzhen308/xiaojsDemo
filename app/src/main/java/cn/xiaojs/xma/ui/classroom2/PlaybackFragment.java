@@ -1,63 +1,109 @@
 package cn.xiaojs.xma.ui.classroom2;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
+import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.PlayerFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observables.GroupedObservable;
 
 
 /**
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class PlaybackFragment extends PlayerFragment {
+public class PlaybackFragment extends PlayerFragment implements ChatAdapter.FetchMoreListener {
 
-    @BindView(R.id.left_btn)
-    ImageView controlLeftBtn;
+    @BindView(R.id.exo_play_root)
+    ConstraintLayout exoPlayLayout;
+    @BindView(R.id.control_bg)
+    View bottomControlBgView;
     @BindView(R.id.right_btn)
-    ImageView controlRightBtn;
-    @BindView(R.id.top_bar)
-    ConstraintLayout topBarLay;
+    ImageView orientBtn;
+    @BindView(R.id.exo_play)
+    TextView exoPlayView;
+
+    private int landPaddingSize;
+    private EventListener.ELIdle idleObserver;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  super.onCreateView(inflater, container, savedInstanceState);
-
-        controlLeftBtn.setVisibility(View.VISIBLE);
-        controlLeftBtn.setImageResource(R.drawable.ic_close);
-        controlRightBtn.setVisibility(View.VISIBLE);
-        controlRightBtn.setImageResource(R.drawable.ic_class_crossscreen);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         return view;
     }
 
-    @OnClick({R.id.back_btn, R.id.menu_btn, R.id.live_btn, R.id.left_btn, R.id.right_btn})
-    void OnViewClick(View view) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        LibDoc doc = (LibDoc) getArguments().getSerializable(PlayerFragment.EXTRA_OBJECT);
+        if (doc !=null) {
+            exoPlayView.setText(doc.name);
+        }
+
+        landPaddingSize = getResources().getDimensionPixelSize(R.dimen.px208);
+        initControlPanel();
+        initTalkData(this);
+
+        idleObserver = classroomEngine.observerIdle(receivedConsumer);
+    }
+
+    @OnClick({R.id.left_btn, R.id.right_btn})
+    void onPlayControlViewClick(View view) {
         switch (view.getId()) {
-            case R.id.back_btn:                       //返回
-                back();
+            case R.id.left_btn:
+                if (!TextUtils.isEmpty(classroomEngine.getPlayUrl())) {
+                    enterPlay();
+                } else {
+                    enterIdle();
+                }
                 break;
-            case R.id.menu_btn:                       //更多
-                break;
-            case R.id.live_btn:                       //开始直播
-                break;
-            case R.id.left_btn:                       //关闭
-                closeMovie();
-                break;
-            case R.id.right_btn:                      //横竖屏切换
+            case R.id.right_btn:
                 changeOrientation();
                 break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(idleObserver != null) {
+            idleObserver.dispose();
         }
     }
 
@@ -67,11 +113,18 @@ public class PlaybackFragment extends PlayerFragment {
     }
 
     @Override
-    public void onVisibilityChange(int visibility) {
-        super.onVisibilityChange(visibility);
+    public void onTopbackClick(View view, boolean land) {
+        back();
+    }
 
-        topBarLay.setVisibility(visibility);
+    @Override
+    public void onStartLiveClick(View view) {
+        requestLive();
+    }
 
+
+    public void onStartOrStopLiveClick(View view) {
+        requestLive();
     }
 
     @Override
@@ -83,4 +136,273 @@ public class PlaybackFragment extends PlayerFragment {
     public void onOpened() {
 
     }
+
+    @Override
+    public void onRotate(int orientation) {
+        super.onRotate(orientation);
+        controlHandleOnRotate(orientation);
+    }
+
+    @Override
+    public void onVisibilityChange(int visibility) {
+        super.onVisibilityChange(visibility);
+
+        int changeRequest = getActivity().getRequestedOrientation();
+        switch (changeRequest) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                controlPort.setVisibility(visibility);
+                break;
+            default:
+                controlLand.setVisibility(visibility);
+                if (centerPanelView.getVisibility() == View.VISIBLE) {
+                    showOrHiddenCenterPanel();
+                    return;
+                }
+
+                break;
+
+        }
+
+    }
+
+
+    private void initControlPanel() {
+
+        int changeRequest = getActivity().getRequestedOrientation();
+        controlHandleOnRotate(changeRequest);
+
+        lTopRoominfoView.setVisibility(View.GONE);
+        lTopPhotoView.setVisibility(View.GONE);
+        lRightSwitchcameraView.setVisibility(View.GONE);
+        lRightSwitchVbView.setVisibility(View.GONE);
+
+        configStartOrPausedLiveButton();
+
+    }
+
+
+    private void configStartOrPausedLiveButton() {
+        if (classroomEngine.canIndividualByState()) {
+            startOrStopLiveView.setText("开始直播");
+            startOrStopLiveView.setVisibility(View.VISIBLE);
+            pTopLiveView.setText("开始直播");
+            pTopLiveView.setVisibility(View.VISIBLE);
+        } else {
+
+            if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
+                startOrStopLiveView.setText("开始上课");
+                startOrStopLiveView.setVisibility(View.VISIBLE);
+
+                pTopLiveView.setText("开始上课");
+                pTopLiveView.setVisibility(View.VISIBLE);
+            } else {
+                startOrStopLiveView.setVisibility(View.GONE);
+                pTopLiveView.setVisibility(View.GONE);
+            }
+
+
+        }
+    }
+
+
+    @Override
+    protected void controlHandleOnRotate(int orientation) {
+        switch (orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                controlLand.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+                controlPort.setVisibility(View.GONE);
+
+                exoPlayLayout.setPadding(landPaddingSize, 0, landPaddingSize, 0);
+                bottomControlBgView.setBackgroundDrawable(
+                        getResources().getDrawable(R.drawable.exo_player_control_land_rect_bg));
+
+                orientBtn.setVisibility(View.GONE);
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                controlLand.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                controlPort.setVisibility(View.VISIBLE);
+
+                pBottomAvatorView.setVisibility(View.GONE);
+                pBottomClassnameView.setVisibility(View.GONE);
+                pBottomBgView.setVisibility(View.GONE);
+                pBottomOrientView.setVisibility(View.GONE);
+
+                exoPlayLayout.setPadding(0, 0, 0, 0);
+                bottomControlBgView.setBackgroundColor(
+                        getResources().getColor(R.color.black_opacity_60));
+
+                orientBtn.setVisibility(View.VISIBLE);
+
+                break;
+        }
+    }
+
+    @Override
+    public void onFetchMoreRequested() {
+        loadTalk();
+    }
+
+    private void showClassBeginTips(Attendee attendee) {
+
+        final CommonDialog tipsDialog = new CommonDialog(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(
+                R.layout.layout_classroom2_dlg_tips_stopped_live, null);
+
+        tipsDialog.setCancelable(false);
+        tipsDialog.setCanceledOnTouchOutside(false);
+
+        ImageView avatorView = (ImageView) view.findViewById(R.id.avator);
+        TextView titleView = (TextView) view.findViewById(R.id.title);
+        TextView tipsView = (TextView) view.findViewById(R.id.tips);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        ImageView closeBtn = (ImageView) view.findViewById(R.id.close_btn);
+
+        String avatorUrl = Account.getAvatar(attendee.accountId, avatorView.getMeasuredWidth());
+        Glide.with(getContext())
+                .load(avatorUrl)
+                .transform(new CircleTransform(getContext()))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(avatorView);
+
+
+        titleView.setText(attendee.name + "老师开始上课了");
+        tipsView.setText("同学，别再开小差了噢～");
+        okBtn.setText("点击听课");
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipsDialog.dismiss();
+                enterPlay();
+            }
+        });
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipsDialog.dismiss();
+            }
+        });
+
+        tipsDialog.setCustomView(view);
+        tipsDialog.show();
+    }
+
+    private void showLivingTips(Attendee attendee) {
+
+        final CommonDialog tipsDialog = new CommonDialog(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(
+                R.layout.layout_classroom2_dlg_tips_stopped_live, null);
+
+        tipsDialog.setCancelable(false);
+        tipsDialog.setCanceledOnTouchOutside(false);
+        tipsDialog.setRootBackgroud(android.R.color.transparent);
+        tipsDialog.setBottomButtonVisibility(View.GONE);
+
+        LinearLayout rootLay = (LinearLayout) view.findViewById(R.id.root_lay);
+        ImageView avatorView = (ImageView) view.findViewById(R.id.avator);
+        TextView titleView = (TextView) view.findViewById(R.id.title);
+        TextView tipsView = (TextView) view.findViewById(R.id.tips);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        ImageView closeBtn = (ImageView) view.findViewById(R.id.close_btn);
+
+        String avatorUrl = Account.getAvatar(attendee.accountId, avatorView.getMeasuredWidth());
+        Glide.with(getContext())
+                .load(avatorUrl)
+                .transform(new CircleTransform(getContext()))
+                .placeholder(R.drawable.default_avatar_grey)
+                .error(R.drawable.default_avatar_grey)
+                .into(avatorView);
+
+
+        rootLay.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_white_rect_coner));
+        titleView.setText(attendee.name + "正在直播");
+        tipsView.setText("人都到齐了，就差你了～");
+        okBtn.setText("点击观看");
+
+        closeBtn.setVisibility(View.VISIBLE);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipsDialog.dismiss();
+                enterPlay();
+            }
+        });
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipsDialog.dismiss();
+            }
+        });
+
+        tipsDialog.setCustomView(view);
+        tipsDialog.show();
+
+    }
+
+
+    private void handleStreamstartted(StreamStartReceive receive) {
+
+        switch (receive.streamType) {
+            case Live.StreamType.LIVE:
+                if (receive == null)
+                    return;
+
+                Attendee attend = classroomEngine.getMember(receive.claimedBy);
+                if (attend == null)
+                    return;
+                showClassBeginTips(attend);
+
+                break;
+            case Live.StreamType.INDIVIDUAL:
+
+                if (receive == null)
+                    return;
+
+                Attendee attendee = classroomEngine.getMember(receive.claimedBy);
+                if (attendee == null)
+                    return;
+
+                showLivingTips(attendee);
+                break;
+        }
+    }
+
+    private void handleSyncState(SyncStateReceive syncStateReceive) {
+        configStartOrPausedLiveButton();
+    }
+
+
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("receivedConsumer .....");
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.STREAMING_STARTED:
+                    StreamStartReceive receive = (StreamStartReceive) eventReceived.t;
+                    handleStreamstartted(receive);
+                    break;
+                case Su.EventType.SYNC_CLASS_STATE:
+                    break;
+                case Su.EventType.SYNC_STATE:
+                    SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;
+                    handleSyncState(syncStateReceive);
+                    break;
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+                    //TODO fix同一条消息多次回调?
+                    handleReceivedMsg(talk);
+                    break;
+            }
+        }
+    };
 }

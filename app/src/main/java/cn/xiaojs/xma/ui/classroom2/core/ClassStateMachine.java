@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.ui.classroom.bean.SyncClassStateResponse;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 
 /**
  * Created by maxiaobao on 2017/7/4.
@@ -79,6 +80,12 @@ public class ClassStateMachine extends ClassroomStateMachine{
         if (session.ctl != null) {
             return session.ctl.title;
         }
+        return session.cls.title;
+    }
+
+    @Override
+    protected String getClassTitle() {
+        CtlSession session = getSession().ctlSession;
         return session.cls.title;
     }
 
@@ -157,7 +164,7 @@ public class ClassStateMachine extends ClassroomStateMachine{
                 newCtl.id = syncState.current.id;
                 newCtl.subtype = syncState.current.typeName;
                 newCtl.duration = syncState.current.schedule.duration;
-                //newCtl.startedOn = syncState.current.schedule.start.toGMTString();
+                newCtl.startedOn = ScheduleUtil.simpleUTCFormat.format(syncState.current.schedule.start);
                 ctlSession.ctl = newCtl;
             }
         }

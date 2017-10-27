@@ -119,7 +119,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
 
     @BindView(R.id.center_panel)
-    View centerPanelView;
+    public View centerPanelView;
     @BindView(R.id.center_one2one)
     TextView centerOne2oneView;
     @BindView(R.id.center_board_opera)
@@ -144,6 +144,10 @@ public abstract class MovieFragment extends BaseRoomFragment
     public ImageView pBottomAvatorView;
     @BindView(R.id.p_bottom_class_name)
     public TextView pBottomClassnameView;
+    @BindView(R.id.p_bottom_bg)
+    public View pBottomBgView;
+    @BindView(R.id.p_bottom_orient)
+    public ImageView pBottomOrientView;
     @BindView(R.id.p_top_live)
     public TextView pTopLiveView;
 
@@ -393,8 +397,8 @@ public abstract class MovieFragment extends BaseRoomFragment
         ((Classroom2Activity) getActivity()).enterLiving();
     }
 
-    public void enterPlayback() {
-        ((Classroom2Activity) getActivity()).enterPlayback();
+    public void enterPlayback(LibDoc doc) {
+        ((Classroom2Activity) getActivity()).enterPlayback(doc);
     }
 
 
@@ -665,7 +669,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
-    private void showOrHiddenCenterPanel() {
+    public void showOrHiddenCenterPanel() {
 
         int visibility = centerPanelView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
 
