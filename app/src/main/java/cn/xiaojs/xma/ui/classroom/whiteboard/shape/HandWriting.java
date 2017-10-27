@@ -37,12 +37,13 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncLayerBuilder;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtGoing;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinishedDelete;
 
-public class HandWriting extends Doodle implements SyncCollector{
+public class HandWriting extends Doodle implements SyncCollector,SyncLayerBuilder{
     private Path mNormalizedPath;
 
     private HandWriting(Whiteboard whiteboard) {
@@ -188,22 +189,12 @@ public class HandWriting extends Doodle implements SyncCollector{
             evtFinished.board= getWhiteboard().getWhiteBoardId();
             evtFinished.id=evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             SyncData syncData=new SyncData();
-            syncData.layer=new SyncLayer();
+            syncData.layer=onBuildLayer();
             evtFinished.data=syncData;
-            syncData.layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
-            syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
-            syncData.layer.shape=new Shape();
             RectF layerRect=new RectF();
             drawingMatrix.mapRect(layerRect,mDoodleRect);
-            syncData.layer.id=getDoodleId();
             syncData.startPos=new PointF(layerRect.left,layerRect.top);
             syncData.endPos=new PointF(layerRect.right,layerRect.bottom);
-            syncData.layer.shape.height=layerRect.height();
-            syncData.layer.shape.width=layerRect.width();
-            syncData.layer.shape.left=layerRect.left;
-            syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),drawingMatrix);
-            syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
             return evtFinished;
         }
         return null;
@@ -271,22 +262,29 @@ public class HandWriting extends Doodle implements SyncCollector{
                 return evtFinished;
             }else if(action== Action.SCALE_ACTION||action== Action.MOVE_ACTION||action== Action.ROTATE_ACTION
                     ||action== Action.SCALE_ROTATE_ACTION||action== Action.CHANGE_AREA_ACTION){
-                SyncLayer layer=new SyncLayer();
-                layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
-                layer.lineWidth=(int)getPaint().getStrokeWidth();
-                layer.shape=new Shape();
-                RectF layerRect=new RectF();
-                getDrawingMatrixFromWhiteboard().mapRect(layerRect,mDoodleRect);
-                layer.id=getDoodleId();
-                layer.shape.height=layerRect.height();
-                layer.shape.width=layerRect.width();
-                layer.shape.left=layerRect.left;
-                layer.shape.top=layerRect.top;
-                layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),getDrawingMatrixFromWhiteboard());
-                layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
-                return layer;
+
+                return onBuildLayer();
             }
         }
         return null;
+    }
+
+    @Override
+    public SyncLayer onBuildLayer() {
+        SyncLayer layer=new SyncLayer();
+        layer.id=getDoodleId();
+        layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+        layer.lineWidth=(int)getPaint().getStrokeWidth();
+        layer.shape=new Shape();
+        RectF layerRect=new RectF();
+        Matrix drawingMatrix=new Matrix(getDrawingMatrixFromWhiteboard());
+        drawingMatrix.mapRect(layerRect,mDoodleRect);
+        layer.shape.height=layerRect.height();
+        layer.shape.width=layerRect.width();
+        layer.shape.left=layerRect.left;
+        layer.shape.top=layerRect.top;
+        layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),drawingMatrix);
+        layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        return layer;
     }
 }

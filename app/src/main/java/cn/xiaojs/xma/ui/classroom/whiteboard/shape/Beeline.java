@@ -33,6 +33,7 @@ import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Viewport;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.LineSegment;
@@ -43,6 +44,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtGoing;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinishedDelete;
 
 public class Beeline extends TwoDimensionalShape {
     /**
@@ -194,23 +196,24 @@ public class Beeline extends TwoDimensionalShape {
             evtFinished.board= getWhiteboard().getWhiteBoardId();
             evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             SyncData syncData=new SyncData();
-            syncData.layer=new SyncLayer();
+            syncData.layer=onBuildLayer();
             evtFinished.data=syncData;
-            syncData.layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
-            syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
-            syncData.layer.shape=new Shape();
             RectF layerRect=new RectF();
-            mDisplayMatrix.mapRect(layerRect,mDoodleRect);
-            syncData.layer.id=getDoodleId();
-            syncData.layer.shape.height=layerRect.height();
-            syncData.layer.shape.width=layerRect.width();
-            syncData.layer.shape.left=layerRect.left;
-            syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY());
-            syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+            getDrawingMatrixFromWhiteboard().mapRect(layerRect,mDoodleRect);
+            calculatePosition(syncData,getDrawingMatrixFromWhiteboard());
+
             return evtFinished;
         }
         return null;
+    }
+
+
+    private void calculatePosition(SyncData syncData,Matrix matrix){
+        float[] _p=new float[2];
+        matrix.mapPoints(_p,new float[]{mPoints.get(0).x,mPoints.get(0).y});
+        syncData.startPos=new PointF(_p[0],_p[1]);
+        matrix.mapPoints(_p,new float[]{mPoints.get(1).x,mPoints.get(1).y});
+        syncData.endPos=new PointF(_p[0],_p[1]);
     }
 
     private ArrayList<PointF> getRealPoints(float transX,float transY){
@@ -230,5 +233,21 @@ public class Beeline extends TwoDimensionalShape {
         return dest;
     }
 
-
+    @Override
+    public SyncLayer onBuildLayer() {
+        SyncLayer layer=new SyncLayer();
+        layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+        layer.lineWidth=(int)getPaint().getStrokeWidth();
+        layer.shape=new Shape();
+        RectF layerRect=new RectF();
+        getDrawingMatrixFromWhiteboard().mapRect(layerRect,mDoodleRect);
+        layer.id=getDoodleId();
+        layer.shape.height=layerRect.height();
+        layer.shape.width=layerRect.width();
+        layer.shape.left=layerRect.left;
+        layer.shape.top=layerRect.top;
+        layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY());
+        layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        return layer;
+    }
 }

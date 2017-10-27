@@ -118,7 +118,6 @@ public class BoardCollaborateFragment extends BaseFragment {
     @Override
     protected void init() {
         firstData=(ShareboardReceive) getArguments().getSerializable(COLLABORATE_FIRST_DATA);
-//        LogUtil.d(firstData.board.drawing.stylus);
         mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
         mFadeAnimListener = new FadeAnimListener();
         mBoardController.showWhiteboardLayout(null, mDoodleRatio);

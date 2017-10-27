@@ -48,6 +48,7 @@ import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
 import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
+import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -328,8 +329,9 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
     }
 
     private void popClassSchedule(){
-        ProfileFragment profileFragment = new ProfileFragment();
-        profileFragment.show(getFragmentManager(), "profile");
+        /*ProfileFragment profileFragment = new ProfileFragment();
+        profileFragment.show(getFragmentManager(), "profile");*/
+        ScheduleFragment.createInstance("").show(getFragmentManager(),"schedule");
     }
 
 

@@ -227,21 +227,11 @@ public class Triangle extends TwoDimensionalShape {
             evtFinished.board= getWhiteboard().getWhiteBoardId();
             evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             SyncData syncData=new SyncData();
-            syncData.layer=new SyncLayer();
+            syncData.layer=onBuildLayer();
             evtFinished.data=syncData;
-            syncData.layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
-            syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
-            syncData.layer.shape=new Shape();
             RectF layerRect=new RectF();
             drawingMatrix.mapRect(layerRect,mDoodleRect);
-            syncData.layer.id=getDoodleId();
             calculatePosition(syncData,drawingMatrix);
-            syncData.layer.shape.height=layerRect.height();
-            syncData.layer.shape.width=layerRect.width();
-            syncData.layer.shape.left=layerRect.left;
-            syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),drawingMatrix);
-            syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
             return evtFinished;
         }
         return null;
@@ -279,42 +269,22 @@ public class Triangle extends TwoDimensionalShape {
         syncData.endPos=new PointF(_p[0],_p[1]);
     }
 
+
     @Override
-    public Object onCollect(int action,int type) {
-        if(type== SyncGenerator.STATE_BEGIN){
-
-            SyncBoardEvtBegin evtBegin=new SyncBoardEvtBegin();
-            Ctx ctx=new Ctx();
-            ctx.lineWidth=(int)getPaint().getStrokeWidth();
-            ctx.strokeStyle= ColorUtil.getColorName(getPaint().getColor());
-            ctx.viewport=getWhiteboard().getViewport();
-            evtBegin.ctx=ctx;
-            evtBegin.stg= Live.SyncStage.BEGIN;
-            evtBegin.time=System.currentTimeMillis();
-            evtBegin.board= getWhiteboard().getWhiteBoardId();
-            evtBegin.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
-            if(action== Action.DELETE_ACTION){
-                evtBegin.evt= Live.SyncEvent.ERASER;
-            }
-            return evtBegin;
-        }else if(type== SyncGenerator.STATE_DOING){
-
-        }else if(type== SyncGenerator.STATE_FINISHED){
-            if(action== Action.DELETE_ACTION) {
-                SyncBoardFinishedDelete evtFinished=new SyncBoardFinishedDelete();
-                evtFinished.stg= Live.SyncStage.FINISH;
-                evtFinished.evt= Live.SyncEvent.ERASER;
-                evtFinished.time=System.currentTimeMillis();
-                evtFinished.board= getWhiteboard().getWhiteBoardId();
-                evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
-                evtFinished.data=new ArrayList<SyncLayer>();
-                SyncLayer layer=new SyncLayer();
-                layer.id=getDoodleId();
-                evtFinished.data.add(layer);
-                return evtFinished;
-            }
-        }
-        return null;
+    public SyncLayer onBuildLayer() {
+        SyncLayer layer=new SyncLayer();
+        layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+        layer.lineWidth=(int)getPaint().getStrokeWidth();
+        layer.shape=new Shape();
+        RectF layerRect=new RectF();
+        getDrawingMatrixFromWhiteboard().mapRect(layerRect,mDoodleRect);
+        layer.id=getDoodleId();
+        layer.shape.height=layerRect.height();
+        layer.shape.width=layerRect.width();
+        layer.shape.left=layerRect.left;
+        layer.shape.top=layerRect.top;
+        layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),getDrawingMatrixFromWhiteboard());
+        layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        return layer;
     }
-
 }
