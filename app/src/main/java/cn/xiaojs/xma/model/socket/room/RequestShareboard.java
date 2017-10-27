@@ -10,4 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestShareboard {
     public String board;
+    public Integer page;//可选
+    public String preview;//预览图  base64编码(可选)
+
 }
