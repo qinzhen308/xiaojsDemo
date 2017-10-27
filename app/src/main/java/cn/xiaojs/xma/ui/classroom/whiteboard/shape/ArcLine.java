@@ -15,6 +15,7 @@ import cn.xiaojs.xma.model.socket.room.whiteboard.Shape;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Action;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.TwoDimensionalShape;
@@ -23,6 +24,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardEvtBegin;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinished;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.model.SyncBoardFinishedDelete;
 
 /**
  * created by Paul Z on 2017/8/25
@@ -277,25 +279,17 @@ public class ArcLine extends TwoDimensionalShape {
             evtFinished.board= getWhiteboard().getWhiteBoardId();
             evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             SyncData syncData=new SyncData();
-            syncData.layer=new SyncLayer();
+            syncData.layer=onBuildLayer();
             evtFinished.data=syncData;
-            syncData.layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
-            syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
-            syncData.layer.shape=new Shape();
             RectF layerRect=new RectF();
             drawingMatrix.mapRect(layerRect,mDoodleRect);
-            syncData.layer.id=getDoodleId();
             calculatePosition(syncData,drawingMatrix);
-            syncData.layer.shape.height=layerRect.height();
-            syncData.layer.shape.width=layerRect.width();
-            syncData.layer.shape.left=layerRect.left;
-            syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints(layerRect.centerX(),layerRect.centerY(),drawingMatrix);
-            syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
             return evtFinished;
         }
         return null;
     }
+
+
 
     private ArrayList<PointF> getRealPoints(float transX,float transY,Matrix drawingMatrix){
         ArrayList<PointF> dest=new ArrayList<>();
@@ -324,5 +318,24 @@ public class ArcLine extends TwoDimensionalShape {
         syncData.startPos=new PointF(_p[0],_p[1]);
         matrix.mapPoints(_p,new float[]{mPoints.get(1).x,mPoints.get(1).y});
         syncData.endPos=new PointF(_p[0],_p[1]);
+    }
+
+    @Override
+    public SyncLayer onBuildLayer() {
+        SyncLayer layer=new SyncLayer();
+        layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+        layer.lineWidth=(int)getPaint().getStrokeWidth();
+        layer.shape=new Shape();
+        RectF layerRect=new RectF();
+        Matrix drawingMatrix=new Matrix(getDrawingMatrixFromWhiteboard());
+        drawingMatrix.mapRect(layerRect,mDoodleRect);
+        layer.id=getDoodleId();
+        layer.shape.height=layerRect.height();
+        layer.shape.width=layerRect.width();
+        layer.shape.left=layerRect.left;
+        layer.shape.top=layerRect.top;
+        layer.shape.data=getRealPoints(layerRect.centerX(),layerRect.centerY(),drawingMatrix);
+        layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        return layer;
     }
 }

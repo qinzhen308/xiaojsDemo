@@ -158,21 +158,11 @@ public class Oval extends TwoDimensionalShape {
             evtFinished.board= getWhiteboard().getWhiteBoardId();
             evtFinished.from= AccountDataManager.getAccountID(getWhiteboard().getContext());
             SyncData syncData=new SyncData();
-            syncData.layer=new SyncLayer();
+            syncData.layer=onBuildLayer();
             evtFinished.data=syncData;
-            syncData.layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
-            syncData.layer.lineWidth=(int)getPaint().getStrokeWidth();
-            syncData.layer.shape=new Shape();
             RectF layerRect=new RectF();
             drawingMatrix.mapRect(layerRect,mDoodleRect);
-            syncData.layer.id=getDoodleId();
             calculatePosition(syncData,drawingMatrix);
-            syncData.layer.shape.height=layerRect.height();
-            syncData.layer.shape.width=layerRect.width();
-            syncData.layer.shape.left=layerRect.left;
-            syncData.layer.shape.top=layerRect.top;
-            syncData.layer.shape.data=getRealPoints(layerRect);
-            syncData.layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
             return evtFinished;
         }
         return null;
@@ -205,4 +195,21 @@ public class Oval extends TwoDimensionalShape {
         syncData.endPos=new PointF(_p[0],_p[1]);
     }
 
+    @Override
+    public SyncLayer onBuildLayer() {
+        SyncLayer layer=new SyncLayer();
+        layer.lineColor=ColorUtil.getColorName(getPaint().getColor());
+        layer.lineWidth=(int)getPaint().getStrokeWidth();
+        layer.shape=new Shape();
+        RectF layerRect=new RectF();
+        getDrawingMatrixFromWhiteboard().mapRect(layerRect,mDoodleRect);
+        layer.id=getDoodleId();
+        layer.shape.height=layerRect.height();
+        layer.shape.width=layerRect.width();
+        layer.shape.left=layerRect.left;
+        layer.shape.top=layerRect.top;
+        layer.shape.data=getRealPoints(layerRect);
+        layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        return layer;
+    }
 }

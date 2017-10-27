@@ -8,6 +8,7 @@ import android.graphics.PathDashPathEffect;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
@@ -151,5 +152,10 @@ public class Square extends ThreeDimensionalShape {
     @Override
     protected double computeVolume() {
         return 0;
+    }
+
+    @Override
+    public SyncLayer onBuildLayer() {
+        return null;
     }
 }
