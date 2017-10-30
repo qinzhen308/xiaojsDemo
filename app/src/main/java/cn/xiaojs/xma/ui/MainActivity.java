@@ -35,6 +35,7 @@ import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.home.HomeFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
@@ -474,7 +475,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 ClassesListActivity.invoke(this,1);
                 break;
             case ACTION_TO_MY_RECORDED_LESSONS:
-                ClassesListActivity.invoke(this,2);
+//                ClassesListActivity.invoke(this,2);
+                MyCourseListActivity.invoke(this);
                 break;
             case ACTION_TO_CLASSROOM:
                 String ticket=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+0);

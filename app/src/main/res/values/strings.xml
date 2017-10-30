@@ -1062,6 +1062,7 @@
     <string name="abort_class">退出班</string>
     <string name="continue_live">继续上课</string>
     <string name="finish_class">下课</string>
+    <string name="my_course_list">我的课程</string>
 
 
 </resources>

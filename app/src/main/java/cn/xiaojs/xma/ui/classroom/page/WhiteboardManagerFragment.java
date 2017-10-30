@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
@@ -110,6 +111,7 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
         ClassroomEngine.getEngine().getBoards(criteria, pagination, new APIServiceCallback<CollectionPage<BoardItem>>() {
             @Override
             public void onSuccess(CollectionPage<BoardItem> object) {
+
 
             }
 
