@@ -54,5 +54,17 @@
             android:layout_height="@dimen/px50"
             android:layout_marginLeft="@dimen/px15"
             circle:color="@color/wb_color_7"/>
+    <cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_8"
+            android:layout_width="@dimen/px50"
+            android:layout_height="@dimen/px50"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_8"/>
+    <cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView
+            android:id="@+id/btn_color_9"
+            android:layout_width="@dimen/px50"
+            android:layout_height="@dimen/px50"
+            android:layout_marginLeft="@dimen/px15"
+            circle:color="@color/wb_color_9"/>
 </LinearLayout>
 

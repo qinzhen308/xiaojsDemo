@@ -92,7 +92,6 @@
                 android:text="公开课"
                 android:textColor="@color/selector_btn_orange_black"
                 android:textSize="@dimen/font_28px"
-
                 />
 
             <RadioButton

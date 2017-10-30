@@ -55,6 +55,8 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
                 (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_5),
                 (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_6),
                 (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_7),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_8),
+                (CircleView) mPopWindowLayout.findViewById(R.id.btn_color_9),
         };
 
         initColor(mColorButtons.length);
@@ -81,13 +83,15 @@ public class ColorPickerPop extends SettingsPopupWindow implements View.OnClickL
 
         COLORS = new int[size];
         Resources rs = mContext.getResources();
-        COLORS[0] = rs.getColor(R.color.wb_color_1);
-        COLORS[1] = rs.getColor(R.color.wb_color_2);
-        COLORS[2] = rs.getColor(R.color.wb_color_3);
-        COLORS[3] = rs.getColor(R.color.wb_color_4);
-        COLORS[4] = rs.getColor(R.color.wb_color_5);
-        COLORS[5] = rs.getColor(R.color.wb_color_6);
+        COLORS[3] = rs.getColor(R.color.wb_color_1);
+        COLORS[2] = rs.getColor(R.color.wb_color_2);
+        COLORS[0] = rs.getColor(R.color.wb_color_3);
+        COLORS[1] = rs.getColor(R.color.wb_color_4);
+        COLORS[8] = rs.getColor(R.color.wb_color_5);
+        COLORS[7] = rs.getColor(R.color.wb_color_6);
         COLORS[6] = rs.getColor(R.color.wb_color_7);
+        COLORS[5] = rs.getColor(R.color.wb_color_8);
+        COLORS[4] = rs.getColor(R.color.wb_color_9);
     }
 
     public void show(View anchor, int panelWidth) {
