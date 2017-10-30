@@ -33,15 +33,12 @@ public class LiveManager {
 
     /**
      * Generates a live ticket with the specified parameters.
-     * @param context
-     * @param cs
-     * @param callback
      */
     public static void generateTicket(Context context,
                                       String cs,
                                       APIServiceCallback<Ticket> callback) {
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.generateTicket(cs);
 
     }
@@ -49,56 +46,50 @@ public class LiveManager {
 
     /**
      * Validates and boots a participant session.
-     * @param context
-     * @param ticket
-     * @param callback
      */
     public static LiveRequest bootSession(Context context,
-                                   String ticket,
-                                   APIServiceCallback<CtlSession> callback) {
+                                          String ticket,
+                                          APIServiceCallback<CtlSession> callback) {
 
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.bootSession(ticket);
         return request;
     }
 
+    public static CtlSession bootSession2(Context context,
+                                          String ticket) throws Exception {
+
+
+        LiveRequest request = new LiveRequest(context, null);
+        return request.bootSession2(ticket);
+    }
+
     /**
      * Retrieves a collection of talks that match the specified criteria within a specific class.
-     * @param context
-     * @param ticket
-     * @param criteria
-     * @param pagination
-     * @param callback
      */
     public static void getTalks(Context context,
-                         String ticket,
-                         LiveCriteria criteria,
-                         Pagination pagination,
-                         APIServiceCallback<CollectionPage<TalkItem>> callback) {
+                                String ticket,
+                                LiveCriteria criteria,
+                                Pagination pagination,
+                                APIServiceCallback<CollectionPage<TalkItem>> callback) {
 
-        LiveRequest request = new LiveRequest(context,callback);
-        request.getTalks(ticket,criteria,pagination);
+        LiveRequest request = new LiveRequest(context, callback);
+        request.getTalks(ticket, criteria, pagination);
     }
 
     /**
      * Returns participants currently joined the specific live session.
-     * @param context
-     * @param ticket
-     * @param callback
      */
     public static void getAttendees(Context context,
                                     String ticket,
                                     APIServiceCallback<LiveCollection<Attendee>> callback) {
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.getAttendees(ticket);
     }
 
     /**
      * Actually starts the scheduled live session by the teaching lead.
-     * @param context
-     * @param ticket
-     * @param callback
      */
     public static void beginClass(Context context,
                                   String ticket,
@@ -106,15 +97,12 @@ public class LiveManager {
         ClassMode classMode = new ClassMode();
         classMode.mode = Live.StreamMode.NO;
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.beginClass(ticket, classMode);
     }
 
     /**
      * Actually starts the scheduled live session by the teaching lead.
-     * @param context
-     * @param ticket
-     * @param callback
      */
     public static void beginClass(Context context,
                                   String ticket,
@@ -124,34 +112,25 @@ public class LiveManager {
         ClassMode classMode = new ClassMode();
         classMode.mode = mode;
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.beginClass(ticket, classMode);
     }
 
     /**
      * Closes an open board.
-     * @param context
-     * @param ticket
-     * @param board
-     * @param callback
      */
     public static void closeBoard(Context context,
                                   String ticket,
                                   String board,
                                   APIServiceCallback<ResponseBody> callback) {
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.closeBoard(ticket, board);
 
     }
 
     /**
      * Retrieves a collection of boards accessible to the current attendee within a specific class.
-     * @param context
-     * @param ticket
-     * @param criteria
-     * @param pagination
-     * @param callback
      */
     public static void getBoards(Context context,
                                  String ticket,
@@ -159,73 +138,56 @@ public class LiveManager {
                                  Pagination pagination,
                                  APIServiceCallback<CollectionPage<BoardItem>> callback) {
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.getBoards(ticket, criteria, pagination);
 
     }
 
     /**
      * Retrieves a board owned by the current attendee.
-     * @param context
-     * @param ticket
-     * @param board
-     * @param callback
      */
     public static void openBoard(Context context,
                                  String ticket,
                                  String board,
                                  APIServiceCallback<BoardItem> callback) {
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.openBoard(ticket, board);
     }
 
     /**
      * Pauses the live session to have a rest.
-     * @param context
-     * @param ticket
-     * @param callback
      */
     public static void pauseClass(Context context,
                                   String ticket,
                                   APIServiceCallback<ResponseBody> callback) {
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.pauseClass(ticket);
     }
 
     /**
      * Registers a board created during a class.
-     * @param context
-     * @param ticket
-     * @param board
-     * @param callback
      */
     public static void registerBoard(Context context,
                                      String ticket,
                                      Board board,
                                      APIServiceCallback<BoardItem> callback) {
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.registerBoard(ticket, board);
     }
 
     /**
      * Requests to finish the live session by the teaching lead.
-     * @param context
-     * @param ticket
-     * @param callback
      */
     public static void finishClass(Context context,
-                                     String ticket,
-                                     APIServiceCallback<ResponseBody> callback) {
-        LiveRequest request = new LiveRequest(context,callback);
+                                   String ticket,
+                                   APIServiceCallback<ResponseBody> callback) {
+        LiveRequest request = new LiveRequest(context, callback);
         request.finishClass(ticket);
     }
 
     /**
      * Manually resumes a paused live session.
-     * @param context
-     * @param ticket
-     * @param callback
      */
     public static void resumeClass(Context context,
                                    String ticket,
@@ -233,16 +195,12 @@ public class LiveManager {
         ClassMode classMode = new ClassMode();
         classMode.mode = Live.StreamMode.NO;
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.resumeClass(ticket, classMode);
     }
 
     /**
      * Manually resumes a paused live session.
-     * @param context
-     * @param ticket
-     * @param mode
-     * @param callback
      */
     public static void resumeClass(Context context,
                                    String ticket,
@@ -251,17 +209,12 @@ public class LiveManager {
         ClassMode classMode = new ClassMode();
         classMode.mode = mode;
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.resumeClass(ticket, classMode);
     }
 
     /**
      * Returns lessons scheduled for the current class, optionally filtered by criteria.
-     * @param context
-     * @param ticket
-     * @param criteria
-     * @param pagination
-     * @param callback
      */
     public static void getLiveSchedule(Context context,
                                        String ticket,
@@ -269,7 +222,7 @@ public class LiveManager {
                                        Pagination pagination,
                                        APIServiceCallback<List<LiveSchedule>> callback) {
 
-        LiveRequest request = new LiveRequest(context,callback);
+        LiveRequest request = new LiveRequest(context, callback);
         request.getLiveSchedule(ticket, criteria, pagination);
     }
 

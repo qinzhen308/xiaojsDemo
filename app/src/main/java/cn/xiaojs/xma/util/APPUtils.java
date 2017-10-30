@@ -44,6 +44,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LoginDataManager;
+import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.ui.account.LoginActivity;
 /**
  * Created by maxiaobao on 2016/10/26.
@@ -239,6 +240,8 @@ public class APPUtils {
         Toast.makeText(context, exitTips, Toast.LENGTH_SHORT).show();
         XiaojsConfig.mLoginUser = null;
         AccountDataManager.clearUserInfo(context);
+        SecurityPref.setTicket(context,"");
+        SecurityPref.setSFM(context,"");
         //取消友盟授权
 //        UMShareAPI.get(context).deleteOauth((Activity) context, SHARE_MEDIA.WEIXIN,null);
 //        UMShareAPI.get(context).deleteOauth((Activity) context, SHARE_MEDIA.QQ,null);

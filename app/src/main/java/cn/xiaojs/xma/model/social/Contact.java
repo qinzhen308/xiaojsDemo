@@ -1,8 +1,5 @@
 package cn.xiaojs.xma.model.social;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -37,6 +34,7 @@ public class Contact implements Serializable{
     public String chatId;
 
     public boolean unfollowable;
+    public String ticket;
 
 //
 //    @Override

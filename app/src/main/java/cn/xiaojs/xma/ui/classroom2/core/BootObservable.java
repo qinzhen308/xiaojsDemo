@@ -21,6 +21,7 @@ import io.reactivex.android.MainThreadDisposable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -52,6 +53,7 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         bootListener = new BootListener(context, ticket, observer);
         observer.onSubscribe(bootListener);
         bootListener.boot();
+
 
     }
 
@@ -99,20 +101,18 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         private void boot() {
 
             sendStatus(Status.BOOT_BEGIN);
-            liveRequest = LiveManager.bootSession(context,
-                    initTicket, new APIServiceCallback<CtlSession>() {
-                @Override
-                public void onSuccess(CtlSession session) {
 
+            try {
+                ctlSession = LiveManager.bootSession2(context, initTicket);
+                if (ctlSession != null) {
                     sendStatus(Status.BOOT_SUCCESS);
 
-                    if (TextUtils.isEmpty(session.ticket)) {
-                        session.ticket = initTicket;
+                    if (TextUtils.isEmpty(ctlSession.ticket)) {
+                        ctlSession.ticket = initTicket;
                     }
 
-                    ctlSession = session;
 
-                    if (session.accessible) {
+                    if (ctlSession.accessible) {
                         //连接socket
                         try {
                             connectSocket(ctlSession, false);
@@ -124,14 +124,49 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                         //询问用户是否强制进入
                         sendStatus(Status.BOOT_QUERY_KICKOUT);
                     }
-
                 }
-
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (ctlSession == null) {
                     sendStatus(Status.BOOT_FAILED);
                 }
-            });
+            }
+
+
+//            liveRequest = LiveManager.bootSession(context,
+//                    initTicket, new APIServiceCallback<CtlSession>() {
+//                @Override
+//                public void onSuccess(CtlSession session) {
+//
+//                    sendStatus(Status.BOOT_SUCCESS);
+//
+//                    if (TextUtils.isEmpty(session.ticket)) {
+//                        session.ticket = initTicket;
+//                    }
+//
+//                    ctlSession = session;
+//
+//                    if (session.accessible) {
+//                        //连接socket
+//                        try {
+//                            connectSocket(ctlSession, false);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            sendStatus(Status.SOCKET_CONNECT_FAILED);
+//                        }
+//                    } else {
+//                        //询问用户是否强制进入
+//                        sendStatus(Status.BOOT_QUERY_KICKOUT);
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(String errorCode, String errorMessage) {
+//                    sendStatus(Status.BOOT_FAILED);
+//                }
+//            });
         }
 
         private Emitter.Listener connectListener = new Emitter.Listener() {

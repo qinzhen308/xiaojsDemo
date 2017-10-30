@@ -32,7 +32,9 @@ import cn.xiaojs.xma.ui.base.IntentFlags;
 import cn.xiaojs.xma.ui.base.XiaojsActions;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.home.HomeFragment;
+import cn.xiaojs.xma.ui.contact2.ContactFragment;
+import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
+import cn.xiaojs.xma.ui.findings2.FindingsFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
@@ -40,23 +42,20 @@ import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
-import cn.xiaojs.xma.ui.live.LiveFragment;
 import cn.xiaojs.xma.ui.message.ContactActivity;
 
-import cn.xiaojs.xma.ui.message.MessageFragment;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
-import cn.xiaojs.xma.ui.search.SearchActivity;
+import cn.xiaojs.xma.ui.search.DiscoverFragment;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
-import cn.xiaojs.xma.ui.widget.SwipeLayout;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
 
 import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
 import static cn.xiaojs.xma.util.MessageUitl.ACTION_NEW_PUSH;
 
-public class MainActivity extends BaseTabActivity implements XiaojsActions , IUpdateMethod{
+public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpdateMethod {
 
     public static final String KEY_POSITION = "key_position";
 
@@ -77,8 +76,9 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
         //setMiddleTitle(R.string.app_name);
         needHeader(false);
         List<Fragment> fs = new ArrayList<>();
-        fs.add(new ClassFragment());
-        fs.add(new HomeFragment());
+        fs.add(new ConversationFragment());
+        fs.add(new ContactFragment());
+        fs.add(new DiscoverFragment());
         fs.add(new MineFragment());
 
 //        conversationFragment = new MessageFragment();
@@ -86,8 +86,14 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
 
 
         setButtonType(BUTTON_TYPE_NONE);
-        addViews(new int[]{R.string.home_tab_class, R.string.home_tab_circle, R.string.home_tab_mine},
-                new int[]{R.drawable.home_tab_selector, R.drawable.live_tab_selector, R.drawable.mine_tab_selector},
+        addViews(new int[]{R.string.home_tab_class,
+                        R.string.home_tab_contact,
+                        R.string.home_tab_findings,
+                        R.string.home_tab_mine},
+                new int[]{R.drawable.home_tab_conversation_selector,
+                        R.drawable.home_tab_contacts_selector,
+                        R.drawable.home_tab_findings_selector,
+                        R.drawable.home_tab_my_selector},
                 fs);
 
         Intent intent = getIntent();
@@ -128,7 +134,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                     setTabSelected(position);
                 }
                 //回到这个页面后，再去其他页面
-                doAction(intent.getAction(),intent);
+                doAction(intent.getAction(), intent);
             }
         }
         //集中处理scheme协议
@@ -153,32 +159,32 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
     protected void onTabClick(int position) {
         judgeDoubleClick(position);
         super.onTabClick(position);
-        if(position==0){
-            AnalyticEvents.onEvent(this,3);
-        }else if(position==1){
-            AnalyticEvents.onEvent(this,4);
-        }else if(position==2){
-            AnalyticEvents.onEvent(this,5);
+        if (position == 0) {
+            AnalyticEvents.onEvent(this, 3);
+        } else if (position == 1) {
+            AnalyticEvents.onEvent(this, 4);
+        } else if (position == 2) {
+            AnalyticEvents.onEvent(this, 5);
         }
     }
 
-    private final void judgeDoubleClick(int position){
-        if(position!=0)return;
-        if(System.currentTimeMillis()-clickInvalid<DOUBLE_CLICK_INTERVAL){
+    private final void judgeDoubleClick(int position) {
+        if (position != 0) return;
+        if (System.currentTimeMillis() - clickInvalid < DOUBLE_CLICK_INTERVAL) {
             onTabDoubleClick(position);
-            clickInvalid=0;
-        }else {
-            clickInvalid=System.currentTimeMillis();
+            clickInvalid = 0;
+        } else {
+            clickInvalid = System.currentTimeMillis();
         }
     }
 
-    private void onTabDoubleClick(int position){
-        ClassFragment fragment=(ClassFragment)mAdapter.getFragment(0);
-        fragment.updateData();
+    private void onTabDoubleClick(int position) {
+//        ClassFragment fragment = (ClassFragment) mAdapter.getFragment(0);
+//        fragment.updateData();
     }
 
-    private final static int DOUBLE_CLICK_INTERVAL=500;
-    private long clickInvalid=0;
+    private final static int DOUBLE_CLICK_INTERVAL = 500;
+    private long clickInvalid = 0;
 
 
     private boolean dealFromNotify(Intent intent) {
@@ -324,7 +330,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
         upgradeReceiver = new UpgradeReceiver();
 
         registerReceiver(upgradeReceiver, filter);
-        mSchemeProcessor=new SchemeProcessor(this);
+        mSchemeProcessor = new SchemeProcessor(this);
         mSchemeProcessor.handle(getIntent());
     }
 
@@ -362,8 +368,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
     }
 
     @Override
-    public void updateData(boolean justNative,Object... others) {
-        ClassFragment fragment=(ClassFragment) getFragment(0);
+    public void updateData(boolean justNative, Object... others) {
+        ClassFragment fragment = (ClassFragment) getFragment(0);
         fragment.updateData();
     }
 
@@ -432,10 +438,10 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
 //                if (conversationFragment != null && conversationFragment.isAdded()) {
 //                    conversationFragment.getMessageOverview();
 //                }
-                Fragment fg=getFragment(2);
+                Fragment fg = getFragment(2);
                 //当前在个人中心才调，否则在切换到个人中心在onResume更新状态
-                if(fg instanceof MineFragment && fg.isAdded()){
-                    ((MineFragment)fg).showMessageTips(true);
+                if (fg instanceof MineFragment && fg.isAdded()) {
+                    ((MineFragment) fg).showMessageTips(true);
                 }
 
             }
@@ -445,43 +451,41 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
 
     /**
      * 利用这个activity的singletask模式清理栈，再根据action跳到对应页面
-     * @param context
-     * @param action
+     *
      * @param datas 这种方式传值，虽然通用，但可读性差
      */
-    public static void invokeWithAction(Context context,String action,String... datas){
-        Intent intent=new Intent(context, MainActivity.class);
-        if(!TextUtils.isEmpty(action)){
+    public static void invokeWithAction(Context context, String action, String... datas) {
+        Intent intent = new Intent(context, MainActivity.class);
+        if (!TextUtils.isEmpty(action)) {
             intent.setAction(action);
         }
-        if(datas!=null){
-            for(int i=0;i<datas.length;i++){
-                intent.putExtra(IntentFlags.EXTRA_COMMON_KEY+i,datas[i]);
+        if (datas != null) {
+            for (int i = 0; i < datas.length; i++) {
+                intent.putExtra(IntentFlags.EXTRA_COMMON_KEY + i, datas[i]);
             }
         }
         context.startActivity(intent);
     }
 
 
-
     @Override
     public void doAction(String action, Intent intent) {
-        if(TextUtils.isEmpty(action))return;
-        switch (action){
+        if (TextUtils.isEmpty(action)) return;
+        switch (action) {
             case ACTION_TO_MY_CLASSES:
-                ClassesListActivity.invoke(this,0);
+                ClassesListActivity.invoke(this, 0);
                 break;
             case ACTION_TO_MY_LESSONS:
-                ClassesListActivity.invoke(this,1);
+                ClassesListActivity.invoke(this, 1);
                 break;
             case ACTION_TO_MY_RECORDED_LESSONS:
 //                ClassesListActivity.invoke(this,2);
                 MyCourseListActivity.invoke(this);
                 break;
             case ACTION_TO_CLASSROOM:
-                String ticket=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+0);
+                String ticket = intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY + 0);
                 if (TextUtils.isEmpty(ticket)) {
-                    Toast.makeText(this,"进入教室失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "进入教室失败", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -491,19 +495,19 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
                 this.startActivity(i);
                 break;
             case ACTION_TO_RECORDED_LESSONS_DIR:
-                String id=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+0);
-                String isEpiredStr=intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY+1);
+                String id = intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY + 0);
+                String isEpiredStr = intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY + 1);
                 if (TextUtils.isEmpty(id)) {
-                    Toast.makeText(this,"课程id有误",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "课程id有误", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                boolean isEpired=false;
+                boolean isEpired = false;
                 try {
-                    isEpired=Boolean.valueOf(isEpiredStr);
-                }catch (Exception e){
+                    isEpired = Boolean.valueOf(isEpiredStr);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                RLDirListActivity.invoke(this,id,isEpired);
+                RLDirListActivity.invoke(this, id, isEpired);
                 break;
         }
     }
@@ -511,14 +515,14 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions , IUp
     @Keep
     @PermissionSuccess(requestCode = MainActivity.PERMISSION_CODE)
     public void requestCameraSuccess() {
-        AnalyticEvents.onEvent(this,2);
+        AnalyticEvents.onEvent(this, 2);
         startActivity(new Intent(this, ScanQrcodeActivity.class));
     }
 
     @Keep
     @PermissionRationale(requestCode = MainActivity.PERMISSION_CODE)
     public void requestCameraRationale() {
-        PermissionHelper.showRationaleDialog(this,getResources().getString(R.string.permission_rationale_camera_tip));
+        PermissionHelper.showRationaleDialog(this, getResources().getString(R.string.permission_rationale_camera_tip));
 
     }
 

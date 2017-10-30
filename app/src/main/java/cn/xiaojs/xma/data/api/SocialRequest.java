@@ -201,6 +201,14 @@ public class SocialRequest extends ServiceRequest {
                 DataManager.getGroupData(getContext()));
     }
 
+
+    public void getContacts2(){
+        Call<ArrayList<ContactGroup>> call = getService().getContacts();
+        enqueueRequest(APIType.GET_CONTACTS, call);
+    }
+
+
+
     public ArrayList<ContactGroup> getContactsSync() throws IOException{
         Response<ArrayList<ContactGroup>> response = getService().getContacts().execute();
         if (response != null && response.raw().networkResponse().code() != NOT_MODIFIED) {

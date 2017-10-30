@@ -314,6 +314,15 @@ public class SocialManager {
 
     }
 
+    public static void getContacts2(Context context,
+                                   APIServiceCallback<ArrayList<ContactGroup>> callback) {
+
+        SocialRequest socialRequest = new SocialRequest(context, callback);
+        socialRequest.getContacts2();
+
+    }
+
+
     public static ArrayList<ContactGroup> getContacts(Context context) throws IOException{
 
         SocialRequest socialRequest = new SocialRequest(context,null);

@@ -12,6 +12,9 @@ public class SecurityPref {
     private static final String PREF_PERMISSION_PREFIX = "permission_";
     private static final String PREF_CSRF_TOKEN = "csrf_token";
     private static final String PREF_CSRF_COOKIE = "csrf_cookie";
+    private static final String PREF_SFM = "sfm";
+    private static final String PREF_TICKET = "ticket";
+
 
 
 
@@ -23,6 +26,29 @@ public class SecurityPref {
         return key.toString();
 
     }
+
+    public static void setTicket(final Context context,String ticket) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_TICKET,ticket).apply();
+    }
+
+    public static String getTicket(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_TICKET,"");
+    }
+
+
+    public static void setSFM(final Context context,String sfm) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        sp.edit().putString(PREF_SFM,sfm).apply();
+    }
+
+    public static String getSFM(final Context context) {
+        SharedPreferences sp = DataPref.getSharedPreferences(context);
+        return sp.getString(PREF_SFM,"");
+    }
+
+
 
     public static void setPermission(final Context context, int permission,boolean granted) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);

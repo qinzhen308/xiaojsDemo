@@ -390,6 +390,26 @@ public class ApiManager {
                 .toString();
     }
 
+    public static String getXMSUrl(Context context) {
+
+        String channel = XiaojsConfig.CHANNEL;
+        String baseUrl;
+
+        if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
+            String port = XiaojsConfig.XMS_PORT;
+            baseUrl = createUrl(context,port);
+        }else {
+            baseUrl = XiaojsConfig.XMS_BASE_URL;
+        }
+
+
+        return new StringBuilder(baseUrl)
+                .append("/")
+                .append(XiaojsConfig.XMS_IOCM_COMPARTMENT)
+                .toString();
+
+    }
+
 
 
 }

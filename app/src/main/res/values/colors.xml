@@ -185,5 +185,8 @@
     <color name="chat_gray">#EEEEEE</color>
     <color name="chat_name">#979797</color>
     <color name="chat_name_blue">#96D0F6</color>
+    <color name="contact_letter_idx_bg">#33000000</color>
+    <color name="index_blue">#0076FF</color>
+    <color name="page_tips_text">#C7C7CC</color>
 
 </resources>

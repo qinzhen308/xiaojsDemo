@@ -32,6 +32,7 @@ import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.ctl.Price;
 import cn.xiaojs.xma.model.social.Comment;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
+import cn.xiaojs.xma.ui.contact2.query.TextComparator;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
@@ -308,6 +309,10 @@ public class ExampleUnitTest {
 //        observable.subscribe(observer1);
 //        observable.subscribe(observer2);
 
+        String name = TextComparator.getLeadingUp("我的");
+        System.out.println("fuck---:" + name);
+        String name1 = TextComparator.getLeadingUp("hello");
+        System.out.println("fuck1---:" + name1);
 
     }
 

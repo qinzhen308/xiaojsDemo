@@ -47,6 +47,11 @@ public class SocketManager {
     }
 
     public void initSocket(String url, IO.Options options) throws Exception {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("connect socket url:%s, \n query:%s", url, options.query);
+        }
+
         socket = IO.socket(url, options);
     }
 

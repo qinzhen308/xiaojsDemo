@@ -40,10 +40,15 @@ public class XiaojsConfig {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //url and port
     ///////////////外网生产环境域名/////////////
+
+    public static final int XMS_IOCM_COMPARTMENT = 6;
+
     //XAS
     public static final String XAS_BASE_URL = "http://xas.xiaojs.cn";
     //XLS
     public static final String XLS_BASE_URL = "http://xls.xiaojs.cn";
+    //XMS
+    public static final String XMS_BASE_URL = "http://xms.xiaojs.cn";
     //分享URL
     public static final String SHARE_BASE_URL = "http://www.xiaojs.cn";
     //分享课（公开课和班课）
@@ -77,6 +82,8 @@ public class XiaojsConfig {
     public static String SERVICE_PORT = "3000";
     //Live port
     public static String LIVE_PORT = "3004";
+    //
+    public static String XMS_PORT = "3002";
 
     //七牛存储空间
     //华东:存储空间列表(图片和文档存储)Bucket (xiaojs-test) 测试域名:

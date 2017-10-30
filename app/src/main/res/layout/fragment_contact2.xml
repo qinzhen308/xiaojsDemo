@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cl_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bottomsheet_bg_white_rect">
+
+
+    <TextView
+            android:id="@+id/title_bar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px90"
+            android:gravity="center"
+            android:text="通讯录"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_36px"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    <View
+            android:id="@+id/title_bar_line"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px1"
+            android:background="@color/gray_line"
+            app:layout_constraintTop_toBottomOf="@id/title_bar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+
+    <RadioGroup
+            android:id="@+id/tab_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/px78"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/tab_my"
+            app:layout_constraintTop_toBottomOf="@id/title_bar_line"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            >
+
+        <RadioButton
+                android:id="@+id/tab_my"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="好友"
+                android:gravity="center"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:button="@null"
+                />
+
+        <RadioButton
+                android:id="@+id/tab_class"
+                android:layout_width="@dimen/px170"
+                android:layout_height="match_parent"
+                android:text="教室"
+                android:gravity="center"
+                android:background="@drawable/selector_line_bottom_orange"
+                android:drawableBottom="@color/main_orange"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/font_32px"
+                android:textColor="@color/selector_btn_orange_black"
+                android:button="@null"
+                />
+    </RadioGroup>
+
+    <View
+            android:id="@+id/top_line"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px1"
+            android:background="@color/gray_line"
+            app:layout_constraintTop_toBottomOf="@id/tab_bar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    <android.support.v4.view.ViewPager
+            android:id="@+id/tab_viewpager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/px120"
+            app:layout_constraintTop_toBottomOf="@id/top_line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+</android.support.constraint.ConstraintLayout>
+
