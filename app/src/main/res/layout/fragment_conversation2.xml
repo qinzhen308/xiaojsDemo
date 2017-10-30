@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <TextView
+            android:id="@+id/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px90"
+            android:gravity="center"
+            android:text="会话"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_36px"
+            android:layout_alignParentTop="true"
+            />
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/px90"
+            android:src="@drawable/ic_conversation_scan_1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:paddingLeft="@dimen/px27"
+            android:paddingRight="@dimen/px27"/>
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/px90"
+            android:src="@drawable/ic_conversation_add_1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingLeft="@dimen/px27"
+            android:paddingRight="@dimen/px27"/>
+
+    <View
+            android:id="@+id/title_bar_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"
+            android:background="@color/gray_line"
+            android:layout_below="@id/title_bar"
+            />
+
+    <include
+            layout="@layout/layout_base2_page_status_tips"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title_bar_line"
+            android:visibility="gone"/>
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_bar_line"
+            android:layout_marginTop="@dimen/px1"
+            android:layout_marginBottom="@dimen/px120"
+            android:scrollbars="none"/>
+</RelativeLayout>
+
+

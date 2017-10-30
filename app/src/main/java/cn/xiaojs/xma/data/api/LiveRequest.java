@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.live.Ticket;
 import cn.xiaojs.xma.model.Pagination;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by maxiaobao on 2017/1/9.
@@ -50,6 +51,16 @@ public class LiveRequest extends ServiceRequest{
         Call<CtlSession> call = getLiveService().bootSession(ticket);
         enqueueRequest(APIType.BOOT_SESSION,call);
     }
+
+    public CtlSession bootSession2(String ticket) throws Exception{
+
+        Call<CtlSession> call = getLiveService().bootSession(ticket);
+        Response<CtlSession> response = call.execute();
+        if (response !=null)
+            return response.body();
+        return null;
+    }
+
 
     public void getTalks(String ticket, LiveCriteria criteria, Pagination pagination) {
 

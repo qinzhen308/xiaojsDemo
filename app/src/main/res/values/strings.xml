@@ -82,6 +82,8 @@
     <string name="claim_fail">声明失败</string>
 
     <string name="home_tab_index">首页</string>
+    <string name="home_tab_contact">通讯录</string>
+    <string name="home_tab_findings">发现</string>
     <string name="home_tab_circle">小圈</string>
     <string name="home_tab_live">直播</string>
     <string name="home_tab_message">消息</string>

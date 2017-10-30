@@ -21,6 +21,8 @@ public class LoginInfo extends APIEntity {
     public User user;
     public Upgrade upgrade;
     public HashMap<Long, String> contactGroups;
+    public String ticket;
+    public String sfm;
 
     public User getUser() {
         return user;

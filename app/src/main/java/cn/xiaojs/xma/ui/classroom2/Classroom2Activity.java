@@ -52,6 +52,7 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 /**
@@ -320,6 +321,7 @@ public class Classroom2Activity extends FragmentActivity {
 
         BootObservable bootObservable = new BootObservable(this, ticket);
         bootObservable
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bootSessionConsumer);
         bootListener = bootObservable.getBootListener();

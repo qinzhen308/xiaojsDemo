@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.api.QiniuRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.AliasTags;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Criteria;
@@ -216,9 +217,10 @@ public class AccountDataManager {
     public static boolean isLogin(Context context) {
 
         String sessionID = AccountPref.getAuthToken(context);
+        String sfm = SecurityPref.getSFM(context);
         boolean login = AccountPref.getLoginStatus(context);
 
-        if (login && !TextUtils.isEmpty(sessionID)) {
+        if (login && !TextUtils.isEmpty(sessionID) && !TextUtils.isEmpty(sfm)) {
             return true;
         }
 

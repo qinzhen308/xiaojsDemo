@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Errors;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
@@ -53,15 +54,21 @@ public class DataManager {
     public static final String ACTION_UPDATE_CLASS_FROM_DB = "cn.xiaojs.xma.update_class_from_db";
 
 
+
     public static MemCache getCache(Context context) {
         return MemCache.getDataCache(context);
     }
-
+    public static XiaojsApplication getApplication(Context context) {
+        return MemCache.getDataCache(context).getApplication();
+    }
 
     /**
      * init memory data cache when the user already logined
      */
-    public static void init(final Context context) {
+    public static void init(XiaojsApplication application) {
+
+        Context context = application.getApplicationContext();
+        getCache(context).setApplication(application);
 
         saveVersionCode(context, APPUtils.getAPPVersionCode(context));
 
@@ -69,21 +76,26 @@ public class DataManager {
 
         if (AccountDataManager.isLogin(context)) {
 
-            XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
-
-            XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
-            //AccountPref.setAvatorTime(context, XiaojsConfig.AVATOR_TIME);
-
-
-            lanuchInitDataService(context, null);
-
-            //jpush
-            JpushUtil.resumePush(context);
-
-            //jpush alias/tags
-            AccountDataManager.setAliaTagsWithCheck(context);
+            initDataWithLogined(context, null);
 
         }
+    }
+
+    public static void initDataWithLogined(Context context,HashMap<Long, String> groupMap) {
+
+        XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
+
+        XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
+        //AccountPref.setAvatorTime(context, XiaojsConfig.AVATOR_TIME);
+
+
+        lanuchInitDataService(context, groupMap);
+
+        //jpush
+        JpushUtil.resumePush(context);
+
+        //jpush alias/tags
+        AccountDataManager.setAliaTagsWithCheck(context);
     }
 
     public static void lanuchInitDataService(Context context, HashMap<Long, String> groupMap) {
@@ -527,6 +539,7 @@ public class DataManager {
         private Map<Long, ContactGroup> groupMap;
         private Map<String,Contact> contacts;
         //private ArrayList<ContactGroup> contactGroups;
+        private XiaojsApplication application;
 
         private MemCache(Context context) {
             this.context = context.getApplicationContext();
@@ -543,6 +556,14 @@ public class DataManager {
                 }
             }
             return cache;
+        }
+
+        public XiaojsApplication getApplication() {
+            return application;
+        }
+
+        public void setApplication(XiaojsApplication application) {
+            this.application = application;
         }
 
         public void init() {

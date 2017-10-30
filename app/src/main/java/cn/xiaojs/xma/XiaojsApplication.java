@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -14,11 +13,18 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 
+import cn.xiaojs.xma.data.api.socket.xms.SocketStatus;
+import cn.xiaojs.xma.data.api.socket.xms.XMSObservable;
+import cn.xiaojs.xma.data.preference.SecurityPref;
+import cn.xiaojs.xma.ui.contact2.query.PinYin;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ThirdLoginUtil;
 import cn.xiaojs.xma.util.XjsUtils;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by maxiaobao on 2016/10/19.
@@ -27,6 +33,8 @@ import cn.xiaojs.xma.util.XjsUtils;
 public class XiaojsApplication extends Application {
 
     public static final String ACTION_NEW_MESSAGE = "xjs_lc_new_msg";
+
+    private XMSObservable xmsObservable;
 
 
     @Override
@@ -95,6 +103,50 @@ public class XiaojsApplication extends Application {
         //init data cache
         DataManager.init(this);
 
+        if (AccountDataManager.isLogin(this)) {
+            connectXms();
+        }
+
+        PinYin.init(this);
+
+
     }
+
+    public void connectXms() {
+        if (xmsObservable == null) {
+            String sfm = SecurityPref.getSFM(this);
+            xmsObservable = XMSObservable.obseverXMS(this, sfm, xmsConsumer);
+        }
+
+    }
+
+    private Consumer<Integer> xmsConsumer = new Consumer<Integer>() {
+        @Override
+        public void accept(Integer status) throws Exception {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("XiaojsApplication received XMS status: %d", status);
+            }
+
+            switch (status) {
+                case SocketStatus.CONNECT_BEGIN:                               //开始连接
+                    break;
+                case SocketStatus.CONNECTING:                                  //连接中
+                    break;
+                case SocketStatus.CONNECT_SUCCESS:                             //连接成功
+                    break;
+                case SocketStatus.CONNECT_FAILED:                              //连接失败
+                    break;
+                case SocketStatus.CONNECT_TIMEOUT:                             //连接超时
+                    break;
+                case SocketStatus.DISCONNECTED:                                //断开连接
+                    break;
+                case SocketStatus.RECONNECT:                                   //重新连接
+                    break;
+                case SocketStatus.RECONNECT_ARRIVED_MAX_COUNT:                 //重连次数达到上限
+                    break;
+            }
+        }
+    };
 
 }
