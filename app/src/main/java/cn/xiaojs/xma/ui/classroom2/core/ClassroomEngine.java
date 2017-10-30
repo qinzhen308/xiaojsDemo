@@ -16,8 +16,11 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -566,6 +569,14 @@ public final class ClassroomEngine {
     public void openBoard(String ticket, String board, final APIServiceCallback<BoardItem> callback) {
         if (roomRequest != null) {
             roomRequest.openBoard(ticket,board,callback);
+        }
+    }
+    /**
+     * 白板管理列表数据
+     */
+    public void getBoards( BoardCriteria criteria, Pagination pagination, APIServiceCallback<CollectionPage<BoardItem>> callback) {
+        if (roomRequest != null) {
+            roomRequest.getBoards(getTicket(),criteria,pagination,callback);
         }
     }
 

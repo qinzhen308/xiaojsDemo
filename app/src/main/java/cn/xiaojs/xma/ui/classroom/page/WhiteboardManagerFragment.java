@@ -16,8 +16,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.live.BoardCriteria;
+import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.ui.base.CommonRVAdapter;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 
 /**
  * Created by Paul Z on 2017/10/18.
@@ -96,5 +102,21 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
             fragment.setArguments(data);
         }
         return fragment;
+    }
+
+    public void getBoards(){
+        BoardCriteria criteria=new BoardCriteria();
+        Pagination pagination=new Pagination();
+        ClassroomEngine.getEngine().getBoards(criteria, pagination, new APIServiceCallback<CollectionPage<BoardItem>>() {
+            @Override
+            public void onSuccess(CollectionPage<BoardItem> object) {
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 }

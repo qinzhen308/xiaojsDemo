@@ -303,6 +303,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                 onOne2OneClick(view);
                 break;
             case R.id.center_board_opera:                                         //百般协作
+                onboardCollaborateClick(view);
                 break;
             case R.id.center_board_mgr:                                           //白板管理
                 onBoardMgrClick(view);
@@ -605,6 +606,14 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onNewboardClick(View view) {
         // TODO: 2017/10/18 新增白板
+
+    }
+
+    /**
+     * 点击了新增白板
+     */
+    public void onboardCollaborateClick(View view) {
+        whiteboardFragment.requestShareBoard();
 
     }
 

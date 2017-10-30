@@ -24,6 +24,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.orhanobut.logger.Logger;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -42,6 +43,7 @@ import cn.xiaojs.xma.model.live.SlidePage;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.RequestShareboard;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.ui.base.BaseFragment;
@@ -58,6 +60,7 @@ import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.widget.banner.PageNumView;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -501,15 +504,40 @@ public class BoardCollaborateFragment extends BaseFragment {
 
 
 
-
+    @Deprecated
     public void setOnPushPreviewListener(OnPushPreviewListener onPushPreviewListener){
         this.onPushPreviewListener=onPushPreviewListener;
     }
 
-
+    @Deprecated
     public interface OnPushPreviewListener{
         public void onPushPreview(Bitmap bitmap);
     }
+
+
+    /**
+     * 发起协作
+     */
+    public void requestShareBoard(){
+        RequestShareboard shareboard=new RequestShareboard();
+        shareboard.board=boardId;
+        Bitmap preview=preview();
+        if(preview!=null){
+            shareboard.preview=Base64.encodeToString(BitmapUtils.bmpToByteArray(preview,true),Base64.DEFAULT);
+        }
+        ClassroomEngine.getEngine().requestShareboard(shareboard, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse eventResponse) {
+                ToastUtil.showToast(getActivity(),"发起协作成功");
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                ToastUtil.showToast(getActivity(),"发起协作失败："+errorMessage);
+            }
+        });
+    }
+
 
 
 }

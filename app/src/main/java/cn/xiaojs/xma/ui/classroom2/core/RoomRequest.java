@@ -12,8 +12,11 @@ import cn.xiaojs.xma.data.EventManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
@@ -343,6 +346,11 @@ public final class RoomRequest {
                         callback.onFailure(errorCode, errorMessage);
                     }
                 });
+    }
+
+    protected void getBoards(String ticket, BoardCriteria criteria, Pagination pagination, APIServiceCallback<CollectionPage<BoardItem>> callback){
+        LiveManager.getBoards(context, ticket,criteria,
+                pagination,callback );
     }
 
 
