@@ -34,6 +34,7 @@ public class Contact implements Serializable{
     public String chatId;
 
     public boolean unfollowable;
+    public String ticket;
 
 //
 //    @Override
