@@ -42,6 +42,7 @@ import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.certification.CertificationActivity;
 import cn.xiaojs.xma.ui.grade.MaterialActivity;
 import cn.xiaojs.xma.ui.lesson.EnrollLessonActivity;
+import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
 import cn.xiaojs.xma.ui.lesson.SubjectSelectorActivity;
 import cn.xiaojs.xma.ui.lesson.TeachLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
@@ -173,8 +174,7 @@ public class MineFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.my_teaching_layout:
                 AnalyticEvents.onEvent(getActivity(),9);
-                startActivity(new Intent(mContext, ClassesListActivity.class));
-                //startActivity(new Intent(mContext, TeachLessonActivity.class));
+                MyCourseListActivity.invoke(getActivity());
                 break;
 //            case R.id.my_enrollment_layout:
 //                startActivity(new Intent(mContext, EnrollLessonActivity.class));

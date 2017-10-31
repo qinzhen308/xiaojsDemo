@@ -37,6 +37,7 @@ import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
 import cn.xiaojs.xma.ui.findings2.FindingsFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
+import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
@@ -46,6 +47,7 @@ import cn.xiaojs.xma.ui.message.ContactActivity;
 import cn.xiaojs.xma.ui.message.PostDynamicActivity;
 
 import cn.xiaojs.xma.ui.recordlesson.RLDirListActivity;
+import cn.xiaojs.xma.ui.search.DiscoverFragment;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -76,7 +78,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
         List<Fragment> fs = new ArrayList<>();
         fs.add(new ConversationFragment());
         fs.add(new ContactFragment());
-        fs.add(new FindingsFragment());
+        fs.add(new DiscoverFragment());
         fs.add(new MineFragment());
 
 //        conversationFragment = new MessageFragment();
@@ -477,7 +479,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
                 ClassesListActivity.invoke(this, 1);
                 break;
             case ACTION_TO_MY_RECORDED_LESSONS:
-                ClassesListActivity.invoke(this, 2);
+//                ClassesListActivity.invoke(this,2);
+                MyCourseListActivity.invoke(this);
                 break;
             case ACTION_TO_CLASSROOM:
                 String ticket = intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY + 0);

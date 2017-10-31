@@ -59,7 +59,7 @@ public class WhiteboardConfigs {
         TEXT_BORDER_PADDING = rs.getDimensionPixelOffset(R.dimen.px12);
 
         BORDER_COLOR = rs.getColor(R.color.green_grass);
-        DEFAULT_PAINT_COLOR = rs.getColor(R.color.wb_color_4);
+        DEFAULT_PAINT_COLOR = rs.getColor(R.color.wb_color_1);
         BORDER_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px4);
         BORDER_DASH_WIDTH = rs.getDimensionPixelOffset(R.dimen.px10);
         BORDER_PADDING = rs.getDimensionPixelOffset(R.dimen.px10);

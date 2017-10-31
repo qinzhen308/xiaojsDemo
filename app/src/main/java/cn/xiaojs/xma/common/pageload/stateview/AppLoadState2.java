@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.common.pageload.stateview;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,9 @@ public class AppLoadState2 implements LoadStateListener{
     private String failedDesc1;
     private String failedBtnDesc;
 
+    private int emptyImageRes;
+    private int failedImageRes;
+
     ViewGroup parent;
 
     public AppLoadState2(Context context, ViewGroup parent){
@@ -63,6 +67,25 @@ public class AppLoadState2 implements LoadStateListener{
         failedBtnDesc=tips[5];
     }
 
+    public void setEmptyImageRes(@DrawableRes int emptyImageRes){
+        this.emptyImageRes=emptyImageRes;
+    }
+
+    public void setEmptyImageAndTip(@DrawableRes int emptyImageRes,String text){
+        setEmptyImageRes(emptyImageRes);
+        emptyDesc=text;
+    }
+
+    public void setFailedImageRes(@DrawableRes int failedImageRes){
+        this.failedImageRes=failedImageRes;
+    }
+
+    public void setFailedImageAndTip(@DrawableRes int failedImageRes,String text){
+        setFailedImageRes(failedImageRes);
+        failedDesc=text;
+    }
+
+
     @Override
     public void onSuccess(String msg) {
         detach();
@@ -71,7 +94,11 @@ public class AppLoadState2 implements LoadStateListener{
     @Override
     public void onFailed(String msg) {
         setTexts(failedDesc,failedDesc1,failedBtnDesc);
-        mEmptyImage.setImageResource(R.drawable.ic_data_failed);
+        if(failedImageRes>0){
+            mEmptyImage.setImageResource(failedImageRes);
+        }else {
+            mEmptyImage.setImageResource(R.drawable.ic_data_failed);
+        }
         mEmptyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +112,11 @@ public class AppLoadState2 implements LoadStateListener{
     public void onNoData(String msg) {
         setTexts(emptyDesc,emptyDesc1,emptyBtnDesc);
         mCurrentState = STATE_NORMAL;
+        if(emptyImageRes>0){
+            mEmptyImage.setImageResource(emptyImageRes);
+        }else {
+            mEmptyImage.setImageResource(R.drawable.ic_data_empty);
+        }
         mEmptyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

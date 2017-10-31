@@ -108,13 +108,15 @@
     <color name="relationship_tag5">#b8e986</color>
     <color name="relationship_tag6">#50e3c2</color>
     <!--whiteboard-->
-    <color name="wb_color_1">#44DB5E</color>
-    <color name="wb_color_2">#54C7FC</color>
-    <color name="wb_color_3">#FFCD00</color>
-    <color name="wb_color_4">#FF0031</color>
-    <color name="wb_color_5">#FFFFFF</color>
-    <color name="wb_color_6">#CCCCCC</color>
+    <color name="wb_color_3">#44DB5E</color>
+    <color name="wb_color_4">#54C7FC</color>
+    <color name="wb_color_2">#FFCD00</color>
+    <color name="wb_color_1">#FF0031</color>
+    <color name="wb_color_9">#FFFFFF</color>
+    <color name="wb_color_8">#CCCCCC</color>
     <color name="wb_color_7">#000000</color>
+    <color name="wb_color_6">#F70FFF</color>
+    <color name="wb_color_5">#2209FF</color>
 
     <!-- 社交 -->
     <color name="cancel_fllow_btn_color">#DEDEDE</color>
