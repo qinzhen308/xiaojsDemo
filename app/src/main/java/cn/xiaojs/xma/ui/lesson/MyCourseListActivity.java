@@ -47,7 +47,7 @@ public class MyCourseListActivity extends BaseActivity implements IUpdateMethod,
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_my_course_list);
-        setTitle(R.string.my_course_list);
+        setMiddleTitle(R.string.my_course_list);
         initView();
     }
 

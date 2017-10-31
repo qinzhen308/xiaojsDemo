@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
+import cn.xiaojs.xma.ui.lesson.xclass.MyScheduleActivity;
 
 /**
  * Created by maxiaobao on 2017/10/30.
@@ -64,9 +65,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             conViewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    //TODO 进入我的课表
-
+                    MyScheduleActivity.invoke(context);
                 }
             });
 

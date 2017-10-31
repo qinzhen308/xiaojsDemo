@@ -377,5 +377,8 @@ public class ClassFragment extends BaseFragment implements View.OnClickListener 
         updateData();
     }
 
+    public long getSelectedDate(){
+        return contentBuz.getSelectedDate();
+    }
 
 }

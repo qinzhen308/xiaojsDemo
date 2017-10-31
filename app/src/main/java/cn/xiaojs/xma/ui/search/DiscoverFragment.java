@@ -132,12 +132,11 @@ public class DiscoverFragment extends BaseFragment {
         handler.sendMessageDelayed(msg,300);
     }
 
-    @OnClick({R.id.back, R.id.search_ok})
+    @OnClick({ R.id.search_ok})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.back:
-                break;
             case R.id.search_ok:
+                mInput.setText("");
                 break;
         }
     }
@@ -182,10 +181,11 @@ public class DiscoverFragment extends BaseFragment {
 
     @Override
     protected View getContentView() {
-        View v=LayoutInflater.from(getActivity()).inflate(R.layout.activity_global_search_v2,null);
+        View v=LayoutInflater.from(getActivity()).inflate(R.layout.fragment_discover,null);
         appLoadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
         appLoadState.setEmptyImageAndTip(R.drawable.img_discover_default,"涨知识，来这里！好多大牛和课程");
         stateView=new LoadStatusViewDecoratee(appLoadState);
+        stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
         return v;
     }
 
@@ -208,6 +208,11 @@ public class DiscoverFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(TextUtils.isEmpty(mInput.getText().toString())){
+                    searchOk.setVisibility(View.GONE);
+                }else {
+                    searchOk.setVisibility(View.VISIBLE);
+                }
                 toSearch();
             }
         });
