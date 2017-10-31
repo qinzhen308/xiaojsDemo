@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
-import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.util.NetUtil;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -62,7 +61,7 @@ public class XMSObservable extends Observable<Integer> {
         private Context context;
         protected Observer<? super Integer> observer;
         protected Disposable disposableTimeout;
-        private XmsSocketManager socketManager;
+        private XMSSocketManager socketManager;
         private int connectCount;
         private String address;
         private IO.Options ioOptions;
@@ -76,7 +75,7 @@ public class XMSObservable extends Observable<Integer> {
             //this.address = "http://192.168.100.3:3007";
             this.ioOptions = buildOptions(sfm);
 
-            socketManager = new XmsSocketManager(context);
+            socketManager = XMSSocketManager.getSocketManager(context);
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("Connect XMS url: %s, \n IO options query: %s", address, ioOptions.query);

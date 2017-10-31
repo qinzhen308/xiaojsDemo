@@ -80,6 +80,7 @@ public class LiveRequest extends ServiceRequest{
 
     }
 
+
     public void getAttendees(String ticket) {
         Call<LiveCollection<Attendee>> call = getLiveService().getAttendees(ticket);
         enqueueRequest(APIType.GET_ATTENDEES,call);

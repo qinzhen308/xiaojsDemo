@@ -26,6 +26,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.CommunicationManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
@@ -132,7 +133,8 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
         pagination.setPage(currentPage);
 
         liveCriteria = new LiveCriteria();
-        liveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
+        liveCriteria.to = classroomEngine.getCtlSession().cls.id;
+        liveCriteria.type = Communications.TalkType.OPEN;
 
         loadData();
 
@@ -212,7 +214,7 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
 
     private void loadData() {
         loading = true;
-        LiveManager.getTalks(getContext(), classroomEngine.getTicket(),
+        CommunicationManager.getTalks(getContext(),
                 liveCriteria, pagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
                     @Override
                     public void onSuccess(CollectionPage<TalkItem> object) {

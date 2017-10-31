@@ -71,6 +71,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleData;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.CDirectory;
 import cn.xiaojs.xma.model.material.EditDoc;
 import cn.xiaojs.xma.model.material.LibOverview;
@@ -133,6 +134,17 @@ public interface XiaojsService {
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     String TIME_ZONE_ID = "GMT+8";
     String METHOD_GET = "GET";
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //Communications
+    //
+
+    //Get Talks
+    @GET("/v1/communications/talks/{criteria}/{pagination}")
+    Call<CollectionPage<TalkItem>> getTalks(@Path("criteria") String criteria,
+                                            @Path("pagination") String pagination);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

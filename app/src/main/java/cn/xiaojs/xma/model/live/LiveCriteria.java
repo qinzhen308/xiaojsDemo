@@ -12,5 +12,6 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LiveCriteria {
     public String to;
+    public int type;
     public Date before;
 }

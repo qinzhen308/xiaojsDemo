@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,9 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.CommunicationManager;
 import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.CollectionPage;
@@ -43,6 +46,7 @@ import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.ui.widget.SpecialEditText;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -52,12 +56,13 @@ import io.reactivex.schedulers.Schedulers;
  * Created by maxiaobao on 2017/9/25.
  */
 
-public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapter.FetchMoreListener {
+public abstract class ChatSessionFragment extends BaseDialogFragment implements ChatAdapter.FetchMoreListener {
 
     @BindView(R.id.chat_list)
     RecyclerView recyclerView;
+    @BindView(R.id.msg_input)
+    SpecialEditText inputView;
 
-    private ClassroomEngine classroomEngine;
     private LiveCriteria liveCriteria;
     private Pagination pagination;
     private int currentPage = 1;
@@ -66,10 +71,9 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
     private ChatAdapter adapter;
     private MessageComparator messageComparator;
     private boolean loading = false;
-
-    private EventListener.ELTalk talkObserver;
     private long lastTimeline = 0;
 
+    public abstract LiveCriteria createLiveCriteria();
 
     @Nullable
     @Override
@@ -83,7 +87,7 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
         return view;
     }
 
-    @OnClick({R.id.back_btn, R.id.more_btn})
+    @OnClick({R.id.back_btn, R.id.more_btn, R.id.send_btn})
     void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
@@ -92,6 +96,9 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
             case R.id.more_btn:
                 showMoreMenu();
                 break;
+            case R.id.send_btn:
+                sendTalk();
+                break;
         }
     }
 
@@ -99,7 +106,6 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        classroomEngine = ClassroomEngine.getEngine();
         messageData = new ArrayList<>();
         messageComparator = new MessageComparator();
 
@@ -120,58 +126,26 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
         pagination.setMaxNumOfObjectsPerPage(maxNumOfObjectPerPage);
         pagination.setPage(currentPage);
 
-        liveCriteria = new LiveCriteria();
-        liveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
+        liveCriteria = createLiveCriteria();
 
         loadData();
-
-        talkObserver = classroomEngine.observerTalk(receivedConsumer);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (talkObserver != null) {
-            talkObserver.dispose();
-        }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && data != null) {
-            switch (requestCode) {
-                case ClassroomController.REQUEST_INPUT:
-
-                    final Talk talkBean = new Talk();
-                    talkBean.from = AccountDataManager.getAccountID(getContext());
-                    talkBean.body = new Talk.TalkContent();
-                    talkBean.body.text = data.getStringExtra(Constants.KEY_MSG_INPUT_TXT);
-                    talkBean.body.contentType = Communications.ContentType.TEXT;
-                    talkBean.time = System.currentTimeMillis();
-                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
-
-
-                    classroomEngine.sendTalk(talkBean, new EventCallback<TalkResponse>() {
-                        @Override
-                        public void onSuccess(TalkResponse talkResponse) {
-                            if (talkResponse != null) {
-                                talkBean.time = talkResponse.time;
-                            }
-                            handleReceivedMsg(talkBean);
-                        }
-
-                        @Override
-                        public void onFailed(String errorCode, String errorMessage) {
-
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    break;
-            }
-        }
-
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (resultCode == Activity.RESULT_OK && data != null) {
+//            switch (requestCode) {
+//                case ClassroomController.REQUEST_INPUT:
+//                    break;
+//            }
+//        }
+//
+//    }
 
     @Override
     public void onFetchMoreRequested() {
@@ -198,10 +172,46 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
         }
     };
 
+    private void sendTalk() {
+
+        String bodyStr = inputView.getText().toString();
+        if (TextUtils.isEmpty(bodyStr))
+            return;
+
+        final Talk talkBean = new Talk();
+        talkBean.type = liveCriteria.type;
+        talkBean.from = AccountDataManager.getAccountID(getContext());
+        talkBean.body = new Talk.TalkContent();
+        talkBean.body.text = bodyStr;
+        talkBean.body.contentType = Communications.ContentType.TEXT;
+        talkBean.time = System.currentTimeMillis();
+        talkBean.to = liveCriteria.to;
+
+
+        XMSManager.sendTalk(getContext(), talkBean, new EventCallback<TalkResponse>() {
+            @Override
+            public void onSuccess(TalkResponse talkResponse) {
+                if (talkResponse != null) {
+                    talkBean.time = talkResponse.time;
+                }
+
+                inputView.setText("");
+
+                handleReceivedMsg(talkBean);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void loadData() {
         loading = true;
-        LiveManager.getTalks(getContext(), classroomEngine.getTicket(),
+        CommunicationManager.getTalks(getContext(),
                 liveCriteria, pagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
                     @Override
                     public void onSuccess(CollectionPage<TalkItem> object) {
@@ -274,7 +284,7 @@ public class ChatSessionFragment extends BaseDialogFragment implements ChatAdapt
         talkItem.body.contentType = talk.body.contentType;
         talkItem.from.accountId = talk.from;
         //获取名字
-        Attendee attendee = classroomEngine.getMember(talk.from);
+        Attendee attendee = null;
         talkItem.from.name = attendee == null ? "nil" : attendee.name;
 
         timeline(talkItem);

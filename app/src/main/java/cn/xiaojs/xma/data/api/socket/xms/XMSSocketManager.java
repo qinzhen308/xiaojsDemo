@@ -17,14 +17,30 @@ import io.socket.emitter.Emitter;
  * Created by maxiaobao on 2017/6/7.
  */
 
-public class XmsSocketManager {
+public class XMSSocketManager {
     private Context context;
+
+    private volatile static XMSSocketManager socketManager;
 
     private Socket socket;
 
-    public XmsSocketManager(Context context) {
+    private XMSSocketManager(Context context) {
         this.context = context.getApplicationContext();
     }
+
+    public static XMSSocketManager getSocketManager(Context context) {
+        if (socketManager == null) {
+
+            synchronized (XMSSocketManager.class) {
+                if (socketManager == null) {
+                    socketManager = new XMSSocketManager(context);
+                }
+            }
+        }
+        return socketManager;
+    }
+
+
 
     public void initSocket(String url, IO.Options options) throws Exception {
         socket = IO.socket(url, options);

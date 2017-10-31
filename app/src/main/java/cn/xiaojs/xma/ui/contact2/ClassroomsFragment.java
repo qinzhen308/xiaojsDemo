@@ -22,13 +22,14 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 
 /**
  * Created by maxiaobao on 2017/10/29.
  */
 
-public class ClassroomsFragment extends Base2Fragment {
+public class ClassroomsFragment extends Base2Fragment{
 
     @BindView(R.id.listview)
     ListView listView;
@@ -91,6 +92,12 @@ public class ClassroomsFragment extends Base2Fragment {
                     hiddenTips();
                     adapter = new ClassroomsAdapter(getContext(), contacts);
                     listView.setAdapter(adapter);
+                    adapter.setItemClickListener(new ClassroomsAdapter.OnItemClickListener() {
+                        @Override
+                        public void OnItemClick(Contact contact) {
+                            GroupSessionFragment.invoke(getFragmentManager(), contact.id);
+                        }
+                    });
                 }else {
                     showFinalTips();
                 }

@@ -11,6 +11,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Talk {
+    public int type;
     public String from;
     public String to;
     public long time;

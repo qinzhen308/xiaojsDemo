@@ -29,6 +29,12 @@ public class Su {
 
 
     public class EventCategory {
+
+        public static final int XMS_ACCOUNT = 1000;                               // XMS Account events
+        public static final int XMS_MESSAGING = 1001;                             // Server-side messaging events (emitted by XMS-Messaging runtime)
+        public static final int XMS_APP = 1002;                                   // Application-side messaging events (emitted by XMS clients)
+
+
         //Server-side in-class events (emitted by XLS-Live runtime)
         public static final int LIVE = 6000;
         //Class-side in-class events (emitted by classroom clients)

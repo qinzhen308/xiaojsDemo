@@ -15,12 +15,10 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.data.LiveManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatSessionFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 
 /**
@@ -92,8 +90,7 @@ public class MemberListFragment extends BottomSheetFragment {
     }
 
     public void enterChatSession() {
-        ChatSessionFragment sessionFragment = new ChatSessionFragment();
-        sessionFragment.show(getFragmentManager(),"");
+        SingleSessionFragment.invoke(getFragmentManager());
     }
 
 

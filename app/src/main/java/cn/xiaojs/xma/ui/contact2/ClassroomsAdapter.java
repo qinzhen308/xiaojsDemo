@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.material.ClassViewHolder;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
@@ -31,6 +32,15 @@ public class ClassroomsAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<Contact> dataCollect;
+    private OnItemClickListener itemClickListener;
+
+    public interface OnItemClickListener{
+        void OnItemClick(Contact contact);
+    }
+
+    public void setItemClickListener(OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     public ClassroomsAdapter(Context context, ArrayList<Contact> dataCollect) {
         this.context = context;
@@ -66,10 +76,18 @@ public class ClassroomsAdapter extends BaseAdapter {
             viewHolder = (ClassroomViewHolder) convertView.getTag();
         }
 
-        Contact contactItem = getItem(position);
+        final Contact contactItem = getItem(position);
         viewHolder.avatorTextView.setText(String.valueOf(contactItem.title.charAt(0)));
         viewHolder.titleView.setText(contactItem.title);
         viewHolder.descView.setText("[Oh YES]");
+        viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener !=null) {
+                    itemClickListener.OnItemClick(contactItem);
+                }
+            }
+        });
 
         return convertView;
     }
