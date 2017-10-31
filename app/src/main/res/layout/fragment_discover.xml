@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px90"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_weight="1"
+            android:background="@drawable/grey_conner_bg"
+            android:drawableLeft="@drawable/ic_search"
+            android:gravity="center_vertical"
+            android:hint="@string/home_search_hint"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/px15"
+            android:paddingLeft="@dimen/px10"
+            android:paddingRight="@dimen/px10"
+            android:paddingTop="@dimen/px15"
+            android:singleLine="true"
+            android:textSize="@dimen/font_28px" />
+
+        <TextView
+            android:id="@+id/search_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingRight="@dimen/px30"
+            android:paddingTop="@dimen/px10"
+            android:paddingBottom="@dimen/px10"
+            android:text="@string/cancel"
+            android:visibility="gone"
+            android:textColor="@color/main_blue" />
+
+    </LinearLayout>
+
+    <View style="@style/DividerHorizontal" />
+
+    <RadioGroup
+        android:id="@+id/tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px78"
+        android:checkedButton="@+id/tab1"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/tab1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:button="@null"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="综合"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_28px" />
+
+        <RadioButton
+            android:id="@+id/tab2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:button="@null"
+            android:drawableBottom="@color/main_orange"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:text="公开课"
+            android:visibility="gone"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_28px"
+            />
+
+        <RadioButton
+            android:id="@+id/tab3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:button="@null"
+            android:drawableBottom="@color/main_orange"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="录播课"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_28px"
+            />
+
+        <RadioButton
+            android:id="@+id/tab4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:button="@null"
+            android:layout_weight="1"
+            android:drawableBottom="@color/main_orange"
+            android:gravity="center"
+            android:text="班"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_28px" />
+
+        <RadioButton
+            android:id="@+id/tab5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:button="@null"
+            android:drawableBottom="@color/main_orange"
+            android:gravity="center"
+            android:text="个人"
+            android:layout_weight="1"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_28px" />
+
+        <RadioButton
+            android:id="@+id/tab6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_line_bottom_orange"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableBottom="@color/main_orange"
+            android:gravity="center"
+            android:text="机构"
+            android:textColor="@color/selector_btn_orange_black"
+            android:textSize="@dimen/font_28px" />
+
+    </RadioGroup>
+    <View style="@style/DividerHorizontal" />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/load_state_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+
+</LinearLayout>
+
+
+
+
