@@ -149,6 +149,9 @@
                 android:name=".ui.lesson.xclass.LessonScheduleActivity"
                 android:screenOrientation="portrait"/>
         <activity
+                android:name=".ui.lesson.xclass.MyScheduleActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".ui.lesson.xclass.SearchLessonActivity"
                 android:windowSoftInputMode="adjustPan"
                 android:screenOrientation="portrait"/>

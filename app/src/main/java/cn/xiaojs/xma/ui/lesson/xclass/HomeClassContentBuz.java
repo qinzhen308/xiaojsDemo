@@ -577,4 +577,9 @@ public class HomeClassContentBuz {
             }
         }
     };
+
+    public long getSelectedDate(){
+        return ScheduleUtil.ymdToTimeMill(year,month,day);
+    }
+
 }
