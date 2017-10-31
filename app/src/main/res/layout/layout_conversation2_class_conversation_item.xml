@@ -1,81 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<cn.xiaojs.xma.ui.widget.SwipeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/px140">
+        android:layout_height="@dimen/px140"
+        swipe:show_mode="pull_out"
+        swipe:drag_edge="right"
+        swipe:clickToClose="true"
+        android:id="@+id/root"
+        >
 
-    <cn.xiaojs.xma.ui.classroom2.widget.ColorIconTextView
-            android:id="@+id/avator"
-            android:layout_width="@dimen/px90"
-            android:layout_height="@dimen/px90"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/px25"
-            android:layout_marginTop="@dimen/px25"
-            android:layout_marginBottom="@dimen/px25"
-            android:layout_marginRight="@dimen/px20"
-            android:paddingLeft="@dimen/px21"
-            android:paddingRight="@dimen/px21"
-            android:textSize="@dimen/font_38px"
-            android:textColor="@color/font_white"
-            android:gravity="center"
-            />
-
-    <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_34px"
-            android:textColor="@color/font_black"
-            android:layout_marginTop="@dimen/px28"
-            android:layout_marginRight="@dimen/px20"
-            android:layout_toRightOf="@id/avator"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:layout_toLeftOf="@+id/time"
-            />
-
-    <TextView
-            android:id="@+id/desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_26px"
-            android:textColor="@color/summary_color"
-            android:layout_marginTop="@dimen/px10"
-            android:layout_marginRight="@dimen/px20"
-            android:layout_marginBottom="@dimen/px22"
-            android:layout_alignLeft="@id/title"
-            android:layout_toLeftOf="@+id/unread_flag"
-            android:layout_below="@id/title"
-            android:singleLine="true"
-            android:ellipsize="end"
-            />
-
-    <TextView
-            android:id="@+id/time"
+    <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/title"
-            android:textSize="@dimen/px24"
-            android:textColor="@color/summary_color"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/px24"
-            />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+        <Button
+                android:id="@+id/rdelete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/font_white"
+                android:background="@drawable/big_submit_btn_selector"
+                android:padding="8dp"
+                android:text="删除"
+                />
+        <Button
+                android:id="@+id/rtop"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/common_text"
+                android:text="置顶"
+                android:background="@color/cancel_fllow_btn_color"
+                android:padding="8dp"
+                />
+    </LinearLayout>
 
-    <TextView
-            android:id="@+id/unread_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/desc"
-            android:textSize="@dimen/px24"
-            android:textColor="@color/font_white"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/px24"
-            />
-
-    <View
+    <RelativeLayout
+            android:id="@+id/uproot"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px1"
-            android:background="@color/gray_line"
-            android:layout_alignParentBottom="true"/>
-</RelativeLayout>
+            android:layout_height="match_parent">
+
+        <cn.xiaojs.xma.ui.classroom2.widget.ColorIconTextView
+                android:id="@+id/avator"
+                android:layout_width="@dimen/px90"
+                android:layout_height="@dimen/px90"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/px25"
+                android:layout_marginTop="@dimen/px25"
+                android:layout_marginBottom="@dimen/px25"
+                android:layout_marginRight="@dimen/px20"
+                android:paddingLeft="@dimen/px21"
+                android:paddingRight="@dimen/px21"
+                android:textSize="@dimen/font_38px"
+                android:textColor="@color/font_white"
+                android:gravity="center"
+                />
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_34px"
+                android:textColor="@color/font_black"
+                android:layout_marginTop="@dimen/px28"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_toRightOf="@id/avator"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_toLeftOf="@+id/time"
+                />
+
+        <TextView
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_26px"
+                android:textColor="@color/summary_color"
+                android:layout_marginTop="@dimen/px10"
+                android:layout_marginRight="@dimen/px20"
+                android:layout_marginBottom="@dimen/px22"
+                android:layout_alignLeft="@id/title"
+                android:layout_toLeftOf="@+id/unread_flag"
+                android:layout_below="@id/title"
+                android:singleLine="true"
+                android:ellipsize="end"
+                />
+
+        <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/title"
+                android:textSize="@dimen/px24"
+                android:textColor="@color/summary_color"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/px24"
+                />
+
+        <TextView
+                android:id="@+id/unread_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/desc"
+                android:textSize="@dimen/px24"
+                android:textColor="@color/font_white"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/px24"
+                />
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/px1"
+                android:background="@color/gray_line"
+                android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+</cn.xiaojs.xma.ui.widget.SwipeLayout>
+
+

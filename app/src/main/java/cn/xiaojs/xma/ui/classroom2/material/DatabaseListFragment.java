@@ -125,7 +125,7 @@ public class DatabaseListFragment extends BaseRoomFragment
 
         pagination = new Pagination();
         pagination.setPage(1);
-        pagination.setMaxNumOfObjectsPerPage(50);
+        pagination.setMaxNumOfObjectsPerPage(10);
 
         loadData(null);
 
@@ -171,6 +171,7 @@ public class DatabaseListFragment extends BaseRoomFragment
         if (loading)
             return;
 
+        recyclerView.startLoading();
         loadData(searchKey);
     }
 
@@ -199,9 +200,9 @@ public class DatabaseListFragment extends BaseRoomFragment
                         if (object != null && object.documents != null && object.documents.size() > 0) {
                             libDocs.addAll(object.documents);
                             pagination.setPage(pagination.getPage() + 1);
-                            materialAdapter.notifyDataSetChanged();
+                            //materialAdapter.notifyDataSetChanged();
                         }
-
+                        recyclerView.loadCompleted();
                         //materialAdapter.notifyDataSetChanged();
 
 
@@ -211,7 +212,7 @@ public class DatabaseListFragment extends BaseRoomFragment
                     public void onFailure(String errorCode, String errorMessage) {
                         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         loading = false;
-
+                        recyclerView.loadCompleted();
 //                         materialAdapter.setLoading(loading);
 //                        materialAdapter.notifyDataSetChanged();
                     }

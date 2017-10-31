@@ -9,15 +9,17 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
+import cn.xiaojs.xma.ui.widget.SwipeLayout;
 
 /**
  * Created by maxiaobao on 2017/10/30.
  */
 
-public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationViewHolder>{
+public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationViewHolder> {
 
     private Context context;
     private ArrayList<Contact> contacts;
+    private SwipeLayout openedSwipe;
 
     public ConversationAdapter(Context context) {
         this.context = context;
@@ -40,7 +42,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             View view = TimetableConViewHolder.createView(context, parent);
             return new TimetableConViewHolder(view);
 
-        }else {
+        } else {
             View view = ClassConViewHolder.createView(context, parent);
             return new ClassConViewHolder(view);
         }
@@ -57,30 +59,94 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
         Contact contact = contacts.get(position);
 
-        if (holder instanceof  TimetableConViewHolder) {
+        if (holder instanceof TimetableConViewHolder) {
             TimetableConViewHolder conViewHolder = (TimetableConViewHolder) holder;
             conViewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     //TODO 进入我的课表
+
                 }
             });
 
-        }else {
-            ClassConViewHolder conViewHolder = (ClassConViewHolder) holder;
+        } else {
+            final ClassConViewHolder conViewHolder = (ClassConViewHolder) holder;
 
             conViewHolder.avatorTextView.setText(String.valueOf(contact.title.trim().charAt(0)));
             conViewHolder.titleView.setText(contact.title);
             conViewHolder.descView.setText(contact.lastMessage);
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
+            conViewHolder.uprootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //TODO 进入
+                }
+            });
+            conViewHolder.deleteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    conViewHolder.swipeLayout.close();
+                }
+            });
+
+            conViewHolder.topView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    conViewHolder.swipeLayout.close();
+                }
+            });
+
+
+            conViewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout layout) {
+                }
+
+                @Override
+                public void onOpen(SwipeLayout layout) {
+                    openedSwipe = layout;
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout layout) {
+
+                }
+
+                @Override
+                public void onClose(SwipeLayout layout) {
+                    openedSwipe = null;
+                }
+
+                @Override
+                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+
+                }
+            });
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return contacts== null? 0 : contacts.size();
+        return contacts == null ? 0 : contacts.size();
     }
+
+    public boolean closeOpendSwap() {
+        if (openedSwipe != null) {
+            openedSwipe.close();
+            return true;
+        }
+
+        return false;
+    }
+
 
     private Contact createTimetable() {
         Contact timeTable = new Contact();

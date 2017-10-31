@@ -10,12 +10,13 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom2.widget.LoadmoreRecyclerView;
 
 /**
  * Created by maxiaobao on 2017/10/10.
  */
 
-public class MaterialViewHolder extends RecyclerView.ViewHolder {
+public class MaterialViewHolder extends LoadmoreRecyclerView.LMViewHolder {
 
     @BindView(R.id.root_lay)
     ConstraintLayout rootLayout;

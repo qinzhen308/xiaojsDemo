@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,6 +20,7 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
+import cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView;
 
 /**
  * Created by maxiaobao on 2017/10/29.
@@ -27,7 +29,7 @@ import cn.xiaojs.xma.ui.base2.Base2Fragment;
 public class ConversationFragment extends Base2Fragment {
 
     @BindView(R.id.recyclerview)
-    RecyclerView recyclerView;
+    SwapRecylcerView recyclerView;
 
     private ConversationAdapter adapter;
 
@@ -50,6 +52,17 @@ public class ConversationFragment extends Base2Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ConversationAdapter(getContext());
         recyclerView.setAdapter(adapter);
+        recyclerView.setTouchEventListener(new SwapRecylcerView.TouchEventListener() {
+            @Override
+            public boolean patchTouchEvent(MotionEvent ev) {
+
+                if (ev.getAction()== MotionEvent.ACTION_DOWN) {
+                    return adapter.closeOpendSwap();
+                }
+
+                return false;
+            }
+        });
 
         load();
     }
