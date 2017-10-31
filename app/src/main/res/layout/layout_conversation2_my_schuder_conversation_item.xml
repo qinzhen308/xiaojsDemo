@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_lay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px127">
+
+    <ImageView
+            android:id="@+id/avator"
+            android:layout_width="@dimen/px60"
+            android:layout_height="@dimen/px60"
+            android:background="@drawable/ic_mytimetable"
+            android:layout_marginLeft="@dimen/px35"
+            android:layout_marginBottom="@dimen/px47"
+            android:layout_marginTop="@dimen/px20"
+            />
+
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_34px"
+            android:textColor="@color/font_black"
+            android:layout_marginLeft="@dimen/px37"
+            android:layout_toRightOf="@id/avator"
+            android:singleLine="true"
+            android:text="我的课表"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/px53"
+            android:layout_marginTop="@dimen/px26"
+            />
+
+    <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_26px"
+            android:textColor="@color/summary_color"
+            android:singleLine="true"
+            android:drawableRight="@drawable/ic_entrance"
+            android:drawablePadding="@dimen/px10"
+            android:text="今日无课"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/title"
+            android:layout_marginRight="@dimen/px24"
+            android:layout_marginBottom="@dimen/px27"
+            />
+
+    <View
+            android:id="@+id/bottom_space"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px27"
+            android:background="@color/gray_line"
+            android:layout_alignParentBottom="true"/>
+</RelativeLayout>
