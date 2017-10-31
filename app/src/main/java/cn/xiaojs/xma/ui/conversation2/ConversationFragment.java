@@ -29,6 +29,8 @@ public class ConversationFragment extends Base2Fragment {
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
 
+    private ConversationAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -44,8 +46,10 @@ public class ConversationFragment extends Base2Fragment {
         super.onActivityCreated(savedInstanceState);
 
         GridLayoutManager layoutManager =
-                new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL,false);
+                new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        adapter = new ConversationAdapter(getContext());
+        recyclerView.setAdapter(adapter);
 
         load();
     }
@@ -56,31 +60,26 @@ public class ConversationFragment extends Base2Fragment {
             @Override
             public void onSuccess(ArrayList<ContactGroup> contactGroups) {
 
-                ArrayList<Contact> contacts = null;
-
                 if (contactGroups != null && contactGroups.size() > 0) {
                     for (ContactGroup cg : contactGroups) {
                         if (cg.set.equals("dialogs")) {
-                            contacts = cg.collection;
+                            adapter.addContact(cg.collection);
                             break;
                         }
                     }
                 }
 
-                if (contacts != null && contacts.size() > 0) {
+                if (adapter.getItemCount() > 1) {
                     hiddenTips();
-
-                    ConversationAdapter adapter = new ConversationAdapter(getContext(), contacts);
-                    recyclerView.setAdapter(adapter);
-                }else {
+                } else {
                     showFinalTips();
                 }
+
             }
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
                 showFinalTips();
-
             }
         });
     }

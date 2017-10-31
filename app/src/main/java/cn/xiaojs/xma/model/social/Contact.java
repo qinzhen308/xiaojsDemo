@@ -27,6 +27,7 @@ public class Contact implements Serializable{
     public String name;
     public String unread;
     public String lastMessage;
+    public long lastTalked;
     public long group;
 
     public String cover;
