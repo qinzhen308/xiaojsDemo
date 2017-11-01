@@ -28,6 +28,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LiveScheduleLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LoadStateBarView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.MyScheduleView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.NativeLessonView;
 import cn.xiaojs.xma.ui.recordlesson.model.HomeRLessonFooterModel;
 import cn.xiaojs.xma.ui.recordlesson.model.RLDirectory;
@@ -82,7 +83,8 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(viewType== VIEW_TYPE_HOME_LESSON_LABEL){
             holder=new CommonHolder(new HomeLessonLabelView(parent.getContext()));
         }else if(viewType==VIEW_TYPE_HOME_LESSON){
-            holder=new CommonHolder(new HomeLessonView(parent.getContext()));
+//            holder=new CommonHolder(new HomeLessonView(parent.getContext()));
+            holder=new CommonHolder(new MyScheduleView(parent.getContext()));
 
         }else if(viewType==VIEW_TYPE_HOME_CLASS_LABEL){
             holder=new CommonHolder(new HomeClassLabelView(parent.getContext()));

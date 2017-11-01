@@ -4,39 +4,25 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
-import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.ui.classroom.page.ClassroomScheduleFragment;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
-import cn.xiaojs.xma.ui.classroom2.material.AddNewFragment;
-import cn.xiaojs.xma.ui.classroom2.material.DatabaseListFragment;
-import cn.xiaojs.xma.ui.classroom2.material.DownloadListFragment;
-import cn.xiaojs.xma.util.APPUtils;
 
 import static cn.xiaojs.xma.ui.classroom.main.Constants.KEY_CLASS_ID;
 
 /**
  * Created by Paul Z on 2017/10/25.
+ * 教室里的课表的容器页面(包含该班级的课表和添加课)
  */
 
 public class ScheduleFragment extends BottomSheetFragment

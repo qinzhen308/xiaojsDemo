@@ -35,6 +35,7 @@ import java.util.Map;
 
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.Registrant;
+import cn.xiaojs.xma.model.ScheduleCriteria;
 import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
@@ -62,6 +63,7 @@ import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
@@ -350,6 +352,15 @@ public class LessonRequest extends ServiceRequest {
         Call<CollectionResult<PrivateClass>> call = getService().getClassesSchedule(type, limit,state);
         enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
     }
+
+
+    public void getClassesScheduleNewly(String ticket, ScheduleCriteria criteria, Pagination pagination) {
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+        Call<CollectionPage<ScheduleLesson>> call = getService().getClassesScheduleNewly(ticket,criteriaJsonstr,paginationJsonstr);
+        enqueueRequest(APIType.GET_CLASSES_SCHEDULE, call);
+    }
+
 
 
     public void scheduleClassLesson(String classes, ScheduleParams params) {

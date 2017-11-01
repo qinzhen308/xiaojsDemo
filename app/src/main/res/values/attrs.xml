@@ -323,8 +323,11 @@
         </attr>
         <attr name="label_width" format="dimension"></attr>
         <attr name="label_height" format="dimension"></attr>
-        <attr name="labelSrc" format="reference|color">
-        </attr>
+        <attr name="labelSrc" format="reference|color"/>
+        <attr name="my_mask_color" format="color"/>
+        <attr name="my_mask_textcolor" format="color"/>
+        <attr name="my_mask_text" format="reference|string"/>
+        <attr name="my_mask_textsize" format="dimension"></attr>
     </declare-styleable>
 
     <declare-styleable name="bottom_line">

@@ -33,6 +33,7 @@ import cn.xiaojs.xma.model.OfflineRegistrant;
 import cn.xiaojs.xma.model.Pagination;
 
 import cn.xiaojs.xma.model.Publish;
+import cn.xiaojs.xma.model.ScheduleCriteria;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
@@ -58,6 +59,7 @@ import cn.xiaojs.xma.model.ctl.PrivateClass;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
@@ -554,6 +556,20 @@ public class LessonDataManager {
 
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.scheduleClassLesson(classes, params);
+        return lessonRequest;
+    }
+
+    /**
+     * Schedule Class Lesson .
+     */
+    public static ServiceRequest getClassesScheduleNewly(Context context,
+                                           String ticket,
+                                           ScheduleCriteria criteria,
+                                           Pagination pagination,
+                                           APIServiceCallback<CollectionPage<ScheduleLesson>> callback) {
+
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.getClassesScheduleNewly(ticket,criteria, pagination);
         return lessonRequest;
     }
 
