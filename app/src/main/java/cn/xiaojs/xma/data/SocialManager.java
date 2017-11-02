@@ -322,6 +322,12 @@ public class SocialManager {
 
     }
 
+    public static ArrayList<ContactGroup> getContacts2(Context context) throws IOException{
+
+        SocialRequest socialRequest = new SocialRequest(context,null);
+        return socialRequest.getContacts2Sync();
+
+    }
 
     public static ArrayList<ContactGroup> getContacts(Context context) throws IOException{
 

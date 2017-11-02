@@ -1,13 +1,17 @@
 package cn.xiaojs.xma.ui.conversation2;
 
 import android.content.Context;
+import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.socket.room.RemoveDlg;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
 import cn.xiaojs.xma.ui.lesson.xclass.MyScheduleActivity;
@@ -24,8 +28,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
     public ConversationAdapter(Context context) {
         this.context = context;
-        this.contacts = new ArrayList<>();
-        contacts.add(createTimetable());
+        //this.contacts = new ArrayList<>();
+        //contacts.add(createTimetable());
     }
 
     public void addContact(ArrayList<Contact> datas) {
@@ -33,6 +37,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             contacts.addAll(datas);
             notifyDataSetChanged();
         }
+    }
+
+    public void setContacts(ArrayList<Contact> datas) {
+        contacts = datas;
+        notifyDataSetChanged();
     }
 
     public ArrayList<Contact> getContacts() {
@@ -60,7 +69,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
     }
 
     @Override
-    public void onBindViewHolder(AbsConversationViewHolder holder, int position) {
+    public void onBindViewHolder(AbsConversationViewHolder holder, final int position) {
 
         Contact contact = contacts.get(position);
 
@@ -99,7 +108,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             conViewHolder.deleteView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    conViewHolder.swipeLayout.close();
+                    removeDlg(position);
                 }
             });
 
@@ -150,6 +159,24 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         return contacts == null ? 0 : contacts.size();
     }
 
+    public boolean isSwapByEv(MotionEvent ev, int offset) {
+
+        if (openedSwipe ==null)
+            return false;
+
+        float x=ev.getX();
+        float y=ev.getY() + offset;
+        int[] p=new int[2];
+        RectF curSwipViewRect =new RectF();
+        openedSwipe.getLocationInWindow(p);
+        curSwipViewRect.set(p[0],p[1],p[0]+openedSwipe.getWidth(),p[1]+openedSwipe.getHeight());
+        if(curSwipViewRect.contains(x,y)){
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean closeOpendSwap() {
         if (openedSwipe != null) {
             openedSwipe.close();
@@ -164,5 +191,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         Contact timeTable = new Contact();
         timeTable.subtype = ConversationType.TypeName.TIME_TABLE;
         return timeTable;
+    }
+
+    private void removeDlg(int position) {
+        Contact contact = contacts.get(position);
+        contacts.remove(position);
+
+        RemoveDlg removeDlg = new RemoveDlg();
+        removeDlg.type = ConversationType.getTalkType(contact.subtype);
+        removeDlg.to = contact.id;
+        XMSManager.sendRemoveDialog(context, removeDlg, null);
+
+        notifyItemRemoved(position);
     }
 }

@@ -32,6 +32,7 @@ import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.MainActivity;
+import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import cn.xiaojs.xma.util.XjsUtils;
 
 public class AccountBusiness {
@@ -79,15 +80,28 @@ public class AccountBusiness {
 
                         AccountDataManager.setPhone(activity,String.valueOf(loginParams.getMobile()));
                         //enter main page
-                        Intent intent = new Intent(activity, MainActivity.class);
-                        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        activity.startActivity(intent);
-
-                        if (listener != null) {
-                            listener.onLogin(true);
-                        }
 
                         AccountPref.setLoginMd5Pwd(activity, loginParams.getPassword());
+
+
+                        final ConversationDataProvider dataProvider
+                                = new ConversationDataProvider(activity);
+                        dataProvider.addLoadstatusListener(new ConversationDataProvider.OnLoadstatusListener() {
+                            @Override
+                            public void onLoadComplete() {
+                                dataProvider.removeLoadstatusListener(this);
+
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                activity.startActivity(intent);
+
+                                if (listener != null) {
+                                    listener.onLogin(true);
+                                }
+                            }
+                        });
+                        dataProvider.startLoad();
+
                     } else {
                         if (listener != null) {
                             listener.onLogin(false);

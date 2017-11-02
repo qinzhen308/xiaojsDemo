@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.xiaojs.xma.ui.view.CommonPopupMenuList
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@null"
+        android:listSelector="@android:color/transparent"
+        android:layout_gravity="center"
+        android:scrollbars="none"
+        android:padding="@dimen/px15"
+        android:background="@drawable/popup_menu_bg"
+        >
+</cn.xiaojs.xma.ui.view.CommonPopupMenuList>

@@ -207,6 +207,16 @@ public class SocialRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_CONTACTS, call);
     }
 
+    public ArrayList<ContactGroup> getContacts2Sync() throws IOException{
+        Response<ArrayList<ContactGroup>> response = getService().getContacts().execute();
+        if (response != null) {
+            return response.body();
+        }
+
+        return null;
+
+    }
+
 
 
     public ArrayList<ContactGroup> getContactsSync() throws IOException{

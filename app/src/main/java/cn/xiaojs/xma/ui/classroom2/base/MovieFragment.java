@@ -77,6 +77,7 @@ import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
 import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
+import cn.xiaojs.xma.ui.view.CommonPopupMenu1;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -404,7 +405,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
 
     public void showMoreMenu(View targetView) {
-        CommonPopupMenu menu = new CommonPopupMenu(getContext());
+        CommonPopupMenu1 menu = new CommonPopupMenu1(getContext());
         String[] items = this.getResources().getStringArray(R.array.classroom2_more_item);
         menu.setBg(R.drawable.popup_menu_bg);
         menu.setWidth(this.getResources().getDimensionPixelSize(R.dimen.px280));

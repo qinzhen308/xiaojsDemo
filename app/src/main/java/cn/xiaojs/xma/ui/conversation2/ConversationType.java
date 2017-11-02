@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.ui.conversation2;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+
 /**
  * Created by maxiaobao on 2017/10/31.
  */
@@ -25,6 +27,20 @@ public class ConversationType {
             return PERSON;
         } else if (TypeName.ORGANIZATION.equals(typeName)) {
             return ORGANIZATION;
+        } else {
+            return UNDEFINED;
+        }
+    }
+
+    public static int getTalkType(String typeName) {
+        if (TypeName.TIME_TABLE.equals(typeName)) {
+            return UNDEFINED;
+        } else if (TypeName.PRIVATE_CLASS.equals(typeName)) {
+            return Communications.TalkType.OPEN;
+        } else if (TypeName.PERSON.equals(typeName)) {
+            return Communications.TalkType.PEER;
+        } else if (TypeName.ORGANIZATION.equals(typeName)) {
+            return UNDEFINED;
         } else {
             return UNDEFINED;
         }
