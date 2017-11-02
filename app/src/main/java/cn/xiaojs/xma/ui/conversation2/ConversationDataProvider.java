@@ -34,7 +34,9 @@ public class ConversationDataProvider {
     private ArrayList<Contact> conversations;
     private Map<String, Integer> conversationsMapping;
     private ArrayList<Contact> persons;
+    private Map<String, Contact> personsMapping;
     private ArrayList<Contact> classes;
+    private Map<String, Contact> classesMapping;
 
     private ArrayList<OnLoadstatusListener> loadstatusListeners;
     private ArrayList<OnDataChangedListener> dataChangedListeners;
@@ -73,6 +75,9 @@ public class ConversationDataProvider {
 
         persons = new ArrayList<>();
         classes = new ArrayList<>();
+
+        personsMapping = new HashMap<>();
+        classesMapping = new HashMap<>();
 
     }
 
@@ -234,6 +239,15 @@ public class ConversationDataProvider {
                         Contact contact = conversations.get(i);
                         conversationsMapping.put(contact.id, i);
                     }
+                }
+
+
+                for (Contact contact : persons) {
+                    personsMapping.put(contact.id, contact);
+                }
+
+                for (Contact contact : classes) {
+                    classesMapping.put(contact.id, contact);
                 }
 
                 e.onComplete();
