@@ -19,6 +19,7 @@ import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ContactsWhitIndex;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.query.FriendsDataProvider;
+import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -35,6 +36,8 @@ public class FriendsFragment extends Base2Fragment {
     private LivIndex livIndex;
     private FriendsAdapter friendsAdapter;
 
+    private ConversationDataProvider dataProvider;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -50,13 +53,15 @@ public class FriendsFragment extends Base2Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        dataProvider = ConversationDataProvider.getProvider(getContext());
+
         loadData();
 
     }
 
     @OnItemClick({R.id.contact_listview})
     void onListItemClick(int position) {
-        if (friendsAdapter !=null) {
+        if (friendsAdapter != null) {
             FriendItem item = (FriendItem) friendsAdapter.getItem(position);
             SingleSessionFragment.invoke(getFragmentManager(), item.contact.id, item.contact.name);
         }
@@ -65,9 +70,9 @@ public class FriendsFragment extends Base2Fragment {
 
     private void loadData() {
 
-        showLoadingStatus();
+        //showLoadingStatus();
 
-        FriendsDataProvider provider = new FriendsDataProvider(getContext());
+        FriendsDataProvider provider = new FriendsDataProvider(getContext(), dataProvider);
         provider.loadFriends(friendDataReciver);
 
     }
@@ -82,7 +87,7 @@ public class FriendsFragment extends Base2Fragment {
 
             showFinalTips();
 
-            if (cwIndex.contacts != null && cwIndex.contacts.size()>0) {
+            if (cwIndex.contacts != null && cwIndex.contacts.size() > 0) {
 
                 hiddenTips();
 
@@ -90,7 +95,7 @@ public class FriendsFragment extends Base2Fragment {
                 listView.setAdapter(friendsAdapter);
                 livIndex = new LivIndex(listView, letterIndexView, null, null, cwIndex.indexMap);
                 livIndex.show();
-            }else {
+            } else {
                 showFinalTips();
             }
 

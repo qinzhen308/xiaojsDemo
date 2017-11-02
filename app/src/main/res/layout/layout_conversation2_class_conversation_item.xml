@@ -23,7 +23,7 @@
                 android:textSize="@dimen/font_30px"
                 android:textColor="@color/font_white"
                 android:background="@drawable/big_submit_btn_selector"
-                android:padding="8dp"
+                android:padding="10dp"
                 android:text="删除"
                 />
         <Button
@@ -34,7 +34,8 @@
                 android:textColor="@color/common_text"
                 android:text="置顶"
                 android:background="@color/cancel_fllow_btn_color"
-                android:padding="8dp"
+                android:padding="10dp"
+                android:visibility="gone"
                 />
     </LinearLayout>
 

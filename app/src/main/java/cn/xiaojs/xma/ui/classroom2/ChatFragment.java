@@ -168,7 +168,7 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
                     talkBean.time = System.currentTimeMillis();
                     talkBean.to = liveCriteria.to;
 
-                    XMSManager.sendTalk(getContext(), talkBean, new EventCallback<TalkResponse>() {
+                    XMSManager.sendTalk(getContext(), true, talkBean, new EventCallback<TalkResponse>() {
                         @Override
                         public void onSuccess(TalkResponse talkResponse) {
                             if (talkResponse != null) {

@@ -24,6 +24,7 @@ import cn.xiaojs.xma.ui.contact2.model.ContactsWhitIndex;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.model.ItemTypes;
 import cn.xiaojs.xma.ui.contact2.model.LabelItem;
+import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -39,40 +40,15 @@ import io.reactivex.schedulers.Schedulers;
 public class FriendsDataProvider {
 
     private Context context;
+    private ConversationDataProvider dataProvider;
 
-    public FriendsDataProvider(Context context) {
+    public FriendsDataProvider(Context context, ConversationDataProvider dataProvider) {
         this.context = context;
+        this.dataProvider = dataProvider;
     }
 
-    public void loadFriends(final Consumer<ContactsWhitIndex> dataReceiver) {
-
-        SocialManager.getContacts2(context, new APIServiceCallback<ArrayList<ContactGroup>>() {
-            @Override
-            public void onSuccess(ArrayList<ContactGroup> contactGroups) {
-
-                ArrayList<Contact> contacts = null;
-
-                if (contactGroups != null && contactGroups.size() > 0) {
-                    for (ContactGroup cg : contactGroups) {
-                        if (cg.set.equals("contacts")) {
-                            contacts = cg.collection;
-                            break;
-                        }
-                    }
-                }
-
-                groupForIndex(contacts, dataReceiver);
-
-
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                groupForIndex(null, dataReceiver);
-            }
-        });
-
-
+    public void loadFriends(Consumer<ContactsWhitIndex> dataReceiver) {
+        groupForIndex(dataProvider.getPersons(),dataReceiver);
     }
 
     private void groupForIndex(

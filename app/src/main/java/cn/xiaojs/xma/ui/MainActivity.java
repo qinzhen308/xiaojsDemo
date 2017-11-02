@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +25,13 @@ import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
+import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.base.BaseConstant;
@@ -37,6 +42,7 @@ import cn.xiaojs.xma.ui.base.XiaojsActions;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
+import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
@@ -551,6 +557,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
 
             switch (eventReceived.eventType) {
                 case Su.EventType.TALK:
+                    updateConveration((Talk) eventReceived.t);
                     break;
                 case Su.EventType.DIALOG_READ:
                     break;
@@ -561,5 +568,37 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
             }
         }
     };
+
+
+    private void updateConveration(Talk talkItem) {
+
+
+
+        if (TextUtils.isEmpty(talkItem.name)) {
+            talkItem.name = "nil";
+        }
+
+        Contact contact = new Contact();
+
+        if (talkItem.type == Communications.TalkType.PEER) {
+            contact.id = talkItem.from;
+            contact.name = talkItem.name;
+            contact.title = talkItem.name;
+        }else if (talkItem.type == Communications.TalkType.OPEN){
+            contact.id = talkItem.to;
+            //FIXME 如果是群聊，班级名字该如何获取呢？
+            contact.name = "";
+            contact.title = "";
+        }else {
+            return;
+        }
+
+        contact.lastMessage = talkItem.body.text;
+        contact.lastTalked = talkItem.time;
+        contact.unread = 1;
+
+        ConversationDataProvider dataProvider = ConversationDataProvider.getProvider(this);
+        dataProvider.updateConversations(contact);
+    }
 
 }

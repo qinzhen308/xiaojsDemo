@@ -24,17 +24,20 @@ import cn.xiaojs.xma.ui.base2.Base2Fragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 
 /**
  * Created by maxiaobao on 2017/10/29.
  */
 
-public class ClassroomsFragment extends Base2Fragment{
+public class ClassroomsFragment extends Base2Fragment {
 
     @BindView(R.id.listview)
     ListView listView;
 
     ClassroomsAdapter adapter;
+
+    private ConversationDataProvider dataProvider;
 
     @Nullable
     @Override
@@ -49,12 +52,23 @@ public class ClassroomsFragment extends Base2Fragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        load();
+
+        dataProvider = ConversationDataProvider.getProvider(getContext());
+
+        adapter = new ClassroomsAdapter(getContext(), dataProvider.getClasses());
+        listView.setAdapter(adapter);
+
+        if (adapter.getCount() > 0) {
+            hiddenTips();
+        } else {
+            showFinalTips();
+        }
+
     }
 
     @OnItemClick({R.id.listview})
     void onListItemClick(int position) {
-        if (adapter!=null) {
+        if (adapter != null) {
             Contact contact = adapter.getItem(position);
             enterClass(getActivity(), contact.ticket);
         }
@@ -70,38 +84,4 @@ public class ClassroomsFragment extends Base2Fragment{
     }
 
 
-
-    private void load() {
-        showLoadingStatus();
-        SocialManager.getContacts2(getContext(), new APIServiceCallback<ArrayList<ContactGroup>>() {
-            @Override
-            public void onSuccess(ArrayList<ContactGroup> contactGroups) {
-
-                ArrayList<Contact> contacts = null;
-
-                if (contactGroups != null && contactGroups.size() > 0) {
-                    for (ContactGroup cg : contactGroups) {
-                        if (cg.set.equals("classes")) {
-                            contacts = cg.collection;
-                            break;
-                        }
-                    }
-                }
-
-                if (contacts != null && contacts.size() > 0) {
-                    hiddenTips();
-                    adapter = new ClassroomsAdapter(getContext(), contacts);
-                    listView.setAdapter(adapter);
-                }else {
-                    showFinalTips();
-                }
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                showFinalTips();
-
-            }
-        });
-    }
 }

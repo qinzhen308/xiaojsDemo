@@ -1,7 +1,5 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,24 +26,21 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CommunicationManager;
-import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
-import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
-import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
@@ -85,6 +80,14 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     private Disposable eventDisposable;
 
     protected String titleStr = "聊天";
+
+    private ConversationDataProvider dataProvider;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dataProvider = ConversationDataProvider.getProvider(getContext());
+    }
 
     @Nullable
     @Override
@@ -145,6 +148,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         loadData();
 
         eventDisposable = XMSEventObservable.observeChatSession(getContext(), receivedConsumer);
+
+        updateUnread();
     }
 
     @Override
@@ -192,13 +197,13 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
                     if (liveCriteria.type == Communications.TalkType.PEER
                             && talk.from.equals(liveCriteria.to)) {
-                        handleReceivedMsg(talk);
+                        handleReceivedMsg(false, talk);
                     }
 
                     if (liveCriteria.type == Communications.TalkType.OPEN
                             && !TextUtils.isEmpty(talk.to)
                             && talk.to.equals(liveCriteria.to)) {
-                        handleReceivedMsg(talk);
+                        handleReceivedMsg(false, talk);
                     }
                     break;
             }
@@ -219,18 +224,19 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         talkBean.body.contentType = Communications.ContentType.TEXT;
         talkBean.time = System.currentTimeMillis();
         talkBean.to = liveCriteria.to;
+        talkBean.name = titleView.getText().toString();
 
 
-        XMSManager.sendTalk(getContext(), talkBean, new EventCallback<TalkResponse>() {
+        XMSManager.sendTalk(getContext(), true, talkBean, new EventCallback<TalkResponse>() {
             @Override
             public void onSuccess(TalkResponse talkResponse) {
                 if (talkResponse != null) {
                     talkBean.time = talkResponse.time;
                 }
-
                 inputView.setText("");
 
-                handleReceivedMsg(talkBean);
+                handleReceivedMsg(true, talkBean);
+
             }
 
             @Override
@@ -240,7 +246,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
             }
         });
     }
-
 
     private void loadData() {
         loading = true;
@@ -307,7 +312,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     }
 
 
-    private void handleReceivedMsg(Talk talk) {
+    private void handleReceivedMsg(boolean send, Talk talk) {
 
         TalkItem talkItem = new TalkItem();
         talkItem.time = talk.time;
@@ -324,6 +329,45 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         adapter.notifyDataSetChanged();
         recyclerView.smoothScrollToPosition(messageData.size() - 1);
 
+        if (send) {
+            updateConveration(talkItem);
+        } else {
+            sendReadTalk(talk);
+        }
+
+
+    }
+
+    private void updateUnread() {
+        dataProvider.updateUnread(liveCriteria.to, 0);
+    }
+
+    private void sendReadTalk(Talk talk) {
+        ReadTalk readTalk = new ReadTalk();
+        readTalk.type = liveCriteria.type;
+        readTalk.from = talk.from;
+        readTalk.to = liveCriteria.to;
+        readTalk.stime = talk.stime;
+
+        XMSManager.sendReadTalk(getContext(), readTalk, null);
+        updateUnread();
+    }
+
+    private void updateConveration(TalkItem talkItem) {
+        Contact contact = new Contact();
+
+        if (TextUtils.isEmpty(talkItem.from.name)) {
+            talkItem.from.name = "nil";
+        }
+
+        contact.id = liveCriteria.to;
+        contact.name = talkItem.from.name;
+        contact.title = talkItem.from.name;
+        contact.lastMessage = talkItem.body.text;
+        contact.lastTalked = talkItem.time;
+        contact.unread = 0;
+
+        dataProvider.updateConversations(contact);
     }
 
     private void timeline(TalkItem item) {
