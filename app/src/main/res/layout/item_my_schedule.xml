@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@color/gray_item_bg"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="@dimen/px165"
+        android:layout_height="wrap_content"
+        android:textColor="@color/chocolate_light"
+        android:layout_marginTop="@dimen/px46"
+        android:textSize="@dimen/font_34px"
+        android:paddingBottom="@dimen/px5"
+        android:paddingTop="@dimen/px5"
+        android:gravity="center"
+        android:text="09:00"
+        android:textStyle="bold"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tv_total_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60分钟"
+        android:textSize="@dimen/font_22px"
+        android:textColor="@color/gray"
+        android:layout_alignLeft="@+id/tv_date"
+        android:layout_alignRight="@+id/tv_date"
+        android:gravity="center"
+        android:layout_below="@+id/tv_date"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="草稿"
+        android:textSize="@dimen/font_22px"
+        android:textColor="@color/red"
+        android:layout_alignLeft="@+id/tv_date"
+        android:layout_alignRight="@+id/tv_date"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/px15"
+        android:layout_below="@+id/tv_total_time"
+        android:maxLines="1"
+        android:visibility="gone"
+        />
+
+
+
+    <TextView
+        android:id="@+id/tv_lesson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/font_black"
+        android:layout_marginTop="@dimen/px46"
+        android:textSize="@dimen/font_32px"
+        android:paddingTop="@dimen/px5"
+        android:paddingBottom="@dimen/px5"
+        android:layout_marginLeft="@dimen/px56"
+        android:layout_toRightOf="@id/tv_date"
+        android:text="什么什么课"
+        android:maxLines="2"
+        />
+
+
+
+
+    <cn.xiaojs.xma.ui.widget.LabelImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/px74"
+        android:layout_height="@dimen/px70"
+        android:scaleType="fitXY"
+        android:layout_alignLeft="@+id/tv_lesson"
+        android:layout_marginTop="@dimen/px20"
+        android:layout_below="@+id/tv_lesson"
+        app:label_height="@dimen/px30"
+        app:label_width="@dimen/px30"
+        android:paddingRight="@dimen/px4"
+        app:labelSrc="@drawable/ic_speaker"
+        app:label_position="LABEL_POSITION_RIGHT_BOTTOM"
+        />
+
+
+    <cn.xiaojs.xma.ui.widget.LabelImageView
+        android:id="@+id/iv_avatar1"
+        android:layout_width="@dimen/px74"
+        android:layout_height="@dimen/px70"
+        android:scaleType="fitXY"
+        android:layout_toRightOf="@+id/iv_avatar"
+        android:layout_below="@+id/tv_lesson"
+        android:layout_alignTop="@+id/iv_avatar"
+        android:layout_marginLeft="@dimen/px20"
+        app:label_height="@dimen/px30"
+        app:label_width="@dimen/px30"
+        app:labelSrc="@drawable/ic_assistant"
+        app:my_mask_color="@color/translucent_50"
+        app:my_mask_text="3"
+        app:my_mask_textcolor="@color/white"
+        app:my_mask_textsize="@dimen/font_36px"
+        android:paddingRight="@dimen/px4"
+        app:label_position="LABEL_POSITION_RIGHT_BOTTOM"
+        />
+
+
+    <ImageView
+        android:id="@+id/btn_more"
+        android:layout_width="@dimen/px50"
+        android:layout_height="@dimen/px50"
+        android:scaleType="center"
+        android:src="@drawable/selector_btn_more1"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/iv_avatar"
+        android:layout_marginRight="@dimen/px39"
+        />
+
+
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px2"
+        android:background="@color/gray_line"
+        android:layout_marginTop="@dimen/px37"
+        android:layout_below="@+id/iv_avatar"
+        />
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="@dimen/px2"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/bottom_line"
+        android:layout_alignParentTop="true"
+        android:background="@color/gray_line"
+        android:layout_marginLeft="@dimen/px166"
+        />
+
+    <View
+        android:id="@+id/state_point"
+        android:layout_width="@dimen/px12"
+        android:layout_height="@dimen/px12"
+        android:background="@drawable/shape_orange_point"
+        android:layout_toRightOf="@+id/v_line"
+        android:layout_alignTop="@+id/tv_date"
+        android:layout_marginLeft="@dimen/px_7"
+        android:layout_marginTop="@dimen/px20"
+        />
+
+    <ProgressBar
+        android:id="@+id/icon_live"
+        android:layout_width="@dimen/px60"
+        android:layout_height="@dimen/px60"
+        android:background="@drawable/shape_orange_point"
+        android:indeterminateDrawable="@drawable/ic_schedule_live"
+        android:layout_toRightOf="@+id/v_line"
+        android:layout_alignTop="@+id/tv_date"
+        android:layout_marginLeft="-15dp"
+        android:layout_marginTop="@dimen/px_4"
+        android:visibility="gone"
+        />
+
+
+</RelativeLayout>

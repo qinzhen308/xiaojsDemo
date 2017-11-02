@@ -48,6 +48,7 @@ import cn.xiaojs.xma.model.account.VerifyParam;
 import cn.xiaojs.xma.model.account.VerifyStatus;
 import cn.xiaojs.xma.model.category.SubjectName;
 import cn.xiaojs.xma.model.contents.Article;
+import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
 import cn.xiaojs.xma.model.ctl.CheckOverlapParams;
 import cn.xiaojs.xma.model.ctl.ClassByUser;
@@ -68,6 +69,7 @@ import cn.xiaojs.xma.model.ctl.ModifyClassParams;
 import cn.xiaojs.xma.model.ctl.DecisionReason;
 import cn.xiaojs.xma.model.ctl.RemoveStudentParams;
 import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.ctl.ScheduleParams;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.ctl.Students;
@@ -374,6 +376,11 @@ public interface XiaojsService {
     @GET("/v1/ctl/schedule/{classId}")
     Call<ScheduleData> getClassesSchedule(@Path("classId") String classId,
                                           @QueryMap Map<String,String> options);
+
+    @GET("/v1/ctl/{ticket}/schedule/{criteria}/{pagination}")
+    Call<CollectionPage<ScheduleLesson>> getClassesScheduleNewly(@Path("ticket") String ticket,
+                                                                 @Path("criteria") String criteria,
+                                                                 @Path("pagination") String pagination);
 
 
     @GET("/v1/ctl/schedule")
