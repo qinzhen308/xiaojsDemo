@@ -22,9 +22,13 @@ import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
+import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
 
@@ -34,7 +38,6 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
-import cn.xiaojs.xma.ui.findings2.FindingsFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
@@ -51,6 +54,8 @@ import cn.xiaojs.xma.ui.search.DiscoverFragment;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
 import static cn.xiaojs.xma.util.MessageUitl.ACTION_NEW_PUSH;
@@ -69,6 +74,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
     //private MessageFragment conversationFragment;
 
     SchemeProcessor mSchemeProcessor;
+
+    private Disposable eventDisposable;
 
 
     @Override
@@ -119,6 +126,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
         }
 
         dealFromNotify(getIntent());
+
+        eventDisposable = XMSEventObservable.observeMainSession(this, receivedConsumer);
 
     }
 
@@ -338,6 +347,12 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
     protected void onDestroy() {
         unregisterReceiver(upgradeReceiver);
 
+        if (eventDisposable != null) {
+            eventDisposable.dispose();
+            eventDisposable = null;
+        }
+
+
         super.onDestroy();
     }
 
@@ -525,5 +540,26 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
         PermissionHelper.showRationaleDialog(this, getResources().getString(R.string.permission_rationale_camera_tip));
 
     }
+
+
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("receivedConsumer .....");
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.TALK:
+                    break;
+                case Su.EventType.DIALOG_READ:
+                    break;
+                case Su.EventType.REMOVE_DIALOG:
+                    break;
+                case Su.EventType.RETAIN_DIALOG:
+                    break;
+            }
+        }
+    };
 
 }

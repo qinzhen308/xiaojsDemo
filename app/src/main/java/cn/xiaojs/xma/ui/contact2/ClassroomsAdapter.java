@@ -32,14 +32,9 @@ public class ClassroomsAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<Contact> dataCollect;
-    private OnItemClickListener itemClickListener;
 
     public interface OnItemClickListener{
         void OnItemClick(Contact contact);
-    }
-
-    public void setItemClickListener(OnItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
     }
 
     public ClassroomsAdapter(Context context, ArrayList<Contact> dataCollect) {
@@ -80,14 +75,6 @@ public class ClassroomsAdapter extends BaseAdapter {
         viewHolder.avatorTextView.setText(String.valueOf(contactItem.title.charAt(0)));
         viewHolder.titleView.setText(contactItem.title);
         viewHolder.descView.setText("[Oh YES]");
-        viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (itemClickListener !=null) {
-                    itemClickListener.OnItemClick(contactItem);
-                }
-            }
-        });
 
         return convertView;
     }

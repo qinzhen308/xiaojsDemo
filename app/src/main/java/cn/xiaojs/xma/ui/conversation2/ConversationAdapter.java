@@ -35,6 +35,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         }
     }
 
+    public ArrayList<Contact> getContacts() {
+        return contacts;
+    }
+
     @Override
     public AbsConversationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -76,6 +80,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             conViewHolder.titleView.setText(contact.title);
             conViewHolder.descView.setText(contact.lastMessage);
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
+
+            if (contact.unread > 0) {
+                conViewHolder.flagView.setText(String.valueOf(contact.unread));
+                conViewHolder.flagView.setVisibility(View.VISIBLE);
+            }else {
+                conViewHolder.flagView.setVisibility(View.GONE);
+            }
+
+
             conViewHolder.uprootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

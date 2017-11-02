@@ -60,6 +60,13 @@ public class Su {
 
         //教室交流
         public static final int TALK = 690001;
+        public static final int RETAIN_DIALOG = 690002;
+        public static final int REMOVE_DIALOG = 690003;
+        public static final int DIALOG_READ = 690004;                             // Clear unread on dialog
+        public static final int READ_TALK = 690005;
+
+
+
         //绘制
         public static final int DRAW = 680001;
         //同步绘制

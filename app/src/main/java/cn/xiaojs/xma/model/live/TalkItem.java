@@ -13,6 +13,7 @@ import java.util.Date;
 public class TalkItem {
 
     public long time;
+    public long stime;
     public TalkPerson from;
     public TalkContent body;
     public String to;
@@ -24,8 +25,8 @@ public class TalkItem {
     public static class TalkPerson {
 
         public String name;
-        public String avatar;
         public String accountId;
+        public String avatar;
 
     }
 

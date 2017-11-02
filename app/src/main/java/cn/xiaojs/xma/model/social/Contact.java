@@ -25,7 +25,7 @@ public class Contact implements Serializable{
     public int followType;
 
     public String name;
-    public String unread;
+    public int unread;
     public String lastMessage;
     public long lastTalked;
     public long group;
@@ -36,6 +36,11 @@ public class Contact implements Serializable{
 
     public boolean unfollowable;
     public String ticket;
+
+    public String owner;
+    public String total;
+    public String current;
+    public boolean retainOnTalk;
 
 //
 //    @Override

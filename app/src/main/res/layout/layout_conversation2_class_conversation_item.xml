@@ -103,13 +103,15 @@
 
         <TextView
                 android:id="@+id/unread_flag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/px44"
+                android:layout_height="@dimen/px44"
                 android:layout_alignBaseline="@id/desc"
-                android:textSize="@dimen/px24"
+                android:textSize="@dimen/font_24px"
                 android:textColor="@color/font_white"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/px24"
+                android:background="@drawable/unread_read_ovil"
+                android:gravity="center"
                 />
 
         <View

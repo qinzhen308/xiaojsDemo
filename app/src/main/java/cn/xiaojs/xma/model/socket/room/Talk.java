@@ -17,6 +17,15 @@ public class Talk {
     public long time;
     public TalkContent body;
 
+    //blew use in socket talk received,not rest api use
+    public boolean sync;
+    public long stime;
+    public String name;
+    public String subtype;
+    public boolean retainOnTalk;
+
+
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TalkContent{

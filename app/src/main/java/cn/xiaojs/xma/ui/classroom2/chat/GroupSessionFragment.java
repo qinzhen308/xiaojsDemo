@@ -21,6 +21,7 @@ public class GroupSessionFragment extends ChatSessionFragment {
         super.onCreate(savedInstanceState);
 
         group = getArguments().getString(CTLConstant.EXTRA_GROUP_ID);
+        titleStr = getArguments().getString(CTLConstant.EXTRA_SESSION_NAME);
 
     }
 
@@ -32,10 +33,11 @@ public class GroupSessionFragment extends ChatSessionFragment {
         return liveCriteria;
     }
 
-    public static void invoke(FragmentManager fragmentManager, String groupId) {
+    public static void invoke(FragmentManager fragmentManager, String groupId, String title) {
         GroupSessionFragment sessionFragment = new GroupSessionFragment();
         Bundle b = new Bundle();
         b.putString(CTLConstant.EXTRA_GROUP_ID, groupId);
+        b.putString(CTLConstant.EXTRA_SESSION_NAME, title);
         sessionFragment.setArguments(b);
         sessionFragment.show(fragmentManager,"gsession");
     }

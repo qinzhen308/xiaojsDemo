@@ -2,9 +2,11 @@ package cn.xiaojs.xma.data.api;
 
 import android.content.Context;
 
+import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -17,6 +19,7 @@ import cn.xiaojs.xma.model.security.LoginParams;
 
 import cn.xiaojs.xma.model.security.SocialLoginParams;
 import cn.xiaojs.xma.util.JpushUtil;
+import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -110,8 +113,11 @@ public class LoginRequest extends ServiceRequest {
 
             UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
-            DataManager.initDataWithLogined(getContext(), info.contactGroups);
-            DataManager.getApplication(getContext()).connectXms();
+            XiaojsApplication app = DataManager.getApplication(getContext());
+            XMSManager xmsManager = DataManager.initDataWithLogined(getContext(),
+                    info.contactGroups, app.getXmsConsumer());
+            app.setXmsManager(xmsManager);
+
 
 
         }

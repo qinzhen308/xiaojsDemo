@@ -13,5 +13,6 @@ import cn.xiaojs.xma.model.socket.EventResponse;
 public class TalkResponse extends EventResponse{
     public String to;
     public long time;
+    public long stime;
     public String data;
 }

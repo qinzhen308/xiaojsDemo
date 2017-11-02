@@ -26,12 +26,21 @@ import cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView;
  * Created by maxiaobao on 2017/10/29.
  */
 
-public class ConversationFragment extends Base2Fragment {
+public class ConversationFragment extends Base2Fragment
+        implements ConversationDataProvider.OnDataListener{
 
     @BindView(R.id.recyclerview)
     SwapRecylcerView recyclerView;
 
     private ConversationAdapter adapter;
+    private ConversationDataProvider dataProvider;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //dataProvider = ConversationDataProvider.getProvider(getContext());
+        //dataProvider.setDataListener(this);
+    }
 
     @Nullable
     @Override
@@ -65,6 +74,12 @@ public class ConversationFragment extends Base2Fragment {
         });
 
         load();
+        //dataProvider.startLoad();
+    }
+
+    @Override
+    public void onDataLoadComplete(ArrayList<Contact> conversations) {
+
     }
 
     private void load() {
@@ -96,4 +111,22 @@ public class ConversationFragment extends Base2Fragment {
             }
         });
     }
+
+
+    public void updateConversation(String id) {
+
+        if (adapter != null && adapter.getItemCount()>0) {
+
+            ArrayList<Contact> contacts = adapter.getContacts();
+
+
+
+        }else {
+            //TODO 直接添加一项，或者直接刷新接口
+        }
+
+
+    }
+
+
 }

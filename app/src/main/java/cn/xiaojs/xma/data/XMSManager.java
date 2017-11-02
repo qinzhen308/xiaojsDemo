@@ -2,16 +2,18 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 
+import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.api.socket.MessageCallback;
-import cn.xiaojs.xma.data.api.socket.SocketListen;
-import cn.xiaojs.xma.data.api.socket.SocketManager;
-import cn.xiaojs.xma.data.api.socket.SocketRequest;
+import cn.xiaojs.xma.data.api.socket.xms.XMSEventListen;
+import cn.xiaojs.xma.data.api.socket.xms.XMSObservable;
 import cn.xiaojs.xma.data.api.socket.xms.XMSSocketManager;
 import cn.xiaojs.xma.data.api.socket.xms.XMSSocketRequest;
+import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -20,20 +22,15 @@ import cn.xiaojs.xma.model.socket.room.TalkResponse;
 
 public class XMSManager {
 
-//    public static <T> SocketListen onEvent(Context context,
-//                                           int eventCategory,
-//                                           int eventType,
-//                                           final Class<T> valueType,
-//                                           MessageCallback<T> callback) {
-//
-//        SocketManager socketManager = SocketManager.getSocketManager(context);
-//        SocketListen socketListen = new SocketListen(socketManager, callback);
-//        socketListen.on(eventCategory, eventType, valueType);
-//
-//        return socketListen;
-//    }
+    private XMSObservable xmsObservable;
 
-
+    public static XMSManager initXMS(Context context, Consumer<Integer> consumer) {
+        XMSManager xmsManager = new XMSManager();
+        String sfm = SecurityPref.getSFM(context);
+        xmsManager.xmsObservable = XMSObservable.obseverXMS(context, sfm, consumer);
+        return xmsManager;
+    }
+    
     public static void sendTalk(Context context, Talk talk,
                                 EventCallback<TalkResponse> callback) {
         XMSSocketManager socketManager = XMSSocketManager.getSocketManager(context);

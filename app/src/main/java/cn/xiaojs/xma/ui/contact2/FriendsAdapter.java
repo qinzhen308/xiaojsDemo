@@ -85,15 +85,15 @@ public class FriendsAdapter extends BaseAdapter {
 
             FriendItem friendItem = (FriendItem) contactItem;
             friendsViewHolder.titleView.setText(friendItem.contact.name);
-            friendsViewHolder.descView.setText("[哈勒普]");
+            friendsViewHolder.descView.setText(friendItem.contact.title);
 
             String avatorUrl = Account.getAvatar(
                     friendItem.contact.account, friendsViewHolder.avatorView.getMeasuredWidth());
             Glide.with(context)
                     .load(avatorUrl)
                     .transform(new CircleTransform(context))
-                    .placeholder(R.drawable.default_avatar_grey)
-                    .error(R.drawable.default_avatar_grey)
+                    .placeholder(R.drawable.ic_defaultavatar)
+                    .error(R.drawable.ic_defaultavatar)
                     .into(friendsViewHolder.avatorView);
         }
 

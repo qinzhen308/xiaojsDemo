@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.contact2.model;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import cn.xiaojs.xma.model.social.Contact;

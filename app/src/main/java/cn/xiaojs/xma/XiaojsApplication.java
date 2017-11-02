@@ -16,6 +16,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.socket.xms.SocketStatus;
 import cn.xiaojs.xma.data.api.socket.xms.XMSObservable;
 import cn.xiaojs.xma.data.preference.SecurityPref;
@@ -34,14 +35,13 @@ public class XiaojsApplication extends Application {
 
     public static final String ACTION_NEW_MESSAGE = "xjs_lc_new_msg";
 
-    private XMSObservable xmsObservable;
-
+    private XMSManager xmsManager;
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        if( Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             MultiDex.install(this);
         }
 
@@ -66,7 +66,7 @@ public class XiaojsApplication extends Application {
         //发布Release版本时，需要引入crash report
         XiaojsConfig.CHANNEL = APPUtils.getChannel(getApplicationContext());
         if (XiaojsConfig.DEBUG) {
-            Logger.d("the channel:%s",XiaojsConfig.CHANNEL);
+            Logger.d("the channel:%s", XiaojsConfig.CHANNEL);
         }
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setAppChannel(XiaojsConfig.CHANNEL);
@@ -85,7 +85,7 @@ public class XiaojsApplication extends Application {
                 false);
         if (APPUtils.isProEvn()) {
             MobclickAgent.setDebugMode(false);
-        }else {
+        } else {
             MobclickAgent.setDebugMode(true);
         }
         MobclickAgent.startWithConfigure(config);
@@ -100,24 +100,20 @@ public class XiaojsApplication extends Application {
         JPushInterface.setDebugMode(XiaojsConfig.DEBUG);
         JPushInterface.init(getApplicationContext());
 
-        //init data cache
-        DataManager.init(this);
-
-        if (AccountDataManager.isLogin(this)) {
-            connectXms();
-        }
+        //init data cache and XMS
+        xmsManager = DataManager.init(this);
 
         PinYin.init(this);
 
 
     }
 
-    public void connectXms() {
-        if (xmsObservable == null) {
-            String sfm = SecurityPref.getSFM(this);
-            xmsObservable = XMSObservable.obseverXMS(this, sfm, xmsConsumer);
-        }
+    public void setXmsManager(XMSManager xmsManager) {
+        this.xmsManager = xmsManager;
+    }
 
+    public Consumer<Integer> getXmsConsumer() {
+        return xmsConsumer;
     }
 
     private Consumer<Integer> xmsConsumer = new Consumer<Integer>() {

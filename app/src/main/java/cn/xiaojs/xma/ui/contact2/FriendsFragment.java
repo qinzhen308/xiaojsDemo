@@ -11,8 +11,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
+import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
+import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ContactsWhitIndex;
+import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.query.FriendsDataProvider;
 import io.reactivex.functions.Consumer;
 
@@ -28,6 +33,7 @@ public class FriendsFragment extends Base2Fragment {
     LetterIndexView letterIndexView;
 
     private LivIndex livIndex;
+    private FriendsAdapter friendsAdapter;
 
     @Nullable
     @Override
@@ -50,7 +56,11 @@ public class FriendsFragment extends Base2Fragment {
 
     @OnItemClick({R.id.contact_listview})
     void onListItemClick(int position) {
-       //TODO 进入会话列表
+        if (friendsAdapter !=null) {
+            FriendItem item = (FriendItem) friendsAdapter.getItem(position);
+            SingleSessionFragment.invoke(getFragmentManager(), item.contact.id, item.contact.name);
+        }
+
     }
 
     private void loadData() {
@@ -76,7 +86,7 @@ public class FriendsFragment extends Base2Fragment {
 
                 hiddenTips();
 
-                FriendsAdapter friendsAdapter = new FriendsAdapter(getContext(), cwIndex.contacts);
+                friendsAdapter = new FriendsAdapter(getContext(), cwIndex.contacts);
                 listView.setAdapter(friendsAdapter);
                 livIndex = new LivIndex(listView, letterIndexView, null, null, cwIndex.indexMap);
                 livIndex.show();

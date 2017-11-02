@@ -89,8 +89,8 @@ public class MemberListFragment extends BottomSheetFragment {
         }
     }
 
-    public void enterChatSession() {
-        SingleSessionFragment.invoke(getFragmentManager());
+    public void enterChatSession(Attendee attendee) {
+        SingleSessionFragment.invoke(getFragmentManager(),attendee.accountId, attendee.name);
     }
 
 

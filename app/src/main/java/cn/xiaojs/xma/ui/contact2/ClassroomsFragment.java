@@ -92,12 +92,6 @@ public class ClassroomsFragment extends Base2Fragment{
                     hiddenTips();
                     adapter = new ClassroomsAdapter(getContext(), contacts);
                     listView.setAdapter(adapter);
-                    adapter.setItemClickListener(new ClassroomsAdapter.OnItemClickListener() {
-                        @Override
-                        public void OnItemClick(Contact contact) {
-                            GroupSessionFragment.invoke(getFragmentManager(), contact.id);
-                        }
-                    });
                 }else {
                     showFinalTips();
                 }

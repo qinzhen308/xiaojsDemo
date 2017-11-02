@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
@@ -31,6 +32,7 @@ import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -49,6 +51,7 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -57,6 +60,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public abstract class ChatSessionFragment extends BaseDialogFragment implements ChatAdapter.FetchMoreListener {
+
+    @BindView(R.id.title)
+    TextView titleView;
 
     @BindView(R.id.chat_list)
     RecyclerView recyclerView;
@@ -73,7 +79,12 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     private boolean loading = false;
     private long lastTimeline = 0;
 
+
     public abstract LiveCriteria createLiveCriteria();
+
+    private Disposable eventDisposable;
+
+    protected String titleStr = "聊天";
 
     @Nullable
     @Override
@@ -106,6 +117,9 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        titleView.setText(titleStr);
+
         messageData = new ArrayList<>();
         messageComparator = new MessageComparator();
 
@@ -129,11 +143,17 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         liveCriteria = createLiveCriteria();
 
         loadData();
+
+        eventDisposable = XMSEventObservable.observeChatSession(getContext(), receivedConsumer);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (eventDisposable != null) {
+            eventDisposable.dispose();
+            eventDisposable = null;
+        }
     }
 
 //    @Override
@@ -165,8 +185,21 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
             switch (eventReceived.eventType) {
                 case Su.EventType.TALK:
                     Talk talk = (Talk) eventReceived.t;
-                    //TODO fix同一条消息多次回调?
-                    handleReceivedMsg(talk);
+
+                    if (talk.type != liveCriteria.type) {
+                        return;
+                    }
+
+                    if (liveCriteria.type == Communications.TalkType.PEER
+                            && talk.from.equals(liveCriteria.to)) {
+                        handleReceivedMsg(talk);
+                    }
+
+                    if (liveCriteria.type == Communications.TalkType.OPEN
+                            && !TextUtils.isEmpty(talk.to)
+                            && talk.to.equals(liveCriteria.to)) {
+                        handleReceivedMsg(talk);
+                    }
                     break;
             }
         }
@@ -283,9 +316,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         talkItem.body.text = talk.body.text;
         talkItem.body.contentType = talk.body.contentType;
         talkItem.from.accountId = talk.from;
-        //获取名字
-        Attendee attendee = null;
-        talkItem.from.name = attendee == null ? "nil" : attendee.name;
+        talkItem.from.name = talk.name;
 
         timeline(talkItem);
 

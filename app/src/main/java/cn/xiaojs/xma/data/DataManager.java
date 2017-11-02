@@ -22,6 +22,7 @@ import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.DataCacheManager;
 import cn.xiaojs.xma.util.FileUtil;
 import cn.xiaojs.xma.util.JpushUtil;
+import io.reactivex.functions.Consumer;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
@@ -65,7 +66,7 @@ public class DataManager {
     /**
      * init memory data cache when the user already logined
      */
-    public static void init(XiaojsApplication application) {
+    public static XMSManager init(XiaojsApplication application) {
 
         Context context = application.getApplicationContext();
         getCache(context).setApplication(application);
@@ -75,13 +76,14 @@ public class DataManager {
         dealDownloadAsync(context);
 
         if (AccountDataManager.isLogin(context)) {
-
-            initDataWithLogined(context, null);
-
+            return initDataWithLogined(context, null, application.getXmsConsumer());
         }
+
+        return null;
     }
 
-    public static void initDataWithLogined(Context context,HashMap<Long, String> groupMap) {
+    public static XMSManager initDataWithLogined(Context context,
+                                           HashMap<Long, String> groupMap, Consumer<Integer> consumer) {
 
         XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
 
@@ -96,6 +98,8 @@ public class DataManager {
 
         //jpush alias/tags
         AccountDataManager.setAliaTagsWithCheck(context);
+
+        return XMSManager.initXMS(context, consumer);
     }
 
     public static void lanuchInitDataService(Context context, HashMap<Long, String> groupMap) {

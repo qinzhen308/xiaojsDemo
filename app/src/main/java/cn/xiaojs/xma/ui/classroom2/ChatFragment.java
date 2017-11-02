@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,10 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CommunicationManager;
 import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -53,6 +56,7 @@ import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -75,7 +79,7 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
     private MessageComparator messageComparator;
     private boolean loading = false;
 
-    private EventListener.ELTalk talkObserver;
+    private Disposable eventDisposable;
     private long lastTimeline = 0;
 
 
@@ -138,14 +142,14 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
 
         loadData();
 
-        talkObserver = classroomEngine.observerTalk(receivedConsumer);
+        eventDisposable = XMSEventObservable.observeChatSession(getContext(),receivedConsumer);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (talkObserver != null) {
-            talkObserver.dispose();
+        if (eventDisposable != null) {
+            eventDisposable.dispose();
         }
     }
 
@@ -156,27 +160,28 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
                 case CTLConstant.REQUEST_INPUT_MESSAGE:
 
                     final Talk talkBean = new Talk();
+                    talkBean.type = liveCriteria.type;
                     talkBean.from = AccountDataManager.getAccountID(getContext());
                     talkBean.body = new Talk.TalkContent();
                     talkBean.body.text = data.getStringExtra(CTLConstant.EXTRA_INPUT_MESSAGE);
                     talkBean.body.contentType = Communications.ContentType.TEXT;
                     talkBean.time = System.currentTimeMillis();
-                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
+                    talkBean.to = liveCriteria.to;
 
-
-                    classroomEngine.sendTalk(talkBean, new EventCallback<TalkResponse>() {
+                    XMSManager.sendTalk(getContext(), talkBean, new EventCallback<TalkResponse>() {
                         @Override
                         public void onSuccess(TalkResponse talkResponse) {
                             if (talkResponse != null) {
                                 talkBean.time = talkResponse.time;
                             }
+
                             handleReceivedMsg(talkBean);
                         }
 
                         @Override
                         public void onFailed(String errorCode, String errorMessage) {
 
-                            Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -204,8 +209,16 @@ public class ChatFragment extends Fragment implements ChatAdapter.FetchMoreListe
             switch (eventReceived.eventType) {
                 case Su.EventType.TALK:
                     Talk talk = (Talk) eventReceived.t;
-                    //TODO fix同一条消息多次回调?
-                    handleReceivedMsg(talk);
+
+                    if (talk.type != Communications.TalkType.OPEN || talk.type != liveCriteria.type) {
+                        return;
+                    }
+
+                    if (!TextUtils.isEmpty(talk.to)
+                        && talk.to.equals(liveCriteria.to)) {
+                        handleReceivedMsg(talk);
+                    }
+
                     break;
             }
         }

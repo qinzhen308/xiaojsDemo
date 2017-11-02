@@ -53,7 +53,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     @Override
     public void onBindViewHolder(MemberAdapter.MemberViewHolder holder, int position) {
 
-        Attendee attendee = attendees.get(position);
+        final Attendee attendee = attendees.get(position);
         String avatorUrl = Account.getAvatar(attendee.accountId, avatorSize);
         Glide.with(context)
                 .load(avatorUrl)
@@ -76,7 +76,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.enterChatSession();
+                fragment.enterChatSession(attendee);
             }
         });
 
