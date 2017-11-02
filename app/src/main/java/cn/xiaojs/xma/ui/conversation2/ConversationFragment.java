@@ -1,7 +1,11 @@
 package cn.xiaojs.xma.ui.conversation2;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,13 +18,20 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.analytics.AnalyticEvents;
+import cn.xiaojs.xma.common.permissiongen.PermissionGen;
+import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.ui.MainActivity;
+import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
 import cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView;
+import cn.xiaojs.xma.ui.search.SearchActivity;
 
 /**
  * Created by maxiaobao on 2017/10/29.
@@ -124,9 +135,26 @@ public class ConversationFragment extends Base2Fragment
         }else {
             //TODO 直接添加一项，或者直接刷新接口
         }
-
-
     }
+
+    /*@OnClick({R.id.btn_scan,R.id.btn_add})
+    public void onViewClick(View v){
+        switch (v.getId()){
+            case R.id.btn_scan2:
+                if (PermissionUtil.isOverMarshmallow() && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//                    mContext.requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.PERMISSION_CODE);
+                    PermissionGen.needPermission(getActivity() , MainActivity.PERMISSION_CODE,Manifest.permission.CAMERA);
+
+                } else {
+                    startActivity(new Intent(getActivity(), ScanQrcodeActivity.class));
+                }
+                break;
+            case R.id.btn_add:
+                showMenu(btnAdd);
+                break;
+        }
+
+    }*/
 
 
 }

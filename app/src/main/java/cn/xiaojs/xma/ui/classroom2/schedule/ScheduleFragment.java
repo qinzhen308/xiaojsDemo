@@ -5,7 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,51 +14,206 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.DataPageLoader;
+import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.stateview.AppLoadState2;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStateListener;
+import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
+import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Duration;
+import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.ScheduleCriteria;
+import cn.xiaojs.xma.model.ctl.ScheduleLesson;
+import cn.xiaojs.xma.model.live.LiveSchedule;
+import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
-
-import static cn.xiaojs.xma.ui.classroom.main.Constants.KEY_CLASS_ID;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by Paul Z on 2017/10/25.
- * 教室里的课表的容器页面(包含该班级的课表和添加课)
+ * 教室里面的课表
  */
 
 public class ScheduleFragment extends BottomSheetFragment
-        implements DialogInterface.OnKeyListener{
+        implements DialogInterface.OnKeyListener {
 
     @BindView(R.id.cl_root)
-    ConstraintLayout rootLay;
+    RelativeLayout rootLay;
 
-    ClassroomScheduleFragment fragment;
+    @BindView(R.id.recyclerview)
+    RecyclerView recyclerview;
+    HomeClassAdapter mAdapter;
+
+    DataPageLoader<ScheduleLesson, CollectionPage<ScheduleLesson>> dataPageLoader;
+    Pagination mPagination;
+    LoadStatusViewDecoratee stateView;
 
 
     @Override
     public View createView(LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_classroom2_schedule, container, false);
+        View v = inflater.inflate(R.layout.fragment_classroom2_schedule, container, false);
+        stateView = new LoadStatusViewDecoratee(new AppLoadState2(getActivity(), (ViewGroup) v.findViewById(R.id.load_state_container)));
+        return v;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getDialog()==null) {
+        if (getDialog() == null) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
-            params.setMargins(0,0,0,0);
+            params.setMargins(0, 0, 0, 0);
             rootLay.setBackgroundColor(getResources().getColor(R.color.white));
-        }else {
+        } else {
             getDialog().setOnKeyListener(this);
         }
 
-        fragment=new ClassroomScheduleFragment();
-        Bundle data=new Bundle();
-        data.putString(KEY_CLASS_ID,getArguments().getString(KEY_CLASS_ID));
-        fragment.setArguments(data);
-        getChildFragmentManager().beginTransaction().add(R.id.layout_container,fragment).commitAllowingStateLoss();
+        init();
+
+    }
+
+    protected void init() {
+        mAdapter = new HomeClassAdapter(recyclerview);
+        recyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerview.setAdapter(mAdapter);
+
+        initPageLoad();
+        dataPageLoader.refresh();
+        mAdapter.setCallback(new EventCallback() {
+            @Override
+            public void onEvent(int what, Object... object) {
+                //what代表事件
+                if (what == EVENT_1) {//点击回放
+                    //索引
+                    int position = (int) object[0];
+                    //数据
+                    LiveSchedule data = (LiveSchedule) object[1];
+                    LibDoc doc = new LibDoc();
+                    doc.key = data.playback;
+
+                    doc.mimeType = data.mimeType;
+
+                    if (TextUtils.isEmpty(doc.mimeType)) {
+                        doc.mimeType = Collaboration.StreamingTypes.HLS;
+                    } else {
+                        doc.typeName = Collaboration.TypeName.RECORDING_IN_LIBRARY;
+                    }
+                    ClassroomController.getInstance(getActivity()).enterVideoPlayPage(doc);
+                }
+            }
+        });
+    }
+
+    private void request() {
+
+        Duration schedule = new Duration();
+        schedule.setStart(new Date(0));
+        schedule.setEnd(new Date(ScheduleUtil.ymdToTimeMill(2100, 12, 30)));
+
+        ScheduleCriteria criteria = new ScheduleCriteria();
+//        criteria.duration=schedule;
+        LessonDataManager.getClassesScheduleNewly(getActivity(), ClassroomEngine.getEngine().getTicket(), criteria, mPagination, dataPageLoader);
+    }
+
+
+    private void initPageLoad() {
+        mPagination = new Pagination();
+        mPagination.setPage(1);
+        mPagination.setMaxNumOfObjectsPerPage(10);
+        dataPageLoader = new DataPageLoader<ScheduleLesson, CollectionPage<ScheduleLesson>>() {
+            PageChangeInRecyclerView pageChangeInRecyclerView;
+
+            @Override
+            public void next() {
+                //不想分页就重写它，什么都不做
+            }
+
+            @Override
+            public void onRequst(int page) {
+                mPagination.setPage(page);
+                stateView.change(LoadStateListener.STATE_LOADING, "");
+                request();
+            }
+
+            @Override
+            public List<ScheduleLesson> adaptData(CollectionPage<ScheduleLesson> object) {
+                if (object == null) return new ArrayList<>();
+                return object.objectsOfPage;
+            }
+
+            @Override
+            public void onSuccess(List<ScheduleLesson> curPage, List<ScheduleLesson> all) {
+                pageChangeInRecyclerView.completeLoading();
+                if (ArrayUtil.isEmpty(all)) {
+                    stateView.change(LoadStateListener.STATE_ALL_EMPTY, "");
+                } else {
+                    stateView.change(LoadStateListener.STATE_NORMAL, "");
+                }
+                bindData(all);
+
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                pageChangeInRecyclerView.completeLoading();
+                bindData(new ArrayList<ScheduleLesson>());
+                stateView.change(LoadStateListener.STATE_LOADING_ERROR, "");
+            }
+
+            @Override
+            public void prepare() {
+                pageChangeInRecyclerView = new PageChangeInRecyclerView(recyclerview, this);
+
+            }
+        };
+    }
+
+    //这里认为服务器返回的数据是经过排序后的，不管倒叙还是顺序。
+    private void bindData(List<ScheduleLesson> list) {
+        ArrayList monthLists = new ArrayList();
+        LessonLabelModel tempLabel = null;
+        Date tempDate = new Date(0);
+        int tempCount = 0;
+        for (int j = 0; j < list.size(); j++) {
+            ScheduleLesson cs = list.get(j);
+            if (!ScheduleUtil.isSameDay(cs.schedule.getStart(), tempDate)) {//不是同一天
+                tempCount = 0;
+                tempDate = cs.schedule.getStart();
+                tempLabel = new LessonLabelModel(ScheduleUtil.getDateYMDW(cs.schedule.getStart()), 0, true);
+                monthLists.add(tempLabel);
+            }
+            tempCount++;
+            monthLists.add(cs);
+            tempLabel.lessonCount = tempCount;
+        }
+        monthLists.add(new LastEmptyModel());
+        mAdapter.setList(monthLists);
+        mAdapter.notifyDataSetChanged();
+    }
+
+
+    public void refresh() {
+        dataPageLoader.refresh();
     }
 
 
@@ -79,13 +235,22 @@ public class ScheduleFragment extends BottomSheetFragment
     }
 
 
-    public static ScheduleFragment createInstance(String classId){
-        ScheduleFragment fragment=new ScheduleFragment();
-        Bundle data=new Bundle();
-        if(!TextUtils.isEmpty(classId)){
-            data.putString(KEY_CLASS_ID,classId);
-        }
+    public static ScheduleFragment createInstance(String classId) {
+        ScheduleFragment fragment = new ScheduleFragment();
+        Bundle data = new Bundle();
         fragment.setArguments(data);
         return fragment;
+    }
+
+
+    @OnClick({R.id.add_btn, R.id.v_divider})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.add_btn:
+                AddLessonScheduleFragment fragment=AddLessonScheduleFragment.createInstance();
+                fragment.setTargetFragment(this,CTLConstant.REQUEST_MATERIAL_ADD_NEW);
+                fragment.show(getChildFragmentManager(),"add_lesson_schedule");
+                break;
+        }
     }
 }

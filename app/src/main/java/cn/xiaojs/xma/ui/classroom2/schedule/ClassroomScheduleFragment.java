@@ -68,13 +68,6 @@ public class ClassroomScheduleFragment extends AbsClassScheduleFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((TextView)mContent.findViewById(R.id.middle_view)).setText("课表");
-        mContent.findViewById(R.id.left_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exit();
-            }
-        });
     }
 
 

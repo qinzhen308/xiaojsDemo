@@ -19,7 +19,7 @@ import cn.xiaojs.xma.model.account.Account;
 public class ScheduleLesson implements Serializable{
     public String id;
     public String title;
-    public String type;
+    public String typeName;
     public String ticket;
     public Schedule schedule;
     public Enroll enroll;
@@ -27,27 +27,19 @@ public class ScheduleLesson implements Serializable{
     public Account owner;
     public Account teacher;
     public Account[] assistants;
-    @JsonProperty("class")
-    public ClassInfo classInfo;
     public Adviser[] advisers;
     public boolean accessible;
     public String playback;
     public boolean recordable;
     public String mimeType;
+    public boolean imLead;
+    public Classroom classroom;
 
-
-    public ScheduleLesson() {
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Classroom{
+        public String liveState;
     }
-
-    protected ScheduleLesson(Parcel in) {
-        id = in.readString();
-        title = in.readString();
-        type = in.readString();
-        ticket = in.readString();
-        state = in.readString();
-    }
-
-
 
 
 }

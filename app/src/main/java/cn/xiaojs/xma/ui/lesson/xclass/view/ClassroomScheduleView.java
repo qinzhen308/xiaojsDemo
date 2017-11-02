@@ -30,6 +30,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
@@ -44,7 +45,7 @@ import cn.xiaojs.xma.util.MaterialUtil;
  * Created by Paul Z on 2017/11/1.
  */
 
-public class ClassroomScheduleView extends RelativeLayout implements IViewModel<CLesson> {
+public class ClassroomScheduleView extends RelativeLayout implements IViewModel<ScheduleLesson> {
 
 
     @BindView(R.id.tv_date)
@@ -68,7 +69,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     @BindView(R.id.icon_live)
     ProgressBar iconLive;
 
-    CLesson mData;
+    ScheduleLesson mData;
     @BindView(R.id.tv_state)
     TextView tvState;
 
@@ -108,7 +109,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
 
 
     @Override
-    public void bindData(int position, CLesson data) {
+    public void bindData(int position, ScheduleLesson data) {
         mData = data;
         this.position = position;
         tvDate.setText(ScheduleUtil.getHMDate(data.schedule.getStart()));
@@ -169,7 +170,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    enterClassroom();
+
                 }
             });
         }
@@ -190,12 +191,12 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     }
 
     private boolean isAdviser() {
-        if (mData.classInfo == null || mData.classInfo.advisers == null) return false;
+       /* if (mData.classInfo == null || mData.classInfo.advisers == null) return false;
         String id = AccountPref.getAccountID(getContext());
         for (cn.xiaojs.xma.model.account.Account ad : mData.classInfo.advisers) {
             if (id.equals(ad.getId())) return true;
-        }
-        return false;
+        }*/
+        return mData.imLead;
     }
 
 
@@ -216,23 +217,6 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
             }
         } else {
             ivAvatar1.setVisibility(GONE);
-        }
-    }
-
-    private void enterClassroom() {
-        if (Account.TypeName.CLASS_LESSON.equals(mData.type)) {
-            if (XiaojsConfig.DEBUG) Logger.d("--------qz--------ticket=" + mData.classInfo.ticket);
-            Intent i = new Intent();
-            i.putExtra(Constants.KEY_TICKET, mData.classInfo.ticket);
-            i.setClass(getContext(), ClassroomActivity.class);
-            getContext().startActivity(i);
-        } else if (Account.TypeName.STAND_ALONE_LESSON.equals(mData.type) && (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)
-                || Ctl.StandaloneLessonState.LIVE.equals(mData.state)
-                || Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state))) {
-            Intent i = new Intent();
-            i.putExtra(Constants.KEY_TICKET, mData.ticket);
-            i.setClass(getContext(), ClassroomActivity.class);
-            getContext().startActivity(i);
         }
     }
 
