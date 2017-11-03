@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.provider.DataObserver;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
@@ -33,6 +35,8 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView;
 import cn.xiaojs.xma.ui.lesson.xclass.CreateClassActivity;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
@@ -116,6 +120,23 @@ public class ConversationFragment extends Base2Fragment {
                 }
 
                 return false;
+            }
+        });
+
+        adapter.setItemClickListener(new ConversationAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Contact contact, int position) {
+                if (!TextUtils.isEmpty(contact.subtype)
+                        && ConversationType.TypeName.PRIVATE_CLASS.equals(contact.subtype)){
+
+                    String ticket = dataProvider.getClassTicket(contact.id);
+                    if (!TextUtils.isEmpty(ticket)) {
+                        Classroom2Activity.invoke(getActivity(), ticket);
+                    }
+
+                }else {
+                    SingleSessionFragment.invoke(getFragmentManager(),contact.id, contact.title);
+                }
             }
         });
 

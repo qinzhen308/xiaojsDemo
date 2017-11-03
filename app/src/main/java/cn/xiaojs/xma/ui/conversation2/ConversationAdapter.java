@@ -27,6 +27,16 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
     private ArrayList<Contact> contacts;
     private SwipeLayout openedSwipe;
 
+    private ItemClickListener itemClickListener;
+
+    public interface ItemClickListener{
+        void onItemClick(Contact contact, int position);
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
     public ConversationAdapter(Context context) {
         this.context = context;
         this.contacts = new ArrayList<>();
@@ -66,7 +76,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
     @Override
     public void onBindViewHolder(AbsConversationViewHolder holder, final int position) {
 
-        Contact contact = contacts.get(position);
+        final Contact contact = contacts.get(position);
 
         if (holder instanceof TimetableConViewHolder) {
             TimetableConViewHolder conViewHolder = (TimetableConViewHolder) holder;
@@ -82,13 +92,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
             String title = TextUtils.isEmpty(contact.title) ? "#" : String.valueOf(contact.title.trim().charAt(0));
 
-            conViewHolder.avatorTextView.setText(title);
+            conViewHolder.avatorTextView.setIconWithText(title);
             conViewHolder.titleView.setText(contact.title);
             conViewHolder.descView.setText(contact.lastMessage);
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
 
             if (contact.unread > 0) {
-                conViewHolder.flagView.setText(String.valueOf(contact.unread));
+                if (contact.unread > 99) {
+                    conViewHolder.flagView.setText("99+");
+                }else {
+                    conViewHolder.flagView.setText(String.valueOf(contact.unread));
+                }
+
                 conViewHolder.flagView.setVisibility(View.VISIBLE);
             }else {
                 conViewHolder.flagView.setVisibility(View.GONE);
@@ -98,8 +113,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             conViewHolder.uprootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    //TODO 进入
+                    if (itemClickListener != null) {
+                        itemClickListener.onItemClick(contact, position);
+                    }
                 }
             });
             conViewHolder.deleteView.setOnClickListener(new View.OnClickListener() {

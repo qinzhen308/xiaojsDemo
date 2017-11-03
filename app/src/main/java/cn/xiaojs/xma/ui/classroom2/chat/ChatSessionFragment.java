@@ -41,7 +41,6 @@ import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
-import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
@@ -347,7 +346,11 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         ReadTalk readTalk = new ReadTalk();
         readTalk.type = liveCriteria.type;
         readTalk.from = talk.from;
-        readTalk.to = liveCriteria.to;
+
+        if (liveCriteria.type == Communications.TalkType.OPEN) {
+            readTalk.to = AccountDataManager.getAccountID(getContext());
+        }
+
         readTalk.stime = talk.stime;
 
         XMSManager.sendReadTalk(getContext(), readTalk, null);

@@ -79,7 +79,7 @@ public class ClassroomsFragment extends Base2Fragment {
     }
 
     private void showAdpater() {
-        adapter.addDatas(dataProvider.getConversations());
+        adapter.addDatas(dataProvider.getClasses());
         if (adapter.getCount() > 0) {
             hiddenTips();
         } else {

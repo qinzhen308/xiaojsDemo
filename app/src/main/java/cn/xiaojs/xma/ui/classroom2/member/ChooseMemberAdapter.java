@@ -50,8 +50,8 @@ public class ChooseMemberAdapter extends RecyclerView.Adapter<ChooseMemberViewHo
         Glide.with(context)
                 .load(avatorUrl)
                 .transform(new CircleTransform(context))
-                .placeholder(R.drawable.default_avatar_grey)
-                .error(R.drawable.default_avatar_grey)
+                .placeholder(R.drawable.ic_defaultavatar)
+                .error(R.drawable.ic_defaultavatar)
                 .into(holder.avatorView);
 
 
