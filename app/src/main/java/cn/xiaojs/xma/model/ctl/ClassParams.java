@@ -18,5 +18,8 @@ public class ClassParams {
     public boolean accessible;
     public ClassEnroll enroll;
     public List<ClassLesson> lessons;
+    public boolean visitor;
+    public Boolean talk;
+    public Boolean library;
 
 }

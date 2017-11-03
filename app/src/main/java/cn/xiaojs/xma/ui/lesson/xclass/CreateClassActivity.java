@@ -1,26 +1,26 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.v4.app.ActivityCompat;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -28,13 +28,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
-import cn.xiaojs.xma.common.permissiongen.PermissionGen;
-import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.account.Account;
@@ -44,11 +43,11 @@ import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.common.ImageViewActivity;
-import cn.xiaojs.xma.ui.lesson.CourseConstant;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.StringUtil;
 
 /**
@@ -64,11 +63,6 @@ public class CreateClassActivity extends BaseActivity {
     private final int REQUEST_MANUAL_STUDENTS_CODE = 0x3;
     private final int REQUEST_IMPORT_STUDENTS_CODE = 0x4;
     private final int REQUEST_ZERO_ADD_STUDENT_CODE = 0x5;
-
-    @BindView(R.id.tips_content)
-    TextView tipsContentView;
-    @BindView(R.id.lay_tips)
-    LinearLayout tipsRootView;
 
     @BindView(R.id.class_name)
     EditTextDel classNameEdt;
@@ -92,6 +86,15 @@ public class CreateClassActivity extends BaseActivity {
     TextView labelAddVerify;
     @BindView(R.id.label_public)
     TextView labelPublic;
+
+    @BindView(R.id.cb_allow_guest_chart)
+    CheckBox cbAllowGuestChart;
+    @BindView(R.id.cb_allow_guest_read)
+    CheckBox cbAllowGuestRead;
+    @BindView(R.id.guest_switcher)
+    ToggleButton guestSwitcher;
+    @BindView(R.id.layout_guest_authority)
+    View layoutGuestAuthority;
 
     public static ArrayList<ClassLesson> classLessons;
 
@@ -149,21 +152,18 @@ public class CreateClassActivity extends BaseActivity {
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_create_class);
-        setMiddleTitle(getString(R.string.create_class));
+        setMiddleTitle("新建教室");
 
         initView();
     }
 
 
-    @OnClick({R.id.left_image, R.id.lesson_creation_tips_close, R.id.sub_btn,
+    @OnClick({R.id.left_image, R.id.sub_btn,
             R.id.lay_time_table, R.id.lay_class_student})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_image:
                 finish();
-                break;
-            case R.id.lesson_creation_tips_close://关闭提醒
-                closeCourCreateTips();
                 break;
             case R.id.sub_btn://完成
                 createClass();
@@ -194,7 +194,6 @@ public class CreateClassActivity extends BaseActivity {
 //        labelAddVerify.setText(StringUtil.getSpecialString(labelAddVerify.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
 //        labelTeacher.setText(StringUtil.getSpecialString(labelTeacher.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
 
-        tipsContentView.setText(R.string.class_create_tips);
 
         classNameEdt.setHint(getString(R.string.live_lesson_name_hint, MAX_CLASS_CHAR));
         classNameEdt.setForbidEnterChar(true);
@@ -216,6 +215,16 @@ public class CreateClassActivity extends BaseActivity {
                     AnalyticEvents.onEvent(CreateClassActivity.this, 39);
                 } else {
                     AnalyticEvents.onEvent(CreateClassActivity.this, 40);
+                }
+            }
+        });
+        guestSwitcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    layoutGuestAuthority.setVisibility(View.VISIBLE);
+                } else {
+                    layoutGuestAuthority.setVisibility(View.GONE);
                 }
             }
         });
@@ -263,9 +272,6 @@ public class CreateClassActivity extends BaseActivity {
         dialog.show();
     }
 
-    private void closeCourCreateTips() {
-        tipsRootView.setVisibility(View.GONE);
-    }
 
     private void addStudents() {
 
@@ -364,6 +370,14 @@ public class CreateClassActivity extends BaseActivity {
         params.accessible = publicSwitcher.isChecked();
         params.lessons = classLessons;
 
+        if(guestSwitcher.isChecked()){
+            params.visitor=true;
+            params.library=cbAllowGuestRead.isChecked();
+            params.talk=cbAllowGuestChart.isChecked();
+        }else {
+            params.visitor=false;
+        }
+
         ClassEnroll classEnroll = null;
         if (enrollStudents != null && enrollStudents.size() > 0) {
             for (StudentEnroll e : enrollStudents) {
@@ -395,16 +409,11 @@ public class CreateClassActivity extends BaseActivity {
             @Override
             public void onSuccess(CLResponse object) {
                 cancelProgress();
-                Toast.makeText(CreateClassActivity.this,
-                        R.string.create_class_success,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                showSuccessTip(object.getId());
                 clearClassLessons();
 
                 DataChangeHelper.getInstance()
                         .notifyDataChanged(SimpleDataChangeListener.CREATE_CLASS_CHANGED);
-                setResult(RESULT_OK);
-                finish();
             }
 
             @Override
@@ -561,6 +570,65 @@ public class CreateClassActivity extends BaseActivity {
 
     }
 
+    private void showSuccessTip(final String classId){
+        final CommonDialog tipsDialog = new CommonDialog(this);
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.layout_classroom2_dlg_tips_stopped_live, null);
 
+        tipsDialog.setCancelable(false);
+        tipsDialog.setCanceledOnTouchOutside(false);
+
+        ImageView avatorView = (ImageView) view.findViewById(R.id.avator);
+        final TextView titleView = (TextView) view.findViewById(R.id.title);
+        TextView tipsView = (TextView) view.findViewById(R.id.tips);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        ImageView closeBtn = (ImageView) view.findViewById(R.id.close_btn);
+
+        avatorView.setImageResource(R.drawable.ic_create_classroom_success);
+
+        titleView.setText("创建成功");
+        tipsView.setText("一个人玩儿好孤单，邀请好友加入吧");
+        okBtn.setText("分享给好友");
+
+        tipsDialog.setBottomButtonVisibility(View.GONE);
+        okBtn.setVisibility(View.VISIBLE);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url= ApiManager.getShareLessonUrl(classId, cn.xiaojs.xma.common.xf_foundation.schemas.Account.TypeName.CLASS_LESSON);
+                if(url.contains("?")){
+                    url+="&app=android";
+                }else {
+                    url+="?app=android";
+                }
+                ShareUtil.shareUrlByUmeng(CreateClassActivity.this, classNameEdt.getText().toString(), AccountDataManager.getAccont(CreateClassActivity.this).getBasic().getName(), url);
+            }
+        });
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipsDialog.dismiss();
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+
+        tipsDialog.setCustomView(view);
+        tipsDialog.show();
+        isCreateSuccess=true;
+
+    }
+
+    boolean isCreateSuccess=false;
+    @Override
+    public void onBackPressed() {
+        if(isCreateSuccess){
+            finish();
+            return;
+        }
+        super.onBackPressed();
+    }
 }
 

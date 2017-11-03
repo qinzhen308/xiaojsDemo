@@ -1,90 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include
-            layout="@layout/layout_create_tips"
-            android:id="@+id/lay_tips"
-            />
 
     <Button
-            android:id="@+id/sub_btn"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/finish"
-            style="@style/BigSubmitBtn"/>
+        android:id="@+id/sub_btn"
+        style="@style/BigSubmitBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/finish" />
 
     <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/sub_btn"
-            android:layout_below="@id/lay_tips">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/sub_btn"
+        android:background="@color/classroom_gray_1">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <!--班名称-->
-            <LinearLayout
-                    style="@style/LiveLessonItem">
+            <LinearLayout style="@style/LiveLessonItem">
 
                 <TextView
                     android:id="@+id/label_class"
-                        style="@style/LiveLessonCreateTitle"
-                        android:text="@string/live_class_name"
-                    />
+                    style="@style/LiveLessonCreateTitle"
+                    android:text="@string/classroom_name" />
 
                 <cn.xiaojs.xma.ui.widget.EditTextDel
-                        android:id="@+id/class_name"
-                        style="@style/LiveLessonCreateEdt"
-                        android:layout_marginLeft="@dimen/px40"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:maxLines="2"
-                        android:hint="@string/live_lesson_name_hint"/>
+                    android:id="@+id/class_name"
+                    style="@style/LiveLessonCreateEdt"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="@dimen/px40"
+                    android:layout_weight="1"
+                    android:hint="@string/live_lesson_name_hint"
+                    android:maxLines="2" />
             </LinearLayout>
 
-            <include layout="@layout/layout_horizontal_line"/>
-
             <LinearLayout
-                    style="@style/LiveLessonItem">
+                style="@style/LiveLessonItem"
+                android:layout_marginTop="@dimen/px2">
 
                 <TextView
                     android:id="@+id/label_teacher"
                     style="@style/LiveLessonCreateTitle"
-                        android:text="@string/head_teacher"/>
+                    android:text="@string/administrator" />
 
                 <TextView
-                        android:id="@+id/teacher_name"
-                        style="@style/LiveLessonRightEntrance"
-                        android:drawableRight="@null"
-                        />
+                    android:id="@+id/teacher_name"
+                    style="@style/LiveLessonRightEntrance"
+                    android:drawableRight="@null" />
             </LinearLayout>
-
-            <include layout="@layout/layout_horizontal_line"/>
 
 
             <!--加入班级是否需要验证-->
             <LinearLayout
-                    android:paddingLeft="@dimen/px28"
-                    android:paddingRight="@dimen/px26"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px32"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px26">
 
                 <TextView
                     android:id="@+id/label_add_verify"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/px25"
-                        android:paddingBottom="@dimen/px28"
-                        android:text="@string/join_type"
-                        android:background="@color/white"/>
+                    android:background="@color/white"
+                    android:paddingBottom="@dimen/px28"
+                    android:paddingTop="@dimen/px25"
+                    android:text="@string/join_classroom_need_verity" />
 
                 <ToggleButton
                     android:id="@+id/veri_switcher"
@@ -92,31 +83,31 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/toggle_btn_selector"
                     android:textOff=""
-                    android:textOn=""/>
+                    android:textOn="" />
 
             </LinearLayout>
 
-            <include layout="@layout/layout_horizontal_line"/>
 
             <!--加入班级是否需要验证-->
             <LinearLayout
-                android:paddingLeft="@dimen/px28"
-                android:paddingRight="@dimen/px26"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px2"
+                android:background="@color/white"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px26">
 
                 <TextView
                     android:id="@+id/label_public"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/px25"
+                    android:layout_weight="1"
+                    android:background="@color/white"
                     android:paddingBottom="@dimen/px28"
-                    android:text="@string/class_need_public"
-                    android:background="@color/white"/>
+                    android:paddingTop="@dimen/px25"
+                    android:text="@string/classroom_need_public" />
 
                 <ToggleButton
                     android:id="@+id/public_switcher"
@@ -124,45 +115,135 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/toggle_btn_selector"
                     android:textOff=""
-                    android:textOn=""/>
+                    android:textOn="" />
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/layout_public_tip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/px20"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px26"
+                android:text="可通过关键字搜索找到该教室"
+                android:textColor="@color/hint_color"
+                android:textSize="@dimen/font_28px"
+                android:visibility="gone" />
+
+            <!--允许游客进入教室-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px2"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px26">
+
+                <TextView
+                    android:id="@+id/label_guest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:paddingBottom="@dimen/px28"
+                    android:paddingTop="@dimen/px25"
+                    android:text="@string/join_classroom_allow_guest" />
+
+                <ToggleButton
+                    android:id="@+id/guest_switcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/toggle_btn_selector"
+                    android:textOff=""
+                    android:textOn="" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_guest_authority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/px15"
+                android:paddingLeft="@dimen/px28"
+                android:paddingRight="@dimen/px26"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/cb_allow_guest_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/multi_check_selector_blue"
+                    android:drawablePadding="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:paddingTop="@dimen/px20"
+                    android:text="允许游客查看资料库"
+                    android:textColor="@color/hint_color"
+                    android:textSize="@dimen/font_28px" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <CheckBox
+                    android:id="@+id/cb_allow_guest_chart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/multi_check_selector_blue"
+                    android:drawablePadding="@dimen/px20"
+                    android:paddingBottom="@dimen/px20"
+                    android:paddingTop="@dimen/px20"
+                    android:text="允许游客聊天"
+                    android:textColor="@color/hint_color"
+                    android:textSize="@dimen/font_28px" />
+
+
+            </LinearLayout>
 
 
             <!--课表-->
             <LinearLayout
-                    android:id="@+id/lay_time_table"
-                    android:layout_marginTop="@dimen/px32"
-                    style="@style/LiveLessonItem">
+                android:id="@+id/lay_time_table"
+                style="@style/LiveLessonItem"
+                android:layout_marginTop="@dimen/px32">
 
                 <TextView
-                        style="@style/LiveLessonTitle"
-                        android:text="@string/time_table"/>
+                    style="@style/LiveLessonTitle"
+                    android:text="@string/time_table" />
 
                 <TextView
-                        android:id="@+id/time_table_tips"
-                        style="@style/LiveLessonRightEntrance"
-                        android:hint="@string/arrange_class"/>
+                    android:id="@+id/time_table_tips"
+                    style="@style/LiveLessonRightEntrance"
+                    android:hint="@string/arrange_class" />
 
             </LinearLayout>
 
-            <include
-                    layout="@layout/layout_horizontal_line"/>
 
             <!--学生-->
             <LinearLayout
-                    android:id="@+id/lay_class_student"
-                    style="@style/LiveLessonItem">
+                android:id="@+id/lay_class_student"
+                style="@style/LiveLessonItem"
+                android:layout_marginTop="@dimen/px2">
 
                 <TextView
-                        style="@style/LiveLessonTitle"
-                        android:text="@string/class_student"/>
+                    style="@style/LiveLessonTitle"
+                    android:text="@string/class_student" />
 
                 <TextView
-                        android:id="@+id/student_num_tips"
-                        style="@style/LiveLessonRightEntrance"
-                        android:hint="@string/please_select"/>
+                    android:id="@+id/student_num_tips"
+                    style="@style/LiveLessonRightEntrance"
+                    android:hint="@string/please_select" />
 
             </LinearLayout>
 

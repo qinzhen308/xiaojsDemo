@@ -1066,5 +1066,11 @@
     <string name="finish_class">下课</string>
     <string name="my_course_list">我的课程</string>
 
+    <string name="classroom_name">教室名称</string>
+    <string name="administrator">管理员</string>
+    <string name="join_classroom_need_verity">加入教室是否需要验证</string>
+    <string name="classroom_need_public">教室是否公开</string>
+    <string name="join_classroom_allow_guest">是否允许游客进教室</string>
+
 
 </resources>
