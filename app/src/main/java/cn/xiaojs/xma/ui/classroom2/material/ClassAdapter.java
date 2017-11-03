@@ -37,7 +37,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassViewHolder> {
         holder.nameView.setText(contact.alias);
         holder.descView.setText("summary");
 
-        holder.avatorView.setText(String.valueOf(contact.alias.charAt(0)));
+        holder.avatorView.setIconWithText(String.valueOf(contact.alias.charAt(0)));
 
         if (position == checkIndex) {
             holder.checkedView.setChecked(true);

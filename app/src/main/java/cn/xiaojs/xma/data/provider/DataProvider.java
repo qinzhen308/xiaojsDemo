@@ -126,7 +126,33 @@ public class DataProvider {
         this.classes = classes;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 教室
+    //
 
+    public String getClassTicket(String cid) {
+        Contact contact = classesMapping.get(cid);
+        if (contact != null) {
+            return contact.ticket;
+        }
+        return null;
+    }
+
+    public String getClassName(String cid) {
+        Contact contact = classesMapping.get(cid);
+        if (contact != null) {
+            return contact.title;
+        }
+        return "";
+    }
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Conversation
+    //
     public void updateConversationUnread(String conversationId, int unreadCount) {
 
         if (TextUtils.isEmpty(conversationId))

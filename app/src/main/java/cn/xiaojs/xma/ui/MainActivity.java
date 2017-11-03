@@ -44,6 +44,7 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
+import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
@@ -561,7 +562,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
                     break;
                 case Su.EventType.DIALOG_READ:
                     Talk talk = (Talk) eventReceived.t;
-                    updateDlgRead(talk.type, talk.from);
+                    updateDlgRead(talk.type, talk.to);
                     break;
                 case Su.EventType.REMOVE_DIALOG:
                     break;
@@ -583,6 +584,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
             talkItem.name = "nil";
         }
 
+        DataProvider dataProvider = DataProvider.getProvider(this);
+
         Contact contact = new Contact();
 
         if (talkItem.type == Communications.TalkType.PEER) {
@@ -591,9 +594,10 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
             contact.title = talkItem.name;
         }else if (talkItem.type == Communications.TalkType.OPEN){
             contact.id = talkItem.to;
-            //FIXME 如果是群聊，班级名字该如何获取呢？
-            contact.name = "";
-            contact.title = "";
+            String title = dataProvider.getClassName(talkItem.to);
+            contact.name = title;
+            contact.title = title;
+            contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
         }else {
             return;
         }
@@ -602,7 +606,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
         contact.lastTalked = talkItem.time;
         contact.unread = 1;
 
-        DataProvider dataProvider = DataProvider.getProvider(this);
+
         dataProvider.moveOrInsertConversation(contact);
     }
 

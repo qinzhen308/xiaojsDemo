@@ -47,7 +47,8 @@ public class ClassroomsAdapter extends BaseAdapter {
 
     public void addDatas(ArrayList<Contact> data) {
         if (data !=null) {
-            dataCollect.addAll(data);
+            dataCollect = data;
+            notifyDataSetChanged();
         }
 
     }
@@ -85,7 +86,7 @@ public class ClassroomsAdapter extends BaseAdapter {
 
         String title = TextUtils.isEmpty(contactItem.title) ? "#" : String.valueOf(contactItem.title.trim().charAt(0));
 
-        viewHolder.avatorTextView.setText(title);
+        viewHolder.avatorTextView.setIconWithText(title);
         viewHolder.titleView.setText(contactItem.title);
         viewHolder.descView.setText("[Oh YES]");
 

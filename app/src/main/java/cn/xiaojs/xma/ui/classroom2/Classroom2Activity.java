@@ -1,6 +1,8 @@
 package cn.xiaojs.xma.ui.classroom2;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -123,6 +125,15 @@ public class Classroom2Activity extends FragmentActivity {
                     }
                 }
             };
+
+
+    //进入教室
+    public static void invoke(Activity context, String ticket) {
+        Intent i = new Intent();
+        i.putExtra(CTLConstant.EXTRA_TICKET, ticket);
+        i.setClass(context, Classroom2Activity.class);
+        context.startActivity(i);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -665,8 +676,8 @@ public class Classroom2Activity extends FragmentActivity {
         Glide.with(this)
                 .load(avatorUrl)
                 .transform(new CircleTransform(this))
-                .placeholder(R.drawable.default_avatar_grey)
-                .error(R.drawable.default_avatar_grey)
+                .placeholder(R.drawable.ic_defaultavatar)
+                .error(R.drawable.ic_defaultavatar)
                 .into(o2oAvatorView);
         o2oNameView.setText(attendee.name);
         o2oLayout.setVisibility(View.VISIBLE);
