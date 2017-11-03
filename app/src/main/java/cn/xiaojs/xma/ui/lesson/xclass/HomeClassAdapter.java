@@ -12,6 +12,7 @@ import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.model.ctl.CLesson;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
+import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.ui.lesson.xclass.model.ClassFooterModel;
@@ -21,6 +22,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LoadStateMode;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.lesson.xclass.view.ClassView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.ClassroomScheduleView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassFooterView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
@@ -93,7 +95,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }else if(viewType== VIEW_TYPE_NATIVE_LESSON){
             holder=new CommonHolder(new NativeLessonView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_LIVE_SCHEDULE_LESSON){
-            holder=new CommonHolder(new LiveScheduleLessonView(parent.getContext()));
+            holder=new CommonHolder(new ClassroomScheduleView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_HOME_CLASS_FOOTER){
             holder=new CommonHolder(new HomeClassFooterView(parent.getContext()));
         }else if(viewType== VIEW_TYPE_HOME_RECORDED_LESSON){
@@ -145,7 +147,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_HOME_LESSON_LABEL;
         }else if(o instanceof CLesson){
             return VIEW_TYPE_HOME_LESSON;
-        }else if(o instanceof LiveSchedule){
+        }else if(o instanceof ScheduleLesson){
             return VIEW_TYPE_LIVE_SCHEDULE_LESSON;
         }else if(o instanceof ClassFooterModel){
             return VIEW_TYPE_HOME_CLASS_FOOTER;

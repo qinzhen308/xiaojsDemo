@@ -14,12 +14,11 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.util.DeviceUtil;
-
 import java.util.ArrayList;
 
-public class CommonPopupMenu {
+import cn.xiaojs.xma.R;
+
+public class CommonPopupMenu1 {
     private ArrayList<String> mItemList;
     private ArrayList<Integer> mImgList;
     private Context mContext;
@@ -30,14 +29,14 @@ public class CommonPopupMenu {
 
     private int offset;
 
-    public CommonPopupMenu(Context ctx) {
+    public CommonPopupMenu1(Context ctx) {
         init(ctx, 0);
     }
 
     private void init(Context ctx, int pix) {
         mContext = ctx;
         mListView = (ListView) LayoutInflater.from(ctx).inflate(
-                R.layout.common_popup_menu, null);
+                R.layout.common_popup_menu1, null);
         mListView.setPadding(
                 ctx.getResources().getDimensionPixelSize(R.dimen.px15),
                 ctx.getResources().getDimensionPixelSize(R.dimen.px30),
@@ -146,7 +145,7 @@ public class CommonPopupMenu {
             if (convertView == null) {
 
                 convertView = LayoutInflater.from(mContext).inflate(
-                        R.layout.common_popup_menu_item, parent, false);
+                        R.layout.common_popup_menu_item1, parent, false);
 
                 TextView menuItem = (TextView) convertView;
                 mHolder = new ItemHolder();

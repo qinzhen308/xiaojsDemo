@@ -103,4 +103,12 @@ public abstract class DataPageLoader<B,T> implements APIServiceCallback<T> ,Page
      */
     public abstract void prepare();
 
+    @Override
+    public void previous() {
+
+    }
+
+    public List<B> getAllDatas(){
+        return mList;
+    }
 }

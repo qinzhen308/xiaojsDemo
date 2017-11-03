@@ -8,6 +8,8 @@ public interface PageChangeListener {
 
     void next();
 
+    void previous();
+
     void refresh();
 
 }

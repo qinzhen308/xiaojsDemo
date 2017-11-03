@@ -50,7 +50,7 @@ public class LessonOperateBoard<T> extends Dialog implements DialogInterface.OnC
 
 
     //请一定按顺序，并且和LOpModel里面的OP_..顺序保持一致
-    private final static int[] icons={
+    public final static int[] icons={
             R.drawable.ic_op_apply,R.drawable.ic_op_cancel_lesson,
             R.drawable.ic_op_cancel_submit,R.drawable.ic_op_class_info,
             R.drawable.ic_op_database2,R.drawable.ic_op_delete,
@@ -68,7 +68,7 @@ public class LessonOperateBoard<T> extends Dialog implements DialogInterface.OnC
     };
 
     //请一定按顺序，并且和LOpModel里面的OP_..顺序保持一致
-    private final static int[] names={
+    public final static int[] names={
             R.string.lesson_op_look_apply,R.string.lesson_op_cancel_lesson,
             R.string.lesson_op_cancel_submit,R.string.lesson_op_class_info,
             R.string.lesson_op_database,R.string.lesson_op_delete,

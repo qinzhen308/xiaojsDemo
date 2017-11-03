@@ -18,7 +18,8 @@
             />
 
     <ImageView
-            android:layout_width="wrap_content"
+        android:id="@+id/btn_scan"
+        android:layout_width="wrap_content"
             android:layout_height="@dimen/px90"
             android:src="@drawable/ic_conversation_scan_1"
             android:layout_alignParentLeft="true"
@@ -27,6 +28,7 @@
             android:paddingRight="@dimen/px27"/>
 
     <ImageView
+        android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/px90"
             android:src="@drawable/ic_conversation_add_1"

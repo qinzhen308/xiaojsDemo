@@ -30,21 +30,24 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom2.schedule.SLOpModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.view.TextInBgSpan;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
+import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.MaterialUtil;
 
 /**
  * Created by Paul Z on 2017/11/1.
  */
 
-public class ClassroomScheduleView extends RelativeLayout implements IViewModel<CLesson> {
+public class ClassroomScheduleView extends RelativeLayout implements IViewModel<ScheduleLesson> {
 
 
     @BindView(R.id.tv_date)
@@ -68,7 +71,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     @BindView(R.id.icon_live)
     ProgressBar iconLive;
 
-    CLesson mData;
+    ScheduleLesson mData;
     @BindView(R.id.tv_state)
     TextView tvState;
 
@@ -108,7 +111,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
 
 
     @Override
-    public void bindData(int position, CLesson data) {
+    public void bindData(int position, ScheduleLesson data) {
         mData = data;
         this.position = position;
         tvDate.setText(ScheduleUtil.getHMDate(data.schedule.getStart()));
@@ -169,7 +172,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    enterClassroom();
+
                 }
             });
         }
@@ -190,12 +193,12 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     }
 
     private boolean isAdviser() {
-        if (mData.classInfo == null || mData.classInfo.advisers == null) return false;
+       /* if (mData.classInfo == null || mData.classInfo.advisers == null) return false;
         String id = AccountPref.getAccountID(getContext());
         for (cn.xiaojs.xma.model.account.Account ad : mData.classInfo.advisers) {
             if (id.equals(ad.getId())) return true;
-        }
-        return false;
+        }*/
+        return mData.imLead;
     }
 
 
@@ -216,23 +219,6 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
             }
         } else {
             ivAvatar1.setVisibility(GONE);
-        }
-    }
-
-    private void enterClassroom() {
-        if (Account.TypeName.CLASS_LESSON.equals(mData.type)) {
-            if (XiaojsConfig.DEBUG) Logger.d("--------qz--------ticket=" + mData.classInfo.ticket);
-            Intent i = new Intent();
-            i.putExtra(Constants.KEY_TICKET, mData.classInfo.ticket);
-            i.setClass(getContext(), ClassroomActivity.class);
-            getContext().startActivity(i);
-        } else if (Account.TypeName.STAND_ALONE_LESSON.equals(mData.type) && (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)
-                || Ctl.StandaloneLessonState.LIVE.equals(mData.state)
-                || Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state))) {
-            Intent i = new Intent();
-            i.putExtra(Constants.KEY_TICKET, mData.ticket);
-            i.setClass(getContext(), ClassroomActivity.class);
-            getContext().startActivity(i);
         }
     }
 
@@ -260,44 +246,39 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
 
     @OnClick(R.id.btn_more)
     public void onViewClicked() {
-        new LessonOperateBoard(getContext()).setOpGroup2(fromSchedule ? classLessonOperate() : classOperate()).maybe((Activity) getContext(), mData, position).show();
-    }
-
-    //首页班课的操作，对班的操作
-    public List<LOpModel> classOperate() {
-        List<LOpModel> list = new ArrayList<>();
-        list.add(new LOpModel(LOpModel.OP_SCHEDULE));
-        list.add(new LOpModel(LOpModel.OP_DATABASE1));
-        list.add(new LOpModel(LOpModel.OP_ENTER));
-        list.add(new LOpModel(LOpModel.OP_CLASS_INFO));
-        return list;
+        ListBottomDialog dialog=new ListBottomDialog(getContext());
+        final List<SLOpModel> lOpModelList=classLessonOperate();
+        String[] names=new String[lOpModelList.size()];
+        for(int i=0;i<lOpModelList.size();i++){
+            names[i]=getResources().getString(LessonOperateBoard.names[lOpModelList.get(i).getId()]);
+        }
+        dialog.setItems(names);
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                lOpModelList.get(position).onClick((Activity) getContext(),mData,position);
+            }
+        });
+        dialog.show();
+//        new LessonOperateBoard(getContext()).setOpGroup2(fromSchedule ? classLessonOperate() : classOperate()).maybe((Activity) getContext(), mData, position).show();
     }
 
     //课表的操作，对班级课表页面的课的操作，只有班主任和课所有者能操作
-    public List<LOpModel> classLessonOperate() {
-        List<LOpModel> list = new ArrayList<>();
+    public List<SLOpModel> classLessonOperate() {
+        List<SLOpModel> list = new ArrayList<>();
         if (Ctl.StandaloneLessonState.PENDING_FOR_LIVE.equals(mData.state)) {//待开课
             if (mData.schedule.getStart().getTime() - System.currentTimeMillis() > 5 * 60 * 1000) {
-                list.add(new LOpModel(LOpModel.OP_EDIT));
+                list.add(new SLOpModel(LOpModel.OP_EDIT));
             }
-            list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
-            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new SLOpModel(LOpModel.OP_CANCEL_LESSON));
         } else if (Ctl.StandaloneLessonState.LIVE.equals(mData.state)) {//上课中
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
-            list.add(new LOpModel(LOpModel.OP_ENTER));
         } else if (Ctl.StandaloneLessonState.FINISHED.equals(mData.state)) {//已完课
-            list.add(new LOpModel(LOpModel.OP_DELETE));
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
-            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new SLOpModel(LOpModel.OP_DELETE));
         } else if (Ctl.StandaloneLessonState.CANCELLED.equals(mData.state)) {//已取消
-            list.add(new LOpModel(LOpModel.OP_DELETE));
-            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new SLOpModel(LOpModel.OP_DELETE));
         } else {//其余状态，班课除了上面的几个状态，其余的就是待开课前的状态（排课中）
-            list.add(new LOpModel(LOpModel.OP_EDIT));
-            list.add(new LOpModel(LOpModel.OP_CANCEL_LESSON));
-//            list.add(new LOpModel(LOpModel.OP_SHARE));
-            list.add(new LOpModel(LOpModel.OP_ENTER));
+            list.add(new SLOpModel(LOpModel.OP_EDIT));
+            list.add(new SLOpModel(LOpModel.OP_CANCEL_LESSON));
         }
         return list;
     }

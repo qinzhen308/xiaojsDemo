@@ -256,4 +256,9 @@
         <item>Z</item>
         <item>\#</item>
     </string-array>
+
+    <string-array name="add_menu3">
+        <item>教室</item>
+        <item>课程</item>
+    </string-array>
 </resources>
