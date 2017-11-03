@@ -37,6 +37,9 @@ public class PageChangeInRecyclerView extends RecyclerView.OnScrollListener impl
                 loader.next();
 //                isLoading=true;
             }
+            if(!isLoading&&isToTop()){
+                loader.previous();
+            }
         }
     }
 

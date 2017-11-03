@@ -19,9 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
 import cn.xiaojs.xma.common.pageload.EventCallback;
@@ -31,6 +29,7 @@ import cn.xiaojs.xma.common.pageload.stateview.LoadStatusViewDecoratee;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Duration;
 import cn.xiaojs.xma.model.Pagination;
@@ -66,6 +65,9 @@ public class ScheduleFragment extends BottomSheetFragment
     DataPageLoader<ScheduleLesson, CollectionPage<ScheduleLesson>> dataPageLoader;
     Pagination mPagination;
     LoadStatusViewDecoratee stateView;
+
+    Date historyEndDate;//已经上过的课程和还未上过课程的临界
+    Pagination mPrePagination;
 
 
     @Override
@@ -124,6 +126,45 @@ public class ScheduleFragment extends BottomSheetFragment
         });
     }
 
+    private boolean isHistoryLoading=false;
+
+    private void requestHistory() {
+        if(historyEndDate==null)return;
+        isHistoryLoading=true;
+        Duration schedule = new Duration();
+        schedule.setEnd(historyEndDate);
+        ScheduleCriteria criteria = new ScheduleCriteria();
+        criteria.duration=schedule;
+        criteria.sort=true;
+        LessonDataManager.getClassesScheduleNewly(getActivity(), ClassroomEngine.getEngine().getTicket(), criteria, mPrePagination, new APIServiceCallback<CollectionPage<ScheduleLesson>>() {
+            @Override
+            public void onSuccess(CollectionPage<ScheduleLesson> object) {
+                if (object==null||ArrayUtil.isEmpty(object.objectsOfPage)) {
+                } else {
+                    dataPageLoader.getAllDatas().addAll(0,object.objectsOfPage);
+                    bindData(dataPageLoader.getAllDatas());
+                    mPrePagination.setPage(mPrePagination.getPage()+1);
+                }
+                isHistoryLoading=false;
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                isHistoryLoading=false;
+            }
+        });
+    }
+
+    private void requestLast() {
+
+        Duration schedule = new Duration();
+
+        ScheduleCriteria criteria = new ScheduleCriteria();
+//        criteria.duration=schedule;
+        criteria.sort=false;
+        LessonDataManager.getClassesScheduleNewly(getActivity(), ClassroomEngine.getEngine().getTicket(), criteria, mPagination, dataPageLoader);
+    }
+
     private void request() {
 
         Duration schedule = new Duration();
@@ -140,19 +181,21 @@ public class ScheduleFragment extends BottomSheetFragment
         mPagination = new Pagination();
         mPagination.setPage(1);
         mPagination.setMaxNumOfObjectsPerPage(10);
+        mPrePagination = new Pagination();
+        mPrePagination.setPage(1);
+        mPrePagination.setMaxNumOfObjectsPerPage(10);
         dataPageLoader = new DataPageLoader<ScheduleLesson, CollectionPage<ScheduleLesson>>() {
             PageChangeInRecyclerView pageChangeInRecyclerView;
-
-            @Override
-            public void next() {
-                //不想分页就重写它，什么都不做
-            }
 
             @Override
             public void onRequst(int page) {
                 mPagination.setPage(page);
                 stateView.change(LoadStateListener.STATE_LOADING, "");
-                request();
+                if(page==1){
+                    request();
+                }else {
+                    requestLast();
+                }
             }
 
             @Override
@@ -166,11 +209,16 @@ public class ScheduleFragment extends BottomSheetFragment
                 pageChangeInRecyclerView.completeLoading();
                 if (ArrayUtil.isEmpty(all)) {
                     stateView.change(LoadStateListener.STATE_ALL_EMPTY, "");
+                    if(historyEndDate==null){
+                        historyEndDate=new Date();
+                    }
                 } else {
                     stateView.change(LoadStateListener.STATE_NORMAL, "");
+                    if(historyEndDate==null){
+                        historyEndDate=all.get(0).schedule.getStart();
+                    }
                 }
                 bindData(all);
-
             }
 
             @Override
@@ -184,6 +232,13 @@ public class ScheduleFragment extends BottomSheetFragment
             public void prepare() {
                 pageChangeInRecyclerView = new PageChangeInRecyclerView(recyclerview, this);
 
+            }
+
+            @Override
+            public void previous() {
+                if(!isHistoryLoading){
+                    requestHistory();
+                }
             }
         };
     }

@@ -67,7 +67,7 @@ public class AddLessonScheduleFragment extends BottomSheetFragment
 
     private long lessonStartTime;
 
-    private long targetTime;
+    private long targetTime=-1;
     private String classId;
 
     @Override
