@@ -91,7 +91,7 @@ public class DataManager {
         //AccountPref.setAvatorTime(context, XiaojsConfig.AVATOR_TIME);
 
 
-        lanuchInitDataService(context, groupMap);
+        lanuchSyncService(context);
 
         //jpush
         JpushUtil.resumePush(context);
@@ -100,6 +100,12 @@ public class DataManager {
         AccountDataManager.setAliaTagsWithCheck(context);
 
         return XMSManager.initXMS(context, consumer);
+    }
+
+    public static void lanuchSyncService(Context context) {
+        Intent i = new Intent(context, SyncService.class);
+        i.putExtra(SYNC_TYPE, TYPE_INIT);
+        context.startService(i);
     }
 
     public static void lanuchInitDataService(Context context, HashMap<Long, String> groupMap) {
@@ -116,13 +122,6 @@ public class DataManager {
     public static void lanuchLoadContactService(Context context,int type) {
         Intent i = new Intent(context, SyncService.class);
         i.putExtra(DataManager.SYNC_TYPE,type);
-        context.startService(i);
-    }
-
-    public static void lanuchContactService(Context context, ArrayList<ContactGroup> contactGroups) {
-        Intent i = new Intent(context, SyncService.class);
-        i.putExtra(DataManager.SYNC_TYPE,DataManager.TYPE_CONTACT);
-        i.putExtra(DataManager.EXTRA_CONTACT,contactGroups);
         context.startService(i);
     }
 

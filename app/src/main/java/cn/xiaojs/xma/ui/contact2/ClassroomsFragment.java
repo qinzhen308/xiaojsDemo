@@ -4,27 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.provider.DataObserver;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
-import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
-import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 
 /**
  * Created by maxiaobao on 2017/10/29.
@@ -37,7 +31,7 @@ public class ClassroomsFragment extends Base2Fragment {
 
     ClassroomsAdapter adapter;
 
-    private ConversationDataProvider dataProvider;
+    private DataProvider dataProvider;
 
     @Nullable
     @Override
@@ -53,17 +47,27 @@ public class ClassroomsFragment extends Base2Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        dataProvider = ConversationDataProvider.getProvider(getContext());
-
-        adapter = new ClassroomsAdapter(getContext(), dataProvider.getClasses());
+        adapter = new ClassroomsAdapter(getContext());
         listView.setAdapter(adapter);
 
-        if (adapter.getCount() > 0) {
-            hiddenTips();
-        } else {
-            showFinalTips();
+        dataProvider = DataProvider.getProvider(getContext());
+        dataProvider.registesObserver(dataObserver);
+        if (dataProvider.isCompleted()) {
+            showAdpater();
+        }else {
+            showLoadingStatus();
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+
+        if (dataObserver != null) {
+            dataProvider.unregistesObserver(dataObserver);
+        }
+
+        super.onDestroy();
     }
 
     @OnItemClick({R.id.listview})
@@ -71,6 +75,15 @@ public class ClassroomsFragment extends Base2Fragment {
         if (adapter != null) {
             Contact contact = adapter.getItem(position);
             enterClass(getActivity(), contact.ticket);
+        }
+    }
+
+    private void showAdpater() {
+        adapter.addDatas(dataProvider.getConversations());
+        if (adapter.getCount() > 0) {
+            hiddenTips();
+        } else {
+            showFinalTips();
         }
     }
 
@@ -82,6 +95,14 @@ public class ClassroomsFragment extends Base2Fragment {
         i.setClass(context, Classroom2Activity.class);
         context.startActivity(i);
     }
+
+
+    private DataObserver dataObserver = new DataObserver() {
+        @Override
+        public void onLoadComplete() {
+            showAdpater();
+        }
+    };
 
 
 }

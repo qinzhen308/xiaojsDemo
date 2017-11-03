@@ -30,6 +30,7 @@ import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.LiveCriteria;
@@ -81,12 +82,12 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
     protected String titleStr = "聊天";
 
-    private ConversationDataProvider dataProvider;
+    private DataProvider dataProvider;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataProvider = ConversationDataProvider.getProvider(getContext());
+        dataProvider = DataProvider.getProvider(getContext());
     }
 
     @Nullable
@@ -339,7 +340,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     }
 
     private void updateUnread() {
-        dataProvider.updateUnread(liveCriteria.to, 0);
+        dataProvider.updateConversationUnread(liveCriteria.to, 0);
     }
 
     private void sendReadTalk(Talk talk) {
@@ -367,7 +368,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         contact.lastTalked = talkItem.time;
         contact.unread = 0;
 
-        dataProvider.updateConversations(contact);
+        dataProvider.moveOrInsertConversation(contact);
     }
 
     private void timeline(TalkItem item) {

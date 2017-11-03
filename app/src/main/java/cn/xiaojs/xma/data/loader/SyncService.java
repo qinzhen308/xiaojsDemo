@@ -3,6 +3,7 @@ package cn.xiaojs.xma.data.loader;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 
 import com.orhanobut.logger.Logger;
 
@@ -22,6 +23,7 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.db.ContactDao;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.ClaimCompetency;
 import cn.xiaojs.xma.model.Competency;
 import cn.xiaojs.xma.model.Privilege;
@@ -48,178 +50,54 @@ public class SyncService extends IntentService {
             Logger.d("begin to sync data...");
         }
 
+        final Context context = getApplicationContext();
+        int syncType = intent.getIntExtra(DataManager.SYNC_TYPE, -1);
+        DataProvider dataProvider = DataProvider.getProvider(context);
         try {
-            final Context context = getApplicationContext();
-
-            int syncType = intent.getIntExtra(DataManager.SYNC_TYPE, -1);
             switch (syncType) {
-                case DataManager.TYPE_FETCH_CLASS_FROM_NET:
-                    if (NetUtil.getCurrentNetwork(context) == NetUtil.NETWORK_NONE) {
-                        return;
-                    }
-
-                    ArrayList<ContactGroup> conGroups = SocialManager.getContacts(context);
-                    if (conGroups != null) {
-                        DataManager.syncContactData(context, conGroups);
-
-                        ContactDao contactDao = new ContactDao();
-
-                        ArrayList<ContactGroup> newCGroups = contactDao.getClasses(context);
-
-                        Intent i = new Intent(DataManager.ACTION_UPDATE_CLASS_FROM_DB);
-                        i.putExtra(DataManager.EXTRA_CONTACT, newCGroups);
-                        sendBroadcast(i);
-                    } else {
-                        DataManager.reloadContactWhenEmpty(context);
-                    }
-
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("sync service: TYPE_FETCH_PRIVATECLASS_FROM_NET");
-                    }
-
-                    break;
-                case DataManager.TYPE_FETCH_CONTACT_FROM_NET:
-
-                    if (NetUtil.getCurrentNetwork(context) == NetUtil.NETWORK_NONE) {
-                        return;
-                    }
-                    ArrayList<ContactGroup> cGroups = SocialManager.getContacts(context);
-                    if (cGroups != null) {
-                        DataManager.syncContactData(context, cGroups);
-
-                        ContactDao contactDao = new ContactDao();
-                        ArrayList<ContactGroup> newCGroups = contactDao.getContacts(context, DataManager.getGroupData(context));
-
-                        Intent i = new Intent(DataManager.ACTION_UPDATE_CONTACT_FROM_DB);
-                        i.putExtra(DataManager.EXTRA_CONTACT, newCGroups);
-                        sendBroadcast(i);
-                    } else {
-
-                        DataManager.reloadContactWhenEmpty(context);
-                    }
-
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("sync service: TYPE_FETCH_CONTACT_FROM_NET");
-                        //Logger.d(DataManager.getContacts(context));
-                    }
-
-                    break;
-                case DataManager.TYPE_CONTACT:
-
-                    ArrayList<ContactGroup> entry = (ArrayList<ContactGroup>) intent.
-                            getSerializableExtra(DataManager.EXTRA_CONTACT);
-                    if (entry != null) {
-                        DataManager.syncContactData(context, entry);
-                    }
-
-
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("sync service: TYPE_CONTACT");
-                        //Logger.d(DataManager.getContacts(context));
-                    }
-
-                    break;
-
                 case DataManager.TYPE_INIT:
 
-                    DataManager.initMemCache(context);
-
-                    ArrayList<ContactGroup> contactGroups = null;
-                    //同步联系人到DB
-
-                    try {
-                        if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
-                            contactGroups = SocialManager.getContacts(context);
-                            if (contactGroups == null) {
-
-                                DataManager.reloadContactWhenEmpty(context);
-
-                            } else {
-                                DataManager.syncContactData(context, contactGroups);
+                    dataProvider.setCompleted(false);
+                    ArrayList<ContactGroup> contactGroups = SocialManager.getContacts2(context);
+                    if (contactGroups != null && contactGroups.size() > 0) {
+                        for (ContactGroup cg : contactGroups) {
+                            if (cg.set.equals("dialogs")) {
+                                dataProvider.setConversations(cg.collection);
+                            } else if (cg.set.equals("contacts")) {
+                                dataProvider.setPersons(cg.collection);
+                            } else if (cg.set.equals("classes")) {
+                                dataProvider.setClasses(cg.collection);
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
 
-                    //同步分组到DB和Memory cache
-                    try {
-                        HashMap<Long, String> cgMap = (HashMap<Long, String>) intent.getSerializableExtra(DataManager.EXTRA_GROUP);
-                        Map<Long, ContactGroup> map = new HashMap<>();
-                        if (cgMap != null) {
-                            Set<Long> keys = cgMap.keySet();
-                            for (Long key : keys) {
-                                ContactGroup contactGroup = new ContactGroup();
-                                contactGroup.name = cgMap.get(key);
-                                contactGroup.group = key;
-                                contactGroup.collection = new ArrayList<>(0);
-                                map.put(key, contactGroup);
-                            }
+                    ArrayList<Contact> conversations = dataProvider.getConversations();
+                    ArrayList<Contact> persons = dataProvider.getPersons();
+                    ArrayList<Contact> classes = dataProvider.getClasses();
 
-                        } else if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
-                            map = AccountDataManager.getHomeData(context);
-                        }
 
-                        if (contactGroups != null && cgMap != null) {
-
-                            for (ContactGroup group : contactGroups) {
-
-                                ContactGroup cg = map.get(group.group);
-                                if (cg != null) {
-                                    cg.collection = group.collection;
-                                }
-                            }
-                        }
-                        DataManager.syncGroupData(context, map);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    Map<String, Integer> conversationsMapping
+                            = dataProvider.getConversationsMapping();
+                    conversationsMapping.clear();
+                    int count = conversations.size();
+                    for (int i = 0; i < count; i++) {
+                        Contact contact = conversations.get(i);
+                        conversationsMapping.put(contact.id, i);
                     }
 
-                    //同步教学能力
-                    try {
-                        ClaimCompetency claimCompetency = AccountDataManager.getCompetencies(context);
-                        if (claimCompetency != null) {
-                            List<Competency> competencies = claimCompetency.competencies;
-                            if (competencies != null) {
-                                int count = competencies.size();
-                                if (count > 0) {
-                                    StringBuilder names = new StringBuilder();
-                                    for (int i = 0; i < count; i++) {
-                                        Competency competency = competencies.get(i);
-                                        String name = competency.getSubject().getName();
-                                        names.append(name);
-                                        if (i < count - 1) {
-                                            names.append("、");
-                                        }
-                                    }
-                                    AccountDataManager.clearAbilities(context);
-                                    AccountDataManager.addAbility(context, names.toString());
-                                }
-                            }
-
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    Map<String, Contact> personsMapping = dataProvider.getPersonsMapping();
+                    personsMapping.clear();
+                    for (Contact contact : persons) {
+                        personsMapping.put(contact.id, contact);
                     }
 
-                    //是否是老师
-//                    if (NetUtil.getCurrentNetwork(context) != NetUtil.NETWORK_NONE) {
-//                        Privilege[] privileges = SecurityManager.havePrivilegeSync(context,
-//                                Su.Permission.COURSE_OPEN_CREATE);
-//                        SecurityManager.savePermission(context, privileges);
-//                    }
-
-                    //check update
-
-
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("sync service: TYPE_INIT");
-                        //Logger.d(DataManager.getContacts(context));
+                    Map<String, Contact> classesMapping = dataProvider.getClassesMapping();
+                    classesMapping.clear();
+                    for (Contact contact : classes) {
+                        classesMapping.put(contact.id, contact);
                     }
 
                     break;
-
 
             }
 
@@ -229,6 +107,8 @@ public class SyncService extends IntentService {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("sync data end ...");
             }
+
+            dataProvider.dispatchLoadComplete();
         }
 
 

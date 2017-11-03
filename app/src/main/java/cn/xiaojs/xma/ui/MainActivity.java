@@ -30,6 +30,7 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
@@ -42,7 +43,6 @@ import cn.xiaojs.xma.ui.base.XiaojsActions;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
-import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
@@ -560,6 +560,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
                     updateConveration((Talk) eventReceived.t);
                     break;
                 case Su.EventType.DIALOG_READ:
+                    Talk talk = (Talk) eventReceived.t;
+                    updateDlgRead(talk.type, talk.from);
                     break;
                 case Su.EventType.REMOVE_DIALOG:
                     break;
@@ -570,10 +572,13 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
     };
 
 
+    private void updateDlgRead(int type, String to) {
+        DataProvider dataProvider = DataProvider.getProvider(this);
+        dataProvider.updateConversationUnread(to, 0);
+    }
+
+
     private void updateConveration(Talk talkItem) {
-
-
-
         if (TextUtils.isEmpty(talkItem.name)) {
             talkItem.name = "nil";
         }
@@ -597,8 +602,8 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
         contact.lastTalked = talkItem.time;
         contact.unread = 1;
 
-        ConversationDataProvider dataProvider = ConversationDataProvider.getProvider(this);
-        dataProvider.updateConversations(contact);
+        DataProvider dataProvider = DataProvider.getProvider(this);
+        dataProvider.moveOrInsertConversation(contact);
     }
 
 }

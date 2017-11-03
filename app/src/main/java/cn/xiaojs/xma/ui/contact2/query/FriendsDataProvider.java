@@ -2,29 +2,19 @@ package cn.xiaojs.xma.ui.contact2.query;
 
 import android.content.Context;
 
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
-import cn.xiaojs.xma.ui.contact2.model.ContactCompare;
 import cn.xiaojs.xma.ui.contact2.model.ContactsWhitIndex;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.model.ItemTypes;
 import cn.xiaojs.xma.ui.contact2.model.LabelItem;
-import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -40,15 +30,13 @@ import io.reactivex.schedulers.Schedulers;
 public class FriendsDataProvider {
 
     private Context context;
-    private ConversationDataProvider dataProvider;
 
-    public FriendsDataProvider(Context context, ConversationDataProvider dataProvider) {
+    public FriendsDataProvider(Context context) {
         this.context = context;
-        this.dataProvider = dataProvider;
     }
 
-    public void loadFriends(Consumer<ContactsWhitIndex> dataReceiver) {
-        groupForIndex(dataProvider.getPersons(),dataReceiver);
+    public void loadFriends(DataProvider dataProvider, Consumer<ContactsWhitIndex> dataReceiver) {
+        groupForIndex(dataProvider.getPersons(), dataReceiver);
     }
 
     private void groupForIndex(
@@ -83,9 +71,9 @@ public class FriendsDataProvider {
                 Collections.sort(contacts);
 
 
-                for (int i=0; i<contacts.size(); i++) {
+                for (int i = 0; i < contacts.size(); i++) {
                     AbsContactItem contactItem = contacts.get(i);
-                    if (contactItem.getItemType() == ItemTypes.LABEL){
+                    if (contactItem.getItemType() == ItemTypes.LABEL) {
                         belongCollect.put(contactItem.belongsGroup(), i);
                     }
                 }

@@ -1,11 +1,14 @@
 package cn.xiaojs.xma.ui.contact2;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.bumptech.glide.Glide;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -37,9 +40,16 @@ public class ClassroomsAdapter extends BaseAdapter {
         void OnItemClick(Contact contact);
     }
 
-    public ClassroomsAdapter(Context context, ArrayList<Contact> dataCollect) {
+    public ClassroomsAdapter(Context context) {
         this.context = context;
-        this.dataCollect = dataCollect;
+        this.dataCollect = new ArrayList<>();
+    }
+
+    public void addDatas(ArrayList<Contact> data) {
+        if (data !=null) {
+            dataCollect.addAll(data);
+        }
+
     }
 
     @Override
@@ -72,7 +82,10 @@ public class ClassroomsAdapter extends BaseAdapter {
         }
 
         final Contact contactItem = getItem(position);
-        viewHolder.avatorTextView.setText(String.valueOf(contactItem.title.charAt(0)));
+
+        String title = TextUtils.isEmpty(contactItem.title) ? "#" : String.valueOf(contactItem.title.trim().charAt(0));
+
+        viewHolder.avatorTextView.setText(title);
         viewHolder.titleView.setText(contactItem.title);
         viewHolder.descView.setText("[Oh YES]");
 

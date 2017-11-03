@@ -11,15 +11,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.data.provider.DataObserver;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
-import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
-import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ContactsWhitIndex;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.query.FriendsDataProvider;
-import cn.xiaojs.xma.ui.conversation2.ConversationDataProvider;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -36,7 +34,7 @@ public class FriendsFragment extends Base2Fragment {
     private LivIndex livIndex;
     private FriendsAdapter friendsAdapter;
 
-    private ConversationDataProvider dataProvider;
+    private DataProvider dataProvider;
 
     @Nullable
     @Override
@@ -53,11 +51,27 @@ public class FriendsFragment extends Base2Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        dataProvider = ConversationDataProvider.getProvider(getContext());
+        dataProvider = DataProvider.getProvider(getContext());
+        dataProvider.registesObserver(dataObserver);
+        if (dataProvider.isCompleted()) {
+            loadData();
+        }else {
+            showLoadingStatus();
+        }
 
-        loadData();
 
     }
+
+    @Override
+    public void onDestroy() {
+
+        if (dataObserver != null) {
+            dataProvider.unregistesObserver(dataObserver);
+        }
+
+        super.onDestroy();
+    }
+
 
     @OnItemClick({R.id.contact_listview})
     void onListItemClick(int position) {
@@ -72,10 +86,17 @@ public class FriendsFragment extends Base2Fragment {
 
         //showLoadingStatus();
 
-        FriendsDataProvider provider = new FriendsDataProvider(getContext(), dataProvider);
-        provider.loadFriends(friendDataReciver);
+        FriendsDataProvider provider = new FriendsDataProvider(getContext());
+        provider.loadFriends(dataProvider, friendDataReciver);
 
     }
+
+    private DataObserver dataObserver = new DataObserver() {
+        @Override
+        public void onLoadComplete() {
+            loadData();
+        }
+    };
 
     private Consumer<ContactsWhitIndex> friendDataReciver
             = new Consumer<ContactsWhitIndex>() {

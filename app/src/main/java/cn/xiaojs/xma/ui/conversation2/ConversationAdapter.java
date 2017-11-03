@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.conversation2;
 import android.content.Context;
 import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,19 +29,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
     public ConversationAdapter(Context context) {
         this.context = context;
-        //this.contacts = new ArrayList<>();
-        //contacts.add(createTimetable());
+        this.contacts = new ArrayList<>();
+        contacts.add(createTimetable());
     }
 
     public void addContact(ArrayList<Contact> datas) {
-        if (contacts != null) {
-            contacts.addAll(datas);
-            notifyDataSetChanged();
-        }
-    }
 
-    public void setContacts(ArrayList<Contact> datas) {
-        contacts = datas;
+        this.contacts = datas;
         notifyDataSetChanged();
     }
 
@@ -85,7 +80,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         } else {
             final ClassConViewHolder conViewHolder = (ClassConViewHolder) holder;
 
-            conViewHolder.avatorTextView.setText(String.valueOf(contact.title.trim().charAt(0)));
+            String title = TextUtils.isEmpty(contact.title) ? "#" : String.valueOf(contact.title.trim().charAt(0));
+
+            conViewHolder.avatorTextView.setText(title);
             conViewHolder.titleView.setText(contact.title);
             conViewHolder.descView.setText(contact.lastMessage);
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
