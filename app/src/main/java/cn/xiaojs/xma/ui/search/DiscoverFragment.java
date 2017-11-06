@@ -86,6 +86,10 @@ public class DiscoverFragment extends BaseFragment {
             PageChangeInRecyclerView pageChangeInRecyclerView;
             @Override
             public void onRequst(int page) {
+                if(TextUtils.isEmpty(keywords)){
+                    isLoading=false;
+                    return;
+                }
                 stateView.change(LoadStateListener.STATE_LOADING,"");
                 searchRequest(page);
             }
@@ -177,6 +181,10 @@ public class DiscoverFragment extends BaseFragment {
     private void bindData(List<SearchResultV2> data){
         mAdapter.setList(data);
         mAdapter.notifyDataSetChanged();
+        if(TextUtils.isEmpty(keywords)){
+            appLoadState.setEmptyImageAndTip(R.drawable.img_discover_default,"涨知识，来这里！好多大牛和课程");
+            stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
+        }
     }
 
     @Override

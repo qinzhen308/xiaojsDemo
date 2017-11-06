@@ -14,6 +14,7 @@ import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.Upgrade;
+import cn.xiaojs.xma.model.VisitorParams;
 import cn.xiaojs.xma.model.account.AssociationStaus;
 import cn.xiaojs.xma.model.account.CompetencySubject;
 import cn.xiaojs.xma.model.account.DealAck;
@@ -425,6 +426,8 @@ public interface XiaojsService {
     Call<CLResponse> modifyClass(@Path("class") String classid, @Body ModifyModeParam params);
     @PATCH("/v1/ctl/classes/{class}/modify")
     Call<CLResponse> modifyClass(@Path("class") String classid, @Body Publish params);
+    @PATCH("/v1/ctl/classes/{class}/modify")
+    Call<CLResponse> modifyClass(@Path("class") String classid, @Body VisitorParams params);
 
     //Get Class Students
     @GET("/v1/ctl/classes/{classes}/students/{criteria}/{pagination}")

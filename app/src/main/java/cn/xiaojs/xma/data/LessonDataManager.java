@@ -34,6 +34,7 @@ import cn.xiaojs.xma.model.Pagination;
 
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.ScheduleCriteria;
+import cn.xiaojs.xma.model.VisitorParams;
 import cn.xiaojs.xma.model.account.DealAck;
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
 import cn.xiaojs.xma.model.ctl.CRecordLesson;
@@ -621,6 +622,13 @@ public class LessonDataManager {
     public static ServiceRequest modifyClass(Context context,
                                    String classid,
                                    Publish params,
+                                   APIServiceCallback<CLResponse> callback) {
+        LessonRequest lessonRequest = new LessonRequest(context, callback);
+        lessonRequest.modifyClass(classid, params);
+        return lessonRequest;
+    }
+    public static ServiceRequest modifyClass(Context context,
+                                   String classid, VisitorParams params,
                                    APIServiceCallback<CLResponse> callback) {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.modifyClass(classid, params);
