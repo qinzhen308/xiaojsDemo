@@ -113,6 +113,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.sync.PushPreviewBoardListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
+import cn.xiaojs.xma.ui.classroom2.core.SyncboardHelper;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
 import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -2196,6 +2197,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public void setLayers(Drawing drawing){
         if(drawing==null)return;
         if(drawing.stylus==null)return;
+        SyncboardHelper.handleLayerData(drawing);
         syncCreateLayers(drawing.stylus.layers);
     }
 

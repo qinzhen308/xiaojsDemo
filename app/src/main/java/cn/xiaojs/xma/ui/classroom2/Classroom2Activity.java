@@ -160,7 +160,6 @@ public class Classroom2Activity extends FragmentActivity {
         initTicket = getIntent().getStringExtra(CTLConstant.EXTRA_TICKET);
 
         onBootlistener(initTicket);
-        collaborateFragment = BoardCollaborateFragment.createInstance("");
     }
 
     @OnClick({R.id.bottom_input, R.id.bottom_members, R.id.bottom_database, R.id.bottom_schedule})
@@ -311,6 +310,7 @@ public class Classroom2Activity extends FragmentActivity {
     }
 
     private void handleConnectSuccess(BootObservable.BootSession bootSession) {
+
         cancelProgress();
         Toast.makeText(Classroom2Activity.this,
                 R.string.socket_connect, Toast.LENGTH_LONG).show();
@@ -335,9 +335,12 @@ public class Classroom2Activity extends FragmentActivity {
             finish();
         }
 
+        collaborateFragment = BoardCollaborateFragment.createInstance("");
+
         initMovieFragment();
 
         initChatFragment();
+
     }
 
     private void handleConnectError() {

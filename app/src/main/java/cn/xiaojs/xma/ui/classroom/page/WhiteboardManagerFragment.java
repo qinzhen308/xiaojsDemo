@@ -1,7 +1,10 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.DataPageLoader;
+import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.stateview.LoadStateListener;
 import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -26,12 +30,17 @@ import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.ScheduleLesson;
+import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.ui.base.CommonRVAdapter;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.schedule.SLOpModel;
+import cn.xiaojs.xma.ui.lesson.xclass.view.LessonOperateBoard;
+import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/10/18.
@@ -51,6 +60,7 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
     Pagination mPagination;
 
     public static final String EXTRA_SELECTED_BOARD_ID="extra_selected_board_id";
+    public static final String EXTRA_SELECTED_BOARD="extra_selected_board";
 
 
     @Nullable
@@ -87,8 +97,75 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
         ArrayList<WhiteboardModel> datas=new ArrayList<>();
         mAdapter.setList(datas);
         mAdapter.notifyDataSetChanged();
+        mAdapter.setCallback(new EventCallback() {
+            @Override
+            public void onEvent(int what, Object... object) {
+                switch (what){
+                    case EVENT_1://打开本白板
+                        openBoard((int)object[1],(WhiteboardModel) object[0]);
+                        break;
+                    case EVENT_2://更多
+                        showMoreDialog((int)object[1],(WhiteboardModel) object[0]);
+                        break;
+                }
+            }
+        });
     }
 
+    private void openBoard(final int itemPosition, final WhiteboardModel data){
+        if(getTargetFragment() !=null){
+            Intent intent=new Intent();
+            intent.putExtra(EXTRA_SELECTED_BOARD,data.boardItem);
+            getTargetFragment().onActivityResult(getTargetRequestCode(),Activity.RESULT_OK,intent);
+        }
+        dismiss();
+    }
+
+    private void showMoreDialog(final int itemPosition, final WhiteboardModel data){
+        ListBottomDialog dialog=new ListBottomDialog(getActivity());
+
+        dialog.setItems(getResources().getStringArray(R.array.board_manager_operate));
+        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                if(position==0){
+                    rename(itemPosition,data);
+                }else if(position==1){
+                    deleteBoard(itemPosition,data);
+                }
+            }
+        });
+        dialog.show();
+    }
+
+
+    private void deleteBoard(int position,WhiteboardModel data){
+
+    }
+
+    private void rename(int position,WhiteboardModel data){
+
+    }
+
+
+    public void registBoard(){
+        final Board board=new Board();
+        board.title="新的白板";
+        board.drawing=new Board.DrawDimension();
+        board.drawing.height=810;
+        board.drawing.width=1440;
+        ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
+            @Override
+            public void onSuccess(BoardItem object) {
+                dataPageLoader.refresh();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                ToastUtil.showToast(getActivity(),errorMessage+",后续操作无法保存");
+            }
+        });
+    }
 
 
 
@@ -99,6 +176,7 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
                 dismiss();
                 break;
             case R.id.right_view:
+                registBoard();
                 break;
         }
     }
@@ -164,4 +242,5 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
 
         };
     }
+
 }
