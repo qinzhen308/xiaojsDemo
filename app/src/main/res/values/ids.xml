@@ -8,4 +8,5 @@
         <item name="managerpaymenttypeselect_tg" type="id"/>
         <item name="tag_list_adapter_viewtype" type="id"/>
         <item name="tag_list_adapter_viewholder" type="id"/>
+        <item name="fragment_database_framelayout" type="id"/>
 </resources>

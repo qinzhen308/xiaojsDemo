@@ -36,6 +36,7 @@
                     android:focusable="false"
                     android:textSize="@dimen/font_26px"
                     android:text="@string/video_loading"/>
+
         </LinearLayout>
 
     </FrameLayout>

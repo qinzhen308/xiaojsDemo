@@ -2,13 +2,14 @@ package cn.xiaojs.xma.ui.classroom2.base;
 
 import android.support.v4.app.Fragment;
 
+import cn.xiaojs.xma.ui.base2.Base2Fragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 
 /**
  * Created by maxiaobao on 2017/10/12.
  */
 
-public class BaseRoomFragment extends Fragment {
+public class BaseRoomFragment extends Base2Fragment {
 
     /**
      * 显示loading状态

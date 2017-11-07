@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
@@ -19,6 +21,11 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.base2.Base2Fragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
+import cn.xiaojs.xma.ui.contact2.model.ClassItem;
+import cn.xiaojs.xma.ui.contact2.model.ContactsWhitIndex;
+import cn.xiaojs.xma.ui.contact2.query.FriendsDataProvider;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by maxiaobao on 2017/10/29.
@@ -28,8 +35,11 @@ public class ClassroomsFragment extends Base2Fragment {
 
     @BindView(R.id.listview)
     ListView listView;
+    @BindView(R.id.letter_index)
+    LetterIndexView letterIndexView;
 
     ClassroomsAdapter adapter;
+    private LivIndex livIndex;
 
     private DataProvider dataProvider;
 
@@ -53,8 +63,8 @@ public class ClassroomsFragment extends Base2Fragment {
         dataProvider = DataProvider.getProvider(getContext());
         dataProvider.registesObserver(dataObserver);
         if (dataProvider.isCompleted()) {
-            showAdpater();
-        }else {
+            loadData();
+        } else {
             showLoadingStatus();
         }
 
@@ -73,13 +83,18 @@ public class ClassroomsFragment extends Base2Fragment {
     @OnItemClick({R.id.listview})
     void onListItemClick(int position) {
         if (adapter != null) {
-            Contact contact = adapter.getItem(position);
-            enterClass(getActivity(), contact.ticket);
+            ClassItem contactItem = (ClassItem) adapter.getItem(position);
+            enterClass(getActivity(), contactItem.contact.ticket);
         }
     }
 
-    private void showAdpater() {
-        adapter.addDatas(dataProvider.getClasses());
+    private void loadData() {
+        FriendsDataProvider provider = new FriendsDataProvider(getContext());
+        provider.loadClasses(dataProvider, classesConsumer);
+    }
+
+    private void showAdpater(ArrayList<AbsContactItem> classes) {
+        adapter.addDatas(classes);
         if (adapter.getCount() > 0) {
             hiddenTips();
         } else {
@@ -100,7 +115,35 @@ public class ClassroomsFragment extends Base2Fragment {
     private DataObserver dataObserver = new DataObserver() {
         @Override
         public void onLoadComplete() {
-            showAdpater();
+            loadData();
+        }
+    };
+
+    private Consumer<ContactsWhitIndex> classesConsumer = new Consumer<ContactsWhitIndex>() {
+        @Override
+        public void accept(ContactsWhitIndex cwIndex) throws Exception {
+
+            if (getActivity() == null)
+                return;
+
+            showFinalTips();
+
+            if (cwIndex.contacts != null && cwIndex.contacts.size() > 0) {
+
+                hiddenTips();
+
+                showAdpater(cwIndex.contacts);
+
+                //int lsize = cwIndex.letters.size();
+
+                //letterIndexView.setLetters(cwIndex.letters.toArray(new String[lsize]));
+                livIndex = new LivIndex(listView, letterIndexView, null, null, cwIndex.indexMap);
+                livIndex.show();
+            } else {
+                showFinalTips();
+            }
+
+
         }
     };
 

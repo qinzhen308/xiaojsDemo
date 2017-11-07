@@ -51,7 +51,7 @@ public class Base2Fragment extends Fragment {
     }
 
 
-    protected void showLoadingStatus() {
+    public void showLoadingStatus() {
         if (tipsLayout != null) {
             tipsLayout.setVisibility(View.VISIBLE);
             loadingView.setVisibility(View.VISIBLE);
@@ -63,7 +63,7 @@ public class Base2Fragment extends Fragment {
         }
     }
 
-    protected void showFinalTips(@DrawableRes int tipsIcon, @StringRes int tipsStr) {
+    public void showFinalTips(@DrawableRes int tipsIcon, @StringRes int tipsStr) {
         if (tipsLayout != null) {
             tipsLayout.setVisibility(View.VISIBLE);
             loadingView.setVisibility(View.GONE);
@@ -75,7 +75,7 @@ public class Base2Fragment extends Fragment {
         }
     }
 
-    protected void showFinalTips() {
+    public void showFinalTips() {
         if (tipsLayout != null) {
             tipsLayout.setVisibility(View.VISIBLE);
             loadingView.setVisibility(View.GONE);
@@ -85,7 +85,7 @@ public class Base2Fragment extends Fragment {
         }
     }
 
-    protected void hiddenTips() {
+    public void hiddenTips() {
         if (tipsLayout != null) {
             tipsLayout.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);

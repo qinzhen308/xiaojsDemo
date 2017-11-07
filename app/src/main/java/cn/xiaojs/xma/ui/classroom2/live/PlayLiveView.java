@@ -87,6 +87,7 @@ public class PlayLiveView extends BaseLiveView {
 
 
     private void configPlayView(PLVideoTextureView videoTextureView) {
+        loadingLayout.setVisibility(VISIBLE);
         videoTextureView.setBufferingIndicator(loadingLayout);
         //mVideoView.setCoverView(coverView);
 
@@ -108,7 +109,7 @@ public class PlayLiveView extends BaseLiveView {
         options.setInteger(AVOptions.KEY_MEDIACODEC, codec);
 
         videoTextureView.setAVOptions(options);
-        videoTextureView.setDebugLoggingEnabled(true);
+        videoTextureView.setDebugLoggingEnabled(XiaojsConfig.DEBUG);
 
         // You can mirror the display
         // mVideoView.setMirror(true);

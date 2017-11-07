@@ -52,6 +52,9 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
     ImageView orientBtn;
     @BindView(R.id.exo_play)
     TextView exoPlayView;
+    @BindView(R.id.exo_pause)
+    TextView exoPauseView;
+
 
     private int landPaddingSize;
     private EventListener.ELIdle idleObserver;
@@ -73,6 +76,7 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         LibDoc doc = (LibDoc) getArguments().getSerializable(PlayerFragment.EXTRA_OBJECT);
         if (doc !=null) {
             exoPlayView.setText(doc.name);
+            exoPauseView.setText(doc.name);
         }
 
         landPaddingSize = getResources().getDimensionPixelSize(R.dimen.px208);
@@ -177,6 +181,8 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         lRightSwitchVbView.setVisibility(View.GONE);
 
         configStartOrPausedLiveButton();
+
+        centerOne2oneView.setEnabled(false);
 
     }
 

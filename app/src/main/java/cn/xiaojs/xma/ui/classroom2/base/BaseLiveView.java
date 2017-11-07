@@ -56,14 +56,15 @@ public abstract class BaseLiveView extends FrameLayout{
 
     private void init() {
         setKeepScreenOn(true);
-        LayoutInflater.from(getContext()).
+        View view = LayoutInflater.from(getContext()).
                 inflate(R.layout.layout_classroom2_base_live_view, this, true);
+
+        ButterKnife.bind(this);
 
         FrameLayout.LayoutParams params =
                 new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.CENTER;
         addView(createLiveView(), 0, params);
-        ButterKnife.bind(this);
     }
 
 

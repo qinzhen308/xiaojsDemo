@@ -10,5 +10,6 @@ import java.util.Map;
 public class ContactsWhitIndex {
     public ArrayList<AbsContactItem> contacts;
     public Map<String, Integer> indexMap;
+    public ArrayList<String> letters;
 
 }

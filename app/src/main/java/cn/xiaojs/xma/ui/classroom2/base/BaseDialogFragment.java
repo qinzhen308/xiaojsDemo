@@ -25,19 +25,25 @@ public class BaseDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (getDialog() != null) {
+            getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final Window window = getDialog().getWindow();
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        window.setLayout(-1, WindowManager.LayoutParams.MATCH_PARENT);
+        if (getDialog() != null) {
+            final Window window = getDialog().getWindow();
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            window.setLayout(-1, WindowManager.LayoutParams.MATCH_PARENT);
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -52,6 +53,8 @@ public class LetterIndexView extends View {
 
         mPaint.setAntiAlias(true);
         mPaint.setTextAlign(Paint.Align.CENTER);
+        mPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        //mPaint.setFlags(Paint.FAKE_BOLD_TEXT_FLAG);
         mPaint.setColor(normalColor);
 
         letters = paramContext.getResources().getStringArray(stringArrayId);
@@ -92,7 +95,7 @@ public class LetterIndexView extends View {
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float letterHeight = ((float)getHeight()) / letters.length;
+        float letterHeight = ((float)getMeasuredHeight()) / letters.length;
         float width = getWidth();
         float textSize = letterHeight * 5 / 6;
         mPaint.setTextSize(textSize);

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/bottom_control_layout"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/px100"
+        >
+    <TextView
+            android:id="@+id/bottom_input"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:layout_marginRight="@dimen/px30"
+            android:layout_marginTop="@dimen/px15"
+            android:layout_marginBottom="@dimen/px15"
+            android:layout_marginLeft="@dimen/px30"
+            android:padding="@dimen/px15"
+            android:hint="我也来说两句"
+            android:textSize="@dimen/font_28px"
+            android:textColorHint="@color/hint_color"
+            android:gravity="left|center_vertical"
+            android:background="@drawable/bg_rectrangle_rect"
+            />
+
+    <ImageView
+            android:id="@+id/bottom_members"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_class_members_1"
+            android:padding="@dimen/px30"
+            />
+
+    <ImageView
+            android:id="@+id/bottom_database"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_class_database_1"
+            android:padding="@dimen/px30"
+            />
+
+    <ImageView
+            android:id="@+id/bottom_schedule"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_class_schedule_1"
+            android:padding="@dimen/px30"
+            />
+
+</LinearLayout>

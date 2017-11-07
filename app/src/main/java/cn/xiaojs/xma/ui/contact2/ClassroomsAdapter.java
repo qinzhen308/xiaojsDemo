@@ -18,6 +18,7 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.material.ClassViewHolder;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
+import cn.xiaojs.xma.ui.contact2.model.ClassItem;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.model.ItemTypes;
 import cn.xiaojs.xma.ui.contact2.model.LabelItem;
@@ -34,7 +35,7 @@ public class ClassroomsAdapter extends BaseAdapter {
 
 
     private Context context;
-    private ArrayList<Contact> dataCollect;
+    private ArrayList<AbsContactItem> dataCollect;
 
     public interface OnItemClickListener{
         void OnItemClick(Contact contact);
@@ -45,7 +46,7 @@ public class ClassroomsAdapter extends BaseAdapter {
         this.dataCollect = new ArrayList<>();
     }
 
-    public void addDatas(ArrayList<Contact> data) {
+    public void addDatas(ArrayList<AbsContactItem> data) {
         if (data !=null) {
             dataCollect = data;
             notifyDataSetChanged();
@@ -59,7 +60,7 @@ public class ClassroomsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Contact getItem(int position) {
+    public AbsContactItem getItem(int position) {
         return dataCollect.get(position);
     }
 
@@ -71,24 +72,53 @@ public class ClassroomsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ClassroomViewHolder viewHolder = null;
+        final AbsContactItem contactItem = getItem(position);
+        int itemType = contactItem.getItemType();
 
-        if (convertView == null) {
 
-            convertView = ClassroomViewHolder.createView(context, parent);
-            viewHolder = new ClassroomViewHolder(convertView);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ClassroomViewHolder) convertView.getTag();
+        if (itemType == ItemTypes.LABEL) {
+
+            LabelViewHolder labelViewHolder = null;
+
+            if (convertView != null && convertView.getTag() instanceof LabelViewHolder) {
+                labelViewHolder = (LabelViewHolder) convertView.getTag();
+            } else {
+
+                convertView = LabelViewHolder.createView(context, parent);
+                labelViewHolder = new LabelViewHolder(context, convertView);
+                convertView.setTag(labelViewHolder);
+            }
+
+            LabelItem labelItem = (LabelItem) contactItem;
+
+            labelViewHolder.labelView.setText(labelItem.getText());
+
+
+        }else {
+
+            ClassroomViewHolder classViewHolder = null;
+
+            if (convertView != null && convertView.getTag() instanceof ClassItem) {
+                classViewHolder = (ClassroomViewHolder) convertView.getTag();
+
+            } else {
+                convertView = ClassroomViewHolder.createView(context, parent);
+                classViewHolder = new ClassroomViewHolder(convertView);
+                convertView.setTag(classViewHolder);
+            }
+
+
+            ClassItem classItem = (ClassItem) contactItem;
+
+            String titleStr = classItem.contact.title;
+
+            String title = TextUtils.isEmpty(titleStr) ?
+                    "#" : String.valueOf(titleStr.trim().charAt(0));
+
+            classViewHolder.avatorTextView.setIconWithText(title);
+            classViewHolder.titleView.setText(titleStr);
+            classViewHolder.descView.setText(classItem.contact.owner);
         }
-
-        final Contact contactItem = getItem(position);
-
-        String title = TextUtils.isEmpty(contactItem.title) ? "#" : String.valueOf(contactItem.title.trim().charAt(0));
-
-        viewHolder.avatorTextView.setIconWithText(title);
-        viewHolder.titleView.setText(contactItem.title);
-        viewHolder.descView.setText("[Oh YES]");
 
         return convertView;
     }

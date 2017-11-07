@@ -1,17 +1,21 @@
 package cn.xiaojs.xma.ui.classroom2.material;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -26,9 +30,11 @@ import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
  */
 
 public class DownloadListFragment extends BottomSheetFragment
-        implements LoaderManager.LoaderCallbacks<Cursor>{
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        DialogInterface.OnKeyListener{
 
-
+    @BindView(R.id.cl_root)
+    ConstraintLayout rootLay;
     @BindView(R.id.rlist)
     RecyclerView recyclerView;
 
@@ -45,6 +51,16 @@ public class DownloadListFragment extends BottomSheetFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
+        if (getDialog()==null) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
+            params.setMargins(0,0,0,0);
+            rootLay.setBackgroundColor(getResources().getColor(R.color.white));
+        }else {
+            getDialog().setOnKeyListener(this);
+        }
+
 
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL,false);
@@ -68,6 +84,15 @@ public class DownloadListFragment extends BottomSheetFragment
         }
     }
 
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP){
+            dismiss();
+            return true;
+        }
+
+        return false;
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

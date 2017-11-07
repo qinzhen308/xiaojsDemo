@@ -269,7 +269,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                         }
 
                         if (XiaojsConfig.DEBUG) {
-                            Logger.d("the total time: %d, now taketime:%d",finalTakeTime, aLong);
+                            Logger.d("the total time: %d, now taketime:%d", finalTakeTime, aLong);
                         }
 
                         if (aLong >= finalTakeTime) {
@@ -319,10 +319,13 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         lRightSwitchcameraView.setVisibility(View.GONE);
         lTopPhotoView.setVisibility(View.GONE);
         lTopRoominfoView.setVisibility(View.GONE);
+        lRightSwitchVbView.setVisibility(View.GONE);
 
         pBottomClassnameView.setText(classroomEngine.getClassTitle());
 
         configStartOrPausedLiveButton();
+
+        centerOne2oneView.setEnabled(false);
 
     }
 

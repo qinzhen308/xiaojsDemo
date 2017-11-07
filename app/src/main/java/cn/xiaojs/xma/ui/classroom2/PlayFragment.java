@@ -223,19 +223,21 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
         Glide.with(getContext())
                 .load(avatorUrl)
                 .transform(new CircleTransform(getContext()))
-                .placeholder(R.drawable.default_avatar_grey)
-                .error(R.drawable.default_avatar_grey)
+                .placeholder(R.drawable.ic_defaultavatar)
+                .error(R.drawable.ic_defaultavatar)
                 .into(pBottomAvatorView);
         pBottomAvatorView.setVisibility(View.VISIBLE);
 
         Glide.with(getContext())
                 .load(avatorUrl)
                 .transform(new CircleTransform(getContext()))
-                .placeholder(R.drawable.default_avatar_grey)
-                .error(R.drawable.default_avatar_grey)
+                .placeholder(R.drawable.ic_defaultavatar)
+                .error(R.drawable.ic_defaultavatar)
                 .into(lTopPhotoView);
 
         requestUpdateMemberCount();
+
+        centerOne2oneView.setEnabled(false);
 
     }
 

@@ -11,6 +11,7 @@ public class ItemTypes {
      */
     public static final int LABEL = 0;
     public static final int FRIEND = 1;
+    public static final int CLASSES = 2;
 
 
 }

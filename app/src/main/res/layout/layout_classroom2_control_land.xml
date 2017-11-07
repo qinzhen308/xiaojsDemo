@@ -67,7 +67,7 @@
             android:id="@+id/l_top_photo"
             android:layout_width="@dimen/px68"
             android:layout_height="@dimen/px68"
-            android:background="@drawable/default_avatar"
+            android:background="@drawable/ic_defaultavatar"
             android:layout_marginLeft="@dimen/px24"
             app:layout_constraintTop_toTopOf="@id/top_guideline"
             app:layout_constraintLeft_toRightOf="@id/l_top_back"
@@ -79,7 +79,7 @@
             android:layout_height="0dp"
             android:text="停止直播"
             android:textColor="@color/font_white"
-            android:textSize="@dimen/font_28px"
+            android:textSize="@dimen/font_24px"
             android:gravity="center"
             android:padding="@dimen/px20"
             android:background="@drawable/bg_start_live_rect"
@@ -166,7 +166,7 @@
     <View
             android:id="@+id/center_panel"
             android:layout_width="@dimen/px520"
-            android:layout_height="@dimen/px520"
+            android:layout_height="@dimen/px380"
             android:background="@drawable/classroom2_control_center_bg_rect"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -179,10 +179,10 @@
             android:id="@+id/center_one2one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="一对一音视频"
+            android:text="一对一视频"
             android:textSize="@dimen/font_22px"
-            android:textColor="@color/font_white"
-            android:drawableTop="@drawable/ic_class_oneonevideo"
+            android:textColor="@color/selector_classroom2_center_control_text"
+            android:drawableTop="@drawable/classroom2_control_center_one2one_selector"
             android:drawablePadding="@dimen/px12"
             android:singleLine="true"
             android:layout_marginTop="@dimen/px39"
@@ -192,22 +192,22 @@
             app:layout_constraintTop_toTopOf="@id/center_panel"
             android:visibility="gone"/>
 
-    <TextView
-            android:id="@+id/center_board_opera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="白板协作"
-            android:textSize="@dimen/font_22px"
-            android:textColor="@color/font_white"
-            android:drawableTop="@drawable/ic_class_whiteboardcollaboration"
-            android:drawablePadding="@dimen/px12"
-            android:singleLine="true"
-            android:layout_marginTop="@dimen/px39"
-            android:layout_marginLeft="@dimen/px54"
-            android:gravity="center"
-            app:layout_constraintLeft_toRightOf="@id/center_one2one"
-            app:layout_constraintTop_toTopOf="@id/center_panel"
-            android:visibility="gone"/>
+    <!--<TextView-->
+            <!--android:id="@+id/center_board_opera"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="白板协作"-->
+            <!--android:textSize="@dimen/font_22px"-->
+            <!--android:textColor="@color/font_white"-->
+            <!--android:drawableTop="@drawable/ic_class_whiteboardcollaboration"-->
+            <!--android:drawablePadding="@dimen/px12"-->
+            <!--android:singleLine="true"-->
+            <!--android:layout_marginTop="@dimen/px39"-->
+            <!--android:layout_marginLeft="@dimen/px54"-->
+            <!--android:gravity="center"-->
+            <!--app:layout_constraintLeft_toRightOf="@id/center_one2one"-->
+            <!--app:layout_constraintTop_toTopOf="@id/center_panel"-->
+            <!--android:visibility="visible"/>-->
 
     <TextView
             android:id="@+id/center_board_mgr"
@@ -215,14 +215,14 @@
             android:layout_height="wrap_content"
             android:text="白板管理"
             android:textSize="@dimen/font_22px"
-            android:textColor="@color/font_white"
+            android:textColor="@color/selector_classroom2_center_control_text"
             android:drawableTop="@drawable/ic_class_whiteboardmanagement"
             android:drawablePadding="@dimen/px12"
             android:singleLine="true"
             android:layout_marginTop="@dimen/px39"
             android:layout_marginLeft="@dimen/px71"
             android:gravity="center"
-            app:layout_constraintLeft_toRightOf="@id/center_board_opera"
+            app:layout_constraintLeft_toRightOf="@id/center_one2one"
             app:layout_constraintTop_toTopOf="@id/center_panel"
             android:visibility="gone"/>
 
@@ -233,15 +233,15 @@
             android:layout_height="wrap_content"
             android:text="新增白板"
             android:textSize="@dimen/font_22px"
-            android:textColor="@color/font_white"
+            android:textColor="@color/selector_classroom2_center_control_text"
             android:drawableTop="@drawable/ic_class_newwhiteboard"
             android:drawablePadding="@dimen/px12"
             android:singleLine="true"
             android:layout_marginTop="@dimen/px39"
             android:layout_marginLeft="@dimen/px54"
             android:gravity="center"
-            app:layout_constraintLeft_toLeftOf="@id/center_panel"
-            app:layout_constraintTop_toBottomOf="@id/center_one2one"
+            app:layout_constraintLeft_toRightOf="@id/center_board_mgr"
+            app:layout_constraintTop_toTopOf="@id/center_panel"
             android:visibility="gone"/>
 
     <TextView
@@ -250,14 +250,15 @@
             android:layout_height="wrap_content"
             android:text="教室成员"
             android:textSize="@dimen/font_22px"
-            android:textColor="@color/font_white"
+            android:textColor="@color/selector_classroom2_center_control_text"
             android:drawableTop="@drawable/ic_class_operation_members"
             android:drawablePadding="@dimen/px12"
+            android:layout_marginTop="@dimen/px39"
             android:singleLine="true"
             android:layout_marginLeft="@dimen/px71"
             android:gravity="center"
-            app:layout_constraintLeft_toRightOf="@id/center_new_board"
-            app:layout_constraintTop_toTopOf="@id/center_new_board"
+            app:layout_constraintLeft_toLeftOf="@id/center_panel"
+            app:layout_constraintTop_toBottomOf="@id/center_one2one"
             android:visibility="gone"/>
     <TextView
             android:id="@+id/center_database"
@@ -265,14 +266,14 @@
             android:layout_height="wrap_content"
             android:text="资料库"
             android:textSize="@dimen/font_22px"
-            android:textColor="@color/font_white"
+            android:textColor="@color/selector_classroom2_center_control_text"
             android:drawableTop="@drawable/ic_class_operation_database"
             android:drawablePadding="@dimen/px12"
             android:singleLine="true"
             android:layout_marginLeft="@dimen/px71"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@id/center_member"
-            app:layout_constraintTop_toTopOf="@id/center_new_board"
+            app:layout_constraintTop_toTopOf="@id/center_member"
             android:visibility="gone"/>
 
     <TextView
@@ -281,15 +282,14 @@
             android:layout_height="wrap_content"
             android:text="课表"
             android:textSize="@dimen/font_22px"
-            android:textColor="@color/font_white"
+            android:textColor="@color/selector_classroom2_center_control_text"
             android:drawableTop="@drawable/ic_class_operation_schedule"
             android:drawablePadding="@dimen/px12"
             android:singleLine="true"
-            android:layout_marginTop="@dimen/px39"
             android:layout_marginLeft="@dimen/px54"
             android:gravity="center"
-            app:layout_constraintLeft_toLeftOf="@id/center_panel"
-            app:layout_constraintTop_toBottomOf="@id/center_new_board"
+            app:layout_constraintLeft_toRightOf="@id/center_database"
+            app:layout_constraintTop_toTopOf="@id/center_database"
             android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>

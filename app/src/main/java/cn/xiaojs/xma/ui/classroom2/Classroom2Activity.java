@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
+import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.base.PlayerFragment;
 import cn.xiaojs.xma.ui.classroom2.core.BootObservable;
@@ -48,6 +50,9 @@ import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomType;
 import cn.xiaojs.xma.ui.classroom2.core.RoomSession;
+import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
+import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
+import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.classroom2.util.MaterialUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -68,12 +73,18 @@ public class Classroom2Activity extends FragmentActivity {
     @BindView(R.id.constrant_root)
     ConstraintLayout rootLayout;
 
+    @BindView(R.id.bottom_control_layout)
+    LinearLayout bottomControlLayout;
+
     @BindView(R.id.o2o_root)
     FrameLayout o2oLayout;
     @BindView(R.id.o2o_avator)
     ImageView o2oAvatorView;
     @BindView(R.id.o2o_name)
     TextView o2oNameView;
+
+    private ChatFragment chatFragment;
+    private DatabaseFragment databaseFragment;
 
 
     private BootObservable.BootListener bootListener;
@@ -150,6 +161,25 @@ public class Classroom2Activity extends FragmentActivity {
         onBootlistener(initTicket);
         collaborateFragment = BoardCollaborateFragment.createInstance("");
     }
+
+    @OnClick({R.id.bottom_input, R.id.bottom_members, R.id.bottom_database, R.id.bottom_schedule})
+    void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.bottom_input:
+                popInput();
+                break;
+            case R.id.bottom_members:               //教室成员
+                popMembers();
+                break;
+            case R.id.bottom_database:              //资料库
+                popDatabase();
+                break;
+            case R.id.bottom_schedule:              //课表
+                popClassSchedule();
+                break;
+        }
+    }
+
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -372,7 +402,11 @@ public class Classroom2Activity extends FragmentActivity {
     private void initChatFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        ChatFragment chatFragment = new ChatFragment();
+        chatFragment = new ChatFragment();
+        Bundle b = new Bundle();
+        b.putString(CTLConstant.EXTRA_GROUP_ID, classroomEngine.getCtlSession().cls.id);
+        b.putString(CTLConstant.EXTRA_SESSION_NAME, classroomEngine.getClassTitle());
+        chatFragment.setArguments(b);
         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, 0)
                 .add(R.id.bottom_lay, chatFragment)
                 .commitAllowingStateLoss();
@@ -433,14 +467,19 @@ public class Classroom2Activity extends FragmentActivity {
                 hideSystemUI();
                 constraintSet.setDimensionRatio(R.id.replace_lay, null);
                 constraintSet.constrainHeight(R.id.replace_lay, rootLayout.getWidth());
+                constraintSet.applyTo(rootLayout);
+                bottomControlLayout.setVisibility(View.GONE);
                 break;
             case Configuration.ORIENTATION_PORTRAIT:
                 showSystemUI();
                 constraintSet.setDimensionRatio(R.id.replace_lay, "16:9");
                 constraintSet.constrainHeight(R.id.replace_lay, 0);
+                constraintSet.applyTo(rootLayout);
+                bottomControlLayout.setVisibility(View.VISIBLE);
                 break;
         }
-        constraintSet.applyTo(rootLayout);
+
+
     }
 
 
@@ -651,6 +690,50 @@ public class Classroom2Activity extends FragmentActivity {
             transaction.remove(movieFragment);
         }
     }
+
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 底部面板操作
+    //
+    private void popInput() {
+
+        if (chatFragment !=null && chatFragment.isAdded()) {
+            chatFragment.popInput();
+        }
+    }
+
+
+    private void popMembers() {
+        MemberListFragment memberListfragment = new MemberListFragment();
+        memberListfragment.show(getSupportFragmentManager(), "member");
+    }
+
+    private void popDatabase() {
+        databaseFragment = new DatabaseFragment();
+        databaseFragment.show(getSupportFragmentManager(), "database");
+
+    }
+
+    private void popClassSchedule(){
+        /*ProfileFragment profileFragment = new ProfileFragment();
+        profileFragment.show(getFragmentManager(), "profile");*/
+        ScheduleFragment.createInstance("").show(getSupportFragmentManager(),"schedule");
+    }
+
+
+    public void exitDatabaseFragment() {
+
+        if (databaseFragment != null && databaseFragment.isVisible()) {
+            databaseFragment.dismiss();
+        }
+
+    }
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

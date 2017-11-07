@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2.material;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,10 +35,14 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassViewHolder> {
     public void onBindViewHolder(ClassViewHolder holder, final int position) {
 
         Contact contact = classes.get(position);
-        holder.nameView.setText(contact.alias);
-        holder.descView.setText("summary");
+        holder.nameView.setText(contact.title);
+        holder.descView.setText(contact.owner);
 
-        holder.avatorView.setIconWithText(String.valueOf(contact.alias.charAt(0)));
+
+        String tt = TextUtils.isEmpty(contact.title)?
+                "#" : String.valueOf(contact.title.trim().charAt(0));
+
+        holder.avatorView.setIconWithText(tt);
 
         if (position == checkIndex) {
             holder.checkedView.setChecked(true);
@@ -61,6 +66,6 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassViewHolder> {
     }
 
     public Contact getCheckItem() {
-        return classes==null? null : classes.get(checkIndex);
+        return (checkIndex<0 || classes==null)? null : classes.get(checkIndex);
     }
 }

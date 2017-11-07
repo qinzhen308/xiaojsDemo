@@ -10,6 +10,8 @@ public class CTLConstant {
     public static final String EXTRA_EXCEPTION_TIPS = "exception_tips";
     public static final String EXTRA_TICKET = "ticket";
 
+    public static final String EXTRA_ID = "eid";
+    public static final String EXTRA_SUTYPE = "esubtype";
     public static final String EXTRA_DIRECTORY_ID = "dir_id";
     public static final String EXTRA_CONTACT = "econtact";
     public static final String EXTRA_DOC_ID= "edoc_id";
@@ -28,6 +30,9 @@ public class CTLConstant {
     public static final int REQUEST_CHOOSE_MEMBER = 5;
     public static final int REQUEST_OPEN_MATERIAL = 6;
     public static final int REQUEST_RECEIVE_WHITEBOARD_DATA = 7;
+    public static final int REQUEST_OPEN_MEMBERS = 8;
+    public static final int REQUEST_OPEN_CANLENDER = 9;
+    public static final int REQUEST_OPEN_DOWNLOAD = 10;
 
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课

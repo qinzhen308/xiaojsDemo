@@ -6,6 +6,7 @@
         >
 
     <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/px88"
@@ -15,8 +16,8 @@
 
         <ImageView
                 android:id="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_width="@dimen/px40"
+                android:layout_height="@dimen/px40"
                 android:src="@drawable/ic_class_database_close_1"
                 android:layout_marginRight="@dimen/px28"
                 android:layout_marginTop="@dimen/px34"
@@ -35,7 +36,7 @@
                 android:textSize="@dimen/px32"
                 android:gravity="center"
                 android:textColor="@color/classroom_dark_gray"
-                android:layout_marginTop="@dimen/px184"
+                android:layout_marginTop="@dimen/px104"
                 app:layout_constraintTop_toBottomOf="@id/back_btn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>

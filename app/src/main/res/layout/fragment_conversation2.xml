@@ -52,13 +52,22 @@
             android:layout_below="@id/title_bar_line"
             android:visibility="gone"/>
 
-    <cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView
-            android:id="@+id/recyclerview"
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/title_bar_line"
-            android:layout_marginBottom="@dimen/px120"
-            android:scrollbars="none"/>
+            android:layout_marginBottom="@dimen/px120">
+
+        <cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 </RelativeLayout>
 
 

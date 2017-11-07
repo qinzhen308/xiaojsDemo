@@ -1,9 +1,10 @@
 package cn.xiaojs.xma.ui.classroom2.base;
 
-import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -12,16 +13,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.widget.LoadingView;
+import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 
 /**
  * Created by maxiaobao on 2017/9/26.
  */
 
 public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
+
+    @Nullable
+    @BindView(R.id.tips_layout)
+    RelativeLayout tipsLayout;
+    @Nullable
+    @BindView(R.id.loading_progress)
+    LoadingView loadingView;
+    @Nullable
+    @BindView(R.id.loading_desc)
+    TextView loadingDescView;
+    @Nullable
+    @BindView(R.id.tips_icon)
+    TextView tipsIconView;
+
 
     protected ClassroomEngine classroomEngine;
 
@@ -112,6 +133,51 @@ public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
      */
     public void cancelProgress() {
         ((Classroom2Activity) getActivity()).cancelProgress();
+    }
+
+
+    protected void showLoadingStatus() {
+        if (tipsLayout != null) {
+            tipsLayout.setVisibility(View.VISIBLE);
+            loadingView.setVisibility(View.VISIBLE);
+            loadingView.resume();
+
+            loadingDescView.setVisibility(View.VISIBLE);
+            tipsIconView.setVisibility(View.GONE);
+
+        }
+    }
+
+    protected void showFinalTips(@DrawableRes int tipsIcon, @StringRes int tipsStr) {
+        if (tipsLayout != null) {
+            tipsLayout.setVisibility(View.VISIBLE);
+            loadingView.setVisibility(View.GONE);
+            loadingView.pause();
+            loadingDescView.setVisibility(View.GONE);
+            tipsIconView.setVisibility(View.VISIBLE);
+            tipsIconView.setCompoundDrawablesWithIntrinsicBounds(0, tipsIcon, 0, 0);
+            tipsIconView.setText(tipsStr);
+        }
+    }
+
+    protected void showFinalTips() {
+        if (tipsLayout != null) {
+            tipsLayout.setVisibility(View.VISIBLE);
+            loadingView.setVisibility(View.GONE);
+            loadingView.pause();
+            loadingDescView.setVisibility(View.GONE);
+            tipsIconView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void hiddenTips() {
+        if (tipsLayout != null) {
+            tipsLayout.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
+            loadingView.pause();
+            loadingDescView.setVisibility(View.GONE);
+            tipsIconView.setVisibility(View.GONE);
+        }
     }
 
 }

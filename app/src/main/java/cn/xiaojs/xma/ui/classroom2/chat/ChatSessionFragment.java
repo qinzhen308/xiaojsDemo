@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,11 +60,19 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
     @BindView(R.id.title)
     TextView titleView;
+    @BindView(R.id.back_btn)
+    TextView backView;
+    @BindView(R.id.more_btn)
+    ImageView moreView;
 
     @BindView(R.id.chat_list)
     RecyclerView recyclerView;
     @BindView(R.id.msg_input)
     SpecialEditText inputView;
+    @BindView(R.id.bottom_line)
+    View bottomlineView;
+    @BindView(R.id.send_btn)
+    Button sendBtnView;
 
     private LiveCriteria liveCriteria;
     private Pagination pagination;
@@ -96,6 +106,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
         super.onCreateView(inflater, container, savedInstanceState);
 
+
         View view = inflater.inflate(R.layout.fragment_classroom2_chat_session, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -111,7 +122,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                 showMoreMenu();
                 break;
             case R.id.send_btn:
-                sendTalk();
+                String bodyStr = inputView.getText().toString();
+                sendTalk(bodyStr);
                 break;
         }
     }
@@ -210,9 +222,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         }
     };
 
-    private void sendTalk() {
+    protected void sendTalk(String bodyStr) {
 
-        String bodyStr = inputView.getText().toString();
         if (TextUtils.isEmpty(bodyStr))
             return;
 
@@ -411,5 +422,17 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         });
         dialog.show();
 
+    }
+
+    public void hiddenSendBar() {
+        bottomlineView.setVisibility(View.GONE);
+        inputView.setVisibility(View.GONE);
+        sendBtnView.setVisibility(View.GONE);
+    }
+
+    public void hiddenTitleBar() {
+        titleView.setVisibility(View.GONE);
+        backView.setVisibility(View.GONE);
+        moreView.setVisibility(View.GONE);
     }
 }

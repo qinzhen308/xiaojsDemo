@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2.material;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.List;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.widget.LoadmoreRecyclerView;
@@ -32,21 +34,21 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
     private final int NORMAL_TYPE = 2;
 
     private Context context;
-    private boolean mine;
     private List<LibDoc> libDocs;
-    private boolean loading;
+    private String subType;
 
+    private String mId;
     private DatabaseListFragment fragment;
 
-    public MaterialAdapter(DatabaseListFragment fragment, String owner, List<LibDoc> libDocs) {
+    public MaterialAdapter(DatabaseListFragment fragment, String subType, List<LibDoc> libDocs) {
         super(fragment.getContext());
         this.fragment = fragment;
         this.context = fragment.getContext();
         this.libDocs = libDocs;
+        this.subType = subType;
+        this.mId = AccountDataManager.getAccountID(context);
 
-        if (TextUtils.isEmpty(owner)) {
-            mine = true;
-        }
+
     }
 
 
@@ -73,10 +75,6 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
         final LibDoc doc = libDocs.get(position);
         final MaterialViewHolder mholder = (MaterialViewHolder) holder;
         mholder.showOpera(false);
-        if (mine) {
-            mholder.opera2View.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.share_selector, 0, 0);
-            mholder.opera2View.setText(R.string.share);
-        }
 
 
         thumbnail(doc.typeName, doc.mimeType, doc.key, mholder);
@@ -84,7 +82,8 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
 
         mholder.nameView.setText(doc.name);
 
-        if (Collaboration.State.INIT.equals(doc.state) || Collaboration.State.CONVERTING.equals(doc.state)) {
+        if (Collaboration.State.INIT.equals(doc.state)
+                || Collaboration.State.CONVERTING.equals(doc.state)) {
             mholder.descView.setTextColor(context.getResources().getColor(R.color.main_orange));
             mholder.descView.setText("转码中...");
         } else if (Collaboration.State.FAULTED.equals(doc.state)) {
@@ -105,13 +104,40 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
                 sb.append(XjsUtils.getSizeFormatText(doc.used));
 
             }
-            mholder.descView.setText(sb);
+
+
+            if (subType == Collaboration.SubType.PRIVATE_CLASS
+                    && !TextUtils.isEmpty(doc.owner.name)) {
+                String author = doc.owner.name;
+                mholder.descView.setText(
+                        Html.fromHtml(context.getString(R.string.material_info_summary, sb, author)));
+            } else {
+                mholder.descView.setText(sb);
+            }
+
         }
 
-        if (Collaboration.TypeName.DIRECTORY_IN_LIBRARY.equals(doc.typeName)) {
+        if (subType == Collaboration.SubType.PRIVATE_CLASS
+                || Collaboration.TypeName.DIRECTORY_IN_LIBRARY.equals(doc.typeName)) {
             mholder.opera1View.setVisibility(View.GONE);
-        }else {
+        } else {
             mholder.opera1View.setVisibility(View.VISIBLE);
+        }
+
+        if (subType == Collaboration.SubType.PRIVATE_CLASS) {
+            mholder.opera4View.setVisibility(View.GONE);
+        } else {
+            mholder.opera4View.setVisibility(View.VISIBLE);
+        }
+
+        if (doc.owner.id.equals(mId)) {
+            mholder.opera2View.setVisibility(View.VISIBLE);
+            mholder.opera3View.setVisibility(View.VISIBLE);
+            mholder.expandView.setVisibility(View.VISIBLE);
+        } else {
+            mholder.opera3View.setVisibility(View.GONE);
+            mholder.opera2View.setVisibility(View.GONE);
+            mholder.expandView.setVisibility(View.GONE);
         }
 
 
@@ -147,8 +173,6 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
 
             }
         });
-
-        mholder.opera4View.setVisibility(View.VISIBLE);
         mholder.opera4View.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,16 +185,21 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
             public void onClick(View v) {
                 if (Collaboration.TypeName.DIRECTORY_IN_LIBRARY.equals(doc.typeName)) {
                     fragment.enterNext(doc, position);
-                }else if(context instanceof Classroom2Activity){
+                } else if (context instanceof Classroom2Activity) {
                     if (Collaboration.isStreaming(doc.mimeType) || Collaboration.isVideo(doc.mimeType)) {
-                        ((Classroom2Activity)context).enterPlayback(doc);
-                    }else {
-                        ((Classroom2Activity)context).getCollaBorateFragment().openDocInBoard(doc);
+                        ((Classroom2Activity) context).enterPlayback(doc);
+                    } else {
+                        ((Classroom2Activity) context).getCollaBorateFragment().openDocInBoard(doc);
+
                     }
 
-                }else {
-                    MaterialUtil.openMaterial(fragment.getActivity(),doc);
+                    ((Classroom2Activity) context).exitDatabaseFragment();
+
+                } else {
+                    MaterialUtil.openMaterial(fragment.getActivity(), doc);
+                    ((Classroom2Activity) context).exitDatabaseFragment();
                 }
+
 
             }
         });
@@ -210,9 +239,5 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
                 .placeholder(errorResId)
                 .error(errorResId)
                 .into(holder.iconView);
-    }
-
-    public void setLoading(boolean loading) {
-        this.loading = loading;
     }
 }

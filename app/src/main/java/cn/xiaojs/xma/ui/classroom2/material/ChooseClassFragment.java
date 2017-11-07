@@ -19,6 +19,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.loader.DataLoder;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
@@ -39,6 +40,8 @@ public class ChooseClassFragment extends BottomSheetFragment {
 
     private String comeid;
 
+    private DataProvider dataProvider;
+
 
     @Override
     public View createView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -52,6 +55,7 @@ public class ChooseClassFragment extends BottomSheetFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        dataProvider = DataProvider.getProvider(getContext());
 
         comeid = getArguments().getString(CTLConstant.EXTRA_DOC_ID);
 
@@ -63,6 +67,8 @@ public class ChooseClassFragment extends BottomSheetFragment {
         classes = new ArrayList<>();
         classAdapter = new ClassAdapter(getContext(), classes);
         recyclerView.setAdapter(classAdapter);
+
+        showLoadingStatus();
 
         loadData();
     }
@@ -83,35 +89,26 @@ public class ChooseClassFragment extends BottomSheetFragment {
 
     private void loadData() {
 
-        DataManager.getClasses(getContext(),
-                new DataLoder.DataLoaderCallback<ArrayList<ContactGroup>>() {
 
-                    @Override
-                    public void loadCompleted(ArrayList<ContactGroup> contacts) {
+        ArrayList<Contact> ss = dataProvider.getClasses();
+        if (ss == null || ss.size() <= 0) {
+            showFinalTips();
+            return;
+        }
 
-                        DataManager.lanuchLoadContactService(getContext().getApplicationContext(),
-                                DataManager.TYPE_FETCH_CLASS_FROM_NET);
-                        if (contacts == null || contacts.size() == 0) {
-                            return;
-                        }
+        hiddenTips();
 
-                        ArrayList<Contact> ss = contacts.get(0).collection;
-                        if (ss == null || ss.size() == 0) {
-                            return;
-                        }
+        classes.addAll(ss);
+        classAdapter.notifyDataSetChanged();
 
-                        classes.addAll(ss);
-                        classAdapter.notifyDataSetChanged();
-
-                    }
-                });
     }
 
     private void ok() {
 
         Contact contact = classAdapter.getCheckItem();
+        contact.account = contact.id;
         Fragment target = getTargetFragment();
-        if (target != null) {
+        if (target != null && contact != null) {
             Intent intent = new Intent();
             intent.putExtra(CTLConstant.EXTRA_CONTACT, contact);
             intent.putExtra(CTLConstant.EXTRA_DOC_ID, comeid);

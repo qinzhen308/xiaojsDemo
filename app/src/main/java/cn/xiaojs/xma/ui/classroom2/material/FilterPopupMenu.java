@@ -28,8 +28,11 @@ public class FilterPopupMenu {
     private int offset;
     private String[] titles;
 
-    public FilterPopupMenu(Context ctx, String[] titles, int defualtCheckedIndex) {
+    private int customerWidth = 0;
+
+    public FilterPopupMenu(Context ctx, String[] titles, int width, int defualtCheckedIndex) {
         this.titles = titles;
+        this.customerWidth = width;
         init(ctx, 0, defualtCheckedIndex);
     }
 
@@ -53,8 +56,11 @@ public class FilterPopupMenu {
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setItemChecked(checkedIndex, true);
 
+
+        int realW = customerWidth==0? ViewGroup.LayoutParams.MATCH_PARENT : customerWidth;
+
         mPopupWindow = new PopupWindow(rootView,
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                realW, ViewGroup.LayoutParams.MATCH_PARENT);
         //mPopupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.bg_popup_menu));
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());

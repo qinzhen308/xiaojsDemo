@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
@@ -37,7 +39,10 @@ import cn.xiaojs.xma.ui.classroom2.material.DownloadListFragment;
  */
 
 public class DatabaseFragment extends BottomSheetFragment
-        implements DatabaseListFragment.OnOperatingListener, DialogInterface.OnKeyListener{
+        implements DatabaseListFragment.OnOperatingListener, DialogInterface.OnKeyListener {
+
+    @BindView(R.id.rroot_lay)
+    RelativeLayout rrootLay;
 
     @BindView(R.id.cl_root)
     ConstraintLayout rootLay;
@@ -48,10 +53,15 @@ public class DatabaseFragment extends BottomSheetFragment
     ViewPager viewPager;
     @BindView(R.id.download_btn)
     ImageView downloadBtn;
+    @BindView(R.id.add_btn)
+    ImageView addBtnView;
 
     private ArrayList<Fragment> fragmentList;
 
     private DatabaseListFragment databaseListFragment;
+
+    private FrameLayout thirdLayout;
+    private BottomSheetFragment thirdFragment;
 
 
     @Override
@@ -65,23 +75,27 @@ public class DatabaseFragment extends BottomSheetFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getDialog()==null) {
+        if (getDialog() == null) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
-            params.setMargins(0,0,0,0);
+            params.setMargins(0, 0, 0, 0);
             rootLay.setBackgroundColor(getResources().getColor(R.color.white));
-        }else {
+        } else {
             getDialog().setOnKeyListener(this);
         }
 
 
         fragmentList = new ArrayList<>(2);
 
-        databaseListFragment = new DatabaseListFragment();
+        databaseListFragment = DatabaseListFragment.invoke();
         databaseListFragment.setOnOperatingListener(this);
         fragmentList.add(databaseListFragment);
-        fragmentList.add(new DatabaseListFragment());
 
-        FrgStatePageAdapter  pageAdapter = new FrgStatePageAdapter(getChildFragmentManager());
+
+        String clsId = classroomEngine.getCtlSession().cls.id;
+        fragmentList.add(DatabaseListFragment.invokeWithIdAndSubtype(
+                clsId, Collaboration.SubType.PRIVATE_CLASS));
+
+        FrgStatePageAdapter pageAdapter = new FrgStatePageAdapter(getChildFragmentManager());
         pageAdapter.setList(fragmentList);
         viewPager.setAdapter(pageAdapter);
 
@@ -96,9 +110,11 @@ public class DatabaseFragment extends BottomSheetFragment
                 switch (position) {
                     case 0:
                         tabGroup.check(R.id.tab_my);
+                        addBtnView.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         tabGroup.check(R.id.tab_class);
+                        addBtnView.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -114,7 +130,7 @@ public class DatabaseFragment extends BottomSheetFragment
 
     @OnClick({R.id.tab_my, R.id.tab_class, R.id.download_btn, R.id.add_btn})
     void onViewClick(View view) {
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.tab_my:
                 viewPager.setCurrentItem(0);
                 break;
@@ -137,6 +153,10 @@ public class DatabaseFragment extends BottomSheetFragment
             switch (requestCode) {
                 case CTLConstant.REQUEST_MATERIAL_ADD_NEW:
                     databaseListFragment.refreshData();
+                    destoryThird();
+                    break;
+                case CTLConstant.REQUEST_OPEN_DOWNLOAD:
+                    destoryThird();
                     break;
             }
         }
@@ -145,7 +165,7 @@ public class DatabaseFragment extends BottomSheetFragment
     @Override
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
             handleBackKey();
             return true;
         }
@@ -211,29 +231,92 @@ public class DatabaseFragment extends BottomSheetFragment
 
 
     private void openAddNew() {
-        AddNewFragment addNewFragment = new AddNewFragment();
-        Bundle data = new Bundle();
-        data.putString(CTLConstant.EXTRA_DIRECTORY_ID, databaseListFragment.getCurrentDirectoryId());
-        addNewFragment.setArguments(data);
-        addNewFragment.setTargetFragment(this, CTLConstant.REQUEST_MATERIAL_ADD_NEW);
-        addNewFragment.show(getFragmentManager(),"addnew");
+        showAddPage();
     }
 
     private void downloadOrBack() {
 
         if (databaseListFragment.canBackSuper()) {
             databaseListFragment.backSuper();
-        }else {
-            DownloadListFragment listFragment = new DownloadListFragment();
-            listFragment.show(getFragmentManager(),"downloadlist");
+        } else {
+            showDownloadPage();
         }
+    }
+
+    private void showDownloadPage() {
+        DownloadListFragment listFragment = new DownloadListFragment();
+        listFragment.setTargetFragment(this, CTLConstant.REQUEST_OPEN_DOWNLOAD);
+        if (getDialog() == null) {
+            if (thirdLayout == null) {
+                initThirdLayout();
+            }
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_database_framelayout, listFragment)
+                    .addToBackStack("ddd")
+                    .commitAllowingStateLoss();
+        } else {
+            listFragment.show(getFragmentManager(), "downloadlist");
+        }
+        thirdFragment = listFragment;
+    }
+
+    private void showAddPage() {
+
+        AddNewFragment addNewFragment = new AddNewFragment();
+        Bundle data = new Bundle();
+        data.putString(CTLConstant.EXTRA_DIRECTORY_ID, databaseListFragment.getCurrentDirectoryId());
+        addNewFragment.setArguments(data);
+        addNewFragment.setTargetFragment(this, CTLConstant.REQUEST_MATERIAL_ADD_NEW);
+
+        if (getDialog() == null) {
+
+            if (thirdLayout == null) {
+                initThirdLayout();
+            }
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_database_framelayout, addNewFragment)
+                    .addToBackStack("ddd")
+                    .commitAllowingStateLoss();
+        } else {
+            addNewFragment.show(getFragmentManager(), "addnew");
+        }
+
+        thirdFragment = addNewFragment;
+
+    }
+
+    private void initThirdLayout() {
+        thirdLayout = new FrameLayout(getContext());
+        thirdLayout.setId(R.id.fragment_database_framelayout);
+        thirdLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        rrootLay.addView(thirdLayout);
+    }
+
+    private void destoryThird(){
+
+        if (thirdFragment !=null) {
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .remove(thirdFragment)
+                    .commitAllowingStateLoss();
+            thirdFragment = null;
+        }
+
+        if (thirdLayout !=null) {
+            rrootLay.removeView(thirdLayout);
+            thirdLayout = null;
+        }
+
     }
 
     private void handleBackKey() {
 
         if (databaseListFragment.canBackSuper()) {
             databaseListFragment.backSuper();
-        }else {
+        } else {
             dismiss();
         }
     }

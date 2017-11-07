@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
@@ -114,6 +116,10 @@ public class FriendsFragment extends Base2Fragment {
 
                 friendsAdapter = new FriendsAdapter(getContext(), cwIndex.contacts);
                 listView.setAdapter(friendsAdapter);
+
+                //int lsize = cwIndex.letters.size();
+
+                //letterIndexView.setLetters(cwIndex.letters.toArray(new String[lsize]));
                 livIndex = new LivIndex(listView, letterIndexView, null, null, cwIndex.indexMap);
                 livIndex.show();
             } else {

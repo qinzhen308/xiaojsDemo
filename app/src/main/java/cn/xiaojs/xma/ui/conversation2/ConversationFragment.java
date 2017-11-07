@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
@@ -26,6 +27,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.provider.DataObserver;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
@@ -49,6 +51,9 @@ import cn.xiaojs.xma.util.JudgementUtil;
 
 public class ConversationFragment extends Base2Fragment {
 
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
+
     @BindView(R.id.recyclerview)
     SwapRecylcerView recyclerView;
     @BindView(R.id.title_bar)
@@ -67,6 +72,10 @@ public class ConversationFragment extends Base2Fragment {
 
             if (XiaojsConfig.DEBUG) {
                 Logger.d("received data provider load complete!");
+            }
+
+            if (refreshLayout !=null && refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
             }
 
             showApapter();
@@ -148,6 +157,14 @@ public class ConversationFragment extends Base2Fragment {
         }else {
             showLoadingStatus();
         }
+
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DataManager.lanuchSyncService(getContext());
+            }
+        });
 
     }
 

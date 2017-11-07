@@ -35,6 +35,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CollaManager;
 import cn.xiaojs.xma.data.DownloadManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -90,11 +91,28 @@ public class DatabaseListFragment extends BaseRoomFragment
     private boolean searching;
     private boolean forbiddenLoadSearch;
 
+    private String ownerId;
+    private String subType;
+
 
     public interface OnOperatingListener {
         void onEnterFolder();
         void onBackSuper();
         void onEnterSearch();
+    }
+
+    public static DatabaseListFragment invoke() {
+        return new DatabaseListFragment();
+    }
+
+    public static DatabaseListFragment invokeWithIdAndSubtype(String ownerId, String subType) {
+
+        DatabaseListFragment databaseListFragment = new DatabaseListFragment();
+        Bundle b = new Bundle();
+        b.putString(CTLConstant.EXTRA_ID, ownerId);
+        b.putString(CTLConstant.EXTRA_SUTYPE, subType);
+        databaseListFragment.setArguments(b);
+        return databaseListFragment;
     }
 
 
@@ -111,6 +129,15 @@ public class DatabaseListFragment extends BaseRoomFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        String myId = AccountDataManager.getAccountID(getContext());
+
+        ownerId = getArguments() ==null?
+                myId : getArguments().getString(CTLConstant.EXTRA_ID, myId);
+        subType = getArguments() ==null?
+                Collaboration.SubType.PERSON
+                : getArguments().getString(CTLConstant.EXTRA_SUTYPE, Collaboration.SubType.PERSON);
+
+
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -118,8 +145,7 @@ public class DatabaseListFragment extends BaseRoomFragment
         folderStack = new Stack<>();
 
         libDocs = new ArrayList<>();
-        materialAdapter = new MaterialAdapter(this,
-                XiaojsConfig.mLoginUser.getId(), libDocs);
+        materialAdapter = new MaterialAdapter(this, subType, libDocs);
         recyclerView.setAdapter(materialAdapter);
         recyclerView.setLoadmoreListener(this);
 
@@ -127,7 +153,10 @@ public class DatabaseListFragment extends BaseRoomFragment
         pagination.setPage(1);
         pagination.setMaxNumOfObjectsPerPage(10);
 
+        showLoadingStatus();
+
         loadData(null);
+
 
     }
 
@@ -182,9 +211,9 @@ public class DatabaseListFragment extends BaseRoomFragment
 //        materialAdapter.notifyDataSetChanged();
 
         CollaManager.getDocuments(getContext(),
-                XiaojsConfig.mLoginUser.getId(),
+                ownerId,
                 directoryId,
-                Collaboration.SubType.PERSON,
+                subType,
                 name,
                 getCategoryByIndex(),
                 getSortByIndex(),0, pagination, new APIServiceCallback<UserDoc>() {
@@ -195,15 +224,22 @@ public class DatabaseListFragment extends BaseRoomFragment
 
                         directoryId = object.libId;
 
-                        // materialAdapter.setLoading(loading);
+                        if (pagination.getPage() <= 1) {
+                            if (object != null && object.documents != null && object.documents.size() > 0) {
+                                hiddenTips();
+                            }else {
+                                showFinalTips();
+                            }
+                        }else {
+                            hiddenTips();
+                        }
 
                         if (object != null && object.documents != null && object.documents.size() > 0) {
                             libDocs.addAll(object.documents);
                             pagination.setPage(pagination.getPage() + 1);
-                            //materialAdapter.notifyDataSetChanged();
+                            materialAdapter.notifyDataSetChanged();
                         }
                         recyclerView.loadCompleted();
-                        //materialAdapter.notifyDataSetChanged();
 
 
                     }
@@ -213,8 +249,6 @@ public class DatabaseListFragment extends BaseRoomFragment
                         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         loading = false;
                         recyclerView.loadCompleted();
-//                         materialAdapter.setLoading(loading);
-//                        materialAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -391,7 +425,7 @@ public class DatabaseListFragment extends BaseRoomFragment
 
     private void showFilterMenu(){
         String[] titles = getResources().getStringArray(R.array.material_filters);
-        FilterPopupMenu menu = new FilterPopupMenu(getContext(),titles, filterIndex);
+        FilterPopupMenu menu = new FilterPopupMenu(getContext(),titles, lineView.getMeasuredWidth(), filterIndex);
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -441,7 +475,7 @@ public class DatabaseListFragment extends BaseRoomFragment
 
     private void showSortMenu(){
         String[] titles = getResources().getStringArray(R.array.material_sorts);
-        FilterPopupMenu menu = new FilterPopupMenu(getContext(),titles, sortIndex);
+        FilterPopupMenu menu = new FilterPopupMenu(getContext(),titles,lineView.getMeasuredWidth(), sortIndex);
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

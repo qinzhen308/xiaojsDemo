@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,12 +18,14 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,9 +69,12 @@ import static android.app.Activity.RESULT_OK;
  * Created by maxiaobao on 2017/9/26.
  */
 
-public class AddNewFragment extends BottomSheetFragment{
+public class AddNewFragment extends BottomSheetFragment implements DialogInterface.OnKeyListener{
 
     private static final int REQUEST_PERMISSION = 1000;
+
+    @BindView(R.id.cl_root)
+    ConstraintLayout rootLay;
 
     @BindView(R.id.back_btn)
     ImageView backView;
@@ -101,6 +108,15 @@ public class AddNewFragment extends BottomSheetFragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (getDialog()==null) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
+            params.setMargins(0,0,0,0);
+            rootLay.setBackgroundColor(getResources().getColor(R.color.white));
+        }else {
+            getDialog().setOnKeyListener(this);
+        }
+
+
         directoryId = getArguments().getString(CTLConstant.EXTRA_DIRECTORY_ID);
 
     }
@@ -123,6 +139,15 @@ public class AddNewFragment extends BottomSheetFragment{
         }
     }
 
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP){
+            dismiss();
+            return true;
+        }
+
+        return false;
+    }
 
     @Keep
     @PermissionSuccess(requestCode = REQUEST_PERMISSION)

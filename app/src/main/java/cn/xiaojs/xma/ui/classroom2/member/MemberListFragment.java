@@ -1,13 +1,17 @@
 package cn.xiaojs.xma.ui.classroom2.member;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,9 +29,10 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
  * Created by maxiaobao on 2017/9/26.
  */
 
-public class MemberListFragment extends BottomSheetFragment {
+public class MemberListFragment extends BottomSheetFragment implements DialogInterface.OnKeyListener{
 
-
+    @BindView(R.id.cl_root)
+    ConstraintLayout rootLay;
     @BindView(R.id.member_list)
     RecyclerView recyclerView;
 
@@ -44,6 +49,15 @@ public class MemberListFragment extends BottomSheetFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (getDialog()==null) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
+            params.setMargins(0,0,0,0);
+            rootLay.setBackgroundColor(getResources().getColor(R.color.white));
+        }else {
+            getDialog().setOnKeyListener(this);
+        }
+
+
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
@@ -59,24 +73,9 @@ public class MemberListFragment extends BottomSheetFragment {
 
         recyclerView.setAdapter(memberAdapter);
 
-
-//        LiveManager.getAttendees(getContext(), classroomEngine.getTicket(),
-//                new APIServiceCallback<LiveCollection<Attendee>>() {
-//            @Override
-//            public void onSuccess(LiveCollection<Attendee> liveCollection) {
-//
-//
-//                MemberAdapter memberAdapter = new MemberAdapter(MemberListFragment.this
-//                        ,getContext(), liveCollection.attendees);
-//
-//                recyclerView.setAdapter(memberAdapter);
-//            }
-//
-//            @Override
-//            public void onFailure(String errorCode, String errorMessage) {
-//
-//            }
-//        });
+        if (memberAdapter.getItemCount() <= 0) {
+            showFinalTips();
+        }
 
     }
 
@@ -87,6 +86,17 @@ public class MemberListFragment extends BottomSheetFragment {
                 addStudents();
                 break;
         }
+    }
+
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP){
+            dismiss();
+            return true;
+        }
+
+        return false;
     }
 
     public void enterChatSession(Attendee attendee) {

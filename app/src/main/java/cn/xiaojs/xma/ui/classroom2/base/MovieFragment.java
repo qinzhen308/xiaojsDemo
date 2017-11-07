@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -44,9 +45,12 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.CommunicationManager;
 import cn.xiaojs.xma.data.LiveManager;
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -54,9 +58,11 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
@@ -74,6 +80,8 @@ import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
+import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
+import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
@@ -122,9 +130,9 @@ public abstract class MovieFragment extends BaseRoomFragment
     @BindView(R.id.center_panel)
     public View centerPanelView;
     @BindView(R.id.center_one2one)
-    TextView centerOne2oneView;
-    @BindView(R.id.center_board_opera)
-    TextView centerBoardOperaView;
+    public TextView centerOne2oneView;
+//    @BindView(R.id.center_board_opera)
+//    TextView centerBoardOperaView;
     @BindView(R.id.center_board_mgr)
     TextView centerBoardMgrView;
     @BindView(R.id.center_new_board)
@@ -191,6 +199,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     private ObjectAnimator hiddeControlAnim;
     private ObjectAnimator showControlAnim;
 
+    private DataProvider dataProvider;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,6 +214,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        dataProvider = DataProvider.getProvider(getContext());
 
         slideLayout.setSlideListener(this);
         if (ClassroomController.getInstance(getActivity()).isLandscape()) {
@@ -232,31 +244,33 @@ public abstract class MovieFragment extends BaseRoomFragment
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case CTLConstant.REQUEST_INPUT_MESSAGE:
+                    String bodyStr = data.getStringExtra(CTLConstant.EXTRA_INPUT_MESSAGE);
+                    sendTalk(bodyStr);
 
-                    final Talk talkBean = new Talk();
-                    talkBean.from = AccountDataManager.getAccountID(getContext());
-                    talkBean.body = new Talk.TalkContent();
-                    talkBean.body.text = data.getStringExtra(CTLConstant.EXTRA_INPUT_MESSAGE);
-                    talkBean.body.contentType = Communications.ContentType.TEXT;
-                    talkBean.time = System.currentTimeMillis();
-                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
-
-
-                    classroomEngine.sendTalk(talkBean, new EventCallback<TalkResponse>() {
-                        @Override
-                        public void onSuccess(TalkResponse talkResponse) {
-                            if (talkResponse != null) {
-                                talkBean.time = talkResponse.time;
-                            }
-                            handleReceivedMsg(talkBean);
-                        }
-
-                        @Override
-                        public void onFailed(String errorCode, String errorMessage) {
-
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+//                    final Talk talkBean = new Talk();
+//                    talkBean.from = AccountDataManager.getAccountID(getContext());
+//                    talkBean.body = new Talk.TalkContent();
+//                    talkBean.body.text = data.getStringExtra(CTLConstant.EXTRA_INPUT_MESSAGE);
+//                    talkBean.body.contentType = Communications.ContentType.TEXT;
+//                    talkBean.time = System.currentTimeMillis();
+//                    talkBean.to = String.valueOf(Communications.TalkType.OPEN);
+//
+//
+//                    classroomEngine.sendTalk(talkBean, new EventCallback<TalkResponse>() {
+//                        @Override
+//                        public void onSuccess(TalkResponse talkResponse) {
+//                            if (talkResponse != null) {
+//                                talkBean.time = talkResponse.time;
+//                            }
+//                            handleReceivedMsg(talkBean);
+//                        }
+//
+//                        @Override
+//                        public void onFailed(String errorCode, String errorMessage) {
+//
+//                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                     break;
             }
         }
@@ -295,7 +309,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
-    @OnClick({R.id.center_one2one, R.id.center_board_opera,
+    @OnClick({R.id.center_one2one, //R.id.center_board_opera,
             R.id.center_board_mgr, R.id.center_new_board, R.id.center_member,
             R.id.center_database, R.id.center_canlender})
     void onCenterPanelItemClick(View view) {
@@ -303,9 +317,9 @@ public abstract class MovieFragment extends BaseRoomFragment
             case R.id.center_one2one:                                             //一对一音视频
                 onOne2OneClick(view);
                 break;
-            case R.id.center_board_opera:                                         //百般协作
-                onboardCollaborateClick(view);
-                break;
+//            case R.id.center_board_opera:                                         //百般协作
+//                onboardCollaborateClick(view);
+//                break;
             case R.id.center_board_mgr:                                           //白板管理
                 onBoardMgrClick(view);
                 break;
@@ -313,11 +327,13 @@ public abstract class MovieFragment extends BaseRoomFragment
                 onNewboardClick(view);
                 break;
             case R.id.center_member:                                              //教室成员
+                onMemberClick(view);
                 break;
             case R.id.center_database:                                            //资料库
                 onMaterialClick(view);
                 break;
             case R.id.center_canlender:                                           //课表
+                onCanlenderClick(view);
                 break;
         }
 
@@ -678,6 +694,18 @@ public abstract class MovieFragment extends BaseRoomFragment
         showSlidePanel(databaseFragment, "database");
     }
 
+    public void onMemberClick(View view) {
+        MemberListFragment memberListFragment = new MemberListFragment();
+        memberListFragment.setTargetFragment(this, CTLConstant.REQUEST_OPEN_MEMBERS);
+        showSlidePanel(memberListFragment, "members");
+    }
+
+    public void onCanlenderClick(View view) {
+        ScheduleFragment scheduleFragment = new ScheduleFragment();
+        scheduleFragment.setTargetFragment(this, CTLConstant.REQUEST_OPEN_CANLENDER);
+        showSlidePanel(scheduleFragment, "canlender");
+    }
+
 
     public void showOrHiddenCenterPanel() {
 
@@ -685,7 +713,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         centerPanelView.setVisibility(visibility);
         centerOne2oneView.setVisibility(visibility);
-        centerBoardOperaView.setVisibility(visibility);
+        //centerBoardOperaView.setVisibility(visibility);
         centerBoardMgrView.setVisibility(visibility);
         centerNewBoardView.setVisibility(visibility);
         centerMedmberView.setVisibility(visibility);
@@ -812,7 +840,8 @@ public abstract class MovieFragment extends BaseRoomFragment
         pagination.setPage(currentPage);
 
         liveCriteria = new LiveCriteria();
-        liveCriteria.to = String.valueOf(Communications.TalkType.OPEN);
+        liveCriteria.to = classroomEngine.getCtlSession().cls.id;
+        liveCriteria.type = Communications.TalkType.OPEN;
 
         loadTalk();
     }
@@ -823,7 +852,8 @@ public abstract class MovieFragment extends BaseRoomFragment
         if (loading) return;
 
         loading = true;
-        LiveManager.getTalks(getContext(), classroomEngine.getTicket(),
+
+        CommunicationManager.getTalks(getContext(),
                 liveCriteria, pagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
                     @Override
                     public void onSuccess(CollectionPage<TalkItem> object) {
@@ -837,8 +867,9 @@ public abstract class MovieFragment extends BaseRoomFragment
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
-
-                        Toast.makeText(getContext(), "获取消息列表失败", Toast.LENGTH_SHORT).show();
+                        if (XiaojsConfig.DEBUG) {
+                            Toast.makeText(getContext(), "获取消息列表失败", Toast.LENGTH_SHORT).show();
+                        }
 
                         loading = false;
                     }
@@ -916,6 +947,106 @@ public abstract class MovieFragment extends BaseRoomFragment
         }
 
     }
+
+    protected void sendTalk(String bodyStr) {
+
+        if (TextUtils.isEmpty(bodyStr))
+            return;
+
+        final Talk talkBean = new Talk();
+        talkBean.type = liveCriteria.type;
+        talkBean.from = AccountDataManager.getAccountID(getContext());
+        talkBean.body = new Talk.TalkContent();
+        talkBean.body.text = bodyStr;
+        talkBean.body.contentType = Communications.ContentType.TEXT;
+        talkBean.time = System.currentTimeMillis();
+        talkBean.to = liveCriteria.to;
+        talkBean.name = classroomEngine.getClassTitle();
+
+
+        XMSManager.sendTalk(getContext(), true, talkBean, new EventCallback<TalkResponse>() {
+            @Override
+            public void onSuccess(TalkResponse talkResponse) {
+                if (talkResponse != null) {
+                    talkBean.time = talkResponse.time;
+                }
+
+                handleReceivedMsg(true, talkBean);
+
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void handleReceivedMsg(boolean send, Talk talk) {
+
+        TalkItem talkItem = new TalkItem();
+        talkItem.time = talk.time;
+        talkItem.body = new TalkItem.TalkContent();
+        talkItem.from = new TalkItem.TalkPerson();
+        talkItem.body.text = talk.body.text;
+        talkItem.body.contentType = talk.body.contentType;
+        talkItem.from.accountId = talk.from;
+        talkItem.from.name = talk.name;
+
+        timeline(talkItem);
+
+        messageData.add(talkItem);
+        adapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(messageData.size() - 1);
+
+        if (send) {
+            updateConveration(talkItem);
+        } else {
+            sendReadTalk(talk);
+        }
+
+
+    }
+
+    private void updateUnread() {
+        dataProvider.updateConversationUnread(liveCriteria.to, 0);
+    }
+
+    private void sendReadTalk(Talk talk) {
+        ReadTalk readTalk = new ReadTalk();
+        readTalk.type = liveCriteria.type;
+        readTalk.from = talk.from;
+
+        if (liveCriteria.type == Communications.TalkType.OPEN) {
+            readTalk.to = AccountDataManager.getAccountID(getContext());
+        }
+
+        readTalk.stime = talk.stime;
+
+        XMSManager.sendReadTalk(getContext(), readTalk, null);
+        updateUnread();
+    }
+
+    private void updateConveration(TalkItem talkItem) {
+        Contact contact = new Contact();
+
+        if (TextUtils.isEmpty(talkItem.from.name)) {
+            talkItem.from.name = "nil";
+        }
+
+        contact.id = liveCriteria.to;
+        contact.name = talkItem.from.name;
+        contact.title = talkItem.from.name;
+        contact.lastMessage = talkItem.body.text;
+        contact.lastTalked = talkItem.time;
+        contact.unread = 0;
+
+        dataProvider.moveOrInsertConversation(contact);
+    }
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1213,8 +1344,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     @Override
-    public void openSlideMenu(LibDoc doc,ArrayList<LibDoc.ExportImg> slides,int curPage) {
-        showSlidePanel( SlideMenuFragment.createInstance(doc.name,slides,curPage), "menu_fragment");
+    public void openSlideMenu(LibDoc doc, ArrayList<LibDoc.ExportImg> slides, int curPage) {
+        showSlidePanel(SlideMenuFragment.createInstance(doc.name, slides, curPage), "menu_fragment");
     }
 
     @Override

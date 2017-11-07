@@ -20,9 +20,10 @@
 
     <cn.xiaojs.xma.ui.contact2.LetterIndexView
             android:id="@+id/letter_index"
-            android:layout_width="@dimen/px30"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/px25"
+            android:layout_height="@dimen/px500"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/px21"
             android:background="#00000000"
             android:visibility="gone"/>

@@ -16,6 +16,7 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -45,7 +46,10 @@ public class LandViewHolder extends ChatViewHolder {
     protected void bindData(TalkItem item) {
 
 
-        StringBuilder sb = new StringBuilder(item.from.name).append(" ");
+        String name = (TextUtils.isEmpty(item.from.name)
+                ||AccountDataManager.getAccountID(context).equals(item.from)) ? "我" : item.from.name;
+
+        StringBuilder sb = new StringBuilder(name).append(" ");
 
         if (item.body.contentType == Communications.ContentType.TEXT) {
 
@@ -89,7 +93,7 @@ public class LandViewHolder extends ChatViewHolder {
         spannableString.setSpan(
                 new ForegroundColorSpan(context.getResources().getColor(R.color.chat_name_blue)),
                 0,
-                item.from.name.length(),
+                name.length(),
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         nameView.setText(spannableString);
