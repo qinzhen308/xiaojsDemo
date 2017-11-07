@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
@@ -97,7 +99,6 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
         initDefaultBoard();
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
-
     }
 
 //    @Override
@@ -191,6 +192,12 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                 .addToBackStack("board_default")
                 .commit();*/
         ivWhiteboardPreview.setImageDrawable(new ColorDrawable());
+        whiteboardFragment.setLastBoardLoadListener(new BoardCollaborateFragment.OnLastBoardLoadListener() {
+            @Override
+            public void onSuccess(Bitmap preview) {
+                ivWhiteboardPreview.setImageBitmap(preview);
+            }
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

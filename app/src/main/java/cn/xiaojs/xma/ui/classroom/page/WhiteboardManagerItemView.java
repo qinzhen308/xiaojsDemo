@@ -1,7 +1,10 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.util.BitmapUtils;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -62,6 +66,8 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
         }else {
             selector.setVisibility(GONE);
         }
+        tvTitle.setText(mData.boardItem.title);
+        ivWhiteBoard.setImageBitmap(BitmapUtils.base64ToBitmapWithPrefix(mData.boardItem.snapshot));
     }
 
 

@@ -64,6 +64,7 @@ import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Command;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Drawing;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Viewport;
@@ -2189,6 +2190,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }else {
             syncChangeLayer(command.p);
         }
+    }
+
+
+    public void setLayers(Drawing drawing){
+        if(drawing==null)return;
+        if(drawing.stylus==null)return;
+        syncCreateLayers(drawing.stylus.layers);
     }
 
 

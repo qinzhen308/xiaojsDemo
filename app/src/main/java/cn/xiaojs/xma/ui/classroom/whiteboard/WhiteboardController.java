@@ -31,6 +31,7 @@ import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Drawing;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
@@ -748,5 +749,9 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     public void setPushPreviewBoardListener(PushPreviewBoardListener pushPreviewBoardListener){
         mCurrWhiteboard.setPushPreviewBoardListener(pushPreviewBoardListener);
+    }
+
+    public void setBoardLayerSet(Drawing drawing) {
+        mCurrWhiteboard.setLayers(drawing);
     }
 }
