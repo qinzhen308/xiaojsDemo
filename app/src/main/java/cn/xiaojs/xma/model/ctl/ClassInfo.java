@@ -29,4 +29,7 @@ public class ClassInfo implements Serializable{
     public String state;
 
     public Publish publish;
+    public boolean visitor;
+    public boolean talk;
+    public boolean library;
 }

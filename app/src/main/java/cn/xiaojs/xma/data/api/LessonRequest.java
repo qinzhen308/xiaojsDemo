@@ -36,6 +36,7 @@ import java.util.Map;
 import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.Registrant;
 import cn.xiaojs.xma.model.ScheduleCriteria;
+import cn.xiaojs.xma.model.VisitorParams;
 import cn.xiaojs.xma.model.account.DealAck;
 
 import cn.xiaojs.xma.model.PersonHomeUserLesson;
@@ -391,6 +392,10 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.MODIFY_CLASS, call);
     }
     public void modifyClass(String classid, ModifyModeParam params) {
+        Call<CLResponse> call = getService().modifyClass(classid, params);
+        enqueueRequest(APIType.MODIFY_CLASS, call);
+    }
+    public void modifyClass(String classid, VisitorParams params) {
         Call<CLResponse> call = getService().modifyClass(classid, params);
         enqueueRequest(APIType.MODIFY_CLASS, call);
     }

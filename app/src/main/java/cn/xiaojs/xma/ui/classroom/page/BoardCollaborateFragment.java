@@ -37,7 +37,10 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Board;
+import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.SlidePage;
 import cn.xiaojs.xma.model.material.LibDoc;
@@ -112,6 +115,10 @@ public class BoardCollaborateFragment extends BaseFragment {
     private int curPage=-1;
 
     private OnPushPreviewListener onPushPreviewListener;
+
+    public BoardCollaborateFragment(){
+        getLastBoard();
+    }
 
     @Override
     protected View getContentView() {
@@ -219,7 +226,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-        setTargetFragment(null,1);
+        setTargetFragment(null,0);
         super.onDetach();
     }
 
@@ -234,6 +241,9 @@ public class BoardCollaborateFragment extends BaseFragment {
             mWhiteBoardPanel.setVisibility(View.GONE);
             mBoardController.setWhiteBoardReadOnly(true);
         }*/
+        if(mLastBoardItem!=null){
+            mBoardController.setBoardLayerSet(mLastBoardItem.drawing);
+        }
     }
 
 
@@ -538,6 +548,47 @@ public class BoardCollaborateFragment extends BaseFragment {
         });
     }
 
+    BoardItem mLastBoardItem;
+    public void getLastBoard(){
+        BoardCriteria criteria=new BoardCriteria();
+        Pagination pagination=new Pagination();
+        pagination.setMaxNumOfObjectsPerPage(1);
+        pagination.setPage(1);
+        criteria.state= Live.BoardState.OPEN;
+        ClassroomEngine.getEngine().getBoards(criteria, pagination, new APIServiceCallback<CollectionPage<BoardItem>>() {
+            @Override
+            public void onSuccess(CollectionPage<BoardItem> object) {
+                if(object==null||ArrayUtil.isEmpty(object.objectsOfPage)){
+                    return;
+                }
+                BoardItem boardItem=object.objectsOfPage.get(0);
+                if(isAdded()&&isInLayout()){
+                    mBoardController.replaceNewWhiteboardLayout(null,mDoodleRatio);
+                    mBoardController.setBoardLayerSet(boardItem.drawing);
+                }else {
+                    mLastBoardItem=boardItem;
+                }
+                if(mOnLastBoardLoadListener!=null){
+                    mOnLastBoardLoadListener.onSuccess(BitmapUtils.base64ToBitmapWithPrefix(mLastBoardItem.snapshot));
+                }
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
+    OnLastBoardLoadListener mOnLastBoardLoadListener;
+    public void setLastBoardLoadListener(OnLastBoardLoadListener onLastBoardLoadListener){
+        mOnLastBoardLoadListener=onLastBoardLoadListener;
+    }
+
+    public interface OnLastBoardLoadListener{
+        void onSuccess(Bitmap preview);
+    }
 
 
 }

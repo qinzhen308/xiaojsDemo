@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model.live;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.model.socket.room.whiteboard.Drawing;
+
 /**
  * Created by maxiaobao on 2017/2/6.
  */
@@ -12,6 +14,9 @@ public class BoardItem extends Board{
     public String id;
     public boolean active;
     public boolean primary;
-    //public remoting;
+    public int type;
+    public String title;
+    public Drawing drawing;
+    public String snapshot;
 
 }
