@@ -33,6 +33,7 @@ import cn.xiaojs.xma.ui.classroom2.base.PlayerFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observables.GroupedObservable;
@@ -252,7 +253,7 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
 
     private void showClassBeginTips(Attendee attendee) {
 
-        final CommonDialog tipsDialog = new CommonDialog(getContext());
+        final Common3Dialog tipsDialog = new Common3Dialog(getContext());
         View view = LayoutInflater.from(getContext()).inflate(
                 R.layout.layout_classroom2_dlg_tips_stopped_live, null);
 
@@ -263,7 +264,6 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         TextView titleView = (TextView) view.findViewById(R.id.title);
         TextView tipsView = (TextView) view.findViewById(R.id.tips);
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        ImageView closeBtn = (ImageView) view.findViewById(R.id.close_btn);
 
         String avatorUrl = Account.getAvatar(attendee.accountId, avatorView.getMeasuredWidth());
         Glide.with(getContext())
@@ -286,12 +286,7 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
             }
         });
 
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tipsDialog.dismiss();
-            }
-        });
+        tipsDialog.needCloseBtn(false);
 
         tipsDialog.setCustomView(view);
         tipsDialog.show();
@@ -299,21 +294,19 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
 
     private void showLivingTips(Attendee attendee) {
 
-        final CommonDialog tipsDialog = new CommonDialog(getContext());
+        final Common3Dialog tipsDialog = new Common3Dialog(getContext());
         View view = LayoutInflater.from(getContext()).inflate(
                 R.layout.layout_classroom2_dlg_tips_stopped_live, null);
 
         tipsDialog.setCancelable(false);
         tipsDialog.setCanceledOnTouchOutside(false);
         tipsDialog.setRootBackgroud(android.R.color.transparent);
-        tipsDialog.setBottomButtonVisibility(View.GONE);
 
         LinearLayout rootLay = (LinearLayout) view.findViewById(R.id.root_lay);
         ImageView avatorView = (ImageView) view.findViewById(R.id.avator);
         TextView titleView = (TextView) view.findViewById(R.id.title);
         TextView tipsView = (TextView) view.findViewById(R.id.tips);
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        ImageView closeBtn = (ImageView) view.findViewById(R.id.close_btn);
 
         String avatorUrl = Account.getAvatar(attendee.accountId, avatorView.getMeasuredWidth());
         Glide.with(getContext())
@@ -329,8 +322,6 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         tipsView.setText("人都到齐了，就差你了～");
         okBtn.setText("点击观看");
 
-        closeBtn.setVisibility(View.VISIBLE);
-
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,13 +330,7 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
             }
         });
 
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tipsDialog.dismiss();
-            }
-        });
-
+        tipsDialog.needCloseBtn(true);
         tipsDialog.setCustomView(view);
         tipsDialog.show();
 

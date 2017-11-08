@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -62,6 +63,8 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.PushPreviewBoardListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
@@ -256,6 +259,10 @@ public class BoardCollaborateFragment extends BaseFragment {
                 }
             },500);
         }
+        if(mTempDoc!=null){
+            openDoc(mTempDoc);
+            mTempDoc=null;
+        }
     }
 
 
@@ -434,7 +441,6 @@ public class BoardCollaborateFragment extends BaseFragment {
         WhiteboardManagerFragment fragment=WhiteboardManagerFragment.createInstance("");
         fragment.setTargetFragment(this,CODE_OPEN_BOARD);
         fragment.show(getChildFragmentManager(),"dialog_fragment");
-
     }
 
     public void registBoard(){
@@ -473,7 +479,22 @@ public class BoardCollaborateFragment extends BaseFragment {
         }
     }
 
+
     public void openDocInBoard(final LibDoc doc){
+        if(isAdded()&&isInLayout()){
+            openDoc(doc);
+        }else {
+            Fragment fragment=((Classroom2Activity)getActivity()).getSupportFragmentManager().findFragmentById(R.id.replace_lay);
+            if(fragment instanceof MovieFragment){
+                ((MovieFragment)fragment).changeOrientationToLand();
+            }
+            mTempDoc=doc;
+        }
+    }
+
+    private LibDoc mTempDoc;
+
+    private void openDoc(final LibDoc doc){
         if(doc==null){
             ToastUtil.showToast(getActivity(),"该文件无效，无法打开");
             return;

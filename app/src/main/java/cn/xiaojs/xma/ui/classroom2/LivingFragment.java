@@ -44,6 +44,7 @@ import cn.xiaojs.xma.ui.classroom2.member.ChooseMemberFragment;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.functions.Consumer;
@@ -441,7 +442,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
 
     private void showStopTips(Attendee attendee) {
-        final CommonDialog tipsDialog = new CommonDialog(getContext());
+        final Common3Dialog tipsDialog = new Common3Dialog(getContext());
         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_classroom2_dlg_tips_stopped_live, null);
 
         ImageView avatorView = (ImageView) view.findViewById(R.id.avator);

@@ -50,6 +50,7 @@ import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -155,6 +156,7 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
         super.onResume();
 
         updateCountView();
+        showSuccessTip("");
     }
 
     @Override
@@ -628,7 +630,7 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
     }
 
     private void showSuccessTip(final String classId) {
-        final CommonDialog tipsDialog = new CommonDialog(this);
+        final Common3Dialog tipsDialog = new Common3Dialog(this);
         View view = LayoutInflater.from(this).inflate(
                 R.layout.layout_classroom2_dlg_tips_stopped_live, null);
 
@@ -647,7 +649,6 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
         tipsView.setText("一个人玩儿好孤单，邀请好友加入吧");
         okBtn.setText("分享给好友");
 
-        tipsDialog.setBottomButtonVisibility(View.GONE);
         closeBtn.setVisibility(View.VISIBLE);
 
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -663,16 +664,15 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
             }
         });
 
-        closeBtn.setOnClickListener(new View.OnClickListener() {
+        tipsDialog.setOnCloseClickListener(new Common3Dialog.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                tipsDialog.dismiss();
+            public void onClick() {
                 setResult(RESULT_OK);
                 finish();
             }
         });
-
         tipsDialog.setCustomView(view);
+        tipsDialog.needCloseBtn(true);
         tipsDialog.show();
         isCreateSuccess = true;
 
