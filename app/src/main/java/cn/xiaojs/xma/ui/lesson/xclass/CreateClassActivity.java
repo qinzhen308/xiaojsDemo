@@ -591,7 +591,7 @@ public class CreateClassActivity extends BaseActivity {
         okBtn.setText("分享给好友");
 
         tipsDialog.setBottomButtonVisibility(View.GONE);
-        okBtn.setVisibility(View.VISIBLE);
+        closeBtn.setVisibility(View.VISIBLE);
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override

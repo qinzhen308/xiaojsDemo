@@ -16,6 +16,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
@@ -59,10 +60,7 @@ public class ScanQrcodeActivity extends QrCodeActivity {
         //要判断是不是教室的URL http://192.168.100.3/live/590ad80c25558febef0f6957/1
         String key = checkAndParseKey(data);
         if (!TextUtils.isEmpty(key)) {
-
-            Intent i = new Intent(this, ClassroomActivity.class);
-            i.putExtra(Constants.KEY_TICKET,key);
-            startActivity(i);
+            Classroom2Activity.invoke(this,key);
             finish();
         } else if(data!=null){
             if(data.contains(IDENTIFICATION_CLASS_CODE)){
