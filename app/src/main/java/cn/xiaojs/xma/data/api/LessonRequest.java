@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.api.service.APIType;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
@@ -592,12 +593,10 @@ public class LessonRequest extends ServiceRequest {
                 || apiType == APIType.JOIN_LESSON
                 || apiType == APIType.ENROLL_LESSON
                 || apiType == APIType.CREATE_CLASS
-                || apiType == APIType.CREATE_LESSON) {
+                || apiType == APIType.CREATE_LESSON
+                || apiType == APIType.REMOVE_CLASS) {
 
-            //FIXME 此处有个BUG，
-            // 1.当等于APIType.JOIN_CLASS时，如果加入需要验证的班，验证通过后才能改为true。先忽略此问题。
-            // 2.解散班、删除公开课后，也会有此问题，也先忽略
-            AccountDataManager.setHasClass(getContext(), true);
+            DataManager.syncData(getContext());
         }
     }
 }

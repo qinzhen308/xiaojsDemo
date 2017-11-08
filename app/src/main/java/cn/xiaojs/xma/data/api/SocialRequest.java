@@ -255,23 +255,27 @@ public class SocialRequest extends ServiceRequest {
 //                DataManager.lanuchContactService(getContext(), result);
 //            }
         }else if (apiType == APIType.FOLLOW_CONTACT) {
-            Contact contact = new Contact();
-            contact.id = currentAccountId;
-            contact.name = currentName;
-            DataManager.getCache(getContext()).addContactId(currentAccountId, contact);
+//            Contact contact = new Contact();
+//            contact.id = currentAccountId;
+//            contact.name = currentName;
+//            DataManager.getCache(getContext()).addContactId(currentAccountId, contact);
+//
+//            Intent i = new Intent(HomeFragment.ACTION_UPDATE_FOWLLED);
+//            i.putExtra(HomeFragment.EXTRA_FOWLLED_ID,currentAccountId);
+//            getContext().sendBroadcast(i);
 
-            Intent i = new Intent(HomeFragment.ACTION_UPDATE_FOWLLED);
-            i.putExtra(HomeFragment.EXTRA_FOWLLED_ID,currentAccountId);
-            getContext().sendBroadcast(i);
+            DataManager.syncData(getContext());
 
             //FIXME 添加数据库放到此处
 
         }else if (apiType == APIType.UNFOLLOW_CONTACT) {
-            DataManager.getCache(getContext()).removeContactId(currentAccountId);
+//            DataManager.getCache(getContext()).removeContactId(currentAccountId);
+//
+//            Intent i = new Intent(HomeFragment.ACTION_UPDATE_UN_FOWLLED);
+//            i.putExtra(HomeFragment.EXTRA_FOWLLED_ID,currentAccountId);
+//            getContext().sendBroadcast(i);
 
-            Intent i = new Intent(HomeFragment.ACTION_UPDATE_UN_FOWLLED);
-            i.putExtra(HomeFragment.EXTRA_FOWLLED_ID,currentAccountId);
-            getContext().sendBroadcast(i);
+            DataManager.syncData(getContext());
 
         }
     }
