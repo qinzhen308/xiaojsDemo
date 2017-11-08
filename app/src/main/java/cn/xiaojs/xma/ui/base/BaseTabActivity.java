@@ -248,7 +248,7 @@ public abstract class BaseTabActivity extends BaseActivity {
 
         if (mTabs == null) return;
 
-        RedTipTextView redTipTextView = mTabs.get(2);
+        RedTipTextView redTipTextView = mTabs.get(3);
 
         if (!redTipTextView.mTipEnable) {
             redTipTextView.setTipEnable(true);
@@ -261,7 +261,7 @@ public abstract class BaseTabActivity extends BaseActivity {
 
         if (mTabs == null) return;
 
-        RedTipTextView redTipTextView = mTabs.get(2);
+        RedTipTextView redTipTextView = mTabs.get(3);
         if (redTipTextView.mTipEnable) {
             redTipTextView.setTipEnable(false);
         }

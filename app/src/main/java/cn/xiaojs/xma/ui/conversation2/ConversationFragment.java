@@ -21,6 +21,9 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,11 +31,15 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.provider.DataObserver;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.internal.PermissionUtil;
+import cn.xiaojs.xma.model.ctl.ScheduleData;
+import cn.xiaojs.xma.model.ctl.ScheduleOptions;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
@@ -41,6 +48,8 @@ import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView;
 import cn.xiaojs.xma.ui.lesson.xclass.CreateClassActivity;
+import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu1;
 import cn.xiaojs.xma.util.JudgementUtil;
@@ -186,6 +195,8 @@ public class ConversationFragment extends Base2Fragment {
         } else {
             showFinalTips();
         }
+
+        requestTodayScheduleCount();
     }
 
 
@@ -236,6 +247,47 @@ public class ConversationFragment extends Base2Fragment {
         });
         int offset = getActivity().getResources().getDimensionPixelSize(R.dimen.px68);
         menu.show(targetView, offset);
+    }
+
+
+    private void requestTodayScheduleCount() {
+
+        if (adapter == null)
+            return;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        long time = System.currentTimeMillis();
+        long start = ScheduleUtil.ymdToTimeMill(year, month, day);
+        long end = start + ScheduleUtil.DAY - 1000;
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("----qz----start time mil=" + start + "---end time mil=" + end);
+            Logger.d("----qz----start GMT+8:00 Time=" + ScheduleUtil.getDateYMDHMS(start) + "---end GMT+8:00 Time=" + ScheduleUtil.getDateYMDHMS(end));
+            Logger.d("----qz----start UTC Time=" + ScheduleUtil.getUTCDate(start) + "---end UTC Time=" + ScheduleUtil.getUTCDate(end));
+        }
+        ScheduleOptions options = new ScheduleOptions.Builder().setStart(ScheduleUtil.getUTCDate(start))
+                .setEnd(ScheduleUtil.getUTCDate(end))
+                .build();
+        LessonDataManager.getClassesSchedule(getActivity(), options, new APIServiceCallback<ScheduleData>() {
+            @Override
+            public void onSuccess(ScheduleData object) {
+
+                if (object !=null && object.calendar != null && object.calendar.size()>0) {
+                    Contact timetable = adapter.getItem(0);
+                    timetable.unread = object.calendar.size();
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
 

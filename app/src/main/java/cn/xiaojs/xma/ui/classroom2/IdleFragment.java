@@ -236,7 +236,10 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
             startTimer(startDate);
 
             lessonTipsTitleView.setText(ctl.title);
-            lessonTipsDescView.setText(TimeUtil.getFormatDate(startDate, "yyyy.MM.dd HH:mm") + "   主讲：丹阳");
+
+            String leadName = ctl.lead==null? "" : "   主讲：" + ctl.lead.name;
+
+            lessonTipsDescView.setText(TimeUtil.getFormatDate(startDate, "yyyy.MM.dd HH:mm") + leadName);
             lessonTipsLayout.setVisibility(View.VISIBLE);
 
 

@@ -47,6 +47,7 @@ public class CtlSession implements Serializable {
         public String state;
         public String startedOn;
         public long duration;
+        public CtlLead lead;
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
@@ -63,6 +64,14 @@ public class CtlSession implements Serializable {
     public static class ConnectType implements Serializable {
         public int app;
     }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CtlLead {
+        public String id;
+        public String name;
+    }
+
 
     @Override
     public String toString() {

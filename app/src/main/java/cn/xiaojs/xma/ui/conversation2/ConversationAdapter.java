@@ -54,6 +54,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         notifyDataSetChanged();
     }
 
+    public Contact getItem(int position) {
+        return contacts == null ? null : contacts.get(position);
+    }
+
     public ArrayList<Contact> getContacts() {
         return contacts;
     }
@@ -88,6 +92,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
         if (holder instanceof TimetableConViewHolder) {
             TimetableConViewHolder conViewHolder = (TimetableConViewHolder) holder;
+
+            if (contact.unread>0) {
+                conViewHolder.descView.setText("今日"+contact.unread+"节课");
+            }else {
+                conViewHolder.descView.setText("今日无节课");
+            }
+
             conViewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
