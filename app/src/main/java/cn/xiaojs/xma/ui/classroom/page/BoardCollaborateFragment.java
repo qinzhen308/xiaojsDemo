@@ -27,6 +27,9 @@ import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -213,6 +216,8 @@ public class BoardCollaborateFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+
+
 
 
     @Override
@@ -606,6 +611,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
             }
         });
+
     }
 
     OnLastBoardLoadListener mOnLastBoardLoadListener;
@@ -617,5 +623,28 @@ public class BoardCollaborateFragment extends BaseFragment {
         void onSuccess(Bitmap preview);
     }
 
+
+    //定时保存
+    private void startSaveTimer(){
+        if(executor==null){
+            executor=new ScheduledThreadPoolExecutor(1);
+            executor.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            },5,5, TimeUnit.SECONDS);
+        }
+    }
+
+    //停止定时保存
+    private void stopSaveTimer(){
+        if(executor!=null){
+            executor.shutdown();
+            executor=null;
+        }
+    }
+
+    ScheduledThreadPoolExecutor executor;
 
 }
