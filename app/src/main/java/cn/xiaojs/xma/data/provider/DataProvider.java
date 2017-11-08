@@ -245,6 +245,7 @@ public class DataProvider {
         Contact timeTable = new Contact();
         timeTable.id = "-1";
         timeTable.subtype = ConversationType.TypeName.TIME_TABLE;
+        timeTable.unread = 0;
         return timeTable;
     }
 

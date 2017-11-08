@@ -21,6 +21,8 @@ public class TimetableConViewHolder extends AbsConversationViewHolder {
     public RelativeLayout rootLayout;
     @BindView(R.id.title)
     public TextView titleView;
+    @BindView(R.id.desc)
+    public TextView descView;
 
     public TimetableConViewHolder(View itemView) {
         super(itemView);

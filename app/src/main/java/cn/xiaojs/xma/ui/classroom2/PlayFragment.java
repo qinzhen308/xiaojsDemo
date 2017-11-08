@@ -216,6 +216,7 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
         controlHandleOnRotate(changeRequest);
 
         lRightSwitchcameraView.setVisibility(View.GONE);
+        lRightSwitchVbView.setVisibility(View.GONE);
         pBottomClassnameView.setText(classroomEngine.getRoomTitle());
 
         String avatorUrl = Account.getAvatar(classroomEngine.getCtlSession().claimedBy,

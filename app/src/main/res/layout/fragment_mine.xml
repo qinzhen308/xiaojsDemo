@@ -25,9 +25,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:drawableLeft="@drawable/ic_my_class"
+                    android:drawableLeft="@drawable/ic_my_course"
                     android:drawablePadding="@dimen/px20"
-                    android:text="@string/my_teaching"/>
+                    android:text="我的课程"/>
 
             <TextView
                     android:id="@+id/my_teaching"
@@ -55,7 +55,7 @@
                 android:id="@+id/my_document_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
+                android:visibility="gone"
                 style="@style/MinePageItem">
 
             <TextView
@@ -87,7 +87,8 @@
 
 
         <View
-                style="@style/DividerHorizontal"/>
+                style="@style/DividerHorizontal"
+                android:visibility="gone"/>
 
         <!--我报的名-->
         <!--<RelativeLayout-->
@@ -130,7 +131,8 @@
                 android:id="@+id/my_contact_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/MinePageItem">
+                style="@style/MinePageItem"
+                android:visibility="gone">
 
             <TextView
                     android:layout_alignParentLeft="true"
@@ -243,7 +245,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/px20"
                 android:orientation="horizontal"
-                style="@style/MinePageItem">
+                style="@style/MinePageItem"
+                android:visibility="gone">
 
             <TextView
                     android:id="@+id/teach_ability_title"
@@ -292,7 +295,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:drawableLeft="@drawable/ic_name_auth"
+                    android:drawableLeft="@drawable/ic_my_authentication"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/name_verify"/>
 
@@ -330,9 +333,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:drawableLeft="@drawable/ic_share_my"
+                    android:drawableLeft="@drawable/ic_my_share"
                     android:drawablePadding="@dimen/px20"
-                    android:text="@string/recommend_xiaojs"/>
+                    android:text="分享APP"/>
 
 
             <ImageView
@@ -364,7 +367,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_black"
                     android:textSize="@dimen/font_26px"
-                    android:drawableLeft="@drawable/ic_setting"
+                    android:drawableLeft="@drawable/ic_my_set"
                     android:drawablePadding="@dimen/px20"
                     android:text="@string/settings"/>
 
