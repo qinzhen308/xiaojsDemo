@@ -138,14 +138,15 @@ public class SRPersonView extends RelativeLayout implements IViewModel<SearchRes
 
     private void chooseGroup() {
 
-        BaseBusiness.showFollowDialog(getContext(), new BaseBusiness.OnFollowListener() {
+        /*BaseBusiness.showFollowDialog(getContext(), new BaseBusiness.OnFollowListener() {
             @Override
             public void onFollow(long group) {
                 if (group > 0) {
                     toFollow(group);
                 }
             }
-        });
+        });*/
+        toFollow(Social.ContactGroup.FRIENDS);
     }
 
     private void toFollow(long group) {

@@ -18,6 +18,7 @@ import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.BoardSaveParams;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
@@ -315,6 +316,51 @@ public final class RoomRequest {
                 callback.onFailed(errorCode, errorMessage);
             }
         });
+    }
+
+
+    protected void saveBoard(String ticket, String board, BoardSaveParams saving, final APIServiceCallback<ResponseBody> callback){
+        LiveManager.saveBoard(context, ticket,
+                board,saving, new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        callback.onSuccess(object);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
+    }
+    protected void closeBoard(String ticket, String board, final APIServiceCallback<ResponseBody> callback){
+        LiveManager.closeBoard(context, ticket,
+                board, new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        callback.onSuccess(object);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
+    }
+
+    protected void deleteBoard(String ticket, String board, final APIServiceCallback<ResponseBody> callback){
+        LiveManager.deleteBoard(context, ticket,
+                board, new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        callback.onSuccess(object);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
     }
 
 

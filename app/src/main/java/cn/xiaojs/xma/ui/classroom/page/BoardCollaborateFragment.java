@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayInputStream;
@@ -434,6 +435,9 @@ public class BoardCollaborateFragment extends BaseFragment {
     public void registBoard(){
         final Board board=new Board();
         board.title="新的白板";
+        board.drawing=new Board.DrawDimension();
+        board.drawing.width=ScreenUtils.getScreenWidth(getActivity());
+        board.drawing.height=board.drawing.width*9/16;
         ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
             @Override
             public void onSuccess(BoardItem object) {

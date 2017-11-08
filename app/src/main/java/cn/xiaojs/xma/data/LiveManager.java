@@ -14,6 +14,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.BoardSaveParams;
 import cn.xiaojs.xma.model.live.ClassMode;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -128,6 +129,18 @@ public class LiveManager {
         request.closeBoard(ticket, board);
 
     }
+    /**
+     * delete an board.
+     */
+    public static void deleteBoard(Context context,
+                                  String ticket,
+                                  String board,
+                                  APIServiceCallback<ResponseBody> callback) {
+
+        LiveRequest request = new LiveRequest(context, callback);
+        request.deleteBoard(ticket, board);
+
+    }
 
     /**
      * Retrieves a collection of boards accessible to the current attendee within a specific class.
@@ -174,6 +187,17 @@ public class LiveManager {
                                      APIServiceCallback<BoardItem> callback) {
         LiveRequest request = new LiveRequest(context, callback);
         request.registerBoard(ticket, board);
+    }
+    /**
+     * save the board.
+     */
+    public static void saveBoard(Context context,
+                                     String ticket,
+                                     String board,
+                                     BoardSaveParams saving,
+                                     APIServiceCallback<ResponseBody> callback) {
+        LiveRequest request = new LiveRequest(context, callback);
+        request.saveBoard(ticket, board,saving);
     }
 
     /**

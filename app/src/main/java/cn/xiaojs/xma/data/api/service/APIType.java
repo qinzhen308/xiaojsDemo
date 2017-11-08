@@ -212,5 +212,7 @@ public class APIType {
     public static final int ABORT_CLASS= 137;
     public static final int EDIT_DOCUMENT = 138;
     public static final int MOVE_DOCUMENT = 139;
+    public static final int SAVE_BOARD = 140;
+    public static final int DELETE_BOARD = 141;
 
 }
