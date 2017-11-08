@@ -592,6 +592,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
             contact.id = talkItem.from;
             contact.name = talkItem.name;
             contact.title = talkItem.name;
+            contact.subtype = ConversationType.TypeName.PERSON;
         }else if (talkItem.type == Communications.TalkType.OPEN){
             contact.id = talkItem.to;
             String title = dataProvider.getClassName(talkItem.to);

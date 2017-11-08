@@ -23,6 +23,7 @@ public class CTLConstant {
     public static final String EXTRA_GROUP_ID= "gid";
     public static final String EXTRA_ACCOUNTID= "aid";
     public static final String EXTRA_SESSION_NAME= "sessionname";
+    public static final String EXTRA_CHOICE_MODE = "cmode";
     public static final int REQUEST_MATERIAL_ADD_NEW = 1;
     public static final int REQUEST_CHOOSE_CLASSES = 2;
     public static final int REQUEST_MATERIAL_MOVE = 3;
@@ -33,6 +34,7 @@ public class CTLConstant {
     public static final int REQUEST_OPEN_MEMBERS = 8;
     public static final int REQUEST_OPEN_CANLENDER = 9;
     public static final int REQUEST_OPEN_DOWNLOAD = 10;
+    public static final int REQUEST_ADD_MEMBERS = 11;
 
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课

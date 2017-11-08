@@ -55,8 +55,9 @@ public interface LiveService {
 
 
     //Get Attendees
-    @GET("/v1/live/{ticket}/attendees")
-    Call<LiveCollection<Attendee>> getAttendees(@Path("ticket") String ticket);
+    @GET("/v1/live/{ticket}/attendees/{peekOnly}")
+    Call<LiveCollection<Attendee>> getAttendees(
+            @Path("ticket") String ticket, @Path("peekOnly") boolean peekOnly);
 
     //Begin Class
     @PATCH("/v1/live/{ticket}/begin")

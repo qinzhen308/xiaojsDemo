@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -41,8 +42,13 @@ import cn.xiaojs.xma.model.ctl.ClassEnroll;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
+import cn.xiaojs.xma.model.ctl.EnrollStatus;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.contact2.ContactFragment;
+import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
+import cn.xiaojs.xma.ui.contact2.model.ClassItem;
+import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
@@ -50,11 +56,13 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.StringUtil;
 
+import static cn.xiaojs.xma.R.string.student;
+
 /**
  * Created by maxiaobao on 2017/5/17.
  */
 
-public class CreateClassActivity extends BaseActivity {
+public class CreateClassActivity extends BaseActivity implements ContactFragment.ChoiceCompletedListener {
 
     public static final int MAX_CLASS_CHAR = 50;
 
@@ -190,7 +198,7 @@ public class CreateClassActivity extends BaseActivity {
 
     private void initView() {
 
-        labelClass.setText(StringUtil.getSpecialString(labelClass.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
+        labelClass.setText(StringUtil.getSpecialString(labelClass.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
 //        labelAddVerify.setText(StringUtil.getSpecialString(labelAddVerify.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
 //        labelTeacher.setText(StringUtil.getSpecialString(labelTeacher.getText().toString()+" *"," *",getResources().getColor(R.color.main_orange)));
 
@@ -233,10 +241,10 @@ public class CreateClassActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
 //                    showSetPublicTip();
-                    String a=getString(R.string.class_need_public);
-                    SpannableString spannableString=new SpannableString(a+"\n"+getString(R.string.set_public_tip2));
-                    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.common_text)),a.length()+1,spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannableString.setSpan(new RelativeSizeSpan(0.8f),a.length()+1,spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    String a = getString(R.string.class_need_public);
+                    SpannableString spannableString = new SpannableString(a + "\n" + getString(R.string.set_public_tip2));
+                    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.common_text)), a.length() + 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f), a.length() + 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     labelPublic.setText(spannableString);
                 } else {
                     labelPublic.setText(R.string.class_need_public);
@@ -246,7 +254,7 @@ public class CreateClassActivity extends BaseActivity {
 
     }
 
-    private void showSetPublicTip(){
+    private void showSetPublicTip() {
         ListBottomDialog dialog = new ListBottomDialog(this);
         dialog.setTopTitle(R.string.set_public_tip);
         String[] items = new String[]{"设为公开"};
@@ -310,7 +318,7 @@ public class CreateClassActivity extends BaseActivity {
 //                        }
 
                         break;
-                    case 1://从已有班级中添加
+                    case 1://从通讯录中添加
                         if (enrollStudents != null && enrollStudents.size() > 0) {
                             showOverlayTips(true);
                         } else {
@@ -366,16 +374,16 @@ public class CreateClassActivity extends BaseActivity {
         ClassParams params = new ClassParams();
 
         params.title = name;
-        params.join = veriSwitcher.isChecked()? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
+        params.join = veriSwitcher.isChecked() ? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         params.accessible = publicSwitcher.isChecked();
         params.lessons = classLessons;
 
-        if(guestSwitcher.isChecked()){
-            params.visitor=true;
-            params.library=cbAllowGuestRead.isChecked();
-            params.talk=cbAllowGuestChart.isChecked();
-        }else {
-            params.visitor=false;
+        if (guestSwitcher.isChecked()) {
+            params.visitor = true;
+            params.library = cbAllowGuestRead.isChecked();
+            params.talk = cbAllowGuestChart.isChecked();
+        } else {
+            params.visitor = false;
         }
 
         ClassEnroll classEnroll = null;
@@ -458,9 +466,12 @@ public class CreateClassActivity extends BaseActivity {
     }
 
     private void enterImportPage() {
-        Intent i = new Intent(CreateClassActivity.this,
-                ImportStudentFormClassActivity.class);
-        startActivityForResult(i, REQUEST_IMPORT_STUDENTS_CODE);
+
+        ContactFragment.invokeWithChoice(getSupportFragmentManager(), ListView.CHOICE_MODE_MULTIPLE, this);
+
+//        Intent i = new Intent(CreateClassActivity.this,
+//                ImportStudentFormClassActivity.class);
+//        startActivityForResult(i, REQUEST_IMPORT_STUDENTS_CODE);
     }
 
     private void enterStudentPage() {
@@ -472,6 +483,52 @@ public class CreateClassActivity extends BaseActivity {
         startActivityForResult(ic, REQUEST_MANUAL_STUDENTS_CODE);
     }
 
+    @Override
+    public void onChoiceData(boolean person, ArrayList<AbsContactItem> data) {
+
+        if (data == null || data.size() <= 0)
+            return;
+
+        if (person) {
+            ArrayList<StudentEnroll> senrolls = new ArrayList<>(data.size());
+            for (AbsContactItem item : data) {
+                FriendItem friendItem = (FriendItem) item;
+                StudentEnroll studentEnroll = new StudentEnroll();
+                studentEnroll.id = friendItem.contact.id;
+                studentEnroll.name = friendItem.contact.name;
+
+                senrolls.add(studentEnroll);
+            }
+            enrollStudents = senrolls;
+
+            //清空导入班级的学生
+            if (enrollImports != null) {
+                enrollImports.clear();
+                enrollImports = null;
+            }
+        } else {
+
+            ArrayList<EnrollImport> imports = new ArrayList<>(data.size());
+            for (AbsContactItem item : data) {
+                ClassItem classItem = (ClassItem) item;
+                EnrollImport enrollImport = new EnrollImport();
+                enrollImport.id = classItem.contact.id;
+                enrollImport.subtype = classItem.contact.subtype;
+
+                imports.add(enrollImport);
+            }
+
+            enrollImports = imports;
+
+            //清空手动加入的学生
+            if (enrollStudents != null) {
+                enrollStudents.clear();
+                enrollStudents = null;
+            }
+
+        }
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -534,23 +591,23 @@ public class CreateClassActivity extends BaseActivity {
         }
     }
 
-    private boolean wannaExit(){
+    private boolean wannaExit() {
 
-        int status=checkExit();
-        if(status<0)return true;
+        int status = checkExit();
+        if (status < 0) return true;
 
-        final CommonDialog dialog=new CommonDialog(this);
+        final CommonDialog dialog = new CommonDialog(this);
         dialog.setTitle(R.string.create_class_exit_tip2);
         dialog.setLefBtnText(R.string.exit);
         dialog.setRightBtnText(R.string.countine_input);
-        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener(){
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
                 dialog.dismiss();
                 finish();
             }
         });
-        dialog.setOnRightClickListener(new CommonDialog.OnClickListener(){
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
                 dialog.dismiss();
@@ -560,17 +617,17 @@ public class CreateClassActivity extends BaseActivity {
         return false;
     }
 
-    private int checkExit(){
-        int tipCount=0;
+    private int checkExit() {
+        int tipCount = 0;
         String name = classNameEdt.getText().toString().trim();
-        if (!TextUtils.isEmpty(name)&&name.length() <= MAX_CLASS_CHAR) {
+        if (!TextUtils.isEmpty(name) && name.length() <= MAX_CLASS_CHAR) {
             tipCount++;
         }
-        return tipCount>=1?1:-1;
+        return tipCount >= 1 ? 1 : -1;
 
     }
 
-    private void showSuccessTip(final String classId){
+    private void showSuccessTip(final String classId) {
         final CommonDialog tipsDialog = new CommonDialog(this);
         View view = LayoutInflater.from(this).inflate(
                 R.layout.layout_classroom2_dlg_tips_stopped_live, null);
@@ -596,11 +653,11 @@ public class CreateClassActivity extends BaseActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url= ApiManager.getShareLessonUrl(classId, cn.xiaojs.xma.common.xf_foundation.schemas.Account.TypeName.CLASS_LESSON);
-                if(url.contains("?")){
-                    url+="&app=android";
-                }else {
-                    url+="?app=android";
+                String url = ApiManager.getShareLessonUrl(classId, cn.xiaojs.xma.common.xf_foundation.schemas.Account.TypeName.CLASS_LESSON);
+                if (url.contains("?")) {
+                    url += "&app=android";
+                } else {
+                    url += "?app=android";
                 }
                 ShareUtil.shareUrlByUmeng(CreateClassActivity.this, classNameEdt.getText().toString(), AccountDataManager.getAccont(CreateClassActivity.this).getBasic().getName(), url);
             }
@@ -617,14 +674,15 @@ public class CreateClassActivity extends BaseActivity {
 
         tipsDialog.setCustomView(view);
         tipsDialog.show();
-        isCreateSuccess=true;
+        isCreateSuccess = true;
 
     }
 
-    boolean isCreateSuccess=false;
+    boolean isCreateSuccess = false;
+
     @Override
     public void onBackPressed() {
-        if(isCreateSuccess){
+        if (isCreateSuccess) {
             finish();
             return;
         }

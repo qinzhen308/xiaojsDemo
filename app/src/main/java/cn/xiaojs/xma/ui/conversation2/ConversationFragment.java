@@ -162,7 +162,7 @@ public class ConversationFragment extends Base2Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                DataManager.lanuchSyncService(getContext());
+                DataManager.syncData(getContext());
             }
         });
 

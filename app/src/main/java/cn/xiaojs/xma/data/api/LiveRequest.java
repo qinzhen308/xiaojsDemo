@@ -81,8 +81,8 @@ public class LiveRequest extends ServiceRequest{
     }
 
 
-    public void getAttendees(String ticket) {
-        Call<LiveCollection<Attendee>> call = getLiveService().getAttendees(ticket);
+    public void getAttendees(String ticket, boolean peekOnly) {
+        Call<LiveCollection<Attendee>> call = getLiveService().getAttendees(ticket, peekOnly);
         enqueueRequest(APIType.GET_ATTENDEES,call);
     }
 

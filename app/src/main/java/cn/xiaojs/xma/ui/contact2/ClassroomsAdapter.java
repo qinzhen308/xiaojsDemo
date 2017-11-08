@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 
@@ -36,14 +37,16 @@ public class ClassroomsAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<AbsContactItem> dataCollect;
+    private int choiceMode;
 
     public interface OnItemClickListener{
         void OnItemClick(Contact contact);
     }
 
-    public ClassroomsAdapter(Context context) {
+    public ClassroomsAdapter(Context context, int choiceMode) {
         this.context = context;
         this.dataCollect = new ArrayList<>();
+        this.choiceMode = choiceMode;
     }
 
     public void addDatas(ArrayList<AbsContactItem> data) {
@@ -109,6 +112,13 @@ public class ClassroomsAdapter extends BaseAdapter {
 
 
             ClassItem classItem = (ClassItem) contactItem;
+
+            if (choiceMode == ListView.CHOICE_MODE_MULTIPLE) {
+                classViewHolder.checkedTextView.setVisibility(View.VISIBLE);
+            } else {
+                classViewHolder.checkedTextView.setVisibility(View.GONE);
+            }
+
 
             String titleStr = classItem.contact.title;
 

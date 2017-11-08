@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,8 @@ import cn.xiaojs.xma.ui.classroom2.widget.ColorIconTextView;
 
 public class ClassroomViewHolder {
 
+    @BindView(R.id.check_view)
+    public CheckedTextView checkedTextView;
     @BindView(R.id.root_lay)
     public RelativeLayout rootLayout;
     @BindView(R.id.avator)

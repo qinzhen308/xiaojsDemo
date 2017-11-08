@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +40,18 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         this.fragment = fragment;
         this.attendees = attendees;
         avatorSize = context.getResources().getDimensionPixelSize(R.dimen.px90);
+    }
+
+    public void updateData(ArrayList<Attendee> atts) {
+
+        if (atts == null)
+            return;
+
+        attendees.clear();
+        attendees.addAll(atts);
+        Collections.sort(attendees);
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -86,7 +99,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     public int getItemCount() {
         return attendees == null ? 0 : attendees.size();
     }
-
 
 
     static class MemberViewHolder extends RecyclerView.ViewHolder {

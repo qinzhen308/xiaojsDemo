@@ -308,8 +308,9 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
-                            RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
-                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
+                            //RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
+                            //rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
+                            recyclerView.scrollToPosition(messageData.size() - 1);
                         } else {
                             adapter.notifyItemRangeInserted(0, talkItems.size());
                             recyclerView.scrollToPosition(talkItems.size());
@@ -338,7 +339,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
         messageData.add(talkItem);
         adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(messageData.size() - 1);
+        recyclerView.scrollToPosition(messageData.size() - 1);
 
         if (send) {
             updateConveration(talkItem);

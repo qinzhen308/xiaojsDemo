@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 
@@ -28,10 +29,12 @@ public class FriendsAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<AbsContactItem> dataCollect;
+    private int choiceMode;
 
-    public FriendsAdapter(Context context, ArrayList<AbsContactItem> dataCollect) {
+    public FriendsAdapter(Context context, ArrayList<AbsContactItem> dataCollect, int choiceMode) {
         this.context = context;
         this.dataCollect = dataCollect;
+        this.choiceMode = choiceMode;
     }
 
     @Override
@@ -84,6 +87,13 @@ public class FriendsAdapter extends BaseAdapter {
             }
 
             FriendItem friendItem = (FriendItem) contactItem;
+
+            if (choiceMode == ListView.CHOICE_MODE_MULTIPLE) {
+                friendsViewHolder.checkedTextView.setVisibility(View.VISIBLE);
+            } else {
+                friendsViewHolder.checkedTextView.setVisibility(View.GONE);
+            }
+
             friendsViewHolder.titleView.setText(friendItem.contact.name);
             friendsViewHolder.descView.setText(friendItem.contact.title);
 

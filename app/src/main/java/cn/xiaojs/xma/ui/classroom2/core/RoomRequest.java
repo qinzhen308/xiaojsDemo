@@ -15,10 +15,12 @@ import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.ClassResponse;
+import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
@@ -351,6 +353,35 @@ public final class RoomRequest {
     protected void getBoards(String ticket, BoardCriteria criteria, Pagination pagination, APIServiceCallback<CollectionPage<BoardItem>> callback){
         LiveManager.getBoards(context, ticket,criteria,
                 pagination,callback );
+    }
+
+
+    protected void getMembers(String ticket, final APIServiceCallback<LiveCollection<Attendee>> callback) {
+        LiveManager.getAttendees(context, ticket,false,
+                new APIServiceCallback<LiveCollection<Attendee>>() {
+                    @Override
+                    public void onSuccess(LiveCollection<Attendee> liveCollection) {
+
+                        if (liveCollection != null
+                                && liveCollection.attendees != null
+                                && liveCollection.attendees.size()>0) {
+
+                            stateMachine.addMembersInSession(liveCollection.attendees);
+                        }
+
+                        callback.onSuccess(liveCollection);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.e("load class members failed....");
+                        }
+
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
     }
 
 

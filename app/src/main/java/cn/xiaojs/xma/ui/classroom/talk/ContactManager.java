@@ -93,7 +93,7 @@ public class ContactManager{
     public synchronized void getAttendees(Context context, final OnGetAttendsCallback callback) {
         if (mLiveCollection == null) {
             String ticket = ClassroomEngine.getEngine().getTicket();
-            LiveManager.getAttendees(context, ticket, new APIServiceCallback<LiveCollection<Attendee>>() {
+            LiveManager.getAttendees(context, ticket, false,new APIServiceCallback<LiveCollection<Attendee>>() {
                 @Override
                 public void onSuccess(LiveCollection<Attendee> liveCollection) {
                     if (liveCollection != null && liveCollection.attendees != null) {

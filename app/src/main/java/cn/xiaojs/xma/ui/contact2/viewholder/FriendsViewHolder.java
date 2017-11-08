@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -17,6 +19,8 @@ import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 
 public class FriendsViewHolder extends AbsContactViewHolder<FriendItem> {
 
+    @BindView(R.id.check_view)
+    public CheckedTextView checkedTextView;
     @BindView(R.id.avator)
     public ImageView avatorView;
     @BindView(R.id.title)

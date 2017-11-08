@@ -513,9 +513,9 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     }
 
-    private void loadMemberList() {
+    protected void loadMemberList() {
 
-        LiveManager.getAttendees(getContext(), roomSession.ticket,
+        LiveManager.getAttendees(getContext(), roomSession.ticket,false,
                 new APIServiceCallback<LiveCollection<Attendee>>() {
                     @Override
                     public void onSuccess(LiveCollection<Attendee> liveCollection) {
@@ -538,7 +538,11 @@ public abstract class ClassroomStateMachine extends StateMachine {
                 });
     }
 
-    private void addMembersInSession(ArrayList<Attendee> attendees){
+    protected void addMembersInSession(ArrayList<Attendee> attendees){
+
+        if (attendees ==null)
+            return;
+
         Observable.fromArray(attendees)
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<ArrayList<Attendee>>() {
@@ -546,6 +550,8 @@ public abstract class ClassroomStateMachine extends StateMachine {
                     public void accept(ArrayList<Attendee> attendees) throws Exception {
                         if(roomSession.classMembers == null) {
                             roomSession.classMembers = new HashMap<>();
+                        }else {
+                            roomSession.classMembers.clear();
                         }
 
                         for (Attendee attendee : attendees) {

@@ -42,6 +42,7 @@ public class ClassroomsFragment extends Base2Fragment {
     private LivIndex livIndex;
 
     private DataProvider dataProvider;
+    private int choiceMode;
 
     @Nullable
     @Override
@@ -57,7 +58,12 @@ public class ClassroomsFragment extends Base2Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ClassroomsAdapter(getContext());
+        choiceMode = getArguments() == null ?
+                ListView.CHOICE_MODE_NONE
+                : getArguments().getInt(CTLConstant.EXTRA_CHOICE_MODE, ListView.CHOICE_MODE_NONE);
+        listView.setChoiceMode(choiceMode);
+
+        adapter = new ClassroomsAdapter(getContext(), choiceMode);
         listView.setAdapter(adapter);
 
         dataProvider = DataProvider.getProvider(getContext());
@@ -82,7 +88,7 @@ public class ClassroomsFragment extends Base2Fragment {
 
     @OnItemClick({R.id.listview})
     void onListItemClick(int position) {
-        if (adapter != null) {
+        if (adapter != null && choiceMode == ListView.CHOICE_MODE_NONE) {
             ClassItem contactItem = (ClassItem) adapter.getItem(position);
             enterClass(getActivity(), contactItem.contact.ticket);
         }
@@ -111,6 +117,20 @@ public class ClassroomsFragment extends Base2Fragment {
         context.startActivity(i);
     }
 
+    public ArrayList<AbsContactItem> getChoiceItems() {
+        ArrayList<AbsContactItem> datas = null;
+        long[] ids = listView.getCheckItemIds();
+        if (ids != null && ids.length > 0) {
+            datas = new ArrayList<>(ids.length);
+            for (int i = 0; i < ids.length; i++) {
+                AbsContactItem item = adapter.getItem((int) ids[i]);
+                datas.add(item);
+            }
+        }
+
+        return datas;
+    }
+
 
     private DataObserver dataObserver = new DataObserver() {
         @Override
@@ -125,9 +145,6 @@ public class ClassroomsFragment extends Base2Fragment {
 
             if (getActivity() == null)
                 return;
-
-            showFinalTips();
-
             if (cwIndex.contacts != null && cwIndex.contacts.size() > 0) {
 
                 hiddenTips();

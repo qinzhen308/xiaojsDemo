@@ -91,7 +91,7 @@ public class DataManager {
         //AccountPref.setAvatorTime(context, XiaojsConfig.AVATOR_TIME);
 
 
-        lanuchSyncService(context);
+        syncData(context);
 
         //jpush
         JpushUtil.resumePush(context);
@@ -102,7 +102,7 @@ public class DataManager {
         return XMSManager.initXMS(context, consumer);
     }
 
-    public static void lanuchSyncService(Context context) {
+    public static void syncData(Context context) {
         Intent i = new Intent(context, SyncService.class);
         i.putExtra(SYNC_TYPE, TYPE_INIT);
         context.startService(i);

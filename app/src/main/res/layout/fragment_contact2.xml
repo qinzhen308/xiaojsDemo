@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:background="@drawable/bottomsheet_bg_white_rect">
+        android:background="@color/white">
 
 
     <TextView
@@ -23,6 +23,32 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             />
+
+    <ImageView
+            android:id="@id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_back"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            app:layout_constraintLeft_toLeftOf="@id/title_bar"
+            app:layout_constraintTop_toTopOf="@id/title_bar"
+            app:layout_constraintBottom_toBottomOf="@id/title_bar"
+            />
+
+    <TextView
+            android:id="@id/ok_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:paddingLeft="@dimen/px30"
+            android:paddingRight="@dimen/px30"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/btn_blue"
+            android:textSize="@dimen/font_30px"
+            app:layout_constraintRight_toRightOf="@id/title_bar"
+            app:layout_constraintTop_toTopOf="@id/title_bar"
+            app:layout_constraintBottom_toBottomOf="@id/title_bar"/>
 
     <View
             android:id="@+id/title_bar_line"

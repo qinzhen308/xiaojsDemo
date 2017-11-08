@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<cn.xiaojs.xma.ui.widget.CheckableRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
+    <CheckedTextView
+            android:id="@+id/check_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/px25"
+            android:checkMark="@drawable/multi_check_selector"
+            android:visibility="gone"
+            />
 
     <ImageView
             android:id="@+id/avator"
             android:layout_width="@dimen/px89"
             android:layout_height="@dimen/px89"
-            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@id/check_view"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/px25"
             android:layout_marginTop="@dimen/px20"
@@ -43,4 +55,4 @@
             android:singleLine="true"
             android:ellipsize="end"
             />
-</RelativeLayout>
+</cn.xiaojs.xma.ui.widget.CheckableRelativeLayout>

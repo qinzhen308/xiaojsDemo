@@ -1,5 +1,7 @@
 package cn.xiaojs.xma.model.live;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -10,7 +12,7 @@ import java.io.Serializable;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Attendee implements Serializable{
+public class Attendee implements Serializable, Comparable<Attendee>{
 
     public String psType;
     public String psTypeInLesson;
@@ -60,5 +62,23 @@ public class Attendee implements Serializable{
     @Override
     public int hashCode() {
         return accountId.hashCode();
+    }
+
+
+    @Override
+    public int compareTo(@NonNull Attendee o) {
+        if (o==null)
+            return -1;
+
+        if (xa == o.xa)
+            return 0;
+
+        if (o.xa > 0)
+            return 1;
+
+        if (o.xa <=0)
+            return -1;
+
+        return 0;
     }
 }

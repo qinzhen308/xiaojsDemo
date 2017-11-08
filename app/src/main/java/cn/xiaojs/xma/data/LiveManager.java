@@ -83,9 +83,10 @@ public class LiveManager {
      */
     public static void getAttendees(Context context,
                                     String ticket,
+                                    boolean peekOnly,
                                     APIServiceCallback<LiveCollection<Attendee>> callback) {
         LiveRequest request = new LiveRequest(context, callback);
-        request.getAttendees(ticket);
+        request.getAttendees(ticket,peekOnly);
     }
 
     /**

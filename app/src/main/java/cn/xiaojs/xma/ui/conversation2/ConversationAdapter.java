@@ -8,12 +8,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
+import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.room.RemoveDlg;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
 import cn.xiaojs.xma.ui.lesson.xclass.MyScheduleActivity;
 
@@ -29,7 +34,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
     private ItemClickListener itemClickListener;
 
-    public interface ItemClickListener{
+    public interface ItemClickListener {
         void onItemClick(Contact contact, int position);
     }
 
@@ -61,6 +66,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             View view = TimetableConViewHolder.createView(context, parent);
             return new TimetableConViewHolder(view);
 
+        } else if (viewType == ConversationType.PERSON) {
+            View view = PeerConViewHolder.createView(context, parent);
+            return new PeerConViewHolder(view);
         } else {
             View view = ClassConViewHolder.createView(context, parent);
             return new ClassConViewHolder(view);
@@ -87,6 +95,91 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 }
             });
 
+        } else if (holder instanceof PeerConViewHolder) {
+
+            final PeerConViewHolder peerConViewHolder = (PeerConViewHolder) holder;
+
+
+            String avatorUrl = Account.getAvatar(contact.id, peerConViewHolder.avatorView.getMeasuredWidth());
+            Glide.with(context)
+                    .load(avatorUrl)
+                    .transform(new CircleTransform(context))
+                    .placeholder(R.drawable.ic_defaultavatar)
+                    .error(R.drawable.ic_defaultavatar)
+                    .into(peerConViewHolder.avatorView);
+
+            peerConViewHolder.titleView.setText(contact.title);
+            peerConViewHolder.descView.setText(contact.lastMessage);
+            peerConViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
+
+            if (contact.unread > 0) {
+                if (contact.unread > 99) {
+                    peerConViewHolder.flagView.setText("99+");
+                } else {
+                    peerConViewHolder.flagView.setText(String.valueOf(contact.unread));
+                }
+
+                peerConViewHolder.flagView.setVisibility(View.VISIBLE);
+            } else {
+                peerConViewHolder.flagView.setVisibility(View.GONE);
+            }
+
+
+            peerConViewHolder.uprootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onItemClick(contact, position);
+                    }
+                }
+            });
+            peerConViewHolder.deleteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeDlg(position);
+                }
+            });
+
+            peerConViewHolder.topView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    peerConViewHolder.swipeLayout.close();
+                }
+            });
+
+
+            peerConViewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout layout) {
+                }
+
+                @Override
+                public void onOpen(SwipeLayout layout) {
+                    openedSwipe = layout;
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout layout) {
+
+                }
+
+                @Override
+                public void onClose(SwipeLayout layout) {
+                    openedSwipe = null;
+                }
+
+                @Override
+                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+
+                }
+            });
+
+
         } else {
             final ClassConViewHolder conViewHolder = (ClassConViewHolder) holder;
 
@@ -100,12 +193,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             if (contact.unread > 0) {
                 if (contact.unread > 99) {
                     conViewHolder.flagView.setText("99+");
-                }else {
+                } else {
                     conViewHolder.flagView.setText(String.valueOf(contact.unread));
                 }
 
                 conViewHolder.flagView.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 conViewHolder.flagView.setVisibility(View.GONE);
             }
 
@@ -174,16 +267,16 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
     public boolean isSwapByEv(MotionEvent ev, int offset) {
 
-        if (openedSwipe ==null)
+        if (openedSwipe == null)
             return false;
 
-        float x=ev.getX();
-        float y=ev.getY() + offset;
-        int[] p=new int[2];
-        RectF curSwipViewRect =new RectF();
+        float x = ev.getX();
+        float y = ev.getY() + offset;
+        int[] p = new int[2];
+        RectF curSwipViewRect = new RectF();
         openedSwipe.getLocationInWindow(p);
-        curSwipViewRect.set(p[0],p[1],p[0]+openedSwipe.getWidth(),p[1]+openedSwipe.getHeight());
-        if(curSwipViewRect.contains(x,y)){
+        curSwipViewRect.set(p[0], p[1], p[0] + openedSwipe.getWidth(), p[1] + openedSwipe.getHeight());
+        if (curSwipViewRect.contains(x, y)) {
             return false;
         }
 

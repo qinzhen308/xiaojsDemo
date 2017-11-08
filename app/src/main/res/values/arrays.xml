@@ -135,7 +135,7 @@
     </string-array>
     <string-array name="add_student">
         <item>手动添加</item>
-        <item>从已有班级中添加</item>
+        <item>从通讯录中添加</item>
     </string-array>
 
     <string-array name="add_menu2">

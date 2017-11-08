@@ -24,6 +24,7 @@ import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
@@ -381,6 +382,12 @@ public final class ClassroomEngine {
     public void pauseClass(String ticket, final APIServiceCallback<ResponseBody> callback) {
         if (roomRequest != null) {
             roomRequest.pauseClass(ticket, callback);
+        }
+    }
+
+    public void getMembers(String ticket, APIServiceCallback<LiveCollection<Attendee>> callback) {
+        if (roomRequest != null) {
+            roomRequest.getMembers(ticket, callback);
         }
     }
 
