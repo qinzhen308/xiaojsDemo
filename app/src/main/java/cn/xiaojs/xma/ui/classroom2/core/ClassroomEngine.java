@@ -22,6 +22,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.BoardSaveParams;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
@@ -567,6 +568,43 @@ public final class ClassroomEngine {
     public void registerBoard(String ticket, Board board, final APIServiceCallback<BoardItem> callback) {
         if (roomRequest != null) {
             roomRequest.registerBoard(ticket,board,callback);
+        }
+    }
+    /**
+     * 保存白板
+     */
+    public void saveBoard( String board, BoardSaveParams saving, final APIServiceCallback<ResponseBody> callback) {
+        if (roomRequest != null) {
+            roomRequest.saveBoard(getTicket(),board,saving,callback);
+        }
+    }
+
+    /**
+     * 重命名白板
+     */
+    public void renameBoard( String board,String title , final APIServiceCallback<ResponseBody> callback) {
+        if (roomRequest != null) {
+            BoardSaveParams saving=new BoardSaveParams();
+            saving.title=title;
+            roomRequest.saveBoard(getTicket(),board,saving,callback);
+        }
+    }
+
+    /**
+     * 关闭白板
+     */
+    public void closeBoard( String board, final APIServiceCallback<ResponseBody> callback) {
+        if (roomRequest != null) {
+            roomRequest.closeBoard(getTicket(),board,callback);
+        }
+    }
+
+    /**
+     * 删除白板
+     */
+    public void deleteBoard( String board, final APIServiceCallback<ResponseBody> callback) {
+        if (roomRequest != null) {
+            roomRequest.deleteBoard(getTicket(),board,callback);
         }
     }
 

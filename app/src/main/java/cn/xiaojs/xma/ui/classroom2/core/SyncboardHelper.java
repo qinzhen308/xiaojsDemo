@@ -14,6 +14,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Ctx;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Drawing;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncData;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -178,6 +179,30 @@ public class SyncboardHelper {
             }
         }
 
+        public void handleDrawing(Drawing drawing) {
+            if(drawing==null
+                    ||drawing.stylus==null)
+                return;
+
+            int height=drawing.height;
+            int width=drawing.width;
+            RectF viewportRect=new RectF(0,0,width,height);
+            Matrix matrix=new Matrix();
+            matrix.setRectToRect(viewportRect,unitRect, Matrix.ScaleToFit.FILL);
+
+            if(!ArrayUtil.isEmpty(drawing.stylus.layers)){
+                for(SyncLayer layer:drawing.stylus.layers){
+                    matrixLayerToUnit(layer,matrix);
+                }
+            }
+
+            if(!ArrayUtil.isEmpty(drawing.stylus.groupLayers)){
+                for(SyncLayer layer:drawing.stylus.groupLayers){
+                    matrixLayerToUnit(layer,matrix);
+                }
+            }
+        }
+
     }
 
 
@@ -257,6 +282,10 @@ public class SyncboardHelper {
         finished(syncBoard);
 
         return true;
+    }
+
+    public synchronized static void handleLayerData(Drawing drawing) {
+        new SyncboardHelperInstance("my_whiteboard_layer").handleDrawing(drawing);
     }
 
 }

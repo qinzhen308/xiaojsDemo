@@ -3,6 +3,9 @@ package cn.xiaojs.xma.ui.classroom.page;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.view.View;
@@ -14,14 +17,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.BitmapUtils;
 
 /**
  * Created by Paul Z on 2017/5/23.
  */
 
-public class WhiteboardManagerItemView extends RelativeLayout implements IViewModel<WhiteboardModel> {
+public class WhiteboardManagerItemView extends RelativeLayout implements IViewModel<WhiteboardModel> ,IEventer{
 
     WhiteboardModel mData;
     @BindView(R.id.iv_white_board)
@@ -33,6 +39,7 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
     @BindView(R.id.selector)
     View selector;
 
+    int mPosition;
 
     public WhiteboardManagerItemView(Context context) {
         super(context);
@@ -61,13 +68,18 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
     @Override
     public void bindData(int position, WhiteboardModel data) {
         mData = data;
+        mPosition=position;
         if(data.isSelected){
             selector.setVisibility(VISIBLE);
         }else {
             selector.setVisibility(GONE);
         }
+        if(!TextUtils.isEmpty(mData.boardItem.snapshot)){
+            ivWhiteBoard.setImageBitmap(BitmapUtils.base64ToBitmapWithPrefix(mData.boardItem.snapshot));
+        }else {
+            ivWhiteBoard.setImageDrawable(new ColorDrawable(Color.WHITE));
+        }
         tvTitle.setText(mData.boardItem.title);
-        ivWhiteBoard.setImageBitmap(BitmapUtils.base64ToBitmapWithPrefix(mData.boardItem.snapshot));
     }
 
 
@@ -75,9 +87,22 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_white_board:
+                if(mEventCallback!=null){
+                    mEventCallback.onEvent(EventCallback.EVENT_1,mData,mPosition);
+                }
                 break;
             case R.id.btn_more:
+                if(mEventCallback!=null){
+                    mEventCallback.onEvent(EventCallback.EVENT_2,mData,mPosition);
+                }
                 break;
         }
+    }
+
+    private EventCallback mEventCallback;
+
+    @Override
+    public void setEventCallback(EventCallback eventCallback) {
+        mEventCallback = eventCallback;
     }
 }

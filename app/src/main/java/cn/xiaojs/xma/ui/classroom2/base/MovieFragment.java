@@ -234,8 +234,12 @@ public abstract class MovieFragment extends BaseRoomFragment
     @Override
     public void onDestroy() {
         //
-        whiteboardFragment = null;
+        destoryWhiteboardFragment();
         super.onDestroy();
+    }
+
+    private void destoryWhiteboardFragment(){
+        whiteboardFragment = null;
     }
 
 

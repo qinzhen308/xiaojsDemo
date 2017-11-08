@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayInputStream;
@@ -79,6 +80,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     public static final String COLLABORATE_FIRST_DATA="extra_collaborate_first_data";
     public static final String EXTRA_BOARD_ID="extra_board_id";
+    public static final int CODE_OPEN_BOARD=10;
 
 
     @BindView(R.id.white_board_panel)
@@ -242,7 +244,12 @@ public class BoardCollaborateFragment extends BaseFragment {
             mBoardController.setWhiteBoardReadOnly(true);
         }*/
         if(mLastBoardItem!=null){
-            mBoardController.setBoardLayerSet(mLastBoardItem.drawing);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mBoardController.setBoardLayerSet(mLastBoardItem.drawing);
+                }
+            },500);
         }
     }
 
@@ -397,6 +404,20 @@ public class BoardCollaborateFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==Activity.RESULT_OK){
+            if(requestCode==CODE_OPEN_BOARD){
+                BoardItem boardItem=(BoardItem) data.getSerializableExtra(WhiteboardManagerFragment.EXTRA_SELECTED_BOARD);
+                mBoardController.replaceNewWhiteboardLayout(null,mDoodleRatio);
+                if(boardItem.drawing!=null){
+                    mBoardController.setBoardLayerSet(boardItem.drawing);
+                }
+            }
+        }
+    }
+
     public void showWhiteboardManager(){
         /*Fragment fragment=WhiteboardManagerFragment.createInstance("");
         fragment.setTargetFragment(this,200);
@@ -405,12 +426,18 @@ public class BoardCollaborateFragment extends BaseFragment {
                 addToBackStack("dialog_fragment").
                 commitAllowingStateLoss();*/
 
-        WhiteboardManagerFragment.createInstance("").show(getChildFragmentManager(),"dialog_fragment");
+        WhiteboardManagerFragment fragment=WhiteboardManagerFragment.createInstance("");
+        fragment.setTargetFragment(this,CODE_OPEN_BOARD);
+        fragment.show(getChildFragmentManager(),"dialog_fragment");
+
     }
 
     public void registBoard(){
         final Board board=new Board();
         board.title="新的白板";
+        board.drawing=new Board.DrawDimension();
+        board.drawing.width=ScreenUtils.getScreenWidth(getActivity());
+        board.drawing.height=board.drawing.width*9/16;
         ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
             @Override
             public void onSuccess(BoardItem object) {

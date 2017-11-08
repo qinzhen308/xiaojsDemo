@@ -461,6 +461,7 @@ public class BitmapUtils {
     }
 
     public static Bitmap base64ToBitmapWithPrefix(String base64) {
+        if(TextUtils.isEmpty(base64))return null;
         base64=base64.substring(base64.indexOf(",")+1);
         byte[] bytes = Base64.decode(base64, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

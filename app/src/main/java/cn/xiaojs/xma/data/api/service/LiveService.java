@@ -7,6 +7,7 @@ import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.BoardSaveParams;
 import cn.xiaojs.xma.model.live.ClassMode;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -19,6 +20,7 @@ import cn.xiaojs.xma.model.live.Ticket;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
@@ -67,6 +69,10 @@ public interface LiveService {
     @PATCH("/v1/live/{ticket}/boards/{board}")
     Call<ResponseBody> closeBoard(@Path("ticket") String ticket, @Path("board") String board);
 
+    //delete Board
+    @DELETE("/v1/live/{ticket}/boards/{board}")
+    Call<ResponseBody> deleteBoard(@Path("ticket") String ticket, @Path("board") String board);
+
     //Get Boards
     @GET("/v1/live/{ticket}/boards/{criteria}/{pagination}")
     Call<CollectionPage<BoardItem>> getBoards(@Path("ticket") String ticket,
@@ -84,6 +90,9 @@ public interface LiveService {
     //Register Board
     @POST("/v1/live/{ticket}/boards")
     Call<BoardItem> registerBoard(@Path("ticket") String ticket, @Body Board board);
+    //save Board
+    @PUT("/v1/live/{ticket}/boards/{board}")
+    Call<ResponseBody> saveBoard(@Path("ticket") String ticket, @Path("board") String board,@Body BoardSaveParams saving);
 
     //Finish Class
     @PATCH("/v1/live/{ticket}/end")
