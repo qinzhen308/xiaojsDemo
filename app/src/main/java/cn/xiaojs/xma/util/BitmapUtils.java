@@ -1019,11 +1019,12 @@ public class BitmapUtils {
     }
 
     public static String savePreviewToFile(Bitmap bitmap){
+        Bitmap target=rotateBitmap(bitmap,180,true);
         File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         String fileName = new StringBuilder("xjs_preview_temp")
                 .append(".jpg")
                 .toString();
         String filePath = fileDir + "/" + fileName;
-        return saveImage(bitmap, filePath, 100, false,false);
+        return saveImage(target, filePath, 100, true,false);
     }
 }

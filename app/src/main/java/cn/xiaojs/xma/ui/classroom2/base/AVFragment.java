@@ -1,6 +1,8 @@
 package cn.xiaojs.xma.ui.classroom2.base;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.View;
 import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
 import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
@@ -18,16 +21,13 @@ import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public abstract class AVFragment extends MovieFragment implements
-        WhiteboardStreamEngine.WBStreamingStateListener,
-        StreamingEngine.AVStreamingStateListener{
+public abstract class AVFragment extends MovieFragment
+        implements StreamingEngine.AVStreamingStateListener{
 
 
     private StreamingEngine streamingEngine;
-    private WhiteboardStreamEngine whiteboardStreamEngine;
 
     private boolean streaming;
-
 
     protected abstract CameraPreviewFrameView createCameraPreview();
 
@@ -37,16 +37,11 @@ public abstract class AVFragment extends MovieFragment implements
 
         controlClickView.setVisibility(View.GONE);
 
-
-        whiteboardStreamEngine = new WhiteboardStreamEngine();
-        whiteboardStreamEngine.setWBStreamingStateListener(this);
-        whiteboardStreamEngine.preparePublish(getContext(), classroomEngine.getPublishUrl());
-
-
         streamingEngine = new StreamingEngine(getContext(),createCameraPreview());
         streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
         streamingEngine.setStateListener(this);
         streamingEngine.preparePublish(createCameraPreview());
+        streamingEngine.setPictureStreamingResourceId(R.drawable.bg_qrcode_content);
 
     }
 
@@ -54,15 +49,13 @@ public abstract class AVFragment extends MovieFragment implements
     public void onResume() {
         super.onResume();
         streamingEngine.resumeAV();
-        whiteboardStreamEngine.resume();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         streamingEngine.pauseAV();
-        whiteboardStreamEngine.pause();
 
     }
 
@@ -70,12 +63,10 @@ public abstract class AVFragment extends MovieFragment implements
     public void onDestroy() {
         super.onDestroy();
         streamingEngine.destoryAV();
-        whiteboardStreamEngine.destory();
     }
 
     protected void stopStreaming() {
         streamingEngine.stopStreamingAV();
-        whiteboardStreamEngine.stopStreaming();
     }
 
     protected void switchCamera() {
@@ -83,7 +74,7 @@ public abstract class AVFragment extends MovieFragment implements
     }
 
     protected void receivedWhiteboardData(Bitmap bitmap) {
-        whiteboardStreamEngine.inputWhiteboardData(bitmap);
+        streamingEngine.inputWhiteboardData(bitmap);
     }
 
 
@@ -102,41 +93,9 @@ public abstract class AVFragment extends MovieFragment implements
     @Override
     public int onSwitchStreamingClick(View view) {
         int vis =  super.onSwitchStreamingClick(view);
-
-        if (vis == View.VISIBLE) {
-
-            streaming = false;
-            streamingEngine.stopStreamingAV();
-
-            whiteboardStreamEngine.stopStreaming();
-            whiteboardStreamEngine.resume();
-            whiteboardStreamEngine.startStreaming();
-        }else {
-            streaming = false;
-            whiteboardStreamEngine.stopStreaming();
-
-            streamingEngine.stopStreamingAV();
-            streamingEngine.resumeAV();
-            streamingEngine.startStreamingAV();
-        }
+        streamingEngine.togglePictureStreaming();
 
         return vis;
-    }
-
-    @Override
-    public void onWBStateChanged(StreamingState streamingState, Object extra) {
-        switch (streamingState) {
-            case STREAMING:
-                if (XiaojsConfig.DEBUG) {
-                    Logger.d("STREAMING xxxxxxxxx");
-                }
-
-                if (!streaming) {
-                    sendStartStreaming();
-                    streaming = true;
-                }
-                break;
-        }
     }
 
     @Override
@@ -148,6 +107,7 @@ public abstract class AVFragment extends MovieFragment implements
                 }
 
                 if (!streaming) {
+                    streamingEngine.togglePictureStreaming();
                     sendStartStreaming();
                     streaming = true;
                 }
