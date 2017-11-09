@@ -1017,4 +1017,13 @@ public class BitmapUtils {
             e.printStackTrace();
         }
     }
+
+    public static String savePreviewToFile(Bitmap bitmap){
+        File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String fileName = new StringBuilder("xjs_preview_temp")
+                .append(".jpg")
+                .toString();
+        String filePath = fileDir + "/" + fileName;
+        return saveImage(bitmap, filePath, 100, false,false);
+    }
 }
