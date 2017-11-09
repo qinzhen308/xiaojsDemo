@@ -73,6 +73,12 @@ public class ClassroomsAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean isEnabled(int position) {
+        return (dataCollect == null || dataCollect.get(position).getItemType() == ItemTypes.LABEL) ?
+                false : true;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final AbsContactItem contactItem = getItem(position);

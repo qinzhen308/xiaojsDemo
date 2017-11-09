@@ -38,6 +38,7 @@ import cn.xiaojs.xma.ui.classroom2.live.filter.IFilter;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.UIUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -323,8 +324,8 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     private void initControlPanel() {
 
-        int changeRequest = getActivity().getRequestedOrientation();
-        controlHandleOnRotate(changeRequest);
+        int orientation = UIUtils.getCurrentOrientation(getContext());
+        controlHandleOnRotate(orientation);
 
         lRightSwitchcameraView.setVisibility(View.GONE);
         lTopPhotoView.setVisibility(View.GONE);

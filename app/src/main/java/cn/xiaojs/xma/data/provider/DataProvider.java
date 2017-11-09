@@ -26,7 +26,6 @@ public class DataProvider {
 
     private Context context;
     private ArrayList<Contact> conversations;
-    private Map<String, Integer> conversationsMapping;
     private ArrayList<Contact> persons;
     private Map<String, Contact> personsMapping;
     private ArrayList<Contact> classes;
@@ -42,7 +41,6 @@ public class DataProvider {
         conversations.add(createTimetable());
         persons = new ArrayList<>();
         classes = new ArrayList<>();
-        conversationsMapping = new HashMap<>();
         personsMapping = new HashMap<>();
         classesMapping = new HashMap<>();
 
@@ -94,10 +92,6 @@ public class DataProvider {
 
     public ArrayList<Contact> getClasses() {
         return classes;
-    }
-
-    public Map<String, Integer> getConversationsMapping() {
-        return conversationsMapping;
     }
 
     public Map<String, Contact> getPersonsMapping() {
@@ -158,8 +152,13 @@ public class DataProvider {
         if (TextUtils.isEmpty(conversationId))
             return;
 
-        if (conversationsMapping.containsKey(conversationId)) {
-            int index = conversationsMapping.get(conversationId);
+        Contact tempContact = new Contact();
+        tempContact.id = conversationId;
+
+        int index = conversations.indexOf(tempContact);
+
+        if (index>=0) {
+
             Contact oriContact = conversations.get(index);
             oriContact.unread = unreadCount;
 
@@ -175,10 +174,8 @@ public class DataProvider {
         if (contact == null)
             return;
 
-        boolean isnew = conversationsMapping.containsKey(contact.id);
-
-        if (isnew) {
-            int index = conversationsMapping.get(contact.id);
+        int index = conversations.indexOf(contact);
+        if (index >= 0) {
             Contact oriContact = conversations.get(index);
             oriContact.lastTalked = contact.lastTalked;
             oriContact.lastMessage = contact.lastMessage;
@@ -189,7 +186,6 @@ public class DataProvider {
                 conversations.add(1, oriContact);
             }
 
-            conversationsMapping.put(contact.id, 1);
             for (DataObserver observer : dataObservers) {
                 observer.onConversationMove(oriContact, index, 1);
             }
@@ -198,8 +194,6 @@ public class DataProvider {
         } else {
 
             conversations.add(1, contact);
-            conversationsMapping.put(contact.id, 1);
-
             for (DataObserver observer : dataObservers) {
                 observer.onConversationInsert(contact, 1);
             }

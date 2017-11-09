@@ -59,6 +59,7 @@ import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.SheetFragment;
 import cn.xiaojs.xma.util.MaterialUtil;
+import cn.xiaojs.xma.util.UIUtils;
 
 public class ClassroomController {
     public final static int REQUEST_PIC_CODE = 1;
@@ -408,7 +409,7 @@ public class ClassroomController {
         }
         if (mContext instanceof FragmentActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
-            if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            if (UIUtils.isLandspace(mContext)) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
 
@@ -440,7 +441,7 @@ public class ClassroomController {
 
         if (mContext instanceof ClassroomActivity) {
             FragmentActivity activity = (FragmentActivity) mContext;
-            if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            if (UIUtils.isLandspace(mContext)) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
 
@@ -504,22 +505,14 @@ public class ClassroomController {
      * 是否是竖屏
      */
     public boolean isPortrait() {
-        if (mContext instanceof FragmentActivity) {
-            FragmentActivity activity = (FragmentActivity) mContext;
-            return activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        }
-        return false;
+        return !UIUtils.isLandspace(mContext);
     }
 
     /**
      * 是否是竖屏
      */
     public boolean isLandscape() {
-        if (mContext instanceof FragmentActivity) {
-            FragmentActivity activity = (FragmentActivity) mContext;
-            return activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        }
-        return false;
+        return UIUtils.isLandspace(mContext);
     }
 
     public int getPlayFragmentMode() {

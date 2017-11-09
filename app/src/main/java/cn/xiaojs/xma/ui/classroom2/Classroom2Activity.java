@@ -64,6 +64,7 @@ import cn.xiaojs.xma.ui.classroom2.util.MaterialUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import cn.xiaojs.xma.util.UIUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -209,7 +210,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             return;
         }
 
-        if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (UIUtils.isLandspace(this)) {
             changeOrientation();
             return;
         }
@@ -243,7 +244,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (hasFocus && UIUtils.isLandspace(this)) {
             hideSystemUI();
         }
     }
@@ -318,9 +319,6 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     private void handleConnectSuccess(BootObservable.BootSession bootSession) {
 
         cancelProgress();
-        Toast.makeText(Classroom2Activity.this,
-                R.string.socket_connect, Toast.LENGTH_LONG).show();
-
 
         //grant permission
         String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
@@ -835,7 +833,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     public void openDocInBoard(LibDoc doc) {
         Fragment fragment=getSupportFragmentManager().findFragmentById(R.id.replace_lay);
         if(fragment instanceof MovieFragment&&fragment.isInLayout()){
-            if(getRequestedOrientation()==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+            if(UIUtils.isLandspace(this)){
                if(collaborateFragment.isAdded()&&collaborateFragment.isInLayout()){
                    collaborateFragment.openDocInsideBoard(doc);
                }

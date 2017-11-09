@@ -61,6 +61,7 @@ import cn.xiaojs.xma.ui.classroom.talk.TalkPresenter;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.BitmapUtils;
+import cn.xiaojs.xma.util.UIUtils;
 
 public abstract class ClassroomLiveFragment extends BaseFragment implements
         OnSettingChangedListener,
@@ -154,7 +155,7 @@ public abstract class ClassroomLiveFragment extends BaseFragment implements
         if (getActivity() == null)
             return false;
 
-        return getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        return !UIUtils.isLandspace(getActivity());
     }
 
     /**
