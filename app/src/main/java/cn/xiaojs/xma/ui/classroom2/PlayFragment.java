@@ -143,6 +143,7 @@ public class PlayFragment extends MovieFragment
     @Override
     public void onRotate(int orientation) {
         controlHandleOnRotate(orientation);
+        onRotateToInitBoard(orientation);
     }
 
     @Override

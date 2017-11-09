@@ -64,6 +64,7 @@ import cn.xiaojs.xma.ui.classroom2.util.MaterialUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
+import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -251,6 +252,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        Logger.d("-------qz-------activity----onConfigurationChanged-----orientation=" + newConfig.orientation);
 
         if (newConfig.orientation != Configuration.ORIENTATION_UNDEFINED) {
 
@@ -833,18 +835,16 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
     @Override
     public void openDocInBoard(LibDoc doc) {
-        Fragment fragment=getSupportFragmentManager().findFragmentById(R.id.replace_lay);
-        if(fragment instanceof MovieFragment&&fragment.isInLayout()){
+        if(movieFragment.isAdded()&&!movieFragment.isDetached()){
             if(getRequestedOrientation()==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-               if(collaborateFragment.isAdded()&&collaborateFragment.isInLayout()){
-                   collaborateFragment.openDocInsideBoard(doc);
-               }
+                collaborateFragment.openDocInsideBoard(doc);
             }else {
-                ((MovieFragment) fragment).changeOrientationToLand();
+                collaborateFragment.openDocOutsideBoard(doc);
+                movieFragment.changeOrientationToLand();
+                movieFragment.showBoardContainer(true);
             }
         }else {
-            //需要切换到idle或play或live
+            ToastUtil.showToast(this,"教室连接异常");
         }
-
     }
 }

@@ -134,6 +134,8 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
+        mHandWriting.setSelected(true);
+        enterHandWriting();
     }
 
     /**

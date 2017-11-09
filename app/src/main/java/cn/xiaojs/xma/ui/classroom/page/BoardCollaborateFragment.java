@@ -93,8 +93,8 @@ public class BoardCollaborateFragment extends BaseFragment {
     View mWhiteBoardPanel;
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mBoardScrollerView;
-    @BindView(R.id.test_preview)
-    ImageView testPreview;
+//    @BindView(R.id.test_preview)
+//    ImageView testPreview;
     @BindView(R.id.text_pager_points)
     TextView textPagerPoints;
 
@@ -169,7 +169,7 @@ public class BoardCollaborateFragment extends BaseFragment {
         mBoardController.setPushPreviewBoardListener(new PushPreviewBoardListener() {
             @Override
             public void onPush(Bitmap bitmap) {
-                testPreview.setImageBitmap(bitmap);
+//                testPreview.setImageBitmap(bitmap);
                 if(onPushPreviewListener!=null){
                     onPushPreviewListener.onPushPreview(bitmap);
                 }
@@ -490,6 +490,10 @@ public class BoardCollaborateFragment extends BaseFragment {
             }
             mTempDoc=doc;
         }
+    }
+
+    public void openDocOutsideBoard(final LibDoc doc){
+        mTempDoc=doc;
     }
 
     private LibDoc mTempDoc;

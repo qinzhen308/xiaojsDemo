@@ -440,7 +440,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         menu.addTextItems(items);
         menu.setTextColor(Color.WHITE);
         menu.addImgItems(new Integer[]{R.drawable.ic_classroom_share,
-                R.drawable.ic_classroom_share,
+                R.drawable.ic_classroom_detail,
                 R.drawable.ic_classroom_setting});
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -453,7 +453,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                         break;
                     case 0:
                         String url=ApiManager.getShareLessonUrl(classroomEngine.getCtlSession().cls.id, Account.TypeName.CLASS_LESSON);
-                        ShareUtil.shareUrlByUmeng(getActivity(),classroomEngine.getCtlSession().cls.title,"",url);
+                        ShareUtil.shareUrlByUmeng(getActivity(),classroomEngine.getCtlSession().cls.title,classroomEngine.getClassAdviser().name,url);
                         break;
                     case 2:
                         SettingFragment settingFragment = new SettingFragment();
@@ -609,6 +609,16 @@ public abstract class MovieFragment extends BaseRoomFragment
         whiteboardContainerLayout.setVisibility(vis);
 
         return vis;
+    }
+
+    public void showBoardContainer(boolean isShow) {
+        if(isShow==(whiteboardContainerLayout.getVisibility()==View.VISIBLE))return;
+        if(isShow){
+           lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
+       }else {
+           lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
+        }
+        whiteboardContainerLayout.setVisibility(isShow?View.VISIBLE:View.GONE);
     }
 
 
@@ -1264,7 +1274,7 @@ public abstract class MovieFragment extends BaseRoomFragment
             }
             controlClickView.setVisibility(View.GONE);
         } else {
-            if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
+            if (whiteboardFragment.isAdded() &&!whiteboardFragment.isDetached()) {
                 getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
             }
         }

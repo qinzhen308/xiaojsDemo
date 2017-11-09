@@ -58,6 +58,7 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/bg_wb_tool_panel"
         android:gravity="center_vertical"
+        android:layout_marginBottom="@dimen/px15"
         android:orientation="horizontal">
 
         <ImageView
