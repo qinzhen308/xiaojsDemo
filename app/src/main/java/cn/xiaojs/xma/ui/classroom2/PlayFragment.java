@@ -43,7 +43,8 @@ import io.reactivex.functions.Consumer;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMoreListener, VideoStreamView.ControlListener {
+public class PlayFragment extends MovieFragment
+        implements ChatAdapter.FetchMoreListener, VideoStreamView.ControlListener {
 
     @BindView(R.id.video_view)
     PlayLiveView videoView;
@@ -215,9 +216,14 @@ public class PlayFragment extends MovieFragment implements ChatAdapter.FetchMore
         int changeRequest = getActivity().getRequestedOrientation();
         controlHandleOnRotate(changeRequest);
 
+        lTopRoominfoView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.class_living_animation,0,0,0);
+        lTopRoominfoView.start();
+
         lRightSwitchcameraView.setVisibility(View.GONE);
         lRightSwitchVbView.setVisibility(View.GONE);
         pBottomClassnameView.setText(classroomEngine.getRoomTitle());
+        pBottomAnimationView.setVisibility(View.VISIBLE);
 
         String avatorUrl = Account.getAvatar(classroomEngine.getCtlSession().claimedBy,
                 lTopPhotoView.getMeasuredWidth());

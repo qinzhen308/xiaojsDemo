@@ -250,6 +250,12 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     }
 
     private void initControlView() {
+
+        lTopRoominfoView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.class_living_animation,0,0,0);
+        lTopRoominfoView.start();
+
+
         String avatorUrl = Account.getAvatar(AccountDataManager.getAccountID(getContext()),
                 lTopPhotoView.getMeasuredWidth());
         Glide.with(getContext())

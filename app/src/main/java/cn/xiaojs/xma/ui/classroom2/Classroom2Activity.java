@@ -88,7 +88,7 @@ public class Classroom2Activity extends FragmentActivity {
     private DatabaseFragment databaseFragment;
 
 
-    private BootObservable.BootListener bootListener;
+    private BootObservable bootObservable;
     private String initTicket;
     private MovieFragment movieFragment;
 
@@ -364,18 +364,17 @@ public class Classroom2Activity extends FragmentActivity {
 
         offBootlistener();
 
-        BootObservable bootObservable = new BootObservable(this, ticket);
+        bootObservable = new BootObservable(this, ticket);
         bootObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bootSessionConsumer);
-        bootListener = bootObservable.getBootListener();
+
     }
 
     private void offBootlistener() {
-        if (bootListener != null && !bootListener.isDisposed()) {
-            bootListener.dispose();
-        }
+        if (bootObservable != null)
+            bootObservable.dispose();
     }
 
 
@@ -522,7 +521,11 @@ public class Classroom2Activity extends FragmentActivity {
                 public void onClick() {
                     //强制登录
                     mKickOutDialog.dismiss();
-                    bootListener.continueConnect();
+
+                    //FIXME crash
+                    bootObservable.continueConnect();
+
+
                 }
             });
 
@@ -666,6 +669,17 @@ public class Classroom2Activity extends FragmentActivity {
 
     public void enterPlayback(LibDoc doc) {
 
+
+        if (movieFragment != null && movieFragment instanceof LivingFragment) {
+            Toast.makeText(this, "您正在直播，不能打开视频文件", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (movieFragment != null && movieFragment instanceof PlayFragment) {
+            Toast.makeText(this, "您正在观看直播，不能打开视频文件", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (movieFragment != null && movieFragment instanceof PlaybackFragment) {
             return;
         }
@@ -696,17 +710,13 @@ public class Classroom2Activity extends FragmentActivity {
     }
 
 
-
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // 底部面板操作
     //
     private void popInput() {
 
-        if (chatFragment !=null && chatFragment.isAdded()) {
+        if (chatFragment != null && chatFragment.isAdded()) {
             chatFragment.popInput();
         }
     }
@@ -723,10 +733,10 @@ public class Classroom2Activity extends FragmentActivity {
 
     }
 
-    private void popClassSchedule(){
+    private void popClassSchedule() {
         /*ProfileFragment profileFragment = new ProfileFragment();
         profileFragment.show(getFragmentManager(), "profile");*/
-        ScheduleFragment.createInstance("").show(getSupportFragmentManager(),"schedule");
+        ScheduleFragment.createInstance("").show(getSupportFragmentManager(), "schedule");
     }
 
 
@@ -737,7 +747,6 @@ public class Classroom2Activity extends FragmentActivity {
         }
 
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

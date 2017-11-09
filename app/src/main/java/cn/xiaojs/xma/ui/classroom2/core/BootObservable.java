@@ -42,8 +42,16 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         this.ticket = ticket;
     }
 
-    public BootListener getBootListener() {
-        return bootListener;
+    public void continueConnect() {
+        if (bootListener != null) {
+            bootListener.continueConnect();
+        }
+    }
+
+    public void dispose() {
+        if (bootListener !=null && !bootListener.isDisposed()) {
+            bootListener.dispose();
+        }
     }
 
 

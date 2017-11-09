@@ -188,6 +188,14 @@ public final class ClassroomEngine {
         return stateMachine.getUserIdentity(psType);
     }
 
+    public Attendee getClassAdviser() {
+        return stateMachine.getSession().adviser;
+    }
+
+    public CtlSession.CtlLead getCurrentLessonLead() {
+        return getCtlSession().ctl == null ? null : getCtlSession().ctl.lead;
+    }
+
     public boolean hasTeachingAbility() {
         return stateMachine.hasTeachingAbility();
     }

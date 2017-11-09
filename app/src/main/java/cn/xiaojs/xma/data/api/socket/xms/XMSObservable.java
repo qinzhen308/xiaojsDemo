@@ -1,6 +1,11 @@
 package cn.xiaojs.xma.data.api.socket.xms;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.orhanobut.logger.Logger;
 
@@ -8,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.util.NetUtil;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -29,6 +35,7 @@ public class XMSObservable extends Observable<Integer> {
     private Context context;
     private String sfm;
     private Disposable disposable;
+    private SocketStatusListener socketStatusListener;
 
     public XMSObservable(Context context, String sfm) {
         this.context = context;
@@ -37,7 +44,7 @@ public class XMSObservable extends Observable<Integer> {
 
     @Override
     protected void subscribeActual(Observer<? super Integer> observer) {
-        SocketStatusListener socketStatusListener = new SocketStatusListener(context, sfm, observer);
+        socketStatusListener = new SocketStatusListener(context, sfm, observer);
         observer.onSubscribe(socketStatusListener);
         socketStatusListener.startConnect();
     }
@@ -55,7 +62,7 @@ public class XMSObservable extends Observable<Integer> {
 
     public static class SocketStatusListener extends MainThreadDisposable {
 
-        private final int MAX_CONNECT_COUNT = 10;
+        private final int MAX_CONNECT_COUNT = 50;
         private final int MAX_CONNECT_TIMEOUT = 20 * 1000; //s
 
         private Context context;
@@ -66,6 +73,7 @@ public class XMSObservable extends Observable<Integer> {
         private String address;
         private IO.Options ioOptions;
         private int currentStatus;
+        //private NetworkStatusReceiver networkStatusReceiver;
 
         public SocketStatusListener(Context context, String sfm, Observer observer) {
             this.context = context;
@@ -81,6 +89,8 @@ public class XMSObservable extends Observable<Integer> {
                 Logger.d("Connect XMS url: %s, \n IO options query: %s", address, ioOptions.query);
             }
 
+            //registerNetStatus();
+
         }
 
         @Override
@@ -92,7 +102,53 @@ public class XMSObservable extends Observable<Integer> {
             offTimout();
             offSocket();
             socketManager.disConnect();
+            //unRegisteNetStatus();
         }
+
+//        private void registerNetStatus() {
+//            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+//            context.registerReceiver(networkStatusReceiver, filter);
+//        }
+//
+//        private void unRegisteNetStatus() {
+//            if (networkStatusReceiver != null) {
+//                context.unregisterReceiver(networkStatusReceiver);
+//                networkStatusReceiver = null;
+//            }
+//        }
+
+//        private void reconnectWhenNetActived(boolean mobile) {
+//            try {
+//
+//                if (XiaojsConfig.DEBUG) {
+//
+//                    String active = mobile ? "MOBLIE" : "WIFI";
+//
+//                    Logger.d("received network activied by: %s", active);
+//                }
+//
+//
+//                if (socketManager.connected()) {
+//
+//                    if (XiaojsConfig.DEBUG) {
+//                        Logger.d("the XMS socket has connected, so nothing to do...");
+//                    }
+//
+//                    return;
+//                }
+//
+//
+//                if (XiaojsConfig.DEBUG) {
+//                    Logger.d("start to reConnect XMS socket now....");
+//                }
+//
+//                connectCount = 0;
+//                toReconnect();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                sendStatus(SocketStatus.CONNECT_FAILED);
+//            }
+//        }
 
 
         private void startConnect() {
@@ -255,7 +311,7 @@ public class XMSObservable extends Observable<Integer> {
                 if (NetUtil.getCurrentNetwork(context) == NetUtil.NETWORK_NONE) {
 
                     if (XiaojsConfig.DEBUG) {
-                        Logger.d("the current reconnect count is %d and < max count,so auto reconnect");
+                        Logger.d("the current network is disconnected ,so cancel reconnect");
                     }
 
                     return;
@@ -278,6 +334,52 @@ public class XMSObservable extends Observable<Integer> {
             sendStatus(SocketStatus.RECONNECT);
             connectSocket();
         }
+
+
+        /**
+         * 网络切换监听
+         */
+//        public class NetworkStatusReceiver extends BroadcastReceiver {
+//            @Override
+//            public void onReceive(final Context context, Intent intent) {
+//
+//
+//                if (XiaojsConfig.DEBUG) {
+//                    Logger.d("received network status is changed...");
+//                }
+//
+//
+//                ConnectivityManager manager = (ConnectivityManager)
+//                        context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//                NetworkInfo mobileInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+//                NetworkInfo wifiInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//                NetworkInfo activeInfo = manager.getActiveNetworkInfo();
+//
+//                boolean mobileNet = mobileInfo == null ? false : mobileInfo.isConnected();
+//                boolean wifiNet = wifiInfo == null ? false : wifiInfo.isConnected();
+//
+//                if (activeInfo == null) {
+//                    //没有网络
+//                    if (XiaojsConfig.DEBUG) {
+//                        Logger.d("received network is disconnected");
+//                    }
+//                    return;
+//
+//                }
+//
+//                if (wifiNet) {
+//                    // WIFI
+//                    reconnectWhenNetActived(false);
+//                    return;
+//                }
+//
+//
+//                if (mobileNet) {
+//                    reconnectWhenNetActived(true);
+//                    return;
+//                }
+//            }
+//        }
 
 
     }

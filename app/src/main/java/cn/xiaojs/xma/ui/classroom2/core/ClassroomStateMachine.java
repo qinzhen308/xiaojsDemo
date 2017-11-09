@@ -556,6 +556,10 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
                         for (Attendee attendee : attendees) {
                             roomSession.classMembers.put(attendee.accountId, attendee);
+
+                            if(CTLConstant.UserIdentity.ADVISER ==getUserIdentity(attendee.psType)) {
+                                roomSession.adviser = attendee;
+                            }
                         }
 
                         if (XiaojsConfig.DEBUG) {

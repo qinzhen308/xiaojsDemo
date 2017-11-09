@@ -24,6 +24,7 @@ public class RoomSession {
     protected CtlSession ctlSession;                                  //当前教室的状态值
 
     protected Map<String, Attendee> classMembers;                     //教室中的成员
+    protected Attendee adviser;                                       //班主任信息，可能为空
 
 
     public RoomSession(CtlSession session) {

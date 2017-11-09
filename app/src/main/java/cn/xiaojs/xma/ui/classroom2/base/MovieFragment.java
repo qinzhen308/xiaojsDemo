@@ -84,6 +84,8 @@ import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
 import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
+import cn.xiaojs.xma.ui.view.AnimationTextView;
+import cn.xiaojs.xma.ui.view.AnimationView;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu1;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
@@ -114,7 +116,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     @BindView(R.id.l_top_photo)
     public ImageView lTopPhotoView;
     @BindView(R.id.l_top_roominfo)
-    public TextView lTopRoominfoView;
+    public AnimationTextView lTopRoominfoView;
 
     @BindView(R.id.l_bottom_session)
     public ImageView lBottomSessionView;
@@ -151,6 +153,8 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     @BindView(R.id.p_bottom_avator)
     public ImageView pBottomAvatorView;
+    @BindView(R.id.p_bottom_animationing)
+    public AnimationView pBottomAnimationView;
     @BindView(R.id.p_bottom_class_name)
     public TextView pBottomClassnameView;
     @BindView(R.id.p_bottom_bg)
@@ -656,9 +660,9 @@ public abstract class MovieFragment extends BaseRoomFragment
         int vis = recyclerView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE;
 
         if (vis == View.VISIBLE) {
-            lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
-        } else {
             lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_display);
+        } else {
+            lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
         }
 
         recyclerView.setVisibility(vis);

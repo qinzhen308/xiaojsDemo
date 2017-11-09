@@ -1,6 +1,11 @@
 package cn.xiaojs.xma.data;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Message;
 
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
@@ -14,6 +19,7 @@ import cn.xiaojs.xma.model.socket.room.RemoveDlg;
 import cn.xiaojs.xma.model.socket.room.RetainDlg;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import io.reactivex.functions.Consumer;
 
 
@@ -31,6 +37,8 @@ public class XMSManager {
         xmsManager.xmsObservable = XMSObservable.obseverXMS(context, sfm, consumer);
         return xmsManager;
     }
+
+
 
     public static void sendTalk(final Context context, final boolean retain, final Talk talk,
                                 final EventCallback<TalkResponse> callback) {
