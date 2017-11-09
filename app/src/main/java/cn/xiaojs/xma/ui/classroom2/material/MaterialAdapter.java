@@ -189,7 +189,7 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
                     if (Collaboration.isStreaming(doc.mimeType) || Collaboration.isVideo(doc.mimeType)) {
                         ((Classroom2Activity) context).enterPlayback(doc);
                     } else {
-                        ((Classroom2Activity) context).getCollaBorateFragment().openDocInBoard(doc);
+                        ((Classroom2Activity) context).openDocInBoard(doc);
 
                     }
 

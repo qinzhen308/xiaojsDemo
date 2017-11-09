@@ -23,6 +23,8 @@
 
 package cn.xiaojs.xma.util;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -289,6 +291,18 @@ public class APPUtils {
 
         return value;
 
+    }
+
+
+    /**
+     * 复制内容到剪切板
+     * @param context
+     * @param content
+     */
+    public static void clipboard(Context context,String content){
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        // 将文本内容放到系统剪贴板里。
+        cm.setText(content);
     }
 
 }

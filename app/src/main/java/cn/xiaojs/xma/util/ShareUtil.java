@@ -117,6 +117,11 @@ public class ShareUtil {
                         //QQ
                         new ShareAction(activity).setPlatform(SHARE_MEDIA.QQ).withMedia(umImage).share();
                         break;
+                    case R.id.tv_url:
+                        //QQ
+                        APPUtils.clipboard(activity,imgUrl);
+                        ToastUtil.showToast(activity,"链接已复制到剪切板");
+                        break;
                 }
 
             }
@@ -146,7 +151,7 @@ public class ShareUtil {
                 }
 
             }
-        });
+        },false);
     }
 
     public static void shareUrlByUmeng(final Activity activity, final String title, final String message,final String url) {
@@ -169,6 +174,11 @@ public class ShareUtil {
                     case R.id.tv_qq:
                         //QQ
                         new ShareAction(activity).setPlatform(SHARE_MEDIA.QQ).withMedia(web).share();
+                        break;
+                    case R.id.tv_url:
+                        //QQ
+                        APPUtils.clipboard(activity,url);
+                        ToastUtil.showToast(activity,"链接已复制到剪切板");
                         break;
                 }
 
@@ -226,8 +236,13 @@ public class ShareUtil {
         });
     }
 
-
     public static void shareDld(final Context context, final ShareBtnListener btnListener) {
+        shareDld(context,btnListener,true);
+    }
+
+
+
+        public static void shareDld(final Context context, final ShareBtnListener btnListener,boolean isNeedCopyUrl) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_share_window,null);
         Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
         //TextView tvXjs = (TextView) view.findViewById(R.id.tv_xfirends);
@@ -235,6 +250,10 @@ public class ShareUtil {
         TextView tvQq = (TextView) view.findViewById(R.id.tv_qq);
         TextView tvWechat = (TextView) view.findViewById(R.id.tv_wechat);
         TextView tvFriends = (TextView) view.findViewById(R.id.tv_fcircle);
+        TextView tvUrl = (TextView) view.findViewById(R.id.tv_url);
+        if(!isNeedCopyUrl){
+            tvUrl.setVisibility(View.GONE);
+        }
 
         final BottomSheet bottomSheet = new BottomSheet(context);
         bottomSheet.setTitleVisibility(View.GONE);
@@ -255,6 +274,14 @@ public class ShareUtil {
             }
         });
         tvFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnListener.onClickListener(v);
+                bottomSheet.dismiss();
+
+            }
+        });
+        tvUrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 btnListener.onClickListener(v);

@@ -188,5 +188,6 @@
     <color name="contact_letter_idx_bg">#33000000</color>
     <color name="index_blue">#0076FF</color>
     <color name="page_tips_text">#C7C7CC</color>
+    <color name="trans_divider">#11ffffff</color>
 
 </resources>
