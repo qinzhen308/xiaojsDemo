@@ -188,10 +188,12 @@ public final class ClassroomEngine {
         return stateMachine.getUserIdentity(psType);
     }
 
+    //获取班主任的信息，可能为空
     public Attendee getClassAdviser() {
         return stateMachine.getSession().adviser;
     }
 
+    //获取班级中的当前课的老师信息，可能为空
     public CtlSession.CtlLead getCurrentLessonLead() {
         return getCtlSession().ctl == null ? null : getCtlSession().ctl.lead;
     }
