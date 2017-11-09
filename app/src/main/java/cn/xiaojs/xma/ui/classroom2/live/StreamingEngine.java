@@ -1,7 +1,10 @@
 package cn.xiaojs.xma.ui.classroom2.live;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
+import android.support.annotation.DrawableRes;
 import android.view.MotionEvent;
 
 import com.orhanobut.logger.Logger;
@@ -24,6 +27,7 @@ import com.qiniu.pili.droid.streaming.StreamingState;
 import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
 import com.qiniu.pili.droid.streaming.SurfaceTextureCallback;
 import com.qiniu.pili.droid.streaming.WatermarkSetting;
+import com.qiniu.pili.droid.streaming.av.common.PLFourCC;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -35,6 +39,14 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.classroom2.live.gles.FBO;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
+import cn.xiaojs.xma.util.BitmapUtils;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/10/19.
@@ -65,9 +77,11 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     private AVStreamingStateListener stateListener;
 
 
-    private boolean canStreaming = false;
+    private boolean canStreaming = true;
 
-    public StreamingEngine(Context context,CameraPreviewFrameView cameraStreamView) {
+    private boolean temp = true;
+
+    public StreamingEngine(Context context, CameraPreviewFrameView cameraStreamView) {
         this.context = context;
         initProfile();
         mediaStreamingManager = new MediaStreamingManager(context,
@@ -111,7 +125,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
 
     private void initProfile() {
         profile = new StreamingProfile();
-        profile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH3);
+        profile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_MEDIUM2);
         profile.setEncodingSizeLevel(StreamingProfile.VIDEO_ENCODING_HEIGHT_480);
         profile.setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.LAND);
         profile.setEncoderRCMode(StreamingProfile.EncoderRCModes.QUALITY_PRIORITY);
@@ -127,7 +141,6 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
                         0.8f, 3.0f, 20 * 1000));
 
 
-
     }
 
 
@@ -135,6 +148,10 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     //
     // 音视频推流
     //
+
+    public void togglePictureStreaming() {
+        mediaStreamingManager.togglePictureStreaming();
+    }
 
     public void setStateListener(AVStreamingStateListener listener) {
         this.stateListener = listener;
@@ -308,7 +325,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
 
                 if (canStreaming) {
                     startStreamingAVInternal();
-                }else {
+                } else {
                     stopStreamingAV();
                 }
 
@@ -414,4 +431,114 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     public boolean onPreviewFrame(byte[] bytes, int i, int i1, int i2, int i3, long l) {
         return true;
     }
+
+
+    //////////////////////////////////
+
+
+    public void setPictureStreamingResourceId(@DrawableRes int res) {
+        mediaStreamingManager.setPictureStreamingResourceId(res);
+    }
+
+    public void inputWhiteboardData(Bitmap whiteboardBitmap) {
+
+        if (whiteboardBitmap == null)
+            return;
+
+        //int inputWidth = whiteboardBitmap.getWidth();
+        //int inputHeight = whiteboardBitmap.getHeight();
+
+        //wbDataObservable.onDataReceived(whiteboardBitmap, inputWidth, inputHeight);
+
+        publishStream(whiteboardBitmap);
+    }
+
+
+    private void publishStream(final Bitmap targetBitmap) {
+
+        Observable.create(new ObservableOnSubscribe<String>() {
+
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+
+                //byte[] data = getNV21(inputWidth, inputHeight, targetBitmap);
+
+                String path = BitmapUtils.savePreviewToFile(targetBitmap);
+
+                e.onNext(path);
+
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String path) throws Exception {
+
+                        if (XiaojsConfig.DEBUG) {
+                            Logger.d("inputVideoFrame......................");
+                        }
+
+                        //Drawable d;
+
+                        mediaStreamingManager.setPictureStreamingFilePath(path);
+
+//                        mediaStreamingManager.inputVideoFrame(dataBytes, inputWidth, inputHeight,
+//                                0, false, PLFourCC.FOURCC_NV21, System.nanoTime());
+                    }
+                });
+
+
+    }
+
+
+    // untested function
+    byte[] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
+
+        int[] argb = new int[inputWidth * inputHeight];
+
+        scaled.getPixels(argb, 0, inputWidth, 0, 0, inputWidth, inputHeight);
+
+        byte[] yuv = new byte[inputWidth * inputHeight * 3 / 2];
+        encodeYUV420SP(yuv, argb, inputWidth, inputHeight);
+
+        scaled.recycle();
+
+        return yuv;
+    }
+
+    void encodeYUV420SP(byte[] yuv420sp, int[] argb, int width, int height) {
+        final int frameSize = width * height;
+
+        int yIndex = 0;
+        int uvIndex = frameSize;
+
+        int a, R, G, B, Y, U, V;
+        int index = 0;
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+
+                a = (argb[index] & 0xff000000) >> 24; // a is not used obviously
+                R = (argb[index] & 0xff0000) >> 16;
+                G = (argb[index] & 0xff00) >> 8;
+                B = (argb[index] & 0xff) >> 0;
+
+                // well known RGB to YUV algorithm
+                Y = ((66 * R + 129 * G + 25 * B + 128) >> 8) + 16;
+                U = ((-38 * R - 74 * G + 112 * B + 128) >> 8) + 128;
+                V = ((112 * R - 94 * G - 18 * B + 128) >> 8) + 128;
+
+                // NV21 has a plane of Y and interleaved planes of VU each sampled by a factor of 2
+                //    meaning for every 4 Y pixels there are 1 V and 1 U.  Note the sampling is every other
+                //    pixel AND every other scanline.
+                yuv420sp[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
+                if (j % 2 == 0 && index % 2 == 0) {
+                    yuv420sp[uvIndex++] = (byte) ((V < 0) ? 0 : ((V > 255) ? 255 : V));
+                    yuv420sp[uvIndex++] = (byte) ((U < 0) ? 0 : ((U > 255) ? 255 : U));
+                }
+
+                index++;
+            }
+        }
+    }
+
 }
