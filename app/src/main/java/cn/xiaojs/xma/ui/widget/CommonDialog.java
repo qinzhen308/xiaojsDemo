@@ -35,6 +35,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.UIUtils;
 
 public class CommonDialog extends Dialog {
 
@@ -187,7 +188,7 @@ public class CommonDialog extends Dialog {
         int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         if (mContext instanceof Activity) {
-            if (((Activity) mContext).getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            if (UIUtils.isLandspace(mContext)) {
                 width = DeviceUtil.getScreenWidth(mContext) / 2;
                 height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }

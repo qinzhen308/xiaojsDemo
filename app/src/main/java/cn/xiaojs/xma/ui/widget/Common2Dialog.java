@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.UIUtils;
 
 /**
  * created by Paul Z on 2017/6/7
@@ -149,7 +150,7 @@ public class Common2Dialog extends Dialog {
         int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         if (mContext instanceof Activity) {
-            if (((Activity) mContext).getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            if (UIUtils.isLandspace(mContext)) {
                 width = DeviceUtil.getScreenWidth(mContext) / 2;
                 height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }

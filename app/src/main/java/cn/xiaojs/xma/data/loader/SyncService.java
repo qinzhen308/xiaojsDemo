@@ -71,19 +71,8 @@ public class SyncService extends IntentService {
                         }
                     }
 
-                    ArrayList<Contact> conversations = dataProvider.getConversations();
                     ArrayList<Contact> persons = dataProvider.getPersons();
                     ArrayList<Contact> classes = dataProvider.getClasses();
-
-
-                    Map<String, Integer> conversationsMapping
-                            = dataProvider.getConversationsMapping();
-                    conversationsMapping.clear();
-                    int count = conversations.size();
-                    for (int i = 0; i < count; i++) {
-                        Contact contact = conversations.get(i);
-                        conversationsMapping.put(contact.id, i);
-                    }
 
                     Map<String, Contact> personsMapping = dataProvider.getPersonsMapping();
                     personsMapping.clear();

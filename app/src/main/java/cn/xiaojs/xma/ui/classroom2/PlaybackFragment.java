@@ -35,6 +35,7 @@ import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.UIUtils;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observables.GroupedObservable;
 
@@ -152,8 +153,8 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
     public void onVisibilityChange(int visibility) {
         super.onVisibilityChange(visibility);
 
-        int changeRequest = getActivity().getRequestedOrientation();
-        switch (changeRequest) {
+        int orientation = UIUtils.getCurrentOrientation(getContext());
+        switch (orientation) {
             case Configuration.ORIENTATION_PORTRAIT:
                 controlPort.setVisibility(visibility);
                 break;
@@ -173,8 +174,8 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
 
     private void initControlPanel() {
 
-        int changeRequest = getActivity().getRequestedOrientation();
-        controlHandleOnRotate(changeRequest);
+        int orientation = UIUtils.getCurrentOrientation(getContext());
+        controlHandleOnRotate(orientation);
 
         lTopRoominfoView.setVisibility(View.GONE);
         lTopPhotoView.setVisibility(View.GONE);

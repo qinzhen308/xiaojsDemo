@@ -36,6 +36,7 @@ import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.UIUtils;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
@@ -214,8 +215,8 @@ public class PlayFragment extends MovieFragment
 
     private void initControlPanel() {
 
-        int changeRequest = getActivity().getRequestedOrientation();
-        controlHandleOnRotate(changeRequest);
+        int orientation = UIUtils.getCurrentOrientation(getContext());
+        controlHandleOnRotate(orientation);
 
         lTopRoominfoView.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.class_living_animation,0,0,0);

@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.util.DeviceUtil;
+import cn.xiaojs.xma.util.UIUtils;
 
 /**
  * created by Paul Z on 2017/11/8
@@ -75,7 +76,7 @@ public class Common3Dialog extends Dialog {
         WindowManager.LayoutParams params = dialogWindow.getAttributes();
         params.dimAmount = 0.5f;
         int width=0;
-        if (mContext instanceof Activity&&((Activity) mContext).getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (UIUtils.isLandspace(mContext)) {
             width = DeviceUtil.getScreenWidth(mContext) / 2;
         }else {
             width = DeviceUtil.getScreenWidth(getContext()) - 2 * getContext().getResources().getDimensionPixelSize(R.dimen.px60);

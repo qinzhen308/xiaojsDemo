@@ -97,6 +97,7 @@ import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.UIUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -569,9 +570,9 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     public void hiddeOrshowControl() {
 
-        int currentOrient = getActivity().getRequestedOrientation();
+        int currentOrient = UIUtils.getCurrentOrientation(getContext());
         switch (currentOrient) {
-            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
+            case Configuration.ORIENTATION_LANDSCAPE:
                 if (controlLand == null)
                     return;
 
@@ -785,8 +786,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 切换横竖屏
      */
     public void changeOrientation() {
-        int changeRequest = getActivity().getRequestedOrientation() ==
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE ?
+        int changeRequest = UIUtils.isLandspace(getContext()) ?
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         getActivity().setRequestedOrientation(changeRequest);
 
@@ -797,9 +797,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void changeOrientationToLand() {
 
-        int changeRequest = getActivity().getRequestedOrientation();
-
-        if (changeRequest != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (!UIUtils.isLandspace(getContext())) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
@@ -927,8 +925,9 @@ public abstract class MovieFragment extends BaseRoomFragment
 
                         if (currentPage == 1) {
                             adapter.notifyDataSetChanged();
-                            RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
-                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
+                            recyclerView.scrollToPosition(messageData.size() - 1);
+//                            RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
+//                            rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
                         } else {
                             adapter.notifyItemRangeInserted(0, talkItems.size());
                             recyclerView.scrollToPosition(talkItems.size());
@@ -959,7 +958,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         messageData.add(talkItem);
         adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(messageData.size() - 1);
+        recyclerView.scrollToPosition(messageData.size() - 1);
 
     }
 
@@ -1024,7 +1023,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         messageData.add(talkItem);
         adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(messageData.size() - 1);
+        recyclerView.scrollToPosition(messageData.size() - 1);
 
         if (send) {
             updateConveration(talkItem);

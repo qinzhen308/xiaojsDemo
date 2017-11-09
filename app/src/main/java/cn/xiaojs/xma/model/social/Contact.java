@@ -42,7 +42,17 @@ public class Contact implements Serializable{
     public String current;
     public boolean retainOnTalk;
 
-//
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof Contact) {
+            Contact otact = (Contact) obj;
+            return  id.equals(otact.id);
+        }
+
+        return super.equals(obj);
+    }
+
+    //
 //    @Override
 //    public int describeContents() {
 //        return 0;

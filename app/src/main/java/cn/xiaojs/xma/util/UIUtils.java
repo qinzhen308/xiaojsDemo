@@ -26,6 +26,7 @@ package cn.xiaojs.xma.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -42,6 +43,16 @@ import cn.xiaojs.xma.ui.common.ImageViewActivity;
 
 
 public class UIUtils {
+
+
+    public static boolean isLandspace(Context context) {
+        return getCurrentOrientation(context) == Configuration.ORIENTATION_LANDSCAPE ? true : false;
+    }
+
+
+    public static int getCurrentOrientation(Context context) {
+        return context.getResources().getConfiguration().orientation;
+    }
 
     /**
      * 判断当前设备是否是平板

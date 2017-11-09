@@ -740,7 +740,8 @@ public class DatabaseListFragment extends BaseRoomFragment
             public void onSuccess(ResponseBody object) {
                 ToastUtil.showToast(getContext(), "修改成功");
                 bean.name = newName;
-                materialAdapter.notifyItemChanged(position);
+                //materialAdapter.notifyItemChanged(position);
+                materialAdapter.notifyDataSetChanged();
 
             }
 
@@ -787,7 +788,8 @@ public class DatabaseListFragment extends BaseRoomFragment
                 Toast.makeText(getContext(), R.string.delete_success, Toast.LENGTH_SHORT).show();
 
                 libDocs.remove(position);
-                materialAdapter.notifyItemRemoved(position);
+                //materialAdapter.notifyItemRemoved(position);
+                materialAdapter.notifyDataSetChanged();
 
             }
 
@@ -838,7 +840,8 @@ public class DatabaseListFragment extends BaseRoomFragment
             public void onSuccess(ResponseBody object) {
                 ToastUtil.showToast(getContext(), "转码中...");
                 libDoc.state = Collaboration.State.CONVERTING;
-                materialAdapter.notifyItemChanged(position);
+                //materialAdapter.notifyItemChanged(position);
+                materialAdapter.notifyDataSetChanged();
             }
 
             @Override
