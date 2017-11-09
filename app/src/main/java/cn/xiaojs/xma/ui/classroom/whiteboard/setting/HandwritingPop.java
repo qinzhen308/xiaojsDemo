@@ -28,7 +28,8 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.widget.PaintPathPreview;
 
 public class HandwritingPop extends SettingsPopupWindow {
 
-    public final float MIN_PAINT_SIZE = WhiteboardConfigs.DEFAULT_PAINT_STROKE_WIDTH;
+    public final int MIN_PAINT_SIZE = WhiteboardConfigs.MIN_PAINT_STROKE_WIDTH;
+    public final int MAX_PAINT_SIZE = WhiteboardConfigs.MAX_PAINT_STROKE_WIDTH;
 
     public final int DEFAULT_PAINT_ALPHA = 152;
 
@@ -59,6 +60,8 @@ public class HandwritingPop extends SettingsPopupWindow {
 
     private void initViews(Context context) {
         mPaintSizeBar = (SeekBar) mPopWindowLayout.findViewById(R.id.paint_thickness);
+        mPaintSizeBar.setProgress(WhiteboardConfigs.DEFAULT_PAINT_STROKE_WIDTH-MIN_PAINT_SIZE);
+        mPaintSizeBar.setMax(MAX_PAINT_SIZE-MIN_PAINT_SIZE);
         mPaintSizeBar.setOnSeekBarChangeListener(mSeekBarListener);
         mPaintPathPreView = (PaintPathPreview) mPopWindowLayout.findViewById(R.id.doodle_paint_preview);
         mPaintPathPreView.setPreviewMode(PaintPathPreview.PAINT_PREVIEW_MODE);

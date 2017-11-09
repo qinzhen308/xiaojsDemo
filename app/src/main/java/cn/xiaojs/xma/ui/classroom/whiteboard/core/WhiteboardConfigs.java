@@ -25,7 +25,9 @@ public class WhiteboardConfigs {
     public static final float WHITE_BOARD_MAX_SCALE = 5.0f;
     public static final float WHITE_BOARD_MIN_SCALE = 1.0f;
 
-    public static final float DEFAULT_PAINT_STROKE_WIDTH = 10.0f;
+    public static final int DEFAULT_PAINT_STROKE_WIDTH = 2;
+    public static final int MIN_PAINT_STROKE_WIDTH = 1;
+    public static final int MAX_PAINT_STROKE_WIDTH = 32;
 
     public static int DEFAULT_PAINT_COLOR = Color.BLACK;
 
@@ -43,7 +45,7 @@ public class WhiteboardConfigs {
     public static int TOUCH_SLOPE = 20;
     public static int TEXT_BORDER_PADDING  =20;
 
-    public static float PAINT_STROKE_WIDTH = 20;
+    public static float PAINT_STROKE_WIDTH = 2;
     public static float DEFAULT_TEXT_SIZE = 60;
 
     public static int MIN_EDIT_TEXT_WIDTH = 80;
@@ -68,7 +70,7 @@ public class WhiteboardConfigs {
         CONTROLLER_RADIUS = rs.getDimensionPixelOffset(R.dimen.px20);
         DEL_BTN_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px8);
 
-        PAINT_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px20);
+//        PAINT_STROKE_WIDTH = rs.getDimensionPixelOffset(R.dimen.px20);
 
         DEFAULT_TEXT_SIZE = rs.getDimensionPixelSize(R.dimen.px60);
         MIN_EDIT_TEXT_WIDTH = rs.getDimensionPixelOffset(R.dimen.px80);

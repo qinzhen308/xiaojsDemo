@@ -6,11 +6,11 @@
               android:orientation="vertical">
 
     <cn.xiaojs.xma.ui.classroom.whiteboard.widget.PaintPathPreview
-            android:id="@+id/doodle_paint_preview"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px100"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"/>
+        android:id="@+id/doodle_paint_preview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px100"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"/>
 
     <LinearLayout
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
                 android:foregroundGravity="center_vertical"
                 android:thumb="@drawable/paint_progress_controller"
                 android:progressDrawable="@drawable/wb_paint_progress_bar"
-                android:max="30"/>
+                android:max="31"/>
     </LinearLayout>
 
 </LinearLayout>

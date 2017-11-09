@@ -4,6 +4,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -31,6 +35,7 @@ import cn.xiaojs.xma.util.BitmapUtils;
 public class ClassroomPopupWindowLayout extends LinearLayout {
     public final static int DARK_GRAY = 1;
     public final static int LIGHT_GRAY = 2;
+    public final static int TRANS_60 = 3;
     private int mGravity;
 
     private ImageView mIndicator;
@@ -54,7 +59,7 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
 
 
     public void addContent(View content, int gravity) {
-        addContent(content, gravity, DARK_GRAY);
+        addContent(content, gravity, TRANS_60);
     }
 
     public void addContent(View content, int gravity, int style) {
@@ -62,6 +67,8 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
             content.setBackgroundResource(R.drawable.wb_black_conner_bg);
         }else if (style == LIGHT_GRAY){
             content.setBackgroundResource(R.drawable.wb_conner_bg);
+        }else if(style == TRANS_60){
+            content.setBackgroundResource(R.drawable.bg_wb_tool_panel);
         }
         //content.setBackgroundResource(R.drawable.wb_conner_bg);
         //content.setBackgroundColor(Color.RED);
@@ -94,8 +101,27 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
     }
 
     public ImageView buildIndicator(int gravity, int style) {
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), style == DARK_GRAY ?
-                R.drawable.ic_cr_pop_indicator_dark_gray : R.drawable.ic_cr_pop_indicator_gray);
+        int arrawRes=0;
+        Bitmap bmp=null;
+        if (style == DARK_GRAY){
+            arrawRes=R.drawable.ic_cr_pop_indicator_dark_gray;
+            bmp = BitmapFactory.decodeResource(getResources(), arrawRes);
+        }else if (style == LIGHT_GRAY){
+            arrawRes=R.drawable.ic_cr_pop_indicator_gray;
+            bmp = BitmapFactory.decodeResource(getResources(), arrawRes);
+        }else if(style == TRANS_60){
+            bmp= Bitmap.createBitmap(30, 20, Bitmap.Config.ARGB_4444);
+            Canvas canvas=new Canvas(bmp);
+            Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
+            p.setStyle(Paint.Style.FILL);
+            p.setColor(getResources().getColor(R.color.black_opacity_60));
+            Path path=new Path();
+            path.moveTo(0,0);
+            path.lineTo(15,20);
+            path.lineTo(30,0);
+            path.lineTo(0,0);
+            canvas.drawPath(path,p);
+        }
         ImageView img = new ImageView(getContext());
 
         if (bmp != null) {

@@ -13,7 +13,7 @@
     </item>
     <item  >
         <shape >
-            <solid android:color="@color/classroom_main_gray"/>
+            <solid android:color="@color/trans"/>
 
         </shape>
     </item>

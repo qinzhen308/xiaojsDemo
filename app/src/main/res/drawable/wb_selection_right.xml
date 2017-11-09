@@ -3,8 +3,8 @@
     <item  android:state_pressed="true" >
         <shape >
             <solid android:color="@color/classroom_dark_gray"/>
-            <corners android:bottomRightRadius="@dimen/px40"
-                android:topRightRadius="@dimen/px40"
+            <corners android:bottomRightRadius="@dimen/px60"
+                android:topRightRadius="@dimen/px60"
                 android:bottomLeftRadius="0dp"
                 android:topLeftRadius="0dp"
                 />
@@ -13,8 +13,8 @@
     <item  android:state_selected="true" >
         <shape >
             <solid android:color="@color/classroom_dark_gray"/>
-            <corners android:bottomRightRadius="@dimen/px40"
-                android:topRightRadius="@dimen/px40"
+            <corners android:bottomRightRadius="@dimen/px60"
+                android:topRightRadius="@dimen/px60"
                 android:bottomLeftRadius="0dp"
                 android:topLeftRadius="0dp"
                 />
@@ -22,9 +22,9 @@
     </item>
     <item  >
         <shape >
-            <solid android:color="@color/classroom_main_gray"/>
-            <corners android:bottomRightRadius="@dimen/px40"
-                android:topRightRadius="@dimen/px40"
+            <solid android:color="@color/trans"/>
+            <corners android:bottomRightRadius="@dimen/px60"
+                android:topRightRadius="@dimen/px60"
                 android:bottomLeftRadius="0dp"
                 android:topLeftRadius="0dp"
                 />

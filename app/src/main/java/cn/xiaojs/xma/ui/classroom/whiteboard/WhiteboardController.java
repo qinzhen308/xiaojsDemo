@@ -134,8 +134,6 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         mGeoShape.setImageResource(R.drawable.wb_rectangle_selector);
         mPanel.measure(0, 0);
         mPanelWidth = mPanel.getMeasuredWidth();
-        mHandWriting.setSelected(true);
-        enterHandWriting();
     }
 
     /**
@@ -159,6 +157,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             onGeometryChange(GeometryShape.RECTANGLE);
             onColorChanged(WhiteboardConfigs.DEFAULT_PAINT_COLOR);
         }
+        handlePanelItemClick(mHandWriting);
     }
 
     public void replaceNewWhiteboardLayout(Bitmap bmp, float boardRatio) {
