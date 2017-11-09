@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Keep;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -28,6 +30,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,6 +47,8 @@ import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
+import cn.xiaojs.xma.ui.classroom.page.IBoardDocManager;
+import cn.xiaojs.xma.ui.classroom.page.IBoardManager;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.base.PlayerFragment;
@@ -67,7 +73,7 @@ import okhttp3.ResponseBody;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class Classroom2Activity extends FragmentActivity {
+public class Classroom2Activity extends FragmentActivity implements IBoardManager,IBoardDocManager{
 
     private final static int REQUEST_PERMISSION = 1000;
 
@@ -787,4 +793,49 @@ public class Classroom2Activity extends FragmentActivity {
         return collaborateFragment;
     }
 
+
+    //------------------白板的操作逻辑-----------------
+
+    @Override
+    public void onPushPreview(Bitmap bitmap) {
+        //需要的话实现
+    }
+
+    @Override
+    public void addNewBoard(String title) {
+        //需要的话实现
+    }
+
+    @Override
+    public void openBoard(String boardId) {
+        //需要的话实现
+    }
+
+    @Override
+    public boolean pushPreviewEnable() {
+        //需要的话实现
+        return false;
+    }
+
+    @Override
+    public void openSlideMenu(LibDoc doc, ArrayList<LibDoc.ExportImg> slides, int curPage) {
+        //需要的话实现
+    }
+
+    @Override
+    public void openDocInBoard(LibDoc doc) {
+        Fragment fragment=getSupportFragmentManager().findFragmentById(R.id.replace_lay);
+        if(fragment instanceof MovieFragment&&fragment.isInLayout()){
+            if(getRequestedOrientation()==ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+               if(collaborateFragment.isAdded()&&collaborateFragment.isInLayout()){
+                   collaborateFragment.openDocInsideBoard(doc);
+               }
+            }else {
+                ((MovieFragment) fragment).changeOrientationToLand();
+            }
+        }else {
+            //需要切换到idle或play或live
+        }
+
+    }
 }

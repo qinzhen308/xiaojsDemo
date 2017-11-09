@@ -260,7 +260,7 @@ public class BoardCollaborateFragment extends BaseFragment {
             },500);
         }
         if(mTempDoc!=null){
-            openDoc(mTempDoc);
+            openDocInsideBoard(mTempDoc);
             mTempDoc=null;
         }
     }
@@ -482,7 +482,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     public void openDocInBoard(final LibDoc doc){
         if(isAdded()&&isInLayout()){
-            openDoc(doc);
+            openDocInsideBoard(doc);
         }else {
             Fragment fragment=((Classroom2Activity)getActivity()).getSupportFragmentManager().findFragmentById(R.id.replace_lay);
             if(fragment instanceof MovieFragment){
@@ -494,7 +494,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     private LibDoc mTempDoc;
 
-    private void openDoc(final LibDoc doc){
+    public void openDocInsideBoard(final LibDoc doc){
         if(doc==null){
             ToastUtil.showToast(getActivity(),"该文件无效，无法打开");
             return;

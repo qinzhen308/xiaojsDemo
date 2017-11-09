@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Keep;
@@ -42,12 +43,14 @@ import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CommunicationManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.XMSManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.provider.DataProvider;
@@ -86,9 +89,11 @@ import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu;
 import cn.xiaojs.xma.ui.view.CommonPopupMenu1;
+import cn.xiaojs.xma.ui.view.CommonPopupMenu2;
 import cn.xiaojs.xma.ui.widget.ClosableAdapterSlidingLayout;
 import cn.xiaojs.xma.ui.widget.ClosableSlidingLayout;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
+import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -425,26 +430,28 @@ public abstract class MovieFragment extends BaseRoomFragment
 
 
     public void showMoreMenu(View targetView) {
-        CommonPopupMenu1 menu = new CommonPopupMenu1(getContext());
+        CommonPopupMenu2 menu = new CommonPopupMenu2(getContext());
         String[] items = this.getResources().getStringArray(R.array.classroom2_more_item);
-        menu.setBg(R.drawable.popup_menu_bg);
         menu.setWidth(this.getResources().getDimensionPixelSize(R.dimen.px280));
         menu.addTextItems(items);
-        menu.addImgItems(new Integer[]{R.drawable.ic_setting,
-                R.drawable.ic_class_database_share_1,
-                R.drawable.ic_add_class1});
+        menu.setTextColor(Color.WHITE);
+        menu.addImgItems(new Integer[]{R.drawable.ic_classroom_share,
+                R.drawable.ic_classroom_share,
+                R.drawable.ic_classroom_setting});
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 switch (i) {
-                    case 2:
+                    case 1:
                         ClassDetailFragment classDetailFragment = new ClassDetailFragment();
                         classDetailFragment.show(getFragmentManager(), "detail");
                         break;
-                    case 1:
-                        break;
                     case 0:
+                        String url=ApiManager.getShareLessonUrl(classroomEngine.getCtlSession().cls.id, Account.TypeName.CLASS_LESSON);
+                        ShareUtil.shareUrlByUmeng(getActivity(),classroomEngine.getCtlSession().cls.title,"",url);
+                        break;
+                    case 2:
                         SettingFragment settingFragment = new SettingFragment();
                         settingFragment.show(getFragmentManager(), "setting");
                         break;

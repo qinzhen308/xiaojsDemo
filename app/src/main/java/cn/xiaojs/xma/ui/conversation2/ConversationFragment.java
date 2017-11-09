@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.conversation2;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -15,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -48,10 +47,9 @@ import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView;
 import cn.xiaojs.xma.ui.lesson.xclass.CreateClassActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.recordlesson.CreateRecordlessonActivity;
-import cn.xiaojs.xma.ui.view.CommonPopupMenu1;
+import cn.xiaojs.xma.ui.view.CommonPopupMenu2;
 import cn.xiaojs.xma.util.JudgementUtil;
 
 /**
@@ -220,10 +218,11 @@ public class ConversationFragment extends Base2Fragment {
     }
 
     private void showMenu(View targetView) {
-        CommonPopupMenu1 menu = new CommonPopupMenu1(getActivity());
+        CommonPopupMenu2 menu = new CommonPopupMenu2(getActivity());
         String[] items = getActivity().getResources().getStringArray(R.array.add_menu3);
         menu.setWidth(getActivity().getResources().getDimensionPixelSize(R.dimen.px280));
         menu.addTextItems(items);
+        menu.setTextColor(Color.WHITE);
         menu.addImgItems(new Integer[]{R.drawable.ic_add_class3,R.drawable.ic_add_course});
         menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
