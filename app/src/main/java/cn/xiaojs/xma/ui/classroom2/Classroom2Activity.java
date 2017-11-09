@@ -64,11 +64,8 @@ import cn.xiaojs.xma.ui.classroom2.util.MaterialUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
-<<<<<<< HEAD
 import cn.xiaojs.xma.util.ToastUtil;
-=======
 import cn.xiaojs.xma.util.UIUtils;
->>>>>>> 97cec663c8a5b528bc83aa218821ee5cc098a71d
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
