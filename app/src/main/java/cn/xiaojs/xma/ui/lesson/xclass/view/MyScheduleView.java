@@ -3,14 +3,17 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +42,7 @@ import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.view.TextInBgSpan;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
 import cn.xiaojs.xma.util.MaterialUtil;
 
@@ -596,6 +600,24 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
         }
         return list;
 
+    }
+
+    @OnClick(R.id.iv_avatar1)
+    private void showAssistantDialog(){
+        if(mData.advisers==null||mData.advisers.length>=2){
+            return;
+        }
+        Common3Dialog dialog=new Common3Dialog(getContext());
+        ListView content= new ListView(getContext());
+        content.setDivider(new ColorDrawable(getResources().getColor(R.color.main_bg)));
+        content.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.px2));
+        String[] teachers=new String[mData.advisers.length];
+        for(int i=0;i<mData.advisers.length;i++)teachers[i]=mData.advisers[i].name;
+        content.setAdapter(new ArrayAdapter<String>(getContext(),R.layout.item_simple_text,R.id.textview,teachers));
+        dialog.setTitle("助教（"+teachers.length+"）");
+        dialog.setCustomView(content);
+        dialog.needCloseBtn(true);
+        dialog.show();
     }
 
     private EventCallback mEventCallback;
