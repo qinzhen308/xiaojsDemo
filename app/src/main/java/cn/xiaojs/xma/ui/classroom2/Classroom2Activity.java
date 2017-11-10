@@ -832,6 +832,12 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     }
 
     @Override
+    public boolean setReadOnly(boolean isReadOnly) {
+        collaborateFragment.setReadOnly(isReadOnly);
+        return false;
+    }
+
+    @Override
     public void openDocInBoard(LibDoc doc) {
         if(movieFragment.isAdded()&&!movieFragment.isDetached()){
             if(UIUtils.isLandspace(this)){
