@@ -1,11 +1,9 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -13,27 +11,22 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 import com.orhanobut.logger.Logger;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
@@ -48,17 +41,15 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
-import cn.xiaojs.xma.model.live.SlidePage;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.RequestShareboard;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Drawing;
 import cn.xiaojs.xma.ui.base.BaseFragment;
-import cn.xiaojs.xma.ui.classroom.main.AnimData;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
-import cn.xiaojs.xma.ui.classroom.main.FadeAnimListener;
+import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
@@ -69,11 +60,9 @@ import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
-import cn.xiaojs.xma.ui.widget.banner.PageNumView;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.MaterialUtil;
-import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.functions.Consumer;
 
@@ -85,23 +74,26 @@ public class BoardCollaborateFragment extends BaseFragment {
     public final static int TYPE_SINGLE_IMG = 1;
     public final static int TYPE_MULTI_IMG = 2;
 
-    public static final String COLLABORATE_FIRST_DATA="extra_collaborate_first_data";
-    public static final String EXTRA_BOARD_ID="extra_board_id";
-    public static final int CODE_OPEN_BOARD=10;
+    public static final String EXTRA_BOARD_ID = "extra_board_id";
+    public static final int CODE_OPEN_BOARD = 10;
 
 
     @BindView(R.id.white_board_panel)
     View mWhiteBoardPanel;
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mBoardScrollerView;
-//    @BindView(R.id.test_preview)
+    //    @BindView(R.id.test_preview)
 //    ImageView testPreview;
     @BindView(R.id.text_pager_points)
     TextView textPagerPoints;
 
-    private int boardMode=BOARD_MODE_MINE;
-    private final static int BOARD_MODE_MINE=0;//面向发起者
-    private final static int BOARD_MODE_YOUR=1;//面向被动者
+    private int boardMode = BOARD_MODE_MINE;
+    private final static int BOARD_MODE_MINE = 0;//面向发起者
+    private final static int BOARD_MODE_YOUR = 1;//面向被动者
+    private int state = STATE_UNSPECIFIED;
+    private final static int STATE_UNSPECIFIED = 0;//未协作状态
+    private final static int STATE_COLLABORATE_FREEZE = 1;//白板协作状态---不能操作远程图形
+    private final static int STATE_COLLABORATE_NORMAL = 2;//白板协作状态---可以操作远程图形
 
 
     private WhiteboardController mBoardController;
@@ -109,26 +101,45 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     private int mDisplayType = TYPE_SINGLE_IMG;
     private float mDoodleRatio = WhiteboardLayer.DOODLE_CANVAS_RATIO;
-    private FadeAnimListener mFadeAnimListener;
 
-    public ShareboardReceive firstData;
+    public ShareboardReceive collaborateData;
     private EventListener.Syncboard eventListener;
 
     private String boardId;
 
     private LibDoc doc;
-    private int boardType=Live.BoardType.WHITE;
+    private int boardType = Live.BoardType.WHITE;
 
-    ArrayList<LibDoc.ExportImg> slides=null;
+    ArrayList<LibDoc.ExportImg> slides = null;
 
-    private int curPage=-1;
+    private int curPage = -1;
 
     private OnPushPreviewListener onPushPreviewListener;
 
-    private boolean isReadOnly=false;
+    private boolean isReadOnly = false;
+    private boolean needRegistNewBoard = false;
 
-    public BoardCollaborateFragment(){
+    public BoardCollaborateFragment() {
         getLastBoard();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(mContent!=null){
+            if(mContent.getParent()!=null){
+                ((ViewGroup)mContent.getParent()).removeView(mContent);
+            }
+            lazyLoadBuz();
+            return mContent;
+        }
+        mContext = getActivity();
+        mContent = (ViewGroup) inflater.inflate(R.layout.fragment_base, null);
+        View content = getContentView();
+        addContainerView(content);
+        ButterKnife.bind(this, content);
+        init();
+        initBoard();
+        return mContent;
     }
 
     @Override
@@ -137,66 +148,39 @@ public class BoardCollaborateFragment extends BaseFragment {
     }
 
     @Override
-    protected void init() {
-        firstData=(ShareboardReceive) getArguments().getSerializable(COLLABORATE_FIRST_DATA);
-        mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
-        mFadeAnimListener = new FadeAnimListener();
-        mBoardController.showWhiteboardLayout(null, mDoodleRatio);
-        mBoardController.setCanReceive(true);
-        mBoardController.setCanSend(true);
-        mBoardController.setCanSend(true);
-        boardId=getArguments().getString(EXTRA_BOARD_ID);
-        if(TextUtils.isEmpty(boardId)){
-            registBoard();
-        }else {
-            openBoard(boardId);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(needRegistNewBoard){
+            registBoard(null);
+            needRegistNewBoard=false;
         }
+    }
 
-        if(firstData!=null){
-            boardMode=BOARD_MODE_YOUR;
-            mBoardController.setWhiteBoardId(firstData.board.id);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mBoardController.syncBoardLayerSet(firstData);
-                }
-            }, 500);
-        }else {
-            String boardId=getArguments().getString(EXTRA_BOARD_ID);
-            if(TextUtils.isEmpty(boardId)){
-                mBoardController.setWhiteBoardId(boardId);
-            }
-        }
-//        mBoardController.setSyncDrawingListener(syncDrawingListener);
+    @Override
+    protected void init() {
+        mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
+        mBoardController.showWhiteboardLayout(null, mDoodleRatio);
         eventListener = ClassroomEngine.getEngine().observerSyncboard(syncBoardConsumer);
         mBoardController.setPushPreviewBoardListener(new PushPreviewBoardListener() {
             @Override
             public void onPush(Bitmap bitmap) {
 //                testPreview.setImageBitmap(bitmap);
-                if(onPushPreviewListener!=null){
+                if (onPushPreviewListener != null) {
                     onPushPreviewListener.onPushPreview(bitmap);
                 }
 
-                Fragment fragment=getTargetFragment();
-                if(fragment instanceof IBoardManager&&((IBoardManager)fragment).pushPreviewEnable()){
-                    ((IBoardManager)fragment).onPushPreview(bitmap);
+                Fragment fragment = getTargetFragment();
+                if (fragment instanceof IBoardManager && ((IBoardManager) fragment).pushPreviewEnable()) {
+                    ((IBoardManager) fragment).onPushPreview(bitmap);
                 }
 
             }
         });
-        mBoardController.setWhiteBoardReadOnly(isReadOnly);
-        mBoardController.setPanelShow(!isReadOnly);
-    }
-
-    private Bitmap decodeBg(){
-        byte[] bytes=Base64.decode(firstData.board.preview.substring(firstData.board.preview.indexOf(",")+1,firstData.board.preview.length()),Base64.DEFAULT);
-        Bitmap bg=BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-        return bg;
     }
 
 
-    @OnClick({ R.id.select_btn, R.id.handwriting_btn,R.id.shape_btn,
-            R.id.color_picker_btn,  R.id.eraser_btn, R.id.undo, R.id.redo,R.id.text_pager_points})
+    @OnClick({R.id.select_btn, R.id.handwriting_btn, R.id.shape_btn,
+            R.id.color_picker_btn, R.id.eraser_btn, R.id.undo, R.id.redo, R.id.text_pager_points})
     public void onPanelItemClick(View v) {
         switch (v.getId()) {
             case R.id.select_btn:
@@ -209,9 +193,9 @@ public class BoardCollaborateFragment extends BaseFragment {
                 mBoardController.handlePanelItemClick(v);
                 break;
             case R.id.text_pager_points:
-                Fragment fragment=getTargetFragment();
-                if(fragment instanceof IBoardManager){
-                    ((IBoardManager)fragment).openSlideMenu(doc,slides,curPage);
+                Fragment fragment = getTargetFragment();
+                if (fragment instanceof IBoardManager) {
+                    ((IBoardManager) fragment).openSlideMenu(doc, slides, curPage);
                 }
                 break;
 
@@ -219,12 +203,6 @@ public class BoardCollaborateFragment extends BaseFragment {
                 break;
         }
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
 
 
 
@@ -235,98 +213,76 @@ public class BoardCollaborateFragment extends BaseFragment {
         if (mWhiteBoardPanel != null) {
             mWhiteBoardPanel.animate().cancel();
         }
-
         eventListener.dispose();
     }
 
 
     @Override
     public void onDetach() {
-        setTargetFragment(null,0);
+        setTargetFragment(null, 0);
         super.onDetach();
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initView();
-    }
-
-    private void initView(){
-        /*if(ClassroomController.getInstance(getContext()).isPortrait()){
-            mWhiteBoardPanel.setVisibility(View.GONE);
-            mBoardController.setWhiteBoardReadOnly(true);
-        }*/
-        if(mLastBoardItem!=null){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mBoardController.setBoardLayerSet(mLastBoardItem.drawing);
-                }
-            },500);
-        }
+    private void lazyLoadBuz(){
         if(mTempDoc!=null){
-            openDocInsideBoard(mTempDoc);
+            doc=mTempDoc;
             mTempDoc=null;
+            initBoard();
         }
     }
 
 
-    private void hideAnim(View view) {
-        startAnimation(view,
-                FadeAnimListener.MODE_ANIM_HIDE,
-                FadeAnimListener.ANIM_ALPHA,
-                new AnimData(0));
+    private void initBoard() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                boardMode = BOARD_MODE_MINE;
+                mBoardController.setCanReceive(false);
+                mBoardController.setCanSend(false);
+                textPagerPoints.setVisibility(View.GONE);
+                //优先初始化最后一次打开的白板数据，如果没有再根据白板类型初始化
+                if(mLastBoardItem != null){
+                    mBoardController.replaceNewWhiteboardLayout(null, mDoodleRatio);
+                    mBoardController.setBoardLayerSet(mLastBoardItem.drawing);
+                    mLastBoardItem=null;
+                }else if (boardType == Live.BoardType.WHITE) {
+                    mBoardController.showWhiteboardLayout(null, mDoodleRatio);
+                    if(TextUtils.isEmpty(boardId)){
+                        registBoard(null);
+                    }
+                } else if (boardType == Live.BoardType.SLIDES) {
+                    loadNewPage(0);
+                    if(TextUtils.isEmpty(boardId)){
+                        registBoard(doc.name);
+                    }
+                } else if (boardType == Live.BoardType.COLLABORATION) {
+                    mBoardController.showWhiteboardLayout(null, mDoodleRatio);
+                    if (collaborateData == null) {
+                        ToastUtil.showToast(getActivity(), "协作失败");
+                    } else {
+                        //协作初始化  不用注册，打开；但需要打开协作相关的开关，设置同步监听
+                        mBoardController.setCanReceive(true);
+                        mBoardController.setCanSend(true);
+                        boardMode = BOARD_MODE_YOUR;
+                        boardId=collaborateData.board.id;
+                        mBoardController.syncBoardLayerSet(collaborateData);
+                    }
+                }
+                //根据协作状态初始化对应内容
+                if (state == STATE_UNSPECIFIED) {
+                    mBoardController.setSyncDrawingListener(null);
+                } else if (state == STATE_COLLABORATE_FREEZE) {
+                    mBoardController.setSyncDrawingListener(syncDrawingListener);
+                } else if (state == STATE_COLLABORATE_NORMAL) {
+                    mBoardController.setSyncDrawingListener(syncDrawingListener);
+                }
+                mBoardController.setWhiteBoardId(boardId);
+                mBoardController.setWhiteBoardReadOnly(isReadOnly);
+                mBoardController.setPanelShow(!isReadOnly);
+            }
+        }, 500);
+
     }
-
-    private void showAnim(View view) {
-        startAnimation(view,
-                FadeAnimListener.MODE_ANIM_SHOW,
-                FadeAnimListener.ANIM_ALPHA,
-                new AnimData(1));
-    }
-
-    protected void startAnimation(View view, int animMode, int animSets, AnimData data) {
-        FadeAnimListener listener = mFadeAnimListener;
-        ViewPropertyAnimator viewPropertyAnimator = view.animate();
-
-        //alpha anim
-        if ((FadeAnimListener.ANIM_ALPHA & animSets) != 0) {
-            viewPropertyAnimator.alpha(data.alpha);
-        }
-        //translate anim
-        if ((FadeAnimListener.ANIM_TRANSLATE & animSets) != 0) {
-            viewPropertyAnimator.translationX(data.translateX);
-            viewPropertyAnimator.translationY(data.translateY);
-        }
-        //scale anim
-        if ((FadeAnimListener.ANIM_SCALE & animSets) != 0) {
-            viewPropertyAnimator.scaleX(data.scaleX);
-            viewPropertyAnimator.scaleY(data.scaleY);
-        }
-
-        viewPropertyAnimator.setListener(listener.with(view).play(animMode)).start();
-    }
-
-
-    public static BoardCollaborateFragment createInstance(ShareboardReceive shareboardReceive) {
-        BoardCollaborateFragment fragment = new BoardCollaborateFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(COLLABORATE_FIRST_DATA,shareboardReceive);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
-    public static BoardCollaborateFragment createInstance(String boardID) {
-        BoardCollaborateFragment fragment = new BoardCollaborateFragment();
-        Bundle bundle = new Bundle();
-        if(!TextUtils.isEmpty(boardID)){
-            bundle.putString(EXTRA_BOARD_ID,boardID);
-        }
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
 
     private Consumer<EventReceived> syncBoardConsumer = new Consumer<EventReceived>() {
         @Override
@@ -349,7 +305,7 @@ public class BoardCollaborateFragment extends BaseFragment {
     };
 
 
-    private SyncDrawingListener syncDrawingListener=new SyncDrawingListener() {
+    private SyncDrawingListener syncDrawingListener = new SyncDrawingListener() {
         @Override
         public void onBegin(String data) {
             ClassroomEngine.getEngine().syncBoard(data, new EventCallback<EventResponse>() {
@@ -360,7 +316,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
                 @Override
                 public void onFailed(String errorCode, String errorMessage) {
-                    Logger.d("----sync----onBegin---onFailed:"+errorMessage);
+                    Logger.d("----sync----onBegin---onFailed:" + errorMessage);
                 }
             });
         }
@@ -375,7 +331,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
                 @Override
                 public void onFailed(String errorCode, String errorMessage) {
-                    Logger.d("----sync----onGoing---onFailed:"+errorMessage);
+                    Logger.d("----sync----onGoing---onFailed:" + errorMessage);
                 }
             });
         }
@@ -390,7 +346,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
                 @Override
                 public void onFailed(String errorCode, String errorMessage) {
-                    Logger.d("----sync----onFinished---onFailed:"+errorMessage);
+                    Logger.d("----sync----onFinished---onFailed:" + errorMessage);
                 }
             });
         }
@@ -408,8 +364,8 @@ public class BoardCollaborateFragment extends BaseFragment {
         }*/
     }
 
-    public Bitmap preview(){
-        if(mBoardController!=null){
+    public Bitmap preview() {
+        if (mBoardController != null) {
             return mBoardController.getPreviewWhiteBoard();
         }
         return null;
@@ -418,7 +374,7 @@ public class BoardCollaborateFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         mBoardController.setPushPreviewBoardListener(null);
-        isReadOnly=false;
+        isReadOnly = false;
         super.onDestroy();
     }
 
@@ -426,18 +382,18 @@ public class BoardCollaborateFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==Activity.RESULT_OK){
-            if(requestCode==CODE_OPEN_BOARD){
-                BoardItem boardItem=(BoardItem) data.getSerializableExtra(WhiteboardManagerFragment.EXTRA_SELECTED_BOARD);
-                mBoardController.replaceNewWhiteboardLayout(null,mDoodleRatio);
-                if(boardItem.drawing!=null){
-                    mBoardController.setBoardLayerSet(boardItem.drawing);
-                }
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CODE_OPEN_BOARD) {
+                BoardItem boardItem = (BoardItem) data.getSerializableExtra(WhiteboardManagerFragment.EXTRA_SELECTED_BOARD);
+                mLastBoardItem=boardItem;
+                boardId=boardItem.id;
+                boardType=boardItem.type;
+                initBoard();
             }
         }
     }
 
-    public void showWhiteboardManager(){
+    public void showWhiteboardManager() {
         /*Fragment fragment=WhiteboardManagerFragment.createInstance("");
         fragment.setTargetFragment(this,200);
         getChildFragmentManager().beginTransaction().
@@ -445,17 +401,21 @@ public class BoardCollaborateFragment extends BaseFragment {
                 addToBackStack("dialog_fragment").
                 commitAllowingStateLoss();*/
 
-        WhiteboardManagerFragment fragment=WhiteboardManagerFragment.createInstance("");
-        fragment.setTargetFragment(this,CODE_OPEN_BOARD);
-        fragment.show(getChildFragmentManager(),"dialog_fragment");
+        WhiteboardManagerFragment fragment = WhiteboardManagerFragment.createInstance("");
+        fragment.setTargetFragment(this, CODE_OPEN_BOARD);
+        fragment.show(getChildFragmentManager(), "dialog_fragment");
     }
 
-    public void registBoard(){
-        final Board board=new Board();
-        board.title="新的白板";
-        board.drawing=new Board.DrawDimension();
-        board.drawing.width=ScreenUtils.getScreenWidth(getActivity());
-        board.drawing.height=board.drawing.width*9/16;
+    public void registBoard(String title) {
+        final Board board = new Board();
+        board.title = TextUtils.isEmpty(title)?"新的白板":title;
+        board.drawing = new Board.DrawDimension();
+        board.drawing.width = ScreenUtils.getScreenWidth(getActivity());
+        board.drawing.height = board.drawing.width * 9 / 16;
+        board.type= boardType;
+        if(boardType==Live.BoardType.SLIDES&&!ArrayUtil.isEmpty(slides)){
+            board.pages=slides;
+        }
         ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
             @Override
             public void onSuccess(BoardItem object) {
@@ -464,128 +424,126 @@ public class BoardCollaborateFragment extends BaseFragment {
 
             @Override
             public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(getActivity(),errorMessage+",后续操作无法保存");
+                ToastUtil.showToast(getActivity(), errorMessage + ",后续操作无法保存");
             }
         });
     }
 
-    public void openBoard(final String boardId){
-        if(!TextUtils.isEmpty(boardId)){
+    public void openBoard(final String boardId) {
+        if (!TextUtils.isEmpty(boardId)) {
             ClassroomEngine.getEngine().openBoard(ClassroomEngine.getEngine().getTicket(), boardId, new APIServiceCallback<BoardItem>() {
                 @Override
                 public void onSuccess(BoardItem object) {
-                    BoardCollaborateFragment.this.boardId=object.id;
+                    BoardCollaborateFragment.this.boardId = object.id;
                     mBoardController.setWhiteBoardId(boardId);
                 }
 
                 @Override
                 public void onFailure(String errorCode, String errorMessage) {
-                    ToastUtil.showToast(getActivity(),errorMessage+",后续操作无法保存");
+                    ToastUtil.showToast(getActivity(), errorMessage + ",后续操作无法保存");
                 }
             });
         }
     }
 
-
-
-    public void openDocInBoard(final LibDoc doc){
-        if(isAdded()&&isInLayout()){
-            openDocInsideBoard(doc);
-        }else {
-            Fragment fragment=((Classroom2Activity)getActivity()).getSupportFragmentManager().findFragmentById(R.id.replace_lay);
-            if(fragment instanceof MovieFragment){
-                ((MovieFragment)fragment).changeOrientationToLand();
-            }
-            mTempDoc=doc;
-        }
+    public void createNewBoard(){
+        boardType=Live.BoardType.WHITE;
+        boardId=null;
+        doc=null;
+        mTempDoc=null;
+        mLastBoardItem=null;
+        initBoard();
     }
 
-    public void openDocOutsideBoard(final LibDoc doc){
-        mTempDoc=doc;
+
+
+    public void openDocOutsideBoard(final LibDoc doc) {
+        if (doc == null) {
+            ToastUtil.showToast(getActivity(), "该文件无效，无法打开");
+            return;
+        }
+        ArrayList<LibDoc.ExportImg> imgs = null;
+        if (Collaboration.isImage(doc.mimeType)) {
+            imgs = new ArrayList<>(1);
+            LibDoc.ExportImg img = new LibDoc.ExportImg();
+            img.name = doc.key;
+            imgs.add(img);
+        } else if (Collaboration.isPPT(doc.mimeType) || Collaboration.isDoc(doc.mimeType) || Collaboration.isPDF(doc.mimeType)) {
+            if (doc.exported == null || ArrayUtil.isEmpty(doc.exported.images)) {
+                ToastUtil.showToast(getActivity(), "该文件无效，无法打开");
+                return;
+            }
+            imgs = MaterialUtil.getSortImgs(doc.exported.images);
+        } else {
+            ToastUtil.showToast(getActivity(), "无法打开该类型文件");
+            return;
+        }
+        boardType= Live.BoardType.SLIDES;
+        slides = imgs;
+        mTempDoc = doc;
     }
 
     private LibDoc mTempDoc;
 
-    public void openDocInsideBoard(final LibDoc doc){
-        if(doc==null){
-            ToastUtil.showToast(getActivity(),"该文件无效，无法打开");
+    public void openDocInsideBoard(final LibDoc doc) {
+        if (doc == null) {
+            ToastUtil.showToast(getActivity(), "该文件无效，无法打开");
             return;
         }
-        final Board board=new Board();
-        ArrayList<LibDoc.ExportImg> imgs=null;
-        if(Collaboration.isImage(doc.mimeType)){
-            imgs=new ArrayList<>(1);
-            LibDoc.ExportImg img=new LibDoc.ExportImg();
-            img.name=doc.key;
+        ArrayList<LibDoc.ExportImg> imgs = null;
+        if (Collaboration.isImage(doc.mimeType)) {
+            imgs = new ArrayList<>(1);
+            LibDoc.ExportImg img = new LibDoc.ExportImg();
+            img.name = doc.key;
             imgs.add(img);
-        }else if(Collaboration.isPPT(doc.mimeType)||Collaboration.isDoc(doc.mimeType)||Collaboration.isPDF(doc.mimeType)){
-            if(doc.exported==null|| ArrayUtil.isEmpty(doc.exported.images)){
-                ToastUtil.showToast(getActivity(),"该文件无效，无法打开");
+        } else if (Collaboration.isPPT(doc.mimeType) || Collaboration.isDoc(doc.mimeType) || Collaboration.isPDF(doc.mimeType)) {
+            if (doc.exported == null || ArrayUtil.isEmpty(doc.exported.images)) {
+                ToastUtil.showToast(getActivity(), "该文件无效，无法打开");
                 return;
             }
-            imgs=MaterialUtil.getSortImgs(doc.exported.images);
-            board.pages=imgs;
-        }else {
-            ToastUtil.showToast(getActivity(),"无法打开该类型文件");
+            imgs = MaterialUtil.getSortImgs(doc.exported.images);
+        } else {
+            ToastUtil.showToast(getActivity(), "无法打开该类型文件");
             return;
         }
-        slides=imgs;
-        board.title=doc.name;
-        board.type= Live.BoardType.SLIDES;
-        board.drawing=new Board.DrawDimension();
-        board.drawing.height=1080;
-        board.drawing.width=1920;
-
-        BoardCollaborateFragment.this.doc=doc;
-        loadNewPage(0);
-       /* ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
-            @Override
-            public void onSuccess(BoardItem object) {
-                BoardCollaborateFragment.this.doc=doc;
-                loadNewPage(0);
-                openBoard(object.id);
-            }
-
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
-                ToastUtil.showToast(getActivity(),errorMessage+",后续操作无法保存");
-            }
-        });*/
+        boardType= Live.BoardType.SLIDES;
+        this.doc = doc;
+        slides = imgs;
+        initBoard();
     }
 
 
-    public void loadNewPage(int page){
-        String url=null;
+    public void loadNewPage(int page) {
+        String url = null;
        /* if(Collaboration.isImage(doc.mimeType)){
             url=Social.getDrawing(doc.key, false);
         }else if(Collaboration.isPPT(doc.mimeType) || Collaboration.isPDF(doc.mimeType) || Collaboration.isDoc(doc.mimeType)){
         }else {
             return;
         }*/
-        curPage=page;
-        url=Social.getDrawing(slides.get(page).name, false);
-        if(XiaojsConfig.DEBUG){
-            Logger.d("-----qz------loadBoardImg----url="+url);
+        curPage = page;
+        url = Social.getDrawing(slides.get(page).name, false);
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("-----qz------loadBoardImg----url=" + url);
         }
         textPagerPoints.setVisibility(View.VISIBLE);
-        textPagerPoints.setText((page+1)+"/"+slides.size());
+        textPagerPoints.setText((page + 1) + "/" + slides.size());
         Glide.with(this).load(url).asBitmap().into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                mBoardController.replaceNewWhiteboardLayout(resource,mDoodleRatio);
+                mBoardController.replaceNewWhiteboardLayout(resource, mDoodleRatio);
             }
         });
     }
 
 
-
     @Deprecated
-    public void setOnPushPreviewListener(OnPushPreviewListener onPushPreviewListener){
-        this.onPushPreviewListener=onPushPreviewListener;
+    public void setOnPushPreviewListener(OnPushPreviewListener onPushPreviewListener) {
+        this.onPushPreviewListener = onPushPreviewListener;
     }
 
     @Deprecated
-    public interface OnPushPreviewListener{
+    public interface OnPushPreviewListener {
         public void onPushPreview(Bitmap bitmap);
     }
 
@@ -593,48 +551,53 @@ public class BoardCollaborateFragment extends BaseFragment {
     /**
      * 发起协作
      */
-    public void requestShareBoard(){
-        RequestShareboard shareboard=new RequestShareboard();
-        shareboard.board=boardId;
-        Bitmap preview=preview();
-        if(preview!=null){
-            shareboard.preview=Base64.encodeToString(BitmapUtils.bmpToByteArray(preview,true),Base64.DEFAULT);
+    public void requestShareBoard() {
+        RequestShareboard shareboard = new RequestShareboard();
+        shareboard.board = boardId;
+        Bitmap preview = preview();
+        if (preview != null) {
+            shareboard.preview = Base64.encodeToString(BitmapUtils.bmpToByteArray(preview, true), Base64.DEFAULT);
         }
         ClassroomEngine.getEngine().requestShareboard(shareboard, new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse eventResponse) {
-                ToastUtil.showToast(getActivity(),"发起协作成功");
+                ToastUtil.showToast(getActivity(), "发起协作成功");
             }
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
-                ToastUtil.showToast(getActivity(),"发起协作失败："+errorMessage);
+                ToastUtil.showToast(getActivity(), "发起协作失败：" + errorMessage);
             }
         });
     }
 
     BoardItem mLastBoardItem;
-    public void getLastBoard(){
-        BoardCriteria criteria=new BoardCriteria();
-        Pagination pagination=new Pagination();
+
+    public void getLastBoard() {
+        BoardCriteria criteria = new BoardCriteria();
+        Pagination pagination = new Pagination();
         pagination.setMaxNumOfObjectsPerPage(1);
         pagination.setPage(1);
-        criteria.state= Live.BoardState.OPEN;
+        criteria.state = Live.BoardState.OPEN;
         ClassroomEngine.getEngine().getBoards(criteria, pagination, new APIServiceCallback<CollectionPage<BoardItem>>() {
             @Override
             public void onSuccess(CollectionPage<BoardItem> object) {
-                if(object==null||ArrayUtil.isEmpty(object.objectsOfPage)){
+                if (object == null || ArrayUtil.isEmpty(object.objectsOfPage)) {
+                    needRegistNewBoard=true;
                     return;
                 }
-                BoardItem boardItem=object.objectsOfPage.get(0);
-                if(isAdded()&&isInLayout()){
-                    mBoardController.replaceNewWhiteboardLayout(null,mDoodleRatio);
+                BoardItem boardItem = object.objectsOfPage.get(0);
+                mLastBoardItem = boardItem;
+                boardType=mLastBoardItem.type;
+                boardId=mLastBoardItem.id;
+
+                if (isAdded() && !isDetached()) {
+                    mBoardController.replaceNewWhiteboardLayout(null, mDoodleRatio);
                     mBoardController.setBoardLayerSet(boardItem.drawing);
-                }else {
-                    mLastBoardItem=boardItem;
+                    initBoard();
                 }
-                if(mOnLastBoardLoadListener!=null){
-                    mOnLastBoardLoadListener.onSuccess(BitmapUtils.base64ToBitmapWithPrefix(mLastBoardItem.snapshot));
+                if (mOnLastBoardLoadListener != null) {
+                    mOnLastBoardLoadListener.onSuccess(BitmapUtils.base64ToBitmapWithPrefix(boardItem.snapshot));
                 }
 
             }
@@ -648,44 +611,50 @@ public class BoardCollaborateFragment extends BaseFragment {
     }
 
     OnLastBoardLoadListener mOnLastBoardLoadListener;
-    public void setLastBoardLoadListener(OnLastBoardLoadListener onLastBoardLoadListener){
-        mOnLastBoardLoadListener=onLastBoardLoadListener;
+
+    public void setLastBoardLoadListener(OnLastBoardLoadListener onLastBoardLoadListener) {
+        mOnLastBoardLoadListener = onLastBoardLoadListener;
     }
 
-    public interface OnLastBoardLoadListener{
+    public interface OnLastBoardLoadListener {
         void onSuccess(Bitmap preview);
     }
 
 
     //定时保存
-    private void startSaveTimer(){
-        if(executor==null){
-            executor=new ScheduledThreadPoolExecutor(1);
+    private void startSaveTimer() {
+        if (executor == null) {
+            executor = new ScheduledThreadPoolExecutor(1);
             executor.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
 
                 }
-            },5,5, TimeUnit.SECONDS);
+            }, 5, 5, TimeUnit.SECONDS);
         }
     }
 
     //停止定时保存
-    private void stopSaveTimer(){
-        if(executor!=null){
+    private void stopSaveTimer() {
+        if (executor != null) {
             executor.shutdown();
-            executor=null;
+            executor = null;
         }
     }
 
     ScheduledThreadPoolExecutor executor;
 
-    public void setReadOnly(boolean isReadOnly){
-        this.isReadOnly=isReadOnly;
-        if(isAdded()&&!isDetached()){
+    public void setReadOnly(boolean isReadOnly) {
+        this.isReadOnly = isReadOnly;
+        if (isAdded() && !isDetached()) {
             mBoardController.setWhiteBoardReadOnly(isReadOnly);
             mBoardController.setPanelShow(!isReadOnly);
         }
+    }
+
+    public static BoardCollaborateFragment createInstance() {
+        BoardCollaborateFragment fragment = new BoardCollaborateFragment();
+        return fragment;
     }
 
 }

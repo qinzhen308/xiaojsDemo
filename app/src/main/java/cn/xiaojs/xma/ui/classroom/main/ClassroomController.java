@@ -279,12 +279,12 @@ public class ClassroomController {
      * 白板协作打开
      */
     public void enterBoardCollaborateFragment(ShareboardReceive shareboardReceive) {
-        enterLandFullScreen(isPortrait(),(Activity) mContext);
+        /*enterLandFullScreen(isPortrait(),(Activity) mContext);
         ((ClassroomActivity) mContext).getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.board_collaborate_layout, BoardCollaborateFragment.createInstance(shareboardReceive))
                 .addToBackStack("board_collaborate")
-                .commit();
+                .commit();*/
     }
 
     /**
