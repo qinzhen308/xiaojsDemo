@@ -661,7 +661,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
     protected void onAcceptShareBoard(ShareboardReceive shareboard) {
         //TODO 同意白板协作后的后续操作
 
-        ClassroomController.getInstance(mContext).enterBoardCollaborateFragment(shareboard);
+//        ClassroomController.getInstance(mContext).enterBoardCollaborateFragment(shareboard);
     }
 
     @Override

@@ -344,7 +344,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             finish();
         }
 
-        collaborateFragment = BoardCollaborateFragment.createInstance("");
+        collaborateFragment = BoardCollaborateFragment.createInstance();
 
         initMovieFragment();
 

@@ -669,7 +669,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void onNewboardClick(View view) {
         // TODO: 2017/10/18 新增白板
-
+        addNewBoard("");
     }
 
     /**
@@ -1387,7 +1387,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     @Override
     public void addNewBoard(String title) {
-
+        whiteboardFragment.createNewBoard();
     }
 
     @Override
