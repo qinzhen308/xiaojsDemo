@@ -13,6 +13,7 @@ import com.qiniu.pili.droid.streaming.StreamingState;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 
+import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
 import cn.xiaojs.xma.ui.classroom2.live.WhiteboardStreamEngine;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
@@ -31,6 +32,7 @@ public abstract class AVFragment extends MovieFragment
 
     protected abstract CameraPreviewFrameView createCameraPreview();
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -41,7 +43,14 @@ public abstract class AVFragment extends MovieFragment
         streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
         streamingEngine.setStateListener(this);
         streamingEngine.preparePublish(createCameraPreview());
-        streamingEngine.setPictureStreamingResourceId(R.drawable.bg_qrcode_content);
+        streamingEngine.setPictureStreamingResourceId(R.drawable.xjs_streaming_cover1);
+
+        whiteboardFragment.setLastBoardLoadListener(new BoardCollaborateFragment.OnLastBoardLoadListener() {
+            @Override
+            public void onSuccess(Bitmap preview) {
+                streamingEngine.inputWhiteboardData(preview);
+            }
+        });
 
     }
 

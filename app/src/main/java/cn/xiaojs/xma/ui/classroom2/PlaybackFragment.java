@@ -86,6 +86,8 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         initTalkData(this);
 
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
+
+        config4Preview();
     }
 
     @OnClick({R.id.left_btn, R.id.right_btn})

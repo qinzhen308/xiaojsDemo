@@ -18,8 +18,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -62,6 +64,7 @@ import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
 import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.classroom2.util.MaterialUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -347,6 +350,12 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
         initChatFragment();
 
+        //如果是预览模式
+        if (classroomEngine.isPreview()) {
+            bottomControlLayout.setVisibility(View.GONE);
+            showPreviewTips();
+        }
+
     }
 
     private void handleConnectError() {
@@ -428,6 +437,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         dialog.setDesc("您的课还没有结束，是否继续上课？");
         dialog.setRightBtnText(R.string.continue_live);
         dialog.setLefBtnText(R.string.finish_class);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override
             public void onClick() {
@@ -477,14 +488,21 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                 constraintSet.setDimensionRatio(R.id.replace_lay, null);
                 constraintSet.constrainHeight(R.id.replace_lay, rootLayout.getWidth());
                 constraintSet.applyTo(rootLayout);
-                bottomControlLayout.setVisibility(View.GONE);
+
+                if (!classroomEngine.isPreview()){
+                    bottomControlLayout.setVisibility(View.GONE);
+                }
                 break;
             case Configuration.ORIENTATION_PORTRAIT:
                 showSystemUI();
                 constraintSet.setDimensionRatio(R.id.replace_lay, "16:9");
                 constraintSet.constrainHeight(R.id.replace_lay, 0);
                 constraintSet.applyTo(rootLayout);
-                bottomControlLayout.setVisibility(View.VISIBLE);
+
+                if (!classroomEngine.isPreview()){
+                    bottomControlLayout.setVisibility(View.VISIBLE);
+                }
+
                 break;
         }
 
@@ -522,6 +540,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             mKickOutDialog.setDesc(R.string.mobile_kick_out_desc);
             mKickOutDialog.setLefBtnText(R.string.cancel);
             mKickOutDialog.setRightBtnText(R.string.ok);
+            mKickOutDialog.setCanceledOnTouchOutside(false);
+            mKickOutDialog.setCancelable(false);
             mKickOutDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
                 @Override
                 public void onClick() {
@@ -612,6 +632,26 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         });
 
         exitDialog.show();
+    }
+
+
+    private void showPreviewTips() {
+        final Common3Dialog tipsDialog = new Common3Dialog(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_classroom2_dlg_tips_preview, null);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+
+        tipsDialog.setCanceledOnTouchOutside(false);
+        tipsDialog.setCancelable(false);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipsDialog.dismiss();
+            }
+        });
+
+        tipsDialog.setCustomView(view);
+        tipsDialog.show();
     }
 
 

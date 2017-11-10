@@ -160,6 +160,10 @@ public final class ClassroomEngine {
         stateMachine.getSession().csOfCurrent = csOfCurrent;
     }
 
+    public boolean isPreview() {
+        return stateMachine.getSession().preview;
+    }
+
     public String getRoomTitle() {
         return stateMachine.getTitle();
     }

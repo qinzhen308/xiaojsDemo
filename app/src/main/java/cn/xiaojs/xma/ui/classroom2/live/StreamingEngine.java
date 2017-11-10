@@ -75,11 +75,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     private int mMaxZoom = 0;
     private FBO fBO = new FBO();
     private AVStreamingStateListener stateListener;
-
-
     private boolean canStreaming = true;
-
-    private boolean temp = true;
 
     public StreamingEngine(Context context, CameraPreviewFrameView cameraStreamView) {
         this.context = context;

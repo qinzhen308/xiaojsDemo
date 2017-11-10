@@ -105,6 +105,8 @@ public class DataProvider {
     public void setConversations(ArrayList<Contact> conversations) {
         if (conversations == null)
             return;
+        this.conversations.clear();
+        this.conversations.add(createTimetable());
         this.conversations.addAll(conversations);
     }
 

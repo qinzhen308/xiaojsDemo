@@ -91,7 +91,7 @@ public class PlayFragment extends MovieFragment
         playLiveObserver = classroomEngine.observerPlaylive(receivedConsumer);
         classroomEngine.setLiveTimerObserver(playLiveObserver);
 
-
+        config4Preview();
     }
 
     @OnClick({R.id.video_view})

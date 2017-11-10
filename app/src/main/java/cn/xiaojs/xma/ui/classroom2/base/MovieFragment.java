@@ -126,6 +126,10 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     @BindView(R.id.l_bottom_session)
     public ImageView lBottomSessionView;
+    @BindView(R.id.l_bottom_chat)
+    public ImageView lBottomChatView;
+    @BindView(R.id.l_bottom_more)
+    public ImageView lBottomMoreView;
 
     @BindView(R.id.l_right_screenshot)
     public ImageView lRightScreenshortView;
@@ -169,6 +173,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     public ImageView pBottomOrientView;
     @BindView(R.id.p_top_live)
     public TextView pTopLiveView;
+    @BindView(R.id.p_top_more)
+    public ImageView pTopMoreView;
 
 
     /////////////
@@ -594,6 +600,20 @@ public abstract class MovieFragment extends BaseRoomFragment
                 }
                 break;
 
+        }
+    }
+
+    public void config4Preview() {
+        if (classroomEngine.isPreview()) {
+            pTopLiveView.setVisibility(View.GONE);
+            pTopMoreView.setVisibility(View.GONE);
+
+            startOrStopLiveView.setVisibility(View.GONE);
+            lBottomChatView.setVisibility(View.GONE);
+            lBottomMoreView.setVisibility(View.GONE);
+            lRightSwitchcameraView.setVisibility(View.GONE);
+            lRightSwitchVbView.setVisibility(View.GONE);
+            lRightScreenshortView.setVisibility(View.GONE);
         }
     }
 
@@ -1202,6 +1222,8 @@ public abstract class MovieFragment extends BaseRoomFragment
         classroomEngine.startStreaming(new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse response) {
+
+                Toast.makeText(getContext(), "直播已开始",Toast.LENGTH_SHORT).show();
 
             }
 

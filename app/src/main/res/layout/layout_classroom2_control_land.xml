@@ -179,7 +179,7 @@
             android:id="@+id/center_one2one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="一对一视频"
+            android:text="视频对话"
             android:textSize="@dimen/font_22px"
             android:textColor="@color/selector_classroom2_center_control_text"
             android:drawableTop="@drawable/classroom2_control_center_one2one_selector"

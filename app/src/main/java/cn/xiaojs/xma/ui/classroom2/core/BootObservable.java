@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.LiveRequest;
@@ -118,7 +119,6 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                     if (TextUtils.isEmpty(ctlSession.ticket)) {
                         ctlSession.ticket = initTicket;
                     }
-
 
                     if (ctlSession.accessible) {
                         //连接socket

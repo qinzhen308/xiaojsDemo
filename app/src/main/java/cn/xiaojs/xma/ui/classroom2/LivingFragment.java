@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +63,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     VideoStreamView videoStreamView;
     @BindView(R.id.video_play)
     PlayLiveView playView;
+    @BindView(R.id.loading_layoutx)
+    RelativeLayout loadingLayout;
 
     private EventListener.ELLiving livingObserver;
 
@@ -85,6 +89,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        showLoading();
+
         initControlView();
         initTalkData(this);
 
@@ -94,6 +100,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         livingObserver = classroomEngine.observerLiving(receivedConsumer);
         classroomEngine.setLiveTimerObserver(livingObserver);
 
+        config4Preview();
     }
 
     @Override
@@ -138,6 +145,41 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     }
 
+    @Override
+    public void onAVStateChanged(StreamingState streamingState, Object extra) {
+        super.onAVStateChanged(streamingState, extra);
+
+        switch (streamingState) {
+            case PREPARING:
+            case CONNECTED:
+            case CONNECTING:
+            case READY:
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showLoading();
+                    }
+                });
+
+                break;
+            case STREAMING:
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hiddenLoading();
+                    }
+                });
+
+                break;
+            case SHUTDOWN:
+                break;
+            case IOERROR:
+            case DISCONNECTED:
+                break;
+
+        }
+
+    }
 
     @Override
     public void onTopbackClick(View view, boolean land) {
@@ -252,7 +294,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private void initControlView() {
 
         lTopRoominfoView.setCompoundDrawablesWithIntrinsicBounds(
-                R.drawable.class_living_animation,0,0,0);
+                R.drawable.class_living_animation, 0, 0, 0);
         lTopRoominfoView.start();
 
 
@@ -281,6 +323,14 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
 
 
+    }
+
+    private void showLoading() {
+        loadingLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hiddenLoading() {
+        loadingLayout.setVisibility(View.GONE);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

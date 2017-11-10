@@ -1071,6 +1071,7 @@
     <string name="join_classroom_need_verity">加入教室是否需要验证</string>
     <string name="classroom_need_public">教室是否公开</string>
     <string name="join_classroom_allow_guest">是否允许游客进教室</string>
+    <string name="preview_tips">您正在使用"预览模式"</string>
 
 
 </resources>

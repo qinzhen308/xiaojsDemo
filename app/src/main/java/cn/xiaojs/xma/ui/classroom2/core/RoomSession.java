@@ -25,6 +25,7 @@ public class RoomSession {
 
     protected Map<String, Attendee> classMembers;                     //教室中的成员
     protected Attendee adviser;                                       //班主任信息，可能为空
+    protected boolean preview;                                        //是否为预览模式
 
 
     public RoomSession(CtlSession session) {
@@ -35,6 +36,11 @@ public class RoomSession {
         } else {
             classroomType = ClassroomType.StandaloneLesson;
         }
+
+        if (session.mode == Live.ClassroomMode.PREVIEW) {
+            preview = true;
+        }
+
 
         //FIXME 有问题么？
         if (Live.StreamType.INDIVIDUAL == session.streamType) {

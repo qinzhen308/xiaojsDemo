@@ -100,6 +100,8 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
         initDefaultBoard();
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
+
+        config4Preview();
     }
 
 //    @Override

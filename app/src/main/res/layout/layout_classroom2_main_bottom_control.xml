@@ -3,6 +3,7 @@
               android:id="@+id/bottom_control_layout"
               android:layout_width="match_parent"
               android:layout_height="@dimen/px100"
+              android:background="@color/white"
         >
     <TextView
             android:id="@+id/bottom_input"
