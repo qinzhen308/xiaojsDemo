@@ -742,6 +742,16 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     public void setWhiteBoardReadOnly(boolean readOnly){
         mCurrWhiteboard.setNeedReadOnly(readOnly);
+        mPanel.setVisibility(View.GONE);
+        mPanel.setVisibility(View.VISIBLE);
+    }
+
+    public void setPanelShow(boolean isShown){
+        if(isShown){
+            mPanel.setVisibility(View.VISIBLE);
+        }else {
+            mPanel.setVisibility(View.GONE);
+        }
     }
 
     public Bitmap getPreviewWhiteBoard(){

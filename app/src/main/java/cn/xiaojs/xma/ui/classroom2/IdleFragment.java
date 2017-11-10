@@ -415,4 +415,9 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
             }
         }
     };
+
+    @Override
+    protected boolean isDefaultShowBoard() {
+        return true;
+    }
 }

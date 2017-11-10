@@ -20,6 +20,8 @@ public interface IBoardManager {
 
     public boolean pushPreviewEnable();
 
+    public boolean setReadOnly(boolean isReadOnly);
+
     public void openSlideMenu(LibDoc doc,ArrayList<LibDoc.ExportImg> slides, int curPage);
 
 }

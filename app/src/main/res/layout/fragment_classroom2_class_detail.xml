@@ -221,7 +221,7 @@
                 android:id="@+id/member_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:horizontalSpacing="@dimen/px10"
+                android:horizontalSpacing="@dimen/px20"
                 android:numColumns="5"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

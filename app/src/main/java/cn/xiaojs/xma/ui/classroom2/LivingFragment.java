@@ -570,4 +570,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
     };
 
+    @Override
+    protected boolean isDefaultShowBoard() {
+        return true;
+    }
 }

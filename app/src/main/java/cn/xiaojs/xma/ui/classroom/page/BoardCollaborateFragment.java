@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom.page;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -124,6 +125,8 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     private OnPushPreviewListener onPushPreviewListener;
 
+    private boolean isReadOnly=false;
+
     public BoardCollaborateFragment(){
         getLastBoard();
     }
@@ -181,6 +184,8 @@ public class BoardCollaborateFragment extends BaseFragment {
 
             }
         });
+        mBoardController.setWhiteBoardReadOnly(isReadOnly);
+        mBoardController.setPanelShow(!isReadOnly);
     }
 
     private Bitmap decodeBg(){
@@ -233,6 +238,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
         eventListener.dispose();
     }
+
 
     @Override
     public void onDetach() {
@@ -412,6 +418,7 @@ public class BoardCollaborateFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         mBoardController.setPushPreviewBoardListener(null);
+        isReadOnly=false;
         super.onDestroy();
     }
 
@@ -478,6 +485,7 @@ public class BoardCollaborateFragment extends BaseFragment {
             });
         }
     }
+
 
 
     public void openDocInBoard(final LibDoc doc){
@@ -671,5 +679,13 @@ public class BoardCollaborateFragment extends BaseFragment {
     }
 
     ScheduledThreadPoolExecutor executor;
+
+    public void setReadOnly(boolean isReadOnly){
+        this.isReadOnly=isReadOnly;
+        if(isAdded()&&!isDetached()){
+            mBoardController.setWhiteBoardReadOnly(isReadOnly);
+            mBoardController.setPanelShow(!isReadOnly);
+        }
+    }
 
 }
