@@ -295,7 +295,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     }
 
     @OnClick(R.id.iv_avatar1)
-    private void showAssistantDialog(){
+    public void showAssistantDialog(){
         if(mData.advisers==null||mData.advisers.length>=2){
             return;
         }

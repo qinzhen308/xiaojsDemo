@@ -603,7 +603,7 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
     }
 
     @OnClick(R.id.iv_avatar1)
-    private void showAssistantDialog(){
+    public void showAssistantDialog(){
         if(mData.advisers==null||mData.advisers.length>=2){
             return;
         }

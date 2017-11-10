@@ -599,7 +599,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     public int onSwitchStreamingClick(View view) {
         int vis = whiteboardContainerLayout.getVisibility() == View.VISIBLE ?
-                View.GONE : View.VISIBLE;
+                View.INVISIBLE : View.VISIBLE;
 
         if (vis == View.VISIBLE) {
             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
@@ -619,7 +619,7 @@ public abstract class MovieFragment extends BaseRoomFragment
        }else {
            lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
         }
-        whiteboardContainerLayout.setVisibility(isShow?View.VISIBLE:View.GONE);
+        whiteboardContainerLayout.setVisibility(isShow?View.VISIBLE:View.INVISIBLE);
     }
 
 
@@ -1272,6 +1272,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                         .commitAllowingStateLoss();
             }
             controlClickView.setVisibility(View.GONE);
+            showBoardContainer(isDefaultShowBoard());
         } else {
             if (whiteboardFragment.isAdded() &&!whiteboardFragment.isDetached()) {
                 getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
@@ -1368,6 +1369,13 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     @Override
+    public boolean setReadOnly(boolean isReadOnly) {
+
+        whiteboardFragment.setReadOnly(isReadOnly);
+        return false;
+    }
+
+    @Override
     public void openSlideMenu(LibDoc doc, ArrayList<LibDoc.ExportImg> slides, int curPage) {
         showSlidePanel(SlideMenuFragment.createInstance(doc.name, slides, curPage), "menu_fragment");
     }
@@ -1412,6 +1420,10 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     public void onUpdateMembersCount(int count) {
 
+    }
+
+    protected boolean isDefaultShowBoard(){
+        return false;
     }
 
 }
