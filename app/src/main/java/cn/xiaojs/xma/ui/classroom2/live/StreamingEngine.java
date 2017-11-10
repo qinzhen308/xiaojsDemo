@@ -37,6 +37,7 @@ import java.util.List;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.data.preference.ClassroomPref;
 import cn.xiaojs.xma.ui.classroom2.live.gles.FBO;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.util.BitmapUtils;
@@ -114,6 +115,10 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
         }
     }
 
+    public void updateStreamingProfile() {
+        mediaStreamingManager.setStreamingProfile(profile);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // streaming profile
@@ -121,7 +126,7 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
 
     private void initProfile() {
         profile = new StreamingProfile();
-        profile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_MEDIUM2);
+        profile.setVideoQuality(ClassroomPref.getLivingLevel(context));
         profile.setEncodingSizeLevel(StreamingProfile.VIDEO_ENCODING_HEIGHT_480);
         profile.setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.LAND);
         profile.setEncoderRCMode(StreamingProfile.EncoderRCModes.QUALITY_PRIORITY);

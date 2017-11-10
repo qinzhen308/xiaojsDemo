@@ -39,7 +39,7 @@
                 android:id="@+id/check_4g"
                 android:layout_width="0dp"
                 android:layout_height="54dp"
-                android:text="允许4G直播观看"
+                android:text="允许3G/4G直播、观看直播或回放"
                 android:checkMark="@drawable/toggle_btn_selector"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/px30"

@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Contact implements Serializable{
+public class Contact implements Serializable {
 
     public String id;
     public String title;
@@ -41,15 +41,23 @@ public class Contact implements Serializable{
     public String total;
     public String current;
     public boolean retainOnTalk;
+    public MetIn metIn;
 
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Contact) {
             Contact otact = (Contact) obj;
-            return  id.equals(otact.id);
+            return id.equals(otact.id);
         }
 
         return super.equals(obj);
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class MetIn {
+        public String id;
+        public String title;
     }
 
     //

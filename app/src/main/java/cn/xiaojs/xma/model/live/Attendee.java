@@ -23,6 +23,7 @@ public class Attendee implements Serializable, Comparable<Attendee>{
     public int sort;
     public MediaSetting avc;
     public int unReadMsgCount;
+    public String title;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)

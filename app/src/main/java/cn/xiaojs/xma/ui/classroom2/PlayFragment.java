@@ -187,6 +187,7 @@ public class PlayFragment extends MovieFragment
     public void onPlayClosed() {
         closeStreaming();
         sendCloseMedia(o2oAttendee.accountId);
+        sendStopStreaming();
     }
 
 
@@ -259,12 +260,14 @@ public class PlayFragment extends MovieFragment
             streamingEngine.pauseAV();
             streamingEngine.stopStreamingAV();
         }
+
         streamView.setVisibility(View.GONE);
         streaming = false;
     }
 
     private void setupStream() {
         streamView.setVisibility(View.VISIBLE);
+        streaming = false;
         if (streamingEngine == null) {
             streamingEngine = new StreamingEngine(getContext(), streamView.getCameraPreviewView());
             streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
@@ -295,6 +298,7 @@ public class PlayFragment extends MovieFragment
             streamingEngine.resumeAV();
         } else {
             streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
+            streamingEngine.updateStreamingProfile();
             streamingEngine.resumeAV();
             streamingEngine.startStreamingAV();
         }

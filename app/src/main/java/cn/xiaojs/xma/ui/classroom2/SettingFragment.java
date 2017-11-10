@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 import android.widget.RadioGroup;
 
+import com.qiniu.pili.droid.streaming.StreamingProfile;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
@@ -47,15 +49,15 @@ public class SettingFragment extends BottomSheetFragment {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
 
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.level_smooth:
-                        ClassroomPref.setLivingLevel(getContext(), 0);
+                        ClassroomPref.setLivingLevel(getContext(), StreamingProfile.VIDEO_QUALITY_LOW2);
                         break;
                     case R.id.level_sd:
-                        ClassroomPref.setLivingLevel(getContext(), 1);
+                        ClassroomPref.setLivingLevel(getContext(), StreamingProfile.VIDEO_QUALITY_MEDIUM2);
                         break;
                     case R.id.level_hd:
-                        ClassroomPref.setLivingLevel(getContext(), 2);
+                        ClassroomPref.setLivingLevel(getContext(), StreamingProfile.VIDEO_QUALITY_HIGH2);
                         break;
 
                 }
@@ -78,12 +80,12 @@ public class SettingFragment extends BottomSheetFragment {
     }
 
     private int getCheckId(int index) {
-        switch (index){
-            case 0:
+        switch (index) {
+            case StreamingProfile.VIDEO_QUALITY_LOW2:
                 return R.id.level_smooth;
-            case 1:
+            case StreamingProfile.VIDEO_QUALITY_MEDIUM2:
                 return R.id.level_sd;
-            case 2:
+            case StreamingProfile.VIDEO_QUALITY_HIGH2:
                 return R.id.level_hd;
         }
 

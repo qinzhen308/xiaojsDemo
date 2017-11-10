@@ -43,6 +43,7 @@ import cn.xiaojs.xma.common.permissiongen.PermissionGen;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -53,6 +54,8 @@ import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
+import cn.xiaojs.xma.data.preference.ClassroomPref;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
@@ -65,6 +68,7 @@ import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.StreamStoppedResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
@@ -102,6 +106,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
@@ -143,7 +148,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     public View centerPanelView;
     @BindView(R.id.center_one2one)
     public TextView centerOne2oneView;
-//    @BindView(R.id.center_board_opera)
+    //    @BindView(R.id.center_board_opera)
 //    TextView centerBoardOperaView;
     @BindView(R.id.center_board_mgr)
     TextView centerBoardMgrView;
@@ -217,6 +222,8 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     private DataProvider dataProvider;
 
+    private Disposable chatDisposable;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -240,6 +247,8 @@ public abstract class MovieFragment extends BaseRoomFragment
         }
         initControlAnim();
 
+        chatDisposable = XMSEventObservable.observeChatSession(getContext(), talkConsumer);
+
     }
 
     @Override
@@ -252,9 +261,14 @@ public abstract class MovieFragment extends BaseRoomFragment
         //
         destoryWhiteboardFragment();
         super.onDestroy();
+
+        if (chatDisposable != null) {
+            chatDisposable.dispose();
+            chatDisposable = null;
+        }
     }
 
-    private void destoryWhiteboardFragment(){
+    private void destoryWhiteboardFragment() {
         whiteboardFragment = null;
     }
 
@@ -459,8 +473,8 @@ public abstract class MovieFragment extends BaseRoomFragment
                         classDetailFragment.show(getFragmentManager(), "detail");
                         break;
                     case 0:
-                        String url=ApiManager.getShareLessonUrl(classroomEngine.getCtlSession().cls.id, Account.TypeName.CLASS_LESSON);
-                        ShareUtil.shareUrlByUmeng(getActivity(),classroomEngine.getCtlSession().cls.title,classroomEngine.getClassAdviser().name,url);
+                        String url = ApiManager.getShareLessonUrl(classroomEngine.getCtlSession().cls.id, Account.TypeName.CLASS_LESSON);
+                        ShareUtil.shareUrlByUmeng(getActivity(), classroomEngine.getCtlSession().cls.title, classroomEngine.getClassAdviser().name, url);
                         break;
                     case 2:
                         SettingFragment settingFragment = new SettingFragment();
@@ -564,13 +578,24 @@ public abstract class MovieFragment extends BaseRoomFragment
                     @Override
                     public void accept(Long aLong) throws Exception {
 
-                        if (whiteboardContainerLayout.getVisibility() == View.VISIBLE) {
+                        if (whiteboardShowing()) {
                             return;
                         }
 
                         hiddeControlAnim(view);
                     }
                 });
+    }
+
+    private boolean whiteboardShowing() {
+        if (whiteboardContainerLayout.getVisibility()== View.VISIBLE
+                && whiteboardFragment != null
+                && whiteboardFragment.isAdded()
+                && !whiteboardFragment.isDetached()) {
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -614,6 +639,8 @@ public abstract class MovieFragment extends BaseRoomFragment
             lRightSwitchcameraView.setVisibility(View.GONE);
             lRightSwitchVbView.setVisibility(View.GONE);
             lRightScreenshortView.setVisibility(View.GONE);
+
+            setReadOnly(true);
         }
     }
 
@@ -633,13 +660,15 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     public void showBoardContainer(boolean isShow) {
-        if(isShow==(whiteboardContainerLayout.getVisibility()==View.VISIBLE))return;
-        if(isShow){
-           lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
-       }else {
-           lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
+        if (isShow == (whiteboardContainerLayout.getVisibility() == View.VISIBLE)) return;
+        if (isShow) {
+            lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
+            controlClickView.setVisibility(View.GONE);
+        } else {
+            lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
+            controlClickView.setVisibility(View.VISIBLE);
         }
-        whiteboardContainerLayout.setVisibility(isShow?View.VISIBLE:View.INVISIBLE);
+        whiteboardContainerLayout.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
     }
 
 
@@ -1091,6 +1120,36 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
+    private Consumer<EventReceived> talkConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("receivedConsumer talk .....");
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.TALK:
+                    Talk talk = (Talk) eventReceived.t;
+
+                    if (talk.type != liveCriteria.type) {
+                        return;
+                    }
+
+                    if (liveCriteria.type == Communications.TalkType.PEER
+                            && talk.from.equals(liveCriteria.to)) {
+                        handleReceivedMsg(false, talk);
+                    }
+
+                    if (liveCriteria.type == Communications.TalkType.OPEN
+                            && !TextUtils.isEmpty(talk.to)
+                            && talk.to.equals(liveCriteria.to)) {
+                        handleReceivedMsg(false, talk);
+                    }
+                    break;
+            }
+        }
+    };
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1102,7 +1161,7 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public void requestLive() {
 
-        if (NetworkUtil.isWIFI(getContext())) {
+        if (ClassroomPref.allowLive4G(getContext()) || NetworkUtil.isWIFI(getContext())) {
             requestLivePermission();
         } else {
             showNetworkTips();
@@ -1223,7 +1282,7 @@ public abstract class MovieFragment extends BaseRoomFragment
             @Override
             public void onSuccess(EventResponse response) {
 
-                Toast.makeText(getContext(), "直播已开始",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "直播已开始", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -1296,9 +1355,11 @@ public abstract class MovieFragment extends BaseRoomFragment
             controlClickView.setVisibility(View.GONE);
             showBoardContainer(isDefaultShowBoard());
         } else {
-            if (whiteboardFragment.isAdded() &&!whiteboardFragment.isDetached()) {
+            if (whiteboardFragment.isAdded() && !whiteboardFragment.isDetached()) {
                 getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
             }
+
+            controlClickView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1444,7 +1505,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     }
 
-    protected boolean isDefaultShowBoard(){
+    protected boolean isDefaultShowBoard() {
         return false;
     }
 

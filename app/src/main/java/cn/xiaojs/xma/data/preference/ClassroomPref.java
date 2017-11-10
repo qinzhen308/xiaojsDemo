@@ -3,6 +3,8 @@ package cn.xiaojs.xma.data.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.qiniu.pili.droid.streaming.StreamingProfile;
+
 /**
  * Created by maxiaobao on 2016/12/4.
  */
@@ -32,7 +34,7 @@ public class ClassroomPref {
 
     public static int getLivingLevel(final Context context) {
         SharedPreferences sp = DataPref.getSharedPreferences(context);
-        return sp.getInt(PREF_LIVING_LEVEL,0);
+        return sp.getInt(PREF_LIVING_LEVEL, StreamingProfile.VIDEO_QUALITY_MEDIUM2);
     }
 
 

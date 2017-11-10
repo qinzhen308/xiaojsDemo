@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.classroom2.member;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +86,12 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
             holder.nameView.setTextColor(context.getResources().getColor(R.color.font_black));
         }
 
-        holder.descView.setText("stay hungry, stay foolish");
+        if (!TextUtils.isEmpty(attendee.title)) {
+            holder.descView.setText(attendee.title);
+        }else {
+            holder.descView.setText("");
+        }
+
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
