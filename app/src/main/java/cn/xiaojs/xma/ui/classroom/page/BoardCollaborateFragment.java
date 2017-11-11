@@ -130,6 +130,7 @@ public class BoardCollaborateFragment extends BaseFragment {
                 ((ViewGroup)mContent.getParent()).removeView(mContent);
             }
             lazyLoadBuz();
+            setListener();
             return mContent;
         }
         mContext = getActivity();
@@ -138,6 +139,7 @@ public class BoardCollaborateFragment extends BaseFragment {
         addContainerView(content);
         ButterKnife.bind(this, content);
         init();
+        setListener();
         initBoard();
         return mContent;
     }
@@ -156,10 +158,7 @@ public class BoardCollaborateFragment extends BaseFragment {
         }
     }
 
-    @Override
-    protected void init() {
-        mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
-        mBoardController.showWhiteboardLayout(null, mDoodleRatio);
+    private void setListener(){
         eventListener = ClassroomEngine.getEngine().observerSyncboard(syncBoardConsumer);
         mBoardController.setPushPreviewBoardListener(new PushPreviewBoardListener() {
             @Override
@@ -176,6 +175,17 @@ public class BoardCollaborateFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private void destroyListener(){
+        eventListener.dispose();
+        mBoardController.setPushPreviewBoardListener(null);
+    }
+
+    @Override
+    protected void init() {
+        mBoardController = new WhiteboardController(mContext, mContent, mUser, 0);
+        mBoardController.showWhiteboardLayout(null, mDoodleRatio);
     }
 
 
@@ -208,20 +218,16 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
+        destroyListener();
         super.onDestroyView();
-        mBoardController.hideWhiteboardLayout();
-        if (mWhiteBoardPanel != null) {
-            mWhiteBoardPanel.animate().cancel();
-        }
-        eventListener.dispose();
     }
 
 
     @Override
     public void onDetach() {
-        setTargetFragment(null, 0);
         super.onDetach();
     }
+
 
     private void lazyLoadBuz(){
         if(mTempDoc!=null){
@@ -373,7 +379,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        mBoardController.setPushPreviewBoardListener(null);
+        setTargetFragment(null, 0);
         isReadOnly = false;
         super.onDestroy();
     }

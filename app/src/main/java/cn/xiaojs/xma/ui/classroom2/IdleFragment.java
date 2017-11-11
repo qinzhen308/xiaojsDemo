@@ -84,6 +84,8 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     }
 
 
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -194,7 +196,12 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                 .add(R.id.layout_idle_container, BoardCollaborateFragment.createInstance(""))
                 .addToBackStack("board_default")
                 .commit();*/
-        ivWhiteboardPreview.setImageDrawable(new ColorDrawable());
+        Bitmap preview=whiteboardFragment.preview();
+        if(preview==null){
+            ivWhiteboardPreview.setImageDrawable(new ColorDrawable());
+        }else {
+            ivWhiteboardPreview.setImageBitmap(preview);
+        }
         whiteboardFragment.setLastBoardLoadListener(new BoardCollaborateFragment.OnLastBoardLoadListener() {
             @Override
             public void onSuccess(Bitmap preview) {

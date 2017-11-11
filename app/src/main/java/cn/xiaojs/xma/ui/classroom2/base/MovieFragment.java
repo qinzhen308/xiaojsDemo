@@ -1339,7 +1339,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
     }
 
-    protected void onRotateToInitBoard(int orientation) {
+    /*protected void onRotateToInitBoard(int orientation) {
         if (whiteboardFragment == null) return;
         Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation=" + orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -1359,6 +1359,25 @@ public abstract class MovieFragment extends BaseRoomFragment
                 getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
             }
 
+            controlClickView.setVisibility(View.VISIBLE);
+        }
+    }*/
+
+    protected void onRotateToInitBoard(int orientation) {
+        if (whiteboardFragment == null) return;
+        Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation=" + orientation);
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            whiteboardFragment.setTargetFragment(this, 1);
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.layout_idle_container, whiteboardFragment)
+                    .commitAllowingStateLoss();
+            controlClickView.setVisibility(View.GONE);
+            showBoardContainer(isDefaultShowBoard());
+        } else {
+            if (whiteboardFragment.isAdded() ) {
+                getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
+            }
             controlClickView.setVisibility(View.VISIBLE);
         }
     }
