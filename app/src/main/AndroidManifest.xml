@@ -112,8 +112,8 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="xjs"
-                    android:host="www.xjs.cn"
+                <data android:scheme="xiaojs"
+                    android:host="www.xiaojs.cn"
                     />
             </intent-filter>
 

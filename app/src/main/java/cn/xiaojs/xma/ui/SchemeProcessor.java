@@ -15,8 +15,8 @@ import cn.xiaojs.xma.ui.classroom.main.Constants;
  */
 
 public class SchemeProcessor {
-    public static final String SCHEME="xjs";
-    public static final String HOST="www.xjs.cn";
+    public static final String SCHEME="xiaojs";
+    public static final String HOST="www.xiaojs.cn";
     public static final String PATH_CLASSROOM="/classroom";
 
 
