@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/black"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/px70"
+        android:layout_marginBottom="@dimen/px100"
+        android:background="@drawable/bg_share_class_1"
+        >
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/px120"
+            android:layout_height="@dimen/px120"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/px100"
+            />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px30"
+            android:textSize="@dimen/font_30px"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/yellow_shit"
+            android:text="asjdioasio"
+            android:layout_below="@+id/iv_avatar"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px12"
+            android:textSize="@dimen/font_30px"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/font_black"
+            android:text="邀 请 您 加 入"
+            android:layout_below="@+id/tv_name"
+            android:gravity="center"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_class_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px170"
+            android:textSize="@dimen/font_40px"
+            android:maxWidth="@dimen/px400"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/yellow_shit"
+            android:text="啊哈所得税改hi哦哈死哦广化寺哦的"
+            android:layout_below="@+id/iv_avatar"
+            android:gravity="center"
+            />
+
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

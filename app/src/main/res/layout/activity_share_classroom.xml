@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+   <!-- <android.support.v4.view.ViewPager
+        android:id="@+id/vp_style"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/classroom_gray_1"
+        />-->
+
+     <FrameLayout
+        android:id="@+id/vp_style"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+         android:paddingTop="@dimen/px70"
+         android:paddingBottom="@dimen/px100"
+        android:background="@color/classroom_gray_1"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/btn_change_img"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/px80"
+            android:background="@color/white">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/selector_change_img"
+                android:drawablePadding="@dimen/px10"
+                android:text="更换图片"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px" />
+
+        </FrameLayout>
+
+
+        <View
+            style="@style/DividerVertical"
+            android:layout_marginTop="@dimen/px15"
+            android:layout_marginBottom="@dimen/px15"
+            />
+
+        <FrameLayout
+            android:id="@+id/btn_change_style"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/px80"
+            android:background="@color/white">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/selector_change_style"
+                android:drawablePadding="@dimen/px10"
+                android:text="更换模板"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_28px"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
