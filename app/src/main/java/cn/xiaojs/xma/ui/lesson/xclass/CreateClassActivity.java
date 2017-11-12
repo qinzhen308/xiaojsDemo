@@ -45,6 +45,7 @@ import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.EnrollStatus;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.common.ShareQrcodeClassroomActivity;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
@@ -114,6 +115,7 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         classLessons = new ArrayList<>();
+        ShareQrcodeClassroomActivity.invoke(this,1,"","",new Account());
     }
 
     public static void addClassLesson(ClassLesson lesson) {
@@ -154,9 +156,7 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
     @Override
     protected void onResume() {
         super.onResume();
-
         updateCountView();
-        showSuccessTip("");
     }
 
     @Override

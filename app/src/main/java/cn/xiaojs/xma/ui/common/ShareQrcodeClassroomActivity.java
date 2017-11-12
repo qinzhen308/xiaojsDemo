@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.common;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -33,8 +35,11 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.view.sharetemplate.BaseShareTemplateView;
+import cn.xiaojs.xma.ui.view.sharetemplate.ShareTemplate1View;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.ShareUtil;
 
@@ -42,7 +47,7 @@ import cn.xiaojs.xma.util.ShareUtil;
  * Created by Paul Z on 2017/8/1.
  */
 
-public abstract class ShareQrcodeClassroomActivity extends BaseActivity {
+public class ShareQrcodeClassroomActivity extends BaseActivity {
 
     public static final String EXTRA_QRCODE_TYPE = "qr_type";
     public static final String EXTRA_KEY_TITLE = "extra_key_title";
@@ -53,10 +58,10 @@ public abstract class ShareQrcodeClassroomActivity extends BaseActivity {
     public static final int TYPE_CLASS = 0;
     public static final int TYPE_STANDALONG_LESSON = 1;
     public static final int TYPE_RECORDED_LESSON = 2;
-  /*  @BindView(R.id.vp_style)
-    ViewPager vpStyle;*/
-  @BindView(R.id.vp_style)
-  FrameLayout layoutStyle;
+    /*  @BindView(R.id.vp_style)
+      ViewPager vpStyle;*/
+    @BindView(R.id.vp_style)
+    LinearLayout layoutStyle;
     private int qrcodeType = -1;
     String imgUrl;
 
@@ -64,9 +69,10 @@ public abstract class ShareQrcodeClassroomActivity extends BaseActivity {
     String id;
     Account teacher;
 
-    View layoutContent;
+    @BindView(R.id.layout_content)
+    BaseShareTemplateView layoutContent;
 
-    private int[] style1PicRes={R.drawable.bg_share_class_1,R.drawable.bg_share_class_2,R.drawable.bg_share_class_2,R.drawable.bg_share_class_3,R.drawable.bg_share_class_4};
+    private int[] style1PicRes = {R.drawable.bg_share_class_1, R.drawable.bg_share_class_2, R.drawable.bg_share_class_2, R.drawable.bg_share_class_3, R.drawable.bg_share_class_4};
 
 
     String[] shareTypes = {
@@ -122,8 +128,15 @@ public abstract class ShareQrcodeClassroomActivity extends BaseActivity {
     }
 
     public void initView() {
-        ViewGroup.LayoutParams lp = layoutContent.getLayoutParams();
-        lp.width = (int) (layoutContent.getHeight() / 1.775f);
+
+//        layoutContent.setBackgroundResource(style1PicRes[0]);
+//        layoutContent.setBackgroundResource(R.drawable.template1_picture);
+        layoutContent.setBackgroundResource(R.drawable.template2_picture);
+        layoutContent.setTeacherAvatar(BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_avator));
+        layoutContent.setQRCodeImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_avator));
+        layoutContent.setClassName("大撒但是睡得速度闪躲睡得睡得睡得是");
+        layoutContent.setTeacherName("飘飘龙");
+        layoutContent.setTeacherDescrib("飘飘龙阿红撒了；按时拉伸了阿斯顿");
 
         new Thread() {
             @Override
@@ -249,7 +262,6 @@ public abstract class ShareQrcodeClassroomActivity extends BaseActivity {
     }
 
 
-
     public static void invoke(Context context, int type, String id, String title, Account teacher, Serializable... otherInfo) {
         Intent intent = new Intent(context, ShareQrcodeClassroomActivity.class);
         intent.putExtra(EXTRA_QRCODE_TYPE, type);
@@ -261,9 +273,6 @@ public abstract class ShareQrcodeClassroomActivity extends BaseActivity {
         }
         context.startActivity(intent);
     }
-
-
-
 
 
 }

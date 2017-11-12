@@ -2,7 +2,6 @@ package cn.xiaojs.xma.ui.view.sharetemplate;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -31,30 +30,45 @@ public class BaseShareTemplateView extends View implements IClassroomTemplate{
         super(context, attrs, defStyleAttr);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int height=MeasureSpec.getSize(heightMeasureSpec);
+        int width=MeasureSpec.getSize(widthMeasureSpec);
+        if(height/(float)width>1130f/750f){
+            height=(int)(width*1130f/750f);
+        }else {
+            width=(int)(height*750f/1130f);
+        }
+        setMeasuredDimension(width,height);
+    }
 
     @Override
     public void setTeacherName(String str) {
         techerName=str;
+        invalidate();
     }
 
     @Override
     public void setTeacherAvatar(Bitmap avatar) {
         bmAvatar=avatar;
+        invalidate();
     }
 
     @Override
     public void setTeacherDescrib(String str) {
         techerDescrib=str;
+        invalidate();
     }
 
     @Override
     public void setClassName(String str) {
         className=str;
+        invalidate();
     }
 
     @Override
     public void setQRCodeImage(Bitmap qrCode) {
         bmQrCode=qrCode;
-
+        invalidate();
     }
 }

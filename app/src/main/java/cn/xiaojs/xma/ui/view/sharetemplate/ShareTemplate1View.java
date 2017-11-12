@@ -2,9 +2,12 @@ package cn.xiaojs.xma.ui.view.sharetemplate;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -24,6 +27,8 @@ public class ShareTemplate1View extends BaseShareTemplateView{
     private int color_font_black;
     private int color_font_shit;
     private int color_gray;
+
+    Bitmap bmLogo;
 
     public ShareTemplate1View(Context context) {
         super(context);
@@ -47,7 +52,9 @@ public class ShareTemplate1View extends BaseShareTemplateView{
         color_font_shit=getResources().getColor(R.color.yellow_shit);
         color_gray=getResources().getColor(R.color.classroom_gray_1);
         paint.setStrokeWidth(2);
+        bmLogo= BitmapFactory.decodeResource(getResources(),R.drawable.ic_share_logo);
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -55,14 +62,29 @@ public class ShareTemplate1View extends BaseShareTemplateView{
         int width=getWidth();
         int height=getHeight();
         if(width==0||height==0)return;
+
+        if(bmLogo!=null){
+            Rect logoRect=new Rect();
+            int left=(int)(width*30f/750);
+            int right=(int)(width*107f/750)+left;
+            int top=(int)(height*30f/1130);
+            int bottom=(int)(height*43f/1130)+top;
+            logoRect.set(left,top,right,bottom);
+            canvas.drawBitmap(bmLogo,new Rect(0,0,bmLogo.getWidth(),bmLogo.getHeight()),logoRect,paint);
+        }
         if(bmAvatar!=null){
-            Rect avatarRect=new Rect();
+            RectF avatarRect=new RectF();
             int left=(int)(width*308.5f/750);
             int right=(int)(width*133f/750)+left;
             int top=(int)(height*150.5/1130);
-            int bottom=(int)(height*133f/750)+top;
+            int bottom=(int)(height*133f/1130)+top;
             avatarRect.set(left,top,right,bottom);
+            Path pathInner=new Path();
+            pathInner.addOval(avatarRect, Path.Direction.CCW);
+            canvas.save();
+            canvas.clipPath(pathInner);
             canvas.drawBitmap(bmAvatar,new Rect(0,0,bmAvatar.getWidth(),bmAvatar.getHeight()),avatarRect,paint);
+            canvas.restore();
         }
 
         if(bmQrCode!=null){
@@ -70,7 +92,7 @@ public class ShareTemplate1View extends BaseShareTemplateView{
             int left=(int)(width*275f/750);
             int right=(int)(width*200f/750)+left;
             int bottom=(int)(height*930f/1130);
-            int top=bottom-(int)(height*200f/750);
+            int top=bottom-(int)(height*200f/1130);
             qrcodeRect.set(left,top,right,bottom);
             paint.setColor(color_gray);
             canvas.drawRect(qrcodeRect.left-2,qrcodeRect.top-2,qrcodeRect.right+2,qrcodeRect.bottom+2,paint);
@@ -128,7 +150,7 @@ public class ShareTemplate1View extends BaseShareTemplateView{
             measurePaint.setTextSize(textSize);
             float length=measurePaint.measureText(className,0,className.length());
             int maxLineLength=(int)(450f*width/750);
-            int line=((int)length%maxLineLength)+1;
+            int line=((int)length/maxLineLength)+1;
             int strStart=0;
             int strEnd=className.length()/line;
             float x=0;
@@ -149,8 +171,8 @@ public class ShareTemplate1View extends BaseShareTemplateView{
             float lineTagLength=50f*width/750;
             float lineTagSpace=20f*width/750;
             float lineTagX=line>1?maxLineLength:length;
-            canvas.drawLine((width-lineTagX)/2-lineTagSpace,line1Y,(width-lineTagX)/2-lineTagSpace-lineTagLength,line1Y,paint);
-            canvas.drawLine(width-((width-lineTagX)/2-lineTagSpace),line1Y,width-((width-lineTagX)/2-lineTagSpace-lineTagLength),line1Y,paint);
+            canvas.drawLine((width-lineTagX)/2-lineTagSpace,(line1Y+y+lineSpace)/2,(width-lineTagX)/2-lineTagSpace-lineTagLength,(line1Y+y+lineSpace)/2,paint);
+            canvas.drawLine(width-((width-lineTagX)/2-lineTagSpace),(line1Y+y+lineSpace)/2,width-((width-lineTagX)/2-lineTagSpace-lineTagLength),(line1Y+y+lineSpace)/2,paint);
         }
     }
 

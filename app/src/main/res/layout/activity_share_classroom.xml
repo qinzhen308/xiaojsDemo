@@ -13,15 +13,24 @@
         android:background="@color/classroom_gray_1"
         />-->
 
-     <FrameLayout
+     <LinearLayout
         android:id="@+id/vp_style"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
          android:paddingTop="@dimen/px70"
          android:paddingBottom="@dimen/px100"
+         android:orientation="vertical"
+         android:gravity="center_horizontal"
         android:background="@color/classroom_gray_1"
-        />
+        >
+
+         <cn.xiaojs.xma.ui.view.sharetemplate.ShareTemplate3View
+             android:id="@+id/layout_content"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+
+     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
