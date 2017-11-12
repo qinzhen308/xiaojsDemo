@@ -152,7 +152,7 @@ public class SocialRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_UPDATES,call);
     }
 
-    public void followContact(String contact,String name, long group) {
+    public void followContact(String contact, String name, long group, Contact.MetIn in) {
 
         currentAccountId = contact;
         currentName = name;
@@ -160,6 +160,7 @@ public class SocialRequest extends ServiceRequest {
         FollowParam param = new FollowParam();
         param.contact = contact;
         param.group = group;
+        param.metIn = in;
 
         Call<Relation> call = getService().followContact(param);
         enqueueRequest(APIType.FOLLOW_CONTACT,call);

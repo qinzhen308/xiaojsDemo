@@ -30,6 +30,15 @@ import io.reactivex.functions.Consumer;
 public class XMSManager {
 
     private XMSObservable xmsObservable;
+    private String currentSessionId;
+
+    public String getCurrentSessionId() {
+        return currentSessionId;
+    }
+
+    public void setCurrentSessionId(String currentSessionId) {
+        this.currentSessionId = currentSessionId;
+    }
 
     public static XMSManager initXMS(Context context, Consumer<Integer> consumer) {
         XMSManager xmsManager = new XMSManager();

@@ -112,6 +112,10 @@ public class XiaojsApplication extends Application {
         this.xmsManager = xmsManager;
     }
 
+    public XMSManager getXmsManager() {
+        return xmsManager;
+    }
+
     public Consumer<Integer> getXmsConsumer() {
         return xmsConsumer;
     }

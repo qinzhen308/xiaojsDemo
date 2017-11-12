@@ -336,6 +336,25 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
         }
     }
 
+    public static class ELMember extends EventListener {
+
+        public ELMember(Context context) {
+            super(context);
+        }
+
+
+        @Override
+        public void onEvent() {
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.JOIN, Talk.class, this));
+
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.LEAVE, Talk.class, this));
+
+        }
+    }
+
+
     public static class ELTalk extends EventListener {
 
         public ELTalk(Context context) {
@@ -351,6 +370,7 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
         }
     }
+
 
     public static class ELContact extends EventListener {
 

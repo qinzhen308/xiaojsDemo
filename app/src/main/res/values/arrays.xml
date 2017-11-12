@@ -223,9 +223,13 @@
         <item>手机号添加</item>
         <item>从通讯录中添加</item>
     </string-array>
-    <string-array name="classroom2_chat_more">
+    <string-array name="classroom2_chat_more_followed">
         <item>个人主页</item>
         <item>取消关注</item>
+    </string-array>
+    <string-array name="classroom2_chat_more_unfollow">
+        <item>个人主页</item>
+        <item>关注</item>
     </string-array>
     <string-array name="letter_list">
         <item>A</item>

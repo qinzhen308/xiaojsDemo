@@ -23,6 +23,7 @@ import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.SearchResultV2;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
@@ -151,7 +152,13 @@ public class SRPersonView extends RelativeLayout implements IViewModel<SearchRes
 
     private void toFollow(long group) {
 
-        SocialManager.followContact(getContext(), mData.id,mData.basic.getName(), group, new APIServiceCallback<Relation>() {
+
+        Contact.MetIn metIn = new Contact.MetIn();
+        metIn.id = mData.id;
+        metIn.subtype = mData.getType();
+
+        SocialManager.followContact(getContext(),
+                mData.id,mData.basic.getName(), group, metIn, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {
                 Toast.makeText(getContext(), R.string.followed, Toast.LENGTH_SHORT).show();

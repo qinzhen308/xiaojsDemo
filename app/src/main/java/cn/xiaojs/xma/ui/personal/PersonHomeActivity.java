@@ -39,6 +39,7 @@ import butterknife.Unbinder;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
@@ -47,6 +48,7 @@ import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.account.PublicHome;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.base.hover.BaseScrollTabActivity;
@@ -140,6 +142,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
     private String mPersonName;
     private PublicHome mBean;
 
+    private boolean isOrganization;
+
     @Override
     protected void initView() {
         Intent intent = getIntent();
@@ -206,7 +210,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             headerNormal(home.isFollowed);
         }
 
-        boolean isOrganization = home.profile != null ? Account.TypeName.ORGANIZATION.equals(home.profile.typeName) : false;
+        isOrganization = home.profile != null ? Account.TypeName.ORGANIZATION.equals(home.profile.typeName) : false;
         if (home.isTeacher ) {//用户是老师
             //一期暂时没有评价系统，暂时隐藏
             PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
@@ -481,7 +485,13 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     private void follow(long group) {
         if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
-            SocialManager.followContact(this, mAccount,mPersonName, group, new APIServiceCallback<Relation>() {
+
+            Contact.MetIn metIn = new Contact.MetIn();
+            metIn.id = mAccount;
+            metIn.subtype = isOrganization ? Collaboration.SubType.ORGANIZATION : Collaboration.SubType.PERSON;
+
+            SocialManager.followContact(this,
+                    mAccount,mPersonName, group, metIn, new APIServiceCallback<Relation>() {
                 @Override
                 public void onSuccess(Relation object) {
                     ToastUtil.showToast(getApplicationContext(), R.string.followed);

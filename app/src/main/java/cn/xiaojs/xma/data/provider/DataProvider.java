@@ -122,6 +122,15 @@ public class DataProvider {
         this.classes = classes;
     }
 
+    public boolean existInContact(String aid) {
+
+        if (personsMapping !=null && personsMapping.size()>0) {
+            return personsMapping.get(aid) == null? false : true;
+        }
+
+        return false;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 教室
     //

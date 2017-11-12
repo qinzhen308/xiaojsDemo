@@ -34,6 +34,7 @@
             android:layout_marginLeft="@dimen/px20"
             android:layout_marginTop="@dimen/px17"
             android:layout_toRightOf="@id/avator"
+            android:drawablePadding="@dimen/px8"
             />
 
     <TextView

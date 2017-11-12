@@ -34,6 +34,7 @@ import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
 import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
 import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
+import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.UIUtils;
@@ -92,15 +93,6 @@ public class PlayFragment extends MovieFragment
         classroomEngine.setLiveTimerObserver(playLiveObserver);
 
         config4Preview();
-    }
-
-    @OnClick({R.id.video_view})
-    void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.video_view:
-
-                break;
-        }
     }
 
     @Override
@@ -445,6 +437,7 @@ public class PlayFragment extends MovieFragment
     private void handleO2o(OpenMediaReceive receive) {
         Attendee attendee = classroomEngine.getMember(receive.from);
         if (attendee != null) {
+            startVirbating();
             receivedO2o(attendee);
         }
     }

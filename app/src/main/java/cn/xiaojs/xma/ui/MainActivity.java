@@ -42,6 +42,7 @@ import cn.xiaojs.xma.ui.base.IntentFlags;
 import cn.xiaojs.xma.ui.base.XiaojsActions;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
@@ -588,18 +589,20 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
 
         Contact contact = new Contact();
 
+        //FIXME followType 没返回
+
         if (talkItem.type == Communications.TalkType.PEER) {
             contact.id = talkItem.from;
             contact.name = talkItem.name;
             contact.title = talkItem.name;
             contact.subtype = ConversationType.TypeName.PERSON;
-        }else if (talkItem.type == Communications.TalkType.OPEN){
+        } else if (talkItem.type == Communications.TalkType.OPEN) {
             contact.id = talkItem.to;
             String title = dataProvider.getClassName(talkItem.to);
             contact.name = title;
             contact.title = title;
             contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
-        }else {
+        } else {
             return;
         }
 
@@ -609,6 +612,9 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
 
 
         dataProvider.moveOrInsertConversation(contact);
+
+        //FIXME 如果是已经打开的或者消息免打扰的会话，不需要响铃；
+        VibratorUtil.Vibrate(this, 100);
     }
 
 }

@@ -20,7 +20,8 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.live.Attendee;
-import cn.xiaojs.xma.ui.classroom2.chat.ChatSessionFragment;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 
@@ -34,6 +35,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     private ArrayList<Attendee> attendees;
     private int avatorSize;
     private MemberListFragment fragment;
+    private ClassroomEngine classroomEngine;
 
 
     public MemberAdapter(MemberListFragment fragment, Context context, ArrayList<Attendee> attendees) {
@@ -41,6 +43,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         this.fragment = fragment;
         this.attendees = attendees;
         avatorSize = context.getResources().getDimensionPixelSize(R.dimen.px90);
+        classroomEngine = ClassroomEngine.getEngine();
     }
 
     public void updateData(ArrayList<Attendee> atts) {
@@ -86,10 +89,35 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
             holder.nameView.setTextColor(context.getResources().getColor(R.color.font_black));
         }
 
+
+        String realType = TextUtils.isEmpty(attendee.psTypeInLesson)?
+                attendee.psType : attendee.psTypeInLesson;
+
+        int identityRes;
+
+        CTLConstant.UserIdentity identity = classroomEngine.getUserIdentity(realType);
+        if (identity == CTLConstant.UserIdentity.ADMINISTRATOR) {
+            identityRes = R.drawable.mem_administrators;
+        }else if(identity == CTLConstant.UserIdentity.ADVISER) {
+            identityRes = R.drawable.mem_headmaster;
+        }else if(identity == CTLConstant.UserIdentity.LEAD) {
+            identityRes = R.drawable.mem_speaker;
+        }else if(identity == CTLConstant.UserIdentity.TEACHER2) {
+            identityRes = R.drawable.mem_teacher;
+        }else if(identity == CTLConstant.UserIdentity.ASSISTANT) {
+            identityRes = R.drawable.mem_assistant;
+        } else {
+            identityRes = 0;
+        }
+
+        holder.nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,identityRes,0);
+
+
+
         if (!TextUtils.isEmpty(attendee.title)) {
             holder.descView.setText(attendee.title);
         }else {
-            holder.descView.setText("");
+            holder.descView.setText(R.string.contact_empty_tips);
         }
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
@@ -123,88 +151,5 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
             ButterKnife.bind(this, itemView);
         }
     }
-
-
-    //    private Context context;
-//    private ArrayList<Attendee> attendees;
-//    private int avatorSize;
-//
-//    public MemberAdapter(Context context, ArrayList<Attendee> attendees) {
-//        this.context = context;
-//        this.attendees = attendees;
-//        avatorSize = context.getResources().getDimensionPixelSize(R.dimen.px90);
-//    }
-//
-//
-//    public void setAttendees(ArrayList<Attendee> attendees) {
-//        this.attendees = attendees;
-//        notifyDataSetChanged();
-//    }
-//
-//
-//    @Override
-//    public int getCount() {
-//        return attendees == null? 0 : attendees.size();
-//    }
-//
-//    @Override
-//    public Attendee getItem(int position) {
-//        return attendees == null? null : attendees.get(position);
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//
-//        ViewHolder holder;
-//        if (convertView != null) {
-//            holder = (ViewHolder) convertView.getTag();
-//        } else {
-//            convertView = LayoutInflater.from(context)
-//                    .inflate(R.layout.layout_classroom2_member_item, parent, false);
-//            holder = new ViewHolder(convertView);
-//            convertView.setTag(holder);
-//        }
-//
-//        Attendee attendee = getItem(position);
-//        String avatorUrl = Account.getAvatar(attendee.accountId, avatorSize);
-//        Glide.with(context)
-//                .load(avatorUrl)
-//                .transform(new CircleTransform(context))
-//                .placeholder(R.drawable.default_avatar_grey)
-//                .error(R.drawable.default_avatar_grey)
-//                .into(holder.avatorView);
-//
-//        holder.nameView.setText(attendee.name);
-//
-//        boolean online = attendee.xa == 0 ? false : true;
-//
-//        if (online) {
-//            holder.nameView.setTextColor(context.getResources().getColor(R.color.font_orange));
-//        }else {
-//            holder.nameView.setTextColor(context.getResources().getColor(R.color.font_black));
-//        }
-//
-//        holder.descView.setText("stay hungry, stay foolish");
-//
-//        return convertView;
-//    }
-//
-//    static class ViewHolder {
-//        @BindView(R.id.avator)
-//        MessageImageView avatorView;
-//        @BindView(R.id.name)
-//        TextView nameView;
-//        @BindView(R.id.desc)
-//        TextView descView;
-//
-//        public ViewHolder(View view) {
-//            ButterKnife.bind(this, view);
-//        }
-//    }
 
 }

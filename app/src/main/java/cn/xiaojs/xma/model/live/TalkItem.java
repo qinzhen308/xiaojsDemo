@@ -20,6 +20,8 @@ public class TalkItem {
 
     public boolean showTime;
 
+    public String tips; //仅用于系统消息；
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TalkPerson {

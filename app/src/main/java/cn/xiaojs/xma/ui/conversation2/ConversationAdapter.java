@@ -93,9 +93,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         if (holder instanceof TimetableConViewHolder) {
             TimetableConViewHolder conViewHolder = (TimetableConViewHolder) holder;
 
-            if (contact.unread>0) {
-                conViewHolder.descView.setText("今日"+contact.unread+"节课");
-            }else {
+            if (contact.unread > 0) {
+                conViewHolder.descView.setText("今日" + contact.unread + "节课");
+            } else {
                 conViewHolder.descView.setText("今日无节课");
             }
 
@@ -123,7 +123,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             peerConViewHolder.descView.setText(contact.lastMessage);
             peerConViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
 
+
             if (contact.unread > 0) {
+
+                if (contact.silent) {
+                    peerConViewHolder.flagView.setBackgroundResource(R.drawable.unread_slient_ovil);
+                }else {
+                    peerConViewHolder.flagView.setBackgroundResource(R.drawable.unread_read_ovil);
+                }
+
                 if (contact.unread > 99) {
                     peerConViewHolder.flagView.setText("99+");
                 } else {
@@ -131,7 +139,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 }
 
                 peerConViewHolder.flagView.setVisibility(View.VISIBLE);
+                peerConViewHolder.disturbFlagView.setVisibility(View.GONE);
             } else {
+                if (contact.silent) {
+                    peerConViewHolder.disturbFlagView.setVisibility(View.VISIBLE);
+                }else {
+                    peerConViewHolder.disturbFlagView.setVisibility(View.GONE);
+                }
                 peerConViewHolder.flagView.setVisibility(View.GONE);
             }
 
@@ -202,6 +216,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
 
             if (contact.unread > 0) {
+
+                if (contact.silent) {
+                    conViewHolder.flagView.setBackgroundResource(R.drawable.unread_slient_ovil);
+                }else {
+                    conViewHolder.flagView.setBackgroundResource(R.drawable.unread_read_ovil);
+                }
+
                 if (contact.unread > 99) {
                     conViewHolder.flagView.setText("99+");
                 } else {
@@ -209,7 +230,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 }
 
                 conViewHolder.flagView.setVisibility(View.VISIBLE);
+                conViewHolder.disturbFlagView.setVisibility(View.GONE);
             } else {
+                if (contact.silent) {
+                    conViewHolder.disturbFlagView.setVisibility(View.VISIBLE);
+                }else {
+                    conViewHolder.disturbFlagView.setVisibility(View.GONE);
+                }
                 conViewHolder.flagView.setVisibility(View.GONE);
             }
 

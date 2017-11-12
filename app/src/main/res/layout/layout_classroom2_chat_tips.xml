@@ -16,13 +16,14 @@
             android:textColor="@color/font_white"
             android:background="@drawable/chat_item_timeline_bg_rect"
             android:padding="@dimen/px4"
+            android:layout_marginTop="@dimen/px20"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:maxLines="1"
             />
 
     <TextView
-            android:id="@+id/context_tips"
+            android:id="@+id/content_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_24px"

@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
@@ -35,6 +36,7 @@ import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.social.Contact;
@@ -171,6 +173,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
             eventDisposable.dispose();
             eventDisposable = null;
         }
+
     }
 
 //    @Override
@@ -323,6 +326,16 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                 });
     }
 
+    public void addTipsItem(TalkItem talkItem) {
+        if (talkItem == null)
+            return;
+
+        timeline(talkItem);
+        messageData.add(talkItem);
+        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(messageData.size() - 1);
+    }
+
 
     private void handleReceivedMsg(boolean send, Talk talk) {
 
@@ -386,6 +399,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         dataProvider.moveOrInsertConversation(contact);
     }
 
+
+
     private void timeline(TalkItem item) {
         long time = item.time;
         if (lastTimeline == 0
@@ -397,31 +412,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     }
 
 
-    private void showMoreMenu() {
-
-        ListBottomDialog dialog = new ListBottomDialog(getContext());
-
-        String[] items = getResources().getStringArray(R.array.classroom2_chat_more);
-        dialog.setItems(items);
-        dialog.setTitleVisibility(View.GONE);
-        dialog.setRightBtnVisibility(View.GONE);
-        dialog.setLeftBtnVisibility(View.GONE);
-        dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
-            @Override
-            public void onItemClick(int position) {
-                switch (position) {
-                    case 0://个人主页
-
-                        break;
-                    case 1://取消关注
-
-                        break;
-                }
-
-            }
-
-        });
-        dialog.show();
+    public void showMoreMenu() {
 
     }
 

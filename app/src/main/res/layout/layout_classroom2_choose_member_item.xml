@@ -13,7 +13,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/px30"
             android:layout_centerVertical="true"
-            android:checkMark="@drawable/filter_material_single_check_selector"/>
+            android:checkMark="@drawable/filter_material_single_check_selector"
+            android:visibility="gone"/>
 
 
     <ImageView
@@ -38,6 +39,18 @@
             android:layout_marginLeft="@dimen/px20"
             android:layout_marginTop="@dimen/px17"
             android:layout_toRightOf="@id/avator"
+            android:drawablePadding="@dimen/px8"
+            />
+
+    <ImageView
+            android:id="@+id/o2o_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/name"
+            android:layout_alignBottom="@id/name"
+            android:paddingBottom="@dimen/px8"
+            android:layout_marginLeft="@dimen/px10"
+            android:src="@drawable/ic_oneonone"
             />
 
     <TextView

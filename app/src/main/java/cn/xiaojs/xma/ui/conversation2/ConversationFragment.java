@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
@@ -151,7 +152,15 @@ public class ConversationFragment extends Base2Fragment {
                     }
 
                 }else {
-                    SingleSessionFragment.invoke(getFragmentManager(),contact.id, contact.title);
+
+                    if (contact.followType == Social.FllowType.NA) {
+                        if (dataProvider.existInContact(contact.id)) {
+                            contact.followType = Social.FllowType.FOLLOW_SHIP;
+                        }
+                    }
+
+                    SingleSessionFragment.invoke(getFragmentManager(),contact.id,
+                            contact.title, contact.followType);
                 }
             }
         });

@@ -10,6 +10,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,26 +27,29 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.ctl.ClassEnroll;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
-import cn.xiaojs.xma.ui.classroom2.chat.ChatSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
-import cn.xiaojs.xma.ui.lesson.xclass.AddStudentActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.ImportStudentFormClassActivity;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by maxiaobao on 2017/9/26.
@@ -62,6 +66,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     ImageView addBtnView;
 
     private MemberAdapter memberAdapter;
+    private EventListener.ELMember eventListener;
 
 
     @Override
@@ -113,6 +118,18 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
             showFinalTips();
         }
 
+        eventListener = classroomEngine.observerMember(memberConsumer);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (eventListener !=null ) {
+            eventListener.dispose();
+            eventListener = null;
+        }
     }
 
     @OnClick({R.id.add_btn})
@@ -136,7 +153,16 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     }
 
     public void enterChatSession(Attendee attendee) {
-        SingleSessionFragment.invoke(getFragmentManager(), attendee.accountId, attendee.name);
+
+
+        DataProvider dataProvider = DataProvider.getProvider(getContext());
+        int followType = Social.FllowType.NA;
+        if (dataProvider.existInContact(attendee.accountId)) {
+            followType = Social.FllowType.FOLLOW_SHIP;
+        }
+
+        SingleSessionFragment.invoke(getFragmentManager(),
+                attendee.accountId, attendee.name, followType);
     }
 
 
@@ -303,4 +329,30 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
             }
         });
     }
+
+    private void updateMemByEvent() {
+        ArrayList<Attendee> attendees = new ArrayList<>();
+        Map<String, Attendee> attendeeMap = classroomEngine.getMembers();
+        if (attendeeMap != null) {
+            attendees.addAll(attendeeMap.values());
+            if (memberAdapter!=null) {
+                memberAdapter.updateData(attendees);
+            }
+        }
+
+    }
+
+
+    private Consumer<EventReceived> memberConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.JOIN:
+                case Su.EventType.LEAVE:
+                    updateMemByEvent();
+                    break;
+            }
+        }
+    };
 }

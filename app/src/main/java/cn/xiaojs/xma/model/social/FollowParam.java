@@ -13,5 +13,6 @@ public class FollowParam {
 
     public String contact;
     public long group;
+    public Contact.MetIn metIn;
 
 }

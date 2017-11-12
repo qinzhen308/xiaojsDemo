@@ -89,7 +89,8 @@ public class FriendsFragment extends Base2Fragment {
     void onListItemClick(int position) {
         if (friendsAdapter != null && choiceMode == ListView.CHOICE_MODE_NONE) {
             FriendItem item = (FriendItem) friendsAdapter.getItem(position);
-            SingleSessionFragment.invoke(getFragmentManager(), item.contact.id, item.contact.name);
+            SingleSessionFragment.invoke(getFragmentManager(),
+                    item.contact.id, item.contact.name, item.contact.followType);
         }
 
     }

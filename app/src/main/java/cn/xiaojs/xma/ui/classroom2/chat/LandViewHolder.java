@@ -46,57 +46,68 @@ public class LandViewHolder extends ChatViewHolder {
     protected void bindData(TalkItem item) {
 
 
-        String name = (TextUtils.isEmpty(item.from.name)
-                ||AccountDataManager.getAccountID(context).equals(item.from)) ? "我" : item.from.name;
+        if (!TextUtils.isEmpty(item.tips)) {
 
-        StringBuilder sb = new StringBuilder(name).append(" ");
-
-        if (item.body.contentType == Communications.ContentType.TEXT) {
-
-            sb.append(item.body.text);
-
-           // contentTextView.setText(item.body.text);
-           // contentTextView.setVisibility(View.VISIBLE);
             contentImgView.setVisibility(View.GONE);
 
-        }else if (item.body.contentType == Communications.ContentType.STYLUS) {
+            //contentTextView.setText(item.tips);
 
-            sb.append("");
+            contentTextView.setVisibility(View.GONE);
+            nameView.setText(item.tips);
+            nameView.setVisibility(View.VISIBLE);
+        }else {
+            String name = (TextUtils.isEmpty(item.from.name)
+                    ||AccountDataManager.getAccountID(context).equals(item.from)) ? "我" : item.from.name;
 
-            if (!TextUtils.isEmpty(item.body.text)) {
+            StringBuilder sb = new StringBuilder(name).append(" ");
 
-                byte[] imgData = ClassroomBusiness.base64ToByteData(item.body.text);
-                Glide.with(context)
-                        .load(imgData)
-                        .into(getImgViewTarget(0, contentImgView));
+            if (item.body.contentType == Communications.ContentType.TEXT) {
+
+                sb.append(item.body.text);
+
+                // contentTextView.setText(item.body.text);
+                // contentTextView.setVisibility(View.VISIBLE);
+                contentImgView.setVisibility(View.GONE);
+
+            }else if (item.body.contentType == Communications.ContentType.STYLUS) {
+
+                sb.append("");
+
+                if (!TextUtils.isEmpty(item.body.text)) {
+
+                    byte[] imgData = ClassroomBusiness.base64ToByteData(item.body.text);
+                    Glide.with(context)
+                            .load(imgData)
+                            .into(getImgViewTarget(0, contentImgView));
+
+                }else {
+
+                    String imgUrl = ClassroomBusiness.getSnapshot(item.body.drawing.name, MAX_SIZE);
+                    Glide.with(context)
+                            .load(imgUrl)
+                            .into(getImgViewTarget(0, contentImgView));
+                }
+
+                //contentTextView.setVisibility(View.GONE);
+                contentImgView.setVisibility(View.VISIBLE);
+
+
 
             }else {
-
-                String imgUrl = ClassroomBusiness.getSnapshot(item.body.drawing.name, MAX_SIZE);
-                Glide.with(context)
-                        .load(imgUrl)
-                        .into(getImgViewTarget(0, contentImgView));
+                //contentTextView.setVisibility(View.GONE);
+                contentImgView.setVisibility(View.GONE);
             }
 
-            //contentTextView.setVisibility(View.GONE);
-            contentImgView.setVisibility(View.VISIBLE);
 
+            SpannableString spannableString = new SpannableString(sb.toString());
+            spannableString.setSpan(
+                    new ForegroundColorSpan(context.getResources().getColor(R.color.chat_name_blue)),
+                    0,
+                    name.length(),
+                    Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-
-        }else {
-            //contentTextView.setVisibility(View.GONE);
-            contentImgView.setVisibility(View.GONE);
+            nameView.setText(spannableString);
+            nameView.setVisibility(View.VISIBLE);
         }
-
-
-        SpannableString spannableString = new SpannableString(sb.toString());
-        spannableString.setSpan(
-                new ForegroundColorSpan(context.getResources().getColor(R.color.chat_name_blue)),
-                0,
-                name.length(),
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
-        nameView.setText(spannableString);
-        nameView.setVisibility(View.VISIBLE);
     }
 }

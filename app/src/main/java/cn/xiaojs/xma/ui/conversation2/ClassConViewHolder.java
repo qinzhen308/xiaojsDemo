@@ -38,6 +38,8 @@ public class ClassConViewHolder extends AbsConversationViewHolder {
     public Button deleteView;
     @BindView(R.id.rtop)
     public Button topView;
+    @BindView(R.id.disturb_flag)
+    public TextView disturbFlagView;
 
 
     public ClassConViewHolder(View itemView) {

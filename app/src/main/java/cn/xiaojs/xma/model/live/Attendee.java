@@ -68,18 +68,21 @@ public class Attendee implements Serializable, Comparable<Attendee>{
 
     @Override
     public int compareTo(@NonNull Attendee o) {
-        if (o==null)
-            return -1;
 
-        if (xa == o.xa)
-            return 0;
+        return sort - o.sort;
 
-        if (o.xa > 0)
-            return 1;
-
-        if (o.xa <=0)
-            return -1;
-
-        return 0;
+//        if (o==null)
+//            return -1;
+//
+//        if (xa == o.xa)
+//            return 0;
+//
+//        if (o.xa > 0)
+//            return 1;
+//
+//        if (o.xa <=0)
+//            return -1;
+//
+//        return 0;
     }
 }
