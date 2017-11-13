@@ -38,6 +38,7 @@ public class Contact implements Serializable {
     public String ticket;
 
     public String owner;
+    public String ownerId;
     public String total;
     public String current;
     public boolean retainOnTalk;

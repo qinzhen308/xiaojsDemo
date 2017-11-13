@@ -33,6 +33,8 @@ import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.socket.room.ChangeNotify;
+import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.base.BaseConstant;
@@ -569,6 +571,10 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
                     break;
                 case Su.EventType.RETAIN_DIALOG:
                     break;
+                case Su.EventType.CHANGE_NOTIFY:
+                    ChangeNotifyReceived received = (ChangeNotifyReceived) eventReceived.t;
+                    handleChangeNotify(received);
+                    break;
             }
         }
     };
@@ -612,9 +618,12 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
 
 
         dataProvider.moveOrInsertConversation(contact);
+    }
 
-        //FIXME 如果是已经打开的或者消息免打扰的会话，不需要响铃；
-        VibratorUtil.Vibrate(this, 100);
+    private void handleChangeNotify(ChangeNotifyReceived changeNotify) {
+        DataProvider dataProvider = DataProvider.getProvider(this);
+        dataProvider.updateSilent(changeNotify.to, changeNotify.silent);
+
     }
 
 }

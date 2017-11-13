@@ -17,6 +17,16 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
         <Button
+                android:id="@+id/rslient"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/font_30px"
+                android:textColor="@color/common_text"
+                android:text="免打扰"
+                android:background="@color/cancel_fllow_btn_color"
+                android:padding="10dp"
+                />
+        <Button
                 android:id="@+id/rdelete"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -25,17 +35,6 @@
                 android:background="@drawable/big_submit_btn_selector"
                 android:padding="10dp"
                 android:text="删除"
-                />
-        <Button
-                android:id="@+id/rtop"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/font_30px"
-                android:textColor="@color/common_text"
-                android:text="置顶"
-                android:background="@color/cancel_fllow_btn_color"
-                android:padding="10dp"
-                android:visibility="gone"
                 />
     </LinearLayout>
 

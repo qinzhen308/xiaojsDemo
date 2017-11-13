@@ -35,8 +35,6 @@ public class XiaojsApplication extends Application {
 
     public static final String ACTION_NEW_MESSAGE = "xjs_lc_new_msg";
 
-    private XMSManager xmsManager;
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -101,19 +99,11 @@ public class XiaojsApplication extends Application {
         JPushInterface.init(getApplicationContext());
 
         //init data cache and XMS
-        xmsManager = DataManager.init(this);
+        DataManager.init(this);
 
         PinYin.init(this);
 
 
-    }
-
-    public void setXmsManager(XMSManager xmsManager) {
-        this.xmsManager = xmsManager;
-    }
-
-    public XMSManager getXmsManager() {
-        return xmsManager;
     }
 
     public Consumer<Integer> getXmsConsumer() {

@@ -7,6 +7,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Message;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.api.socket.xms.XMSObservable;
@@ -14,6 +18,7 @@ import cn.xiaojs.xma.data.api.socket.xms.XMSSocketManager;
 import cn.xiaojs.xma.data.api.socket.xms.XMSSocketRequest;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.ChangeNotify;
 import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.RemoveDlg;
 import cn.xiaojs.xma.model.socket.room.RetainDlg;
@@ -29,23 +34,64 @@ import io.reactivex.functions.Consumer;
 
 public class XMSManager {
 
+    private static XMSManager xmsManager;
+
+    private Context context;
     private XMSObservable xmsObservable;
-    private String currentSessionId;
+    private Set<String> sessionIds;
 
-    public String getCurrentSessionId() {
-        return currentSessionId;
-    }
 
-    public void setCurrentSessionId(String currentSessionId) {
-        this.currentSessionId = currentSessionId;
-    }
+    public static XMSManager getXmsManager(Context appContext) {
 
-    public static XMSManager initXMS(Context context, Consumer<Integer> consumer) {
-        XMSManager xmsManager = new XMSManager();
-        String sfm = SecurityPref.getSFM(context);
-        xmsManager.xmsObservable = XMSObservable.obseverXMS(context, sfm, consumer);
+        if (xmsManager == null) {
+
+            synchronized (XMSManager.class) {
+
+                if (xmsManager == null) {
+                    xmsManager = new XMSManager(appContext);
+                }
+            }
+        }
+
         return xmsManager;
     }
+
+    private XMSManager(Context appContext) {
+        this.context = appContext.getApplicationContext();
+
+    }
+    public void connectXMS(Consumer<Integer> consumer) {
+        String sfm = SecurityPref.getSFM(context);
+        xmsManager.xmsObservable = XMSObservable.obseverXMS(context, sfm, consumer);
+    }
+
+
+    public boolean sessionOpened(String session) {
+        if (sessionIds == null || sessionIds.size() ==0)
+            return false;
+
+        if (sessionIds.contains(session)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public void closeSession(String session) {
+        if (sessionIds !=null) {
+            sessionIds.remove(session);
+        }
+    }
+
+    public void addOpenedSession(String sessionId) {
+        if (sessionIds == null) {
+            sessionIds = new HashSet<>();
+        }
+
+        sessionIds.add(sessionId);
+
+    }
+
 
 
 
@@ -92,7 +138,7 @@ public class XMSManager {
     }
 
     public static void sendReadTalk(Context context, ReadTalk readTalk,
-                                        EventCallback<EventResponse> callback) {
+                                    EventCallback<EventResponse> callback) {
         XMSSocketManager socketManager = XMSSocketManager.getSocketManager(context);
         XMSSocketRequest<EventResponse> socketRequest = new XMSSocketRequest<>(socketManager,
                 callback);
@@ -103,7 +149,7 @@ public class XMSManager {
     }
 
     public static void sendRemoveDialog(Context context, RemoveDlg removeDlg,
-                                    EventCallback<EventResponse> callback) {
+                                        EventCallback<EventResponse> callback) {
         XMSSocketManager socketManager = XMSSocketManager.getSocketManager(context);
         XMSSocketRequest<EventResponse> socketRequest = new XMSSocketRequest<>(socketManager,
                 callback);
@@ -111,5 +157,16 @@ public class XMSManager {
         String event = Su.getEventSignature(Su.EventCategory.XMS_APP,
                 Su.EventType.REMOVE_DIALOG);
         socketRequest.emit(event, removeDlg, EventResponse.class);
+    }
+
+    public static void sendChangeNotify(Context context, ChangeNotify changeNotify,
+                                        EventCallback<EventResponse> callback) {
+        XMSSocketManager socketManager = XMSSocketManager.getSocketManager(context);
+        XMSSocketRequest<EventResponse> socketRequest = new XMSSocketRequest<>(socketManager,
+                callback);
+
+        String event = Su.getEventSignature(Su.EventCategory.XMS_APP,
+                Su.EventType.CHANGE_NOTIFY);
+        socketRequest.emit(event, changeNotify, EventResponse.class);
     }
 }

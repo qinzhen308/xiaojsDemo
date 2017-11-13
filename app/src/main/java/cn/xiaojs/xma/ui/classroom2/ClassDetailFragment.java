@@ -13,7 +13,6 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +25,9 @@ import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.CLResponse;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
@@ -37,10 +38,11 @@ import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.ChangeNotify;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
-import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.AddLessonNameActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
@@ -139,6 +141,8 @@ public class ClassDetailFragment extends BaseDialogFragment {
     }
 
 
+    //@OnCheckedChanged
+
     @OnClick({R.id.back_btn, R.id.more_btn, R.id.class_top_check,R.id.class_material_title,
             R.id.class_disturb_check, R.id.class_verify_check, R.id.class_public_check,
             R.id.class_anonymous_check,R.id.class_name_title,R.id.class_qrcode_title,
@@ -164,6 +168,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
             case R.id.class_top_check:
                 break;
             case R.id.class_disturb_check:
+                changeNotify();
                 break;
             case R.id.class_verify_check:
                 modifyVerify(!classVerifyCheck.isChecked());
@@ -365,7 +370,10 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         // TODO: 2017/11/6
         classTopCheck.setVisibility(View.GONE);
-        classDisturbCheck.setChecked(false);
+
+
+        boolean silent = DataProvider.getProvider(getContext()).getClassSilent(classId);
+        classDisturbCheck.setChecked(silent);
     }
     private boolean initTeaching() {
         if (classInfo == null)
@@ -393,6 +401,31 @@ public class ClassDetailFragment extends BaseDialogFragment {
     private void databank(){
         // TODO: 2017/11/6 资料库 打开activity or fragment？
 
+    }
+
+    private void changeNotify() {
+
+        final ChangeNotify changeNotify = new ChangeNotify();
+        changeNotify.to = classInfo.id;
+
+        //FIXME 接口没有返回数据
+        changeNotify.silent = !classDisturbCheck.isChecked();
+
+        XMSManager.sendChangeNotify(getContext(), changeNotify,
+                new cn.xiaojs.xma.data.api.socket.EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                DataProvider  dataProvider = DataProvider.getProvider(getContext());
+                dataProvider.updateSilent(changeNotify.to, changeNotify.silent);
+
+                classDisturbCheck.setChecked(changeNotify.silent);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 
     private void openSchedule(){

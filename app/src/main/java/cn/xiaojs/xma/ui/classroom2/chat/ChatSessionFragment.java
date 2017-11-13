@@ -95,6 +95,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
     private DataProvider dataProvider;
 
+    private XMSManager xmsManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +137,14 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        liveCriteria = createLiveCriteria();
+
+        xmsManager = XMSManager.getXmsManager(getContext());
+        if (xmsManager != null) {
+            xmsManager.addOpenedSession(liveCriteria.to);
+        }
+
+
         titleView.setText(titleStr);
 
         messageData = new ArrayList<>();
@@ -157,8 +167,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         pagination.setMaxNumOfObjectsPerPage(maxNumOfObjectPerPage);
         pagination.setPage(currentPage);
 
-        liveCriteria = createLiveCriteria();
-
         loadData();
 
         eventDisposable = XMSEventObservable.observeChatSession(getContext(), receivedConsumer);
@@ -172,6 +180,10 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         if (eventDisposable != null) {
             eventDisposable.dispose();
             eventDisposable = null;
+        }
+
+        if (xmsManager != null) {
+            xmsManager.closeSession(liveCriteria.to);
         }
 
     }
@@ -398,7 +410,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
         dataProvider.moveOrInsertConversation(contact);
     }
-
 
 
     private void timeline(TalkItem item) {

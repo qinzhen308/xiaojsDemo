@@ -131,7 +131,6 @@ public class ConversationFragment extends Base2Fragment {
             @Override
             public boolean patchTouchEvent(MotionEvent ev) {
 
-                //FIXME
                 if (ev.getAction() == MotionEvent.ACTION_DOWN) {
                     return adapter.closeOpendSwap();
                 }

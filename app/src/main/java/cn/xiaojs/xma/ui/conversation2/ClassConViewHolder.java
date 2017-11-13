@@ -36,8 +36,8 @@ public class ClassConViewHolder extends AbsConversationViewHolder {
     public SwipeLayout swipeLayout;
     @BindView(R.id.rdelete)
     public Button deleteView;
-    @BindView(R.id.rtop)
-    public Button topView;
+    @BindView(R.id.rslient)
+    public Button slientView;
     @BindView(R.id.disturb_flag)
     public TextView disturbFlagView;
 
@@ -47,7 +47,6 @@ public class ClassConViewHolder extends AbsConversationViewHolder {
     }
 
     public static View createView(Context context, ViewGroup parent) {
-
         LayoutInflater inflater = LayoutInflater.from(context);
         return inflater.inflate(R.layout.layout_conversation2_class_conversation_item,parent,false);
     }

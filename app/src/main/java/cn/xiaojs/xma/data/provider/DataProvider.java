@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -122,18 +124,51 @@ public class DataProvider {
         this.classes = classes;
     }
 
+    public void updateSilent(String conversationId, boolean silent) {
+        updateConversationSilent(conversationId, silent);
+        updateClassSilent(conversationId, silent);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 联系人
+    //
     public boolean existInContact(String aid) {
 
-        if (personsMapping !=null && personsMapping.size()>0) {
-            return personsMapping.get(aid) == null? false : true;
+        if (personsMapping != null && personsMapping.size() > 0) {
+            return personsMapping.get(aid) == null ? false : true;
         }
 
         return false;
     }
 
+    public Contact getPersonById(String cid) {
+        return personsMapping.get(cid);
+    }
+
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 教室
     //
+
+    public Contact getClassAdviser(String classId) {
+        Contact contact = classesMapping.get(classId);
+        Contact adviser = null;
+        if (contact != null) {
+            adviser = new Contact();
+            adviser.owner = contact.owner;
+            adviser.ownerId = contact.ownerId;
+        }
+
+        if (adviser !=null && !TextUtils.isEmpty(adviser.ownerId)) {
+            Contact person = getPersonById(adviser.owner);
+            if (person !=null) {
+                adviser.title = person.title;
+            }
+        }
+
+        return adviser;
+    }
 
     public String getClassTicket(String cid) {
         Contact contact = classesMapping.get(cid);
@@ -151,13 +186,45 @@ public class DataProvider {
         return "";
     }
 
+    public void updateClassSilent(String classId, boolean silent) {
+        Contact contact = classesMapping.get(classId);
+        if (contact != null) {
+            contact.silent = silent;
+        }
+    }
 
-
+    public boolean getClassSilent(String classId) {
+        Contact contact = classesMapping.get(classId);
+        if (contact != null) {
+            return contact.silent;
+        }
+        return false;
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Conversation
     //
+
+    public void updateConversationSilent(String conversationId, boolean silent) {
+        if (TextUtils.isEmpty(conversationId))
+            return;
+
+        Contact tempContact = new Contact();
+        tempContact.id = conversationId;
+
+        int index = conversations.indexOf(tempContact);
+        if (index >= 0) {
+            Contact oriContact = conversations.get(index);
+            oriContact.silent = silent;
+
+            for (DataObserver observer : dataObservers) {
+                observer.onConversationUpdate(oriContact, index);
+            }
+        }
+    }
+
+
     public void updateConversationUnread(String conversationId, int unreadCount) {
 
         if (TextUtils.isEmpty(conversationId))
@@ -168,13 +235,17 @@ public class DataProvider {
 
         int index = conversations.indexOf(tempContact);
 
-        if (index>=0) {
+        if (index >= 0) {
 
             Contact oriContact = conversations.get(index);
             oriContact.unread = unreadCount;
 
             for (DataObserver observer : dataObservers) {
                 observer.onConversationUpdate(oriContact, index);
+            }
+
+            if (unreadCount > 0) {
+                vibrate(oriContact);
             }
 
         }
@@ -201,6 +272,7 @@ public class DataProvider {
                 observer.onConversationMove(oriContact, index, 1);
             }
 
+            vibrate(contact);
 
         } else {
 
@@ -209,7 +281,7 @@ public class DataProvider {
                 observer.onConversationInsert(contact, 1);
             }
 
-
+            vibrate(contact);
         }
 
     }
@@ -254,5 +326,21 @@ public class DataProvider {
         return timeTable;
     }
 
+    private boolean vibrate(Contact contact) {
+        //消息免打扰的会话，不需要响铃；
+        if (contact.silent) {
+            return false;
+        }
+
+        //如果是已经打开的会话，不需要响铃；
+        XMSManager xmsManager = XMSManager.getXmsManager(context);
+        if (xmsManager.sessionOpened(contact.id)) {
+            return false;
+        }
+
+        VibratorUtil.Vibrate(context, 100);
+        return true;
+
+    }
 
 }

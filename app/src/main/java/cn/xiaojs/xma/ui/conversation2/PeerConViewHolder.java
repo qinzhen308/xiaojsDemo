@@ -37,8 +37,8 @@ public class PeerConViewHolder extends AbsConversationViewHolder {
     public SwipeLayout swipeLayout;
     @BindView(R.id.rdelete)
     public Button deleteView;
-    @BindView(R.id.rtop)
-    public Button topView;
+//    @BindView(R.id.rslient)
+//    public Button slientView;
     @BindView(R.id.disturb_flag)
     public TextView disturbFlagView;
 

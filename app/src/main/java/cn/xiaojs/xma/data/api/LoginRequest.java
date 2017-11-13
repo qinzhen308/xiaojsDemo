@@ -114,11 +114,7 @@ public class LoginRequest extends ServiceRequest {
             UpgradeManager.setUpgrade(getContext(),info.getUpgrade());
 
             XiaojsApplication app = DataManager.getApplication(getContext());
-            XMSManager xmsManager = DataManager.initDataWithLogined(getContext(),
-                    info.contactGroups, app.getXmsConsumer());
-            app.setXmsManager(xmsManager);
-
-
+            DataManager.initDataWithLogined(getContext(), app.getXmsConsumer());
 
         }
     }
