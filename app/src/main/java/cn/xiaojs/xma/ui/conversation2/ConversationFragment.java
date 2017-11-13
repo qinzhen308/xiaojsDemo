@@ -92,16 +92,21 @@ public class ConversationFragment extends Base2Fragment {
         @Override
         public void onConversationUpdate(Contact contact, int index) {
             adapter.notifyDataSetChanged();
+
+            updateTips();
+
         }
 
         @Override
         public void onConversationInsert(Contact contact, int insertIndex) {
             adapter.notifyDataSetChanged();
+            updateTips();
         }
 
         @Override
         public void onConversationMove(Contact contact, int fromIndex, int toIndex) {
             adapter.notifyDataSetChanged();
+            updateTips();
         }
     };
 
@@ -143,6 +148,14 @@ public class ConversationFragment extends Base2Fragment {
         adapter.setItemClickListener(new ConversationAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Contact contact, int position) {
+
+
+//                String ttt= "08086df7213d695c7c53df1a24a6438cbe196b33d7d21c76d98ce0546c3e474b8cb79cd773c7b509cbec32f40489208e4142e0a2c3c1a12f2a585f1b8d7921c2";
+//                Classroom2Activity.invoke(getContext(), ttt);
+//                return;
+
+
+
                 if (!TextUtils.isEmpty(contact.subtype)
                         && ConversationType.TypeName.PRIVATE_CLASS.equals(contact.subtype)){
 
@@ -174,7 +187,6 @@ public class ConversationFragment extends Base2Fragment {
             showLoadingStatus();
         }
 
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -197,13 +209,23 @@ public class ConversationFragment extends Base2Fragment {
 
     private void showApapter() {
         adapter.addContact(dataProvider.getConversations());
+        updateTips();
+
+        requestTodayScheduleCount();
+    }
+
+    private void updateTips() {
+
+        if (adapter == null){
+            showFinalTips();
+            return;
+        }
+
         if (adapter.getItemCount() > 1) {
             hiddenTips();
         } else {
             showFinalTips();
         }
-
-        requestTodayScheduleCount();
     }
 
 

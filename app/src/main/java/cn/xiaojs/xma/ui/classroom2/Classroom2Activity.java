@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -151,7 +152,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
 
     //进入教室
-    public static void invoke(Activity context, String ticket) {
+    public static void invoke(Context context, String ticket) {
         Intent i = new Intent();
         i.putExtra(CTLConstant.EXTRA_TICKET, ticket);
         i.setClass(context, Classroom2Activity.class);

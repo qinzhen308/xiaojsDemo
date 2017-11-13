@@ -32,6 +32,7 @@ public class Talk {
     public String psType;
     public int xa;
     public String xav;
+    public int sort;
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)

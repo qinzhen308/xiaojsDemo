@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@id/root_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:clickable="true"
+        >
+
+
+    <cn.xiaojs.xma.ui.widget.MessageImageView
+            android:id="@+id/avator"
+            android:layout_width="@dimen/px86"
+            android:layout_height="@dimen/px86"
+            android:layout_marginTop="@dimen/px17"
+            android:layout_marginBottom="@dimen/px17"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_visitor"
+            app:oval="true"
+            app:isCircle="true"
+            app:border_color="@color/white"
+            app:border_width="@dimen/px2"
+            />
+
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_32px"
+            android:textColor="@color/font_black"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_toRightOf="@id/avator"
+            android:layout_centerVertical="true"
+            />
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"
+            android:background="@color/gray_line"
+            android:layout_alignParentBottom="true"
+            />
+</RelativeLayout>

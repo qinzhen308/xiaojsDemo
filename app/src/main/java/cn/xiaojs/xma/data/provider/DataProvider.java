@@ -317,8 +317,10 @@ public class DataProvider {
 
 
     public void dispatchLoadComplete() {
-        if (dataObservers == null)
+        if (dataObservers == null) {
+            setCompleted(true);
             return;
+        }
 
         Observable.fromIterable(dataObservers)
                 .observeOn(AndroidSchedulers.mainThread())

@@ -1,7 +1,6 @@
 package cn.xiaojs.xma.ui.classroom2.member;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -29,15 +28,15 @@ import cn.xiaojs.xma.ui.widget.MessageImageView;
  * Created by maxiaobao on 2017/9/27.
  */
 
-public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class VistorAdapter extends RecyclerView.Adapter<MemberViewHolder> {
     private Context context;
     private ArrayList<Attendee> attendees;
     private int avatorSize;
-    private MemberListFragment fragment;
+    private VistorListFragment fragment;
     private ClassroomEngine classroomEngine;
 
 
-    public MemberAdapter(MemberListFragment fragment, Context context, ArrayList<Attendee> attendees) {
+    public VistorAdapter(VistorListFragment fragment, Context context, ArrayList<Attendee> attendees) {
         this.context = context;
         this.fragment = fragment;
         this.attendees = attendees;
@@ -45,27 +44,8 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         classroomEngine = ClassroomEngine.getEngine();
     }
 
-    public void updateData(ArrayList<Attendee> atts) {
-
-        if (atts == null)
-            return;
-
-        attendees.clear();
-        attendees.addAll(atts);
-        Collections.sort(attendees);
-        notifyDataSetChanged();
-
-    }
-
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        if (viewType == MemberType.VISTOR) {
-            View view = LayoutInflater.from(context)
-                    .inflate(R.layout.layout_classroom2_member_vistor_item, parent, false);
-            return new VistorViewHolder(view);
-        }
-
+    public MemberViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.layout_classroom2_member_item, parent, false);
 
@@ -73,33 +53,11 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public int getItemViewType(int position) {
-        final Attendee attendee = attendees.get(position);
-        if (attendee.sort == CTLConstant.VISTOR_SORT)
-            return MemberType.VISTOR;
-
-        return MemberType.NORMAL;
-
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(MemberViewHolder holder, int position) {
 
         final Attendee attendee = attendees.get(position);
 
-        if (holder instanceof VistorViewHolder) {
-            VistorViewHolder vistorHolder = (VistorViewHolder) holder;
-            vistorHolder.nameView.setText("访客(" + attendee.unReadMsgCount + ")");
-            vistorHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fragment.enterVistorlist();
-                }
-            });
-
-        }else {
-
-            MemberViewHolder memberHolder = (MemberViewHolder) holder;
+            MemberViewHolder memberHolder = holder;
 
             String avatorUrl = Account.getAvatar(attendee.accountId, avatorSize);
             Glide.with(context)
@@ -156,7 +114,6 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     fragment.enterChatSession(attendee);
                 }
             });
-        }
     }
 
     @Override
@@ -164,21 +121,5 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return attendees == null ? 0 : attendees.size();
     }
 
-
-
-    static class VistorViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.root_lay)
-        RelativeLayout rootLayout;
-        @BindView(R.id.avator)
-        MessageImageView avatorView;
-        @BindView(R.id.name)
-        TextView nameView;
-
-        public VistorViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
 
 }

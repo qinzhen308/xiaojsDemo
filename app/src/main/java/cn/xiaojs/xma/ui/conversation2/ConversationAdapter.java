@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.provider.DataProvider;
@@ -117,13 +118,19 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             final PeerConViewHolder peerConViewHolder = (PeerConViewHolder) holder;
 
 
-            String avatorUrl = Account.getAvatar(contact.id, peerConViewHolder.avatorView.getMeasuredWidth());
-            Glide.with(context)
-                    .load(avatorUrl)
-                    .transform(new CircleTransform(context))
-                    .placeholder(R.drawable.ic_defaultavatar)
-                    .error(R.drawable.ic_defaultavatar)
-                    .into(peerConViewHolder.avatorView);
+            if (AccountDataManager.isXiaojsAccount(contact.id)) {
+                peerConViewHolder.avatorView.setImageResource(R.drawable.ic_customerservice);
+            }else {
+                String avatorUrl = Account.getAvatar(contact.id, peerConViewHolder.avatorView.getMeasuredWidth());
+                Glide.with(context)
+                        .load(avatorUrl)
+                        .transform(new CircleTransform(context))
+                        .placeholder(R.drawable.ic_defaultavatar)
+                        .error(R.drawable.ic_defaultavatar)
+                        .into(peerConViewHolder.avatorView);
+            }
+
+
 
             peerConViewHolder.titleView.setText(contact.title);
             peerConViewHolder.descView.setText(contact.lastMessage);

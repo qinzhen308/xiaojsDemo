@@ -499,6 +499,8 @@ public abstract class MovieFragment extends BaseRoomFragment
                         ShareUtil.shareUrlByUmeng(getActivity(), classroomEngine.getCtlSession().cls.title, classroomEngine.getClassAdviser().name, url);
                         break;
                     case 2:
+                        if (checkVistorPermission())
+                            return;
                         SettingFragment settingFragment = new SettingFragment();
                         settingFragment.show(getFragmentManager(), "setting");
                         break;
@@ -766,6 +768,10 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 点击了输入聊天消息
      */
     public void onInputMessageClick(View view) {
+
+        if (checkVistorPermission())
+            return;
+
         MsgInputFragment inputFragment = new MsgInputFragment();
         Bundle data = new Bundle();
         data.putInt(CTLConstant.EXTRA_INPUT_FROM, 1);
@@ -786,6 +792,10 @@ public abstract class MovieFragment extends BaseRoomFragment
      * 点击资料库
      */
     public void onMaterialClick(View view) {
+
+        if (checkVistorPermission())
+            return;
+
         DatabaseFragment databaseFragment = new DatabaseFragment();
         databaseFragment.setTargetFragment(this, CTLConstant.REQUEST_OPEN_MATERIAL);
         showSlidePanel(databaseFragment, "database");

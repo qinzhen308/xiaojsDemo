@@ -22,7 +22,7 @@ public class XiaojsConfig {
     //生产环境小教室账号ID
     public static final String XAIOJS_ACCOUNT_ID = "58d255856734e6fe413589e0";
     //测试环境小教室账号ID
-    public static final String TEST_XAIOJS_ACCOUNT_ID = "58d0aaac8b8d4bf95c396c1d";
+    public static final String TEST_XAIOJS_ACCOUNT_ID = "58d255856734e6fe413589e0";
 
 
 

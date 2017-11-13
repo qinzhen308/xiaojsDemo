@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -49,7 +50,15 @@ import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/9/26.
@@ -67,6 +76,8 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
     private MemberAdapter memberAdapter;
     private EventListener.ELMember eventListener;
+
+    private ArrayList<Attendee> vistors;
 
 
     @Override
@@ -103,20 +114,11 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
         recyclerView.setLayoutManager(layoutManager);
 
         ArrayList<Attendee> attendees = new ArrayList<>();
-        Map<String, Attendee> attendeeMap = classroomEngine.getMembers();
-        if (attendeeMap != null && attendeeMap.size() > 0) {
-            attendees.addAll(attendeeMap.values());
-            Collections.sort(attendees);
-        }
-
-        memberAdapter = new MemberAdapter(MemberListFragment.this
-                , getContext(), attendees);
+        memberAdapter = new MemberAdapter(MemberListFragment.this, getContext(), attendees);
 
         recyclerView.setAdapter(memberAdapter);
 
-        if (memberAdapter.getItemCount() <= 0) {
-            showFinalTips();
-        }
+        load(null);
 
         eventListener = classroomEngine.observerMember(memberConsumer);
 
@@ -126,7 +128,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     public void onDestroy() {
         super.onDestroy();
 
-        if (eventListener !=null ) {
+        if (eventListener != null) {
             eventListener.dispose();
             eventListener = null;
         }
@@ -150,6 +152,107 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
         }
 
         return false;
+    }
+
+
+    private void load(final ArrayList<Attendee> tempAtts) {
+
+        showLoadingStatus();
+
+        Observable.create(new ObservableOnSubscribe<Map<Integer, ArrayList<Attendee>>>() {
+
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Map<Integer, ArrayList<Attendee>>> e) throws Exception {
+
+                ArrayList<Attendee> attendees = new ArrayList<>();
+                ArrayList<Attendee> vistors = new ArrayList<>();
+
+                if (tempAtts == null) {
+                    Map<String, Attendee> attendeeMap = classroomEngine.getMembers();
+                    if (attendeeMap != null && attendeeMap.size() > 0) {
+                        for (Attendee att : attendeeMap.values()) {
+                            if (att.sort == CTLConstant.VISTOR_SORT) {
+                                vistors.add(att);
+                                break;
+                            }
+
+                            attendees.add(att);
+                        }
+                    }
+                } else {
+                    if (tempAtts.size() > 0) {
+                        for (Attendee att : tempAtts) {
+                            if (att.sort == CTLConstant.VISTOR_SORT) {
+                                vistors.add(att);
+                                break;
+                            }
+
+                            attendees.add(att);
+                        }
+                    }
+                }
+
+                if (vistors.size() > 0) {
+                    Attendee vistor = new Attendee();
+                    vistor.sort = CTLConstant.VISTOR_SORT;
+                    vistor.unReadMsgCount = vistors.size();
+                    attendees.add(vistor);
+
+                    Collections.sort(vistors);
+                }
+
+                Collections.sort(attendees);
+
+
+                Map<Integer, ArrayList<Attendee>> dataMap = new HashMap<>();
+                dataMap.put(MemberType.VISTOR, vistors);
+                dataMap.put(MemberType.NORMAL, attendees);
+
+                e.onNext(dataMap);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Map<Integer, ArrayList<Attendee>>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Map<Integer, ArrayList<Attendee>> integerArrayListMap) {
+
+                        if (memberAdapter != null) {
+
+                            ArrayList<Attendee> atts = integerArrayListMap.get(MemberType.NORMAL);
+                            memberAdapter.updateData(atts);
+
+                            if (atts.size() > 0) {
+                                hiddenTips();
+                            } else {
+                                showFinalTips();
+                            }
+                        } else {
+                            showFinalTips();
+                        }
+                        vistors = integerArrayListMap.get(MemberType.VISTOR);
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        showFinalTips();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void enterVistorlist() {
+        VistorListFragment.invokeShow(getFragmentManager(), vistors);
     }
 
     public void enterChatSession(Attendee attendee) {
@@ -326,31 +429,23 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     private void refreshMembers() {
         classroomEngine.getMembers(classroomEngine.getTicket(),
                 new APIServiceCallback<LiveCollection<Attendee>>() {
-            @Override
-            public void onSuccess(LiveCollection<Attendee> object) {
+                    @Override
+                    public void onSuccess(LiveCollection<Attendee> object) {
 
-                if (object!=null && memberAdapter!=null) {
-                    memberAdapter.updateData(object.attendees);
-                }
-            }
+                        if (object != null && memberAdapter != null) {
+                            load(object.attendees);
+                        }
+                    }
 
-            @Override
-            public void onFailure(String errorCode, String errorMessage) {
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void updateMemByEvent() {
-        ArrayList<Attendee> attendees = new ArrayList<>();
-        Map<String, Attendee> attendeeMap = classroomEngine.getMembers();
-        if (attendeeMap != null) {
-            attendees.addAll(attendeeMap.values());
-            if (memberAdapter!=null) {
-                memberAdapter.updateData(attendees);
-            }
-        }
-
+        load(null);
     }
 
 
