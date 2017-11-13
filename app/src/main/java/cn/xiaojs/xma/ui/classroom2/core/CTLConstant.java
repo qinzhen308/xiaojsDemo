@@ -6,6 +6,8 @@ package cn.xiaojs.xma.ui.classroom2.core;
 
 public class CTLConstant {
 
+    public static final int VISTOR_SORT = 8;
+
     public static final String ACTION_STREAMING_EXCEPTION = "cn.xiaojs.xma.streaming_exception";
     public static final String EXTRA_EXCEPTION_TIPS = "exception_tips";
     public static final String EXTRA_TICKET = "ticket";

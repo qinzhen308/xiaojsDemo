@@ -176,11 +176,18 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     @Override
     public void onStartLiveClick(View view) {
+
+        if (checkVistorPermission())
+            return;
+
         requestLive();
     }
 
 
     public void onStartOrStopLiveClick(View view) {
+
+        if (checkVistorPermission())
+            return;
         requestLive();
     }
 

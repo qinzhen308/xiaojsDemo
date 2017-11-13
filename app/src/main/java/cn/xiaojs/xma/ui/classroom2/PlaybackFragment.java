@@ -127,11 +127,17 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
 
     @Override
     public void onStartLiveClick(View view) {
+        if (checkVistorPermission())
+            return;
         requestLive();
     }
 
 
     public void onStartOrStopLiveClick(View view) {
+
+        if (checkVistorPermission())
+            return;
+
         requestLive();
     }
 

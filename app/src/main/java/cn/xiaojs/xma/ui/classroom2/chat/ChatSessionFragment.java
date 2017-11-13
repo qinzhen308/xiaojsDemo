@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -44,7 +45,9 @@ import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
+import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
@@ -143,7 +146,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         if (xmsManager != null) {
             xmsManager.addOpenedSession(liveCriteria.to);
         }
-
 
         titleView.setText(titleStr);
 
@@ -279,9 +281,15 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                 liveCriteria, pagination, new APIServiceCallback<CollectionPage<TalkItem>>() {
                     @Override
                     public void onSuccess(CollectionPage<TalkItem> object) {
+
                         if (object != null && object.objectsOfPage != null
                                 && object.objectsOfPage.size() > 0) {
+
                             handleNewData(object);
+                        }else {
+                            if (currentPage == 1) {
+                                handleChatSessionOpened(null);
+                            }
                         }
 
                         loading = false;
@@ -291,6 +299,10 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                     public void onFailure(String errorCode, String errorMessage) {
 
                         Toast.makeText(getContext(), "获取消息列表失败", Toast.LENGTH_SHORT).show();
+
+                        if (currentPage == 1) {
+                            handleChatSessionOpened(null);
+                        }
 
                         loading = false;
                     }
@@ -325,7 +337,12 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                             adapter.notifyDataSetChanged();
                             //RecyclerViewScrollHelper rvHelper = new RecyclerViewScrollHelper();
                             //rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
-                            recyclerView.scrollToPosition(messageData.size() - 1);
+
+                            int lastIndex = messageData.size() - 1;
+                            recyclerView.scrollToPosition(lastIndex);
+                            handleChatSessionOpened(messageData.get(lastIndex));
+
+
                         } else {
                             adapter.notifyItemRangeInserted(0, talkItems.size());
                             recyclerView.scrollToPosition(talkItems.size());
@@ -422,6 +439,30 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
     }
 
+    private void handleChatSessionOpened(TalkItem talkItem) {
+
+        String lastMessage = "";
+        long lastTalked = System.currentTimeMillis();
+
+        if (talkItem !=null) {
+            lastTalked = talkItem.time;
+            if (talkItem.body.contentType == Communications.ContentType.TEXT) {
+                lastMessage = talkItem.body.text;
+            }else if (talkItem.body.contentType == Communications.ContentType.STYLUS) {
+                lastMessage = "【图片】";
+            }
+        }
+
+        Contact contact = new Contact();
+        contact.title = titleStr;
+        contact.id = liveCriteria.to;
+        contact.subtype = ConversationType.getConversationType(liveCriteria.type);
+        contact.lastMessage = lastMessage;
+        contact.lastTalked = lastTalked;
+        dataProvider.conversationOpened(contact);
+
+    }
+
 
     public void showMoreMenu() {
 
@@ -438,4 +479,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         backView.setVisibility(View.GONE);
         moreView.setVisibility(View.GONE);
     }
+
+
 }

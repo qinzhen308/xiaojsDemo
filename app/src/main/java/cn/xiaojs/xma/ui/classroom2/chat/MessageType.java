@@ -9,4 +9,10 @@ public class MessageType {
     public static final int RECEIVED = 1;              //收到的消息
     public static final int TIPS = 2;                  //提示消息
     public static final int LAND = 3;                  //横屏模式下消息
+    public static final int SYSTEM = 4;                  //系统消息
+
+
+    public static class TypeName{
+        public static final String SYSTEM = "System";
+    }
 }

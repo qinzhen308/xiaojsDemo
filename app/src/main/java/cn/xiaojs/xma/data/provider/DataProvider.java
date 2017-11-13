@@ -10,6 +10,7 @@ import java.util.Map;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.socket.room.RetainDlg;
 import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import io.reactivex.Observable;
@@ -130,7 +131,7 @@ public class DataProvider {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // 联系人
+    // Person
     //
     public boolean existInContact(String aid) {
 
@@ -146,11 +147,9 @@ public class DataProvider {
     }
 
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 教室
     //
-
     public Contact getClassAdviser(String classId) {
         Contact contact = classesMapping.get(classId);
         Contact adviser = null;
@@ -160,9 +159,9 @@ public class DataProvider {
             adviser.ownerId = contact.ownerId;
         }
 
-        if (adviser !=null && !TextUtils.isEmpty(adviser.ownerId)) {
+        if (adviser != null && !TextUtils.isEmpty(adviser.ownerId)) {
             Contact person = getPersonById(adviser.owner);
-            if (person !=null) {
+            if (person != null) {
                 adviser.title = person.title;
             }
         }
@@ -286,10 +285,42 @@ public class DataProvider {
 
     }
 
+    public void conversationOpened(Contact contact) {
+        if (contact == null)
+            return;
+
+        int index = conversations.indexOf(contact);
+        if (index >= 0) {
+            Contact oriContact = conversations.get(index);
+            if (index != 1) {
+                conversations.remove(index);
+                conversations.add(1, oriContact);
+
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationMove(oriContact, index, 1);
+                }
+            }
+
+        } else {
+
+            conversations.add(1, contact);
+            for (DataObserver observer : dataObservers) {
+                observer.onConversationInsert(contact, 1);
+            }
+        }
+
+        RetainDlg retainDlg = new RetainDlg();
+        retainDlg.to = contact.id;
+        retainDlg.type = ConversationType.getConversationType(contact.subtype);
+        XMSManager.sendRetainDialog(context, retainDlg, null);
+    }
+
 
     public void dispatchLoadComplete() {
-        if (dataObservers == null)
+        if (dataObservers == null) {
+            setCompleted(true);
             return;
+        }
 
         Observable.fromIterable(dataObservers)
                 .observeOn(AndroidSchedulers.mainThread())

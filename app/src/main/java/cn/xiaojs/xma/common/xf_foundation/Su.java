@@ -57,7 +57,6 @@ public class Su {
         public static final int SYNC_SHARED_BOARD = 610024;                        // Live events
 
 
-
         //教室交流
         public static final int TALK = 690001;
         public static final int RETAIN_DIALOG = 690002;
@@ -65,7 +64,7 @@ public class Su {
         public static final int DIALOG_READ = 690004;                             // Clear unread on dialog
         public static final int READ_TALK = 690005;
         public static final int CHANGE_NOTIFY = 690006;
-
+        public static final int SYNC_CLASSES = 690007;
 
 
         //绘制
@@ -99,8 +98,6 @@ public class Su {
         public static final int CLAIM_STREAMING = 670012;
         public static final int MEDIA_FEEDBACK = 670018;
         public static final int MEDIA_ABORTED = 670019;
-
-
 
 
         //教室踢人事件

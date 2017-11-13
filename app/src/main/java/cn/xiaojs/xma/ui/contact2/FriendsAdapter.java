@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.model.ItemTypes;
@@ -104,14 +105,18 @@ public class FriendsAdapter extends BaseAdapter {
             }
 
 
-            String avatorUrl = Account.getAvatar(
-                    friendItem.contact.account, friendsViewHolder.avatorView.getMeasuredWidth());
-            Glide.with(context)
-                    .load(avatorUrl)
-                    .transform(new CircleTransform(context))
-                    .placeholder(R.drawable.ic_defaultavatar)
-                    .error(R.drawable.ic_defaultavatar)
-                    .into(friendsViewHolder.avatorView);
+            if (AccountDataManager.isXiaojsAccount(friendItem.contact.account)) {
+                friendsViewHolder.avatorView.setImageResource(R.drawable.ic_customerservice);
+            }else {
+                String avatorUrl = Account.getAvatar(
+                        friendItem.contact.account, friendsViewHolder.avatorView.getMeasuredWidth());
+                Glide.with(context)
+                        .load(avatorUrl)
+                        .transform(new CircleTransform(context))
+                        .placeholder(R.drawable.ic_defaultavatar)
+                        .error(R.drawable.ic_defaultavatar)
+                        .into(friendsViewHolder.avatorView);
+            }
         }
 
         return convertView;

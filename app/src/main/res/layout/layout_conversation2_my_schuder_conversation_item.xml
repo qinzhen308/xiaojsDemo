@@ -9,7 +9,7 @@
             android:id="@+id/avator"
             android:layout_width="@dimen/px60"
             android:layout_height="@dimen/px60"
-            android:background="@drawable/ic_mytimetable"
+            android:background="@drawable/ic_list_schedule"
             android:layout_marginLeft="@dimen/px35"
             android:layout_marginBottom="@dimen/px47"
             android:layout_marginTop="@dimen/px20"

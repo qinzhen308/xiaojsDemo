@@ -42,7 +42,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassViewHolder> {
         String tt = TextUtils.isEmpty(contact.title)?
                 "#" : String.valueOf(contact.title.trim().charAt(0));
 
-        holder.avatorView.setIconWithText(tt);
+        holder.avatorView.setText(tt);
 
         if (position == checkIndex) {
             holder.checkedView.setChecked(true);

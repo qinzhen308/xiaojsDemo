@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.TalkItem;
 
@@ -67,6 +68,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
             return MessageType.TIPS;
         }
 
+        if (talkItem.from != null && MessageType.TypeName.SYSTEM.equals(talkItem.from.accountId)) {
+            return MessageType.SYSTEM;
+        }
+
+
         if (talkItem.from == null || myAccountId.equals(talkItem.from.accountId)) {
             return MessageType.SEND_OUT;
         }
@@ -89,6 +95,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
             case MessageType.RECEIVED:
                 holder = new ReceivedViewHolder(context,
                         inflater.inflate(R.layout.layout_classroom2_chat_received,parent,false));
+                break;
+            case MessageType.SYSTEM:
+                holder = new SystemViewHolder(context,
+                        inflater.inflate(R.layout.layout_classroom2_chat_tips,parent,false));
                 break;
             case MessageType.TIPS:
                 holder = new TipsViewHolder(context,

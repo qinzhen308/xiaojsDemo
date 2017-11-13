@@ -109,6 +109,18 @@ public class AccountDataManager {
 //        return false;
     }
 
+
+    public static boolean isXiaojsAccount(String accountId) {
+
+        if (!TextUtils.isEmpty(accountId)
+                && (accountId.equals(XiaojsConfig.XAIOJS_ACCOUNT_ID)
+                || accountId.equals(XiaojsConfig.TEST_XAIOJS_ACCOUNT_ID))) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 是否已实名认证
      * @param context

@@ -131,7 +131,7 @@ public class ClassroomsAdapter extends BaseAdapter {
             String title = TextUtils.isEmpty(titleStr) ?
                     "#" : String.valueOf(titleStr.trim().charAt(0));
 
-            classViewHolder.avatorTextView.setIconWithText(title);
+            classViewHolder.avatorTextView.setText(title);
             classViewHolder.titleView.setText(titleStr);
             classViewHolder.descView.setText(classItem.contact.owner);
         }

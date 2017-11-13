@@ -32,6 +32,22 @@ public class ConversationType {
         }
     }
 
+
+    public static String getConversationType(int typeIndex) {
+        if (typeIndex == TIME_TABLE) {
+            return TypeName.TIME_TABLE;
+        } else if (typeIndex == PRIVATE_CLASS) {
+            return TypeName.PRIVATE_CLASS;
+        } else if (typeIndex == PERSON) {
+            return TypeName.PERSON;
+        } else if (typeIndex == ORGANIZATION) {
+            return TypeName.ORGANIZATION;
+        } else {
+            return "";
+        }
+    }
+
+
     public static int getTalkType(String typeName) {
         if (TypeName.TIME_TABLE.equals(typeName)) {
             return UNDEFINED;

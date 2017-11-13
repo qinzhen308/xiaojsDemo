@@ -103,27 +103,29 @@ public class ChatFragment extends GroupSessionFragment {
 
             switch (eventReceived.eventType) {
                 case Su.EventType.JOIN:
-                    Talk talk = (Talk) eventReceived.t;
-                    if (talk != null && !TextUtils.isEmpty(talk.name)) {
-                        addTipsItem(createJoinTipsItem(talk));
-                    }
+                    //避免与系统消息发生重复，所以注释掉
+//                    Talk talk = (Talk) eventReceived.t;
+//                    if (talk != null && !TextUtils.isEmpty(talk.name)) {
+//                        addTipsItem(createJoinTipsItem(talk));
+//                    }
 
                     break;
                 case Su.EventType.LEAVE:
-                    Talk talkl = (Talk) eventReceived.t;
-                    if (talkl != null && !TextUtils.isEmpty(talkl.accountId)) {
-
-                        String name = talkl.name;
-                        if (TextUtils.isEmpty(name)) {
-                            Attendee attendee = classroomEngine.getMember(talkl.accountId);
-                            if (attendee !=null) {
-                                name = attendee.name;
-                            }
-                        }
-
-                        talkl.name = name;
-                        addTipsItem(createLeaveTipsItem(talkl));
-                    }
+                    //避免与系统消息发生重复，所以注释掉
+//                    Talk talkl = (Talk) eventReceived.t;
+//                    if (talkl != null && !TextUtils.isEmpty(talkl.accountId)) {
+//
+//                        String name = talkl.name;
+//                        if (TextUtils.isEmpty(name)) {
+//                            Attendee attendee = classroomEngine.getMember(talkl.accountId);
+//                            if (attendee !=null) {
+//                                name = attendee.name;
+//                            }
+//                        }
+//
+//                        talkl.name = name;
+//                        addTipsItem(createLeaveTipsItem(talkl));
+//                    }
                     break;
             }
         }
