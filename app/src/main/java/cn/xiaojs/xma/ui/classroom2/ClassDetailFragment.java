@@ -105,6 +105,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
     private ClassInfo classInfo;
     private String classId;
     private boolean teaching;
+    private ClassroomEngine classroomEngine;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,6 +132,9 @@ public class ClassDetailFragment extends BaseDialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        classroomEngine = ClassroomEngine.getEngine();
+
         initView();
         loadClassInfo();
     }
@@ -399,6 +403,11 @@ public class ClassDetailFragment extends BaseDialogFragment {
     }
 
     private void databank(){
+        if (classroomEngine.isVistor()) {
+            Toast.makeText(getContext(), R.string.no_permision_tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // TODO: 2017/11/6 资料库 打开activity or fragment？
 
     }

@@ -217,7 +217,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
             String title = TextUtils.isEmpty(contact.title) ? "#" : String.valueOf(contact.title.trim().charAt(0));
 
-            conViewHolder.avatorTextView.setIconWithText(title);
+            conViewHolder.avatorTextView.setText(title);
             conViewHolder.titleView.setText(contact.title);
             conViewHolder.descView.setText(contact.lastMessage);
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
@@ -328,13 +328,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         RectF curSwipViewRect = new RectF();
         openedSwipe.getLocationInWindow(p);
 
-        p[1] = p[1] - offset;
-
         if (XiaojsConfig.DEBUG) {
-            Logger.d("");
+            Logger.d("----ev(%f,%f), offset(%d), swipe(%d,%d)", x,y,offset, p[0],p[1]);
         }
 
-
+        p[1] = p[1] - offset;
         curSwipViewRect.set(p[0], p[1], p[0] + openedSwipe.getWidth(), p[1] + openedSwipe.getHeight());
         if (curSwipViewRect.contains(x, y)) {
             return false;
@@ -346,6 +344,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
     public boolean closeOpendSwap() {
         if (openedSwipe != null) {
             openedSwipe.close();
+            openedSwipe = null;
             return true;
         }
 

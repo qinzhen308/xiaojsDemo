@@ -1073,6 +1073,7 @@
     <string name="join_classroom_allow_guest">是否允许游客进教室</string>
     <string name="preview_tips">您正在使用"预览模式"</string>
     <string name="contact_empty_tips">这个人什么也没说～</string>
+    <string name="no_permision_tips">您没有访问权限，请先加入教室</string>
 
 
 </resources>

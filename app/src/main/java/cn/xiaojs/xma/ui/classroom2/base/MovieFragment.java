@@ -431,6 +431,15 @@ public abstract class MovieFragment extends BaseRoomFragment
         VibratorUtil.Vibrate(getContext(), 100);
     }
 
+    public boolean checkVistorPermission() {
+        if (classroomEngine.isVistor()) {
+            Toast.makeText(getContext(), R.string.no_permision_tips, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return false;
+    }
+
 
     /**
      * 点击了返回

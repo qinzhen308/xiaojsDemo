@@ -161,11 +161,19 @@ public class PlayFragment extends MovieFragment
 
     @Override
     public void onStartLiveClick(View view) {
+
+        if (checkVistorPermission())
+            return;
+
         requestPublish();
     }
 
     @Override
     public void onStartOrStopLiveClick(View view) {
+
+        if (checkVistorPermission())
+            return;
+
         requestPublish();
     }
 

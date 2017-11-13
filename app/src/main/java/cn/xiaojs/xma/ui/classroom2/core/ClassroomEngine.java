@@ -202,6 +202,14 @@ public final class ClassroomEngine {
         return getCtlSession().ctl == null ? null : getCtlSession().ctl.lead;
     }
 
+    public boolean isVistor() {
+        return getCtlSession().visitor == null? false : true;
+    }
+
+    public CtlSession.Visitor getVistor() {
+        return getCtlSession().visitor;
+    }
+
     public boolean hasTeachingAbility() {
         return stateMachine.hasTeachingAbility();
     }

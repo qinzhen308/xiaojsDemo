@@ -154,6 +154,11 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
     public void enterChatSession(Attendee attendee) {
 
+        if (classroomEngine.isVistor()) {
+            Toast.makeText(getContext(), R.string.no_permision_tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         DataProvider dataProvider = DataProvider.getProvider(getContext());
         int followType = Social.FllowType.NA;
@@ -167,6 +172,12 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
 
     private void addStudents() {
+
+        if (classroomEngine.isVistor()) {
+            Toast.makeText(getContext(), R.string.no_permision_tips, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         ListBottomDialog dialog = new ListBottomDialog(getContext());
 

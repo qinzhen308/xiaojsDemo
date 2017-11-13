@@ -36,6 +36,8 @@ public class CtlSession implements Serializable {
     public int streamType = Live.StreamType.NONE;
     public String claimedBy;
     public String titleOfPrimary;
+    public Visitor visitor;
+
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -68,6 +70,23 @@ public class CtlSession implements Serializable {
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CtlLead {
+        public String id;
+        public String name;
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Visitor{
+        public boolean anonymous;
+        public boolean talk;
+        public boolean library;
+        public VisitorIdentity identity;
+
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class VisitorIdentity {
         public String id;
         public String name;
     }

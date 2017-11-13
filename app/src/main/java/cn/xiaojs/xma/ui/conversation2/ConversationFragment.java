@@ -120,7 +120,7 @@ public class ConversationFragment extends Base2Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        titlebarHeight = titleView.getHeight();
+        titlebarHeight = titleView.getMeasuredHeight();
 
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
@@ -131,7 +131,8 @@ public class ConversationFragment extends Base2Fragment {
             @Override
             public boolean patchTouchEvent(MotionEvent ev) {
 
-                if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                if (ev.getAction() == MotionEvent.ACTION_DOWN
+                        && adapter.isSwapByEv(ev, titlebarHeight)) {
                     return adapter.closeOpendSwap();
                 }
 
