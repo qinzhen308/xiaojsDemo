@@ -26,6 +26,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.LessonState;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -208,62 +209,63 @@ public class BaseBusiness {
     }
 
     public static void showFollowDialog(Context context, final OnFollowListener listener) {
-        SingleSelectDialog dialog = new SingleSelectDialog(context);
-        final Map<Long, ContactGroup> group = DataManager.getGroupData(context);
-        Iterator<ContactGroup> its = group.values().iterator();
-        if (its != null) {
-            final String[] items = new String[group.size()];
-            int i = 0;
-            while (its.hasNext()) {
-                ContactGroup cg = its.next();
-                items[i] = cg.name;
-                i++;
-            }
-            dialog.setItems(items);
-            dialog.setTitle(R.string.add_contact_to);
-            dialog.setOnOkClick(new SingleSelectDialog.OnOkClickListener() {
-                @Override
-                public void onOk(int position) {
+//        SingleSelectDialog dialog = new SingleSelectDialog(context);
+//        final Map<Long, ContactGroup> group = DataManager.getGroupData(context);
+//        Iterator<ContactGroup> its = group.values().iterator();
+//        if (its != null) {
+//            final String[] items = new String[group.size()];
+//            int i = 0;
+//            while (its.hasNext()) {
+//                ContactGroup cg = its.next();
+//                items[i] = cg.name;
+//                i++;
+//            }
+//            dialog.setItems(items);
+//            dialog.setTitle(R.string.add_contact_to);
+//            dialog.setOnOkClick(new SingleSelectDialog.OnOkClickListener() {
+//                @Override
+//                public void onOk(int position) {
                     if (listener != null) {
-                        String name = items[position];
-                        long groupId = getGroup(group, name);
-                        listener.onFollow(groupId);
+                       // String name = items[position];
+                       // long groupId = getGroup(group, name);
+                        //listener.onFollow(groupId);
+                        listener.onFollow(Social.ContactGroup.FRIENDS);
                     }
-                }
-            });
-            dialog.show();
-        }
+           //     }
+           // });
+//            dialog.show();
+  //      }
     }
 
     public static void showFollowDialog(Context context, final OnFollowListener listener,long selectedGroupId) {
-        SingleSelectDialog dialog = new SingleSelectDialog(context);
-        final Map<Long, ContactGroup> group = DataManager.getGroupData(context);
-        Iterator<ContactGroup> its = group.values().iterator();
-        if (its != null) {
-            final String[] items = new String[group.size()];
-            int i = 0;
-            while (its.hasNext()) {
-                ContactGroup cg = its.next();
-                if(cg.group==selectedGroupId){
-                    dialog.setSelectPosition(i);
-                }
-                items[i] = cg.name;
-                i++;
-            }
-            dialog.setItems(items);
-            dialog.setTitle(R.string.add_contact_to);
-            dialog.setOnOkClick(new SingleSelectDialog.OnOkClickListener() {
-                @Override
-                public void onOk(int position) {
+//        SingleSelectDialog dialog = new SingleSelectDialog(context);
+//        final Map<Long, ContactGroup> group = DataManager.getGroupData(context);
+//        Iterator<ContactGroup> its = group.values().iterator();
+//        if (its != null) {
+//            final String[] items = new String[group.size()];
+//            int i = 0;
+//            while (its.hasNext()) {
+//                ContactGroup cg = its.next();
+//                if(cg.group==selectedGroupId){
+//                    dialog.setSelectPosition(i);
+//                }
+//                items[i] = cg.name;
+//                i++;
+//            }
+//            dialog.setItems(items);
+//            dialog.setTitle(R.string.add_contact_to);
+//            dialog.setOnOkClick(new SingleSelectDialog.OnOkClickListener() {
+//                @Override
+//                public void onOk(int position) {
                     if (listener != null) {
-                        String name = items[position];
-                        long groupId = getGroup(group, name);
-                        listener.onFollow(groupId);
+//                        String name = items[position];
+//                        long groupId = getGroup(group, name);
+                        listener.onFollow(Social.ContactGroup.FRIENDS);
                     }
-                }
-            });
-            dialog.show();
-        }
+//                }
+//            });
+//            dialog.show();
+//        }
     }
 
     private static long getGroup(Map<Long, ContactGroup> group, String name) {

@@ -6,16 +6,20 @@ import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.widget.LoadingView;
 
 /**
@@ -67,6 +71,27 @@ public abstract class BaseLiveView extends FrameLayout{
         addView(createLiveView(), 0, params);
     }
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        if (canMove()) {
+//
+//            switch (event.getAction()) {
+////                case MotionEvent.ACTION_DOWN:
+////                    break;
+//                case MotionEvent.ACTION_MOVE:
+//                    if (XiaojsConfig.DEBUG) {
+//                        Logger.d("ACTION_MOVE...............");
+//                    }
+//                    moveView(this, event.getRawX(), event.getRawY());
+//                    return true;
+////                case MotionEvent.ACTION_UP:
+////                    break;
+//            }
+//
+//
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
     @OnClick({R.id.close_video, R.id.overlay_mask})
     void onViewClick(View view){
@@ -83,6 +108,7 @@ public abstract class BaseLiveView extends FrameLayout{
 
 
     public abstract View createLiveView();
+    public abstract boolean canMove();
 
 
     protected void onCloseClick(View view) {
@@ -133,5 +159,13 @@ public abstract class BaseLiveView extends FrameLayout{
             loadingDescView.setText(str);
         }
 
+    }
+
+    private void moveView(View view, float rawX, float rawY) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view
+                .getLayoutParams();
+        params.leftMargin = (int) rawX - getWidth() / 2;
+        params.topMargin = (int) rawY - getHeight() / 2;
+        view.setLayoutParams(params);
     }
 }

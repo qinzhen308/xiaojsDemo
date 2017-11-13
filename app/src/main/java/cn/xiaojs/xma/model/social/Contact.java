@@ -38,10 +38,12 @@ public class Contact implements Serializable {
     public String ticket;
 
     public String owner;
+    public String ownerId;
     public String total;
     public String current;
     public boolean retainOnTalk;
     public MetIn metIn;
+    public boolean silent;
 
     @Override
     public boolean equals(Object obj) {
@@ -58,6 +60,7 @@ public class Contact implements Serializable {
     public static class MetIn {
         public String id;
         public String title;
+        public String subtype;
     }
 
     //

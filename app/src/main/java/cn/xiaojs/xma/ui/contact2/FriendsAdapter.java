@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.contact2;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -95,7 +96,13 @@ public class FriendsAdapter extends BaseAdapter {
             }
 
             friendsViewHolder.titleView.setText(friendItem.contact.name);
-            friendsViewHolder.descView.setText(friendItem.contact.title);
+
+            if (TextUtils.isEmpty(friendItem.contact.title)) {
+                friendsViewHolder.descView.setText(R.string.contact_empty_tips);
+            } else {
+                friendsViewHolder.descView.setText(friendItem.contact.title);
+            }
+
 
             String avatorUrl = Account.getAvatar(
                     friendItem.contact.account, friendsViewHolder.avatorView.getMeasuredWidth());

@@ -64,6 +64,7 @@ public class Su {
         public static final int REMOVE_DIALOG = 690003;
         public static final int DIALOG_READ = 690004;                             // Clear unread on dialog
         public static final int READ_TALK = 690005;
+        public static final int CHANGE_NOTIFY = 690006;
 
 
 

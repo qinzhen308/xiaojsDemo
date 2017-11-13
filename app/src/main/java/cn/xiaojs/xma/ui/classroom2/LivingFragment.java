@@ -203,6 +203,11 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         ChooseMemberFragment chooseMemberFragment = new ChooseMemberFragment();
         chooseMemberFragment.setTargetFragment(this, CTLConstant.REQUEST_CHOOSE_MEMBER);
+        if (one2oneAttendee !=null) {
+            Bundle b = new Bundle();
+            b.putString(CTLConstant.EXTRA_ID, one2oneAttendee.accountId);
+            chooseMemberFragment.setArguments(b);
+        }
         showSlidePanel(chooseMemberFragment, "chat_slide");
     }
 

@@ -66,7 +66,7 @@ public class DataManager {
     /**
      * init memory data cache when the user already logined
      */
-    public static XMSManager init(XiaojsApplication application) {
+    public static void init(XiaojsApplication application) {
 
         Context context = application.getApplicationContext();
         getCache(context).setApplication(application);
@@ -76,14 +76,11 @@ public class DataManager {
         dealDownloadAsync(context);
 
         if (AccountDataManager.isLogin(context)) {
-            return initDataWithLogined(context, null, application.getXmsConsumer());
+            initDataWithLogined(context, application.getXmsConsumer());
         }
-
-        return null;
     }
 
-    public static XMSManager initDataWithLogined(Context context,
-                                           HashMap<Long, String> groupMap, Consumer<Integer> consumer) {
+    public static void initDataWithLogined(Context context, Consumer<Integer> consumer) {
 
         XiaojsConfig.mLoginUser = AccountDataManager.getUserInfo(context);
 
@@ -99,7 +96,8 @@ public class DataManager {
         //jpush alias/tags
         AccountDataManager.setAliaTagsWithCheck(context);
 
-        return XMSManager.initXMS(context, consumer);
+        XMSManager xmsManager = XMSManager.getXmsManager(context);
+        xmsManager.connectXMS(consumer);
     }
 
     public static void syncData(Context context) {

@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
@@ -24,6 +26,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.ui.base2.OnItemClickObservable;
 import cn.xiaojs.xma.ui.classroom2.base.BaseRoomFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
@@ -40,12 +43,15 @@ import io.reactivex.schedulers.Schedulers;
  * Created by maxiaobao on 2017/10/17.
  */
 
-public class ChooseMemberFragment extends BaseRoomFragment {
+public class ChooseMemberFragment extends BaseRoomFragment
+        implements OnItemClickObservable<Attendee> {
 
     @BindView(R.id.rlist)
     RecyclerView recyclerView;
 
     private ChooseMemberAdapter memberAdapter;
+
+    private String currentO2oId;
 
 
     @Nullable
@@ -61,6 +67,9 @@ public class ChooseMemberFragment extends BaseRoomFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        currentO2oId = getArguments()== null?
+                "" : getArguments().getString(CTLConstant.EXTRA_ID, "");
+
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -68,13 +77,24 @@ public class ChooseMemberFragment extends BaseRoomFragment {
         loadMember();
     }
 
-    @OnClick({R.id.ok_btn})
-    void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.ok_btn:
-                ok();
-                break;
+//    @OnClick({R.id.ok_btn})
+//    void onViewClick(View view) {
+//        switch (view.getId()) {
+//            case R.id.ok_btn:
+
+//                break;
+//        }
+//    }
+
+    @Override
+    public void onItemClicked(int index, Attendee entity) {
+
+        if (!TextUtils.isEmpty(currentO2oId)) {
+            Toast.makeText(getContext(), "您正在1对1音视频对话", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        ok(entity);
     }
 
     private void loadMember() {
@@ -120,18 +140,15 @@ public class ChooseMemberFragment extends BaseRoomFragment {
                             return;
                         }
 
-                        memberAdapter = new ChooseMemberAdapter(getContext(), attendees);
+                        memberAdapter = new ChooseMemberAdapter(getContext(), currentO2oId, attendees,
+                                ChooseMemberFragment.this);
                         recyclerView.setAdapter(memberAdapter);
                     }
                 });
     }
 
-    private void ok() {
-
-        Attendee attendee = null;
-        if (memberAdapter !=null) {
-            attendee = memberAdapter.getCheckItem();
-        }
+    private void ok(Attendee attendee) {
+        currentO2oId = attendee.accountId;
 
         Fragment target = getTargetFragment();
         if (target != null) {
@@ -139,6 +156,7 @@ public class ChooseMemberFragment extends BaseRoomFragment {
             intent.putExtra(CTLConstant.EXTRA_MEMBER, attendee);
             target.onActivityResult(CTLConstant.REQUEST_CHOOSE_MEMBER, Activity.RESULT_OK, intent);
         }
+
 
     }
 }

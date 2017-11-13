@@ -594,6 +594,7 @@ public class LessonRequest extends ServiceRequest {
                 || apiType == APIType.ENROLL_LESSON
                 || apiType == APIType.CREATE_CLASS
                 || apiType == APIType.CREATE_LESSON
+                || apiType == APIType.SCHEDULE_CLASS_LESSON
                 || apiType == APIType.REMOVE_CLASS) {
 
             DataManager.syncData(getContext());

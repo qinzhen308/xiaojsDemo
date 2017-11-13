@@ -4,9 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
+import com.orhanobut.logger.Logger;
+
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -15,12 +28,19 @@ import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 
 public class ChatFragment extends GroupSessionFragment {
 
+    private EventListener.ELMember eventListener;
+    private ClassroomEngine classroomEngine;
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         hiddenTitleBar();
         hiddenSendBar();
+
+        classroomEngine = ClassroomEngine.getEngine();
+
+        eventListener = ClassroomEngine.getEngine().observerMember(receivedConsumer);
     }
 
     @Override
@@ -36,6 +56,15 @@ public class ChatFragment extends GroupSessionFragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (eventListener != null) {
+            eventListener.dispose();
+            eventListener = null;
+        }
+    }
 
     public void popInput() {
 
@@ -46,6 +75,59 @@ public class ChatFragment extends GroupSessionFragment {
         inputFragment.setTargetFragment(this, CTLConstant.REQUEST_INPUT_MESSAGE);
         inputFragment.show(getFragmentManager(), "input");
     }
+
+
+    private TalkItem createJoinTipsItem(Talk talk) {
+
+        TalkItem talkItem = new TalkItem();
+        talkItem.time = System.currentTimeMillis();
+        talkItem.tips = talk.name + "加入教室";
+
+        return talkItem;
+
+    }
+
+    private TalkItem createLeaveTipsItem(Talk talk) {
+
+        TalkItem talkItem = new TalkItem();
+        talkItem.time = System.currentTimeMillis();
+        talkItem.tips = talk.name + "离开教室";
+
+        return talkItem;
+
+    }
+
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.JOIN:
+                    Talk talk = (Talk) eventReceived.t;
+                    if (talk != null && !TextUtils.isEmpty(talk.name)) {
+                        addTipsItem(createJoinTipsItem(talk));
+                    }
+
+                    break;
+                case Su.EventType.LEAVE:
+                    Talk talkl = (Talk) eventReceived.t;
+                    if (talkl != null && !TextUtils.isEmpty(talkl.accountId)) {
+
+                        String name = talkl.name;
+                        if (TextUtils.isEmpty(name)) {
+                            Attendee attendee = classroomEngine.getMember(talkl.accountId);
+                            if (attendee !=null) {
+                                name = attendee.name;
+                            }
+                        }
+
+                        talkl.name = name;
+                        addTipsItem(createLeaveTipsItem(talkl));
+                    }
+                    break;
+            }
+        }
+    };
 
 
 }

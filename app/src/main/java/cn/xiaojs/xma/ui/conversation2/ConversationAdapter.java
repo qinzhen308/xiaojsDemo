@@ -9,13 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.XMSManager;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.room.ChangeNotify;
 import cn.xiaojs.xma.model.socket.room.RemoveDlg;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -93,9 +99,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         if (holder instanceof TimetableConViewHolder) {
             TimetableConViewHolder conViewHolder = (TimetableConViewHolder) holder;
 
-            if (contact.unread>0) {
-                conViewHolder.descView.setText("今日"+contact.unread+"节课");
-            }else {
+            if (contact.unread > 0) {
+                conViewHolder.descView.setText("今日" + contact.unread + "节课");
+            } else {
                 conViewHolder.descView.setText("今日无节课");
             }
 
@@ -123,7 +129,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             peerConViewHolder.descView.setText(contact.lastMessage);
             peerConViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
 
+
             if (contact.unread > 0) {
+
+                if (contact.silent) {
+                    peerConViewHolder.flagView.setBackgroundResource(R.drawable.unread_slient_ovil);
+                } else {
+                    peerConViewHolder.flagView.setBackgroundResource(R.drawable.unread_read_ovil);
+                }
+
                 if (contact.unread > 99) {
                     peerConViewHolder.flagView.setText("99+");
                 } else {
@@ -131,7 +145,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 }
 
                 peerConViewHolder.flagView.setVisibility(View.VISIBLE);
+                peerConViewHolder.disturbFlagView.setVisibility(View.GONE);
             } else {
+                if (contact.silent) {
+                    peerConViewHolder.disturbFlagView.setVisibility(View.VISIBLE);
+                } else {
+                    peerConViewHolder.disturbFlagView.setVisibility(View.GONE);
+                }
                 peerConViewHolder.flagView.setVisibility(View.GONE);
             }
 
@@ -151,12 +171,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 }
             });
 
-            peerConViewHolder.topView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    peerConViewHolder.swipeLayout.close();
-                }
-            });
+//            peerConViewHolder.slientView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    changeSlient(contact);
+//                    peerConViewHolder.swipeLayout.close();
+//                }
+//            });
 
 
             peerConViewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
@@ -202,6 +223,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
 
             if (contact.unread > 0) {
+
+                if (contact.silent) {
+                    conViewHolder.flagView.setBackgroundResource(R.drawable.unread_slient_ovil);
+                } else {
+                    conViewHolder.flagView.setBackgroundResource(R.drawable.unread_read_ovil);
+                }
+
                 if (contact.unread > 99) {
                     conViewHolder.flagView.setText("99+");
                 } else {
@@ -209,8 +237,20 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 }
 
                 conViewHolder.flagView.setVisibility(View.VISIBLE);
+                conViewHolder.disturbFlagView.setVisibility(View.GONE);
             } else {
+                if (contact.silent) {
+                    conViewHolder.disturbFlagView.setVisibility(View.VISIBLE);
+                } else {
+                    conViewHolder.disturbFlagView.setVisibility(View.GONE);
+                }
                 conViewHolder.flagView.setVisibility(View.GONE);
+            }
+
+            if (contact.silent) {
+                conViewHolder.slientView.setText("取消免打扰");
+            }else {
+                conViewHolder.slientView.setText("设为免打扰");
             }
 
 
@@ -229,9 +269,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 }
             });
 
-            conViewHolder.topView.setOnClickListener(new View.OnClickListener() {
+            conViewHolder.slientView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    changeSlient(contact);
                     conViewHolder.swipeLayout.close();
                 }
             });
@@ -282,10 +323,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             return false;
 
         float x = ev.getX();
-        float y = ev.getY() + offset;
+        float y = ev.getY();
         int[] p = new int[2];
         RectF curSwipViewRect = new RectF();
         openedSwipe.getLocationInWindow(p);
+
+        p[1] = p[1] - offset;
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("");
+        }
+
+
         curSwipViewRect.set(p[0], p[1], p[0] + openedSwipe.getWidth(), p[1] + openedSwipe.getHeight());
         if (curSwipViewRect.contains(x, y)) {
             return false;
@@ -320,5 +369,24 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         XMSManager.sendRemoveDialog(context, removeDlg, null);
 
         notifyItemRemoved(position);
+    }
+
+    private void changeSlient(final Contact contact) {
+
+        final ChangeNotify changeNotify = new ChangeNotify();
+        changeNotify.to = contact.id;
+        changeNotify.silent = !contact.silent;
+
+        XMSManager.sendChangeNotify(context, changeNotify, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                DataProvider.getProvider(context).updateSilent(changeNotify.to, changeNotify.silent);
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+
+            }
+        });
     }
 }

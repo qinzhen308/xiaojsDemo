@@ -86,10 +86,12 @@ import cn.xiaojs.xma.ui.classroom2.chat.ChatLandAdapter;
 import cn.xiaojs.xma.ui.classroom2.chat.MessageComparator;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
 import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
 import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
+import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.view.AnimationTextView;
 import cn.xiaojs.xma.ui.view.AnimationView;
@@ -224,6 +226,8 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     private Disposable chatDisposable;
 
+    private EventListener.ELMember eventListener;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -248,7 +252,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         initControlAnim();
 
         chatDisposable = XMSEventObservable.observeChatSession(getContext(), talkConsumer);
-
+        eventListener = classroomEngine.observerMember(memberConsumer);
     }
 
     @Override
@@ -265,6 +269,11 @@ public abstract class MovieFragment extends BaseRoomFragment
         if (chatDisposable != null) {
             chatDisposable.dispose();
             chatDisposable = null;
+        }
+
+        if (eventListener !=null) {
+            eventListener.dispose();
+            eventListener = null;
         }
     }
 
@@ -416,6 +425,10 @@ public abstract class MovieFragment extends BaseRoomFragment
                 hiddeOrshowControl();
                 break;
         }
+    }
+
+    public void startVirbating() {
+        VibratorUtil.Vibrate(getContext(), 100);
     }
 
 
@@ -1150,6 +1163,66 @@ public abstract class MovieFragment extends BaseRoomFragment
             }
         }
     };
+
+
+    private TalkItem createJoinTipsItem(Talk talk) {
+
+        TalkItem talkItem = new TalkItem();
+        talkItem.time = System.currentTimeMillis();
+        talkItem.tips = talk.name + "加入教室";
+
+        return talkItem;
+
+    }
+
+    private TalkItem createLeaveTipsItem(Talk talk) {
+
+        TalkItem talkItem = new TalkItem();
+        talkItem.time = System.currentTimeMillis();
+        talkItem.tips = talk.name + "离开教室";
+
+        return talkItem;
+
+    }
+
+    private void addTipsItem(TalkItem talkItem) {
+        messageData.add(talkItem);
+        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(messageData.size() - 1);
+    }
+
+    private Consumer<EventReceived> memberConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.JOIN:
+                    Talk talk = (Talk) eventReceived.t;
+                    if (talk != null && !TextUtils.isEmpty(talk.name)) {
+                        addTipsItem(createJoinTipsItem(talk));
+                    }
+
+                    break;
+                case Su.EventType.LEAVE:
+                    Talk talkl = (Talk) eventReceived.t;
+                    if (talkl != null && !TextUtils.isEmpty(talkl.accountId)) {
+
+                        String name = talkl.name;
+                        if (TextUtils.isEmpty(name)) {
+                            Attendee attendee = classroomEngine.getMember(talkl.accountId);
+                            if (attendee !=null) {
+                                name = attendee.name;
+                            }
+                        }
+
+                        talkl.name = name;
+                        addTipsItem(createLeaveTipsItem(talkl));
+                    }
+                    break;
+            }
+        }
+    };
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

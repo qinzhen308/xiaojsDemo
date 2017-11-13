@@ -78,8 +78,8 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
     @BindView(R.id.tv_state)
     TextView tvState;
 
-    @BindView(R.id.state_label)
-    TextView stateLabel;
+//    @BindView(R.id.state_label)
+//    TextView stateLabel;
 
     int position;
 
@@ -149,7 +149,7 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
 
         if (Account.TypeName.CLASS_LESSON.equals(data.type) && data.classInfo != null) {
             tvState.setVisibility(GONE);
-            stateLabel.setVisibility(GONE);
+            //stateLabel.setVisibility(GONE);
 
             if (Ctl.LiveLessonState.PENDING_FOR_LIVE.equals(data.state)) {
                 statePoint.setVisibility(VISIBLE);
@@ -181,8 +181,8 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
                 statePoint.setVisibility(VISIBLE);
                 statePoint.setBackgroundResource(R.drawable.shape_orange_point);
                 if (fromHome) {
-                    stateLabel.setVisibility(VISIBLE);
-                    stateLabel.setBackgroundResource(R.drawable.class_live_attend);
+                    //stateLabel.setVisibility(VISIBLE);
+                    //stateLabel.setBackgroundResource(R.drawable.class_live_attend);
                 }
                 iconLive.setVisibility(GONE);
 
@@ -190,14 +190,14 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
                 statePoint.setVisibility(INVISIBLE);
                 iconLive.setVisibility(VISIBLE);
                 if (fromHome) {
-                    stateLabel.setVisibility(GONE);
+                    //stateLabel.setVisibility(GONE);
                 }
             } else {
                 statePoint.setVisibility(VISIBLE);
                 statePoint.setBackgroundResource(R.drawable.shape_grey_point);
                 if (fromHome) {
-                    stateLabel.setVisibility(VISIBLE);
-                    stateLabel.setBackgroundResource(R.drawable.class_live_finished);
+                    //stateLabel.setVisibility(VISIBLE);
+                    //stateLabel.setBackgroundResource(R.drawable.class_live_finished);
                 }
                 iconLive.setVisibility(GONE);
             }

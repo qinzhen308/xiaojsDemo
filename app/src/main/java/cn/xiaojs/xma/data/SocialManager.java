@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.Criteria;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.account.UpTokenParam;
 import cn.xiaojs.xma.model.social.Comment;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
 import cn.xiaojs.xma.model.social.DynPost;
 import cn.xiaojs.xma.model.social.DynUpdate;
@@ -243,11 +244,12 @@ public class SocialManager {
                                      String contact,
                                      String name,
                                      long group,
+                                     Contact.MetIn in,
                                      APIServiceCallback<Relation> callback) {
 
 
         SocialRequest socialRequest = new SocialRequest(context, callback);
-        socialRequest.followContact(contact,name, group);
+        socialRequest.followContact(contact,name, group, in);
     }
 
 

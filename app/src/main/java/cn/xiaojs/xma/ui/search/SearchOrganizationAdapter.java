@@ -32,11 +32,13 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pulltorefresh.BaseHolder;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.AccountSearch;
+import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
 import cn.xiaojs.xma.ui.widget.CanInScrollviewListView;
@@ -162,7 +164,12 @@ public class SearchOrganizationAdapter extends CanInScrollviewListView.Adapter {
 
     private void toFollow(AccountInfo bean, long group) {
 
-        SocialManager.followContact(mContext, bean.id,bean.basic.getName(), group, new APIServiceCallback<Relation>() {
+        Contact.MetIn metIn = new Contact.MetIn();
+        metIn.id = bean.id;
+        metIn.subtype = Collaboration.SubType.ORGANIZATION;
+
+        SocialManager.followContact(mContext,
+                bean.id,bean.basic.getName(), group, metIn, new APIServiceCallback<Relation>() {
             @Override
             public void onSuccess(Relation object) {
                 Toast.makeText(mContext, R.string.followed, Toast.LENGTH_SHORT).show();

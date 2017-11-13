@@ -89,7 +89,7 @@
     <string name="home_tab_message">消息</string>
     <string name="home_tab_mine">我的</string>
     <string name="qr_code">二维码</string>
-    <string name="home_tab_class">班课</string>
+    <string name="home_tab_class">会话</string>
 
     <!--account-->
     <!--register-->
@@ -1072,6 +1072,7 @@
     <string name="classroom_need_public">教室是否公开</string>
     <string name="join_classroom_allow_guest">是否允许游客进教室</string>
     <string name="preview_tips">您正在使用"预览模式"</string>
+    <string name="contact_empty_tips">这个人什么也没说～</string>
 
 
 </resources>

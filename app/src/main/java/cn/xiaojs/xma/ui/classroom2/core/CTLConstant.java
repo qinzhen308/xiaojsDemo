@@ -23,6 +23,7 @@ public class CTLConstant {
     public static final String EXTRA_GROUP_ID= "gid";
     public static final String EXTRA_ACCOUNTID= "aid";
     public static final String EXTRA_SESSION_NAME= "sessionname";
+    public static final String EXTRA_FOLLOWTYPE= "follow_type";
     public static final String EXTRA_CHOICE_MODE = "cmode";
     public static final int REQUEST_MATERIAL_ADD_NEW = 1;
     public static final int REQUEST_CHOOSE_CLASSES = 2;

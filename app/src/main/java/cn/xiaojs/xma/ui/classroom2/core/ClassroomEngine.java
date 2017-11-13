@@ -551,6 +551,15 @@ public final class ClassroomEngine {
         return elTalk;
     }
 
+    public EventListener.ELMember observerMember(Consumer<EventReceived> consumer) {
+        EventListener.ELMember elMember = new EventListener.ELMember(context);
+        eventObservable.eventListener(elMember)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+        return elMember;
+    }
+
+
     public EventListener.ELContact observerContact(Consumer<EventReceived> consumer) {
         EventListener.ELContact elContact = new EventListener.ELContact(context);
         eventObservable.eventListener(elContact)

@@ -5,14 +5,18 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.orhanobut.logger.Logger;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 
+import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.ui.classroom2.base.BaseLiveView;
+
+import static com.pili.pldroid.player.AVOptions.PREFER_FORMAT_M3U8;
 
 /**
  * Created by maxiaobao on 2017/10/19.
@@ -27,6 +31,8 @@ public class PlayLiveView extends BaseLiveView {
     private PLVideoTextureView playView;
     private ControlListener controlListener;
 
+    private boolean canMove;
+
     public PlayLiveView(Context context) {
         super(context);
     }
@@ -39,6 +45,9 @@ public class PlayLiveView extends BaseLiveView {
         super(context, attrs, defStyleAttr);
     }
 
+    public void setCanMove(boolean canMove) {
+        this.canMove = canMove;
+    }
 
     @Override
     public View createLiveView() {
@@ -57,6 +66,11 @@ public class PlayLiveView extends BaseLiveView {
         if (controlListener != null) {
             controlListener.onPlayClosed();
         }
+    }
+
+    @Override
+    public boolean canMove() {
+        return canMove;
     }
 
     public void setControlListener(ControlListener listener) {
@@ -101,12 +115,15 @@ public class PlayLiveView extends BaseLiveView {
         // }
 
         // 1 -> hw codec enable, 0 -> disable [recommended]
-        int codec = AVOptions.MEDIA_CODEC_SW_DECODE;
+        int codec = AVOptions.MEDIA_CODEC_AUTO;
         AVOptions options = new AVOptions();
         // the unit of timeout is ms
         options.setInteger(AVOptions.KEY_PREPARE_TIMEOUT, 10 * 1000);
         // 1 -> hw codec enable, 0 -> disable [recommended]
         options.setInteger(AVOptions.KEY_MEDIACODEC, codec);
+
+        // 设置偏好的视频格式，设置后会加快对应格式视频流的加载速度，但播放其他格式会出错
+        options.setInteger(AVOptions.KEY_PREFER_FORMAT, PREFER_FORMAT_M3U8);
 
         videoTextureView.setAVOptions(options);
         videoTextureView.setDebugLoggingEnabled(XiaojsConfig.DEBUG);

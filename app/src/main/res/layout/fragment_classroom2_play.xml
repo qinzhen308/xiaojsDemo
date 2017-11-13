@@ -35,9 +35,9 @@
             android:layout_width="@dimen/px285"
             android:layout_height="@dimen/px160"
             android:layout_marginLeft="@dimen/px30"
-            android:layout_marginBottom="@dimen/px125"
-            android:layout_alignParentBottom="true"
-            android:layout_above="@id/chat_list"
+            android:layout_marginTop="@dimen/px100"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
             android:visibility="gone"
             />
 

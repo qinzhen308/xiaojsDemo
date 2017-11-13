@@ -25,6 +25,8 @@ public class VideoStreamView extends BaseLiveView{
 
     private ControlListener controlListener;
 
+    private boolean canMove;
+
     public VideoStreamView(Context context) {
         super(context);
     }
@@ -35,6 +37,10 @@ public class VideoStreamView extends BaseLiveView{
 
     public VideoStreamView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setCanMove(boolean canMove) {
+        this.canMove = canMove;
     }
 
     @Override
@@ -52,6 +58,11 @@ public class VideoStreamView extends BaseLiveView{
         if (controlListener != null) {
             controlListener.onPlayClosed();
         }
+    }
+
+    @Override
+    public boolean canMove() {
+        return canMove;
     }
 
     public CameraPreviewFrameView getCameraPreviewView() {

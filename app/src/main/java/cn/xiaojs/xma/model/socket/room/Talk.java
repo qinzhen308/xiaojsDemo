@@ -26,6 +26,14 @@ public class Talk {
 
 
 
+
+    ////////use member leave or join
+    public String accountId;
+    public String psType;
+    public int xa;
+    public String xav;
+
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TalkContent{

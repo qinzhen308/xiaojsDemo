@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2.chat;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -61,6 +62,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         autoRequestFetchMoreData(position);
 
         TalkItem talkItem = messages.get(position);
+
+        if (!TextUtils.isEmpty(talkItem.tips)) {
+            return MessageType.TIPS;
+        }
+
         if (talkItem.from == null || myAccountId.equals(talkItem.from.accountId)) {
             return MessageType.SEND_OUT;
         }
