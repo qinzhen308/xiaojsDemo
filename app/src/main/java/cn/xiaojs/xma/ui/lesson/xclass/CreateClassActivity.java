@@ -15,13 +15,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -42,23 +39,18 @@ import cn.xiaojs.xma.model.ctl.ClassEnroll;
 import cn.xiaojs.xma.model.ctl.ClassLesson;
 import cn.xiaojs.xma.model.ctl.ClassParams;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
-import cn.xiaojs.xma.model.ctl.EnrollStatus;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.ui.base.BaseActivity;
-import cn.xiaojs.xma.ui.common.ShareQrcodeClassroomActivity;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
-import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.ShareUtil;
 import cn.xiaojs.xma.util.StringUtil;
-
-import static cn.xiaojs.xma.R.string.student;
 
 /**
  * Created by maxiaobao on 2017/5/17.
@@ -115,7 +107,6 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         classLessons = new ArrayList<>();
-        ShareQrcodeClassroomActivity.invoke(this,1,"","",new Account());
     }
 
     public static void addClassLesson(ClassLesson lesson) {

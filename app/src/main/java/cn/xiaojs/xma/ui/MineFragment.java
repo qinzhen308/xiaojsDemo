@@ -57,6 +57,7 @@ import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
+import cn.xiaojs.xma.ui.share.ShareQrcodeAppActivity;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.EvaluationStar;
 import cn.xiaojs.xma.ui.widget.IconTextView;
@@ -252,12 +253,8 @@ public class MineFragment extends BaseFragment {
                 enterMessage();
                 break;
             case R.id.qrcode_layout:
-                AnalyticEvents.onEvent(getActivity(),15);
 
-                Intent qrIntent = new Intent(mContext, ShareQrcodeActivity.class);
-                qrIntent.putExtra(ShareQrcodeActivity.EXTRA_QRCODE_TYPE,
-                        ShareQrcodeActivity.CLIENT_DOWNLOAD_QRCODE);
-                startActivity(qrIntent);
+                ShareQrcodeAppActivity.invoke(getActivity());
                 break;
             default:
                 break;

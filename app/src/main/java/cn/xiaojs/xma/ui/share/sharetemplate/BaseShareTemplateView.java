@@ -1,4 +1,4 @@
-package cn.xiaojs.xma.ui.view.sharetemplate;
+package cn.xiaojs.xma.ui.share.sharetemplate;
 
 import android.content.Context;
 import android.graphics.Bitmap;

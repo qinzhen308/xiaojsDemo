@@ -43,7 +43,7 @@ import cn.xiaojs.xma.model.socket.room.ChangeNotify;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
-import cn.xiaojs.xma.ui.common.ShareBeautifulQrcodeActivity;
+import cn.xiaojs.xma.ui.share.ShareQrcodeClassroomActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.AddLessonNameActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.StudentsListActivity;
@@ -51,7 +51,6 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.widget.AdapterGirdView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
-import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import okhttp3.ResponseBody;
 
@@ -186,9 +185,14 @@ public class ClassDetailFragment extends BaseDialogFragment {
                 modifyVistorLibrary(cbAllowGuestRead.isChecked());
                 break;
             case R.id.class_qrcode_title:
-                if(classInfo!=null&& !ArrayUtil.isEmpty(classInfo.advisers)){
+                /*if(classInfo!=null&& !ArrayUtil.isEmpty(classInfo.advisers)){
                     ShareBeautifulQrcodeActivity.invoke(getActivity(),ShareBeautifulQrcodeActivity.TYPE_CLASS,classId,className.getText().toString(),classInfo.advisers[0]);
+                }*/
+                if(classInfo!=null){
+
+                    ShareQrcodeClassroomActivity.invoke(getActivity(),classInfo.id,classInfo.title);
                 }
+
                 break;
             case R.id.class_canlender_title:
                 openSchedule();

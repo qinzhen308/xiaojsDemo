@@ -142,7 +142,13 @@
                 android:name=".ui.common.ShareBeautifulQrcodeActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.common.ShareQrcodeClassroomActivity"
+                android:name=".ui.share.ShareQrcodeClassroomActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.share.ShareQrcodeAppActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.share.ShareQrcodeRLessonActivity"
                 android:screenOrientation="portrait"/>
 
         <activity

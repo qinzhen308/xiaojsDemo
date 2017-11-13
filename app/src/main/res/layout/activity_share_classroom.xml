@@ -25,10 +25,6 @@
         android:background="@color/classroom_gray_1"
         >
 
-         <cn.xiaojs.xma.ui.view.sharetemplate.ShareTemplate3View
-             android:id="@+id/layout_content"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content" />
 
      </LinearLayout>
 
@@ -46,6 +42,7 @@
             android:layout_height="@dimen/px80"
             android:background="@color/white">
             <Button
+                android:id="@+id/btn_change_img0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -73,6 +70,7 @@
             android:background="@color/white">
 
             <Button
+                android:id="@+id/btn_change_style0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

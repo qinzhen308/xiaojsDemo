@@ -1,15 +1,13 @@
-package cn.xiaojs.xma.ui.view.sharetemplate;
+package cn.xiaojs.xma.ui.share.sharetemplate;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Region;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
@@ -19,28 +17,27 @@ import cn.xiaojs.xma.R;
  * Created by Paul Z on 2017/11/11.
  */
 
-public class ShareTemplate3View extends BaseShareTemplateView {
+public class ShareTemplate2View extends BaseShareTemplateView {
     public static final String tip1 = "长按识别二维码加入教室，观看直播";
     Paint paint;
     Paint measurePaint;
-
-    Bitmap bmLogo;
-
-    private int color_font_black;
-    private int color_font_shit;
+    private int color_font_white;
     private int color_gray;
 
-    public ShareTemplate3View(Context context) {
+    Bitmap bmLogo;
+    Bitmap bmShareShadow;
+
+    public ShareTemplate2View(Context context) {
         super(context);
         init();
     }
 
-    public ShareTemplate3View(Context context, AttributeSet attrs) {
+    public ShareTemplate2View(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public ShareTemplate3View(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ShareTemplate2View(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -48,30 +45,13 @@ public class ShareTemplate3View extends BaseShareTemplateView {
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         measurePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        color_font_black=getResources().getColor(R.color.font_black);
-        color_font_shit=getResources().getColor(R.color.yellow_shit);
-        color_gray = getResources().getColor(R.color.cancel_fllow_btn_color);
+        color_font_white = getResources().getColor(R.color.white);
+        color_gray = getResources().getColor(R.color.classroom_gray_1);
         paint.setStrokeWidth(2);
         bmLogo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_logo);
+        bmShareShadow = BitmapFactory.decodeResource(getResources(), R.drawable.bg_share_shadow);
     }
 
-
-    private void drawCircleFrame(Canvas canvas){
-        int width = getWidth();
-        int height = getHeight();
-        canvas.save();
-        RectF rect = new RectF();
-        int left = (int) (width * 75f / 750);
-        int right = (int) (width * 600f / 750) + left;
-        int top = (int) (height * 120f / 1130);
-        int bottom = (int) (height * 600f / 1130) + top;
-        rect.set(left,top,right,bottom);
-        Path pathCircle=new Path();
-        pathCircle.addOval(rect, Path.Direction.CCW);
-        canvas.clipPath(pathCircle, Region.Op.DIFFERENCE);
-        canvas.drawColor(Color.WHITE);
-        canvas.restore();
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -80,8 +60,15 @@ public class ShareTemplate3View extends BaseShareTemplateView {
         int height = getHeight();
         if (width == 0 || height == 0) return;
 
-        drawCircleFrame(canvas);
-
+        if (bmShareShadow != null) {
+            Rect shadowRect = new Rect();
+            int left = 0;
+            int right = 0;
+            int top = (int) (height * 622f / 1130);
+            int bottom = height;
+            shadowRect.set(left, top, right, bottom);
+            canvas.drawBitmap(bmLogo, new Rect(0, 0, bmLogo.getWidth(), bmLogo.getHeight()), shadowRect, paint);
+        }
 
         if (bmLogo != null) {
             Rect logoRect = new Rect();
@@ -127,14 +114,14 @@ public class ShareTemplate3View extends BaseShareTemplateView {
             float x = 160f * width / 750;
             float y = 940f * height / 1130;
             paint.setTextSize(textSize);
-            paint.setColor(color_font_black);
+            paint.setColor(color_font_white);
             canvas.drawText(techerName, 0, techerName.length(), x, y, paint);
         }
 
         if (!TextUtils.isEmpty(techerDescrib)) {
             float textSize = 26f * height / 1130;
             paint.setTextSize(textSize);
-            paint.setColor(color_font_black);
+            paint.setColor(color_font_white);
             measurePaint.setTextSize(textSize);
             float length = measurePaint.measureText(techerDescrib, 0, techerDescrib.length());
             int maxLineLength = (int) (400f * width / 750);
@@ -161,7 +148,7 @@ public class ShareTemplate3View extends BaseShareTemplateView {
             float x = 50f * width / 750;
             float y = 1060f * height / 1130;
             paint.setTextSize(textSize);
-            paint.setColor(color_font_black);
+            paint.setColor(color_font_white);
             canvas.drawText(tip1, 0, tip1.length(), x, y, paint);
         }
 
@@ -169,7 +156,7 @@ public class ShareTemplate3View extends BaseShareTemplateView {
         if (!TextUtils.isEmpty(className)) {
             float textSize = 56f * height / 1130;
             paint.setTextSize(textSize);
-            paint.setColor(color_font_shit);
+            paint.setColor(color_font_white);
             measurePaint.setTextSize(textSize);
             float length = measurePaint.measureText(className, 0, className.length());
             int maxLineLength = (int) (650f * width / 750);
@@ -190,7 +177,7 @@ public class ShareTemplate3View extends BaseShareTemplateView {
             }
         }
 
-        paint.setColor(color_gray);
+        paint.setColor(color_font_white);
         canvas.drawLine(56f * width / 750, 1017.5f * height / 1130, 556f * width / 750, 1017.5f * height / 1130, paint);
     }
 
