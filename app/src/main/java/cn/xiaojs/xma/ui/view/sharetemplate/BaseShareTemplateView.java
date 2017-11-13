@@ -9,13 +9,12 @@ import android.view.View;
  * Created by Paul Z on 2017/11/11.
  */
 
-public class BaseShareTemplateView extends View implements IClassroomTemplate{
+public class BaseShareTemplateView extends View implements IClassroomTemplate {
     protected String techerName;
     protected String className;
     protected Bitmap bmQrCode;
     protected Bitmap bmAvatar;
     protected String techerDescrib;
-
 
 
     public BaseShareTemplateView(Context context) {
@@ -32,43 +31,50 @@ public class BaseShareTemplateView extends View implements IClassroomTemplate{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height=MeasureSpec.getSize(heightMeasureSpec);
-        int width=MeasureSpec.getSize(widthMeasureSpec);
-        if(height/(float)width>1130f/750f){
-            height=(int)(width*1130f/750f);
-        }else {
-            width=(int)(height*750f/1130f);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        if (height / (float) width > 1130f / 750f) {
+            height = (int) (width * 1130f / 750f);
+        } else {
+            width = (int) (height * 750f / 1130f);
         }
-        setMeasuredDimension(width,height);
+        setMeasuredDimension(width, height);
     }
 
     @Override
     public void setTeacherName(String str) {
-        techerName=str;
+        techerName = str;
         invalidate();
     }
 
     @Override
     public void setTeacherAvatar(Bitmap avatar) {
-        bmAvatar=avatar;
+        bmAvatar = avatar;
         invalidate();
     }
 
     @Override
     public void setTeacherDescrib(String str) {
-        techerDescrib=str;
+        techerDescrib = str;
         invalidate();
     }
 
     @Override
     public void setClassName(String str) {
-        className=str;
+        className = str;
         invalidate();
     }
 
     @Override
     public void setQRCodeImage(Bitmap qrCode) {
-        bmQrCode=qrCode;
+        if (bmQrCode == qrCode) {
+            return;
+        }
+        bmQrCode = qrCode;
         invalidate();
+    }
+
+    public int getQrCodeSize() {
+        return (int) (getWidth() * 150f / 750f);
     }
 }

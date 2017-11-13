@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -35,11 +39,16 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.view.sharetemplate.BaseShareTemplateView;
 import cn.xiaojs.xma.ui.view.sharetemplate.ShareTemplate1View;
+import cn.xiaojs.xma.ui.view.sharetemplate.ShareTemplate2View;
+import cn.xiaojs.xma.ui.view.sharetemplate.ShareTemplate3View;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.ShareUtil;
 
@@ -62,15 +71,21 @@ public class ShareQrcodeClassroomActivity extends BaseActivity {
       ViewPager vpStyle;*/
     @BindView(R.id.vp_style)
     LinearLayout layoutStyle;
-    private int qrcodeType = -1;
     String imgUrl;
 
     String title;
     String id;
-    Account teacher;
+    Attendee teacher;
 
-    @BindView(R.id.layout_content)
     BaseShareTemplateView layoutContent;
+    BaseShareTemplateView[] templateViews=null;
+
+    private int curTemplate=TEMPLATE_style_1;
+    private static final int TEMPLATE_style_1=0;
+    private static final int TEMPLATE_style_2=1;
+    private static final int TEMPLATE_style_3=2;
+
+    Bitmap bmQrCode;
 
     private int[] style1PicRes = {R.drawable.bg_share_class_1, R.drawable.bg_share_class_2, R.drawable.bg_share_class_2, R.drawable.bg_share_class_3, R.drawable.bg_share_class_4};
 
@@ -87,7 +102,9 @@ public class ShareQrcodeClassroomActivity extends BaseActivity {
         addView(R.layout.activity_share_classroom);
         setMiddleTitle(getString(R.string.share_class));
         setRightText(R.string.share_mode_url);
-        shareUrl = ApiManager.getShareLessonUrl(id, shareTypes[qrcodeType]);
+        shareUrl = ApiManager.getShareLessonUrl(id, cn.xiaojs.xma.common.xf_foundation.schemas.Account.TypeName.CLASS_LESSON);
+        templateViews=new BaseShareTemplateView[]{new ShareTemplate1View(this),new ShareTemplate2View(this),new ShareTemplate3View(this)};
+        changeTemplate(curTemplate);
     }
 
     boolean setViewHeight = true;
@@ -98,6 +115,46 @@ public class ShareQrcodeClassroomActivity extends BaseActivity {
             setViewHeight = false;
             initView();
         }
+    }
+
+    private void changeTemplate(int template){
+        curTemplate=template;
+        layoutStyle.removeAllViews();
+        layoutContent=templateViews[curTemplate];
+        layoutStyle.addView(layoutContent);
+        bindInfo();
+    }
+
+    private void bindInfo(){
+        layoutContent.setClassName(title);
+        layoutContent.setTeacherName(getAdviserName());
+        layoutContent.setTeacherDescrib(getAdviserDescrib());
+        Glide.with(this)
+                .load(cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(getAdviserId(),300))
+                .asBitmap()
+                .error(R.drawable.default_avatar)
+                .placeholder(R.drawable.default_avatar)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        layoutContent.setTeacherAvatar(resource);
+                    }
+                });
+
+        layoutContent.setQRCodeImage(bmQrCode);
+
+    }
+
+    private String getAdviserName(){
+        return "";
+    }
+
+    private String getAdviserDescrib(){
+        return "";
+    }
+
+    private String getAdviserId(){
+        return "";
     }
 
 
@@ -121,33 +178,33 @@ public class ShareQrcodeClassroomActivity extends BaseActivity {
 
     private void setExtra() {
         Intent data = getIntent();
-        qrcodeType = getIntent().getIntExtra(EXTRA_QRCODE_TYPE, -1);
         title = data.getStringExtra(EXTRA_KEY_TITLE);
         id = data.getStringExtra(EXTRA_KEY_ID);
-        teacher = (Account) data.getSerializableExtra(EXTRA_KEY_TEACHER);
+        teacher= ClassroomEngine.getEngine().getClassAdviser();
     }
 
     public void initView() {
 
-//        layoutContent.setBackgroundResource(style1PicRes[0]);
+/*//        layoutContent.setBackgroundResource(style1PicRes[0]);
 //        layoutContent.setBackgroundResource(R.drawable.template1_picture);
         layoutContent.setBackgroundResource(R.drawable.template2_picture);
         layoutContent.setTeacherAvatar(BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_avator));
         layoutContent.setQRCodeImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_avator));
         layoutContent.setClassName("大撒但是睡得速度闪躲睡得睡得睡得是");
         layoutContent.setTeacherName("飘飘龙");
-        layoutContent.setTeacherDescrib("飘飘龙阿红撒了；按时拉伸了阿斯顿");
+        layoutContent.setTeacherDescrib("飘飘龙阿红撒了；按时拉伸了阿斯顿");*/
 
         new Thread() {
             @Override
             public void run() {
-                /*final Bitmap bm = generateQRBitMap(shareUrl, ivQrCode.getWidth());
+                final Bitmap bm = generateQRBitMap(shareUrl, layoutContent.getQrCodeSize());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ivQrCode.setImageBitmap(bm);
+                        bmQrCode=bm;
+                        layoutContent.setQRCodeImage(bm);
                     }
-                });*/
+                });
             }
         }.start();
     }
@@ -262,9 +319,8 @@ public class ShareQrcodeClassroomActivity extends BaseActivity {
     }
 
 
-    public static void invoke(Context context, int type, String id, String title, Account teacher, Serializable... otherInfo) {
+    public static void invoke(Context context, String id, String title, Account teacher, Serializable... otherInfo) {
         Intent intent = new Intent(context, ShareQrcodeClassroomActivity.class);
-        intent.putExtra(EXTRA_QRCODE_TYPE, type);
         intent.putExtra(EXTRA_KEY_TEACHER, teacher);
         intent.putExtra(EXTRA_KEY_TITLE, title);
         intent.putExtra(EXTRA_KEY_ID, id);
