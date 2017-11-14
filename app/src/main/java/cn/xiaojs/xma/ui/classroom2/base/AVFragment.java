@@ -15,7 +15,6 @@ import cn.xiaojs.xma.XiaojsConfig;
 
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
-import cn.xiaojs.xma.ui.classroom2.live.WhiteboardStreamEngine;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 
 /**
@@ -48,6 +47,9 @@ public abstract class AVFragment extends MovieFragment
         whiteboardFragment.setLastBoardLoadListener(new BoardCollaborateFragment.OnLastBoardLoadListener() {
             @Override
             public void onSuccess(Bitmap preview) {
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("---Bitmap preview---------onSuccess----------");
+                }
                 streamingEngine.inputWhiteboardData(preview);
             }
         });
@@ -118,6 +120,7 @@ public abstract class AVFragment extends MovieFragment
                 if (!streaming) {
                     streamingEngine.togglePictureStreaming();
                     sendStartStreaming();
+                    pushBoardWhenStartStreaming();
                     streaming = true;
                 }
                 break;
@@ -142,5 +145,13 @@ public abstract class AVFragment extends MovieFragment
     @Override
     public boolean pushPreviewEnable() {
         return true;
+    }
+
+
+    private void pushBoardWhenStartStreaming() {
+//        Bitmap bitmap = whiteboardContainerLayout.getDrawingCache(true);
+//        if (bitmap !=null) {
+//            streamingEngine.inputWhiteboardData(bitmap);
+//        }
     }
 }

@@ -9,6 +9,8 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="trans_status_bar" parent="AppTheme"/>
+
     <style name="SplashTheme" parent="android:Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:windowBackground">@drawable/splash_bg</item>
     </style>

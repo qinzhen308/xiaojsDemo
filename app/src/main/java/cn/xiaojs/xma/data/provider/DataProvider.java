@@ -3,14 +3,26 @@ package cn.xiaojs.xma.data.provider;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.socket.SyncClassesReceived;
+import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
+import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.RetainDlg;
+import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import io.reactivex.Observable;
@@ -18,12 +30,18 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by maxiaobao on 2017/11/3.
  */
 
 public class DataProvider {
+
+    public static final int ACTION_ADD = 0;
+    public static final int ACTION_REMOVE = 1;
+    public static final int ACTION_UPDATE = 2;
+
 
     private static DataProvider cache;
 
@@ -37,6 +55,8 @@ public class DataProvider {
 
     private boolean completed;
 
+    private Disposable eventDisposable;
+
 
     private DataProvider(Context context) {
         this.context = context.getApplicationContext();
@@ -48,6 +68,8 @@ public class DataProvider {
         classesMapping = new HashMap<>();
 
         completed = false;
+
+        eventDisposable = XMSEventObservable.observeGlobalSession(context, receivedConsumer);
     }
 
     public static DataProvider getProvider(Context context) {
@@ -130,6 +152,15 @@ public class DataProvider {
         updateClassSilent(conversationId, silent);
     }
 
+    public void joinedClass(Contact contact) {
+        addOrUpdateClass(contact);
+    }
+
+    public void leavedClass(String classid) {
+        removeConversation(classid);
+        removeClass(classid);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Person
     //
@@ -150,6 +181,48 @@ public class DataProvider {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 教室
     //
+    public void addOrUpdateClass(Contact contact) {
+        int index = classes.indexOf(contact);
+        if (index >= 0) {
+            Contact oriContact = classes.get(index);
+            oriContact.state = contact.state;
+            oriContact.owner = contact.owner;
+
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onClassesUpdate(ACTION_UPDATE, oriContact);
+                }
+            }
+
+        } else {
+            classes.add(contact);
+            classesMapping.put(contact.id, contact);
+
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onClassesUpdate(ACTION_ADD, contact);
+                }
+            }
+        }
+    }
+
+    public void removeClass(String classid) {
+        if (TextUtils.isEmpty(classid))
+            return;
+
+        Contact rcontact = new Contact();
+        rcontact.id = classid;
+
+        boolean removed = classes.remove(rcontact);
+        classesMapping.remove(classid);
+
+        if (removed && dataObservers != null) {
+            for (DataObserver observer : dataObservers) {
+                observer.onClassesUpdate(ACTION_REMOVE, rcontact);
+            }
+        }
+    }
+
     public Contact getClassAdviser(String classId) {
         Contact contact = classesMapping.get(classId);
         Contact adviser = null;
@@ -205,6 +278,22 @@ public class DataProvider {
     // Conversation
     //
 
+    public void removeConversation(String conversationId) {
+        if (TextUtils.isEmpty(conversationId))
+            return;
+
+        Contact tempContact = new Contact();
+        tempContact.id = conversationId;
+
+        boolean removed = conversations.remove(tempContact);
+
+        if (removed && dataObservers != null) {
+            for (DataObserver observer : dataObservers) {
+                observer.onConversationRemoved(conversationId);
+            }
+        }
+    }
+
     public void updateConversationSilent(String conversationId, boolean silent) {
         if (TextUtils.isEmpty(conversationId))
             return;
@@ -217,8 +306,10 @@ public class DataProvider {
             Contact oriContact = conversations.get(index);
             oriContact.silent = silent;
 
-            for (DataObserver observer : dataObservers) {
-                observer.onConversationUpdate(oriContact, index);
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationUpdate(oriContact, index);
+                }
             }
         }
     }
@@ -239,8 +330,10 @@ public class DataProvider {
             Contact oriContact = conversations.get(index);
             oriContact.unread = unreadCount;
 
-            for (DataObserver observer : dataObservers) {
-                observer.onConversationUpdate(oriContact, index);
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationUpdate(oriContact, index);
+                }
             }
 
             if (unreadCount > 0) {
@@ -262,13 +355,19 @@ public class DataProvider {
             oriContact.lastMessage = contact.lastMessage;
             oriContact.unread = oriContact.unread + contact.unread;
 
+            if (!TextUtils.isEmpty(contact.signature)) {
+                oriContact.state = contact.state;
+            }
+
             if (index != 1) {
                 conversations.remove(index);
                 conversations.add(1, oriContact);
             }
 
-            for (DataObserver observer : dataObservers) {
-                observer.onConversationMove(oriContact, index, 1);
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationMove(oriContact, index, 1);
+                }
             }
 
             vibrate(contact);
@@ -276,8 +375,11 @@ public class DataProvider {
         } else {
 
             conversations.add(1, contact);
-            for (DataObserver observer : dataObservers) {
-                observer.onConversationInsert(contact, 1);
+
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationInsert(contact, 1);
+                }
             }
 
             vibrate(contact);
@@ -296,16 +398,21 @@ public class DataProvider {
                 conversations.remove(index);
                 conversations.add(1, oriContact);
 
-                for (DataObserver observer : dataObservers) {
-                    observer.onConversationMove(oriContact, index, 1);
+                if (dataObservers != null) {
+                    for (DataObserver observer : dataObservers) {
+                        observer.onConversationMove(oriContact, index, 1);
+                    }
                 }
             }
 
         } else {
 
             conversations.add(1, contact);
-            for (DataObserver observer : dataObservers) {
-                observer.onConversationInsert(contact, 1);
+
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationInsert(contact, 1);
+                }
             }
         }
 
@@ -371,6 +478,121 @@ public class DataProvider {
 
         VibratorUtil.Vibrate(context, 100);
         return true;
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("receivedConsumer .....");
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.TALK:
+                    updateConveration((Talk) eventReceived.t);
+                    break;
+                case Su.EventType.DIALOG_READ:
+                    Talk talk = (Talk) eventReceived.t;
+                    updateDlgRead(talk.type, talk.to);
+                    break;
+                case Su.EventType.REMOVE_DIALOG:
+                    break;
+                case Su.EventType.RETAIN_DIALOG:
+                    break;
+                case Su.EventType.CHANGE_NOTIFY:
+                    ChangeNotifyReceived received = (ChangeNotifyReceived) eventReceived.t;
+                    handleChangeNotify(received);
+                    break;
+                case Su.EventType.SYNC_CLASSES:
+                    SyncClassesReceived classesReceived = (SyncClassesReceived) eventReceived.t;
+                    handleSyncClasses(classesReceived);
+                    break;
+            }
+        }
+    };
+
+
+    private void updateDlgRead(int type, String to) {
+        updateConversationUnread(to, 0);
+    }
+
+
+    private void updateConveration(Talk talkItem) {
+        if (TextUtils.isEmpty(talkItem.name)) {
+            talkItem.name = "nil";
+        }
+        Contact contact = new Contact();
+
+        //FIXME followType 没返回
+
+        if (talkItem.type == Communications.TalkType.PEER) {
+            contact.id = talkItem.from;
+            contact.name = talkItem.name;
+            contact.title = talkItem.name;
+            contact.subtype = ConversationType.TypeName.PERSON;
+        } else if (talkItem.type == Communications.TalkType.OPEN) {
+            contact.id = talkItem.to;
+            String title = getClassName(talkItem.to);
+            contact.name = title;
+            contact.title = title;
+            contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
+        } else {
+            return;
+        }
+
+        if (!TextUtils.isEmpty(talkItem.signature)) {
+
+            contact.signature = talkItem.signature;
+
+            if (talkItem.signature.equals(Su.getLiveStreamingSignature())) {
+
+                contact.state = Live.LiveSessionState.LIVE;
+            } else {//FIXME 此处要判断多种状态，目前接口支持不全；
+                contact.state = Live.LiveSessionState.IDLE;
+            }
+
+        }
+
+        contact.lastMessage = talkItem.body.text;
+        contact.lastTalked = talkItem.time;
+        contact.unread = 1;
+
+        moveOrInsertConversation(contact);
+    }
+
+    private void handleChangeNotify(ChangeNotifyReceived changeNotify) {
+        if (changeNotify == null)
+            return;
+        updateSilent(changeNotify.to, changeNotify.silent);
+
+    }
+
+    private void handleSyncClasses(SyncClassesReceived syncClasses) {
+        if (syncClasses == null)
+            return;
+
+        if (syncClasses.change.equals("joined")) {
+
+            Contact contact = new Contact();
+            contact.id = syncClasses.id;
+            contact.subtype = syncClasses.subtype;
+            contact.title = syncClasses.title;
+            contact.state = syncClasses.state;
+            contact.ticket = syncClasses.ticket;
+            contact.ownerId = syncClasses.ownerId;
+            contact.owner = syncClasses.owner;
+
+            joinedClass(contact);
+
+        } else if (syncClasses.change.equals("left")) {
+            leavedClass(syncClasses.id);
+        }
+
 
     }
 

@@ -42,6 +42,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -350,6 +351,10 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
 //        clearResumePosition();
 //        setIntent(intent);
 //    }
+
+    public Bitmap getBitmap() {
+        return playerView.getDrawingCache();
+    }
 
 
     private void initializePlayer() {

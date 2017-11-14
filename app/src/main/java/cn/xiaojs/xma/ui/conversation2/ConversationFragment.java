@@ -108,6 +108,12 @@ public class ConversationFragment extends Base2Fragment {
             adapter.notifyDataSetChanged();
             updateTips();
         }
+
+        @Override
+        public void onConversationRemoved(String conversationId) {
+            adapter.notifyDataSetChanged();
+            updateTips();
+        }
     };
 
 

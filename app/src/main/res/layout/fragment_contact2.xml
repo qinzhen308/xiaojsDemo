@@ -10,19 +10,28 @@
         android:layout_alignParentTop="true"
         android:background="@color/white">
 
+    <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px120"
+            android:background="@drawable/navbar_bg"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
 
     <TextView
             android:id="@+id/title_bar"
             android:layout_width="0dp"
-            android:layout_height="@dimen/px90"
+            android:layout_height="@dimen/px80"
             android:gravity="center"
             android:text="通讯录"
             android:textColor="@color/font_white"
             android:textSize="@dimen/font_36px"
+            android:layout_marginTop="@dimen/px40"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:background="@drawable/navbar_bg"
             />
 
     <ImageView
@@ -32,9 +41,9 @@
             android:src="@drawable/ic_back"
             android:paddingLeft="@dimen/px30"
             android:paddingRight="@dimen/px30"
-            app:layout_constraintLeft_toLeftOf="@id/title_bar"
-            app:layout_constraintTop_toTopOf="@id/title_bar"
-            app:layout_constraintBottom_toBottomOf="@id/title_bar"
+            app:layout_constraintLeft_toLeftOf="@+id/title_bar"
+            app:layout_constraintTop_toTopOf="@+id/title_bar"
+            app:layout_constraintBottom_toBottomOf="@+id/title_bar"
             />
 
     <TextView
@@ -47,16 +56,16 @@
             android:text="确定"
             android:textColor="@color/btn_blue"
             android:textSize="@dimen/font_30px"
-            app:layout_constraintRight_toRightOf="@id/title_bar"
-            app:layout_constraintTop_toTopOf="@id/title_bar"
-            app:layout_constraintBottom_toBottomOf="@id/title_bar"/>
+            app:layout_constraintRight_toRightOf="@+id/title_bar"
+            app:layout_constraintTop_toTopOf="@+id/title_bar"
+            app:layout_constraintBottom_toBottomOf="@+id/title_bar"/>
 
     <View
             android:id="@+id/title_bar_line"
             android:layout_width="0dp"
-            android:layout_height="@dimen/px1"
+            android:layout_height="1dp"
             android:background="@color/gray_line"
-            app:layout_constraintTop_toBottomOf="@id/title_bar"
+            app:layout_constraintTop_toBottomOf="@+id/title_bar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             />
@@ -65,10 +74,10 @@
     <RadioGroup
             android:id="@+id/tab_bar"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/px78"
+            android:layout_height="39dp"
             android:orientation="horizontal"
             android:checkedButton="@+id/tab_my"
-            app:layout_constraintTop_toBottomOf="@id/title_bar_line"
+            app:layout_constraintTop_toBottomOf="@+id/title_bar_line"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             >
@@ -103,9 +112,9 @@
     <View
             android:id="@+id/top_line"
             android:layout_width="0dp"
-            android:layout_height="@dimen/px1"
+            android:layout_height="1dp"
             android:background="@color/gray_line"
-            app:layout_constraintTop_toBottomOf="@id/tab_bar"
+            app:layout_constraintTop_toBottomOf="@+id/tab_bar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             />
@@ -116,7 +125,7 @@
             android:layout_height="0dp"
             android:orientation="vertical"
             android:layout_marginBottom="@dimen/px120"
-            app:layout_constraintTop_toBottomOf="@id/top_line"
+            app:layout_constraintTop_toBottomOf="@+id/top_line"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

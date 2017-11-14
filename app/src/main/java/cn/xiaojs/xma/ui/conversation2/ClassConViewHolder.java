@@ -11,6 +11,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.ui.classroom2.widget.ColorIconTextView;
+import cn.xiaojs.xma.ui.view.AnimationView2;
 import cn.xiaojs.xma.ui.widget.SwipeLayout;
 
 /**
@@ -23,6 +24,8 @@ public class ClassConViewHolder extends AbsConversationViewHolder {
     public RelativeLayout uprootLayout;
     @BindView(R.id.avator)
     public ColorIconTextView avatorTextView;
+    @BindView(R.id.streaming_ani)
+    public AnimationView2 animationView2;
     @BindView(R.id.title)
     public TextView titleView;
     @BindView(R.id.desc)

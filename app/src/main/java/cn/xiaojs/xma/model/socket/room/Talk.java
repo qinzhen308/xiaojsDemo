@@ -23,8 +23,7 @@ public class Talk {
     public String name;
     public String subtype;
     public boolean retainOnTalk;
-
-
+    public String signature;
 
 
     ////////use member leave or join

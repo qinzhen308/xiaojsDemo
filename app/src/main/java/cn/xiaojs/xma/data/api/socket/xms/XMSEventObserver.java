@@ -13,6 +13,7 @@ import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.data.api.socket.MessageCallback;
 import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
+import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import io.reactivex.Observer;
 import io.reactivex.android.MainThreadDisposable;
@@ -119,6 +120,21 @@ public class XMSEventObserver<T> extends MainThreadDisposable implements Message
         }
     }
 
+    public static class GlobalSession extends XMSEventObserver {
+        public GlobalSession(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onEvent() {
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.TALK, Talk.class);
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.DIALOG_READ, Talk.class);
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.REMOVE_DIALOG, Talk.class);
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.RETAIN_DIALOG, Talk.class);
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.CHANGE_NOTIFY, ChangeNotifyReceived.class);
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.SYNC_CLASSES, SyncClassStateReceive.class);
+        }
+    }
 
 }
 

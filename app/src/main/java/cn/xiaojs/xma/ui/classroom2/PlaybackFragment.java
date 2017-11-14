@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -36,6 +37,7 @@ import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.UIUtils;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observables.GroupedObservable;
 
@@ -106,10 +108,14 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         }
     }
 
+
+    public Bitmap getPlaybackShots() {
+        return getBitmap();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         if(idleObserver != null) {
             idleObserver.dispose();
         }
@@ -158,6 +164,40 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
     }
 
     @Override
+    protected void controlHandleOnRotate(int orientation) {
+        switch (orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                controlPort.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                controlLand.setVisibility(View.VISIBLE);
+
+                exoPlayLayout.setPadding(landPaddingSize, 0, landPaddingSize, 0);
+                bottomControlBgView.setBackgroundDrawable(
+                        getResources().getDrawable(R.drawable.exo_player_control_land_rect_bg));
+
+                orientBtn.setVisibility(View.GONE);
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                controlLand.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                controlPort.setVisibility(View.VISIBLE);
+
+                pBottomAvatorView.setVisibility(View.GONE);
+                pBottomClassnameView.setVisibility(View.GONE);
+                pBottomBgView.setVisibility(View.GONE);
+                pBottomOrientView.setVisibility(View.GONE);
+
+                exoPlayLayout.setPadding(0, 0, 0, 0);
+                bottomControlBgView.setBackgroundColor(
+                        getResources().getColor(R.color.black_opacity_60));
+
+                orientBtn.setVisibility(View.VISIBLE);
+
+                break;
+        }
+    }
+
+    @Override
     public void onVisibilityChange(int visibility) {
         super.onVisibilityChange(visibility);
 
@@ -178,7 +218,6 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         }
 
     }
-
 
     private void initControlPanel() {
 
@@ -221,39 +260,6 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
     }
 
 
-    @Override
-    protected void controlHandleOnRotate(int orientation) {
-        switch (orientation) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-                controlLand.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-                controlPort.setVisibility(View.GONE);
-
-                exoPlayLayout.setPadding(landPaddingSize, 0, landPaddingSize, 0);
-                bottomControlBgView.setBackgroundDrawable(
-                        getResources().getDrawable(R.drawable.exo_player_control_land_rect_bg));
-
-                orientBtn.setVisibility(View.GONE);
-                break;
-            case Configuration.ORIENTATION_PORTRAIT:
-                controlLand.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
-                controlPort.setVisibility(View.VISIBLE);
-
-                pBottomAvatorView.setVisibility(View.GONE);
-                pBottomClassnameView.setVisibility(View.GONE);
-                pBottomBgView.setVisibility(View.GONE);
-                pBottomOrientView.setVisibility(View.GONE);
-
-                exoPlayLayout.setPadding(0, 0, 0, 0);
-                bottomControlBgView.setBackgroundColor(
-                        getResources().getColor(R.color.black_opacity_60));
-
-                orientBtn.setVisibility(View.VISIBLE);
-
-                break;
-        }
-    }
 
     @Override
     public void onFetchMoreRequested() {

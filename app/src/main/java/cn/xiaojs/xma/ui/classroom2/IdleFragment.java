@@ -158,6 +158,32 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         }
     }
 
+    @Override
+    protected void controlHandleOnRotate(int orientation) {
+        switch (orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                controlClickView.setVisibility(View.GONE);
+                controlLand.setVisibility(View.VISIBLE);
+                controlPort.setVisibility(View.GONE);
+                if (recyclerView != null) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                lessonTipsLayout.setVisibility(View.GONE);
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                controlClickView.setVisibility(View.VISIBLE);
+                controlLand.setVisibility(View.GONE);
+                controlPort.setVisibility(View.VISIBLE);
+                if (recyclerView != null) {
+                    recyclerView.setVisibility(View.GONE);
+                }
+                if (canShowLessonTips()) {
+                    lessonTipsLayout.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
+
+    }
 
     @Override
     public void onClosed() {
@@ -315,23 +341,6 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
                     }
                 });
-    }
-
-    @Override
-    protected void controlHandleOnRotate(int orientation) {
-        super.controlHandleOnRotate(orientation);
-
-        switch (orientation) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-                lessonTipsLayout.setVisibility(View.GONE);
-                break;
-            case Configuration.ORIENTATION_PORTRAIT:
-                if (canShowLessonTips()) {
-                    lessonTipsLayout.setVisibility(View.VISIBLE);
-                }
-                break;
-        }
-
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

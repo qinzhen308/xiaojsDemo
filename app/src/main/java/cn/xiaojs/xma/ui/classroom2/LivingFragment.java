@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,6 +50,8 @@ import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
+import cn.xiaojs.xma.util.UIUtils;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
 
@@ -74,6 +77,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     private int memCount;
     private long liveTime;
+
+    private Disposable controlAutotimer;
 
 
     @Nullable
@@ -121,6 +126,9 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        destoryAutotimer();
+
         if (livingObserver != null) {
             livingObserver.dispose();
         }
@@ -203,7 +211,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         ChooseMemberFragment chooseMemberFragment = new ChooseMemberFragment();
         chooseMemberFragment.setTargetFragment(this, CTLConstant.REQUEST_CHOOSE_MEMBER);
-        if (one2oneAttendee !=null) {
+        if (one2oneAttendee != null) {
             Bundle b = new Bundle();
             b.putString(CTLConstant.EXTRA_ID, one2oneAttendee.accountId);
             chooseMemberFragment.setArguments(b);
@@ -218,15 +226,28 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         if (whiteboardVis == View.VISIBLE) {
             controlClickView.setVisibility(View.GONE);
+            destoryAutotimer();
             controlLand.setVisibility(View.VISIBLE);
-            clearControlAnim();
         } else {
             controlClickView.setVisibility(View.VISIBLE);
-            hiddeControlAnim(controlLand);
+            startHiddenTimer(controlLand);
         }
 
         return whiteboardVis;
     }
+
+    @Override
+    public void hiddeOrshowControl() {
+
+        if (controlLand.getVisibility() == View.VISIBLE) {
+            controlLand.setVisibility(View.GONE);
+            destoryAutotimer();
+        } else {
+            controlLand.setVisibility(View.VISIBLE);
+            startHiddenTimer(controlLand);
+        }
+    }
+
 
     @Override
     public void onUpdateMembersCount(int count) {
@@ -317,6 +338,9 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         requestUpdateMemberCount();
 
+        controlClickView.setVisibility(View.GONE);
+        destoryAutotimer();
+
     }
 
     private void configStopButton() {
@@ -336,6 +360,19 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     private void hiddenLoading() {
         loadingLayout.setVisibility(View.GONE);
+    }
+
+
+    private void startHiddenTimer(View view) {
+        destoryAutotimer();
+        controlAutotimer = autoStartHiddeAnim(view);
+    }
+
+    private void destoryAutotimer() {
+        if (controlAutotimer != null) {
+            controlAutotimer.dispose();
+            controlAutotimer = null;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

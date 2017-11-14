@@ -44,6 +44,7 @@ public class Contact implements Serializable {
     public boolean retainOnTalk;
     public MetIn metIn;
     public boolean silent;
+    public String signature;
 
     @Override
     public boolean equals(Object obj) {

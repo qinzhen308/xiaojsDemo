@@ -44,6 +44,7 @@ public class ClassroomsFragment extends Base2Fragment {
     private DataProvider dataProvider;
     private int choiceMode;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -137,6 +138,23 @@ public class ClassroomsFragment extends Base2Fragment {
         public void onLoadComplete() {
             loadData();
         }
+
+        @Override
+        public void onClassesUpdate(int action, Contact contact) {
+            switch (action) {
+                case DataProvider.ACTION_ADD:
+                case DataProvider.ACTION_REMOVE:
+                    loadData();
+                    break;
+                case DataProvider.ACTION_UPDATE:
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
+
+            }
+        }
+
     };
 
     private Consumer<ContactsWhitIndex> classesConsumer = new Consumer<ContactsWhitIndex>() {
