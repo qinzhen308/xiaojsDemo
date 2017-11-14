@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1027,4 +1028,52 @@ public class BitmapUtils {
         String filePath = fileDir + "/" + fileName;
         return saveImage(target, filePath, 100, true,false);
     }
+
+    /**
+     * 分享图片时
+     * 临时保存预览图
+     * 到图片查看页面查看
+     * @param bitmap
+     * @return
+     */
+    public static String saveSharePreviewToFile(Bitmap bitmap){
+        File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String fileName = new StringBuilder("xjs_share_preview_temp")
+                .append(".png")
+                .toString();
+        String filePath = fileDir + "/" + fileName;
+        return savePngImage(bitmap, filePath, 100, true,false);
+    }
+
+    public static void saveImgToFile(Context context,Bitmap bitmap){
+
+        if (bitmap != null) {
+            String fileName = new StringBuilder("xjs_download_")
+                    .append(System.currentTimeMillis())
+                    .append(".png")
+                    .toString();
+            File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+            if (BitmapUtils.savePngImageToGallery(context, bitmap, fileDir, fileName, 100, true)) {
+
+                String tips = context.getString(R.string.save_picture_ok_tips,
+                        fileDir.getAbsolutePath(),
+                        fileName);
+                Toast.makeText(context, tips, Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(context,
+                        context.getString(R.string.save_picture_error_tips),
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }else {
+            Toast.makeText(context,
+                    context.getString(R.string.save_picture_error_tips),
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+
 }

@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -60,6 +62,7 @@ import cn.xiaojs.xma.ui.widget.banner.PageNumView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoView;
 import cn.xiaojs.xma.ui.widget.scaleimage.PhotoViewAttacher;
 import cn.xiaojs.xma.ui.widget.scaleimage.ScaleViewPager;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -74,6 +77,7 @@ public class ImageViewActivity extends BaseActivity {
 
     //如果是从聊天跳转的话，需要传以下参数
     public static final String IMAGE_FROM_CHAT = "image_from_chat";//是否从聊天跳转
+    public static final String EXTRA_IS_LOCAL = "extra_is_local";//是否本地图片路径
     public static final String CHAT_TARGET_ID = "chat_target_id";//如果是单人聊天，对方的id
     public static final String CHAT_GROUP_ID = "chat_group_id";//如果是群组聊天，群组id
     public static final String CHAT_MSG_LIST_ID = "chat_msg_list_id";//原聊天列表中图片消息的id
@@ -86,6 +90,7 @@ public class ImageViewActivity extends BaseActivity {
 
     private List<String> mPathList;
 
+    private boolean isLocalImg;
     private boolean mFromChat;
     private int mMessageId;
     private Conversation mConv;
@@ -141,6 +146,7 @@ public class ImageViewActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mFromChat = intent.getBooleanExtra(IMAGE_FROM_CHAT, false);
+            isLocalImg = intent.getBooleanExtra(EXTRA_IS_LOCAL, false);
             if (mFromChat) {
                 String targetAppKey = intent.getStringExtra(CHAT_APP_KEY);
                 mMessageId = intent.getIntExtra(CHAT_MESSAGE_ID, 0);
@@ -160,7 +166,15 @@ public class ImageViewActivity extends BaseActivity {
                         handler.sendEmptyMessage(PICTURE_PATH_LOADED);
                     }
                 }).start();
-            } else {
+            }else if(isLocalImg){
+                mPathList = intent.getStringArrayListExtra(IMAGE_PATH_KEY);
+                int position = intent.getIntExtra(IMAGE_POSITION_KEY, 0);
+                if (mPathList != null && mPathList.size() != 0) {
+                    showImages(position);
+                } else {
+
+                }
+            }else {
                 mPathList = intent.getStringArrayListExtra(IMAGE_PATH_KEY);
                 int position = intent.getIntExtra(IMAGE_POSITION_KEY, 0);
                 if (mPathList != null && mPathList.size() != 0) {
@@ -284,7 +298,16 @@ public class ImageViewActivity extends BaseActivity {
                         //.placeholder(R.drawable.ic_home_picture)
                         .error(R.drawable.ic_home_picture)
                         .into(imageView);
-            } else {
+            }else if(isLocalImg){
+                /*Glide.with(mContext)
+                        .load(new File(mList.get(position % mList.size())))
+                        .asBitmap()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        //.placeholder(R.drawable.ic_home_picture)
+                        .error(R.drawable.ic_home_picture)
+                        .into(imageView);*/
+                imageView.setImageURI(Uri.fromFile(new File(mList.get(position % mList.size()))));
+            }else {
 //                Glide.with(mContext)
 //                        .load(Social.getDrawing(mList.get(position % mList.size()),false))
 //                        //.placeholder(R.drawable.ic_home_picture)
@@ -584,6 +607,18 @@ public class ImageViewActivity extends BaseActivity {
         });
         view.clearAnimation();
         view.startAnimation(animShow);
+    }
+
+
+    public static void invoke(Context context,String title,ArrayList<String> imgs,boolean isLocalImg){
+        Intent intent=new Intent(context,ImageViewActivity.class);
+        intent.putExtra(IMAGE_TITLE_KEY,title);
+        intent.putExtra(EXTRA_IS_LOCAL,isLocalImg);
+        if(!ArrayUtil.isEmpty(imgs)){
+            intent.putExtra(IMAGE_PATH_KEY,imgs);
+        }
+        context.startActivity(intent);
+
     }
 
 }

@@ -36,13 +36,14 @@ import cn.xiaojs.xma.R;
 public class ShareUtil {
 
     static {
-        PlatformConfig.setWeixin(XiaojsConfig.WX_APP_ID,XiaojsConfig.WX_APP_KEY);
-        PlatformConfig.setQQZone(XiaojsConfig.QQ_APP_ID,XiaojsConfig.QQ_APP_KEY);
+        PlatformConfig.setWeixin(XiaojsConfig.WX_APP_ID, XiaojsConfig.WX_APP_KEY);
+        PlatformConfig.setQQZone(XiaojsConfig.QQ_APP_ID, XiaojsConfig.QQ_APP_KEY);
     }
 
 
     /**
      * 分享图片
+     *
      * @param activity
      * @param bitmap
      * @param imgUrl
@@ -59,12 +60,12 @@ public class ShareUtil {
                 switch (v.getId()) {
                     case R.id.tv_wechat:
                         IWXAPI iwxapi = WechatUtil.registerToWechat(activity.getApplicationContext());
-                        WechatUtil.sharePicture(iwxapi,bitmap,true);
+                        WechatUtil.sharePicture(iwxapi, bitmap, true);
 
                         break;
                     case R.id.tv_fcircle:
                         IWXAPI iwxapiq = WechatUtil.registerToWechat(activity.getApplicationContext());
-                        boolean send = WechatUtil.sharePicture(iwxapiq,bitmap,false);
+                        boolean send = WechatUtil.sharePicture(iwxapiq, bitmap, false);
                         break;
                     case R.id.tv_qq:
                         //QQ
@@ -100,8 +101,8 @@ public class ShareUtil {
         if (XiaojsConfig.DEBUG) {
             Logger.d("the share url" + imgUrl);
         }
-        final UMImage umImage=new UMImage(activity,imgUrl);
-        umImage.setThumb(new UMImage(activity,R.drawable.ic_launcher));
+        final UMImage umImage = new UMImage(activity, imgUrl);
+        umImage.setThumb(new UMImage(activity, R.drawable.ic_launcher));
         umImage.setTitle(title);
         shareDld(activity, new ShareBtnListener() {
             @Override
@@ -119,8 +120,8 @@ public class ShareUtil {
                         break;
                     case R.id.tv_url:
                         //QQ
-                        APPUtils.clipboard(activity,imgUrl);
-                        ToastUtil.showToast(activity,"链接已复制到剪切板");
+                        APPUtils.clipboard(activity, imgUrl);
+                        ToastUtil.showToast(activity, "链接已复制到剪切板");
                         break;
                 }
 
@@ -130,11 +131,11 @@ public class ShareUtil {
 
     public static void shareByUmeng(final Activity activity, final Bitmap imgBm, final String title) {
 
-        final UMImage umImage=new UMImage(activity,imgBm);
-        umImage.compressFormat= Bitmap.CompressFormat.PNG;
-        umImage.setThumb(new UMImage(activity,imgBm));
+        final UMImage umImage = new UMImage(activity, imgBm);
+        umImage.compressFormat = Bitmap.CompressFormat.PNG;
+        umImage.setThumb(new UMImage(activity, imgBm));
         umImage.setTitle(title);
-        shareDld(activity, new ShareBtnListener() {
+        sharePicDld(activity, new ShareBtnListener() {
             @Override
             public void onClickListener(View v) {
                 switch (v.getId()) {
@@ -148,16 +149,20 @@ public class ShareUtil {
                         //QQ
                         new ShareAction(activity).setPlatform(SHARE_MEDIA.QQ).withMedia(umImage).share();
                         break;
+                    case R.id.tv_url:
+                        //保存图片
+                        BitmapUtils.saveImgToFile(activity,imgBm);
+                        break;
                 }
 
             }
-        },false);
+        });
     }
 
-    public static void shareUrlByUmeng(final Activity activity, final String title, final String message,final String url) {
+    public static void shareUrlByUmeng(final Activity activity, final String title, final String message, final String url) {
 
-        final UMWeb web=new UMWeb(url);
-        UMImage umImage=new UMImage(activity,R.drawable.ic_share_avator);
+        final UMWeb web = new UMWeb(url);
+        UMImage umImage = new UMImage(activity, R.drawable.ic_share_avator);
         web.setThumb(umImage);
         web.setTitle(title);
         web.setDescription(message);
@@ -177,8 +182,8 @@ public class ShareUtil {
                         break;
                     case R.id.tv_url:
                         //QQ
-                        APPUtils.clipboard(activity,url);
-                        ToastUtil.showToast(activity,"链接已复制到剪切板");
+                        APPUtils.clipboard(activity, url);
+                        ToastUtil.showToast(activity, "链接已复制到剪切板");
                         break;
                 }
 
@@ -189,6 +194,7 @@ public class ShareUtil {
 
     /**
      * 显示分享框
+     *
      * @param
      */
     public static void show(final Activity activity, final String title, final String message, final String url) {
@@ -237,13 +243,12 @@ public class ShareUtil {
     }
 
     public static void shareDld(final Context context, final ShareBtnListener btnListener) {
-        shareDld(context,btnListener,true);
+        shareDld(context, btnListener, true);
     }
 
 
-
-        public static void shareDld(final Context context, final ShareBtnListener btnListener,boolean isNeedCopyUrl) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_share_window,null);
+    public static void shareDld(final Context context, final ShareBtnListener btnListener, boolean isNeedCopyUrl) {
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_share_window, null);
         Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
         //TextView tvXjs = (TextView) view.findViewById(R.id.tv_xfirends);
         //TextView tvClasses = (TextView) view.findViewById(R.id.tv_xfirends);
@@ -251,7 +256,7 @@ public class ShareUtil {
         TextView tvWechat = (TextView) view.findViewById(R.id.tv_wechat);
         TextView tvFriends = (TextView) view.findViewById(R.id.tv_fcircle);
         TextView tvUrl = (TextView) view.findViewById(R.id.tv_url);
-        if(!isNeedCopyUrl){
+        if (!isNeedCopyUrl) {
             tvUrl.setVisibility(View.GONE);
         }
 
@@ -301,8 +306,65 @@ public class ShareUtil {
         bottomSheet.show();
     }
 
+    public static void sharePicDld(final Context context, final ShareBtnListener btnListener) {
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_share_window, null);
+        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
+        //TextView tvXjs = (TextView) view.findViewById(R.id.tv_xfirends);
+        //TextView tvClasses = (TextView) view.findViewById(R.id.tv_xfirends);
+        TextView tvQq = (TextView) view.findViewById(R.id.tv_qq);
+        TextView tvWechat = (TextView) view.findViewById(R.id.tv_wechat);
+        TextView tvFriends = (TextView) view.findViewById(R.id.tv_fcircle);
+        TextView tvUrl = (TextView) view.findViewById(R.id.tv_url);
+        tvUrl.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_share_picture,0,0);
+        tvUrl.setText("保存图片");
+        final BottomSheet bottomSheet = new BottomSheet(context);
+        bottomSheet.setTitleVisibility(View.GONE);
+        bottomSheet.setContent(view);
 
-    public interface ShareBtnListener{
+        tvQq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnListener.onClickListener(v);
+                bottomSheet.dismiss();
+            }
+        });
+        tvWechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnListener.onClickListener(v);
+                bottomSheet.dismiss();
+            }
+        });
+        tvFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnListener.onClickListener(v);
+                bottomSheet.dismiss();
+
+            }
+        });
+        tvUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnListener.onClickListener(v);
+                bottomSheet.dismiss();
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                bottomSheet.dismiss();
+            }
+        });
+
+        bottomSheet.show();
+    }
+
+
+    public interface ShareBtnListener {
         void onClickListener(View v);
     }
 

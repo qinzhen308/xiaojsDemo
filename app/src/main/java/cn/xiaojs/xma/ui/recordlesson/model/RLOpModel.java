@@ -29,6 +29,7 @@ import cn.xiaojs.xma.ui.recordlesson.ManualRegistrationActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonDetailActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
+import cn.xiaojs.xma.ui.share.ShareQrcodeRLessonActivity;
 import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ArrayUtil;
@@ -328,7 +329,8 @@ public class RLOpModel extends AbsOpModel<RLesson> {
     //分享
     private void share(Context context,RLesson bean) {
 
-        ShareBeautifulQrcodeActivity.invoke(context,ShareBeautifulQrcodeActivity.TYPE_RECORDED_LESSON,bean.id,bean.title,bean.teachers[0],bean.expire!=null?bean.expire.effective+"天":"永久");
+//        ShareBeautifulQrcodeActivity.invoke(context,ShareBeautifulQrcodeActivity.TYPE_RECORDED_LESSON,bean.id,bean.title,bean.teachers[0],bean.expire!=null?bean.expire.effective+"天":"永久");
+        ShareQrcodeRLessonActivity.invoke(context,ShareBeautifulQrcodeActivity.TYPE_RECORDED_LESSON,bean.id,bean.title,bean.teachers[0],bean.expire!=null?bean.expire.effective+"天":"永久");
 
 //        if (bean == null) return;
 //        String date = null;
