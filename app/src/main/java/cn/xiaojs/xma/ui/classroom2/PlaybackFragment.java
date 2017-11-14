@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -105,6 +106,11 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
                 changeOrientation();
                 break;
         }
+    }
+
+
+    public Bitmap getPlaybackShots() {
+        return getBitmap();
     }
 
     @Override

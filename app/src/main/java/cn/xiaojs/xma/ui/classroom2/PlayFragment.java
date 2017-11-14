@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -136,6 +137,10 @@ public class PlayFragment extends MovieFragment
 
     }
 
+
+    public Bitmap getPlayshots() {
+        return videoView.getBitmap();
+    }
 
     public void onFetchMoreRequested() {
         loadTalk();
