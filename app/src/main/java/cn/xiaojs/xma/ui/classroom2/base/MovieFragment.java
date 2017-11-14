@@ -91,6 +91,7 @@ import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
 import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
+import cn.xiaojs.xma.ui.classroom2.member.ShareToFragment;
 import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
 import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
 import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
@@ -719,12 +720,16 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     public void onScreenshotClick(View view) {
-        Bitmap bitmap=doScreenshot();
+        final Bitmap bitmap=doScreenshot();
         if(bitmap!=null){
             Fragment fragment=BoardScreenshotFragment.createInstance(getActivity(),bitmap, new OnPhotoDoodleShareListener() {
                 @Override
                 public void onPhotoShared(Attendee attendee, Bitmap bmp) {
 
+                    ShareToFragment shareToFragment = new ShareToFragment();
+                    shareToFragment.setTargetBitmap(bmp);
+                    shareToFragment.setRootFragment(MovieFragment.this);
+                    showSlidePanel(shareToFragment,"share_to");
                 }
             });
             getChildFragmentManager().beginTransaction().add(R.id.screenshot_container,fragment).addToBackStack("screenshot").commitAllowingStateLoss();

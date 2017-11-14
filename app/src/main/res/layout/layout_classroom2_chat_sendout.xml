@@ -70,7 +70,7 @@
             android:layout_marginRight="@dimen/px4"
             android:layout_toLeftOf="@id/avator"
             android:layout_below="@id/name"
-            android:background="@drawable/cr_chat_my_speaker_bg"
+            android:background="@drawable/class_chatbg2"
             android:visibility="gone"
             />
 

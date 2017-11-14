@@ -353,7 +353,7 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
 //    }
 
     public Bitmap getBitmap() {
-        return playerView.getDrawingCache();
+        return playerView.getDrawingCache(true);
     }
 
 

@@ -154,7 +154,7 @@ public class BoardScreenshotFragment extends BaseFragment {
      * 选择分享联系人
      */
     private void selectShareContact(View anchor) {
-
+        mPhotoDoodleShareListener.onPhotoShared(null, mBoardController.getWhiteboardBitmap());
     }
 
     @Override

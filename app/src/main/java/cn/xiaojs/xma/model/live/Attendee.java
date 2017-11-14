@@ -25,6 +25,10 @@ public class Attendee implements Serializable, Comparable<Attendee>{
     public int unReadMsgCount;
     public String title;
 
+
+
+    public int ctype;
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class MediaSetting implements Serializable{
