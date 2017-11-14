@@ -138,9 +138,14 @@ public class PlayFragment extends MovieFragment
     }
 
 
-    public Bitmap getPlayshots() {
+    @Override
+    protected Bitmap doScreenshot() {
+        if(isBoardShown()){
+            return whiteboardFragment.preview();
+        }
         return videoView.getBitmap();
     }
+
 
     public void onFetchMoreRequested() {
         loadTalk();

@@ -196,6 +196,14 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     }
 
     @Override
+    protected Bitmap doScreenshot() {
+        if(isBoardShown()){
+            return whiteboardFragment.preview();
+        }
+        return null;
+    }
+
+    @Override
     public void onTopbackClick(View view, boolean land) {
         back();
     }

@@ -154,13 +154,7 @@ public class BoardScreenshotFragment extends BaseFragment {
      * 选择分享联系人
      */
     private void selectShareContact(View anchor) {
-        if (mSharePopWindow == null) {
-            mSharePopWindow = new ShareDoodlePopWindow(mContext, mBoardController, mPhotoDoodleShareListener);
-        }
 
-        int offsetX = -mContext.getResources().getDimensionPixelSize(R.dimen.px246);
-        int offsetY = mContext.getResources().getDimensionPixelSize(R.dimen.px20);
-        mSharePopWindow.showAsDropDown(anchor, offsetX, offsetY);
     }
 
     @Override

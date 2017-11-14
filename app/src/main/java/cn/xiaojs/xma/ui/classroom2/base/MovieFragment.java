@@ -441,6 +441,10 @@ public abstract class MovieFragment extends BaseRoomFragment
         return false;
     }
 
+    public boolean isBoardShown(){
+        return whiteboardFragment.isAdded()&&whiteboardContainerLayout.getVisibility() == View.VISIBLE;
+    }
+
 
     /**
      * 点击了返回
@@ -715,7 +719,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     public void onScreenshotClick(View view) {
-        Bitmap bitmap=whiteboardFragment.preview();
+        Bitmap bitmap=doScreenshot();
         if(bitmap!=null){
             Fragment fragment=BoardScreenshotFragment.createInstance(getActivity(),bitmap, new OnPhotoDoodleShareListener() {
                 @Override
@@ -728,6 +732,10 @@ public abstract class MovieFragment extends BaseRoomFragment
             ToastUtil.showToast(getActivity(),"截图失败");
         }
 
+    }
+
+    protected Bitmap doScreenshot(){
+        return null;
     }
 
 

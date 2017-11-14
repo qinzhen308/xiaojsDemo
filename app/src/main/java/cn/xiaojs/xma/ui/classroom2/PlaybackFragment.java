@@ -108,10 +108,14 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         }
     }
 
-
-    public Bitmap getPlaybackShots() {
+    @Override
+    protected Bitmap doScreenshot() {
+        if(isBoardShown()){
+            return whiteboardFragment.preview();
+        }
         return getBitmap();
     }
+
 
     @Override
     public void onDestroy() {
