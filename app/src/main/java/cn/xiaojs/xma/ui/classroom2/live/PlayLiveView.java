@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2.live;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -75,6 +76,10 @@ public class PlayLiveView extends BaseLiveView {
 
     public void setControlListener(ControlListener listener) {
         this.controlListener = listener;
+    }
+
+    public Bitmap getBitmap() {
+        return playView.getTextureView().getBitmap();
     }
 
     public void startPlay(String path) {

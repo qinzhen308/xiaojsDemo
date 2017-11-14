@@ -6,37 +6,46 @@
         android:background="@color/white"
         >
 
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px120"
+            android:background="@drawable/navbar_bg"
+            android:layout_alignParentTop="true"/>
+
     <TextView
             android:id="@+id/title_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/px90"
+            android:layout_height="@dimen/px80"
             android:gravity="center"
             android:text="会话"
             android:textColor="@color/font_white"
             android:textSize="@dimen/font_36px"
             android:layout_alignParentTop="true"
-            android:background="@drawable/navbar_bg"
+            android:layout_marginTop="@dimen/px40"
             />
 
     <ImageView
-        android:id="@+id/btn_scan"
-        android:layout_width="wrap_content"
-            android:layout_height="@dimen/px90"
+            android:id="@+id/btn_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/px80"
             android:src="@drawable/ic_conversation_scan_1"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:paddingLeft="@dimen/px27"
-            android:paddingRight="@dimen/px27"/>
+            android:paddingRight="@dimen/px27"
+            android:layout_marginTop="@dimen/px40"
+            />
 
     <ImageView
-        android:id="@+id/btn_add"
+            android:id="@+id/btn_add"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/px90"
+            android:layout_height="@dimen/px80"
             android:src="@drawable/ic_conversation_add_1"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:paddingLeft="@dimen/px27"
-            android:paddingRight="@dimen/px27"/>
+            android:paddingRight="@dimen/px27"
+            android:layout_marginTop="@dimen/px40"/>
 
     <View
             android:id="@+id/title_bar_line"

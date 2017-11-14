@@ -128,4 +128,8 @@ public class Su {
         return eventCategory + ":" + eventType;
     }
 
+    public static String getLiveStreamingSignature() {
+        return EventCategory.LIVE + ":" + EventType.STREAMING_STARTED;
+    }
+
 }

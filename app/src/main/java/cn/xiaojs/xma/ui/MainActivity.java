@@ -12,8 +12,6 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,19 +22,9 @@ import cn.xiaojs.xma.analytics.AnalyticEvents;
 import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.permissiongen.PermissionSuccess;
-import cn.xiaojs.xma.common.xf_foundation.Su;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.UpgradeManager;
-import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
-import cn.xiaojs.xma.data.provider.DataProvider;
-import cn.xiaojs.xma.model.live.TalkItem;
-import cn.xiaojs.xma.model.social.Contact;
-import cn.xiaojs.xma.model.socket.room.ChangeNotify;
-import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
-import cn.xiaojs.xma.model.socket.room.EventReceived;
-import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.base.BaseConstant;
 import cn.xiaojs.xma.ui.base.BaseTabActivity;
 
@@ -44,10 +32,8 @@ import cn.xiaojs.xma.ui.base.IntentFlags;
 import cn.xiaojs.xma.ui.base.XiaojsActions;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
-import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
-import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
@@ -64,8 +50,6 @@ import cn.xiaojs.xma.ui.search.DiscoverFragment;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.MessageUitl;
 import cn.xiaojs.xma.util.ToastUtil;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 import static cn.xiaojs.xma.XiaojsApplication.ACTION_NEW_MESSAGE;
 import static cn.xiaojs.xma.util.MessageUitl.ACTION_NEW_PUSH;
@@ -85,7 +69,6 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
 
     SchemeProcessor mSchemeProcessor;
 
-    private Disposable eventDisposable;
 
 
     @Override
@@ -136,9 +119,6 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
         }
 
         dealFromNotify(getIntent());
-
-        eventDisposable = XMSEventObservable.observeMainSession(this, receivedConsumer);
-
     }
 
     @Override
@@ -357,11 +337,6 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
     protected void onDestroy() {
         unregisterReceiver(upgradeReceiver);
 
-        if (eventDisposable != null) {
-            eventDisposable.dispose();
-            eventDisposable = null;
-        }
-
 
         super.onDestroy();
     }
@@ -550,80 +525,4 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
         PermissionHelper.showRationaleDialog(this, getResources().getString(R.string.permission_rationale_camera_tip));
 
     }
-
-
-    private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
-        @Override
-        public void accept(EventReceived eventReceived) throws Exception {
-            if (XiaojsConfig.DEBUG) {
-                Logger.d("receivedConsumer .....");
-            }
-
-            switch (eventReceived.eventType) {
-                case Su.EventType.TALK:
-                    updateConveration((Talk) eventReceived.t);
-                    break;
-                case Su.EventType.DIALOG_READ:
-                    Talk talk = (Talk) eventReceived.t;
-                    updateDlgRead(talk.type, talk.to);
-                    break;
-                case Su.EventType.REMOVE_DIALOG:
-                    break;
-                case Su.EventType.RETAIN_DIALOG:
-                    break;
-                case Su.EventType.CHANGE_NOTIFY:
-                    ChangeNotifyReceived received = (ChangeNotifyReceived) eventReceived.t;
-                    handleChangeNotify(received);
-                    break;
-            }
-        }
-    };
-
-
-    private void updateDlgRead(int type, String to) {
-        DataProvider dataProvider = DataProvider.getProvider(this);
-        dataProvider.updateConversationUnread(to, 0);
-    }
-
-
-    private void updateConveration(Talk talkItem) {
-        if (TextUtils.isEmpty(talkItem.name)) {
-            talkItem.name = "nil";
-        }
-
-        DataProvider dataProvider = DataProvider.getProvider(this);
-
-        Contact contact = new Contact();
-
-        //FIXME followType 没返回
-
-        if (talkItem.type == Communications.TalkType.PEER) {
-            contact.id = talkItem.from;
-            contact.name = talkItem.name;
-            contact.title = talkItem.name;
-            contact.subtype = ConversationType.TypeName.PERSON;
-        } else if (talkItem.type == Communications.TalkType.OPEN) {
-            contact.id = talkItem.to;
-            String title = dataProvider.getClassName(talkItem.to);
-            contact.name = title;
-            contact.title = title;
-            contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
-        } else {
-            return;
-        }
-
-        contact.lastMessage = talkItem.body.text;
-        contact.lastTalked = talkItem.time;
-        contact.unread = 1;
-
-
-        dataProvider.moveOrInsertConversation(contact);
-    }
-
-    private void handleChangeNotify(ChangeNotifyReceived changeNotify) {
-        DataProvider dataProvider = DataProvider.getProvider(this);
-        dataProvider.updateSilent(changeNotify.to, changeNotify.silent);
-
-    }
-
 }

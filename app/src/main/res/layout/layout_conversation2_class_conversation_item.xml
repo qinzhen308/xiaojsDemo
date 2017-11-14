@@ -60,6 +60,22 @@
                 android:gravity="center"
                 />
 
+        <cn.xiaojs.xma.ui.view.AnimationView2
+                android:id="@+id/streaming_ani"
+                android:layout_width="@dimen/px90"
+                android:layout_height="@dimen/px90"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/px25"
+                android:layout_marginTop="@dimen/px25"
+                android:layout_marginBottom="@dimen/px25"
+                android:layout_marginRight="@dimen/px20"
+                android:paddingLeft="@dimen/px21"
+                android:paddingRight="@dimen/px21"
+                android:src="@drawable/class_living_animation"
+                android:background="@drawable/ic_directseedbg"
+                />
+
         <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"

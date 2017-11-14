@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.classroom2;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -39,6 +40,7 @@ import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.UIUtils;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -62,6 +64,8 @@ public class PlayFragment extends MovieFragment
     private int memCount;
     private long liveTime;
     private long reserveliveTime;
+
+    private Disposable controlAutotimer;
 
     @Nullable
     @Override
@@ -123,9 +127,13 @@ public class PlayFragment extends MovieFragment
             streamingEngine = null;
         }
 
+        destoryAutotimer();
+
         if (playLiveObserver != null) {
             playLiveObserver.dispose();
         }
+
+
     }
 
 
@@ -138,6 +146,59 @@ public class PlayFragment extends MovieFragment
         controlHandleOnRotate(orientation);
         onRotateToInitBoard(orientation);
     }
+
+    @Override
+    protected void controlHandleOnRotate(int orientation) {
+        switch (orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                controlClickView.setVisibility(View.GONE);
+                controlPort.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                controlLand.setVisibility(View.VISIBLE);
+                startHiddenTimer(controlLand);
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                controlLand.setVisibility(View.GONE);
+                controlClickView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                controlPort.setVisibility(View.VISIBLE);
+                startHiddenTimer(controlPort);
+                break;
+        }
+    }
+
+
+    @Override
+    public void hiddeOrshowControl() {
+        int currentOrient = UIUtils.getCurrentOrientation(getContext());
+        switch (currentOrient) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                if (controlLand == null)
+                    return;
+
+                if (controlLand.getVisibility() == View.VISIBLE) {
+                    controlLand.setVisibility(View.GONE);
+                    destoryAutotimer();
+                } else {
+                    controlLand.setVisibility(View.VISIBLE);
+                    startHiddenTimer(controlLand);
+                }
+
+                break;
+            case Configuration.ORIENTATION_PORTRAIT:
+                if (controlPort == null)
+                    return;
+                if (controlPort.getVisibility() == View.VISIBLE) {
+                    controlPort.setVisibility(View.GONE);
+                    destoryAutotimer();
+                } else {
+                    controlPort.setVisibility(View.VISIBLE);
+                    startHiddenTimer(controlPort);
+                }
+                break;
+        }
+    }
+
 
     @Override
     public void closeMovie() {
@@ -220,7 +281,7 @@ public class PlayFragment extends MovieFragment
         controlHandleOnRotate(orientation);
 
         lTopRoominfoView.setCompoundDrawablesWithIntrinsicBounds(
-                R.drawable.class_living_animation,0,0,0);
+                R.drawable.class_living_animation, 0, 0, 0);
         lTopRoominfoView.start();
 
         lRightSwitchcameraView.setVisibility(View.GONE);
@@ -249,6 +310,18 @@ public class PlayFragment extends MovieFragment
 
         centerOne2oneView.setEnabled(false);
 
+    }
+
+    private void startHiddenTimer(View view) {
+        destoryAutotimer();
+        controlAutotimer = autoStartHiddeAnim(view);
+    }
+
+    private void destoryAutotimer() {
+        if (controlAutotimer != null) {
+            controlAutotimer.dispose();
+            controlAutotimer = null;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

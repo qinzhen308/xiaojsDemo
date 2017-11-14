@@ -48,6 +48,14 @@ public class XMSEventObservable extends Observable<EventReceived> {
                 .subscribe(consumer);
     }
 
+    public static Disposable observeGlobalSession(Context context, Consumer<EventReceived> consumer) {
+        XMSEventObserver.GlobalSession observer = new XMSEventObserver.GlobalSession(context);
+        return createEventObservable(observer)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+    }
+
+
     public static Disposable observeMainSession(Context context, Consumer<EventReceived> consumer) {
         XMSEventObserver.MainSession observer = new XMSEventObserver.MainSession(context);
         return createEventObservable(observer)

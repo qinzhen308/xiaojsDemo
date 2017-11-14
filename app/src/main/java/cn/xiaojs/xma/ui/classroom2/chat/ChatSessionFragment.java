@@ -455,6 +455,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
         Contact contact = new Contact();
         contact.title = titleStr;
+        contact.name = titleStr;
         contact.id = liveCriteria.to;
         contact.subtype = ConversationType.getConversationType(liveCriteria.type);
         contact.lastMessage = lastMessage;

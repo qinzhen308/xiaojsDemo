@@ -15,7 +15,9 @@ import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
@@ -120,7 +122,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
             if (AccountDataManager.isXiaojsAccount(contact.id)) {
                 peerConViewHolder.avatorView.setImageResource(R.drawable.ic_customerservice);
-            }else {
+            } else {
                 String avatorUrl = Account.getAvatar(contact.id, peerConViewHolder.avatorView.getMeasuredWidth());
                 Glide.with(context)
                         .load(avatorUrl)
@@ -131,8 +133,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             }
 
 
-
-            peerConViewHolder.titleView.setText(contact.title);
+            peerConViewHolder.titleView.setText(contact.name);
             peerConViewHolder.descView.setText(contact.lastMessage);
             peerConViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
 
@@ -222,9 +223,20 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         } else {
             final ClassConViewHolder conViewHolder = (ClassConViewHolder) holder;
 
-            String title = TextUtils.isEmpty(contact.title) ? "#" : String.valueOf(contact.title.trim().charAt(0));
+            if (!TextUtils.isEmpty(contact.state)
+                    && (contact.state.equals(Live.LiveSessionState.LIVE)
+                    || contact.state.equals(Live.LiveSessionState.INDIVIDUAL))) {
+                conViewHolder.animationView2.setVisibility(View.VISIBLE);
+                conViewHolder.avatorTextView.setVisibility(View.INVISIBLE);
 
-            conViewHolder.avatorTextView.setText(title);
+            } else {
+                String title = TextUtils.isEmpty(contact.title) ? "#" : String.valueOf(contact.title.trim().charAt(0));
+                conViewHolder.avatorTextView.setText(title);
+                conViewHolder.avatorTextView.setVisibility(View.VISIBLE);
+                conViewHolder.animationView2.setVisibility(View.INVISIBLE);
+            }
+
+
             conViewHolder.titleView.setText(contact.title);
             conViewHolder.descView.setText(contact.lastMessage);
             conViewHolder.timeView.setText(TimeUtil.getTimeShowString(contact.lastTalked, false));
@@ -256,7 +268,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
             if (contact.silent) {
                 conViewHolder.slientView.setText("取消免打扰");
-            }else {
+            } else {
                 conViewHolder.slientView.setText("设为免打扰");
             }
 
@@ -336,7 +348,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         openedSwipe.getLocationInWindow(p);
 
         if (XiaojsConfig.DEBUG) {
-            Logger.d("----ev(%f,%f), offset(%d), swipe(%d,%d)", x,y,offset, p[0],p[1]);
+            Logger.d("----ev(%f,%f), offset(%d), swipe(%d,%d)", x, y, offset, p[0], p[1]);
         }
 
         p[1] = p[1] - offset;

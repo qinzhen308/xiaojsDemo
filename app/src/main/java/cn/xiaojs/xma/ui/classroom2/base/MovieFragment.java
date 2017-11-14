@@ -219,9 +219,6 @@ public abstract class MovieFragment extends BaseRoomFragment
     //但生命周期取决于使用他的fragment
     protected BoardCollaborateFragment whiteboardFragment;
 
-    private ObjectAnimator hiddeControlAnim;
-    private ObjectAnimator showControlAnim;
-
     private DataProvider dataProvider;
 
     private Disposable chatDisposable;
@@ -249,7 +246,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
             onRotateToInitBoard(Configuration.ORIENTATION_LANDSCAPE);
         }
-        initControlAnim();
 
         chatDisposable = XMSEventObservable.observeChatSession(getContext(), talkConsumer);
         eventListener = classroomEngine.observerMember(memberConsumer);
@@ -271,7 +267,7 @@ public abstract class MovieFragment extends BaseRoomFragment
             chatDisposable = null;
         }
 
-        if (eventListener !=null) {
+        if (eventListener != null) {
             eventListener.dispose();
             eventListener = null;
         }
@@ -516,103 +512,20 @@ public abstract class MovieFragment extends BaseRoomFragment
     // control
     //
 
-    private void initControlAnim() {
-        hiddeControlAnim = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(),
-                R.animator.classroom2_control_alpha_hide);
-        hiddeControlAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                View view = (View) hiddeControlAnim.getTarget();
-                if (view != null) {
-                    view.setAlpha(1.0f);
-                    view.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        showControlAnim = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(),
-                R.animator.classroom2_control_alpha_show);
-        showControlAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                View view = (View) showControlAnim.getTarget();
-                if (view != null) {
-                    view.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                View view = (View) showControlAnim.getTarget();
-                if (view != null) {
-                    autoStartHiddeAnim(view);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-    }
-
-
-    public void clearControlAnim() {
-        showControlAnim.cancel();
-        hiddeControlAnim.cancel();
-    }
-
-    public void showControlAnim(final View target) {
-        showControlAnim.cancel();
-        showControlAnim.setTarget(target);
-        showControlAnim.start();
-
-    }
-
-    public void hiddeControlAnim(View target) {
-        hiddeControlAnim.cancel();
-        hiddeControlAnim.setTarget(target);
-        hiddeControlAnim.start();
-    }
-
-    private void autoStartHiddeAnim(final View view) {
-        Observable.timer(3000, TimeUnit.MILLISECONDS)
+    public Disposable autoStartHiddeAnim(final View view) {
+        Observable observable = Observable.timer(3000, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
+                .observeOn(AndroidSchedulers.mainThread());
+        return observable.subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-
-                        if (whiteboardShowing()) {
-                            return;
-                        }
-
-                        hiddeControlAnim(view);
+                        view.setVisibility(View.GONE);
                     }
                 });
     }
 
     private boolean whiteboardShowing() {
-        if (whiteboardContainerLayout.getVisibility()== View.VISIBLE
+        if (whiteboardContainerLayout.getVisibility() == View.VISIBLE
                 && whiteboardFragment != null
                 && whiteboardFragment.isAdded()
                 && !whiteboardFragment.isDetached()) {
@@ -620,36 +533,6 @@ public abstract class MovieFragment extends BaseRoomFragment
         }
 
         return false;
-    }
-
-
-    public void hiddeOrshowControl() {
-
-        int currentOrient = UIUtils.getCurrentOrientation(getContext());
-        switch (currentOrient) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-                if (controlLand == null)
-                    return;
-
-                int vis = controlLand.getVisibility();
-                if (vis == View.VISIBLE) {
-                    hiddeControlAnim(controlLand);
-                } else {
-                    showControlAnim(controlLand);
-                }
-
-                break;
-            default:
-                if (controlPort == null)
-                    return;
-                if (controlPort.getVisibility() == View.VISIBLE) {
-                    hiddeControlAnim(controlPort);
-                } else {
-                    showControlAnim(controlPort);
-                }
-                break;
-
-        }
     }
 
     public void config4Preview() {
@@ -687,12 +570,25 @@ public abstract class MovieFragment extends BaseRoomFragment
         if (isShow == (whiteboardContainerLayout.getVisibility() == View.VISIBLE)) return;
         if (isShow) {
             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
-            controlClickView.setVisibility(View.GONE);
         } else {
             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
-            controlClickView.setVisibility(View.VISIBLE);
         }
         whiteboardContainerLayout.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    /**
+     * 点击面板对control view 的显示或隐藏控制
+     */
+    public void hiddeOrshowControl() {
+
+    }
+
+    /**
+     * 切换横竖屏时，对control view 显示隐藏控制
+     * @param orientation
+     */
+    protected void controlHandleOnRotate(int orientation) {
+
     }
 
 
@@ -880,35 +776,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         if (!UIUtils.isLandspace(getContext())) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-    }
-
-    protected void controlHandleOnRotate(int orientation) {
-        switch (orientation) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-
-                showControlAnim(controlLand);
-
-                if (recyclerView != null) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-
-                if (controlPort != null) {
-                    controlPort.setVisibility(View.GONE);
-                }
-
-                break;
-            case Configuration.ORIENTATION_PORTRAIT:
-                if (controlLand != null) {
-                    controlLand.setVisibility(View.GONE);
-                }
-
-                if (recyclerView != null) {
-                    recyclerView.setVisibility(View.GONE);
-                }
-
-                showControlAnim(controlPort);
-                break;
         }
     }
 
@@ -1229,7 +1096,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                         String name = talkl.name;
                         if (TextUtils.isEmpty(name)) {
                             Attendee attendee = classroomEngine.getMember(talkl.accountId);
-                            if (attendee !=null) {
+                            if (attendee != null) {
                                 name = attendee.name;
                             }
                         }
@@ -1241,7 +1108,6 @@ public abstract class MovieFragment extends BaseRoomFragment
             }
         }
     };
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1444,14 +1310,11 @@ public abstract class MovieFragment extends BaseRoomFragment
                         .add(R.id.layout_idle_container, whiteboardFragment)
                         .commitAllowingStateLoss();
             }
-            controlClickView.setVisibility(View.GONE);
             showBoardContainer(isDefaultShowBoard());
         } else {
             if (whiteboardFragment.isAdded() && !whiteboardFragment.isDetached()) {
                 getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
             }
-
-            controlClickView.setVisibility(View.VISIBLE);
         }
     }*/
 
@@ -1464,13 +1327,11 @@ public abstract class MovieFragment extends BaseRoomFragment
                     .beginTransaction()
                     .add(R.id.layout_idle_container, whiteboardFragment)
                     .commitAllowingStateLoss();
-            controlClickView.setVisibility(View.GONE);
             showBoardContainer(isDefaultShowBoard());
         } else {
-            if (whiteboardFragment.isAdded() ) {
+            if (whiteboardFragment.isAdded()) {
                 getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
             }
-            controlClickView.setVisibility(View.VISIBLE);
         }
     }
 

@@ -4,14 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px40"
+            android:background="@color/font_light_gray"
+            android:visibility="visible"/>
+
+
     <LinearLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/px90"
+        android:layout_height="@dimen/px80"
         android:background="@color/white"
         android:orientation="horizontal">
-
-
         <cn.xiaojs.xma.ui.widget.EditTextDel
             android:id="@+id/search_input"
             android:layout_width="0dp"
