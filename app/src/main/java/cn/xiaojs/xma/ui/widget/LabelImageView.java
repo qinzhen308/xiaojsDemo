@@ -115,7 +115,7 @@ public class LabelImageView extends android.support.v7.widget.AppCompatImageView
             mMaskPaint.setColor(mMaskTextColor);
             mMaskPaint.setTextSize(mMaskTextSize);
             float textWidth=mMaskPaint.measureText(mMaskText,0,mMaskText.length());
-            canvas.drawText(mMaskText,0,mMaskText.length(),rectF.centerX()-textWidth/2,rectF.centerY()+mMaskTextSize/2,mMaskPaint);
+            canvas.drawText(mMaskText,0,mMaskText.length(),rectF.centerX()-textWidth/2,rectF.centerY()+mMaskTextSize/3,mMaskPaint);
         }
     }
 

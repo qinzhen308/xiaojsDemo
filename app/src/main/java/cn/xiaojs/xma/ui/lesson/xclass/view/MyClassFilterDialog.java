@@ -268,7 +268,7 @@ public class MyClassFilterDialog extends BaseFullWindow {
             ((CommonAdapter)adapterView.getAdapter()).setSelection(position);
         }
         /*for (int i = 0; i < adapterView.getChildCount(); i++) {
-            if (i == position) {
+            if (i == mPosition) {
                 ((TextView) adapterView.getChildAt(i)).setTextColor(mContext.getResources().getColor(R.color.main_orange));
                 adapterView.getChildAt(i).setBackgroundResource(R.drawable.common_light_stroke);
                 continue;

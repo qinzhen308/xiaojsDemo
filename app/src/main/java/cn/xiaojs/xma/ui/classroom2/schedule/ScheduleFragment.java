@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.live.LiveSchedule;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
@@ -57,6 +59,9 @@ public class ScheduleFragment extends BottomSheetFragment
 
     @BindView(R.id.cl_root)
     RelativeLayout rootLay;
+
+    @BindView(R.id.add_btn)
+    ImageView addBtn;
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
@@ -86,7 +91,11 @@ public class ScheduleFragment extends BottomSheetFragment
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
             params.setMargins(0, 0, 0, 0);
             rootLay.setBackgroundColor(getResources().getColor(R.color.white));
+            addBtn.setVisibility(View.GONE);
         } else {
+            if(ClassroomEngine.getEngine().isVistor()){
+                addBtn.setVisibility(View.GONE);
+            }
             getDialog().setOnKeyListener(this);
         }
 
@@ -120,7 +129,8 @@ public class ScheduleFragment extends BottomSheetFragment
                     } else {
                         doc.typeName = Collaboration.TypeName.RECORDING_IN_LIBRARY;
                     }
-                    ClassroomController.getInstance(getActivity()).enterVideoPlayPage(doc);
+                    ((Classroom2Activity) getContext()).enterPlayback(doc);
+                    dismiss();
                 }
             }
         });

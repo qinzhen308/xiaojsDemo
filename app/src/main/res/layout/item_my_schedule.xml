@@ -99,7 +99,7 @@
         app:label_width="@dimen/px30"
         app:labelSrc="@drawable/ic_assistant"
         app:my_mask_color="@color/translucent_50"
-        app:my_mask_text="3"
+        app:my_mask_text="2"
         app:my_mask_textcolor="@color/white"
         app:my_mask_textsize="@dimen/font_36px"
         android:paddingRight="@dimen/px4"

@@ -2,7 +2,6 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -26,27 +25,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
-import cn.xiaojs.xma.model.ctl.CLesson;
+import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.ctl.ScheduleLesson;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.MainActivity;
-import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
-import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.schedule.SLOpModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.view.TextInBgSpan;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
-import cn.xiaojs.xma.ui.widget.Common2Dialog;
 import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
-import cn.xiaojs.xma.util.MaterialUtil;
 
 /**
  * Created by Paul Z on 2017/11/1.
@@ -80,7 +76,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     @BindView(R.id.tv_state)
     TextView tvState;
 
-    int position;
+    int mPosition;
 
     boolean fromSchedule;
     boolean fromHome;
@@ -118,7 +114,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     @Override
     public void bindData(int position, ScheduleLesson data) {
         mData = data;
-        this.position = position;
+        this.mPosition = position;
         tvDate.setText(ScheduleUtil.getHMDate(data.schedule.getStart()));
         tvTotalTime.setText(data.schedule.getDuration() + "分钟");
 
@@ -126,6 +122,15 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
             SpannableString ss = new SpannableString(" 回放  " + data.title);
             ss.setSpan(new TextInBgSpan(getResources().getDrawable(R.drawable.bg_orange_rect), getResources().getColor(R.color.white)), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvLesson.setText(ss);
+            if (mEventCallback == null) {//目前教室的课表会有这个回调
+                setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //目前给教室里面的课表回调出去
+                        mEventCallback.onEvent(EventCallback.EVENT_1, mPosition, mData);
+                    }
+                });
+            }
         } else {
             tvLesson.setText(data.title);
         }
@@ -173,13 +178,11 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
 
 //        showAssistantLogic1();
         showAssistantLogic2();
-        if (mEventCallback == null) {//目前教室的课表会有这个回调
-            setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
+        if(ClassroomEngine.getEngine().isVistor()){
+            btnMore.setVisibility(INVISIBLE);
+        }else {
+            btnMore.setVisibility(VISIBLE);
         }
     }
 
@@ -228,44 +231,23 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     }
 
 
-    public void replay() {
-        if (mEventCallback != null) {
-            //目前给教室里面的课表回调出去
-            mEventCallback.onEvent(EventCallback.EVENT_1, position, mData);
-        } else {
-            //其余地方课表的逻辑
-            LibDoc doc = new LibDoc();
-            doc.key = mData.playback;
-
-            doc.mimeType = mData.mimeType;
-
-            if (TextUtils.isEmpty(doc.mimeType)) {
-                doc.mimeType = Collaboration.StreamingTypes.HLS;
-            } else {
-                doc.typeName = Collaboration.TypeName.RECORDING_IN_LIBRARY;
-            }
-
-            MaterialUtil.openMaterial((Activity) getContext(), doc);
-        }
-    }
-
     @OnClick(R.id.btn_more)
     public void onViewClicked() {
-        ListBottomDialog dialog=new ListBottomDialog(getContext());
-        final List<SLOpModel> lOpModelList=classLessonOperate();
-        String[] names=new String[lOpModelList.size()];
-        for(int i=0;i<lOpModelList.size();i++){
-            names[i]=getResources().getString(LessonOperateBoard.names[lOpModelList.get(i).getId()]);
+        ListBottomDialog dialog = new ListBottomDialog(getContext());
+        final List<SLOpModel> lOpModelList = classLessonOperate();
+        String[] names = new String[lOpModelList.size()];
+        for (int i = 0; i < lOpModelList.size(); i++) {
+            names[i] = getResources().getString(LessonOperateBoard.names[lOpModelList.get(i).getId()]);
         }
         dialog.setItems(names);
         dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
             @Override
             public void onItemClick(int position) {
-                lOpModelList.get(position).onClick((Activity) getContext(),mData,position);
+                lOpModelList.get(position).onClick((Activity) getContext(), mData, position);
             }
         });
         dialog.show();
-//        new LessonOperateBoard(getContext()).setOpGroup2(fromSchedule ? classLessonOperate() : classOperate()).maybe((Activity) getContext(), mData, position).show();
+//        new LessonOperateBoard(getContext()).setOpGroup2(fromSchedule ? classLessonOperate() : classOperate()).maybe((Activity) getContext(), mData, mPosition).show();
     }
 
     //课表的操作，对班级课表页面的课的操作，只有班主任和课所有者能操作
@@ -295,18 +277,18 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     }
 
     @OnClick(R.id.iv_avatar1)
-    public void showAssistantDialog(){
-        if(mData.advisers==null||mData.advisers.length>=2){
+    public void showAssistantDialog() {
+        if (mData.advisers == null || mData.advisers.length >= 2) {
             return;
         }
-        Common3Dialog dialog=new Common3Dialog(getContext());
-        ListView content= new ListView(getContext());
+        Common3Dialog dialog = new Common3Dialog(getContext());
+        ListView content = new ListView(getContext());
         content.setDivider(new ColorDrawable(getResources().getColor(R.color.main_bg)));
         content.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.px2));
-        String[] teachers=new String[mData.advisers.length];
-        for(int i=0;i<mData.advisers.length;i++)teachers[i]=mData.advisers[i].name;
-        content.setAdapter(new ArrayAdapter<String>(getContext(),R.layout.item_simple_text,R.id.textview,teachers));
-        dialog.setTitle("助教（"+teachers.length+"）");
+        String[] teachers = new String[mData.advisers.length];
+        for (int i = 0; i < mData.advisers.length; i++) teachers[i] = mData.advisers[i].name;
+        content.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.item_simple_text, R.id.textview, teachers));
+        dialog.setTitle("助教（" + teachers.length + "）");
         dialog.setCustomView(content);
         dialog.needCloseBtn(true);
         dialog.show();

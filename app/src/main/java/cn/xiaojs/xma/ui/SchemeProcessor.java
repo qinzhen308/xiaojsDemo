@@ -9,6 +9,7 @@ import android.widget.Toast;
 import cn.xiaojs.xma.ui.base.IntentFlags;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 
 /**
  * Created by Paul Z on 2017/10/18.
@@ -42,10 +43,7 @@ public class SchemeProcessor {
                     Toast.makeText(mContext,"进入教室失败,无效的ticket",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent i = new Intent();
-                i.putExtra(Constants.KEY_TICKET, ticket);
-                i.setClass(mContext, ClassroomActivity.class);
-                mContext.startActivity(i);
+                Classroom2Activity.invoke(mContext,ticket);
                 break;
             default:
                 break;

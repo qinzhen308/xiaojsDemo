@@ -75,8 +75,10 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.classroom.page.BoardScreenshotFragment;
 import cn.xiaojs.xma.ui.classroom.page.IBoardManager;
 import cn.xiaojs.xma.ui.classroom.page.MsgInputFragment;
+import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom.page.SlideMenuFragment;
 import cn.xiaojs.xma.ui.classroom2.ClassDetailFragment;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
@@ -347,12 +349,15 @@ public abstract class MovieFragment extends BaseRoomFragment
             case R.id.l_right_switch_vb:
                 onSwitchStreamingClick(view);
                 break;
+            case R.id.l_right_screenshot:                                           //截屏
+                onScreenshotClick(view);
+                break;
 
         }
     }
 
 
-    @OnClick({R.id.center_one2one, //R.id.center_board_opera,
+    @OnClick({R.id.center_one2one,//R.id.center_board_opera,
             R.id.center_board_mgr, R.id.center_new_board, R.id.center_member,
             R.id.center_database, R.id.center_canlender})
     void onCenterPanelItemClick(View view) {
@@ -811,6 +816,22 @@ public abstract class MovieFragment extends BaseRoomFragment
         ScheduleFragment scheduleFragment = new ScheduleFragment();
         scheduleFragment.setTargetFragment(this, CTLConstant.REQUEST_OPEN_CANLENDER);
         showSlidePanel(scheduleFragment, "canlender");
+    }
+
+    public void onScreenshotClick(View view) {
+        Bitmap bitmap=whiteboardFragment.preview();
+        if(bitmap!=null){
+            Fragment fragment=BoardScreenshotFragment.createInstance(getActivity(),bitmap, new OnPhotoDoodleShareListener() {
+                @Override
+                public void onPhotoShared(Attendee attendee, Bitmap bmp) {
+
+                }
+            });
+            getChildFragmentManager().beginTransaction().add(R.id.screenshot_container,fragment).addToBackStack("screenshot").commitAllowingStateLoss();
+        }else {
+            ToastUtil.showToast(getActivity(),"截图失败");
+        }
+
     }
 
 
