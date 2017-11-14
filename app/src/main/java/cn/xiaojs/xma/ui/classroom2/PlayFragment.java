@@ -161,7 +161,7 @@ public class PlayFragment extends MovieFragment
     protected void controlHandleOnRotate(int orientation) {
         switch (orientation) {
             case Configuration.ORIENTATION_LANDSCAPE:
-                controlClickView.setVisibility(View.GONE);
+                controlClickView.setVisibility(View.VISIBLE);
                 controlPort.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 controlLand.setVisibility(View.VISIBLE);

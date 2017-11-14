@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.ui.base2.OnItemClickObservable;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
@@ -77,7 +78,7 @@ public class ShareToAdapter extends BaseAdapter {
         Attendee attendee = getItem(position);
         String titleStr = attendee.name;
 
-        if (position == 0) {
+        if (attendee.ctype == Communications.TalkType.OPEN) {
             String title = TextUtils.isEmpty(titleStr) ?
                     "#" : String.valueOf(titleStr.trim().charAt(0));
             viewholder.avatorTextView.setText(title);
