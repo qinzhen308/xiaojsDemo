@@ -207,6 +207,8 @@ public class ShareToFragment extends BaseRoomFragment {
                     talkBean.time = System.currentTimeMillis();
                     talkBean.to = att.accountId;
                     talkBean.type = att.ctype;
+
+
                     XMSManager.sendTalk(getContext().getApplicationContext(),
                             true, talkBean, new EventCallback<TalkResponse>() {
                         @Override
@@ -220,7 +222,12 @@ public class ShareToFragment extends BaseRoomFragment {
                         }
                     });
 
-                    updateConveration(talkBean, att.name);
+                    if (Communications.TalkType.OPEN == att.ctype) {
+                        talkBean.name = att.name;
+                        updateChatSession(talkBean);
+                    }else {
+                        updateConveration(talkBean, att.name);
+                    }
                 }
 
                 e.onNext(new Object());
@@ -242,6 +249,14 @@ public class ShareToFragment extends BaseRoomFragment {
 
     }
 
+    private void updateChatSession(Talk talk) {
+        if (talk == null)
+            return;
+
+        Intent i = new Intent(CTLConstant.ACTION_SEND_TALK);
+        i.putExtra(CTLConstant.EXTRA_TALK, talk);
+        getContext().sendBroadcast(i);
+    }
 
     private void updateConveration(Talk talkItem, String name) {
         Contact contact = new Contact();

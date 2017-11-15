@@ -22,7 +22,7 @@ import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
  */
 
 public abstract class AVFragment extends MovieFragment
-        implements StreamingEngine.AVStreamingStateListener{
+        implements StreamingEngine.AVStreamingStateListener {
 
 
     private StreamingEngine streamingEngine;
@@ -38,11 +38,25 @@ public abstract class AVFragment extends MovieFragment
 
         controlClickView.setVisibility(View.GONE);
 
-        streamingEngine = new StreamingEngine(getContext(),createCameraPreview());
+        streamingEngine = new StreamingEngine(getContext(), createCameraPreview());
         streamingEngine.setStreamingUrl(classroomEngine.getPublishUrl());
         streamingEngine.setStateListener(this);
         streamingEngine.preparePublish(createCameraPreview());
-        streamingEngine.setPictureStreamingResourceId(R.drawable.xjs_streaming_cover1);
+
+        Bitmap bitmap = whiteboardFragment.preview();
+        if (bitmap != null) {
+            streamingEngine.inputWhiteboardData(bitmap);
+        } else {
+
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("---create stream bitmap ----------");
+            }
+
+            Bitmap bmp=Bitmap.createBitmap(16, 9, Bitmap.Config.RGB_565);
+            Canvas canvas=new Canvas(bmp);
+            canvas.drawColor(Color.WHITE);
+            streamingEngine.inputWhiteboardData(bmp);
+        }
 
         whiteboardFragment.setLastBoardLoadListener(new BoardCollaborateFragment.OnLastBoardLoadListener() {
             @Override
@@ -76,6 +90,7 @@ public abstract class AVFragment extends MovieFragment
         streamingEngine.destoryAV();
     }
 
+
     protected void stopStreaming() {
         streamingEngine.stopStreamingAV();
     }
@@ -103,7 +118,7 @@ public abstract class AVFragment extends MovieFragment
 
     @Override
     public int onSwitchStreamingClick(View view) {
-        int vis =  super.onSwitchStreamingClick(view);
+        int vis = super.onSwitchStreamingClick(view);
         streamingEngine.togglePictureStreaming();
 
         return vis;
@@ -120,7 +135,6 @@ public abstract class AVFragment extends MovieFragment
                 if (!streaming) {
                     streamingEngine.togglePictureStreaming();
                     sendStartStreaming();
-                    pushBoardWhenStartStreaming();
                     streaming = true;
                 }
                 break;
@@ -133,7 +147,7 @@ public abstract class AVFragment extends MovieFragment
 
         if (XiaojsConfig.DEBUG) {
             Logger.d("received whiteboard data(%d, %d): %s",
-                    bitmap.getWidth(),bitmap.getHeight(), bitmap);
+                    bitmap.getWidth(), bitmap.getHeight(), bitmap);
 
             Logger.d("publish_url: %s", classroomEngine.getPublishUrl());
         }
@@ -147,11 +161,4 @@ public abstract class AVFragment extends MovieFragment
         return true;
     }
 
-
-    private void pushBoardWhenStartStreaming() {
-//        Bitmap bitmap = whiteboardContainerLayout.getDrawingCache(true);
-//        if (bitmap !=null) {
-//            streamingEngine.inputWhiteboardData(bitmap);
-//        }
-    }
 }

@@ -1,7 +1,10 @@
 package cn.xiaojs.xma.ui.classroom2;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -41,6 +44,9 @@ public class ChatFragment extends GroupSessionFragment {
         classroomEngine = ClassroomEngine.getEngine();
 
         eventListener = ClassroomEngine.getEngine().observerMember(receivedConsumer);
+
+        IntentFilter intentFilter = new IntentFilter(CTLConstant.ACTION_SEND_TALK);
+        getContext().registerReceiver(messageReceiver,intentFilter);
     }
 
     @Override
@@ -60,10 +66,16 @@ public class ChatFragment extends GroupSessionFragment {
     public void onDestroy() {
         super.onDestroy();
 
+        if (messageReceiver !=null) {
+            getContext().unregisterReceiver(messageReceiver);
+        }
+
         if (eventListener != null) {
             eventListener.dispose();
             eventListener = null;
         }
+
+
     }
 
     public void popInput() {
@@ -127,6 +139,21 @@ public class ChatFragment extends GroupSessionFragment {
 //                        addTipsItem(createLeaveTipsItem(talkl));
 //                    }
                     break;
+            }
+        }
+    };
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (CTLConstant.ACTION_SEND_TALK.equals(action)) {
+
+                Talk talk = (Talk) intent.getSerializableExtra(CTLConstant.EXTRA_TALK);
+                if (talk != null) {
+                    handleReceivedMsg(true, talk);
+                }
+
             }
         }
     };

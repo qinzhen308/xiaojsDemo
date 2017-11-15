@@ -11,7 +11,6 @@
             android:id="@+id/loading_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black_opacity_40"
             android:layout_gravity="center"
             android:visibility="gone"
             >
@@ -33,7 +32,8 @@
                 android:layout_marginTop="@dimen/px5"
                 android:focusable="false"
                 android:textSize="@dimen/font_26px"
-                android:text="@string/video_loading"/>
+                android:text="@string/video_loading"
+                android:visibility="gone"/>
     </RelativeLayout>
 
     <View
