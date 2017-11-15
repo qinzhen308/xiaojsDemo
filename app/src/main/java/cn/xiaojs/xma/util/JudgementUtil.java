@@ -15,7 +15,8 @@ import cn.xiaojs.xma.ui.widget.CommonDialog;
 public class JudgementUtil {
 
     public static boolean checkTeachingAbility(final Context context){
-        if (AccountDataManager.isTeacher(context)) {
+        return true;
+        /*if (AccountDataManager.isTeacher(context)) {
             return true;
         } else {
             //提示申明教学能力
@@ -38,6 +39,6 @@ public class JudgementUtil {
             });
             dialog.show();
             return false;
-        }
+        }*/
     }
 }

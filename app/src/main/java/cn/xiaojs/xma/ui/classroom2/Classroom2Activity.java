@@ -207,6 +207,12 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     public void onBackPressed() {
 
+        if(movieFragment != null
+                && movieFragment.isAdded()
+                &&movieFragment.getChildFragmentManager().getBackStackEntryCount()>0){
+            movieFragment.getChildFragmentManager().popBackStack();
+            return;
+        }
 
         if (movieFragment != null
                 && movieFragment.isAdded()
@@ -214,6 +220,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             movieFragment.back();
             return;
         }
+
+
+
 
         if (UIUtils.isLandspace(this)) {
             changeOrientation();
