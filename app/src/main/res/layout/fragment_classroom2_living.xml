@@ -84,6 +84,11 @@
             layout="@layout/layout_classroom2_control_land"
             />
 
+    <FrameLayout
+        android:id="@+id/screenshot_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <include
             layout="@layout/layout_classroom2_right_slide_panel"
             android:visibility="gone"

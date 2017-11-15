@@ -34,9 +34,38 @@
             android:paddingLeft="@dimen/px10"
             android:paddingRight="@dimen/px10"
             android:paddingTop="@dimen/px15"
+            android:visibility="gone"
             android:singleLine="true"
             android:textSize="@dimen/font_28px" />
 
+        <LinearLayout
+            android:id="@+id/title_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/px30"
+            android:background="@drawable/grey_conner_bg"
+            android:visibility="visible"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@drawable/ic_search"
+                android:paddingBottom="@dimen/px15"
+                android:paddingLeft="@dimen/px10"
+                android:paddingRight="@dimen/px10"
+                android:paddingTop="@dimen/px15"
+                android:gravity="center"
+                android:hint="@string/search"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/font_28px" />
+
+
+        </LinearLayout>
         <TextView
             android:id="@+id/search_ok"
             android:layout_width="wrap_content"
@@ -53,12 +82,125 @@
 
     <View style="@style/DividerHorizontal" />
 
+    <LinearLayout
+        android:id="@+id/layout_first_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/px65"
+            android:layout_marginBottom="@dimen/px65"
+            android:paddingTop="@dimen/px5"
+            android:paddingBottom="@dimen/px5"
+            android:paddingLeft="@dimen/px40"
+            android:paddingRight="@dimen/px40"
+            android:textSize="@dimen/font_28px"
+            android:text="选择你要搜索的内容"
+            android:textColor="@color/page_tips_text"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="@dimen/px10"
+            android:paddingBottom="@dimen/px20"
+            >
+
+            <TextView
+                android:id="@+id/tab_recommend_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px5"
+                android:paddingBottom="@dimen/px5"
+                android:paddingLeft="@dimen/px40"
+                android:paddingRight="@dimen/px40"
+                android:textSize="@dimen/font_30px"
+                android:text="教室"
+                android:textColor="@color/font_blue"
+                />
+
+
+            <View
+                android:layout_width="@dimen/px2"
+                android:layout_height="match_parent"
+                android:background="@color/cancel_fllow_btn_color"
+                />
+            <TextView
+                android:id="@+id/tab_recommend_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px5"
+                android:paddingBottom="@dimen/px5"
+                android:paddingLeft="@dimen/px40"
+                android:textSize="@dimen/font_30px"
+                android:paddingRight="@dimen/px40"
+                android:text="课程"
+                android:textColor="@color/font_blue"
+                />
+
+            <View
+                android:layout_width="@dimen/px2"
+                android:layout_height="match_parent"
+                android:background="@color/cancel_fllow_btn_color"
+                />
+            <TextView
+                android:id="@+id/tab_recommend_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px5"
+                android:paddingBottom="@dimen/px5"
+                android:paddingLeft="@dimen/px40"
+                android:paddingRight="@dimen/px40"
+                android:textSize="@dimen/font_30px"
+                android:text="个人"
+                android:textColor="@color/font_blue"
+                />
+
+            <View
+                android:layout_width="@dimen/px2"
+                android:layout_height="match_parent"
+                android:background="@color/cancel_fllow_btn_color"
+                />
+            <TextView
+                android:id="@+id/tab_recommend_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/px5"
+                android:paddingBottom="@dimen/px5"
+                android:paddingLeft="@dimen/px40"
+                android:textSize="@dimen/font_30px"
+                android:paddingRight="@dimen/px40"
+                android:text="机构"
+                android:textColor="@color/font_blue"
+                />
+
+
+        </LinearLayout>
+
+        <WebView
+            android:id="@+id/webview"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </LinearLayout>
+
     <RadioGroup
         android:id="@+id/tab_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px78"
         android:checkedButton="@+id/tab1"
         android:background="@color/white"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <RadioButton
@@ -79,16 +221,12 @@
             android:layout_height="match_parent"
             android:background="@drawable/selector_line_bottom_orange"
             android:button="@null"
+            android:layout_weight="1"
             android:drawableBottom="@color/main_orange"
             android:gravity="center"
-            android:layout_weight="1"
-            android:paddingLeft="@dimen/px30"
-            android:paddingRight="@dimen/px30"
-            android:text="公开课"
-            android:visibility="gone"
+            android:text="教室"
             android:textColor="@color/selector_btn_orange_black"
-            android:textSize="@dimen/font_28px"
-            />
+            android:textSize="@dimen/font_28px" />
 
         <RadioButton
             android:id="@+id/tab3"
@@ -99,26 +237,14 @@
             android:drawableBottom="@color/main_orange"
             android:gravity="center"
             android:layout_weight="1"
-            android:text="录播课"
+            android:text="课程"
             android:textColor="@color/selector_btn_orange_black"
             android:textSize="@dimen/font_28px"
             />
 
-        <RadioButton
-            android:id="@+id/tab4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/selector_line_bottom_orange"
-            android:button="@null"
-            android:layout_weight="1"
-            android:drawableBottom="@color/main_orange"
-            android:gravity="center"
-            android:text="班"
-            android:textColor="@color/selector_btn_orange_black"
-            android:textSize="@dimen/font_28px" />
 
         <RadioButton
-            android:id="@+id/tab5"
+            android:id="@+id/tab4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/selector_line_bottom_orange"
@@ -131,7 +257,7 @@
             android:textSize="@dimen/font_28px" />
 
         <RadioButton
-            android:id="@+id/tab6"
+            android:id="@+id/tab5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/selector_line_bottom_orange"
@@ -148,7 +274,9 @@
 
 
     <FrameLayout
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView

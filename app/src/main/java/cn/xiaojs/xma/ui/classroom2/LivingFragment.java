@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import butterknife.BindView;
@@ -38,13 +40,17 @@ import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.ui.classroom.page.BoardScreenshotFragment;
+import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
 import cn.xiaojs.xma.ui.classroom2.base.AVFragment;
+import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
 import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
 import cn.xiaojs.xma.ui.classroom2.member.ChooseMemberFragment;
+import cn.xiaojs.xma.ui.classroom2.member.ShareToFragment;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -188,6 +194,38 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         }
 
+    }
+
+    @Override
+    public void onScreenshotClick(View view) {
+        if(isBoardShown()){
+            super.onScreenshotClick(view);
+        }else {
+            captureFrame(new FrameCapturedCallback() {
+                @Override
+                public void onFrameCaptured(Bitmap bitmap) {
+                    if(bitmap!=null){
+                        Fragment fragment=BoardScreenshotFragment.createInstance(getActivity(),bitmap, new OnPhotoDoodleShareListener() {
+                            @Override
+                            public void onPhotoShared(Attendee attendee, Bitmap bmp) {
+                                ShareToFragment shareToFragment = new ShareToFragment();
+                                shareToFragment.setTargetBitmap(bmp);
+                                shareToFragment.setRootFragment(LivingFragment.this);
+                                showSlidePanel(shareToFragment,"share_to");
+                            }
+                        });
+                        getChildFragmentManager().beginTransaction().add(R.id.screenshot_container,fragment).addToBackStack("screenshot").commitAllowingStateLoss();
+                    }else {
+                        ToastUtil.showToast(getActivity(),"截图失败");
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    protected Bitmap doScreenshot() {
+        return whiteboardFragment.preview();
     }
 
     @Override
@@ -349,7 +387,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
                 .into(lTopPhotoView);
-        lRightScreenshortView.setVisibility(View.GONE);
+        lRightScreenshortView.setVisibility(View.VISIBLE);
 
         configStopButton();
 
