@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
@@ -248,6 +249,20 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
     }
 
+    @Override
+    public void onRotate(int orientation) {
+        super.onRotate(orientation);
+        controlHandleOnRotate(orientation);
+    }
+
+    @Override
+    protected void controlHandleOnRotate(int orientation) {
+        switch (orientation) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                handleBack();
+                break;
+        }
+    }
 
     @Override
     public void onUpdateMembersCount(int count) {
@@ -291,6 +306,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             showFinishClassDlg();
             return;
         }
+
+        Toast.makeText(getContext(), "您的直播已结束", Toast.LENGTH_SHORT).show();
 
         handleBack();
 

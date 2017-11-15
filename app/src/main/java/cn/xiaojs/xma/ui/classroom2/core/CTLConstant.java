@@ -11,9 +11,12 @@ public class CTLConstant {
     public final static int SHARE_IMG_SIZE = 800; //分享图片的大小不超过800
 
     public static final String ACTION_STREAMING_EXCEPTION = "cn.xiaojs.xma.streaming_exception";
+    public static final String ACTION_SEND_TALK = "cn.xiaojs.xma.sendtalk";
+
     public static final String EXTRA_EXCEPTION_TIPS = "exception_tips";
     public static final String EXTRA_TICKET = "ticket";
 
+    public static final String EXTRA_TALK = "cn.xiaojs.xma.sendtalk";
     public static final String EXTRA_ID = "eid";
     public static final String EXTRA_SUTYPE = "esubtype";
     public static final String EXTRA_DIRECTORY_ID = "dir_id";

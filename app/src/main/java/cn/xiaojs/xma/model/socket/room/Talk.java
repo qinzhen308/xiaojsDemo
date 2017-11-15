@@ -3,6 +3,8 @@ package cn.xiaojs.xma.model.socket.room;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
+
 import cn.xiaojs.xma.model.live.TalkItem;
 
 /**
@@ -10,7 +12,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Talk {
+public class Talk implements Serializable{
     public int type;
     public String from;
     public String to;
@@ -36,7 +38,7 @@ public class Talk {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class TalkContent{
+    public static class TalkContent implements Serializable{
         public String text;
         public int contentType;
         public TalkItem.QiNiuImg drawing;
@@ -44,7 +46,7 @@ public class Talk {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class QiNiuImg{
+    public static class QiNiuImg implements Serializable{
         public String name;
     }
 }

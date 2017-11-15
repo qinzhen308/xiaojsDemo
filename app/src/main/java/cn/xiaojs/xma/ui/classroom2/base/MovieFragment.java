@@ -6,7 +6,10 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -252,6 +255,10 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         chatDisposable = XMSEventObservable.observeChatSession(getContext(), talkConsumer);
         eventListener = classroomEngine.observerMember(memberConsumer);
+
+        IntentFilter intentFilter = new IntentFilter(CTLConstant.ACTION_SEND_TALK);
+        getContext().registerReceiver(messageReceiver, intentFilter);
+
     }
 
     @Override
@@ -264,6 +271,10 @@ public abstract class MovieFragment extends BaseRoomFragment
         //
         destoryWhiteboardFragment();
         super.onDestroy();
+
+        if (messageReceiver != null) {
+            getContext().unregisterReceiver(messageReceiver);
+        }
 
         if (chatDisposable != null) {
             chatDisposable.dispose();
@@ -933,8 +944,13 @@ public abstract class MovieFragment extends BaseRoomFragment
         talkItem.body.contentType = talk.body.contentType;
         talkItem.from.accountId = talk.from;
         //获取名字
-        Attendee attendee = classroomEngine.getMember(talk.from);
-        talkItem.from.name = attendee == null ? "nil" : attendee.name;
+        if (TextUtils.isEmpty(talk.name)) {
+            Attendee attendee = classroomEngine.getMember(talk.from);
+            talkItem.from.name = attendee == null ? "nil" : attendee.name;
+        }else {
+            talkItem.from.name = talk.name;
+        }
+
 
         timeline(talkItem);
 
@@ -1080,6 +1096,21 @@ public abstract class MovieFragment extends BaseRoomFragment
                         handleReceivedMsg(false, talk);
                     }
                     break;
+            }
+        }
+    };
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (CTLConstant.ACTION_SEND_TALK.equals(action)) {
+
+                Talk talk = (Talk) intent.getSerializableExtra(CTLConstant.EXTRA_TALK);
+                if (talk != null) {
+                    handleReceivedMsg(true, talk);
+                }
+
             }
         }
     };

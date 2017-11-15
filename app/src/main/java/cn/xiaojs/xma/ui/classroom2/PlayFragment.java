@@ -296,10 +296,16 @@ public class PlayFragment extends MovieFragment
 
         lRightSwitchcameraView.setVisibility(View.GONE);
         lRightSwitchVbView.setVisibility(View.GONE);
-        pBottomClassnameView.setText(classroomEngine.getRoomTitle());
         pBottomAnimationView.setVisibility(View.VISIBLE);
 
-        String avatorUrl = Account.getAvatar(classroomEngine.getCtlSession().claimedBy,
+        String targetId = classroomEngine.getCtlSession().claimedBy;
+
+        Attendee attendee = classroomEngine.getMember(targetId);
+        String descname = attendee==null? "直播中": attendee.name+" 正在直播";
+        pBottomClassnameView.setText(descname);
+
+
+        String avatorUrl = Account.getAvatar(targetId,
                 lTopPhotoView.getMeasuredWidth());
         Glide.with(getContext())
                 .load(avatorUrl)
@@ -315,6 +321,8 @@ public class PlayFragment extends MovieFragment
                 .placeholder(R.drawable.ic_defaultavatar)
                 .error(R.drawable.ic_defaultavatar)
                 .into(lTopPhotoView);
+
+
 
         requestUpdateMemberCount();
 

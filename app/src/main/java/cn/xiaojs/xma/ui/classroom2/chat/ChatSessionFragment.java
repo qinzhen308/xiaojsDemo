@@ -366,7 +366,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     }
 
 
-    private void handleReceivedMsg(boolean send, Talk talk) {
+    protected void handleReceivedMsg(boolean send, Talk talk) {
 
         TalkItem talkItem = new TalkItem();
         talkItem.time = talk.time;

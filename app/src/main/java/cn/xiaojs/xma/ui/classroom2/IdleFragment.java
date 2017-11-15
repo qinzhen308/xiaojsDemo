@@ -319,7 +319,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         takeTime = (takeTime / 1000);
 
         final long finalTakeTime = takeTime;
-        timerDisposable = durationObservable.take(takeTime + 1, TimeUnit.SECONDS)
+        timerDisposable = durationObservable.take(takeTime + 2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
