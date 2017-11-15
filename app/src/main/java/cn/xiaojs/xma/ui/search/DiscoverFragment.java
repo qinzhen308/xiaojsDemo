@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -61,12 +62,28 @@ public class DiscoverFragment extends BaseFragment {
     RadioButton tab4;
     @BindView(R.id.tab5)
     RadioButton tab5;
-    @BindView(R.id.tab6)
-    RadioButton tab6;
     @BindView(R.id.tab_bar)
     RadioGroup tabBar;
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
+
+    @BindView(R.id.webview)
+    WebView webView;
+    @BindView(R.id.layout_first_content)
+    View layoutFirstContent;
+    @BindView(R.id.title_btn)
+    View titleBtn;
+    @BindView(R.id.layout_content)
+    View layoutContent;
+
+    @BindView(R.id.tab_recommend_1)
+    TextView tabRecommend1;
+    @BindView(R.id.tab_recommend_2)
+    TextView tabRecommend2;
+    @BindView(R.id.tab_recommend_3)
+    TextView tabRecommend3;
+    @BindView(R.id.tab_recommend_4)
+    TextView tabRecommend4;
 
     CommonRVAdapter mAdapter;
     private final static int BEGIN_SEARCH=0xff;
@@ -136,13 +153,65 @@ public class DiscoverFragment extends BaseFragment {
         handler.sendMessageDelayed(msg,300);
     }
 
-    @OnClick({ R.id.search_ok})
+    @OnClick({ R.id.search_ok,R.id.title_btn,R.id.tab_recommend_1,R.id.tab_recommend_2,R.id.tab_recommend_3,R.id.tab_recommend_4})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.search_ok:
-                mInput.setText("");
+//                mInput.setText("");
+                exitSearch();
+                break;
+            case R.id.title_btn:
+                beginSearch(Social.SearchType.ALL);
+                break;
+            case R.id.tab_recommend_1:
+                beginSearch(Social.SearchType.CLASS);
+                break;
+            case R.id.tab_recommend_2:
+                beginSearch(Social.SearchType.COURSE);
+                break;
+            case R.id.tab_recommend_3:
+                beginSearch(Social.SearchType.PERSON);
+                break;
+            case R.id.tab_recommend_4:
+                beginSearch(Social.SearchType.ORGANIZATION);
                 break;
         }
+    }
+
+    private void beginSearch(String typeName){
+        this.typeName=typeName;
+        layoutFirstContent.setVisibility(View.GONE);
+        tabBar.setVisibility(View.VISIBLE);
+        layoutContent.setVisibility(View.VISIBLE);
+        mInput.setVisibility(View.VISIBLE);
+        titleBtn.setVisibility(View.GONE);
+        searchOk.setVisibility(View.VISIBLE);
+        switch (typeName){
+            case Social.SearchType.ALL:
+                tabBar.check(R.id.tab1);
+                break;
+            case Social.SearchType.CLASS:
+                tabBar.check(R.id.tab2);
+                break;
+            case Social.SearchType.COURSE:
+                tabBar.check(R.id.tab3);
+                break;
+            case Social.SearchType.PERSON:
+                tabBar.check(R.id.tab4);
+                break;
+            case Social.SearchType.ORGANIZATION:
+                tabBar.check(R.id.tab5);
+                break;
+        }
+    }
+    private void exitSearch(){
+        searchOk.setVisibility(View.GONE);
+        layoutFirstContent.setVisibility(View.VISIBLE);
+        tabBar.setVisibility(View.GONE);
+        layoutContent.setVisibility(View.GONE);
+        mInput.setVisibility(View.GONE);
+        titleBtn.setVisibility(View.VISIBLE);
+        mInput.setText("");
     }
 
 
@@ -202,7 +271,6 @@ public class DiscoverFragment extends BaseFragment {
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mAdapter=new CommonRVAdapter(recyclerview);
         recyclerview.setAdapter(mAdapter);
-        tab2.setVisibility(View.GONE);
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -216,11 +284,6 @@ public class DiscoverFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(TextUtils.isEmpty(mInput.getText().toString())){
-                    searchOk.setVisibility(View.GONE);
-                }else {
-                    searchOk.setVisibility(View.VISIBLE);
-                }
                 toSearch();
             }
         });
@@ -232,20 +295,16 @@ public class DiscoverFragment extends BaseFragment {
                     case R.id.tab1:
                         typeName= Social.SearchType.ALL;
                         break;
-                    /*case R.id.tab2:
-                        typeName= Social.SearchType.LESSON;
-                        break;*/
-                    case R.id.tab3:
-                        typeName= Social.SearchType.COURSE;
-
-                        break;
-                    case R.id.tab4:
+                    case R.id.tab2:
                         typeName= Social.SearchType.CLASS;
                         break;
-                    case R.id.tab5:
+                    case R.id.tab3:
+                        typeName= Social.SearchType.COURSE;
+                        break;
+                    case R.id.tab4:
                         typeName= Social.SearchType.PERSON;
                         break;
-                    case R.id.tab6:
+                    case R.id.tab5:
                         typeName= Social.SearchType.ORGANIZATION;
                         break;
                 }
@@ -255,6 +314,7 @@ public class DiscoverFragment extends BaseFragment {
             }
         });
         initPageLoad();
+        webView.loadUrl("http://wxtest.xiaojs.cn/web/app/homepage.html");
     }
 
     @Override
