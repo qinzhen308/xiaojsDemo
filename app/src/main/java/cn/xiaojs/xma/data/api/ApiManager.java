@@ -333,7 +333,8 @@ public class ApiManager {
             typeParam="coursedetails";
         }
         return new StringBuilder(baseUrl)
-                .append("/web/mobile/")
+//                .append("/web/mobile/")
+                .append("/web/share/")
                 .append(typeParam)
                 .append("/")
                 .append(lessonId)
