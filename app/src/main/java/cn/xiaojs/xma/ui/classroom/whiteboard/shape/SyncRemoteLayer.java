@@ -1,13 +1,11 @@
 package cn.xiaojs.xma.ui.classroom.whiteboard.shape;
 
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;

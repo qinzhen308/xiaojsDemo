@@ -52,6 +52,7 @@ import cn.xiaojs.xma.model.security.AuthenticateStatus;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.MainActivity;
+import cn.xiaojs.xma.ui.SchemeProcessor;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.classroom.live.utils.Utils;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -477,6 +478,10 @@ public class LoginActivity extends BaseActivity {
                     XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
                     AccountPref.setThirdPartFlag(LoginActivity.this,true);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    //scheme跳转
+                    if(SchemeProcessor.isSchemeUri(getIntent())){
+                        intent.setData(getIntent().getData());
+                    }
                     startActivity(intent);
                     finish();
                 }else {

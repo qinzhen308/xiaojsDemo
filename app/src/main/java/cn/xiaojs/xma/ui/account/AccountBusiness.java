@@ -28,6 +28,7 @@ import cn.xiaojs.xma.model.account.User;
 import cn.xiaojs.xma.model.security.LoginInfo;
 import cn.xiaojs.xma.model.security.LoginParams;
 import cn.xiaojs.xma.ui.MainActivity;
+import cn.xiaojs.xma.ui.SchemeProcessor;
 
 public class AccountBusiness {
     public final static String USER_INFO = "user_info";
@@ -79,6 +80,9 @@ public class AccountBusiness {
 
 
                         Intent intent = new Intent(activity, MainActivity.class);
+                        if(SchemeProcessor.isSchemeUri(activity.getIntent())){
+                            intent.setData(activity.getIntent().getData());
+                        }
                         //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         activity.startActivity(intent);
 

@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.ui.account.LoginActivity;
 import cn.xiaojs.xma.ui.base.IntentFlags;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
@@ -43,6 +45,11 @@ public class SchemeProcessor {
                     Toast.makeText(mContext,"进入教室失败,无效的ticket",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(!AccountDataManager.isLogin(mContext)){
+                    mContext.startActivity(new Intent(mContext, LoginActivity.class).setData(schemeUri));
+                    mContext.finish();
+                    return;
+                }
                 Classroom2Activity.invoke(mContext,ticket);
                 break;
             default:
@@ -50,4 +57,16 @@ public class SchemeProcessor {
         }
 
     }
+
+
+    public static boolean isSchemeUri(Uri uri){
+        if(uri==null||!SCHEME.equals(uri.getScheme())||!HOST.equals(uri.getHost())){
+            return false;
+        }
+        return true;
+    }
+    public static boolean isSchemeUri(Intent intent){
+        return isSchemeUri(intent.getData());
+    }
+
 }
