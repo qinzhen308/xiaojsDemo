@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.orhanobut.logger.Logger;
+import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
 import cn.xiaojs.xma.R;
@@ -88,6 +89,10 @@ public abstract class AVFragment extends MovieFragment
     public void onDestroy() {
         super.onDestroy();
         streamingEngine.destoryAV();
+    }
+
+    public void captureFrame(FrameCapturedCallback callback) {
+        streamingEngine.captureFrame(callback);
     }
 
 
