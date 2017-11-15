@@ -51,6 +51,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -128,7 +129,6 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_video_exoplayer, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -353,7 +353,13 @@ public class PlayerFragment extends MovieFragment implements Player.EventListene
 //    }
 
     public Bitmap getBitmap() {
-        return playerView.getDrawingCache(true);
+        View view = playerView.getVideoSurfaceView();
+        if (view instanceof TextureView) {
+            TextureView textureView = (TextureView) view;
+            return textureView.getBitmap();
+        }
+
+        return null;
     }
 
 

@@ -27,8 +27,6 @@
             android:layout_marginTop="@dimen/px20"
             android:layout_marginBottom="@dimen/px20"
             android:layout_marginRight="@dimen/px20"
-            android:paddingLeft="@dimen/px21"
-            android:paddingRight="@dimen/px21"
             />
 
     <cn.xiaojs.xma.ui.classroom2.widget.ColorIconTextView

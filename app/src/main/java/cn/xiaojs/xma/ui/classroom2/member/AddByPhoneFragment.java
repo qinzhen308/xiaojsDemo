@@ -16,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
@@ -173,9 +175,13 @@ public class AddByPhoneFragment extends BottomSheetFragment {
         }
 
         StudentEnroll studentEnroll = new StudentEnroll();
-        studentEnroll.mobile = phone;
-        studentEnroll.name = name;
-        studentEnroll.id = pid;
+
+        if (TextUtils.isEmpty(pid)) {
+            studentEnroll.mobile = phone;
+            studentEnroll.name = name;
+        }else {
+            studentEnroll.id = pid;
+        }
 
         Fragment  targetFragment = getTargetFragment();
         if (targetFragment != null) {

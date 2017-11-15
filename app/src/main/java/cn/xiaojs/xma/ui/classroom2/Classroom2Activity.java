@@ -727,9 +727,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             return;
         }
 
-        if (movieFragment != null && movieFragment instanceof PlaybackFragment) {
-            return;
-        }
+//        if (movieFragment != null && movieFragment instanceof PlaybackFragment) {
+//            return;
+//        }
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         removeOldFragment(fragmentTransaction);

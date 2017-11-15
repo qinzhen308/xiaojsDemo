@@ -430,6 +430,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                 case Su.EventType.SYNC_CLASS_STATE:
                     try {
                         updateLessonTips();
+                        configStartOrPausedLiveButton();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
