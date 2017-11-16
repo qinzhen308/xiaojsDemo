@@ -81,118 +81,130 @@
     </LinearLayout>
 
     <View style="@style/DividerHorizontal" />
-
-    <LinearLayout
+    <ScrollView
         android:id="@+id/layout_first_content"
-        android:orientation="vertical"
         android:visibility="visible"
         android:background="@color/white"
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:layout_height="match_parent">
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/px65"
-            android:layout_marginBottom="@dimen/px65"
-            android:paddingTop="@dimen/px5"
-            android:paddingBottom="@dimen/px5"
-            android:paddingLeft="@dimen/px40"
-            android:paddingRight="@dimen/px40"
-            android:textSize="@dimen/font_28px"
-            android:text="选择你要搜索的内容"
-            android:textColor="@color/page_tips_text"
-            />
-
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/px10"
-            android:paddingBottom="@dimen/px20"
-            >
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
 
             <TextView
-                android:id="@+id/tab_recommend_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/px65"
+                android:layout_marginBottom="@dimen/px65"
                 android:paddingTop="@dimen/px5"
                 android:paddingBottom="@dimen/px5"
                 android:paddingLeft="@dimen/px40"
                 android:paddingRight="@dimen/px40"
-                android:textSize="@dimen/font_30px"
-                android:text="教室"
-                android:textColor="@color/font_blue"
+                android:textSize="@dimen/font_28px"
+                android:text="选择你要搜索的内容"
+                android:textColor="@color/page_tips_text"
                 />
 
-
-            <View
-                android:layout_width="@dimen/px2"
-                android:layout_height="match_parent"
-                android:background="@color/cancel_fllow_btn_color"
-                />
-            <TextView
-                android:id="@+id/tab_recommend_2"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/px5"
-                android:paddingBottom="@dimen/px5"
-                android:paddingLeft="@dimen/px40"
-                android:textSize="@dimen/font_30px"
-                android:paddingRight="@dimen/px40"
-                android:text="课程"
-                android:textColor="@color/font_blue"
-                />
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="@dimen/px10"
+                android:paddingBottom="@dimen/px20"
+                >
 
-            <View
-                android:layout_width="@dimen/px2"
-                android:layout_height="match_parent"
-                android:background="@color/cancel_fllow_btn_color"
-                />
-            <TextView
-                android:id="@+id/tab_recommend_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/px5"
-                android:paddingBottom="@dimen/px5"
-                android:paddingLeft="@dimen/px40"
-                android:paddingRight="@dimen/px40"
-                android:textSize="@dimen/font_30px"
-                android:text="个人"
-                android:textColor="@color/font_blue"
-                />
+                <TextView
+                    android:id="@+id/tab_recommend_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px40"
+                    android:paddingRight="@dimen/px40"
+                    android:textSize="@dimen/font_30px"
+                    android:text="教室"
+                    android:textColor="@color/font_blue"
+                    />
 
-            <View
-                android:layout_width="@dimen/px2"
-                android:layout_height="match_parent"
-                android:background="@color/cancel_fllow_btn_color"
-                />
-            <TextView
-                android:id="@+id/tab_recommend_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/px5"
-                android:paddingBottom="@dimen/px5"
-                android:paddingLeft="@dimen/px40"
-                android:textSize="@dimen/font_30px"
-                android:paddingRight="@dimen/px40"
-                android:text="机构"
-                android:textColor="@color/font_blue"
-                />
+
+                <View
+                    android:layout_width="@dimen/px2"
+                    android:layout_height="match_parent"
+                    android:background="@color/cancel_fllow_btn_color"
+                    />
+                <TextView
+                    android:id="@+id/tab_recommend_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px40"
+                    android:textSize="@dimen/font_30px"
+                    android:paddingRight="@dimen/px40"
+                    android:text="课程"
+                    android:textColor="@color/font_blue"
+                    />
+
+                <View
+                    android:layout_width="@dimen/px2"
+                    android:layout_height="match_parent"
+                    android:background="@color/cancel_fllow_btn_color"
+                    />
+                <TextView
+                    android:id="@+id/tab_recommend_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px40"
+                    android:paddingRight="@dimen/px40"
+                    android:textSize="@dimen/font_30px"
+                    android:text="个人"
+                    android:textColor="@color/font_blue"
+                    />
+
+                <View
+                    android:layout_width="@dimen/px2"
+                    android:layout_height="match_parent"
+                    android:background="@color/cancel_fllow_btn_color"
+                    />
+                <TextView
+                    android:id="@+id/tab_recommend_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/px5"
+                    android:paddingBottom="@dimen/px5"
+                    android:paddingLeft="@dimen/px40"
+                    android:textSize="@dimen/font_30px"
+                    android:paddingRight="@dimen/px40"
+                    android:text="机构"
+                    android:textColor="@color/font_blue"
+                    />
+
+
+            </LinearLayout>
+
+            <WebView
+                android:id="@+id/webview"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:scrollbars="none"
+                android:layout_height="match_parent"/>
 
 
         </LinearLayout>
 
-        <WebView
-            android:id="@+id/webview"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+
+    </ScrollView>
 
 
-    </LinearLayout>
+
 
     <RadioGroup
         android:id="@+id/tab_bar"

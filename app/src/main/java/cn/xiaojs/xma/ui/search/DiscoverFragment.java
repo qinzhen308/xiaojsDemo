@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.search;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.IdRes;
@@ -11,7 +12,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -41,6 +46,7 @@ import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.base.CommonRVAdapter;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.JsInvokeNativeInterface;
 
 /**
  * Created by Paul Z on 2017/10/30.
@@ -214,6 +220,35 @@ public class DiscoverFragment extends BaseFragment {
         mInput.setText("");
     }
 
+    private void initWebView(){
+        WebSettings settings=webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new JsInvokeNativeInterface(getActivity(),webView),"android");
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                Logger.d("---qz----"+consoleMessage.message());
+                return super.onConsoleMessage(consoleMessage);
+            }
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+
+            }
+        });
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
+    }
+
 
     Handler handler=new Handler(){
         @Override
@@ -314,6 +349,7 @@ public class DiscoverFragment extends BaseFragment {
             }
         });
         initPageLoad();
+        initWebView();
         webView.loadUrl("http://wxtest.xiaojs.cn/web/app/homepage.html");
     }
 
