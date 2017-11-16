@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -150,6 +151,11 @@ public class LOpModel extends AbsOpModel<CLesson> {
                 break;
 
         }
+    }
+
+    @Override
+    public void onClick(Fragment fragment, CLesson data, int position) {
+
     }
 
     private void showProgress(Activity activity){

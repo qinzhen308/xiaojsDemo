@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -116,6 +117,7 @@ public abstract class AbsOpModel<T>{
     }
 
     public abstract void onClick(Activity context,T data,int position);
+    public abstract void onClick(Fragment fragment, T data, int position);
 
 
 }

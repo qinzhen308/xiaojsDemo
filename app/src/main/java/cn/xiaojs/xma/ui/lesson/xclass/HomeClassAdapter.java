@@ -1,5 +1,6 @@
 package cn.xiaojs.xma.ui.lesson.xclass;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassFooterView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeClassLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonLabelView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.HomeLessonView;
+import cn.xiaojs.xma.ui.lesson.xclass.view.IBindFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LiveScheduleLessonView;
 import cn.xiaojs.xma.ui.lesson.xclass.view.LoadStateBarView;
@@ -62,6 +64,7 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private List<?> mList;
     private RecyclerView mRecyclerView;
     RecyclerViewScrollHelper scrollHelper;
+    Fragment mFragment;
 
     public HomeClassAdapter(RecyclerView recyclerView){
         mRecyclerView=recyclerView;
@@ -72,6 +75,10 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void setList(List<?> list){
         mList=list;
+    }
+
+    public void setFragment(Fragment fragment){
+        this.mFragment=fragment;
     }
 
     public List<Object> getList(){
@@ -131,6 +138,10 @@ public class HomeClassAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if(holder.itemView instanceof IEventer&&mEventCallback!=null){
             ((IEventer) holder.itemView).setEventCallback(mEventCallback);
+        }
+
+        if(holder.itemView instanceof IBindFragment){
+            ((IBindFragment) holder.itemView).bindFragment(mFragment);
         }
     }
 

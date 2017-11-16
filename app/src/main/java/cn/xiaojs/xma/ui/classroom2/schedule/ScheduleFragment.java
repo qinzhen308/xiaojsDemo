@@ -43,9 +43,12 @@ import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.xclass.HomeClassAdapter;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LastEmptyModel;
 import cn.xiaojs.xma.ui.lesson.xclass.model.LessonLabelModel;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IUpdateMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.util.ArrayUtil;
 
@@ -55,7 +58,7 @@ import cn.xiaojs.xma.util.ArrayUtil;
  */
 
 public class ScheduleFragment extends BottomSheetFragment
-        implements DialogInterface.OnKeyListener {
+        implements DialogInterface.OnKeyListener ,IUpdateMethod,IDialogMethod{
 
     @BindView(R.id.cl_root)
     RelativeLayout rootLay;
@@ -105,6 +108,7 @@ public class ScheduleFragment extends BottomSheetFragment
 
     protected void init() {
         mAdapter = new HomeClassAdapter(recyclerview);
+        mAdapter.setFragment(this);
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerview.setAdapter(mAdapter);
 
@@ -118,7 +122,7 @@ public class ScheduleFragment extends BottomSheetFragment
                     //索引
                     int position = (int) object[0];
                     //数据
-                    LiveSchedule data = (LiveSchedule) object[1];
+                    ScheduleLesson data = (ScheduleLesson) object[1];
                     LibDoc doc = new LibDoc();
                     doc.key = data.playback;
 
@@ -250,6 +254,12 @@ public class ScheduleFragment extends BottomSheetFragment
                     requestHistory();
                 }
             }
+
+            @Override
+            public void refresh() {
+                historyEndDate=null;
+                super.refresh();
+            }
         };
     }
 
@@ -288,6 +298,8 @@ public class ScheduleFragment extends BottomSheetFragment
 
             switch (requestCode) {
                 case CTLConstant.REQUEST_MATERIAL_ADD_NEW:
+                case CourseConstant.CODE_CANCEL_LESSON:
+                    dataPageLoader.refresh();
                     break;
             }
         }
@@ -318,4 +330,25 @@ public class ScheduleFragment extends BottomSheetFragment
                 break;
         }
     }
+
+    @Override
+    public void updateData(boolean justNative, Object... others) {
+
+        if(justNative){
+            mAdapter.notifyDataSetChanged();
+        }else {
+            dataPageLoader.refresh();
+        }
+
+    }
+
+    @Override
+    public void updateItem(int position, Object obj, Object... others) {
+        if(!ArrayUtil.isEmpty(others)&&"remove".equals(others[0])){
+            dataPageLoader.refresh();
+        }else {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
 }

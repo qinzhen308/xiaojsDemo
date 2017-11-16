@@ -859,7 +859,7 @@
     <string name="lesson_op_private">取消公开</string>
     <string name="lesson_op_recreate_lesson">重新开课</string>
     <string name="lesson_op_share">分享课</string>
-    <string name="lesson_op_cancel_lesson">取消</string>
+    <string name="lesson_op_cancel_lesson">取消课</string>
     <string name="lesson_op_submit">提交确认</string>
     <string name="lesson_op_publish">上架</string>
     <string name="lesson_op_edit">编辑</string>

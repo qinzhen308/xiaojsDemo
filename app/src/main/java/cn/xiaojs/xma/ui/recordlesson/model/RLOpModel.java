@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.recordlesson.model;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 
@@ -100,6 +101,11 @@ public class RLOpModel extends AbsOpModel<RLesson> {
                 break;
 
         }
+    }
+
+    @Override
+    public void onClick(Fragment fragment, RLesson data, int position) {
+
     }
 
     private void showProgress(Activity activity){

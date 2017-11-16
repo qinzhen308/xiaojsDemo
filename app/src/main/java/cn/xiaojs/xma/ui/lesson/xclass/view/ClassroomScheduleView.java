@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.lesson.xclass.view;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -27,14 +28,10 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
-import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.ctl.ScheduleLesson;
-import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.MainActivity;
-import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.schedule.SLOpModel;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
@@ -48,7 +45,7 @@ import cn.xiaojs.xma.ui.widget.ListBottomDialog;
  * Created by Paul Z on 2017/11/1.
  */
 
-public class ClassroomScheduleView extends RelativeLayout implements IViewModel<ScheduleLesson> {
+public class ClassroomScheduleView extends RelativeLayout implements IViewModel<ScheduleLesson> ,IBindFragment{
 
 
     @BindView(R.id.tv_date)
@@ -243,7 +240,7 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
         dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
             @Override
             public void onItemClick(int position) {
-                lOpModelList.get(position).onClick((Activity) getContext(), mData, position);
+                lOpModelList.get(position).onClick(mFragment, mData, position);
             }
         });
         dialog.show();
@@ -292,5 +289,11 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
         dialog.setCustomView(content);
         dialog.needCloseBtn(true);
         dialog.show();
+    }
+
+    Fragment mFragment;
+    @Override
+    public void bindFragment(Fragment fragment) {
+        mFragment=fragment;
     }
 }

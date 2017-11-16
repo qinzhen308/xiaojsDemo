@@ -32,11 +32,13 @@ import cn.xiaojs.xma.ui.base.IntentFlags;
 import cn.xiaojs.xma.ui.base.XiaojsActions;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.conversation2.ConversationFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.MyCourseListActivity;
+import cn.xiaojs.xma.ui.lesson.MyLessonActivity;
 import cn.xiaojs.xma.ui.lesson.TeachingSubjectActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassFragment;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassesListActivity;
@@ -488,11 +490,7 @@ public class MainActivity extends BaseTabActivity implements XiaojsActions, IUpd
                     Toast.makeText(this, "进入教室失败", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                Intent i = new Intent();
-                i.putExtra(Constants.KEY_TICKET, ticket);
-                i.setClass(this, ClassroomActivity.class);
-                this.startActivity(i);
+                Classroom2Activity.invoke(this,ticket);
                 break;
             case ACTION_TO_RECORDED_LESSONS_DIR:
                 String id = intent.getStringExtra(IntentFlags.EXTRA_COMMON_KEY + 0);

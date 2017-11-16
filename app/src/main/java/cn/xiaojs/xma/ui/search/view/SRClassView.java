@@ -110,4 +110,6 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
     }
 
 
+
+
 }
