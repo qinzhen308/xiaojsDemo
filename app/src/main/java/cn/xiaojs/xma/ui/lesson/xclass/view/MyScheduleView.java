@@ -242,14 +242,7 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
 
 //        showAssistantLogic1();
         showAssistantLogic2();
-        if (mEventCallback == null) {//目前教室的课表会有这个回调
-            setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    enterClassroom();
-                }
-            });
-        }
+
     }
 
     private void showOperateBtn() {
