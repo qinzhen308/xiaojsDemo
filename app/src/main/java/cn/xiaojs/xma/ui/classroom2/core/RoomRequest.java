@@ -51,6 +51,7 @@ public final class RoomRequest {
             @Override
             public void onSuccess(ClaimReponse claimReponse) {
                 stateMachine.getSession().individualStreamDuration = claimReponse.finishOn;
+                stateMachine.getSession().ctlSession.finishOn = claimReponse.finishOn;
                 stateMachine.startLiveShow(claimReponse);
                 stateMachine.getLiveTimerObserver().startCounter();
                 callback.onSuccess(claimReponse);
@@ -83,6 +84,7 @@ public final class RoomRequest {
 
         if (streamType == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL) {
             stateMachine.getSession().individualStreamDuration = 0;
+            stateMachine.getSession().ctlSession.finishOn = 0;
             stateMachine.getLiveTimerObserver().stopObserver();
             stateMachine.stopLiveShow();
         }

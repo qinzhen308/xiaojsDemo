@@ -13,13 +13,16 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.statemachine.State;
 import cn.xiaojs.xma.common.statemachine.StateMachine;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.provider.DataObserver;
 import cn.xiaojs.xma.model.ctl.FinishClassResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.socket.SyncClassesReceived;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
 import cn.xiaojs.xma.model.socket.room.ClosePreviewReceive;
@@ -44,6 +47,7 @@ import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -57,6 +61,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
     private Context context;
     private RoomSession roomSession;
     protected LiveTimerObserver liveTimerObserver;
+    private ArrayList<SessionDataObserver> dataObservers;
 
     public ClassroomStateMachine(Context context, String name, RoomSession session) {
         super(name);
@@ -72,6 +77,20 @@ public abstract class ClassroomStateMachine extends StateMachine {
     }
 
 
+    public void registesObserver(SessionDataObserver dataObserver) {
+        if (dataObservers == null) {
+            dataObservers = new ArrayList<>();
+        }
+        this.dataObservers.add(dataObserver);
+
+    }
+
+    public void unregistesObserver(SessionDataObserver dataObserver) {
+        if (dataObservers == null)
+            return;
+        this.dataObservers.remove(dataObserver);
+
+    }
 
 
     public void destoryAndQuitNow() {
@@ -124,6 +143,8 @@ public abstract class ClassroomStateMachine extends StateMachine {
             return CTLConstant.UserIdentity.ADMINISTRATOR;
         } else if ("AdviserSession".equals(psType)) {
             return CTLConstant.UserIdentity.ADVISER;
+        } else if ("VisitorSession".equals(psType)) {
+            return CTLConstant.UserIdentity.VISITOR;
         }
 
         return CTLConstant.UserIdentity.NONE;
@@ -206,9 +227,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
 //    public void stopPlayLiveShow() {
 //        sendMessage(CTLConstant.BaseChannel.STOP_PLAY_LIVE_SHOW);
 //    }
-
-
-
     public void addMember(Attendee attendee) {
         if (roomSession.classMembers == null) {
             roomSession.classMembers = new HashMap<>();
@@ -242,7 +260,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
     }
 
 
-
     protected void switchStateWhenReceiveSyncState(String state) {
 
         if (Live.LiveSessionState.FINISHED.equals(state)) {
@@ -262,6 +279,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
      * 获取教室的标题
      */
     protected abstract String getTitle();
+
     protected abstract String getClassTitle();
 
     protected abstract CTLConstant.UserIdentity getIdentity();
@@ -288,6 +306,31 @@ public abstract class ClassroomStateMachine extends StateMachine {
     //
     // 事件响应方法
     //
+
+    protected void syncClasses(SyncClassesReceived message) {
+        String mid = AccountDataManager.getAccountID(context);
+
+        boolean exit = false;
+        for (SyncClassesReceived.ChangeTarget target : message.changes) {
+            if (mid.equals(target.accountId)) {
+                if ("left".equals(target.change)) {
+                    if (dataObservers != null) {
+                        for (SessionDataObserver observer : dataObservers) {
+                            observer.onYouRemovedFromCurrentClass();
+                        }
+                    }
+
+                    exit = true;
+                }
+                break;
+            }
+        }
+
+        if (exit)
+            return;
+
+        loadMemberList();
+    }
 
     protected void closeMedia(CloseMediaReceive message) {
         getSession().one2one = false;
@@ -327,6 +370,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
             roomSession.individualStreamDuration = message.finishOn;
+            roomSession.ctlSession.finishOn = message.finishOn;
             liveTimerObserver.startCounter();
         } else if (message.streamType == Live.StreamType.LIVE) {
 
@@ -482,7 +526,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
         if (Live.LiveSessionState.LIVE.equals(message.to)) {
             liveTimerObserver.startCounter();
-        }else if(Live.LiveSessionState.FINISHED.equals(message.to)) {
+        } else if (Live.LiveSessionState.FINISHED.equals(message.to)) {
             liveTimerObserver.stopObserver();
         }
 
@@ -515,14 +559,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     protected void loadMemberList() {
 
-        LiveManager.getAttendees(getContext(), roomSession.ticket,false,
+        LiveManager.getAttendees(getContext(), roomSession.ticket, false,
                 new APIServiceCallback<LiveCollection<Attendee>>() {
                     @Override
                     public void onSuccess(LiveCollection<Attendee> liveCollection) {
 
                         if (liveCollection != null
                                 && liveCollection.attendees != null
-                                && liveCollection.attendees.size()>0) {
+                                && liveCollection.attendees.size() > 0) {
 
                             addMembersInSession(liveCollection.attendees);
                         }
@@ -538,27 +582,38 @@ public abstract class ClassroomStateMachine extends StateMachine {
                 });
     }
 
-    protected void addMembersInSession(ArrayList<Attendee> attendees){
+    protected void addMembersInSession(ArrayList<Attendee> attendees) {
 
-        if (attendees ==null)
+        if (attendees == null)
             return;
 
         Observable.fromArray(attendees)
                 .observeOn(Schedulers.io())
-                .subscribe(new Consumer<ArrayList<Attendee>>() {
+                .doOnNext(new Consumer<ArrayList<Attendee>>() {
                     @Override
                     public void accept(ArrayList<Attendee> attendees) throws Exception {
-                        if(roomSession.classMembers == null) {
+                        if (roomSession.classMembers == null) {
                             roomSession.classMembers = new HashMap<>();
-                        }else {
+                        } else {
                             roomSession.classMembers.clear();
                         }
 
                         for (Attendee attendee : attendees) {
                             roomSession.classMembers.put(attendee.accountId, attendee);
 
-                            if(CTLConstant.UserIdentity.ADVISER ==getUserIdentity(attendee.psType)) {
+                            if (CTLConstant.UserIdentity.ADVISER == getUserIdentity(attendee.psType)) {
                                 roomSession.adviser = attendee;
+                            }
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ArrayList<Attendee>>() {
+                    @Override
+                    public void accept(ArrayList<Attendee> attendees) throws Exception {
+                        if (dataObservers != null) {
+                            for (SessionDataObserver observer : dataObservers) {
+                                observer.onMemberUpdated();
                             }
                         }
 

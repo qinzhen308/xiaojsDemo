@@ -1,63 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/root_lay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/cl_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/px88"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/bottomsheet_bg_white_rect">
+            android:id="@+id/cl_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/px88"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bottomsheet_bg_white_rect">
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/px88"
-            android:layout_centerHorizontal="true"
-            android:text="课表"
-            android:textSize="@dimen/px32"
-            android:gravity="center"
-            android:textColor="@color/classroom_dark_gray"
-            />
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px88"
+                android:layout_centerHorizontal="true"
+                android:text="课表"
+                android:textSize="@dimen/px32"
+                android:gravity="center"
+                android:textColor="@color/classroom_dark_gray"
+                />
 
         <ImageView
-            android:id="@+id/add_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_class_add_1"
-            android:layout_marginRight="@dimen/px22"
-            android:layout_alignParentRight="true"
-            android:padding="@dimen/px10"
-            android:layout_marginTop="@dimen/px15"
-            />
+                android:id="@+id/add_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_class_add_1"
+                android:layout_marginRight="@dimen/px22"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/px10"
+                android:layout_marginTop="@dimen/px15"
+                />
 
         <View
-            android:id="@+id/v_divider"
-            style="@style/DividerHorizontal"
-            android:layout_below="@+id/title"
-            />
-
+                android:id="@+id/v_divider"
+                style="@style/DividerHorizontal"
+                android:layout_below="@+id/title"
+                />
 
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/v_divider"
-            />
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/v_divider"
+                />
 
         <FrameLayout
-            android:id="@+id/load_state_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/v_divider"
-            />
+                android:id="@+id/load_state_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/v_divider"
+                />
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

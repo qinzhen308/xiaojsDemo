@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,10 +133,17 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     @BindView(R.id.l_top_start_or_stop_living)
     public TextView startOrStopLiveView;
-    @BindView(R.id.l_top_photo)
-    public ImageView lTopPhotoView;
-    @BindView(R.id.l_top_roominfo)
-    public AnimationTextView lTopRoominfoView;
+    @BindView(R.id.l_top_roominfo_root)
+    public LinearLayout lTopRoominfoRootView;
+    @BindView(R.id.l_top_roominfo_ani)
+    public AnimationTextView lTopRoominfoAniView;
+    @BindView(R.id.l_top_roominfo_photo)
+    public ImageView lTopRoominfoPhotoView;
+    @BindView(R.id.l_top_roominfo_name)
+    public TextView lTopRoominfoNameView;
+    @BindView(R.id.l_top_roominfo_other)
+    public TextView lTopRoominfoOtherView;
+
 
     @BindView(R.id.l_bottom_session)
     public ImageView lBottomSessionView;
@@ -180,6 +188,8 @@ public abstract class MovieFragment extends BaseRoomFragment
     public AnimationView pBottomAnimationView;
     @BindView(R.id.p_bottom_class_name)
     public TextView pBottomClassnameView;
+    @BindView(R.id.p_bottom_class_other)
+    public TextView pBottomClassOtherView;
     @BindView(R.id.p_bottom_bg)
     public View pBottomBgView;
     @BindView(R.id.p_bottom_orient)

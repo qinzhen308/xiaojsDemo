@@ -1,86 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             android:id="@+id/root_lay"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/cl_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/px88"
-        android:background="@drawable/bottomsheet_bg_white_rect">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/px22"
-            android:layout_marginTop="@dimen/px15"
-            android:padding="@dimen/px10"
-            android:src="@drawable/ic_back" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/px88"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="修改课名"
-            android:textColor="@color/classroom_dark_gray"
-            android:textSize="@dimen/px32" />
-
-
-        <TextView
-            android:id="@+id/btn_finish"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/px88"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/px22"
-            android:gravity="center"
-            android:text="完成"
-            android:textColor="@color/font_blue"
-            android:textSize="@dimen/px32" />
-
-        <View
-            android:id="@+id/v_divider"
-            style="@style/DividerHorizontal"
-            android:layout_below="@+id/title" />
-
-        <LinearLayout
+            android:id="@+id/cl_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/v_divider"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/px88"
+            android:background="@drawable/bottomsheet_bg_white_rect">
+
+        <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/px22"
+                android:layout_marginTop="@dimen/px15"
+                android:padding="@dimen/px10"
+                android:src="@drawable/ic_back"/>
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px88"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="修改课名"
+                android:textColor="@color/classroom_dark_gray"
+                android:textSize="@dimen/px32"/>
+
+
+        <TextView
+                android:id="@+id/btn_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px88"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/px22"
+                android:gravity="center"
+                android:text="完成"
+                android:textColor="@color/font_blue"
+                android:textSize="@dimen/px32"/>
+
+        <View
+                android:id="@+id/v_divider"
+                style="@style/DividerHorizontal"
+                android:layout_below="@+id/title"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/v_divider"
+                android:orientation="vertical">
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/px100"
-                android:background="@color/white"
-                android:gravity="center"
-                android:paddingBottom="@dimen/px17"
-                android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
-                android:paddingTop="@dimen/px17">
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px100"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/px17"
+                    android:paddingLeft="@dimen/px30"
+                    android:paddingRight="@dimen/px30"
+                    android:paddingTop="@dimen/px17">
 
                 <cn.xiaojs.xma.ui.widget.EditTextDel
-                    android:id="@+id/search_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/px70"
-                    android:background="@drawable/grey_conner_bg"
-                    android:gravity="left|center_vertical"
-                    android:hint="@string/input_lesson_name_hint"
-                    android:paddingLeft="@dimen/px23"
-                    android:paddingRight="@dimen/px23"
-                    android:singleLine="true"
-                    android:textSize="@dimen/font_28px" />
+                        android:id="@+id/search_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/px70"
+                        android:background="@drawable/grey_conner_bg"
+                        android:gravity="left|center_vertical"
+                        android:hint="@string/input_lesson_name_hint"
+                        android:paddingLeft="@dimen/px23"
+                        android:paddingRight="@dimen/px23"
+                        android:singleLine="true"
+                        android:textSize="@dimen/font_28px"/>
 
             </FrameLayout>
 
             <ListView
-                android:id="@+id/complete_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white" />
+                    android:id="@+id/complete_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"/>
 
         </LinearLayout>
 

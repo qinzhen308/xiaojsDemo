@@ -16,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
@@ -70,7 +72,7 @@ public class AddByPhoneFragment extends BottomSheetFragment {
 
     }
 
-    @OnClick({R.id.back_btn, R.id.ok_btn, R.id.lesson_creation_tips_close})
+    @OnClick({R.id.back_btn, R.id.ok_btn, R.id.lesson_creation_tips_close, R.id.root_lay})
     void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
@@ -81,6 +83,9 @@ public class AddByPhoneFragment extends BottomSheetFragment {
                 break;
             case R.id.lesson_creation_tips_close://关闭提醒
                 closeCourCreateTips();
+                break;
+            case R.id.root_lay:
+                dismiss();
                 break;
         }
     }
@@ -173,9 +178,13 @@ public class AddByPhoneFragment extends BottomSheetFragment {
         }
 
         StudentEnroll studentEnroll = new StudentEnroll();
-        studentEnroll.mobile = phone;
-        studentEnroll.name = name;
-        studentEnroll.id = pid;
+
+        if (TextUtils.isEmpty(pid)) {
+            studentEnroll.mobile = phone;
+            studentEnroll.name = name;
+        }else {
+            studentEnroll.id = pid;
+        }
 
         Fragment  targetFragment = getTargetFragment();
         if (targetFragment != null) {

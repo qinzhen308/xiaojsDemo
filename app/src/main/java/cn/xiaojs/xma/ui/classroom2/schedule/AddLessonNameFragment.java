@@ -74,7 +74,7 @@ public class AddLessonNameFragment extends BottomSheetFragment
         }
     }
 
-    @OnClick({R.id.iv_back, R.id.btn_finish})
+    @OnClick({R.id.iv_back, R.id.btn_finish, R.id.root_lay})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
@@ -82,6 +82,9 @@ public class AddLessonNameFragment extends BottomSheetFragment
                 break;
             case R.id.btn_finish://确定
                 complete();
+                break;
+            case R.id.root_lay:
+                dismiss();
                 break;
         }
     }

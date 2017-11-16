@@ -13,6 +13,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
@@ -26,11 +27,14 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by maxiaobao on 2017/11/3.
@@ -273,6 +277,10 @@ public class DataProvider {
         return false;
     }
 
+    public boolean existInClasses(String accountId) {
+        return classesMapping == null? false : classesMapping.get(accountId) != null;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Conversation
@@ -407,13 +415,15 @@ public class DataProvider {
 
         } else {
 
-            conversations.add(1, contact);
-
-            if (dataObservers != null) {
-                for (DataObserver observer : dataObservers) {
-                    observer.onConversationInsert(contact, 1);
+            if (existInClasses(contact.id)) {//此处是为了防止游客的情况；
+                conversations.add(1, contact);
+                if (dataObservers != null) {
+                    for (DataObserver observer : dataObservers) {
+                        observer.onConversationInsert(contact, 1);
+                    }
                 }
             }
+
         }
 
         RetainDlg retainDlg = new RetainDlg();
@@ -572,28 +582,93 @@ public class DataProvider {
 
     }
 
-    private void handleSyncClasses(SyncClassesReceived syncClasses) {
+    private void handleSyncClasses(final SyncClassesReceived syncClasses) {
         if (syncClasses == null)
             return;
 
-        if (syncClasses.change.equals("joined")) {
+        Observable.create(new ObservableOnSubscribe<ChangeHolder>() {
 
-            Contact contact = new Contact();
-            contact.id = syncClasses.id;
-            contact.subtype = syncClasses.subtype;
-            contact.title = syncClasses.title;
-            contact.state = syncClasses.state;
-            contact.ticket = syncClasses.ticket;
-            contact.ownerId = syncClasses.ownerId;
-            contact.owner = syncClasses.owner;
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ChangeHolder> e) throws Exception {
 
-            joinedClass(contact);
+                String mid = AccountDataManager.getAccountID(context);
 
-        } else if (syncClasses.change.equals("left")) {
-            leavedClass(syncClasses.id);
-        }
+                ChangeHolder changeHolder = null;
+
+                SyncClassesReceived.ChangeTarget[] changes = syncClasses.changes;
+                if (changes != null && changes.length > 0) {
+
+                    changeHolder = new ChangeHolder();
+
+                    for (SyncClassesReceived.ChangeTarget target : changes) {
+                        if (mid.equals(target.accountId)) {
+                            if ("joined".equals(target.change)) {
+
+                                Contact contact = new Contact();
+                                contact.id = syncClasses.id;
+                                contact.subtype = syncClasses.subtype;
+                                contact.title = syncClasses.title;
+                                contact.state = syncClasses.state;
+                                contact.ticket = syncClasses.ticket;
+                                contact.ownerId = syncClasses.ownerId;
+                                contact.owner = syncClasses.owner;
+
+                                changeHolder.change = target.change;
+                                changeHolder.target = contact;
+
+                            } else if ("left".equals(target.change)) {
+                                changeHolder.change = target.change;
+                                changeHolder.targetId = syncClasses.id;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                e.onNext(changeHolder);
+                e.onComplete();
+
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ChangeHolder>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull ChangeHolder changeHolder) {
+
+                        if (changeHolder == null || TextUtils.isEmpty(changeHolder.change)) {
+                            return;
+                        }
+
+                        if (changeHolder.change.equals("joined")) {
+                            joinedClass(changeHolder.target);
+
+                        } else if (changeHolder.change.equals("left")) {
+                            leavedClass(changeHolder.targetId);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
 
 
+    static class ChangeHolder {
+        public String change;
+        public Contact target;
+        public String targetId;
     }
 
 }

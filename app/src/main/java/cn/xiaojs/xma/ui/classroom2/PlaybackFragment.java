@@ -228,8 +228,6 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         int orientation = UIUtils.getCurrentOrientation(getContext());
         controlHandleOnRotate(orientation);
 
-        lTopRoominfoView.setVisibility(View.GONE);
-        lTopPhotoView.setVisibility(View.GONE);
         lRightSwitchcameraView.setVisibility(View.GONE);
         lRightSwitchVbView.setVisibility(View.GONE);
 

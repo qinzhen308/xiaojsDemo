@@ -75,7 +75,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public int getItemViewType(int position) {
         final Attendee attendee = attendees.get(position);
-        if (attendee.sort == CTLConstant.VISTOR_SORT)
+        if (attendee.ctype == -1)
             return MemberType.VISTOR;
 
         return MemberType.NORMAL;
@@ -97,7 +97,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
 
-        }else {
+        } else {
 
             MemberViewHolder memberHolder = (MemberViewHolder) holder;
 
@@ -120,7 +120,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
 
 
-            String realType = TextUtils.isEmpty(attendee.psTypeInLesson)?
+            String realType = TextUtils.isEmpty(attendee.psTypeInLesson) ?
                     attendee.psType : attendee.psTypeInLesson;
 
             int identityRes;
@@ -128,25 +128,24 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             CTLConstant.UserIdentity identity = classroomEngine.getUserIdentity(realType);
             if (identity == CTLConstant.UserIdentity.ADMINISTRATOR) {
                 identityRes = R.drawable.mem_administrators;
-            }else if(identity == CTLConstant.UserIdentity.ADVISER) {
+            } else if (identity == CTLConstant.UserIdentity.ADVISER) {
                 identityRes = R.drawable.mem_headmaster;
-            }else if(identity == CTLConstant.UserIdentity.LEAD) {
+            } else if (identity == CTLConstant.UserIdentity.LEAD) {
                 identityRes = R.drawable.mem_speaker;
-            }else if(identity == CTLConstant.UserIdentity.TEACHER2) {
+            } else if (identity == CTLConstant.UserIdentity.TEACHER2) {
                 identityRes = R.drawable.mem_teacher;
-            }else if(identity == CTLConstant.UserIdentity.ASSISTANT) {
+            } else if (identity == CTLConstant.UserIdentity.ASSISTANT) {
                 identityRes = R.drawable.mem_assistant;
             } else {
                 identityRes = 0;
             }
 
-            memberHolder.nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,identityRes,0);
-
+            memberHolder.nameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, identityRes, 0);
 
 
             if (!TextUtils.isEmpty(attendee.title)) {
                 memberHolder.descView.setText(attendee.title);
-            }else {
+            } else {
                 memberHolder.descView.setText(R.string.contact_empty_tips);
             }
 
@@ -163,7 +162,6 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemCount() {
         return attendees == null ? 0 : attendees.size();
     }
-
 
 
     static class VistorViewHolder extends RecyclerView.ViewHolder {

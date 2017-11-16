@@ -225,7 +225,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
             if (!TextUtils.isEmpty(contact.state)
                     && (contact.state.equals(Live.LiveSessionState.LIVE)
-                    || contact.state.equals(Live.LiveSessionState.INDIVIDUAL))) {
+                    || contact.state.equals(Live.LiveSessionState.INDIVIDUAL)
+                    || contact.streaming)) {
                 conViewHolder.animationView2.setVisibility(View.VISIBLE);
                 conViewHolder.avatorTextView.setVisibility(View.INVISIBLE);
 

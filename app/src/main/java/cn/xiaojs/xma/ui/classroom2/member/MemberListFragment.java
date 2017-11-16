@@ -45,6 +45,7 @@ import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.classroom2.core.SessionDataObserver;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
@@ -121,12 +122,15 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
         load(null);
 
         eventListener = classroomEngine.observerMember(memberConsumer);
+        classroomEngine.observeSessionData(dataObserver);
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        classroomEngine.unObserveSessionData(dataObserver);
 
         if (eventListener != null) {
             eventListener.dispose();
@@ -171,7 +175,12 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
                     Map<String, Attendee> attendeeMap = classroomEngine.getMembers();
                     if (attendeeMap != null && attendeeMap.size() > 0) {
                         for (Attendee att : attendeeMap.values()) {
-                            if (att.sort == CTLConstant.VISTOR_SORT) {
+
+                            String pst = TextUtils.isEmpty(att.psTypeInLesson)?
+                                    att.psType : att.psTypeInLesson;
+
+
+                            if (classroomEngine.getUserIdentity(pst) == CTLConstant.UserIdentity.VISITOR) {
                                 vistors.add(att);
                                 break;
                             }
@@ -181,8 +190,13 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
                     }
                 } else {
                     if (tempAtts.size() > 0) {
+
                         for (Attendee att : tempAtts) {
-                            if (att.sort == CTLConstant.VISTOR_SORT) {
+
+                            String pst = TextUtils.isEmpty(att.psTypeInLesson)?
+                                    att.psType : att.psTypeInLesson;
+
+                            if (classroomEngine.getUserIdentity(pst) == CTLConstant.UserIdentity.VISITOR) {
                                 vistors.add(att);
                                 break;
                             }
@@ -194,7 +208,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
                 if (vistors.size() > 0) {
                     Attendee vistor = new Attendee();
-                    vistor.sort = CTLConstant.VISTOR_SORT;
+                    vistor.ctype = -1;
                     vistor.unReadMsgCount = vistors.size();
                     attendees.add(vistor);
 
@@ -459,6 +473,13 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
                     updateMemByEvent();
                     break;
             }
+        }
+    };
+
+    private SessionDataObserver dataObserver = new SessionDataObserver() {
+        @Override
+        public void onMemberUpdated() {
+            load(null);
         }
     };
 }

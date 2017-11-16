@@ -11,6 +11,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.data.api.socket.MessageCallback;
+import cn.xiaojs.xma.model.socket.SyncClassesReceived;
 import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
@@ -120,6 +121,20 @@ public class XMSEventObserver<T> extends MainThreadDisposable implements Message
         }
     }
 
+
+
+    public static class ClassSession extends XMSEventObserver {
+        public ClassSession(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onEvent() {
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.SYNC_CLASSES, SyncClassesReceived.class);
+        }
+    }
+
+
     public static class GlobalSession extends XMSEventObserver {
         public GlobalSession(Context context) {
             super(context);
@@ -132,7 +147,7 @@ public class XMSEventObserver<T> extends MainThreadDisposable implements Message
             on(Su.EventCategory.XMS_MESSAGING, Su.EventType.REMOVE_DIALOG, Talk.class);
             on(Su.EventCategory.XMS_MESSAGING, Su.EventType.RETAIN_DIALOG, Talk.class);
             on(Su.EventCategory.XMS_MESSAGING, Su.EventType.CHANGE_NOTIFY, ChangeNotifyReceived.class);
-            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.SYNC_CLASSES, SyncClassStateReceive.class);
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.SYNC_CLASSES, SyncClassesReceived.class);
         }
     }
 

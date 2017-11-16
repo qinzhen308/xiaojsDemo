@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +33,7 @@ import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import cn.xiaojs.xma.ui.classroom2.core.SessionDataObserver;
 import cn.xiaojs.xma.ui.classroom2.live.PlayLiveView;
 import cn.xiaojs.xma.ui.classroom2.live.StreamingEngine;
 import cn.xiaojs.xma.ui.classroom2.live.VideoStreamView;
@@ -68,6 +70,22 @@ public class PlayFragment extends MovieFragment
 
     private Disposable controlAutotimer;
 
+    private SessionDataObserver dataObserver = new SessionDataObserver() {
+        @Override
+        public void onMemberUpdated() {
+            if (TextUtils.isEmpty(pBottomClassnameView.getText())) {
+                String targetId = classroomEngine.getCtlSession().claimedBy;
+                Attendee attendee = classroomEngine.getMember(targetId);
+                if (attendee != null) {
+                    String descname = attendee.name;
+                    pBottomClassnameView.setText(descname);
+                    lTopRoominfoNameView.setText(descname);
+                }
+            }
+
+        }
+    };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -87,6 +105,7 @@ public class PlayFragment extends MovieFragment
         streamView.setControlListener(this);
 
         initControlPanel();
+        classroomEngine.observeSessionData(dataObserver);
 
         initTalkData(this);
 
@@ -121,6 +140,10 @@ public class PlayFragment extends MovieFragment
     public void onDestroy() {
         super.onDestroy();
         videoView.destroy();
+
+        if (dataObserver != null) {
+            classroomEngine.unObserveSessionData(dataObserver);
+        }
 
         if (streamingEngine != null) {
             streamingEngine.stopStreamingAV();
@@ -273,15 +296,20 @@ public class PlayFragment extends MovieFragment
 
     private void updateRoomInfo() {
 
-        if (classroomEngine.getCtlSession().streamType == Live.StreamType.LIVE) {
-            long liveDur = classroomEngine.getCtlSession().ctl.duration * 60;
-            String totalStr = TimeUtil.formatSecondTime(liveDur);
-            String livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
-            lTopRoominfoView.setText(livetimeStr + "/" + totalStr + "  " + memCount + "人观看");
-        } else {
-            String livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
-            lTopRoominfoView.setText(livetimeStr + "  " + memCount + "人观看");
-        }
+//        String livetimeStr;
+//        if (classroomEngine.getCtlSession().streamType == Live.StreamType.LIVE) {
+//            long liveDur = classroomEngine.getCtlSession().ctl.duration * 60;
+//            String totalStr = TimeUtil.formatSecondTime(liveDur);
+//            livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
+//
+//        } else {
+//            livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
+//        }
+        String livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
+        String otherStr = livetimeStr + "  (" + memCount + "人)";
+
+        pBottomClassOtherView.setText(otherStr);
+        lTopRoominfoOtherView.setText(otherStr);
 
     }
 
@@ -290,9 +318,11 @@ public class PlayFragment extends MovieFragment
         int orientation = UIUtils.getCurrentOrientation(getContext());
         controlHandleOnRotate(orientation);
 
-        lTopRoominfoView.setCompoundDrawablesWithIntrinsicBounds(
+        lTopRoominfoRootView.setVisibility(View.VISIBLE);
+
+        lTopRoominfoAniView.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.class_living_animation, 0, 0, 0);
-        lTopRoominfoView.start();
+        lTopRoominfoAniView.start();
 
         lRightSwitchcameraView.setVisibility(View.GONE);
         lRightSwitchVbView.setVisibility(View.GONE);
@@ -300,13 +330,8 @@ public class PlayFragment extends MovieFragment
 
         String targetId = classroomEngine.getCtlSession().claimedBy;
 
-        Attendee attendee = classroomEngine.getMember(targetId);
-        String descname = attendee==null? "直播中": attendee.name+" 正在直播";
-        pBottomClassnameView.setText(descname);
-
-
         String avatorUrl = Account.getAvatar(targetId,
-                lTopPhotoView.getMeasuredWidth());
+                lTopRoominfoPhotoView.getMeasuredWidth());
         Glide.with(getContext())
                 .load(avatorUrl)
                 .transform(new CircleTransform(getContext()))
@@ -320,7 +345,21 @@ public class PlayFragment extends MovieFragment
                 .transform(new CircleTransform(getContext()))
                 .placeholder(R.drawable.ic_defaultavatar)
                 .error(R.drawable.ic_defaultavatar)
-                .into(lTopPhotoView);
+                .into(lTopRoominfoPhotoView);
+
+
+        if (classroomEngine.getCtlSession().streamType == Live.StreamType.LIVE) {
+            pBottomClassnameView.setText(classroomEngine.getRoomTitle());
+            lTopRoominfoNameView.setText(classroomEngine.getRoomTitle());
+        }else {
+            Attendee attendee = classroomEngine.getMember(targetId);
+
+            if (attendee != null) {
+                String descname = attendee.name;
+                pBottomClassnameView.setText(descname);
+                lTopRoominfoNameView.setText(descname);
+            }
+        }
 
 
 

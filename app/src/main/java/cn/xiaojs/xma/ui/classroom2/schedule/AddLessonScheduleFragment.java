@@ -24,6 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.Schedule;
@@ -318,6 +319,10 @@ public class AddLessonScheduleFragment extends BottomSheetFragment
             public void onSuccess(Object object) {
                 cancelProgress();
                 Toast.makeText(getActivity(),R.string.add_success,Toast.LENGTH_SHORT).show();
+
+                //老师在教室内添加了课，模式要改成TEACHING
+                classroomEngine.getCtlSession().mode = Live.ClassroomMode.TEACHING;
+
                 finishCompleted(classLesson);
             }
 

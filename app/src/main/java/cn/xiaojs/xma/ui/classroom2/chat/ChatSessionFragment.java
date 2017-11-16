@@ -339,8 +339,11 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                             //rvHelper.smoothMoveToPosition(recyclerView, messageData.size() - 1);
 
                             int lastIndex = messageData.size() - 1;
-                            recyclerView.scrollToPosition(lastIndex);
-                            handleChatSessionOpened(messageData.get(lastIndex));
+
+                            if (lastIndex >= 0) {
+                                recyclerView.scrollToPosition(lastIndex);
+                                handleChatSessionOpened(messageData.get(lastIndex));
+                            }
 
 
                         } else {

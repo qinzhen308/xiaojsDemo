@@ -361,8 +361,6 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
         controlHandleOnRotate(orientation);
 
         lRightSwitchcameraView.setVisibility(View.GONE);
-        lTopPhotoView.setVisibility(View.GONE);
-        lTopRoominfoView.setVisibility(View.GONE);
         lRightSwitchVbView.setVisibility(View.GONE);
 
         pBottomClassnameView.setText(classroomEngine.getClassTitle());
@@ -430,6 +428,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                 case Su.EventType.SYNC_CLASS_STATE:
                     try {
                         updateLessonTips();
+                        configStartOrPausedLiveButton();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

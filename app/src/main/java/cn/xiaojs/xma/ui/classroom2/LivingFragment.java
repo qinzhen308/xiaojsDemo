@@ -198,25 +198,25 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void onScreenshotClick(View view) {
-        if(isBoardShown()){
+        if (isBoardShown()) {
             super.onScreenshotClick(view);
-        }else {
+        } else {
             captureFrame(new FrameCapturedCallback() {
                 @Override
                 public void onFrameCaptured(Bitmap bitmap) {
-                    if(bitmap!=null){
-                        Fragment fragment=BoardScreenshotFragment.createInstance(getActivity(),bitmap, new OnPhotoDoodleShareListener() {
+                    if (bitmap != null) {
+                        Fragment fragment = BoardScreenshotFragment.createInstance(getActivity(), bitmap, new OnPhotoDoodleShareListener() {
                             @Override
                             public void onPhotoShared(Attendee attendee, Bitmap bmp) {
                                 ShareToFragment shareToFragment = new ShareToFragment();
                                 shareToFragment.setTargetBitmap(bmp);
                                 shareToFragment.setRootFragment(LivingFragment.this);
-                                showSlidePanel(shareToFragment,"share_to");
+                                showSlidePanel(shareToFragment, "share_to");
                             }
                         });
-                        getChildFragmentManager().beginTransaction().add(R.id.screenshot_container,fragment).addToBackStack("screenshot").commitAllowingStateLoss();
-                    }else {
-                        ToastUtil.showToast(getActivity(),"截图失败");
+                        getChildFragmentManager().beginTransaction().add(R.id.screenshot_container, fragment).addToBackStack("screenshot").commitAllowingStateLoss();
+                    } else {
+                        ToastUtil.showToast(getActivity(), "截图失败");
                     }
                 }
             });
@@ -312,15 +312,16 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     private void updateRoomInfo() {
 
-        if (classroomEngine.getLiveState().equals(Live.LiveSessionState.LIVE)) {
 
-            long liveDur = classroomEngine.getCtlSession().ctl.duration * 60;
-            String totalStr = TimeUtil.formatSecondTime(liveDur);
-            String livetimeStr = TimeUtil.formatSecondTime(liveTime);
-            lTopRoominfoView.setText(livetimeStr + "/" + totalStr + "  " + memCount + "人观看");
-        } else {
-            lTopRoominfoView.setText("直播中（" + memCount + "人观看）");
-        }
+//        long liveDur = classroomEngine.getCtlSession().ctl.duration * 60;
+//        String totalStr = TimeUtil.formatSecondTime(liveDur);
+//        String livetimeStr = TimeUtil.formatSecondTime(liveTime);
+//        lTopRoominfoView.setText(livetimeStr + "/" + totalStr + "  " + memCount + "人观看");
+
+        String livetimeStr = TimeUtil.formatSecondTime(liveTime);
+        String otherStr = livetimeStr + "  (" + memCount + "人)";
+
+        lTopRoominfoOtherView.setText(otherStr);
 
     }
 
@@ -374,19 +375,25 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     private void initControlView() {
 
-        lTopRoominfoView.setCompoundDrawablesWithIntrinsicBounds(
+        lTopRoominfoRootView.setVisibility(View.VISIBLE);
+
+        lTopRoominfoAniView.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.class_living_animation, 0, 0, 0);
-        lTopRoominfoView.start();
+        lTopRoominfoAniView.start();
 
 
         String avatorUrl = Account.getAvatar(AccountDataManager.getAccountID(getContext()),
-                lTopPhotoView.getMeasuredWidth());
+                lTopRoominfoPhotoView.getMeasuredWidth());
         Glide.with(getContext())
                 .load(avatorUrl)
                 .transform(new CircleTransform(getContext()))
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)
-                .into(lTopPhotoView);
+                .into(lTopRoominfoPhotoView);
+
+
+        lTopRoominfoNameView.setText(classroomEngine.getRoomTitle());
+
         lRightScreenshortView.setVisibility(View.VISIBLE);
 
         configStopButton();
@@ -660,7 +667,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                     requestUpdateMemberCount();
                     break;
                 case Su.EventType.TIME_UPDATE:
-                    liveTime = eventReceived.value1;
+                    liveTime = eventReceived.value2;
                     updateRoomInfo();
                     break;
             }

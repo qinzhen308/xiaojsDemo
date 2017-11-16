@@ -198,8 +198,13 @@ public class VistorListFragment extends BottomSheetFragment implements DialogInt
             switch (eventReceived.eventType) {
                 case Su.EventType.JOIN:
                     Talk talk = (Talk) eventReceived.t;
-                    if (talk != null && talk.sort == CTLConstant.VISTOR_SORT) {
-                        join(talk);
+                    if (talk != null) {
+
+                        if (classroomEngine.getUserIdentity(talk.psType) == CTLConstant.UserIdentity.VISITOR) {
+                            join(talk);
+                        }
+
+
                     }
                     break;
                 case Su.EventType.LEAVE:
