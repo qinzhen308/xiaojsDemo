@@ -47,6 +47,7 @@ import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -369,6 +370,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
         if (message.streamType == Live.StreamType.INDIVIDUAL) {
             roomSession.individualStreamDuration = message.finishOn;
+            roomSession.ctlSession.finishOn = message.finishOn;
             liveTimerObserver.startCounter();
         } else if (message.streamType == Live.StreamType.LIVE) {
 
@@ -587,7 +589,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
         Observable.fromArray(attendees)
                 .observeOn(Schedulers.io())
-                .subscribe(new Consumer<ArrayList<Attendee>>() {
+                .doOnNext(new Consumer<ArrayList<Attendee>>() {
                     @Override
                     public void accept(ArrayList<Attendee> attendees) throws Exception {
                         if (roomSession.classMembers == null) {
@@ -603,7 +605,12 @@ public abstract class ClassroomStateMachine extends StateMachine {
                                 roomSession.adviser = attendee;
                             }
                         }
-
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ArrayList<Attendee>>() {
+                    @Override
+                    public void accept(ArrayList<Attendee> attendees) throws Exception {
                         if (dataObservers != null) {
                             for (SessionDataObserver observer : dataObservers) {
                                 observer.onMemberUpdated();

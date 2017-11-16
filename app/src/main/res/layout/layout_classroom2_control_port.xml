@@ -95,17 +95,8 @@
             android:src="@drawable/ic_class_crossscreen"
             app:layout_constraintTop_toTopOf="@id/bottom_guideline"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toRightOf="@id/right_guideline"
             />
-    
-    <ImageView
-            android:id="@+id/p_bottom_avator"
-            android:layout_width="@dimen/px50"
-            android:layout_height="@dimen/px50"
-            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
-            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"/>
 
     <cn.xiaojs.xma.ui.view.AnimationView
             android:id="@+id/p_bottom_animationing"
@@ -113,23 +104,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/class_living_animation"
-            android:layout_marginLeft="@dimen/px21"
-            app:layout_constraintLeft_toRightOf="@id/p_bottom_avator"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"/>
+    
+    <ImageView
+            android:id="@+id/p_bottom_avator"
+            android:layout_width="@dimen/px50"
+            android:layout_height="@dimen/px50"
+            android:layout_marginLeft="@dimen/px10"
+            app:layout_constraintLeft_toRightOf="@id/p_bottom_animationing"
             app:layout_constraintTop_toTopOf="@id/bottom_guideline"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone"/>
 
     <TextView
             android:id="@+id/p_bottom_class_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/font_class_name"
             android:textSize="@dimen/font_30px"
             android:layout_marginRight="@dimen/px10"
             android:layout_marginLeft="@dimen/px10"
+            android:maxLength="10"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintLeft_toRightOf="@id/p_bottom_avator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/p_bottom_class_other"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_class_name"
+            android:textSize="@dimen/font_30px"
+            android:layout_marginRight="@dimen/px10"
+            android:layout_marginLeft="@dimen/px5"
             app:layout_constraintTop_toTopOf="@id/bottom_guideline"
             app:layout_constraintRight_toLeftOf="@id/p_bottom_orient"
-            app:layout_constraintLeft_toRightOf="@id/p_bottom_animationing"
+            app:layout_constraintLeft_toRightOf="@id/p_bottom_class_name"
             app:layout_constraintBottom_toBottomOf="parent"
             />
 

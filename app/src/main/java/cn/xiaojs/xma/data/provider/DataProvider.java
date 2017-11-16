@@ -277,6 +277,10 @@ public class DataProvider {
         return false;
     }
 
+    public boolean existInClasses(String accountId) {
+        return classesMapping == null? false : classesMapping.get(accountId) != null;
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Conversation
@@ -411,13 +415,15 @@ public class DataProvider {
 
         } else {
 
-            conversations.add(1, contact);
-
-            if (dataObservers != null) {
-                for (DataObserver observer : dataObservers) {
-                    observer.onConversationInsert(contact, 1);
+            if (existInClasses(contact.id)) {//此处是为了防止游客的情况；
+                conversations.add(1, contact);
+                if (dataObservers != null) {
+                    for (DataObserver observer : dataObservers) {
+                        observer.onConversationInsert(contact, 1);
+                    }
                 }
             }
+
         }
 
         RetainDlg retainDlg = new RetainDlg();

@@ -49,29 +49,67 @@
             app:layout_constraintTop_toTopOf="@id/top_guideline"
             />
 
-    <cn.xiaojs.xma.ui.view.AnimationTextView
-            android:id="@+id/l_top_roominfo"
+    <LinearLayout
+            android:id="@+id/l_top_roominfo_root"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:textColor="@color/font_white"
-            android:textSize="@dimen/font_28px"
-            android:gravity="center"
-            android:paddingLeft="@dimen/px92"
-            android:paddingRight="@dimen/px24"
-            android:background="@drawable/bg_start_live_rect"
-            app:layout_constraintLeft_toLeftOf="@+id/l_top_photo"
-            app:layout_constraintTop_toTopOf="@id/top_guideline"
-            app:layout_constraintBottom_toBottomOf="@+id/l_top_photo"/>
-
-    <ImageView
-            android:id="@+id/l_top_photo"
-            android:layout_width="@dimen/px68"
             android:layout_height="@dimen/px68"
-            android:background="@drawable/ic_defaultavatar"
+            android:background="@drawable/bg_start_live_rect"
+            android:paddingLeft="@dimen/px20"
+            android:paddingRight="@dimen/px24"
+            android:paddingTop="@dimen/px10"
+            android:paddingBottom="@dimen/px10"
             android:layout_marginLeft="@dimen/px24"
+            android:gravity="center_vertical"
+            app:layout_constraintLeft_toRightOf="@+id/l_top_back"
             app:layout_constraintTop_toTopOf="@id/top_guideline"
-            app:layout_constraintLeft_toRightOf="@id/l_top_back"
-            />
+            android:visibility="gone"
+            >
+
+
+        <cn.xiaojs.xma.ui.view.AnimationTextView
+                android:id="@+id/l_top_roominfo_ani"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_28px"
+                android:gravity="center"
+                />
+
+        <ImageView
+                android:id="@+id/l_top_roominfo_photo"
+                android:layout_width="@dimen/px48"
+                android:layout_height="@dimen/px48"
+                android:background="@drawable/ic_defaultavatar"
+                android:layout_marginLeft="@dimen/px10"
+                app:layout_constraintTop_toTopOf="@id/top_guideline"
+                app:layout_constraintLeft_toRightOf="@id/l_top_back"
+                />
+
+        <TextView
+                android:id="@+id/l_top_roominfo_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_28px"
+                android:layout_marginLeft="@dimen/px9"
+                android:gravity="center"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                />
+
+
+        <TextView
+                android:id="@+id/l_top_roominfo_other"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/font_white"
+                android:textSize="@dimen/font_28px"
+                android:layout_marginLeft="@dimen/px9"
+                android:gravity="center"
+                />
+
+    </LinearLayout>
 
     <TextView
             android:id="@+id/l_top_start_or_stop_living"
@@ -174,7 +212,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone"
             />
-    
+
     <TextView
             android:id="@+id/center_one2one"
             android:layout_width="wrap_content"
@@ -193,21 +231,21 @@
             android:visibility="gone"/>
 
     <!--<TextView-->
-            <!--android:id="@+id/center_board_opera"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="白板协作"-->
-            <!--android:textSize="@dimen/font_22px"-->
-            <!--android:textColor="@color/font_white"-->
-            <!--android:drawableTop="@drawable/ic_class_whiteboardcollaboration"-->
-            <!--android:drawablePadding="@dimen/px12"-->
-            <!--android:singleLine="true"-->
-            <!--android:layout_marginTop="@dimen/px39"-->
-            <!--android:layout_marginLeft="@dimen/px54"-->
-            <!--android:gravity="center"-->
-            <!--app:layout_constraintLeft_toRightOf="@id/center_one2one"-->
-            <!--app:layout_constraintTop_toTopOf="@id/center_panel"-->
-            <!--android:visibility="visible"/>-->
+    <!--android:id="@+id/center_board_opera"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="白板协作"-->
+    <!--android:textSize="@dimen/font_22px"-->
+    <!--android:textColor="@color/font_white"-->
+    <!--android:drawableTop="@drawable/ic_class_whiteboardcollaboration"-->
+    <!--android:drawablePadding="@dimen/px12"-->
+    <!--android:singleLine="true"-->
+    <!--android:layout_marginTop="@dimen/px39"-->
+    <!--android:layout_marginLeft="@dimen/px54"-->
+    <!--android:gravity="center"-->
+    <!--app:layout_constraintLeft_toRightOf="@id/center_one2one"-->
+    <!--app:layout_constraintTop_toTopOf="@id/center_panel"-->
+    <!--android:visibility="visible"/>-->
 
     <TextView
             android:id="@+id/center_board_mgr"
@@ -260,6 +298,7 @@
             app:layout_constraintLeft_toLeftOf="@id/center_panel"
             app:layout_constraintTop_toBottomOf="@id/center_one2one"
             android:visibility="gone"/>
+
     <TextView
             android:id="@+id/center_database"
             android:layout_width="wrap_content"
