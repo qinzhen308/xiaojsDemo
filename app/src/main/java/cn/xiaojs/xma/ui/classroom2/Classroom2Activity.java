@@ -60,6 +60,7 @@ import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomType;
 import cn.xiaojs.xma.ui.classroom2.core.RoomSession;
+import cn.xiaojs.xma.ui.classroom2.core.SessionDataObserver;
 import cn.xiaojs.xma.ui.classroom2.material.DatabaseFragment;
 import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
 import cn.xiaojs.xma.ui.classroom2.schedule.ScheduleFragment;
@@ -79,7 +80,7 @@ import okhttp3.ResponseBody;
  * Created by maxiaobao on 2017/9/18.
  */
 
-public class Classroom2Activity extends FragmentActivity implements IBoardManager,IBoardDocManager{
+public class Classroom2Activity extends FragmentActivity implements IBoardManager, IBoardDocManager {
 
     private final static int REQUEST_PERMISSION = 1000;
 
@@ -110,6 +111,13 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
 
     private ClassroomEngine classroomEngine;
+
+    private SessionDataObserver dataObserver = new SessionDataObserver() {
+        @Override
+        public void onYouRemovedFromCurrentClass() {
+            handleRemovedOut();
+        }
+    };
 
 
     private Consumer<BootObservable.BootSession> bootSessionConsumer =
@@ -207,9 +215,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     public void onBackPressed() {
 
-        if(movieFragment != null
+        if (movieFragment != null
                 && movieFragment.isAdded()
-                &&movieFragment.getChildFragmentManager().getBackStackEntryCount()>0){
+                && movieFragment.getChildFragmentManager().getBackStackEntryCount() > 0) {
             movieFragment.getChildFragmentManager().popBackStack();
             return;
         }
@@ -220,8 +228,6 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             movieFragment.back();
             return;
         }
-
-
 
 
         if (UIUtils.isLandspace(this)) {
@@ -235,6 +241,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        classroomEngine.unObserveSessionData(dataObserver);
 
         offBootlistener();
         SocketManager.getSocketManager(this).disConnect();
@@ -266,7 +273,6 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Logger.d("-------qz-------activity----onConfigurationChanged-----orientation=" + newConfig.orientation);
 
         if (newConfig.orientation != Configuration.ORIENTATION_UNDEFINED) {
 
@@ -354,6 +360,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             finish();
         }
 
+        classroomEngine.observeSessionData(dataObserver);
+
+
         collaborateFragment = BoardCollaborateFragment.createInstance();
 
         initMovieFragment();
@@ -379,6 +388,12 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         finish();
     }
 
+
+    private void handleRemovedOut() {
+        Toast.makeText(Classroom2Activity.this,
+                "您已被教室管理者移除，不再是该教室成员", Toast.LENGTH_LONG).show();
+        finish();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -499,7 +514,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                 constraintSet.constrainHeight(R.id.replace_lay, rootLayout.getWidth());
                 constraintSet.applyTo(rootLayout);
 
-                if (!classroomEngine.isPreview()){
+                if (!classroomEngine.isPreview()) {
                     bottomControlLayout.setVisibility(View.GONE);
                 }
                 break;
@@ -509,7 +524,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                 constraintSet.constrainHeight(R.id.replace_lay, 0);
                 constraintSet.applyTo(rootLayout);
 
-                if (!classroomEngine.isPreview()){
+                if (!classroomEngine.isPreview()) {
                     bottomControlLayout.setVisibility(View.VISIBLE);
                 }
 
@@ -772,7 +787,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     //
     private void popInput() {
 
-        if (classroomEngine.isVistor() && !classroomEngine.getVistor().talk){
+        if (classroomEngine.isVistor() && !classroomEngine.getVistor().talk) {
             Toast.makeText(this, R.string.no_permision_tips, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -790,7 +805,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
     private void popDatabase() {
 
-        if (classroomEngine.isVistor() && !classroomEngine.getVistor().library){
+        if (classroomEngine.isVistor() && !classroomEngine.getVistor().library) {
             Toast.makeText(this, R.string.no_permision_tips, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -900,16 +915,16 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
     @Override
     public void openDocInBoard(LibDoc doc) {
-        if(movieFragment.isAdded()&&!movieFragment.isDetached()){
-            if(UIUtils.isLandspace(this)){
+        if (movieFragment.isAdded() && !movieFragment.isDetached()) {
+            if (UIUtils.isLandspace(this)) {
                 collaborateFragment.openDocInsideBoard(doc);
-            }else {
+            } else {
                 collaborateFragment.openDocOutsideBoard(doc);
                 movieFragment.changeOrientationToLand();
                 movieFragment.showBoardContainer(true);
             }
-        }else {
-            ToastUtil.showToast(this,"教室连接异常");
+        } else {
+            ToastUtil.showToast(this, "教室连接异常");
         }
     }
 }

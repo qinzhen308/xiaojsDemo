@@ -41,9 +41,6 @@ import cn.xiaojs.xma.ui.classroom2.material.DownloadListFragment;
 public class DatabaseFragment extends BottomSheetFragment
         implements DatabaseListFragment.OnOperatingListener, DialogInterface.OnKeyListener {
 
-    @BindView(R.id.rroot_lay)
-    RelativeLayout rrootLay;
-
     @BindView(R.id.cl_root)
     ConstraintLayout rootLay;
 
@@ -292,7 +289,7 @@ public class DatabaseFragment extends BottomSheetFragment
         thirdLayout.setId(R.id.fragment_database_framelayout);
         thirdLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        rrootLay.addView(thirdLayout);
+        ((RelativeLayout)rootLayout).addView(thirdLayout);
     }
 
     private void destoryThird(){
@@ -306,7 +303,7 @@ public class DatabaseFragment extends BottomSheetFragment
         }
 
         if (thirdLayout !=null) {
-            rrootLay.removeView(thirdLayout);
+            ((RelativeLayout)rootLayout).removeView(thirdLayout);
             thirdLayout = null;
         }
 

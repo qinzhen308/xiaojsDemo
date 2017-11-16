@@ -124,6 +124,7 @@ public class XiaojsApplication extends Application {
                 case SocketStatus.CONNECTING:                                  //连接中
                     break;
                 case SocketStatus.CONNECT_SUCCESS:                             //连接成功
+                    DataManager.syncData(getApplicationContext());
                     break;
                 case SocketStatus.CONNECT_FAILED:                              //连接失败
                     break;

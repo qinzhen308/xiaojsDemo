@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.classroom2.base;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
@@ -43,6 +44,10 @@ public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
     @BindView(R.id.tips_icon)
     TextView tipsIconView;
 
+    @Nullable
+    @BindView(R.id.root_lay)
+    public View rootLayout;
+
 
     protected ClassroomEngine classroomEngine;
 
@@ -54,6 +59,7 @@ public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         classroomEngine = ClassroomEngine.getEngine();
     }
 
@@ -64,6 +70,15 @@ public abstract class BottomSheetFragment extends BottomSheetDialogFragment {
 
         final View view = createView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, view);
+
+        if (rootLayout !=null) {
+            rootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+        }
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {

@@ -1,0 +1,22 @@
+package cn.xiaojs.xma.ui.classroom2.core;
+
+/**
+ * Created by maxiaobao on 2017/11/3.
+ */
+
+public abstract class SessionDataObserver {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //
+    public void onYouRemovedFromCurrentClass(){}
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Member
+    //
+    public void onMemberUpdated(){}
+
+
+}

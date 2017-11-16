@@ -13,9 +13,11 @@ import java.util.Map;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
+import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
@@ -27,6 +29,8 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.SyncClassesReceived;
+import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
 import cn.xiaojs.xma.model.socket.room.CloseMediaResponse;
@@ -56,6 +60,7 @@ import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
 
@@ -74,6 +79,9 @@ public final class ClassroomEngine {
     private EventObservable eventObservable;
 
     private EventListener eventListener;
+
+    private Disposable classObserver;
+
 
     //此类可以不用单利模式，用单例主要是方便在不同Fragment中调用。
     public static ClassroomEngine getEngine() {
@@ -106,6 +114,7 @@ public final class ClassroomEngine {
         observerAllEvent();
         roomRequest = new RoomRequest(context, stateMachine);
 
+        classObserver = XMSEventObservable.observeClassSession(context, classesConsumer);
 
 
     }
@@ -125,6 +134,14 @@ public final class ClassroomEngine {
     public ClassroomType getClassroomType() {
         RoomSession roomSession = stateMachine.getSession();
         return roomSession == null ? ClassroomType.Unknown : roomSession.classroomType;
+    }
+
+    public void observeSessionData(SessionDataObserver observer) {
+        stateMachine.registesObserver(observer);
+    }
+
+    public void unObserveSessionData(SessionDataObserver observer) {
+        stateMachine.unregistesObserver(observer);
     }
 
     public Context getContext() {
@@ -203,7 +220,7 @@ public final class ClassroomEngine {
     }
 
     public boolean isVistor() {
-        return getCtlSession().visitor == null? false : true;
+        return getCtlSession().visitor == null ? false : true;
     }
 
     public CtlSession.Visitor getVistor() {
@@ -237,19 +254,20 @@ public final class ClassroomEngine {
     public Attendee getMember(String accountId) {
         return stateMachine.getMember(accountId);
     }
-    public Map<String,Attendee> getMembers() {
+
+    public Map<String, Attendee> getMembers() {
         return stateMachine.getSession().classMembers;
     }
 
     public int getOnlineMemberCount() {
         int count = 0;
 
-        Map<String,Attendee> membersMap = getMembers();
-        if (membersMap != null && membersMap.size()>0) {
+        Map<String, Attendee> membersMap = getMembers();
+        if (membersMap != null && membersMap.size() > 0) {
 
             for (Attendee attendee : membersMap.values()) {
                 if (attendee.xa != 0) {
-                    count ++;
+                    count++;
                 }
             }
 
@@ -354,8 +372,6 @@ public final class ClassroomEngine {
 
     /**
      * 上传白板同步数据
-     * @param data
-     * @param callback
      */
     public void syncBoard(String data, final EventCallback<EventResponse> callback) {
         if (roomRequest != null) {
@@ -366,9 +382,9 @@ public final class ClassroomEngine {
     /**
      * 发送交流
      */
-    public void sendTalk(Talk talk,final EventCallback<TalkResponse> callback) {
+    public void sendTalk(Talk talk, final EventCallback<TalkResponse> callback) {
         if (roomRequest != null) {
-            roomRequest.sendTalk(talk,callback);
+            roomRequest.sendTalk(talk, callback);
         }
     }
 
@@ -475,7 +491,6 @@ public final class ClassroomEngine {
 
         return syncboard;
     }
-
 
 
     public EventListener.ELIdle observerIdle(Consumer<EventReceived> consumer) {
@@ -598,44 +613,45 @@ public final class ClassroomEngine {
      */
     public void registerBoard(String ticket, Board board, final APIServiceCallback<BoardItem> callback) {
         if (roomRequest != null) {
-            roomRequest.registerBoard(ticket,board,callback);
+            roomRequest.registerBoard(ticket, board, callback);
         }
     }
+
     /**
      * 保存白板
      */
-    public void saveBoard( String board, BoardSaveParams saving, final APIServiceCallback<ResponseBody> callback) {
+    public void saveBoard(String board, BoardSaveParams saving, final APIServiceCallback<ResponseBody> callback) {
         if (roomRequest != null) {
-            roomRequest.saveBoard(getTicket(),board,saving,callback);
+            roomRequest.saveBoard(getTicket(), board, saving, callback);
         }
     }
 
     /**
      * 重命名白板
      */
-    public void renameBoard( String board,String title , final APIServiceCallback<ResponseBody> callback) {
+    public void renameBoard(String board, String title, final APIServiceCallback<ResponseBody> callback) {
         if (roomRequest != null) {
-            BoardSaveParams saving=new BoardSaveParams();
-            saving.title=title;
-            roomRequest.saveBoard(getTicket(),board,saving,callback);
+            BoardSaveParams saving = new BoardSaveParams();
+            saving.title = title;
+            roomRequest.saveBoard(getTicket(), board, saving, callback);
         }
     }
 
     /**
      * 关闭白板
      */
-    public void closeBoard( String board, final APIServiceCallback<ResponseBody> callback) {
+    public void closeBoard(String board, final APIServiceCallback<ResponseBody> callback) {
         if (roomRequest != null) {
-            roomRequest.closeBoard(getTicket(),board,callback);
+            roomRequest.closeBoard(getTicket(), board, callback);
         }
     }
 
     /**
      * 删除白板
      */
-    public void deleteBoard( String board, final APIServiceCallback<ResponseBody> callback) {
+    public void deleteBoard(String board, final APIServiceCallback<ResponseBody> callback) {
         if (roomRequest != null) {
-            roomRequest.deleteBoard(getTicket(),board,callback);
+            roomRequest.deleteBoard(getTicket(), board, callback);
         }
     }
 
@@ -644,15 +660,16 @@ public final class ClassroomEngine {
      */
     public void openBoard(String ticket, String board, final APIServiceCallback<BoardItem> callback) {
         if (roomRequest != null) {
-            roomRequest.openBoard(ticket,board,callback);
+            roomRequest.openBoard(ticket, board, callback);
         }
     }
+
     /**
      * 白板管理列表数据
      */
-    public void getBoards( BoardCriteria criteria, Pagination pagination, APIServiceCallback<CollectionPage<BoardItem>> callback) {
+    public void getBoards(BoardCriteria criteria, Pagination pagination, APIServiceCallback<CollectionPage<BoardItem>> callback) {
         if (roomRequest != null) {
-            roomRequest.getBoards(getTicket(),criteria,pagination,callback);
+            roomRequest.getBoards(getTicket(), criteria, pagination, callback);
         }
     }
 
@@ -669,6 +686,10 @@ public final class ClassroomEngine {
 
         if (eventListener != null) {
             eventListener.dispose();
+        }
+
+        if (classObserver != null) {
+            classObserver.dispose();
         }
 
         roomRequest = null;
@@ -697,6 +718,26 @@ public final class ClassroomEngine {
                 });
 
     }
+
+    private Consumer<EventReceived> classesConsumer = new Consumer<EventReceived>() {
+        @Override
+        public void accept(EventReceived eventReceived) throws Exception {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("receivedConsumer .....");
+            }
+
+            switch (eventReceived.eventType) {
+                case Su.EventType.SYNC_CLASSES:
+                    SyncClassesReceived classesReceived = (SyncClassesReceived) eventReceived.t;
+                    if (classesReceived == null
+                            || classesReceived.changes == null
+                            || classesReceived.changes.length > 0) {
+                        stateMachine.syncClasses(classesReceived);
+                    }
+                    break;
+            }
+        }
+    };
 
 
     protected void updateState(EventReceived eventReceived) {

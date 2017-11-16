@@ -87,7 +87,6 @@ public class DataManager {
         XiaojsConfig.AVATOR_TIME = String.valueOf(System.currentTimeMillis());
         //AccountPref.setAvatorTime(context, XiaojsConfig.AVATOR_TIME);
 
-
         syncData(context);
 
         //jpush

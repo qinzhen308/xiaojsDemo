@@ -6,8 +6,6 @@ package cn.xiaojs.xma.ui.classroom2.core;
 
 public class CTLConstant {
 
-    public static final int VISTOR_SORT = -1;
-
     public final static int SHARE_IMG_SIZE = 800; //分享图片的大小不超过800
 
     public static final String ACTION_STREAMING_EXCEPTION = "cn.xiaojs.xma.streaming_exception";
@@ -111,7 +109,8 @@ public class CTLConstant {
         STUDENT("StudentSession"),                                   //学生
         MANAGER("ManagerSession"),                                   //监管
         AUDITOR("AuditorSession"),                                   //旁听
-        ADMINISTRATOR("AdministrationSession");                      //管理员
+        ADMINISTRATOR("AdministrationSession"),                      //管理员
+        VISITOR("VisitorSession");                                   //游客
 
         private final String text;
 

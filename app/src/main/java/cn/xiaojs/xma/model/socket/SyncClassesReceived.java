@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class SyncClassesReceived {
 
     public String id;
-    public String change;
     public String subtype;
     public String owner;
     public String ownerId;
@@ -19,4 +18,22 @@ public class SyncClassesReceived {
     public String cover;
     public String title;
     public String state;
+    public int total;
+    public int current;
+    public ChangeTarget[] changes;
+
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class ChangeTarget {
+        public String change;
+        public String accountId;
+        public String psType;
+        public String psTypeInLesson;
+        public int xa;
+        public String xav;
+        public String name;
+        public String title;
+        public int sort;
+    }
 }

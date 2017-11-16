@@ -46,6 +46,8 @@ public class Contact implements Serializable {
     public boolean silent;
     public String signature;
 
+    public boolean streaming;
+
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Contact) {

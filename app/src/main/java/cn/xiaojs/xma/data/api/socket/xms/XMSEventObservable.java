@@ -63,4 +63,12 @@ public class XMSEventObservable extends Observable<EventReceived> {
                 .subscribe(consumer);
     }
 
+
+    public static Disposable observeClassSession(Context context, Consumer<EventReceived> consumer) {
+        XMSEventObserver.ClassSession observer = new XMSEventObserver.ClassSession(context);
+        return createEventObservable(observer)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+    }
+
 }
