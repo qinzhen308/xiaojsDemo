@@ -1450,6 +1450,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                         if (XiaojsConfig.DEBUG) {
                             Toast.makeText(getContext(), "你已拒绝", Toast.LENGTH_LONG).show();
                         }
+                        o2oAttendee = null;
                     }
 
                     @Override
@@ -1469,6 +1470,8 @@ public abstract class MovieFragment extends BaseRoomFragment
                 if (XiaojsConfig.DEBUG) {
                     ToastUtil.showToast(getContext(), "close open peer to peer video success");
                 }
+
+                o2oAttendee = null;
             }
 
             @Override

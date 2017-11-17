@@ -241,6 +241,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
     protected void sendTalk(String bodyStr) {
 
+        inputView.setText("");
+
         if (TextUtils.isEmpty(bodyStr))
             return;
 
@@ -261,7 +263,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                 if (talkResponse != null) {
                     talkBean.time = talkResponse.time;
                 }
-                inputView.setText("");
 
                 handleReceivedMsg(true, talkBean);
 

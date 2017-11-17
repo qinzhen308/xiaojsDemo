@@ -237,8 +237,9 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
     private WatermarkSetting buildWatermarkSetting() {
 
         WatermarkSetting watermarkSetting = new WatermarkSetting(context);
-        watermarkSetting.setResourceId(R.drawable.logo_splash);
-        watermarkSetting.setAlpha(100);
+        //watermarkSetting.setResourcePath("http://static.xiaojs.cn/shuiyin.png");
+        watermarkSetting.setResourceId(R.drawable.ic_shuiyin);
+        watermarkSetting.setAlpha(200);
         watermarkSetting.setSize(WatermarkSetting.WATERMARK_SIZE.SMALL);
         watermarkSetting.setLocation(WatermarkSetting.WATERMARK_LOCATION.SOUTH_WEST);
         return watermarkSetting;

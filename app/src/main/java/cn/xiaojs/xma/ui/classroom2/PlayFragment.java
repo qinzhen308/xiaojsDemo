@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -30,6 +31,7 @@ import cn.xiaojs.xma.model.socket.room.OpenMediaReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.ui.classroom2.base.BaseLiveView;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.ChatAdapter;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
@@ -46,13 +48,17 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 /**
  * Created by maxiaobao on 2017/9/18.
  */
 
 public class PlayFragment extends MovieFragment
-        implements ChatAdapter.FetchMoreListener, VideoStreamView.ControlListener {
+        implements ChatAdapter.FetchMoreListener, BaseLiveView.ControlListener {
 
+    @BindView(R.id.play_root_lay)
+    RelativeLayout playRootLayout;
     @BindView(R.id.video_view)
     PlayLiveView videoView;
     @BindView(R.id.video_stream)
@@ -69,6 +75,13 @@ public class PlayFragment extends MovieFragment
     private long reserveliveTime;
 
     private Disposable controlAutotimer;
+
+    private int frontViewWidth;
+    private int frontViewheight;
+    private int frontMarginLeft;
+    private int frontMarginTop;
+    private int frontViewIndex = 4; //如果动了XML中的布局，需要更新此index
+    private int backViewIndex = 0;
 
     private SessionDataObserver dataObserver = new SessionDataObserver() {
         @Override
@@ -100,9 +113,17 @@ public class PlayFragment extends MovieFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        frontViewWidth = getResources().getDimensionPixelSize(R.dimen.o2o_width);
+        frontViewheight = getResources().getDimensionPixelSize(R.dimen.o2o_height);
+        frontMarginLeft = getResources().getDimensionPixelSize(R.dimen.o2o_margin_left);
+        frontMarginTop = getResources().getDimensionPixelSize(R.dimen.o2o_margin_top);
 
-        streamView.setCloseEnabled(true);
+        streamView.setControlEnabled(true);
         streamView.setControlListener(this);
+
+        videoView.setControlListener(this);
+        videoView.setControlEnabled(false);
+        videoView.setCloseViewVisibility(View.GONE);
 
         initControlPanel();
         classroomEngine.observeSessionData(dataObserver);
@@ -163,7 +184,7 @@ public class PlayFragment extends MovieFragment
 
     @Override
     protected Bitmap doScreenshot() {
-        if(isBoardShown()){
+        if (isBoardShown()) {
             return whiteboardFragment.preview();
         }
         return videoView.getBitmap();
@@ -254,6 +275,16 @@ public class PlayFragment extends MovieFragment
     }
 
     @Override
+    public void back() {
+
+        if (o2oAttendee != null) {
+            onLiveViewClosed(streamView);
+        }
+
+        super.back();
+    }
+
+    @Override
     public void onStartLiveClick(View view) {
 
         if (checkVistorPermission())
@@ -278,10 +309,41 @@ public class PlayFragment extends MovieFragment
     }
 
     @Override
-    public void onPlayClosed() {
-        closeStreaming();
-        sendCloseMedia(o2oAttendee.accountId);
-        sendStopStreaming();
+    public void onLiveViewClosed(BaseLiveView liveView) {
+
+        if (liveView == null)
+            return;
+
+        if (liveView == streamView) {
+
+            if (playRootLayout.indexOfChild(videoView) == frontViewIndex) {
+                bringToBack(videoView);
+                bringToFront(streamView);
+            }
+
+            closeStreaming();
+            sendCloseMedia(o2oAttendee.accountId);
+            sendStopStreaming();
+        }
+
+    }
+
+    @Override
+    public void onLiveViewScaled(BaseLiveView liveView) {
+
+        if (liveView == null)
+            return;
+
+        if (liveView == streamView) {
+            //streamView全屏，点击View隐藏
+            //videoView小屏，并移动到前端
+            bringToBack(streamView);
+            bringToFront(videoView);
+
+        } else if (liveView == videoView) {
+            bringToBack(videoView);
+            bringToFront(streamView);
+        }
     }
 
 
@@ -291,6 +353,41 @@ public class PlayFragment extends MovieFragment
 
         memCount = count;
         updateRoomInfo();
+
+    }
+
+    private void bringToBack(BaseLiveView target) {
+        target.setControlEnabled(false);
+        RelativeLayout.LayoutParams lp= (RelativeLayout.LayoutParams) target.getLayoutParams();
+        lp.height = MATCH_PARENT;
+        lp.width = MATCH_PARENT;
+        lp.setMargins(0,0,0,0);
+
+        if (target == videoView) {
+            videoView.stopPlay();
+        }
+        playRootLayout.removeView(target);
+        playRootLayout.addView(target, backViewIndex);
+        if (target == videoView) {
+            videoView.startPlay(classroomEngine.getPlayUrl());
+        }
+
+
+
+    }
+
+    private void bringToFront(BaseLiveView target) {
+        target.setControlEnabled(true);
+        RelativeLayout.LayoutParams lp= (RelativeLayout.LayoutParams) target.getLayoutParams();
+        lp.width = frontViewWidth;
+        lp.height = frontViewheight;
+        lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        lp.setMargins(frontMarginLeft,frontMarginTop,0,0);
+        //target.bringToFront();
+
+        playRootLayout.removeView(target);
+        playRootLayout.addView(target, frontViewIndex);
 
     }
 
@@ -351,7 +448,7 @@ public class PlayFragment extends MovieFragment
         if (classroomEngine.getCtlSession().streamType == Live.StreamType.LIVE) {
             pBottomClassnameView.setText(classroomEngine.getRoomTitle());
             lTopRoominfoNameView.setText(classroomEngine.getRoomTitle());
-        }else {
+        } else {
             Attendee attendee = classroomEngine.getMember(targetId);
 
             if (attendee != null) {
@@ -360,7 +457,6 @@ public class PlayFragment extends MovieFragment
                 lTopRoominfoNameView.setText(descname);
             }
         }
-
 
 
         requestUpdateMemberCount();
@@ -389,6 +485,11 @@ public class PlayFragment extends MovieFragment
         if (streamingEngine != null) {
             streamingEngine.pauseAV();
             streamingEngine.stopStreamingAV();
+        }
+
+        if (playRootLayout.indexOfChild(videoView) == frontViewIndex) {
+            bringToBack(videoView);
+            bringToFront(streamView);
         }
 
         streamView.setVisibility(View.GONE);

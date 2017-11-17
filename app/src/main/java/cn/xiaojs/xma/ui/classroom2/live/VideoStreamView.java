@@ -13,17 +13,9 @@ import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
  * Created by maxiaobao on 2017/10/19.
  */
 
-public class VideoStreamView extends BaseLiveView{
-
-
-    public interface ControlListener{
-        void onPlayClosed();
-    }
-
+public class VideoStreamView extends BaseLiveView {
 
     private CameraPreviewFrameView cameraPreviewView;
-
-    private ControlListener controlListener;
 
     private boolean canMove;
 
@@ -53,23 +45,11 @@ public class VideoStreamView extends BaseLiveView{
     }
 
     @Override
-    protected void onCloseClick(View view) {
-        super.onCloseClick(view);
-        if (controlListener != null) {
-            controlListener.onPlayClosed();
-        }
-    }
-
-    @Override
     public boolean canMove() {
         return canMove;
     }
 
     public CameraPreviewFrameView getCameraPreviewView() {
         return cameraPreviewView;
-    }
-
-    public void setControlListener(ControlListener listener) {
-        this.controlListener = listener;
     }
 }

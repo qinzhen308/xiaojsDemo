@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,12 @@ import cn.xiaojs.xma.ui.widget.LoadingView;
 
 public abstract class BaseLiveView extends FrameLayout{
 
+    public interface ControlListener{
+        void onLiveViewClosed(BaseLiveView liveView);
+        void onLiveViewScaled(BaseLiveView liveView);
+    }
+
+
     @BindView(R.id.loading_layout)
     protected RelativeLayout loadingLayout;
     @BindView(R.id.loading_progress)
@@ -36,10 +43,13 @@ public abstract class BaseLiveView extends FrameLayout{
     protected TextView loadingDescView;
     @BindView(R.id.overlay_mask)
     protected View overlayMaskView;
+    @BindView(R.id.overlay_root)
+    protected LinearLayout overlayLayout;
     @BindView(R.id.close_video)
     protected ImageView closeView;
 
-    private boolean closeEnable;
+    private boolean controleEnable;
+    private ControlListener controlListener;
 
 
 
@@ -71,6 +81,10 @@ public abstract class BaseLiveView extends FrameLayout{
         addView(createLiveView(), 0, params);
     }
 
+    public void setControlListener(ControlListener listener) {
+        this.controlListener = listener;
+    }
+
 //    @Override
 //    public boolean onTouchEvent(MotionEvent event) {
 //        if (canMove()) {
@@ -93,15 +107,18 @@ public abstract class BaseLiveView extends FrameLayout{
 //        return super.onTouchEvent(event);
 //    }
 
-    @OnClick({R.id.close_video, R.id.overlay_mask})
+    @OnClick({R.id.close_video, R.id.scale_video, R.id.overlay_mask})
     void onViewClick(View view){
         switch(view.getId()) {
             case R.id.close_video:
                 onCloseClick(view);
                 break;
+            case R.id.scale_video:
+                onScaleClick(view);
+                break;
             case R.id.overlay_mask:
-                int vis = closeView.getVisibility() == VISIBLE? GONE : VISIBLE;
-                closeView.setVisibility(vis);
+                int vis = overlayLayout.getVisibility() == VISIBLE? GONE : VISIBLE;
+                overlayLayout.setVisibility(vis);
                 break;
         }
     }
@@ -112,21 +129,42 @@ public abstract class BaseLiveView extends FrameLayout{
 
 
     protected void onCloseClick(View view) {
-        if (!closeEnable) {
+        if (!controleEnable) {
             overlayMaskView.setVisibility(GONE);
         }
 
-        closeView.setVisibility(GONE);
+        overlayLayout.setVisibility(GONE);
         setVisibility(GONE);
+
+        if (controlListener != null) {
+            controlListener.onLiveViewClosed(this);
+        }
     }
 
-    public void setCloseEnabled(boolean enabled) {
+    protected void onScaleClick(View view) {
+        if (!controleEnable) {
+            overlayMaskView.setVisibility(GONE);
+        }
 
-        closeEnable = enabled;
+        overlayLayout.setVisibility(GONE);
 
-        int vis = closeEnable? VISIBLE : GONE;
+        if (controlListener != null) {
+            controlListener.onLiveViewScaled(this);
+        }
+    }
+
+
+    public void setControlEnabled(boolean enabled) {
+
+        controleEnable = enabled;
+
+        int vis = controleEnable? VISIBLE : GONE;
         overlayMaskView.setVisibility(vis);
 
+    }
+
+    public void setCloseViewVisibility(int visibility) {
+        closeView.setVisibility(visibility);
     }
 
     public void showLoading(boolean show) {

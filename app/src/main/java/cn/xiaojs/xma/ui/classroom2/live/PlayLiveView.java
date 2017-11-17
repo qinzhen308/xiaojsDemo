@@ -25,12 +25,8 @@ import static com.pili.pldroid.player.AVOptions.PREFER_FORMAT_M3U8;
 
 public class PlayLiveView extends BaseLiveView {
 
-    public interface ControlListener{
-        void onPlayClosed();
-    }
-
     private PLVideoTextureView playView;
-    private ControlListener controlListener;
+
 
     private boolean canMove;
 
@@ -64,9 +60,7 @@ public class PlayLiveView extends BaseLiveView {
     protected void onCloseClick(View view) {
         super.onCloseClick(view);
         stopPlay();
-        if (controlListener != null) {
-            controlListener.onPlayClosed();
-        }
+
     }
 
     @Override
@@ -74,9 +68,7 @@ public class PlayLiveView extends BaseLiveView {
         return canMove;
     }
 
-    public void setControlListener(ControlListener listener) {
-        this.controlListener = listener;
-    }
+
 
     public Bitmap getBitmap() {
         return playView.getTextureView().getBitmap();

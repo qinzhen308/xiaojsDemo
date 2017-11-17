@@ -39,17 +39,38 @@
     <View
             android:id="@+id/overlay_mask"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            />
+            android:layout_height="match_parent"/>
 
-    <ImageView
-            android:id="@+id/close_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerInside"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_class_videoshutdown"
-            android:visibility="gone"/>
+    <LinearLayout
+            android:id="@+id/overlay_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@color/white_opacity_35"
+            android:visibility="gone">
+
+        <ImageView
+                android:id="@+id/scale_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_class_videofullscreen"
+                android:padding="@dimen/px10"
+                android:layout_marginRight="@dimen/px20"
+                android:visibility="visible"/>
+
+        <ImageView
+                android:id="@+id/close_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_class_videoshutdown"
+                android:padding="@dimen/px10"
+                android:layout_marginLeft="@dimen/px20"
+                android:visibility="visible"/>
+
+    </LinearLayout>
 
 </FrameLayout>
