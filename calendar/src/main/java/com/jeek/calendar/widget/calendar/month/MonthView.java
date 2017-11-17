@@ -147,6 +147,7 @@ public class MonthView extends View {
         mRestBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_rest_day);
         mWorkBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_work_day);
         mHolidays = CalendarUtils.getInstance(getContext()).getHolidays(mSelYear, mSelMonth + 1);
+        mCircleRadius=getResources().getDimensionPixelOffset(R.dimen.hint_circle_radius);
     }
 
     private void initPaint() {

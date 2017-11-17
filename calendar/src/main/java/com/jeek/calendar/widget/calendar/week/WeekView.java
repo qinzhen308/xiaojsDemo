@@ -129,6 +129,7 @@ public class WeekView extends View {
         int row = CalendarUtils.getWeekRow(mStartDate.getYear(), mStartDate.getMonthOfYear() - 1, mStartDate.getDayOfMonth());
         mHolidays = new int[7];
         System.arraycopy(holidays, row * 7, mHolidays, 0, mHolidays.length);
+        mCircleRadius=getResources().getDimensionPixelOffset(R.dimen.hint_circle_radius);
     }
 
     private void initPaint() {
