@@ -30,6 +30,8 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Utils;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.WhiteboardConfigs;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HandWriting;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HistoryImgLayer;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HistoryLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncCollector;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncGenerator;
@@ -360,7 +362,7 @@ public class Selector extends Doodle implements SyncCollector{
 
     @Override
     public void changeByEdge(float oldX, float oldY, float x, float y, int edge) {
-        if (mSelectedDoodle instanceof GeometryShape||mSelectedDoodle instanceof HandWriting) {
+        if (mSelectedDoodle instanceof GeometryShape||mSelectedDoodle instanceof HandWriting||mSelectedDoodle instanceof HistoryImgLayer||mSelectedDoodle instanceof HistoryLayer) {
             mSelectedDoodle.changeByEdge(oldX, oldY, x, y, edge);
             return;
         }

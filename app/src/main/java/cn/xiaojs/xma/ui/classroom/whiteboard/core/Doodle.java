@@ -62,6 +62,9 @@ public abstract class Doodle implements Transformation{
     public final static int STYLE_SYNC_LAYER = 5;
     public final static int STYLE_SYNC_LAYER_IMG = 6;
 
+    public final static int STYLE_HISTORY_LAYER = 7;//历史图层数据---->HistoryLayer.java
+    public final static int STYLE_HISTORY_IMG_LAYER = 8;//历史图层数据---->HistoryLayer.java
+
     public final static int STATE_IDLE = 0;
     public final static int STATE_DRAWING = 1;
     public final static int STATE_EDIT = 2;
