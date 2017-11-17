@@ -94,8 +94,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     EditTextDel liveLessonName;
     @BindView(R.id.label2)
     TextView label2;
-    @BindView(R.id.lesson_subject)
-    TextView lessonSubject;
     @BindView(R.id.label3)
     TextView label3;
     @BindView(R.id.btn_teacher)
@@ -135,8 +133,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     private String mCoverFileName;
     private String mCoverUrl;
 
-    private Competency mCompetency;
-    private String mCompetencyId;
     private LiveLesson mLesson = new LiveLesson();
 
     private RLessonDetail oldDatal;
@@ -188,10 +184,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         } else {
         }
         mLesson.setCover(oldDatal.cover);
-        mCompetency = new Competency();
-        mCompetency.setChecked(true);
-        mCompetency.setSubject(oldDatal.subject);
-        mCompetencyId = oldDatal.subject.getId();
 
         if (!TextUtils.isEmpty(mLesson.getCover())) {
             mCoverFileName = mLesson.getCover();
@@ -214,8 +206,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         } else {
             expiryDateSwitcher.setChecked(false);
         }
-        lessonSubject.setTextColor(mDarkGrayFont);
-        lessonSubject.setText(mCompetency.getSubject().getName());
         initLessonBrief(mLesson);
         initLessonLabel(mLesson);
         liveLessonName.setText(oldDatal.title);
@@ -279,7 +269,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
                 startActivityForResult(i, LESSON_LABEL);
                 break;
             case R.id.lesson_subject:
-                selectSubject();
                 break;
             case R.id.sub_btn:
                 submit();
@@ -361,17 +350,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
                 updateLesson(data);
                 initLessonLabel(mLesson);
                 break;
-            case REQUEST_SELECT_SUBJECT:
-                if (data != null) {
-                    mCompetency = (Competency) data.getSerializableExtra(KEY_COMPETENCY);
-                    CSubject subject = null;
-                    if (mCompetency != null && (subject = mCompetency.getSubject()) != null) {
-                        lessonSubject.setTextColor(mDarkGrayFont);
-                        mCompetencyId = subject.getId();
-                        lessonSubject.setText(subject.getName());
-                    }
-                }
-                break;
         }
     }
 
@@ -427,14 +405,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         }
     }
 
-    private void selectSubject() {
-        //mLessonSubjectTv.setTextColor(mContentFont);
-        Intent intent = new Intent();
-        intent.setClass(this, SubjectSelectorActivity.class);
-        intent.putExtra(CourseConstant.KEY_SUBJECT, mCompetency);
-        startActivityForResult(intent, REQUEST_SELECT_SUBJECT);
-    }
-
 
     private String formatResult(String s) {
         if (!TextUtils.isEmpty(s)) {
@@ -471,15 +441,11 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
             return;
         }
 
-        if (mCompetency == null || mCompetency.getSubject() == null) {
-            ToastUtil.showToast(getApplicationContext(), R.string.subject_empty);
-            return;
-        }
+
 
 
         CRecordLesson lesson = new CRecordLesson();
         lesson.title = name;
-        lesson.subject = mCompetency.getSubject().getId();
         lesson.mode = 2;
 
         if (!TextUtils.isEmpty(lessonid) && Ctl.RecordedCourseState.ONSHELVES.equals(oldDatal.state)) {

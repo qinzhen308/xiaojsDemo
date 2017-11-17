@@ -96,6 +96,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Coordinate;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Dashline;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HandWriting;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Hexagon;
+import cn.xiaojs.xma.ui.classroom.whiteboard.shape.HistoryLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Oval;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Pentagon;
 import cn.xiaojs.xma.ui.classroom.whiteboard.shape.Rectangle;
@@ -133,6 +134,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public final static int MODE_COLOR_PICKER = 5;
     public final static int MODE_SYNC_REMOTE = 6;
     public final static int MODE_SYNC_REMOTE_IMG = 7;
+    public final static int MODE_HISTORY_LAYER = 8;
+    public final static int MODE_HISTORY_IMG_LAYER = 9;
 
     public final static int BG_SCALE_TYPE_FIT_XY = 1;
     public final static int BG_SCALE_TYPE_FIT_CENTER = 2;
@@ -766,7 +769,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                     syncGenerator.onActionMove((SyncCollector)doodle);
                 }
             }
-            if(mCurrentMode==MODE_GEOMETRY||mCurrentMode==MODE_HAND_WRITING){
+
+            //扩展白板
+            if(mCurrentMode==MODE_GEOMETRY||mCurrentMode==MODE_HAND_WRITING||mCurrentMode==MODE_HISTORY_IMG_LAYER||mCurrentMode==MODE_HISTORY_LAYER){
                 float[] downIn2=new float[]{mDownPoint.x,mDownPoint.y};
                 Matrix matrix=new Matrix();
                 mDisplayMatrix.invert(matrix);
@@ -1197,6 +1202,12 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 break;
             case MODE_SYNC_REMOTE_IMG:
                 mDoodle=new SyncRemoteImgLayer(this);
+                break;
+            case MODE_HISTORY_LAYER:
+                mDoodle=new HistoryLayer(this,Doodle.STYLE_HISTORY_LAYER);
+                break;
+            case MODE_HISTORY_IMG_LAYER:
+                mDoodle=new HistoryLayer(this,Doodle.STYLE_HISTORY_LAYER);
                 break;
 
         }
@@ -2193,12 +2204,43 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }
     }
 
+    /**
+     * 将数据解析为历史图层对象
+     * @param layers
+     */
+    private void parseLayers(List<SyncLayer> layers){
+        if(ArrayUtil.isEmpty(layers))return;
+        int mode=-1;
+        for(SyncLayer layer:layers){
+            mode=Live.ShapeType.DRAW_IMAGE.equals(layer.shape.type)?MODE_HISTORY_IMG_LAYER:MODE_HISTORY_LAYER;
+            Doodle d = buildDoodle(layer.id, mode);
+            if (d != null) {
+                int color=Color.BLACK;
+                try {
+                    color=Color.parseColor(layer.lineColor);
+                }catch (Exception e){
+                    Logger.d(e);
+                }
+                d.setPaint(Utils.createPaint(color, layer.lineWidth, Paint.Style.STROKE));
+                d.setState(Doodle.STATE_EDIT);
+                ((HistoryLayer)d).setLayerSrc(layer);
+                if(mode==MODE_HISTORY_IMG_LAYER){
+                    mDoodle.setDrawingMatrix(mDrawingMatrix);
+                    mDoodle.setDisplayMatrix(mDisplayMatrix);
+                }
+                drawDoodle(mDoodleCanvas, d);
+                d.setState(Doodle.STATE_IDLE);
+            }
+        }
+        drawToDoodleCanvas();
+    }
+
 
     public void setLayers(Drawing drawing){
         if(drawing==null)return;
         if(drawing.stylus==null)return;
         SyncboardHelper.handleLayerData(drawing);
-        syncCreateLayers(drawing.stylus.layers);
+        parseLayers(drawing.stylus.layers);
     }
 
 

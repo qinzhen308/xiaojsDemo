@@ -3,25 +3,25 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.shape;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Base64;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.orhanobut.logger.Logger;
 
+import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
 
 /**
- * Created by Paul Z on 2017/9/7.
+ * Created by Paul Z on 2017/11/17.
  */
 
-public class SyncRemoteImgLayer extends SyncRemoteLayer {
+public class HistoryImgLayer extends HistoryLayer {
     private Bitmap layerBm;
 
     public static final String IMG_SYMBOL_BASE64_2="base64,";
@@ -32,17 +32,22 @@ public class SyncRemoteImgLayer extends SyncRemoteLayer {
 
     private float angle=0;
 
-    public SyncRemoteImgLayer(Whiteboard whiteboard) {
+    public HistoryImgLayer(Whiteboard whiteboard) {
         super(whiteboard,STYLE_SYNC_LAYER_IMG);
     }
 
-    public SyncRemoteImgLayer(Whiteboard whiteboard,String imgSrc) {
+    public HistoryImgLayer(Whiteboard whiteboard, String imgSrc) {
         super(whiteboard,STYLE_SYNC_LAYER_IMG);
         handleImgSource(imgSrc,0);
     }
 
+    @Override
+    public void setLayerSrc(SyncLayer srcLayer) {
+        super.setLayerSrc(srcLayer);
+        handleImgSource(srcLayer.info.imgUrl,srcLayer.angle);
+    }
 
-    public void handleImgSource(String imgSrc,float angle){
+    public void handleImgSource(String imgSrc, float angle){
         this.angle=angle;
         if(isBase64(imgSrc)){
             layerBm=decodeBg(imgSrc);
@@ -115,4 +120,15 @@ public class SyncRemoteImgLayer extends SyncRemoteLayer {
             }
         });
     }
+
+
+    @Override
+    public Path getScreenPath() {
+        mScreenPath.reset();
+        mScreenPath.set(mDrawingPath);
+        mScreenPath.transform(mDisplayMatrix);
+        return mScreenPath;
+    }
+
+
 }

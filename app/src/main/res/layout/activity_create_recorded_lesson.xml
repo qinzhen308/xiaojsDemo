@@ -30,21 +30,7 @@
         </LinearLayout>
 
 
-        <!--学科类目-->
-        <include layout="@layout/layout_horizontal_line" />
 
-        <LinearLayout style="@style/LiveLessonItem">
-
-            <TextView
-                android:id="@+id/label2"
-                style="@style/LiveLessonCreateTitle"
-                android:text="@string/subject_category" />
-
-            <TextView
-                android:id="@+id/lesson_subject"
-                style="@style/LiveLessonRightEntrance"
-                android:hint="@string/please_select" />
-        </LinearLayout>
 
         <!--主讲-->
         <include layout="@layout/layout_horizontal_line" />
