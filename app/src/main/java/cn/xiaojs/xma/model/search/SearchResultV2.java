@@ -39,6 +39,7 @@ public class SearchResultV2 {
     public Expire expire;
 
     public boolean isFollowed;
+    public String ticket;
 
 
     public String getType(){

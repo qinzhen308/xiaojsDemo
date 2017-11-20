@@ -17,15 +17,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.CriteriaStudents;
+import cn.xiaojs.xma.model.ctl.CriteriaStudentsDoc;
+import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
@@ -98,18 +105,65 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url=ApiManager.getShareLessonUrl(mData.id,Account.TypeName.CLASS_LESSON);
-                if(url.contains("?")){
-                    url+="&app=android";
+                checkJoinClassStateAndEnterClassroom();
+            }
+        });
+    }
+
+    private void checkJoinClassStateAndEnterClassroom(){
+        showLoadingDialog(true);
+        CriteriaStudents criteria=new CriteriaStudents();
+        criteria.roles=new String[]{"ClassStudent"};
+        CriteriaStudentsDoc doc=new CriteriaStudentsDoc();
+        doc.id=mData.id;
+        doc.subtype="PrivateClass";
+        criteria.docs=new CriteriaStudentsDoc[]{doc};
+        LessonDataManager.getClasses(getContext(),criteria , new APIServiceCallback<Students>() {
+            @Override
+            public void onSuccess(Students object) {
+                cancelLoadingDialog();
+                if(object!=null){
+                    if(!ArrayUtil.isEmpty(object.classes)){
+                        Classroom2Activity.invoke(getContext(),mData.ticket);
+                    }else {
+                        String url= ApiManager.getShareLessonUrl(mData.id, Account.TypeName.CLASS_LESSON);
+                        if(url.contains("?")){
+                            url+="&app=android";
+                        }else {
+                            url+="?app=android";
+                        }
+                        CommonWebActivity.invoke(getContext(),"",url);
+                    }
                 }else {
-                    url+="?app=android";
+                    String url= ApiManager.getShareLessonUrl(mData.id, Account.TypeName.CLASS_LESSON);
+                    if(url.contains("?")){
+                        url+="&app=android";
+                    }else {
+                        url+="?app=android";
+                    }
+                    CommonWebActivity.invoke(getContext(),"",url);
                 }
-                CommonWebActivity.invoke(getContext(),"",url);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelLoadingDialog();
+                ToastUtil.showToast(getContext(),errorMessage);
             }
         });
     }
 
 
+    private void showLoadingDialog(boolean cancelable){
+        if(getContext() instanceof IDialogMethod){
+            ((IDialogMethod)getContext()).showProgress(cancelable);
+        }
+    }
+    private void cancelLoadingDialog(){
+        if(getContext() instanceof IDialogMethod){
+            ((IDialogMethod)getContext()).cancelProgress();
+        }
+    }
 
 
 }

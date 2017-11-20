@@ -19,19 +19,29 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.CriteriaStudents;
+import cn.xiaojs.xma.model.ctl.CriteriaStudentsDoc;
+import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.search.AccountInfo;
 import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.base.BaseBusiness;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
+import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
 import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/5/23.
