@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/activity_test_api"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,7 +9,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical"
-        tools:context="cn.xiaojs.xma.cn.xiaojs.xma.ui.TestAPIActivity">
+        >
 
 
     <Button
@@ -72,6 +71,22 @@
 
 
     </FrameLayout>
+
+    <cn.xiaojs.xma.ui.classroom2.widget.O2oDragLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/darkgreen">
+
+        <TextView
+                android:id="@+id/nnd"
+                android:layout_width="@dimen/px100"
+                android:layout_height="@dimen/px100"
+                android:background="@color/blue"
+                android:layout_centerInParent="true"
+                android:text="nnd"
+                android:clickable="true"/>
+
+    </cn.xiaojs.xma.ui.classroom2.widget.O2oDragLayout>
 
 
 </LinearLayout>

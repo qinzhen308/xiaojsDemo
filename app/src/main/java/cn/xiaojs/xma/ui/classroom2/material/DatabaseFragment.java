@@ -56,6 +56,7 @@ public class DatabaseFragment extends BottomSheetFragment
     private ArrayList<Fragment> fragmentList;
 
     private DatabaseListFragment databaseListFragment;
+    private DatabaseListFragment classMaterialFragment;
 
     private FrameLayout thirdLayout;
     private BottomSheetFragment thirdFragment;
@@ -83,14 +84,15 @@ public class DatabaseFragment extends BottomSheetFragment
 
         fragmentList = new ArrayList<>(2);
 
+        String clsId = classroomEngine.getCtlSession().cls.id;
+        classMaterialFragment = DatabaseListFragment.invokeWithIdAndSubtype(
+                clsId, Collaboration.SubType.PRIVATE_CLASS);
+
         databaseListFragment = DatabaseListFragment.invoke();
         databaseListFragment.setOnOperatingListener(this);
+
         fragmentList.add(databaseListFragment);
-
-
-        String clsId = classroomEngine.getCtlSession().cls.id;
-        fragmentList.add(DatabaseListFragment.invokeWithIdAndSubtype(
-                clsId, Collaboration.SubType.PRIVATE_CLASS));
+        fragmentList.add(classMaterialFragment);
 
         FrgStatePageAdapter pageAdapter = new FrgStatePageAdapter(getChildFragmentManager());
         pageAdapter.setList(fragmentList);
@@ -187,6 +189,17 @@ public class DatabaseFragment extends BottomSheetFragment
         }
 
         downloadBtn.setImageResource(R.drawable.ic_class_database_mydownload_1);
+    }
+
+    @Override
+    public void onMaterialShared(String classid) {
+        if (classMaterialFragment != null && classMaterialFragment.isAdded()) {
+
+            if (classid.equals(classroomEngine.getCtlSession().cls.id)) {
+                classMaterialFragment.refreshData();
+            }
+
+        }
     }
 
     class FrgStatePageAdapter extends FragmentStatePagerAdapter {
@@ -289,12 +302,12 @@ public class DatabaseFragment extends BottomSheetFragment
         thirdLayout.setId(R.id.fragment_database_framelayout);
         thirdLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        ((RelativeLayout)rootLayout).addView(thirdLayout);
+        ((RelativeLayout) rootLayout).addView(thirdLayout);
     }
 
-    private void destoryThird(){
+    private void destoryThird() {
 
-        if (thirdFragment !=null) {
+        if (thirdFragment != null) {
             getChildFragmentManager()
                     .beginTransaction()
                     .remove(thirdFragment)
@@ -302,8 +315,8 @@ public class DatabaseFragment extends BottomSheetFragment
             thirdFragment = null;
         }
 
-        if (thirdLayout !=null) {
-            ((RelativeLayout)rootLayout).removeView(thirdLayout);
+        if (thirdLayout != null) {
+            ((RelativeLayout) rootLayout).removeView(thirdLayout);
             thirdLayout = null;
         }
 

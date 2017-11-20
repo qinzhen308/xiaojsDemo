@@ -129,6 +129,15 @@ public abstract class AVFragment extends MovieFragment
         return vis;
     }
 
+    protected boolean makeCameraStreamOnly() {
+        boolean changed = hiddeWhiteboardContainer();
+        if (changed) {
+            streamingEngine.togglePictureStreaming();
+        }
+
+        return changed;
+    }
+
     @Override
     public void onAVStateChanged(StreamingState streamingState, Object extra) {
         switch (streamingState) {

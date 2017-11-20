@@ -582,13 +582,25 @@ public abstract class MovieFragment extends BaseRoomFragment
         }
     }
 
+    public boolean hiddeWhiteboardContainer() {
+         if (whiteboardContainerLayout.getVisibility() != View.GONE) {
+             whiteboardContainerLayout.setVisibility(View.GONE);
+             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
+             return true;
+         }
+
+         return false;
+     }
+
     public int onSwitchStreamingClick(View view) {
         int vis = whiteboardContainerLayout.getVisibility() == View.VISIBLE ?
                 View.INVISIBLE : View.VISIBLE;
 
         if (vis == View.VISIBLE) {
+            lRightSwitchcameraView.setVisibility(View.GONE);
             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtovideo);
         } else {
+            lRightSwitchcameraView.setVisibility(View.VISIBLE);
             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
         }
 

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.xiaojs.xma.R;
@@ -63,6 +64,8 @@ public class TestAPIActivity extends Activity {
     private IWXAPI iwxapi;
     private Tencent tencent;
 
+    private TextView nndTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,13 @@ public class TestAPIActivity extends Activity {
 //        tencent = QQUtil.getTencent(this.getApplicationContext());
 
 
+        nndTextView = (TextView) findViewById(R.id.nnd);
+        nndTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TestAPIActivity.this, "nnd", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
     }

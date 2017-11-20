@@ -99,6 +99,7 @@ public class DatabaseListFragment extends BaseRoomFragment
         void onEnterFolder();
         void onBackSuper();
         void onEnterSearch();
+        void onMaterialShared(String classid);
     }
 
     public static DatabaseListFragment invoke() {
@@ -534,7 +535,7 @@ public class DatabaseListFragment extends BaseRoomFragment
 
     private void toPatchShare(final Contact choosedClass, final String docId, boolean repeat) {
 
-        ShareResource resource = new ShareResource();
+        final ShareResource resource = new ShareResource();
         resource.documents = new String[] {docId};
         resource.subtype = choosedClass.subtype;
         resource.repeated = repeat;
@@ -552,6 +553,13 @@ public class DatabaseListFragment extends BaseRoomFragment
                 } else {
                     //shareSuccess(targetId, classname, subType);
                     ToastUtil.showToast(getContext(), R.string.shareok_and_to_class);
+
+
+
+                }
+
+                if (operatingListener !=null) {
+                    operatingListener.onMaterialShared(choosedClass.account);
                 }
             }
 
