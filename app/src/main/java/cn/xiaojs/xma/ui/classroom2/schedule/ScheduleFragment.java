@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -41,6 +42,7 @@ import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.base.BottomSheetFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
@@ -135,6 +137,9 @@ public class ScheduleFragment extends BottomSheetFragment
                     }
                     ((Classroom2Activity) getContext()).enterPlayback(doc);
                     dismiss();
+                }else if(what == EVENT_3){
+                    //点击老师头像，进聊天页面
+                    SingleSessionFragment.invoke(getFragmentManager(),(String)object[0],(String)object[1],-1);
                 }
             }
         });

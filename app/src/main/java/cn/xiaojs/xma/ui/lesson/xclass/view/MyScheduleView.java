@@ -7,12 +7,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -44,6 +42,7 @@ import cn.xiaojs.xma.ui.view.TextInBgSpan;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.LabelImageView;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.MaterialUtil;
 
 /**
@@ -595,22 +594,49 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
 
     }
 
+    @OnClick(R.id.iv_avatar)
+    public void clickTeacher(){
+        enterTalk(mData.teacher.getId(),mData.teacher.getBasic()==null||TextUtils.isEmpty(mData.teacher.getBasic().getName())?mData.teacher.name:mData.teacher.getBasic().getName());
+    }
+
     @OnClick(R.id.iv_avatar1)
     public void showAssistantDialog(){
-        if(mData.advisers==null||mData.advisers.length>=2){
+        if(ArrayUtil.isEmpty(mData.assistants)){
+            return;
+        }
+        if(mData.assistants.length==1){
+            enterTalk(mData.assistants[0].getId(),
+                    mData.assistants[0].getBasic()==null||
+                            TextUtils.isEmpty(mData.assistants[0].getBasic().getName())?
+                            mData.assistants[0].name:mData.assistants[0].getBasic().getName());
             return;
         }
         Common3Dialog dialog=new Common3Dialog(getContext());
         ListView content= new ListView(getContext());
         content.setDivider(new ColorDrawable(getResources().getColor(R.color.main_bg)));
         content.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.px2));
-        String[] teachers=new String[mData.advisers.length];
-        for(int i=0;i<mData.advisers.length;i++)teachers[i]=mData.advisers[i].name;
-        content.setAdapter(new ArrayAdapter<String>(getContext(),R.layout.item_simple_text,R.id.textview,teachers));
-        dialog.setTitle("助教（"+teachers.length+"）");
+        TeacherAdapter adapter=new TeacherAdapter((Activity) getContext());
+        adapter.setList(mData.assistants);
+        content.setAdapter(adapter);
+        content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                enterTalk(mData.assistants[position].getId(),
+                        mData.assistants[position].getBasic()==null||
+                                TextUtils.isEmpty(mData.assistants[position].getBasic().getName())?
+                                mData.assistants[position].name:mData.assistants[position].getBasic().getName());
+            }
+        });
+        dialog.setTitle("助教（"+mData.assistants.length+"）");
         dialog.setCustomView(content);
         dialog.needCloseBtn(true);
         dialog.show();
+    }
+
+    private void enterTalk(String id, String title){
+        if(mEventCallback!=null){
+            mEventCallback.onEvent(EventCallback.EVENT_3,id,title);
+        }
     }
 
     private EventCallback mEventCallback;
@@ -618,4 +644,5 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
     public void setCallback(EventCallback eventCallback) {
         mEventCallback = eventCallback;
     }
+
 }

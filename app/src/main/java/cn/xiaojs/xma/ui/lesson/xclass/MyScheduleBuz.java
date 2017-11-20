@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
@@ -53,6 +54,7 @@ import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.recordedlesson.RecordedLessonCriteria;
 import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.ScanQrcodeActivity;
+import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonCreationActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.model.ClassFooterModel;
@@ -133,6 +135,9 @@ public class MyScheduleBuz {
                 case EVENT_1://切换班和录播课
                     curSubTab = (int) object[0];
                     bindHomeDatas(false);
+                    break;
+                case EVENT_3://点击老师头像，进聊天页面
+                    SingleSessionFragment.invoke(((FragmentActivity)mContext).getSupportFragmentManager(),(String)object[0],(String)object[1],-1);
                     break;
             }
         }
