@@ -54,6 +54,7 @@ import cn.xiaojs.xma.ui.classroom2.member.ChooseMemberFragment;
 import cn.xiaojs.xma.ui.classroom2.member.ShareToFragment;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.classroom2.widget.CameraPreviewFrameView;
+import cn.xiaojs.xma.ui.classroom2.widget.O2oDragLayout;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
@@ -73,7 +74,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         BaseLiveView.ControlListener {
 
     @BindView(R.id.stream_root_lay)
-    RelativeLayout streamRootLayout;
+    O2oDragLayout streamRootLayout;
     @BindView(R.id.videostream_view)
     VideoStreamView videoStreamView;
     @BindView(R.id.video_play)
@@ -97,8 +98,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private int frontMarginLeft;
     private int frontMarginTop;
     private int frontViewIndex = 5; //如果动了XML中的布局，需要更新此index
-    private int backViewIndex = 1;
-
+    private int backViewIndex = 0;
 
     @Nullable
     @Override
@@ -118,6 +118,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         frontMarginLeft = getResources().getDimensionPixelSize(R.dimen.o2o_margin_left);
         frontMarginTop = getResources().getDimensionPixelSize(R.dimen.o2o_margin_top);
 
+        //streamRootLayout.setDragEnable(false);
+
         showLoading();
 
         initControlView();
@@ -128,6 +130,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         videoStreamView.setControlEnabled(false);
         videoStreamView.setControlListener(this);
+        videoStreamView.setCloseViewVisibility(View.GONE);
 
         livingObserver = classroomEngine.observerLiving(receivedConsumer);
         classroomEngine.setLiveTimerObserver(livingObserver);
@@ -151,13 +154,13 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         if (liveView == null)
             return;
 
-        if (liveView == videoStreamView) {
+        if (liveView == playView) {
 
             if (streamRootLayout.indexOfChild(videoStreamView) == frontViewIndex) {
                 bringToBack(videoStreamView);
                 bringToFront(playView);
             }
-            closeMedia();
+            stopPlay(true);
         }
 
 
@@ -167,18 +170,35 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     @Override
     public void onLiveViewScaled(BaseLiveView liveView) {
 
-//        if (liveView == null)
-//            return;
-//
-//        if (liveView == playView) {
-//            bringToBack(playView);
-//            bringToFront(videoStreamView);
-//
-//        } else if (liveView == videoStreamView) {
-//            bringToBack(videoStreamView);
-//            bringToFront(playView);
-//        }
+        if (liveView == null)
+            return;
 
+        makeCameraStreamOnly();
+        //streamRootLayout.setDragEnable(true);
+
+        if (liveView == playView) {
+            bringToBack(playView);
+            bringToFront(videoStreamView);
+            //streamRootLayout.setLiveView(videoStreamView);
+
+        } else if (liveView == videoStreamView) {
+            bringToBack(videoStreamView);
+            bringToFront(playView);
+            //streamRootLayout.setLiveView(playView);
+        }
+
+    }
+
+    @Override
+    protected boolean makeCameraStreamOnly() {
+        boolean changed = super.makeCameraStreamOnly();
+        if (changed) {
+            lRightSwitchVbView.setVisibility(View.GONE);
+            controlClickView.setVisibility(View.VISIBLE);
+            startHiddenTimer(controlLand);
+        }
+
+        return changed;
     }
 
     @Override
@@ -432,14 +452,14 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         lp.width = MATCH_PARENT;
         lp.setMargins(0,0,0,0);
 
-//        if (target == playView) {
-//            playView.stopPlay();
-//        }
+        if (target == playView) {
+            playView.stopPlay();
+        }
         streamRootLayout.removeView(target);
         streamRootLayout.addView(target, backViewIndex);
-//        if (target == playView) {
-//            playView.startPlay(classroomEngine.getPlayUrl());
-//        }
+        if (target == playView) {
+            playView.startPlay(classroomEngine.getPlayUrl());
+        }
 
 
 
@@ -643,9 +663,11 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             if (streamRootLayout.indexOfChild(videoStreamView) == frontViewIndex) {
                 bringToBack(videoStreamView);
                 bringToFront(playView);
+
             }
         }
-
+        lRightSwitchVbView.setVisibility(View.VISIBLE);
+        //streamRootLayout.setDragEnable(false);
         playView.stopPlay();
         playView.setVisibility(View.GONE);
         one2oneAttendee = null;

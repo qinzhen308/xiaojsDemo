@@ -8,8 +8,6 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 import cn.xiaojs.xma.XiaojsConfig;
-import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
-import cn.xiaojs.xma.data.api.ApiManager;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;

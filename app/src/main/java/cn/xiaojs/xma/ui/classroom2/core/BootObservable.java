@@ -93,6 +93,9 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
             if (XiaojsConfig.DEBUG) {
                 Logger.d("BootListener dispose now!");
             }
+
+            socketManager.disConnect();
+
             cancelBoot();
             offTimout();
             offSocket();
@@ -249,7 +252,6 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                 socketManager.off(Socket.EVENT_DISCONNECT, disConnectListener);
                 socketManager.off(Socket.EVENT_CONNECT_ERROR, errorListener);
                 socketManager.off(Socket.EVENT_CONNECT_TIMEOUT, timeoutListener);
-
             }
         }
 

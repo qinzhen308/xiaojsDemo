@@ -124,12 +124,6 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
             mholder.opera1View.setVisibility(View.VISIBLE);
         }
 
-        if (subType == Collaboration.SubType.PRIVATE_CLASS) {
-            mholder.opera4View.setVisibility(View.GONE);
-        } else {
-            mholder.opera4View.setVisibility(View.VISIBLE);
-        }
-
         if (doc.owner.id.equals(mId)) {
             mholder.opera2View.setVisibility(View.VISIBLE);
             mholder.opera3View.setVisibility(View.VISIBLE);
@@ -138,6 +132,14 @@ public class MaterialAdapter extends LoadmoreRecyclerView.LMAdapter {
             mholder.opera3View.setVisibility(View.GONE);
             mholder.opera2View.setVisibility(View.GONE);
             mholder.expandView.setVisibility(View.GONE);
+        }
+
+        if (subType == Collaboration.SubType.PRIVATE_CLASS) {
+            mholder.opera4View.setVisibility(View.GONE);
+            mholder.opera2View.setVisibility(View.GONE);
+        } else {
+            mholder.opera4View.setVisibility(View.VISIBLE);
+            mholder.opera2View.setVisibility(View.VISIBLE);
         }
 
 
