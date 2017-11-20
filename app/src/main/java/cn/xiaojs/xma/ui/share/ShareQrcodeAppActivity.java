@@ -20,7 +20,7 @@ import cn.xiaojs.xma.util.ShareUtil;
  * Created by Paul Z on 2017/8/1.
  */
 
-public class ShareQrcodeAppActivity extends BaseActivity {
+public class ShareQrcodeAppActivity extends BaseShareQrcodeActivity {
 
 
     @BindView(R.id.layout_content)

@@ -16,11 +16,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.DataChangeHelper;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.ctl.CriteriaStudents;
 import cn.xiaojs.xma.model.ctl.CriteriaStudentsDoc;
@@ -28,8 +30,12 @@ import cn.xiaojs.xma.model.ctl.JoinClassParams;
 import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.recordedlesson.RLessonDetail;
+import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.MainActivity;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.lesson.xclass.util.IDialogMethod;
+import cn.xiaojs.xma.ui.personal.PersonHomeActivity;
+import cn.xiaojs.xma.ui.personal.PersonalBusiness;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import okhttp3.ResponseBody;
 
@@ -40,6 +46,8 @@ import okhttp3.ResponseBody;
 public class JsInvokeNativeInterface {
     public static final String TYPE_JION_CLASS="classhome";
     public static final String TYPE_JION_RECORDED_LESSON="recordedCourse";
+    public static final String TYPE_ENTER_CLASSROOM="enterClassroom";
+    public static final String TYPE_ENTER_PERSON_HOME="enterPersonHome";
 
 
     Activity context;
@@ -95,11 +103,49 @@ public class JsInvokeNativeInterface {
                 joinClassBuz(object);
             }else if(TYPE_JION_RECORDED_LESSON.equals(tpye)){
                 joinRecordedLesson(object);
+            }else if(TYPE_ENTER_CLASSROOM.equals(tpye)){
+                enterClassroomBuz(object);
+            }else if(TYPE_ENTER_PERSON_HOME.equals(tpye)){
+                enterPersonHomeBuz(object);
             }
         } catch (JSONException e) {
             e.printStackTrace();
             showToastOnUiThread("参数解析失败");
         }
+    }
+
+    /**
+     * 进教室逻辑
+     * @param object
+     */
+    private void enterClassroomBuz(JSONObject object){
+        JSONObject data=object.optJSONObject("data");
+        String id=data.optString("id");
+        String ticket=data.optString("ticket");
+        String ownerID=data.optString("ownerID");
+        boolean visitor=data.optBoolean("visitor");
+        if(AccountDataManager.getAccountID(context).equals(ownerID)){
+            //自己的教室
+            Classroom2Activity.invoke(context,ticket);
+        }else if(visitor){
+            //允许访客进入
+            Classroom2Activity.invoke(context,ticket);
+        }else {
+            //判断是否加入了
+            checkJoinClassStateAndEnterClassroom(id,ticket);
+        }
+    }
+
+    /**
+     * 进个人主页逻辑
+     * @param object
+     */
+    private void enterPersonHomeBuz(JSONObject object){
+        JSONObject data=object.optJSONObject("data");
+        String id=data.optString("id");
+        Intent intent = new Intent(context, PersonHomeActivity.class);
+        intent.putExtra(PersonalBusiness.KEY_PERSONAL_ACCOUNT, id);
+        context.startActivity(intent);
     }
 
     /**
@@ -352,6 +398,43 @@ public class JsInvokeNativeInterface {
                         showToastOnUiThread("您已提交申请，请等待班主任确认");
                     }else {
                         checkJoinNeedVerify(lessonId,needVerify);
+                    }
+                }else {
+                    showToastOnUiThread("解析失败");
+                }
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelDialogOnUiThread();
+                showToastOnUiThread(errorMessage);
+            }
+        });
+    }
+
+    private void checkJoinClassStateAndEnterClassroom(final String classid,final String ticket){
+        showDialogOnUiThread();
+        CriteriaStudents criteria=new CriteriaStudents();
+        criteria.roles=new String[]{"ClassStudent"};
+        CriteriaStudentsDoc doc=new CriteriaStudentsDoc();
+        doc.id=classid;
+        doc.subtype="PrivateClass";
+        criteria.docs=new CriteriaStudentsDoc[]{doc};
+        LessonDataManager.getClasses(context,criteria , new APIServiceCallback<Students>() {
+            @Override
+            public void onSuccess(Students object) {
+                cancelDialogOnUiThread();
+                if(object!=null){
+                    if(!ArrayUtil.isEmpty(object.classes)){
+                        Classroom2Activity.invoke(context,ticket);
+                    }else {
+                        String url= ApiManager.getShareLessonUrl(classid, Account.TypeName.CLASS_LESSON);
+                        if(url.contains("?")){
+                            url+="&app=android";
+                        }else {
+                            url+="?app=android";
+                        }
+                        CommonWebActivity.invoke(context,"",url);
                     }
                 }else {
                     showToastOnUiThread("解析失败");

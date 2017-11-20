@@ -52,7 +52,7 @@ import cn.xiaojs.xma.util.ShareUtil;
  * Created by Paul Z on 2017/8/1.
  */
 
-public class ShareQrcodeClassroomActivity extends BaseActivity {
+public class ShareQrcodeClassroomActivity extends BaseShareQrcodeActivity {
 
     public static final String EXTRA_QRCODE_TYPE = "qr_type";
     public static final String EXTRA_KEY_TITLE = "extra_key_title";
