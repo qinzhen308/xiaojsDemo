@@ -24,6 +24,7 @@ public abstract class DataObserver {
     public void onConversationMove(Contact contact, int fromIndex, int toIndex){}
     // 会话列表中的某条会话被删除
     public void onConversationRemoved(String conversationId){}
+    public void onConversationsRemoved(String[] conversationIds){}
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

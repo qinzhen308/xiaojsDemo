@@ -13,11 +13,13 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.socket.RemoveDlgReceived;
 import cn.xiaojs.xma.model.socket.SyncClassesReceived;
 import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
@@ -168,6 +170,24 @@ public class DataProvider {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Person
     //
+
+    public String getPersonName(String contactId) {
+        Contact contact = getPersonById(contactId);
+        if (contact != null) {
+            return contact.name;
+        }
+        return null;
+    }
+
+    public int getFollowtypeFromContact(String contactId) {
+
+        Contact contact = getPersonById(contactId);
+        if (contact != null) {
+            return contact.followType;
+        }
+        return Social.FllowType.NA;
+    }
+
     public boolean existInContact(String aid) {
 
         if (personsMapping != null && personsMapping.size() > 0) {
@@ -278,13 +298,30 @@ public class DataProvider {
     }
 
     public boolean existInClasses(String accountId) {
-        return classesMapping == null? false : classesMapping.get(accountId) != null;
+        return classesMapping == null ? false : classesMapping.get(accountId) != null;
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Conversation
     //
+
+    public void removeConversations(String[] conversationIds) {
+        if (conversationIds == null)
+            return;
+
+        for (String conversationId : conversationIds) {
+            Contact tempContact = new Contact();
+            tempContact.id = conversationId;
+            conversations.remove(tempContact);
+        }
+
+        if (dataObservers != null) {
+            for (DataObserver observer : dataObservers) {
+                observer.onConversationsRemoved(conversationIds);
+            }
+        }
+    }
 
     public void removeConversation(String conversationId) {
         if (TextUtils.isEmpty(conversationId))
@@ -359,8 +396,13 @@ public class DataProvider {
         int index = conversations.indexOf(contact);
         if (index >= 0) {
             Contact oriContact = conversations.get(index);
-            oriContact.lastTalked = contact.lastTalked;
-            oriContact.lastMessage = contact.lastMessage;
+            if (contact.lastTalked != 0) {
+                oriContact.lastTalked = contact.lastTalked;
+            }
+
+            if (contact.lastMessage != null) {
+                oriContact.lastMessage = contact.lastMessage;
+            }
             oriContact.unread = oriContact.unread + contact.unread;
 
             if (!TextUtils.isEmpty(contact.signature)) {
@@ -382,6 +424,11 @@ public class DataProvider {
 
         } else {
 
+            if (contact.subtype == ConversationType.TypeName.PRIVATE_CLASS
+                    && !existInClasses(contact.id)) {//此处是为了防止游客的情况；
+                return;
+            }
+
             conversations.add(1, contact);
 
             if (dataObservers != null) {
@@ -393,6 +440,42 @@ public class DataProvider {
             vibrate(contact);
         }
 
+    }
+
+
+    public void conversationRetained(Contact contact) {
+        if (contact == null)
+            return;
+
+        int index = conversations.indexOf(contact);
+        if (index >= 0) {
+            Contact oriContact = conversations.get(index);
+            if (index != 1) {
+                conversations.remove(index);
+                conversations.add(1, oriContact);
+
+                if (dataObservers != null) {
+                    for (DataObserver observer : dataObservers) {
+                        observer.onConversationMove(oriContact, index, 1);
+                    }
+                }
+            }
+
+        } else {
+
+            if (contact.subtype == ConversationType.TypeName.PRIVATE_CLASS
+                    && !existInClasses(contact.id)) {//此处是为了防止游客的情况；
+                return;
+            }
+
+            conversations.add(1, contact);
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationInsert(contact, 1);
+                }
+            }
+
+        }
     }
 
     public void conversationOpened(Contact contact) {
@@ -415,12 +498,15 @@ public class DataProvider {
 
         } else {
 
-            if (existInClasses(contact.id)) {//此处是为了防止游客的情况；
-                conversations.add(1, contact);
-                if (dataObservers != null) {
-                    for (DataObserver observer : dataObservers) {
-                        observer.onConversationInsert(contact, 1);
-                    }
+            if (contact.subtype == ConversationType.TypeName.PRIVATE_CLASS
+                    && !existInClasses(contact.id)) {//此处是为了防止游客的情况；
+                return;
+            }
+
+            conversations.add(1, contact);
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationInsert(contact, 1);
                 }
             }
 
@@ -428,7 +514,7 @@ public class DataProvider {
 
         RetainDlg retainDlg = new RetainDlg();
         retainDlg.to = contact.id;
-        retainDlg.type = ConversationType.getConversationType(contact.subtype);
+        retainDlg.type = ConversationType.getTalkType(contact.subtype);
         XMSManager.sendRetainDialog(context, retainDlg, null);
     }
 
@@ -511,8 +597,11 @@ public class DataProvider {
                     updateDlgRead(talk.type, talk.to);
                     break;
                 case Su.EventType.REMOVE_DIALOG:
+
                     break;
                 case Su.EventType.RETAIN_DIALOG:
+                    Talk retainDlg = (Talk) eventReceived.t;
+                    handleRetainDlg(retainDlg);
                     break;
                 case Su.EventType.CHANGE_NOTIFY:
                     ChangeNotifyReceived received = (ChangeNotifyReceived) eventReceived.t;
@@ -531,6 +620,41 @@ public class DataProvider {
         updateConversationUnread(to, 0);
     }
 
+    private void handleRemoveDlg(RemoveDlgReceived received) {
+        if (received == null)
+            return;
+
+        if (received.type == Communications.TalkType.OPEN) {
+            removeConversation(received.cls);
+        } else if (received.type == Communications.TalkType.PEER) {
+            removeConversations(received.peers);
+        }
+    }
+
+    private void handleRetainDlg(Talk talkItem) {
+
+        if (talkItem == null)
+            return;
+
+        Contact contact = new Contact();
+        if (talkItem.type == Communications.TalkType.PEER) {
+            contact.id = talkItem.from;
+            contact.name = talkItem.name;
+            contact.title = talkItem.name;
+            contact.subtype = ConversationType.TypeName.PERSON;
+            contact.followType = talkItem.followType;
+        } else if (talkItem.type == Communications.TalkType.OPEN) {
+            contact.id = talkItem.to;
+            String title = TextUtils.isEmpty(talkItem.name) ? getClassName(talkItem.to) : talkItem.name;
+            contact.name = title;
+            contact.title = title;
+            contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
+        } else {
+            return;
+        }
+
+        conversationRetained(contact);
+    }
 
     private void updateConveration(Talk talkItem) {
         if (TextUtils.isEmpty(talkItem.name)) {
@@ -538,16 +662,15 @@ public class DataProvider {
         }
         Contact contact = new Contact();
 
-        //FIXME followType 没返回
-
         if (talkItem.type == Communications.TalkType.PEER) {
             contact.id = talkItem.from;
             contact.name = talkItem.name;
             contact.title = talkItem.name;
             contact.subtype = ConversationType.TypeName.PERSON;
+            contact.followType = talkItem.followType;
         } else if (talkItem.type == Communications.TalkType.OPEN) {
             contact.id = talkItem.to;
-            String title = getClassName(talkItem.to);
+            String title = TextUtils.isEmpty(talkItem.name) ? getClassName(talkItem.to) : talkItem.name;
             contact.name = title;
             contact.title = title;
             contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
@@ -562,6 +685,13 @@ public class DataProvider {
             if (talkItem.signature.equals(Su.getLiveStreamingSignature())) {
 
                 contact.state = Live.LiveSessionState.LIVE;
+            } else if (talkItem.signature.equals(Su.getFollowSignature())) {
+
+                //TODO 被关注
+            } else if (talkItem.signature.equals(Su.getUnFollowSignature())) {
+
+                //TODO 被取消关注
+
             } else {//FIXME 此处要判断多种状态，目前接口支持不全；
                 contact.state = Live.LiveSessionState.IDLE;
             }

@@ -114,6 +114,12 @@ public class ConversationFragment extends Base2Fragment {
             adapter.notifyDataSetChanged();
             updateTips();
         }
+
+        @Override
+        public void onConversationsRemoved(String[] conversationIds) {
+            adapter.notifyDataSetChanged();
+            updateTips();
+        }
     };
 
 
@@ -172,14 +178,9 @@ public class ConversationFragment extends Base2Fragment {
 
                 }else {
 
-                    if (contact.followType == Social.FllowType.NA) {
-                        if (dataProvider.existInContact(contact.id)) {
-                            contact.followType = Social.FllowType.FOLLOW_SHIP;
-                        }
-                    }
-
+                    String title = TextUtils.isEmpty(contact.title)? contact.name : contact.title;
                     SingleSessionFragment.invoke(getFragmentManager(),contact.id,
-                            contact.title, contact.followType);
+                            title, contact.followType);
                 }
             }
         });

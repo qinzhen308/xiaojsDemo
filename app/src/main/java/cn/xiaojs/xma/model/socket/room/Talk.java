@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.social.Contact;
 
 /**
  * Created by maxiaobao on 2017/7/7.
@@ -24,7 +25,6 @@ public class Talk implements Serializable{
     public long stime;
     public String name;
     public String subtype;
-    public boolean retainOnTalk;
     public String signature;
 
 
@@ -34,6 +34,12 @@ public class Talk implements Serializable{
     public int xa;
     public String xav;
     public int sort;
+
+
+    public boolean depressed;
+    public Contact.MetIn metIn;
+
+    public int followType;
 
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)

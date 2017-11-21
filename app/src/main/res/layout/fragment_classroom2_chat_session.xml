@@ -117,4 +117,19 @@
             />
 
 
+    <TextView
+            android:id="@+id/pop_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/class_enterclassroombg"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_28px"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/px21"
+            android:layout_marginLeft="@dimen/px22"
+            app:layout_constraintBottom_toTopOf="@id/bottom_line"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:visibility="gone"/>
+
+
 </android.support.constraint.ConstraintLayout>

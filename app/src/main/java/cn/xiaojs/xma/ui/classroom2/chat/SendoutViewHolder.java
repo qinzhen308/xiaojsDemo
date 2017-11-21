@@ -3,7 +3,9 @@ package cn.xiaojs.xma.ui.classroom2.chat;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -12,9 +14,13 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
+import cn.xiaojs.xma.ui.view.ChatPopupMenu;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 
 /**
@@ -34,6 +40,13 @@ public class SendoutViewHolder extends ChatViewHolder {
     TextView contentTextView;
     @BindView(R.id.content_img)
     ImageView contentImgView;
+
+    @BindView(R.id.error_layout)
+    LinearLayout errorLayout;
+    @BindView(R.id.error_tip)
+    TextView errorTipsView;
+    @BindView(R.id.resend)
+    Button resendView;
 
 
     public SendoutViewHolder(Context context, View itemView) {
@@ -70,7 +83,7 @@ public class SendoutViewHolder extends ChatViewHolder {
             contentTextView.setVisibility(View.VISIBLE);
             contentImgView.setVisibility(View.GONE);
 
-        }else if (item.body.contentType == Communications.ContentType.STYLUS) {
+        } else if (item.body.contentType == Communications.ContentType.STYLUS) {
 
             if (!TextUtils.isEmpty(item.body.text)) {
 
@@ -79,7 +92,7 @@ public class SendoutViewHolder extends ChatViewHolder {
                         .load(imgData)
                         .into(getImgViewTarget(0, contentImgView));
 
-            }else {
+            } else {
 
                 String imgUrl = ClassroomBusiness.getSnapshot(item.body.drawing.name, MAX_SIZE);
                 Glide.with(context)
@@ -90,9 +103,37 @@ public class SendoutViewHolder extends ChatViewHolder {
             contentTextView.setVisibility(View.GONE);
             contentImgView.setVisibility(View.VISIBLE);
 
-        }else {
+        } else {
             contentTextView.setVisibility(View.GONE);
             contentImgView.setVisibility(View.GONE);
         }
+
+
+        if (TextUtils.isEmpty(item.error)) {
+            errorLayout.setVisibility(View.GONE);
+        } else {
+            errorLayout.setVisibility(View.VISIBLE);
+        }
+
+        contentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMenu(contentTextView);
+            }
+        });
+
+        resendView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO 重新发送
+            }
+        });
+
+    }
+
+
+    private void showMenu(View view) {
+        ChatPopupMenu chatPopupMenu = new ChatPopupMenu(context);
+        chatPopupMenu.show(view);
     }
 }

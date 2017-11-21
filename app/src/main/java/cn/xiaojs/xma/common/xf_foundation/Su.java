@@ -47,6 +47,8 @@ public class Su {
 
         public static final int TIME_UPDATE = -5555;
 
+        public static final int FOLLOW = 601004;
+        public static final int UNFOLLOW = 601005;
 
         public static final int PRIMARY_SET = 610003;
 
@@ -130,6 +132,15 @@ public class Su {
 
     public static String getLiveStreamingSignature() {
         return EventCategory.LIVE + ":" + EventType.STREAMING_STARTED;
+    }
+
+
+    public static String getFollowSignature() {
+        return EventCategory.XMS_MESSAGING + ":" + EventType.FOLLOW;
+    }
+
+    public static String getUnFollowSignature() {
+        return EventCategory.XMS_MESSAGING + ":" + EventType.UNFOLLOW;
     }
 
 }

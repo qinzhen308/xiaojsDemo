@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/menu_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/font_dark_gray"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+    <Button
+            android:id="@+id/copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="复制"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_15px"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/px10"
+            />
+
+    <Button
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_15px"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/px10"
+            />
+
+</LinearLayout>

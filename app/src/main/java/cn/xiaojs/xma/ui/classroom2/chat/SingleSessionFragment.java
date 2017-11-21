@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -41,7 +42,7 @@ public class SingleSessionFragment extends ChatSessionFragment {
         b.putString(CTLConstant.EXTRA_SESSION_NAME, title);
         b.putInt(CTLConstant.EXTRA_FOLLOWTYPE, followType);
         sessionFragment.setArguments(b);
-        sessionFragment.show(fragmentManager,"ssession");
+        sessionFragment.show(fragmentManager, "ssession");
     }
 
 
@@ -51,9 +52,18 @@ public class SingleSessionFragment extends ChatSessionFragment {
 
         accountId = getArguments().getString(CTLConstant.EXTRA_ACCOUNTID);
         name = getArguments().getString(CTLConstant.EXTRA_SESSION_NAME);
-        titleStr = name;
+
         followType = getArguments().getInt(CTLConstant.EXTRA_FOLLOWTYPE);
 
+        if (TextUtils.isEmpty(name)) {
+            name = dataProvider.getPersonName(accountId);
+        }
+
+        titleStr = name;
+
+        if (followType < 0 || followType == Social.FllowType.NA) {
+            followType = dataProvider.getFollowtypeFromContact(accountId);
+        }
     }
 
 
@@ -102,14 +112,14 @@ public class SingleSessionFragment extends ChatSessionFragment {
 
     private boolean isFollowed() {
 
-        if (followType== Social.FllowType.FOLLOW_SHIP || followType== Social.FllowType.MUTUAL) {
+        if (followType == Social.FllowType.FOLLOW_SHIP || followType == Social.FllowType.MUTUAL) {
             return true;
         }
 
         return false;
     }
 
-    private void toFollowOrCancelFollow(){
+    private void toFollowOrCancelFollow() {
 
         if (isFollowed()) {
             SocialManager.unfollowContact(getContext(), accountId, new APIServiceCallback() {
@@ -118,7 +128,7 @@ public class SingleSessionFragment extends ChatSessionFragment {
 
                     if (followType == Social.FllowType.MUTUAL) {
                         followType = Social.FllowType.FAN_ONLY;
-                    }else {
+                    } else {
                         followType = Social.FllowType.NA;
                     }
                 }
@@ -128,24 +138,24 @@ public class SingleSessionFragment extends ChatSessionFragment {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
-        }else {
+        } else {
             Contact.MetIn metIn = new Contact.MetIn();
             metIn.id = accountId;
             metIn.subtype = Collaboration.SubType.PERSON;
             SocialManager.followContact(getContext(), accountId, name,
                     Social.ContactGroup.FRIENDS, metIn, new APIServiceCallback<Relation>() {
-                @Override
-                public void onSuccess(Relation object) {
-                    if (object !=null) {
-                        followType = object.followType;
-                    }
-                }
+                        @Override
+                        public void onSuccess(Relation object) {
+                            if (object != null) {
+                                followType = object.followType;
+                            }
+                        }
 
-                @Override
-                public void onFailure(String errorCode, String errorMessage) {
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
+                        @Override
+                        public void onFailure(String errorCode, String errorMessage) {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
 
 

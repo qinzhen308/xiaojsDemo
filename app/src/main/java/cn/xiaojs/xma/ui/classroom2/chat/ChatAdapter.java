@@ -72,6 +72,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
             return MessageType.SYSTEM;
         }
 
+        //FIXME 目前判断不出来关注的消息
+
 
         if (talkItem.from == null || myAccountId.equals(talkItem.from.accountId)) {
             return MessageType.SEND_OUT;
@@ -95,6 +97,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
             case MessageType.RECEIVED:
                 holder = new ReceivedViewHolder(context,
                         inflater.inflate(R.layout.layout_classroom2_chat_received,parent,false));
+                break;
+            case MessageType.FOLLOWED:
+                holder = new FollowedViewHolder(context,
+                        inflater.inflate(R.layout.layout_classroom2_chat_followed,parent,false));
                 break;
             case MessageType.SYSTEM:
                 holder = new SystemViewHolder(context,

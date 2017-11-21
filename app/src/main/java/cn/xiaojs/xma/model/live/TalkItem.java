@@ -21,6 +21,10 @@ public class TalkItem {
     public boolean showTime;
 
     public String tips; //仅用于系统消息；
+    public boolean depressed;
+
+
+    public String error;//用于判断是否发送失败，有值说明发送失败
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)

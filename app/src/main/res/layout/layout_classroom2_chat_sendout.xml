@@ -32,17 +32,17 @@
             android:layout_below="@id/time_line"/>
 
     <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:textSize="@dimen/font_24px"
-        android:textColor="@color/font_dark_gray"
-        android:layout_marginRight="@dimen/px22"
-        android:layout_alignTop="@id/avator"
-        android:layout_toLeftOf="@id/avator"
-        android:text="我"
-        />
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="@dimen/font_24px"
+            android:textColor="@color/font_dark_gray"
+            android:layout_marginRight="@dimen/px22"
+            android:layout_alignTop="@id/avator"
+            android:layout_toLeftOf="@id/avator"
+            android:text="我"
+            />
 
     <TextView
             android:id="@+id/content_text"
@@ -56,6 +56,7 @@
             android:layout_toLeftOf="@id/avator"
             android:layout_below="@id/name"
             android:background="@drawable/class_chatbg2"
+            android:clickable="true"
             android:visibility="gone"
             />
 
@@ -73,5 +74,39 @@
             android:background="@drawable/class_chatbg2"
             android:visibility="gone"
             />
+
+    <LinearLayout
+            android:id="@+id/error_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/content_text"
+            android:layout_marginTop="@dimen/px10"
+            android:layout_marginRight="@dimen/px4"
+            android:layout_marginLeft="@dimen/chat_item_content_rl"
+            android:layout_toLeftOf="@id/avator"
+            android:gravity="center"
+            android:visibility="gone">
+
+        <TextView
+                android:id="@+id/error_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_notsendprompt"
+                android:drawablePadding="@dimen/px6"
+                android:textColor="@color/font_light_gray"
+                android:textSize="@dimen/font_18px"
+                android:gravity="center"
+                android:text="消息发送失败"/>
+
+        <Button
+                android:id="@+id/resend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_blue"
+                android:textSize="@dimen/font_20px"
+                android:layout_marginLeft="@dimen/px10"
+                android:text="重新发送"
+                android:background="@android:color/transparent"/>
+    </LinearLayout>
 
 </RelativeLayout>
