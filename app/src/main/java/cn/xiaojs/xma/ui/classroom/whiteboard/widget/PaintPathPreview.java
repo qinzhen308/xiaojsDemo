@@ -71,6 +71,10 @@ public class PaintPathPreview extends View {
         mPath = new Path();
         float mDensity = context.getResources().getDisplayMetrics().density;
         mDpStep = mDensity < 3.0f ? 1.0f : 2.0f;
+        mPreviewLength = getDimensionPixelSize(mContext, R.dimen.px230);
+        mStartX = (getDimensionPixelSize(mContext, R.dimen.px266) - mPreviewLength) / 2;
+        mStartY = (getDimensionPixelSize(mContext, R.dimen.px80)) / 2;
+        mAmplitude = 20f;
     }
 
     private int getDimensionPixelSize(Context context, int resId) {
@@ -79,11 +83,6 @@ public class PaintPathPreview extends View {
 
     public void setPreviewMode(int mode) {
         mPreviewMode = mode;
-
-        mPreviewLength = getDimensionPixelSize(mContext, R.dimen.px230);
-        mStartX = (getDimensionPixelSize(mContext, R.dimen.px266) - mPreviewLength) / 2;
-        mStartY = (getDimensionPixelSize(mContext, R.dimen.px80)) / 2;
-        mAmplitude = 20f;
     }
 
     public void setPaintSize(float size) {

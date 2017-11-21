@@ -470,10 +470,12 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
 
                 //byte[] data = getNV21(inputWidth, inputHeight, targetBitmap);
-
+                Logger.d("----qz thread------");
                 String path = BitmapUtils.savePreviewToFile(targetBitmap);
+                mediaStreamingManager.setPictureStreamingFilePath(path);
 
                 e.onNext(path);
+                e.onComplete();
 
             }
         }).subscribeOn(Schedulers.io())
@@ -487,9 +489,6 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
                         }
 
                         //Drawable d;
-
-                        mediaStreamingManager.setPictureStreamingFilePath(path);
-
 //                        mediaStreamingManager.inputVideoFrame(dataBytes, inputWidth, inputHeight,
 //                                0, false, PLFourCC.FOURCC_NV21, System.nanoTime());
                     }

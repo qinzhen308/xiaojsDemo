@@ -68,7 +68,7 @@ public class ClassroomPopupWindowLayout extends LinearLayout {
         }else if (style == LIGHT_GRAY){
             content.setBackgroundResource(R.drawable.wb_conner_bg);
         }else if(style == TRANS_60){
-            content.setBackgroundResource(R.drawable.bg_wb_tool_panel);
+            content.setBackgroundResource(R.drawable.bg_wb_tool_shape_pop);
         }
         //content.setBackgroundResource(R.drawable.wb_conner_bg);
         //content.setBackgroundColor(Color.RED);

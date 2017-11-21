@@ -963,7 +963,7 @@
     <string name="permission_rationale_camera_audio_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用该功能哦~</string>
     <string name="permission_rationale_camera_audio_room_tip">您已禁止小教室访问相机或麦克风权限，需要开启相机和麦克风权限才可使用教室内直播功能哦~</string>
     <string name="set_public_tip">班级设为公开后，所有人可见，学生可通过搜索班级关键词找到该班</string>
-    <string name="set_public_tip2">学生可以通过搜索班级关键词找到该班</string>
+    <string name="set_public_tip2">可通过关键词搜索找到该教室</string>
 
     <string name="file_rename">文件重命名</string>
     <string name="file_move">移动文件</string>
@@ -1074,6 +1074,7 @@
     <string name="preview_tips">您正在使用"预览模式"</string>
     <string name="contact_empty_tips">这个人什么也没说～</string>
     <string name="no_permision_tips">您没有访问权限，请先加入教室</string>
+    <string name="disband_classroom">解散教室</string>
 
 
 </resources>
