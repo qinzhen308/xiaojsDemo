@@ -8,8 +8,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.orhanobut.logger.Logger;
+
+import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
@@ -22,7 +25,11 @@ import cn.xiaojs.xma.ui.classroom2.chat.GroupSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -32,7 +39,8 @@ import io.reactivex.functions.Consumer;
 public class ChatFragment extends GroupSessionFragment {
 
     private EventListener.ELMember eventListener;
-    private ClassroomEngine classroomEngine;
+    //private ClassroomEngine classroomEngine;
+    private Disposable popAutotimer;
 
 
     @Override
@@ -41,7 +49,7 @@ public class ChatFragment extends GroupSessionFragment {
         hiddenTitleBar();
         hiddenSendBar();
 
-        classroomEngine = ClassroomEngine.getEngine();
+//        classroomEngine = ClassroomEngine.getEngine();
 
         eventListener = ClassroomEngine.getEngine().observerMember(receivedConsumer);
 
@@ -65,6 +73,8 @@ public class ChatFragment extends GroupSessionFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        destoryAutotimer();
 
         if (messageReceiver !=null) {
             getContext().unregisterReceiver(messageReceiver);
@@ -107,6 +117,51 @@ public class ChatFragment extends GroupSessionFragment {
 
         return talkItem;
 
+    }
+
+    @Override
+    protected boolean interceptDepressedMessage(TalkItem item) {
+
+        if (item.depressed && item.body !=null) {
+            showPopTips(item.body.text);
+            return true;
+        }
+        return super.interceptDepressedMessage(item);
+    }
+
+
+    private void showPopTips(String tips) {
+        if (TextUtils.isEmpty(tips)) {
+            return;
+        }
+
+        popTipsView.setText(tips);
+        popTipsView.setVisibility(View.VISIBLE);
+        startHiddenTimer(popTipsView);
+    }
+
+    private void startHiddenTimer(View view) {
+        destoryAutotimer();
+        popAutotimer = autoPopHiddeAnim(view);
+    }
+
+    private void destoryAutotimer() {
+        if (popAutotimer != null) {
+            popAutotimer.dispose();
+            popAutotimer = null;
+        }
+    }
+
+    public Disposable autoPopHiddeAnim(final View view) {
+        Observable observable = Observable.timer(3000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        return observable.subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                view.setVisibility(View.GONE);
+            }
+        });
     }
 
     private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {

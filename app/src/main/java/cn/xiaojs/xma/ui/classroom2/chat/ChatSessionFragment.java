@@ -47,6 +47,8 @@ import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
@@ -78,6 +80,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
     View bottomlineView;
     @BindView(R.id.send_btn)
     Button sendBtnView;
+    @BindView(R.id.pop_tips)
+    protected TextView popTipsView;
 
     private LiveCriteria liveCriteria;
     private Pagination pagination;
@@ -96,7 +100,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
 
     protected String titleStr = "聊天";
 
-    private DataProvider dataProvider;
+    protected DataProvider dataProvider;
 
     private XMSManager xmsManager;
 
@@ -256,6 +260,11 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         talkBean.to = liveCriteria.to;
         talkBean.name = titleView.getText().toString();
 
+        if (NetworkUtil.getCurrentNetwork(getContext()) == CTLConstant.NetworkType.TYPE_NONE) {
+            handleSendError(talkBean);
+            return;
+        }
+
 
         XMSManager.sendTalk(getContext(), true, talkBean, new EventCallback<TalkResponse>() {
             @Override
@@ -265,13 +274,12 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                 }
 
                 handleReceivedMsg(true, talkBean);
-
             }
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
 
-                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                handleSendError(talkBean);
             }
         });
     }
@@ -287,7 +295,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
                                 && object.objectsOfPage.size() > 0) {
 
                             handleNewData(object);
-                        }else {
+                        } else {
                             if (currentPage == 1) {
                                 handleChatSessionOpened(null);
                             }
@@ -369,6 +377,25 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         recyclerView.scrollToPosition(messageData.size() - 1);
     }
 
+    protected void handleSendError(Talk talk) {
+
+        TalkItem talkItem = new TalkItem();
+        talkItem.time = talk.time;
+        talkItem.body = new TalkItem.TalkContent();
+        talkItem.from = new TalkItem.TalkPerson();
+        talkItem.body.text = talk.body.text;
+        talkItem.body.contentType = talk.body.contentType;
+        talkItem.from.accountId = talk.from;
+        talkItem.from.name = talk.name;
+        talkItem.error = "-1";
+
+        timeline(talkItem);
+
+        messageData.add(talkItem);
+        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(messageData.size() - 1);
+    }
+
 
     protected void handleReceivedMsg(boolean send, Talk talk) {
 
@@ -380,12 +407,15 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         talkItem.body.contentType = talk.body.contentType;
         talkItem.from.accountId = talk.from;
         talkItem.from.name = talk.name;
+        talkItem.depressed = talk.depressed;
 
         timeline(talkItem);
 
-        messageData.add(talkItem);
-        adapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(messageData.size() - 1);
+        if (!interceptDepressedMessage(talkItem)) {
+            messageData.add(talkItem);
+            adapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(messageData.size() - 1);
+        }
 
         if (send) {
             updateConveration(talkItem);
@@ -394,6 +424,10 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         }
 
 
+    }
+
+    protected boolean interceptDepressedMessage(TalkItem item) {
+        return false;
     }
 
     private void updateUnread() {
@@ -427,6 +461,13 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         contact.title = talkItem.from.name;
         contact.lastMessage = talkItem.body.text;
         contact.lastTalked = talkItem.time;
+
+        if (liveCriteria.type == Communications.TalkType.OPEN) {
+            contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
+        } else {
+            contact.subtype = ConversationType.TypeName.PERSON;
+        }
+
         contact.unread = 0;
 
         dataProvider.moveOrInsertConversation(contact);
@@ -448,11 +489,11 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         String lastMessage = "";
         long lastTalked = System.currentTimeMillis();
 
-        if (talkItem !=null) {
+        if (talkItem != null) {
             lastTalked = talkItem.time;
             if (talkItem.body.contentType == Communications.ContentType.TEXT) {
                 lastMessage = talkItem.body.text;
-            }else if (talkItem.body.contentType == Communications.ContentType.STYLUS) {
+            } else if (talkItem.body.contentType == Communications.ContentType.STYLUS) {
                 lastMessage = "【图片】";
             }
         }
@@ -461,13 +502,16 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         contact.title = titleStr;
         contact.name = titleStr;
         contact.id = liveCriteria.to;
-        contact.subtype = ConversationType.getConversationType(liveCriteria.type);
+        if (liveCriteria.type == Communications.TalkType.OPEN) {
+            contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
+        } else {
+            contact.subtype = ConversationType.TypeName.PERSON;
+        }
         contact.lastMessage = lastMessage;
         contact.lastTalked = lastTalked;
         dataProvider.conversationOpened(contact);
 
     }
-
 
     public void showMoreMenu() {
 

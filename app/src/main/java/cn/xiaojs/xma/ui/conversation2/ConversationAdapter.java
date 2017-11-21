@@ -17,6 +17,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.XMSManager;
@@ -176,6 +177,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 @Override
                 public void onClick(View v) {
                     removeDlg(position);
+                    peerConViewHolder.swipeLayout.close();
                 }
             });
 
@@ -286,6 +288,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
                 @Override
                 public void onClick(View v) {
                     removeDlg(position);
+                    conViewHolder.swipeLayout.close();
                 }
             });
 
@@ -380,14 +383,20 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
     private void removeDlg(int position) {
         Contact contact = contacts.get(position);
-        contacts.remove(position);
 
         RemoveDlg removeDlg = new RemoveDlg();
-        removeDlg.type = ConversationType.getTalkType(contact.subtype);
-        removeDlg.to = contact.id;
+        int type = ConversationType.getTalkType(contact.subtype);
+        if (type == Communications.TalkType.OPEN) {
+            removeDlg.cls = contact.id;
+        } else if (type == Communications.TalkType.PEER) {
+            removeDlg.peers = new String[]{contact.id};
+        }
+
         XMSManager.sendRemoveDialog(context, removeDlg, null);
 
-        notifyItemRemoved(position);
+        contacts.remove(position);
+        notifyDataSetChanged();
+        //notifyItemRemoved(position);
     }
 
     private void changeSlient(final Contact contact) {

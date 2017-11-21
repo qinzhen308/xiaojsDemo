@@ -10,6 +10,9 @@ public class MessageType {
     public static final int TIPS = 2;                  //提示消息
     public static final int LAND = 3;                  //横屏模式下消息
     public static final int SYSTEM = 4;                  //系统消息
+    public static final int FOLLOWED = 5;                  //被关注了
+    public static final int JOIN_APPLY = 6;                  //加入教室申请
+
 
 
     public static class TypeName{

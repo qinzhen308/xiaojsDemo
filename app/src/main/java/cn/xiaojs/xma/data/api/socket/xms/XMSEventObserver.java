@@ -11,6 +11,7 @@ import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.data.api.socket.MessageCallback;
+import cn.xiaojs.xma.model.socket.RemoveDlgReceived;
 import cn.xiaojs.xma.model.socket.SyncClassesReceived;
 import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
@@ -115,7 +116,7 @@ public class XMSEventObserver<T> extends MainThreadDisposable implements Message
         protected void onEvent() {
             on(Su.EventCategory.XMS_MESSAGING, Su.EventType.TALK, Talk.class);
             on(Su.EventCategory.XMS_MESSAGING, Su.EventType.DIALOG_READ, Talk.class);
-            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.REMOVE_DIALOG, Talk.class);
+            on(Su.EventCategory.XMS_MESSAGING, Su.EventType.REMOVE_DIALOG, RemoveDlgReceived.class);
             on(Su.EventCategory.XMS_MESSAGING, Su.EventType.RETAIN_DIALOG, Talk.class);
             on(Su.EventCategory.XMS_MESSAGING, Su.EventType.CHANGE_NOTIFY, ChangeNotifyReceived.class);
         }
