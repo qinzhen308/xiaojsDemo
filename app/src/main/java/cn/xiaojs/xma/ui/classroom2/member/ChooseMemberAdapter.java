@@ -68,24 +68,32 @@ public class ChooseMemberAdapter extends RecyclerView.Adapter<ChooseMemberViewHo
         String realType = TextUtils.isEmpty(attendee.psTypeInLesson)?
                 attendee.psType : attendee.psTypeInLesson;
 
-        int identityRes;
+        int colorRes;
+        String markStr;
 
         CTLConstant.UserIdentity identity = classroomEngine.getUserIdentity(realType);
         if (identity == CTLConstant.UserIdentity.ADMINISTRATOR) {
-            identityRes = R.drawable.mem_administrators;
-        }else if(identity == CTLConstant.UserIdentity.ADVISER) {
-            identityRes = R.drawable.mem_headmaster;
-        }else if(identity == CTLConstant.UserIdentity.LEAD) {
-            identityRes = R.drawable.mem_speaker;
-        }else if(identity == CTLConstant.UserIdentity.TEACHER2) {
-            identityRes = R.drawable.mem_teacher;
-        }else if(identity == CTLConstant.UserIdentity.ASSISTANT) {
-            identityRes = R.drawable.mem_assistant;
+            markStr = "管理员";
+            colorRes = context.getResources().getColor(R.color.session_admin);
+        } else if (identity == CTLConstant.UserIdentity.LEAD) {
+            markStr = "主讲";
+            colorRes = context.getResources().getColor(R.color.session_leader);
+        } else if (identity == CTLConstant.UserIdentity.ADVISER ) {
+            markStr = "班主任";
+            colorRes = context.getResources().getColor(R.color.session_leader);
+        } else if (identity == CTLConstant.UserIdentity.TEACHER2) {
+            markStr = "老师";
+            colorRes = context.getResources().getColor(R.color.session_teacher);
+        } else if (identity == CTLConstant.UserIdentity.ASSISTANT) {
+            markStr = "助教";
+            colorRes = context.getResources().getColor(R.color.session_assi);
         } else {
-            identityRes = 0;
+            markStr = "";
+            colorRes = context.getResources().getColor(android.R.color.transparent);
         }
 
-        holder.nameView.setCompoundDrawablesWithIntrinsicBounds(0,0,identityRes,0);
+        holder.flagMarkView.setText(markStr);
+        holder.flagMarkView.setBackgroundColor(colorRes);
 
         if (!TextUtils.isEmpty(attendee.title)) {
             holder.descView.setText(attendee.title);

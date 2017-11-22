@@ -191,6 +191,9 @@
     <color name="page_tips_text">#C7C7CC</color>
     <color name="trans_divider">#11ffffff</color>
 
-
+    <color name="session_assi">#709BD0</color>
+    <color name="session_teacher">#9FC962</color>
+    <color name="session_leader">#FF9833</color>
+    <color name="session_admin">#D265CA</color>
 
 </resources>

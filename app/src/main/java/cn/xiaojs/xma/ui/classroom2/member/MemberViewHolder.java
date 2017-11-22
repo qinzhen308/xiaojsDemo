@@ -25,6 +25,8 @@ public class MemberViewHolder extends RecyclerView.ViewHolder{
     MessageImageView avatorView;
     @BindView(R.id.name)
     TextView nameView;
+    @BindView(R.id.flag_mark)
+    TextView flagMarkView;
     @BindView(R.id.desc)
     TextView descView;
 

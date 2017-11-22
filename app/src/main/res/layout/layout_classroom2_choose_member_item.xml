@@ -42,11 +42,23 @@
             android:drawablePadding="@dimen/px8"
             />
 
+    <TextView
+            android:id="@+id/flag_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/name"
+            android:layout_toRightOf="@id/name"
+            android:layout_marginLeft="@dimen/px16"
+            android:textSize="@dimen/font_20px"
+            android:padding="@dimen/px2"
+            android:textColor="@color/font_white"
+            />
+
     <ImageView
             android:id="@+id/o2o_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/name"
+            android:layout_toRightOf="@id/flag_mark"
             android:layout_alignBottom="@id/name"
             android:paddingBottom="@dimen/px8"
             android:layout_marginLeft="@dimen/px10"

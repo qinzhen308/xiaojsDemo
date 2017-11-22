@@ -6,6 +6,7 @@ package cn.xiaojs.xma.ui.classroom2.core;
 
 public class CTLConstant {
 
+    public final static int O2O_TIMEOUT_SECONDS = 18;
     public final static int SHARE_IMG_SIZE = 800; //分享图片的大小不超过800
 
     public static final String ACTION_STREAMING_EXCEPTION = "cn.xiaojs.xma.streaming_exception";

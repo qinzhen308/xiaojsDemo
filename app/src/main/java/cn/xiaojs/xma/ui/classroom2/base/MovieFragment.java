@@ -230,6 +230,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     protected ClassroomEngine classroomEngine;
     protected Fragment slideFragment;
     protected Attendee o2oAttendee;
+    private Disposable o2oTimeouter;
 
     //这个白板fragment对象的留存时间依赖于Activity
     //但生命周期取决于使用他的fragment
@@ -463,8 +464,8 @@ public abstract class MovieFragment extends BaseRoomFragment
         return false;
     }
 
-    public boolean isBoardShown(){
-        return whiteboardFragment.isAdded()&&whiteboardContainerLayout.getVisibility() == View.VISIBLE;
+    public boolean isBoardShown() {
+        return whiteboardFragment.isAdded() && whiteboardContainerLayout.getVisibility() == View.VISIBLE;
     }
 
 
@@ -548,11 +549,11 @@ public abstract class MovieFragment extends BaseRoomFragment
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         return observable.subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        view.setVisibility(View.GONE);
-                    }
-                });
+            @Override
+            public void accept(Long aLong) throws Exception {
+                view.setVisibility(View.GONE);
+            }
+        });
     }
 
     private boolean whiteboardShowing() {
@@ -583,14 +584,18 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     public boolean hiddeWhiteboardContainer() {
-         if (whiteboardContainerLayout.getVisibility() != View.GONE) {
-             whiteboardContainerLayout.setVisibility(View.GONE);
-             lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
-             return true;
-         }
+        if (whiteboardContainerLayout.getVisibility() != View.GONE) {
+            whiteboardContainerLayout.setVisibility(View.GONE);
+            lRightSwitchVbView.setImageResource(R.drawable.ic_class_switchtowhiteboard);
+            return true;
+        }
 
-         return false;
-     }
+        return false;
+    }
+
+    public int getWhiteboardContainerLayoutVisibility() {
+        return whiteboardContainerLayout.getVisibility();
+    }
 
     public int onSwitchStreamingClick(View view) {
         int vis = whiteboardContainerLayout.getVisibility() == View.VISIBLE ?
@@ -628,7 +633,6 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     /**
      * 切换横竖屏时，对control view 显示隐藏控制
-     * @param orientation
      */
     protected void controlHandleOnRotate(int orientation) {
 
@@ -700,6 +704,11 @@ public abstract class MovieFragment extends BaseRoomFragment
 
 
     public void back() {
+
+        if (centerPanelView.getVisibility() == View.VISIBLE) {
+            showOrHiddenCenterPanel();
+        }
+
         getActivity().onBackPressed();
     }
 
@@ -753,31 +762,31 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
     public void onScreenshotClick(View view) {
-        final Bitmap bitmap=doScreenshot();
-        if(bitmap!=null){
-            Fragment fragment=BoardScreenshotFragment.createInstance(getActivity(),bitmap, new OnPhotoDoodleShareListener() {
+        final Bitmap bitmap = doScreenshot();
+        if (bitmap != null) {
+            Fragment fragment = BoardScreenshotFragment.createInstance(getActivity(), bitmap, new OnPhotoDoodleShareListener() {
                 @Override
                 public void onPhotoShared(Attendee attendee, Bitmap bmp) {
 
                     ShareToFragment shareToFragment = new ShareToFragment();
                     shareToFragment.setTargetBitmap(bmp);
                     shareToFragment.setRootFragment(MovieFragment.this);
-                    showSlidePanel(shareToFragment,"share_to");
+                    showSlidePanel(shareToFragment, "share_to");
                 }
             });
-            getChildFragmentManager().beginTransaction().add(R.id.screenshot_container,fragment).addToBackStack("screenshot").commitAllowingStateLoss();
-        }else {
-            ToastUtil.showToast(getActivity(),"截图失败");
+            getChildFragmentManager().beginTransaction().add(R.id.screenshot_container, fragment).addToBackStack("screenshot").commitAllowingStateLoss();
+        } else {
+            ToastUtil.showToast(getActivity(), "截图失败");
         }
 
     }
 
-    protected Bitmap doScreenshot(){
+    protected Bitmap doScreenshot() {
         return null;
     }
 
 
-    public void showOrHiddenCenterPanel() {
+    public int showOrHiddenCenterPanel() {
 
         int visibility = centerPanelView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
 
@@ -791,6 +800,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         centerCanlenderView.setVisibility(visibility);
 
 
+        return visibility;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -969,7 +979,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         if (TextUtils.isEmpty(talk.name)) {
             Attendee attendee = classroomEngine.getMember(talk.from);
             talkItem.from.name = attendee == null ? "nil" : attendee.name;
-        }else {
+        } else {
             talkItem.from.name = talk.name;
         }
 
@@ -1428,10 +1438,42 @@ public abstract class MovieFragment extends BaseRoomFragment
     // 一对一
     //
 
+    private void startO2oTimeout() {
+        destoryO2oTimeout();
+        Observable observable = Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
+                .take(CTLConstant.O2O_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        o2oTimeouter = observable.subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+
+                long real = (aLong + 1);
+                if (real >= CTLConstant.O2O_TIMEOUT_SECONDS - 1) {
+                    ((Classroom2Activity) getActivity()).argeeO2o(false);
+                    return;
+                }
+                ((Classroom2Activity) getActivity())
+                        .updateTimetips(CTLConstant.O2O_TIMEOUT_SECONDS - real + "s");
+
+
+            }
+        });
+
+    }
+
+    private void destoryO2oTimeout() {
+        if (o2oTimeouter != null) {
+            o2oTimeouter.dispose();
+            o2oTimeouter = null;
+        }
+    }
+
 
     protected void receivedO2o(Attendee attendee) {
         o2oAttendee = attendee;
         ((Classroom2Activity) getActivity()).showO2oPanel(attendee);
+        startO2oTimeout();
     }
 
     public void argeeO2o() {
@@ -1439,6 +1481,8 @@ public abstract class MovieFragment extends BaseRoomFragment
         classroomEngine.mediaFeedback(Live.MediaStatus.READY, new EventCallback<EventResponse>() {
             @Override
             public void onSuccess(EventResponse response) {
+
+                destoryO2oTimeout();
 
                 changeOrientationToLand();
 
@@ -1462,6 +1506,8 @@ public abstract class MovieFragment extends BaseRoomFragment
                         if (XiaojsConfig.DEBUG) {
                             Toast.makeText(getContext(), "你已拒绝", Toast.LENGTH_LONG).show();
                         }
+                        destoryO2oTimeout();
+
                         o2oAttendee = null;
                     }
 

@@ -134,6 +134,10 @@ public class Su {
         return EventCategory.LIVE + ":" + EventType.STREAMING_STARTED;
     }
 
+    public static String getStopStreamingSignature() {
+        return EventCategory.LIVE + ":" + EventType.STREAMING_STOPPED;
+    }
+
 
     public static String getFollowSignature() {
         return EventCategory.XMS_MESSAGING + ":" + EventType.FOLLOW;
