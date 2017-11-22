@@ -31,6 +31,7 @@ import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.ClassStateUtil;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 
@@ -112,43 +113,29 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
 
     private void checkJoinClassStateAndEnterClassroom(){
         showLoadingDialog(true);
-        CriteriaStudents criteria=new CriteriaStudents();
-        criteria.roles=new String[]{"ClassStudent"};
-        CriteriaStudentsDoc doc=new CriteriaStudentsDoc();
-        doc.id=mData.id;
-        doc.subtype="PrivateClass";
-        criteria.docs=new CriteriaStudentsDoc[]{doc};
-        LessonDataManager.getClasses(getContext(),criteria , new APIServiceCallback<Students>() {
+        ClassStateUtil.checkClassroomStateForMe(getContext(), mData.id, new ClassStateUtil.ClassStateCallback() {
             @Override
-            public void onSuccess(Students object) {
+            public void onClassroomOpen(String ticket) {
                 cancelLoadingDialog();
-                if(object!=null){
-                    if(!ArrayUtil.isEmpty(object.classes)){
-                        Classroom2Activity.invoke(getContext(),mData.ticket);
-                    }else {
-                        String url= ApiManager.getShareLessonUrl(mData.id, Account.TypeName.CLASS_LESSON);
-                        if(url.contains("?")){
-                            url+="&app=android";
-                        }else {
-                            url+="?app=android";
-                        }
-                        CommonWebActivity.invoke(getContext(),"",url);
-                    }
-                }else {
-                    String url= ApiManager.getShareLessonUrl(mData.id, Account.TypeName.CLASS_LESSON);
-                    if(url.contains("?")){
-                        url+="&app=android";
-                    }else {
-                        url+="?app=android";
-                    }
-                    CommonWebActivity.invoke(getContext(),"",url);
-                }
+                Classroom2Activity.invoke(getContext(),ticket);
             }
 
             @Override
-            public void onFailure(String errorCode, String errorMessage) {
+            public void onClassroomClose(String id) {
                 cancelLoadingDialog();
-                ToastUtil.showToast(getContext(),errorMessage);
+                String url= ApiManager.getShareLessonUrl(mData.id, Account.TypeName.CLASS_LESSON);
+                if(url.contains("?")){
+                    url+="&app=android";
+                }else {
+                    url+="?app=android";
+                }
+                CommonWebActivity.invoke(getContext(),"",url);
+            }
+
+            @Override
+            public void onError(String msg) {
+                cancelLoadingDialog();
+                ToastUtil.showToast(getContext(),msg);
             }
         });
     }

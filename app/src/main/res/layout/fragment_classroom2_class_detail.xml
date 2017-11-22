@@ -1,220 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/white"
-        >
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px88">
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px88">
 
         <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_back"
-                android:padding="@dimen/px28"/>
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="@dimen/px28"
+            android:src="@drawable/ic_back" />
 
 
         <TextView
-                android:layout_width="0dp"
-                android:layout_height="@dimen/px88"
-                android:layout_weight="1.0"
-                android:text="详情"
-                android:gravity="center"
-                android:textColor="@color/font_black"
-                android:textSize="@dimen/font_32px"/>
+            android:layout_width="0dp"
+            android:layout_height="@dimen/px88"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="详情"
+            android:textColor="@color/font_black"
+            android:textSize="@dimen/font_32px" />
 
 
         <ImageView
-                android:id="@+id/more_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/selector_btn_more1"
-                android:padding="@dimen/px28"/>
+            android:id="@+id/more_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="@dimen/px28"
+            android:src="@drawable/selector_btn_more1" />
 
 
     </LinearLayout>
-    
-    
+
 
     <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <View
-                    android:id="@+id/sep_line"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                android:id="@+id/sep_line"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                    android:id="@+id/class_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_dark_gray"
-                    android:gravity="left|center_vertical"
-                    android:drawableRight="@drawable/ic_entrance"
-                    android:paddingRight="@dimen/px30"
-                    android:drawablePadding="@dimen/px8"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sep_line"
-                    />
+                android:id="@+id/class_name"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:drawablePadding="@dimen/px8"
+                android:drawableRight="@drawable/ic_entrance"
+                android:gravity="left|center_vertical"
+                android:paddingRight="@dimen/px30"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sep_line" />
 
             <TextView
-                    android:id="@+id/class_name_title"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="名称"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/class_name"
-                    />
+                android:id="@+id/class_name_title"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:text="名称"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintBaseline_toBaselineOf="@+id/class_name"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <View
-                    android:id="@+id/title_line"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_name_title"/>
+                android:id="@+id/title_line"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_name_title" />
 
 
             <TextView
-                    android:id="@+id/class_qrcode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:drawableRight="@drawable/ic_entrance"
-                    android:drawableLeft="@drawable/ic_qrcode"
-                    android:paddingRight="@dimen/px30"
-                    android:drawablePadding="@dimen/px8"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/title_line"
-                    />
+                android:id="@+id/class_qrcode"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:drawableLeft="@drawable/ic_qrcode"
+                android:drawablePadding="@dimen/px8"
+                android:drawableRight="@drawable/ic_entrance"
+                android:paddingRight="@dimen/px30"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_line" />
 
 
             <TextView
-                    android:id="@+id/class_qrcode_title"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="二维码"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/class_qrcode"
-                    />
+                android:id="@+id/class_qrcode_title"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:text="二维码"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/class_qrcode" />
 
             <View
-                    android:id="@+id/qrcode_line"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_qrcode"/>
+                android:id="@+id/qrcode_line"
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_qrcode" />
 
 
             <TextView
-                    android:id="@+id/class_canlender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:textSize="@dimen/font_28px"
-                    android:textColor="@color/font_dark_gray"
-                    android:gravity="left|center_vertical"
-                    android:drawableRight="@drawable/ic_entrance"
-                    android:paddingRight="@dimen/px30"
-                    android:drawablePadding="@dimen/px8"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/qrcode_line"
-                    />
+                android:id="@+id/class_canlender"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:drawablePadding="@dimen/px8"
+                android:drawableRight="@drawable/ic_entrance"
+                android:gravity="left|center_vertical"
+                android:paddingRight="@dimen/px30"
+                android:textColor="@color/font_dark_gray"
+                android:textSize="@dimen/font_28px"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qrcode_line" />
 
             <TextView
-                    android:id="@+id/class_canlender_title"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="课表"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/class_canlender"
-                    />
+                android:id="@+id/class_canlender_title"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:text="课表"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintBaseline_toBaselineOf="@+id/class_canlender"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <View
-                    android:id="@+id/canlender_line"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_canlender_title"/>
+                android:id="@+id/canlender_line"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_canlender_title" />
 
 
             <TextView
-                    android:id="@+id/class_material_title"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="资料库"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:drawableRight="@drawable/ic_entrance"
-                    android:gravity="left|center_vertical"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/canlender_line"
-                    />
+                android:id="@+id/class_material_title"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:drawableRight="@drawable/ic_entrance"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="资料库"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/canlender_line" />
 
             <View
-                    android:id="@+id/material_line"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_material_title"/>
+                android:id="@+id/material_line"
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_material_title" />
 
             <TextView
-                    android:id="@+id/class_member_title"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="成员"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/material_line"
-                    />
+                android:id="@+id/class_member_title"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:drawableRight="@drawable/ic_entrance"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="成员"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/material_line" />
 
 
             <cn.xiaojs.xma.ui.widget.AdapterGirdView
@@ -225,137 +215,130 @@
                 android:numColumns="5"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/class_member_title"/>
-
-
+                app:layout_constraintTop_toBottomOf="@+id/class_member_title" />
 
 
             <View
-                    android:id="@+id/member_line"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/member_list"/>
+                android:id="@+id/member_line"
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/member_list" />
 
 
             <CheckedTextView
-                    android:id="@+id/class_top_check"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="置顶会话"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    android:checkMark="@drawable/toggle_btn_selector"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/member_line"
-                    />
+                android:id="@+id/class_top_check"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:checkMark="@drawable/toggle_btn_selector"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="置顶会话"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/member_line" />
 
             <View
-                    android:id="@+id/top_check_line"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_top_check"/>
+                android:id="@+id/top_check_line"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_top_check" />
 
             <CheckedTextView
-                    android:id="@+id/class_disturb_check"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="消息免打扰"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    android:checkMark="@drawable/toggle_btn_selector"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/top_check_line"
-                    />
+                android:id="@+id/class_disturb_check"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:checkMark="@drawable/toggle_btn_selector"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="消息免打扰"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top_check_line" />
 
             <View
-                    android:id="@+id/disturb_line"
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_disturb_check"/>
+                android:id="@+id/disturb_line"
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_disturb_check" />
 
 
             <CheckedTextView
-                    android:id="@+id/class_verify_check"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="加入是否需要验证"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    android:checkMark="@drawable/toggle_btn_selector"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/disturb_line"
-                    />
+                android:id="@+id/class_verify_check"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:checkMark="@drawable/toggle_btn_selector"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="加入是否需要验证"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/disturb_line" />
 
             <View
-                    android:id="@+id/verify_line"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_verify_check"/>
+                android:id="@+id/verify_line"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_verify_check" />
 
             <CheckedTextView
-                    android:id="@+id/class_public_check"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="是否公开"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    android:checkMark="@drawable/toggle_btn_selector"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/verify_line"
-                    />
+                android:id="@+id/class_public_check"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:checkMark="@drawable/toggle_btn_selector"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="是否公开"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/verify_line" />
 
             <View
-                    android:id="@+id/public_line"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/hor_divide_line"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/class_public_check"/>
+                android:id="@+id/public_line"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/hor_divide_line"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/class_public_check" />
 
             <CheckedTextView
-                    android:id="@+id/class_anonymous_check"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:text="是否允许游客访问"
-                    android:textSize="@dimen/font_32px"
-                    android:textColor="@color/font_black"
-                    android:paddingLeft="@dimen/px30"
-                    android:paddingRight="@dimen/px30"
-                    android:gravity="left|center_vertical"
-                    android:checkMark="@drawable/toggle_btn_selector"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/public_line"
-                    />
+                android:id="@+id/class_anonymous_check"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:checkMark="@drawable/toggle_btn_selector"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/px30"
+                android:paddingRight="@dimen/px30"
+                android:text="是否允许游客访问"
+                android:textColor="@color/font_black"
+                android:textSize="@dimen/font_32px"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/public_line" />
 
             <LinearLayout
                 android:id="@+id/layout_guest_authority"
@@ -367,10 +350,10 @@
                 android:paddingBottom="@dimen/px15"
                 android:paddingLeft="@dimen/px28"
                 android:paddingRight="@dimen/px26"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/class_anonymous_check"
-                android:visibility="gone">
+                app:layout_constraintTop_toBottomOf="@+id/class_anonymous_check">
 
                 <CheckBox
                     android:id="@+id/cb_allow_guest_read"
@@ -394,12 +377,12 @@
                     android:id="@+id/cb_allow_guest_chart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/px10"
                     android:button="@null"
                     android:drawableLeft="@drawable/multi_check_selector_blue"
                     android:drawablePadding="@dimen/px20"
                     android:paddingBottom="@dimen/px20"
                     android:paddingTop="@dimen/px20"
-                    android:layout_marginRight="@dimen/px10"
                     android:text="允许游客聊天"
                     android:textColor="@color/hint_color"
                     android:textSize="@dimen/font_28px" />

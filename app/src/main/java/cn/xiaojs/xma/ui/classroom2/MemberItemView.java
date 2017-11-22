@@ -16,6 +16,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
 
@@ -23,10 +24,10 @@ import cn.xiaojs.xma.ui.widget.CircleTransform;
  * Created by Paul Z on 2017/11/6.
  */
 
-public class MemberItemView extends LinearLayout implements IViewModel<StudentEnroll> ,IEventer {
+public class MemberItemView extends LinearLayout implements IViewModel<Attendee> ,IEventer {
 
 
-    StudentEnroll mData;
+    Attendee mData;
 
     int position;
 
@@ -65,14 +66,14 @@ public class MemberItemView extends LinearLayout implements IViewModel<StudentEn
     }
 
     @Override
-    public void bindData(int position, StudentEnroll data) {
+    public void bindData(int position, Attendee data) {
         mData = data;
         this.position = position;
 
         tvName.setText(mData.name);
 
         Glide.with(getContext())
-                .load(cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(mData.id, 300))
+                .load(cn.xiaojs.xma.common.xf_foundation.schemas.Account.getAvatar(mData.accountId, 300))
                 .bitmapTransform(circleTransform)
                 .placeholder(R.drawable.default_avatar_grey)
                 .error(R.drawable.default_avatar_grey)

@@ -13,13 +13,23 @@ import com.orhanobut.logger.Logger;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
+import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
+import cn.xiaojs.xma.model.ctl.CriteriaStudents;
+import cn.xiaojs.xma.model.ctl.CriteriaStudentsDoc;
+import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomActivity;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
+import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.ClassStateUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 
 /**
@@ -32,9 +42,9 @@ public class ScanQrcodeActivity extends QrCodeActivity {
     private final String urlSuffix = "/1";
     private String urlPrefix;
 
-    private final String IDENTIFICATION_CLASS_CODE="web/mobile/classhome/";
-    private final String IDENTIFICATION_STANDALONG_LESSON_CODE="web/mobile/coursedetails/";
-    private final String IDENTIFICATION_RECORDED_LESSON_CODE="web/mobile/recorded/";
+    private final String IDENTIFICATION_CLASS_CODE="/classhome/";
+    private final String IDENTIFICATION_STANDALONG_LESSON_CODE="/coursedetails/";
+    private final String IDENTIFICATION_RECORDED_LESSON_CODE="/recorded/";
 
 
     @Override
@@ -65,14 +75,7 @@ public class ScanQrcodeActivity extends QrCodeActivity {
         } else if(data!=null){
             if(data.contains(IDENTIFICATION_CLASS_CODE)){
                 //h5 班级信息的url
-                String url=null;
-                if(data.contains("?")){
-                    url=data+"&app=android";
-                }else {
-                    url=data+"?app=android";
-                }
-                CommonWebActivity.invoke(this,"",url);
-                finish();
+                checkJoinClassStateAndEnterClassroom(data);
             }else if(data.contains(IDENTIFICATION_STANDALONG_LESSON_CODE)){
                 String id=data.substring(data.lastIndexOf("/")+1,data.contains(".")?data.lastIndexOf("."):data.length());
                 startActivity(new Intent(this,LessonHomeActivity.class).putExtra(CourseConstant.KEY_LESSON_ID,id));
@@ -109,6 +112,38 @@ public class ScanQrcodeActivity extends QrCodeActivity {
         }
 
         return null;
+    }
+
+    /**
+     * 进教室或者进教室详情页
+     * @param data
+     */
+    private void checkJoinClassStateAndEnterClassroom(final String data){
+        final String id=data.substring(data.lastIndexOf("/")+1,data.lastIndexOf("."));
+        ClassStateUtil.checkClassroomStateForMe(this, id, new ClassStateUtil.ClassStateCallback() {
+            @Override
+            public void onClassroomOpen(String ticket) {
+                Classroom2Activity.invoke(ScanQrcodeActivity.this,ticket);
+            }
+
+            @Override
+            public void onClassroomClose(String id) {
+                String url=null;
+                if(data.contains("?")){
+                    url=data+"&app=android";
+                }else {
+                    url=data+"?app=android";
+                }
+                CommonWebActivity.invoke(ScanQrcodeActivity.this,"",url);
+                finish();
+            }
+
+            @Override
+            public void onError(String msg) {
+                ToastUtil.showToast(getApplicationContext(),msg);
+
+            }
+        });
     }
 
 }

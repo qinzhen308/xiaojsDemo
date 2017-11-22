@@ -14,6 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,11 +43,16 @@ import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.ChangeNotify;
 import cn.xiaojs.xma.ui.base.AbsListAdapter;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
+import cn.xiaojs.xma.ui.classroom2.core.SessionDataObserver;
+import cn.xiaojs.xma.ui.classroom2.member.MemberListFragment;
+import cn.xiaojs.xma.ui.classroom2.member.MemberType;
 import cn.xiaojs.xma.ui.share.ShareQrcodeClassroomActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.AddLessonNameActivity;
 import cn.xiaojs.xma.ui.lesson.xclass.ClassScheduleActivity;
@@ -52,6 +62,15 @@ import cn.xiaojs.xma.ui.widget.AdapterGirdView;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.util.ToastUtil;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 /**
@@ -136,6 +155,13 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         initView();
         loadClassInfo();
+        classroomEngine.observeSessionData(dataObserver);
+    }
+
+    @Override
+    public void onDestroy() {
+        classroomEngine.unObserveSessionData(dataObserver);
+        super.onDestroy();
     }
 
     private void initView(){
@@ -146,7 +172,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
     //@OnCheckedChanged
 
-    @OnClick({R.id.back_btn, R.id.more_btn, R.id.class_top_check,R.id.class_material_title,
+    @OnClick({R.id.back_btn, R.id.more_btn, R.id.class_top_check,R.id.class_material_title,R.id.class_member_title,
             R.id.class_disturb_check, R.id.class_verify_check, R.id.class_public_check,
             R.id.class_anonymous_check,R.id.class_name_title,R.id.class_qrcode_title,
             R.id.cb_allow_guest_chart,R.id.cb_allow_guest_read,R.id.class_canlender_title})
@@ -204,6 +230,9 @@ public class ClassDetailFragment extends BaseDialogFragment {
             case R.id.class_material_title:
                 databank();
                 break;
+            case R.id.class_member_title:
+                memberList();
+                break;
         }
     }
 
@@ -243,7 +272,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
         }
     }
 
-    private void loadStudents(){
+ /*   private void loadStudents(){
         JoinCriteria criteria=new JoinCriteria();
         criteria.joined=true;
         criteria.title = null;
@@ -266,6 +295,50 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
                     }
                 });
+    }*/
+
+    private void loadStudents(){
+        Observable.create(new ObservableOnSubscribe<ArrayList<Attendee>>() {
+
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ArrayList<Attendee>> e) throws Exception {
+
+                ArrayList<Attendee> attendees = new ArrayList<>();
+
+                Map<String, Attendee> attendeeMap = classroomEngine.getMembers();
+                if (attendeeMap != null && attendeeMap.size() > 0) {
+                    for (Attendee att : attendeeMap.values()) {
+
+                        String pst = TextUtils.isEmpty(att.psTypeInLesson)?
+                                att.psType : att.psTypeInLesson;
+
+                        if (classroomEngine.getUserIdentity(pst) == CTLConstant.UserIdentity.VISITOR) {
+                            break;
+                        }
+
+                        attendees.add(att);
+                    }
+                }
+
+                Collections.sort(attendees);
+
+                e.onNext(attendees);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Attendee>>() {
+            @Override
+            public void accept(ArrayList<Attendee> attendees) throws Exception {
+                ArrayList<Attendee> justNeedAttendees=new ArrayList<Attendee>();
+                int maxSize=teaching?4:5;
+                for(int i=0,size=attendees.size()>maxSize?maxSize:attendees.size();i<size;i++){
+                    justNeedAttendees.add(attendees.get(i));
+                }
+                mAdapter.setList(justNeedAttendees);
+                mAdapter.notifyDataSetChanged();
+                classMemberTitle.setText("成员（"+attendees.size()+"）");
+
+            }
+        });
     }
 
     private void loadClassInfo() {
@@ -345,8 +418,8 @@ public class ClassDetailFragment extends BaseDialogFragment {
             classCanlender.setText(getString(R.string.number_lesson, classInfo.lessons));
         }
 
-        int studentCount = classInfo.join != null ? classInfo.join.current : 0;
-        classMemberTitle.setText("成员（"+studentCount+"）");
+//        int studentCount = classInfo.join != null ? classInfo.join.current : 0;
+//        classMemberTitle.setText("成员（"+studentCount+"）");
 //        opentimeView.setText(TimeUtil.format(classInfo.createdOn, TimeUtil.TIME_YYYY_MM_DD));
 //        creatorView.setText(classInfo.owner!=null?classInfo.owner.name:"");
 
@@ -413,6 +486,13 @@ public class ClassDetailFragment extends BaseDialogFragment {
         }
 
         // TODO: 2017/11/6 资料库 打开activity or fragment？
+
+    }
+
+    private void memberList(){
+
+        MemberListFragment memberListfragment = MemberListFragment.createInstance(MemberListFragment.FROM_CLASSROOM_DETAIL);
+        memberListfragment.show(getFragmentManager(), "member");
 
     }
 
@@ -725,7 +805,15 @@ public class ClassDetailFragment extends BaseDialogFragment {
         });
     }
 
-    public class MemberAdapter extends AbsListAdapter<StudentEnroll,MemberHolder> {
+
+    private SessionDataObserver dataObserver = new SessionDataObserver() {
+        @Override
+        public void onMemberUpdated() {
+            loadStudents();
+        }
+    };
+
+    public class MemberAdapter extends AbsListAdapter<Attendee,MemberHolder> {
 
 
         public MemberAdapter(Activity activity) {
@@ -744,13 +832,15 @@ public class ClassDetailFragment extends BaseDialogFragment {
                         if(what==EVENT_1){
 
                         }else if(what==EVENT_2){//添加学生
-                            Intent i = new Intent(getActivity(), StudentsListActivity.class);
+                            /*Intent i = new Intent(getActivity(), StudentsListActivity.class);
                             i.putExtra(StudentsListActivity.EXTRA_CLASS, ClassroomEngine.getEngine().getCtlSession().cls.id);
                             i.putExtra(EXTRA_TEACHING, teaching);
                             boolean verflag = (classInfo.join != null && classInfo.join.mode == Ctl.JoinMode.VERIFICATION) ?
                                     true : false;
                             i.putExtra(EXTRA_VERI, verflag);
-                            startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);
+                            startActivityForResult(i, REQUEST_STUDENT_LIST_CODE);*/
+                            MemberListFragment memberListfragment = MemberListFragment.createInstance(MemberListFragment.FROM_CLASSROOM_DETAIL);
+                            memberListfragment.show(getFragmentManager(), "member");
                         }
                     }
                 });
@@ -808,4 +898,6 @@ public class ClassDetailFragment extends BaseDialogFragment {
             super(v);
         }
     }
+
+
 }

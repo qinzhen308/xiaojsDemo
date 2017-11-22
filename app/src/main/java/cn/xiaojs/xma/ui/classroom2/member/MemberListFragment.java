@@ -80,6 +80,20 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
     private ArrayList<Attendee> vistors;
 
+    private int from=FROM_CLASSROOM_HOME_BOTTOM;
+    public static final int FROM_CLASSROOM_HOME_BOTTOM=0;
+    public static final int FROM_CLASSROOM_DETAIL=1;
+    public static final String EXTRA_FROM="extra_from";
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle data=getArguments();
+        if(data!=null){
+            from=data.getInt(EXTRA_FROM,FROM_CLASSROOM_HOME_BOTTOM);
+        }
+    }
 
     @Override
     public View createView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -93,7 +107,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getDialog() == null) {
+        if (getDialog() == null||from==FROM_CLASSROOM_DETAIL) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
             params.setMargins(0, 0, 0, 0);
             rootLay.setBackgroundColor(getResources().getColor(R.color.white));
@@ -482,4 +496,13 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
             load(null);
         }
     };
+
+
+    public static MemberListFragment createInstance(int from){
+        MemberListFragment fragment=new MemberListFragment();
+        Bundle data=new Bundle();
+        fragment.setArguments(data);
+        data.putInt(EXTRA_FROM,from);
+        return fragment;
+    }
 }
