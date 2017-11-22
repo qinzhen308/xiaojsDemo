@@ -22,8 +22,8 @@ public class SystemViewHolder extends ChatViewHolder {
     TextView tipsView;
 
 
-    public SystemViewHolder(Context context, View itemView) {
-        super(context, itemView);
+    public SystemViewHolder(Context context, View itemView, ChatAdapter adapter) {
+        super(context, itemView, adapter);
         this.context = context;
     }
 

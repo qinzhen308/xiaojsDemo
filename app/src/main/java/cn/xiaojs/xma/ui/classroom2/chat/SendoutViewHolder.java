@@ -49,13 +49,13 @@ public class SendoutViewHolder extends ChatViewHolder {
     Button resendView;
 
 
-    public SendoutViewHolder(Context context, View itemView) {
-        super(context, itemView);
+    public SendoutViewHolder(Context context, View itemView, ChatAdapter adapter) {
+        super(context, itemView, adapter);
         this.context = context;
     }
 
     @Override
-    protected void bindData(TalkItem item) {
+    protected void bindData(final TalkItem item) {
 
         String portraitUrl = Account.getAvatar(item.from != null ? item.from.accountId : null,
                 avatorView.getMeasuredWidth());
@@ -118,7 +118,7 @@ public class SendoutViewHolder extends ChatViewHolder {
         contentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMenu(contentTextView);
+                chatAdapter.showMenu(v, item);
             }
         });
 
@@ -132,8 +132,5 @@ public class SendoutViewHolder extends ChatViewHolder {
     }
 
 
-    private void showMenu(View view) {
-        ChatPopupMenu chatPopupMenu = new ChatPopupMenu(context);
-        chatPopupMenu.show(view);
-    }
+
 }

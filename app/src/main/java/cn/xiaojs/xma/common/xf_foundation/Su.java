@@ -67,6 +67,8 @@ public class Su {
         public static final int READ_TALK = 690005;
         public static final int CHANGE_NOTIFY = 690006;
         public static final int SYNC_CLASSES = 690007;
+        public static final int RECALL_TALK = 690008;
+        public static final int REMOVE_TALK = 690009;
 
 
         //绘制

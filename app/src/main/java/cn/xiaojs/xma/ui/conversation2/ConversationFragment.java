@@ -178,7 +178,7 @@ public class ConversationFragment extends Base2Fragment {
 
                 }else {
 
-                    String title = TextUtils.isEmpty(contact.title)? contact.name : contact.title;
+                    String title = TextUtils.isEmpty(contact.name)? contact.title : contact.name;
                     SingleSessionFragment.invoke(getFragmentManager(),contact.id,
                             title, contact.followType);
                 }

@@ -106,7 +106,7 @@ public class FriendsAdapter extends BaseAdapter {
 
 
             if (AccountDataManager.isXiaojsAccount(friendItem.contact.account)) {
-                friendsViewHolder.avatorView.setImageResource(R.drawable.ic_customerservice);
+                friendsViewHolder.avatorView.setImageResource(R.drawable.ic_im_xiaojs);
             }else {
                 String avatorUrl = Account.getAvatar(
                         friendItem.contact.account, friendsViewHolder.avatorView.getMeasuredWidth());

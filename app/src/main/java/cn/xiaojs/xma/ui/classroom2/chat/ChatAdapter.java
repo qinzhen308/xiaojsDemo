@@ -1,17 +1,31 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SocialManager;
+import cn.xiaojs.xma.data.XMSManager;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.social.Relation;
+import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.RemoveTalk;
+import cn.xiaojs.xma.ui.view.ChatPopupMenu;
 
 /**
  * Created by maxiaobao on 2017/9/28.
@@ -72,7 +86,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
             return MessageType.SYSTEM;
         }
 
-        //FIXME 目前判断不出来关注的消息
+        if (!TextUtils.isEmpty(talkItem.signature) && talkItem.signature.equals(Su.getFollowSignature())) {
+            return MessageType.FOLLOWED;
+        }
 
 
         if (talkItem.from == null || myAccountId.equals(talkItem.from.accountId)) {
@@ -92,27 +108,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         switch (viewType) {
             case MessageType.SEND_OUT:
                 holder = new SendoutViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_sendout,parent,false));
+                        inflater.inflate(R.layout.layout_classroom2_chat_sendout, parent, false), this);
                 break;
             case MessageType.RECEIVED:
                 holder = new ReceivedViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_received,parent,false));
+                        inflater.inflate(R.layout.layout_classroom2_chat_received, parent, false), this);
                 break;
             case MessageType.FOLLOWED:
                 holder = new FollowedViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_followed,parent,false));
+                        inflater.inflate(R.layout.layout_classroom2_chat_followed, parent, false), this);
                 break;
             case MessageType.SYSTEM:
                 holder = new SystemViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_tips,parent,false));
+                        inflater.inflate(R.layout.layout_classroom2_chat_tips, parent, false), this);
                 break;
             case MessageType.TIPS:
                 holder = new TipsViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_tips,parent,false));
+                        inflater.inflate(R.layout.layout_classroom2_chat_tips, parent, false), this);
                 break;
             case MessageType.LAND:
                 holder = new LandViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_land,parent,false));
+                        inflater.inflate(R.layout.layout_classroom2_chat_land, parent, false), this);
                 break;
 
         }
@@ -128,7 +144,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
     @Override
     public int getItemCount() {
-        return messages == null? 0 : messages.size();
+        return messages == null ? 0 : messages.size();
     }
 
 
@@ -149,6 +165,70 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         if (fetchMoreListener != null) {
             fetchMoreListener.onFetchMoreRequested();
         }
+    }
+
+    public void toFollow(final TalkItem talkItem) {
+
+        SocialManager.followContact(context,
+                talkItem.extra.followedBy,
+                talkItem.from.name,
+                Social.ContactGroup.FRIENDS, null, new APIServiceCallback<Relation>() {
+                    @Override
+                    public void onSuccess(Relation object) {
+
+                        if (object != null) {
+                            talkItem.extra.followType = object.followType;
+                            notifyDataSetChanged();
+                        }
+
+                        Toast.makeText(context, "您已关注", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void showMenu(View view, final TalkItem item) {
+        ChatPopupMenu chatPopupMenu = new ChatPopupMenu(context);
+        chatPopupMenu.setMenuClickListener(new ChatPopupMenu.MenuClickListener() {
+            @Override
+            public void onMenuClick(View view) {
+                switch (view.getId()) {
+                    case R.id.delete:
+
+                        //TODO
+
+//                        RemoveTalk removeTalk = new RemoveTalk();
+//                        removeTalk.
+//
+//                        XMSManager.sendRemoveTalk(context, , new EventCallback<EventResponse>() {
+//                            @Override
+//                            public void onSuccess(EventResponse response) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onFailed(String errorCode, String errorMessage) {
+//
+//                            }
+//                        });
+                        break;
+                    case R.id.copy:
+                        String text = item.body.text;
+                        ClipboardManager cm = (ClipboardManager)
+                                context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        cm.setPrimaryClip(ClipData.newPlainText(null, text));
+                        Toast.makeText(context, "复制成功", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        });
+        chatPopupMenu.show(view);
     }
 
 }

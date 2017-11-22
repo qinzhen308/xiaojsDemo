@@ -80,7 +80,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
             View view = TimetableConViewHolder.createView(context, parent);
             return new TimetableConViewHolder(view);
 
-        } else if (viewType == ConversationType.PERSON) {
+        } else if (viewType == ConversationType.PERSON
+                || viewType == ConversationType.ORGANIZATION) {
             View view = PeerConViewHolder.createView(context, parent);
             return new PeerConViewHolder(view);
         } else {
@@ -122,7 +123,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
 
 
             if (AccountDataManager.isXiaojsAccount(contact.id)) {
-                peerConViewHolder.avatorView.setImageResource(R.drawable.ic_customerservice);
+                peerConViewHolder.avatorView.setImageResource(R.drawable.ic_im_xiaojs);
             } else {
                 String avatorUrl = Account.getAvatar(contact.id, peerConViewHolder.avatorView.getMeasuredWidth());
                 Glide.with(context)

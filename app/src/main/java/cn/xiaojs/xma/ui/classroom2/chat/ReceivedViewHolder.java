@@ -37,8 +37,8 @@ public class ReceivedViewHolder extends ChatViewHolder {
     ImageView contentImgView;
 
 
-    public ReceivedViewHolder(Context context, View itemView) {
-        super(context, itemView);
+    public ReceivedViewHolder(Context context, View itemView, ChatAdapter adapter) {
+        super(context, itemView, adapter);
         this.context = context;
     }
 

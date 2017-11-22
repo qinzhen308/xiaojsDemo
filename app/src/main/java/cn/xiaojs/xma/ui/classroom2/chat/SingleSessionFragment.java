@@ -15,6 +15,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.LiveCriteria;
+import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
@@ -64,6 +65,15 @@ public class SingleSessionFragment extends ChatSessionFragment {
         if (followType < 0 || followType == Social.FllowType.NA) {
             followType = dataProvider.getFollowtypeFromContact(accountId);
         }
+    }
+
+    @Override
+    protected boolean interceptDepressedMessage(TalkItem item) {
+
+        if (item.depressed) {
+            return true;
+        }
+        return super.interceptDepressedMessage(item);
     }
 
 
