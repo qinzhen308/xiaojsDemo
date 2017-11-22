@@ -28,6 +28,7 @@ import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
+import cn.xiaojs.xma.util.ArrayUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -299,6 +300,18 @@ public class DataProvider {
 
     public boolean existInClasses(String accountId) {
         return classesMapping == null ? false : classesMapping.get(accountId) != null;
+    }
+
+    public boolean existInClassesByTicket(String ticket) {
+        if(ArrayUtil.isEmpty(classes)){
+            return false;
+        }
+        for(Contact contact:classes){
+            if(ticket.equals(contact.ticket)){
+                return true;
+            }
+        }
+        return false;
     }
 
 

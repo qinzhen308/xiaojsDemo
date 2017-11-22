@@ -414,37 +414,29 @@ public class JsInvokeNativeInterface {
 
     private void checkJoinClassStateAndEnterClassroom(final String classid,final String ticket){
         showDialogOnUiThread();
-        CriteriaStudents criteria=new CriteriaStudents();
-        criteria.roles=new String[]{"ClassStudent"};
-        CriteriaStudentsDoc doc=new CriteriaStudentsDoc();
-        doc.id=classid;
-        doc.subtype="PrivateClass";
-        criteria.docs=new CriteriaStudentsDoc[]{doc};
-        LessonDataManager.getClasses(context,criteria , new APIServiceCallback<Students>() {
+        ClassStateUtil.checkClassroomStateForMe(context, classid, new ClassStateUtil.ClassStateCallback() {
             @Override
-            public void onSuccess(Students object) {
+            public void onClassroomOpen(String ticket) {
                 cancelDialogOnUiThread();
-                if(object!=null){
-                    if(!ArrayUtil.isEmpty(object.classes)){
-                        Classroom2Activity.invoke(context,ticket);
-                    }else {
-                        String url= ApiManager.getShareLessonUrl(classid, Account.TypeName.CLASS_LESSON);
-                        if(url.contains("?")){
-                            url+="&app=android";
-                        }else {
-                            url+="?app=android";
-                        }
-                        CommonWebActivity.invoke(context,"",url);
-                    }
-                }else {
-                    showToastOnUiThread("解析失败");
-                }
+                Classroom2Activity.invoke(context,ticket);
             }
 
             @Override
-            public void onFailure(String errorCode, String errorMessage) {
+            public void onClassroomClose(String id) {
                 cancelDialogOnUiThread();
-                showToastOnUiThread(errorMessage);
+                String url= ApiManager.getShareLessonUrl(classid, Account.TypeName.CLASS_LESSON);
+                if(url.contains("?")){
+                    url+="&app=android";
+                }else {
+                    url+="?app=android";
+                }
+                CommonWebActivity.invoke(context,"",url);
+            }
+
+            @Override
+            public void onError(String msg) {
+                cancelDialogOnUiThread();
+                showToastOnUiThread(msg);
             }
         });
     }
