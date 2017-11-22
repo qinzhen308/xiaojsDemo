@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
@@ -20,8 +23,10 @@ import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
+import cn.xiaojs.xma.ui.common.ImageViewActivity;
 import cn.xiaojs.xma.ui.view.ChatPopupMenu;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.util.BitmapUtils;
 
 /**
  * Created by maxiaobao on 2017/9/28.
@@ -126,6 +131,26 @@ public class SendoutViewHolder extends ChatViewHolder {
             @Override
             public void onClick(View v) {
                 //TODO 重新发送
+            }
+        });
+
+        contentImgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> imgs = new ArrayList<String>(1);
+                if (!TextUtils.isEmpty(item.body.text)) {
+                    //base64
+                    Bitmap bitmap = BitmapUtils.base64ToBitmapWithPrefix(item.body.text);
+                    String previewFile=BitmapUtils.saveSharePreviewToFile(bitmap);
+                    imgs.add(previewFile);
+                    ImageViewActivity.invoke(context, "",imgs, true);
+                }else {
+
+                    imgs.add(item.body.drawing.name);
+                    ImageViewActivity.invoke(context, "",imgs, false);
+                }
+
+
             }
         });
 
