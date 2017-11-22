@@ -22,6 +22,8 @@ import com.orhanobut.logger.Logger;
 import com.qiniu.pili.droid.streaming.FrameCapturedCallback;
 import com.qiniu.pili.droid.streaming.StreamingState;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
@@ -60,8 +62,11 @@ import cn.xiaojs.xma.ui.widget.Common3Dialog;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.UIUtils;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -92,6 +97,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private long liveTime;
 
     private Disposable controlAutotimer;
+    private Disposable o2oOuttimer;
 
     private int frontViewWidth;
     private int frontViewheight;
@@ -99,6 +105,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private int frontMarginTop;
     private int frontViewIndex = 5; //如果动了XML中的布局，需要更新此index
     private int backViewIndex = 0;
+
 
     @Nullable
     @Override
@@ -164,7 +171,6 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
 
 
-
     }
 
     @Override
@@ -206,6 +212,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         super.onDestroy();
 
         destoryAutotimer();
+        destoryO2otimer();
 
         if (livingObserver != null) {
             livingObserver.dispose();
@@ -276,16 +283,21 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 @Override
                 public void onFrameCaptured(Bitmap bitmap) {
                     if (bitmap != null) {
-                        Fragment fragment = BoardScreenshotFragment.createInstance(getActivity(), bitmap, new OnPhotoDoodleShareListener() {
-                            @Override
-                            public void onPhotoShared(Attendee attendee, Bitmap bmp) {
-                                ShareToFragment shareToFragment = new ShareToFragment();
-                                shareToFragment.setTargetBitmap(bmp);
-                                shareToFragment.setRootFragment(LivingFragment.this);
-                                showSlidePanel(shareToFragment, "share_to");
-                            }
-                        });
-                        getChildFragmentManager().beginTransaction().add(R.id.screenshot_container, fragment).addToBackStack("screenshot").commitAllowingStateLoss();
+                        Fragment fragment = BoardScreenshotFragment.createInstance(
+                                getActivity(), bitmap, new OnPhotoDoodleShareListener() {
+                                    @Override
+                                    public void onPhotoShared(Attendee attendee, Bitmap bmp) {
+                                        ShareToFragment shareToFragment = new ShareToFragment();
+                                        shareToFragment.setTargetBitmap(bmp);
+                                        shareToFragment.setRootFragment(LivingFragment.this);
+                                        showSlidePanel(shareToFragment, "share_to");
+                                    }
+                                });
+                        getChildFragmentManager()
+                                .beginTransaction()
+                                .add(R.id.screenshot_container, fragment)
+                                .addToBackStack("screenshot")
+                                .commitAllowingStateLoss();
                     } else {
                         ToastUtil.showToast(getActivity(), "截图失败");
                     }
@@ -356,6 +368,22 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             controlLand.setVisibility(View.VISIBLE);
             startHiddenTimer(controlLand);
         }
+    }
+
+    @Override
+    public int showOrHiddenCenterPanel() {
+        int vis = super.showOrHiddenCenterPanel();
+
+        if (vis == View.VISIBLE) {
+            if (controlClickView.getVisibility() == View.GONE) {
+                controlClickView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (getWhiteboardContainerLayoutVisibility() == View.VISIBLE) {
+                controlClickView.setVisibility(View.GONE);
+            }
+        }
+        return vis;
     }
 
     @Override
@@ -447,10 +475,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     private void bringToBack(BaseLiveView target) {
         target.setControlEnabled(false);
-        RelativeLayout.LayoutParams lp= (RelativeLayout.LayoutParams) target.getLayoutParams();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) target.getLayoutParams();
         lp.height = MATCH_PARENT;
         lp.width = MATCH_PARENT;
-        lp.setMargins(0,0,0,0);
+        lp.setMargins(0, 0, 0, 0);
 
         if (target == playView) {
             playView.stopPlay();
@@ -462,17 +490,16 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         }
 
 
-
     }
 
     private void bringToFront(BaseLiveView target) {
         target.setControlEnabled(true);
-        RelativeLayout.LayoutParams lp= (RelativeLayout.LayoutParams) target.getLayoutParams();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) target.getLayoutParams();
         lp.width = frontViewWidth;
         lp.height = frontViewheight;
         lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        lp.setMargins(frontMarginLeft,frontMarginTop,0,0);
+        lp.setMargins(frontMarginLeft, frontMarginTop, 0, 0);
         //target.bringToFront();
 
         streamRootLayout.removeView(target);
@@ -481,6 +508,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     }
 
     private void initControlView() {
+
+        lRightSwitchcameraView.setVisibility(View.GONE);
 
         lTopRoominfoRootView.setVisibility(View.VISIBLE);
 
@@ -517,7 +546,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         if (classroomEngine.getLiveState().equals(Live.LiveSessionState.LIVE)) {
             startOrStopLiveView.setText("下课");
         } else {
-            startOrStopLiveView.setText("停止直播");
+            startOrStopLiveView.setText("结束直播");
         }
 
 
@@ -596,6 +625,28 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     // 一对一
     //
 
+
+    private void startO2oTimer() {
+        destoryO2otimer();
+        Observable observable = Observable.timer(CTLConstant.O2O_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        o2oOuttimer = observable.subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                one2oneAttendee = null;
+            }
+        });
+    }
+
+    private void destoryO2otimer() {
+        if (o2oOuttimer != null) {
+            o2oOuttimer.dispose();
+            o2oOuttimer = null;
+        }
+    }
+
+
     private void requestOne2One(final Attendee attendee) {
         showProgress(true);
         classroomEngine.openMedia(attendee.accountId, new EventCallback<EventResponse>() {
@@ -603,6 +654,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             public void onSuccess(EventResponse response) {
                 cancelProgress();
                 one2oneAttendee = attendee;
+
+                startO2oTimer();
+
+                Toast.makeText(getContext(), "正在等待对方接受邀请…",Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -611,7 +666,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 cancelProgress();
 
                 if (Errors.MEDIA_ALREADY_OPENED.equals(errorCode)) {
-                    errorMessage = "你已经正在一对一";
+                    errorMessage = "你已经在视频对话了";
                 } else if (Errors.PENDING_FOR_OPEN_ACK.equals(errorCode)) {
                     errorMessage = getContext().getResources().getString(R.string.has_send_one_to_noe_tips);
                 } else if (Errors.NOT_ON_LIVE.equals(errorCode)) {
@@ -627,11 +682,15 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
 
     private void feedback(EventReceived eventReceived) {
+
+        destoryO2otimer();
+
         MediaFeedbackReceive feedbackReceive = (MediaFeedbackReceive) eventReceived.t;
 
         String msg = getContext().getString(R.string.failed_one2one);
 
         if (Live.MediaStatus.READY == feedbackReceive.status && !TextUtils.isEmpty(feedbackReceive.playUrl)) {
+
             msg = getContext().getString(R.string.success_one2one);
 
             showPlay();
@@ -639,11 +698,16 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
             // mPlayStreamUrl = feedbackReceive.playUrl;
             // playStream(CTLConstant.StreamingType.PLAY_PEER_TO_PEER, feedbackReceive.playUrl);
         } else if (Live.MediaStatus.FAILED_DUE_TO_DENIED == feedbackReceive.status) {
+            one2oneAttendee = null;
             msg = getContext().getString(R.string.user_refuse_one_to_one_tips);
         } else if (Live.MediaStatus.FAILED_DUE_TO_NETWORK_ISSUES == feedbackReceive.status) {
+            one2oneAttendee = null;
             msg = getContext().getString(R.string.failed_one2one_network_issue);
         } else if (Live.MediaStatus.FAILED_DUE_TO_PRIVACY == feedbackReceive.status) {
+            one2oneAttendee = null;
             msg = getContext().getString(R.string.failed_one2one_privacy);
+        } else {
+            one2oneAttendee = null;
         }
 
         ToastUtil.showToast(getContext(), msg);
@@ -659,7 +723,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
         if (send) {
             closeMedia();
-        }else {
+        } else {
             if (streamRootLayout.indexOfChild(videoStreamView) == frontViewIndex) {
                 bringToBack(videoStreamView);
                 bringToFront(playView);

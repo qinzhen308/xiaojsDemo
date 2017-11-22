@@ -96,6 +96,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     ImageView o2oAvatorView;
     @BindView(R.id.o2o_name)
     TextView o2oNameView;
+    @BindView(R.id.o2o_outtime)
+    TextView o2oOuttimeView;
 
     private ChatFragment chatFragment;
     private DatabaseFragment databaseFragment;
@@ -235,7 +237,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             return;
         }
 
-        showExitClassroomDialog();
+
+        super.onBackPressed();
+        //showExitClassroomDialog();
     }
 
     @Override
@@ -848,6 +852,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         }
     }
 
+
+
     public void showO2oPanel(Attendee attendee) {
 
         String avatorUrl = Account.getAvatar(attendee.accountId, o2oAvatorView.getMeasuredWidth());
@@ -858,10 +864,15 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                 .error(R.drawable.ic_defaultavatar)
                 .into(o2oAvatorView);
         o2oNameView.setText(attendee.name);
+        o2oOuttimeView.setText("18s");
         o2oLayout.setVisibility(View.VISIBLE);
     }
 
-    private void argeeO2o(boolean argee) {
+    public void updateTimetips(String lastTime) {
+        o2oOuttimeView.setText(lastTime);
+    }
+
+    public void argeeO2o(boolean argee) {
 
         o2oLayout.setVisibility(View.GONE);
 

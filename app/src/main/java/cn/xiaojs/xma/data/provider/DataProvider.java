@@ -420,6 +420,7 @@ public class DataProvider {
 
             if (!TextUtils.isEmpty(contact.signature)) {
                 oriContact.state = contact.state;
+                oriContact.streaming = contact.streaming;
             }
 
             if (index != 1) {
@@ -670,6 +671,7 @@ public class DataProvider {
     }
 
     private void updateConveration(Talk talkItem) {
+
         if (TextUtils.isEmpty(talkItem.name)) {
             talkItem.name = "nil";
         }
@@ -698,14 +700,18 @@ public class DataProvider {
             if (talkItem.signature.equals(Su.getLiveStreamingSignature())) {
 
                 contact.state = Live.LiveSessionState.LIVE;
-            } else if (talkItem.signature.equals(Su.getFollowSignature())) {
+            } else if (talkItem.signature.equals(Su.getStopStreamingSignature())) {
+                contact.state = Live.LiveSessionState.IDLE;
+                contact.streaming = false;
 
+            }else if (talkItem.signature.equals(Su.getFollowSignature())) {
                 //TODO 被关注
             } else if (talkItem.signature.equals(Su.getUnFollowSignature())) {
 
                 //TODO 被取消关注
 
             } else {//FIXME 此处要判断多种状态，目前接口支持不全；
+                contact.streaming = false;
                 contact.state = Live.LiveSessionState.IDLE;
             }
 
@@ -714,6 +720,11 @@ public class DataProvider {
         contact.lastMessage = talkItem.body.text;
         contact.lastTalked = talkItem.time;
         contact.unread = 1;
+
+        if (talkItem.depressed){
+            //FIXME
+            return;
+        }
 
         moveOrInsertConversation(contact);
     }

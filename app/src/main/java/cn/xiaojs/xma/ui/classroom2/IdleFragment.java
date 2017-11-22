@@ -186,6 +186,35 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     }
 
     @Override
+    public void hiddeOrshowControl() {
+        int currentOrient = UIUtils.getCurrentOrientation(getContext());
+        switch (currentOrient) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                if (controlPort.getVisibility() == View.VISIBLE) {
+                    controlPort.setVisibility(View.GONE);
+
+                } else {
+                    controlPort.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public int showOrHiddenCenterPanel() {
+        int  vis = super.showOrHiddenCenterPanel();
+        if(vis == View.VISIBLE) {
+            if (controlClickView.getVisibility() == View.GONE) {
+                controlClickView.setVisibility(View.VISIBLE);
+            }
+        }else {
+            controlClickView.setVisibility(View.GONE);
+        }
+
+        return vis;
+    }
+
+    @Override
     public void onClosed() {
         exitSlidePanel();
     }

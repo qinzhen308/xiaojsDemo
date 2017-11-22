@@ -115,7 +115,7 @@
             android:id="@+id/l_top_start_or_stop_living"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:text="停止直播"
+            android:text="结束直播"
             android:textColor="@color/font_white"
             android:textSize="@dimen/font_24px"
             android:gravity="center"

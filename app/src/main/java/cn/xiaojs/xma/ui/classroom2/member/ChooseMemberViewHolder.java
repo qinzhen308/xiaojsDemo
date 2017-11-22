@@ -28,6 +28,8 @@ public class ChooseMemberViewHolder extends RecyclerView.ViewHolder {
     ImageView avatorView;
     @BindView(R.id.name)
     TextView nameView;
+    @BindView(R.id.flag_mark)
+    TextView flagMarkView;
     @BindView(R.id.o2o_status)
     ImageView o2oStatusView;
     @BindView(R.id.desc)
