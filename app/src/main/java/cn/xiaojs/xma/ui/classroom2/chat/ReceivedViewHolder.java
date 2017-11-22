@@ -1,12 +1,15 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
@@ -15,7 +18,9 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
+import cn.xiaojs.xma.ui.common.ImageViewActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
+import cn.xiaojs.xma.util.BitmapUtils;
 
 /**
  * Created by maxiaobao on 2017/9/28.
@@ -43,7 +48,7 @@ public class ReceivedViewHolder extends ChatViewHolder {
     }
 
     @Override
-    protected void bindData(TalkItem item) {
+    protected void bindData(final TalkItem item) {
 
         String portraitUrl = Account.getAvatar(item.from != null ? item.from.accountId : null,
                 avatorView.getMeasuredWidth());
@@ -97,6 +102,27 @@ public class ReceivedViewHolder extends ChatViewHolder {
             contentTextView.setVisibility(View.GONE);
             contentImgView.setVisibility(View.GONE);
         }
+
+
+        contentImgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> imgs = new ArrayList<String>(1);
+                if (!TextUtils.isEmpty(item.body.text)) {
+                    //base64
+                    Bitmap bitmap = BitmapUtils.base64ToBitmapWithPrefix(item.body.text);
+                    String previewFile=BitmapUtils.saveSharePreviewToFile(bitmap);
+                    imgs.add(previewFile);
+                    ImageViewActivity.invoke(context, "",imgs, true);
+                }else {
+
+                    imgs.add(item.body.drawing.name);
+                    ImageViewActivity.invoke(context, "",imgs, false);
+                }
+
+
+            }
+        });
 
 
     }
