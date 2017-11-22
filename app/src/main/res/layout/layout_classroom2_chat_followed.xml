@@ -99,10 +99,10 @@
                 android:textColor="@color/font_blue"
                 android:textSize="@dimen/font_24px"
                 android:background="@drawable/btn_bule_rect"
-                android:paddingTop="@dimen/px15"
-                android:paddingBottom="@dimen/px15"
-                android:paddingLeft="@dimen/px30"
-                android:paddingRight="@dimen/px30"
+                android:paddingTop="@dimen/px8"
+                android:paddingBottom="@dimen/px8"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
                 android:visibility="gone"
                 />
 

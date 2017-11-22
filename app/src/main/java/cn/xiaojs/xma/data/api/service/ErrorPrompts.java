@@ -145,7 +145,7 @@ public class ErrorPrompts {
 
             case APIType.FOLLOW_CONTACT:
                 if (errorCode.equals(Errors.INVALID_OPERATION)) {
-                    errorMessage = "已关注";
+                    errorMessage = "您已关注了";
                 } else {
                     errorMessage = "关注失败";
                 }

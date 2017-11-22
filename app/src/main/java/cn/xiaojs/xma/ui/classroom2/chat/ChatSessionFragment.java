@@ -409,6 +409,18 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         talkItem.from.name = talk.name;
         talkItem.depressed = talk.depressed;
 
+        if (!TextUtils.isEmpty(talk.signature)) {
+            talkItem.signature = talk.signature;
+            if (talk.signature.equals(Su.getFollowSignature())) {
+                talkItem.extra = new TalkItem.TalkExtra();
+                //FIXME 事件并没有返回关注人的ID等信息，会导致界面显示的关注操作失效
+                talkItem.extra.followedBy ="";
+                talkItem.extra.name = "";
+                talkItem.extra.followType =talk.followType;
+            }
+        }
+
+
         timeline(talkItem);
 
         if (!interceptDepressedMessage(talkItem)) {

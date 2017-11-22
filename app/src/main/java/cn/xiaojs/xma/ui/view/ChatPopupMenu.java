@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -23,6 +24,16 @@ public class ChatPopupMenu {
     private Context mContext;
     private PopupWindow mPopupWindow;
 
+    private MenuClickListener menuClickListener;
+
+    public void setMenuClickListener(MenuClickListener menuClickListener) {
+        this.menuClickListener = menuClickListener;
+    }
+
+    public interface MenuClickListener {
+        void onMenuClick(View view);
+    }
+
     public ChatPopupMenu(Context ctx) {
         init(ctx, 0);
     }
@@ -32,7 +43,32 @@ public class ChatPopupMenu {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(ctx).inflate(
                 R.layout.layout_classroom2_chat_item_popup_menu, null);
 
-        int width = mContext.getResources().getDimensionPixelSize(R.dimen.px100);
+        Button copyBtn = (Button) linearLayout.findViewById(R.id.copy);
+        Button delBtn = (Button) linearLayout.findViewById(R.id.delete);
+
+        delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (menuClickListener != null) {
+                    menuClickListener.onMenuClick(v);
+                }
+
+                dismiss();
+            }
+        });
+
+        copyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (menuClickListener != null) {
+                    menuClickListener.onMenuClick(v);
+                }
+
+                dismiss();
+            }
+        });
+
+        int width = mContext.getResources().getDimensionPixelSize(R.dimen.px150);
 
         mPopupWindow = new PopupWindow(linearLayout, width, ViewGroup.LayoutParams.WRAP_CONTENT);
         //mPopupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.bg_popup_menu));

@@ -13,6 +13,9 @@ import butterknife.BindView;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
@@ -43,23 +46,27 @@ public class FollowedViewHolder extends ChatViewHolder {
     Button seeBtn;
 
 
-    public FollowedViewHolder(Context context, View itemView) {
-        super(context, itemView);
+    public FollowedViewHolder(Context context, View itemView, ChatAdapter adapter) {
+        super(context, itemView, adapter);
         this.context = context;
     }
 
     @Override
-    protected void bindData(TalkItem item) {
+    protected void bindData(final TalkItem item) {
 
-        String portraitUrl = Account.getAvatar(item.from != null ? item.from.accountId : null,
-                avatorView.getMeasuredWidth());
-        Glide.with(context)
-                .load(portraitUrl)
-                .transform(new CircleTransform(context))
-                .placeholder(R.drawable.ic_defaultavatar)
-                .error(R.drawable.ic_defaultavatar)
-                .into(avatorView);
+        String cid = item.from != null ? item.from.accountId : "";
 
+        if (AccountDataManager.isXiaojsAccount(cid)) {
+            avatorView.setImageResource(R.drawable.ic_im_xiaojs);
+        }else {
+            String portraitUrl = Account.getAvatar(cid, avatorView.getMeasuredWidth());
+            Glide.with(context)
+                    .load(portraitUrl)
+                    .transform(new CircleTransform(context))
+                    .placeholder(R.drawable.ic_defaultavatar)
+                    .error(R.drawable.ic_defaultavatar)
+                    .into(avatorView);
+        }
 
         if (item.showTime) {
             String timeStr = TimeUtil.getTimeShowString(item.time, false);
@@ -73,15 +80,22 @@ public class FollowedViewHolder extends ChatViewHolder {
         nameView.setText(item.from.name);
         contentTextView.setText(item.body.text);
 
-        //FIXME ID 没有，判断不出来followType
-//        DataProvider dataProvider = DataProvider.getProvider(context);
-//        if (dataProvider.existInContact()) {
-//            lineView.setVisibility(View.GONE);
-//            followBtn.setVisibility(View.GONE);
-//        } else {
-//            lineView.setVisibility(View.VISIBLE);
-//            followBtn.setVisibility(View.VISIBLE);
-//        }
+        if (item.extra !=null
+                && (item.extra.followType == Social.FllowType.NA
+                || item.extra.followType == Social.FllowType.FAN_ONLY)) {
+            lineView.setVisibility(View.VISIBLE);
+            followBtn.setVisibility(View.VISIBLE);
+        }else {
+            lineView.setVisibility(View.GONE);
+            followBtn.setVisibility(View.GONE);
+        }
+
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chatAdapter.toFollow(item);
+            }
+        });
 
     }
 }

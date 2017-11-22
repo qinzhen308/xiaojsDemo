@@ -30,11 +30,13 @@ public abstract class ChatViewHolder extends RecyclerView.ViewHolder{
     protected int MAX_SIZE;
 
     protected Context context;
+    protected ChatAdapter chatAdapter;
 
-    public ChatViewHolder(Context context,View itemView) {
+    public ChatViewHolder(Context context,View itemView, ChatAdapter adapter) {
         super(itemView);
         ButterKnife.bind(this,itemView);
         this.context = context;
+        this.chatAdapter = adapter;
         MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px350);
     }
 

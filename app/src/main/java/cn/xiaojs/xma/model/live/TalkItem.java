@@ -26,6 +26,10 @@ public class TalkItem {
 
     public String error;//用于判断是否发送失败，有值说明发送失败
 
+    public String signature;
+    public TalkExtra extra;
+
+
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TalkPerson {
@@ -49,6 +53,15 @@ public class TalkItem {
     public static class QiNiuImg{
         public String name;
     }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class TalkExtra {
+        public String followedBy;
+        public String name;
+        public int followType;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

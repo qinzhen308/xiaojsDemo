@@ -18,6 +18,8 @@ import cn.xiaojs.xma.data.api.socket.xms.XMSSocketManager;
 import cn.xiaojs.xma.data.api.socket.xms.XMSSocketRequest;
 import cn.xiaojs.xma.data.preference.SecurityPref;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.RecallTalk;
+import cn.xiaojs.xma.model.socket.RemoveTalk;
 import cn.xiaojs.xma.model.socket.room.ChangeNotify;
 import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.RemoveDlg;
@@ -168,5 +170,27 @@ public class XMSManager {
         String event = Su.getEventSignature(Su.EventCategory.XMS_APP,
                 Su.EventType.CHANGE_NOTIFY);
         socketRequest.emit(event, changeNotify, EventResponse.class);
+    }
+
+    public static void sendRemoveTalk(Context context, RemoveTalk removeTalk,
+                                        EventCallback<EventResponse> callback) {
+        XMSSocketManager socketManager = XMSSocketManager.getSocketManager(context);
+        XMSSocketRequest<EventResponse> socketRequest = new XMSSocketRequest<>(socketManager,
+                callback);
+
+        String event = Su.getEventSignature(Su.EventCategory.XMS_APP,
+                Su.EventType.REMOVE_TALK);
+        socketRequest.emit(event, removeTalk, EventResponse.class);
+    }
+
+    public static void sendRecallTalk(Context context, RecallTalk recallTalk,
+                                      EventCallback<EventResponse> callback) {
+        XMSSocketManager socketManager = XMSSocketManager.getSocketManager(context);
+        XMSSocketRequest<EventResponse> socketRequest = new XMSSocketRequest<>(socketManager,
+                callback);
+
+        String event = Su.getEventSignature(Su.EventCategory.XMS_APP,
+                Su.EventType.RECALL_TALK);
+        socketRequest.emit(event, recallTalk, EventResponse.class);
     }
 }
