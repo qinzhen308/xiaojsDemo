@@ -120,6 +120,12 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         mWhiteboardLayout = (WhiteboardLayout) root.findViewById(R.id.white_board_layout);
 
         mPanel = root.findViewById(R.id.white_board_panel);
+        mPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //为了事件不穿透到白板上
+            }
+        });
         mSelection = (ImageView) root.findViewById(R.id.select_btn);
         mHandWriting = (ImageView) root.findViewById(R.id.handwriting_btn);
         mGeoShape = (ImageView) root.findViewById(R.id.shape_btn);
@@ -219,13 +225,17 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             return;
         }
 
-        mSelection.setSelected(false);
-        mHandWriting.setSelected(false);
-        mGeoShape.setSelected(false);
+        int id=v.getId();
+        if(!(id==R.id.undo||id==R.id.redo)){
+            mSelection.setSelected(false);
+            mHandWriting.setSelected(false);
+            mGeoShape.setSelected(false);
 //        mTextWriting.setSelected(false);
-        mEraser.setSelected(false);
-        //mColorPicker.setSelected(false);
-        v.setSelected(true);
+            mEraser.setSelected(false);
+            //mColorPicker.setSelected(false);
+            v.setSelected(true);
+        }
+
 
         switch (v.getId()) {
             case R.id.select_btn:

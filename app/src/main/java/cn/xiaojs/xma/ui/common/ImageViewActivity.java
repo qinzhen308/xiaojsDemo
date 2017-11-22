@@ -239,6 +239,9 @@ public class ImageViewActivity extends BaseActivity {
 //        pointContent.setViewPager(mPager, mPathList.size(), position,
 //                true, null);
         pageNumView.setViewPager(mPager, mPathList.size(), position);
+        if(mPathList.size()==1){
+            pageNumView.setVisibility(View.GONE);
+        }
     }
 
     /**
