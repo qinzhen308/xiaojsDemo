@@ -28,6 +28,7 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
@@ -49,7 +50,7 @@ import cn.xiaojs.xma.util.MaterialUtil;
  * Created by Paul Z on 2017/11/1.
  */
 
-public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson> {
+public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson>,IEventer {
 
 
     @BindView(R.id.tv_date)
@@ -615,6 +616,8 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
         ListView content= new ListView(getContext());
         content.setDivider(new ColorDrawable(getResources().getColor(R.color.main_bg)));
         content.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.px2));
+        content.setPadding(0,0,0,getResources().getDimensionPixelSize(R.dimen.px20));
+        content.setSelector(new ColorDrawable());
         TeacherAdapter adapter=new TeacherAdapter((Activity) getContext());
         adapter.setList(mData.assistants);
         content.setAdapter(adapter);
@@ -641,8 +644,8 @@ public class MyScheduleView extends RelativeLayout implements IViewModel<CLesson
 
     private EventCallback mEventCallback;
 
-    public void setCallback(EventCallback eventCallback) {
-        mEventCallback = eventCallback;
+    public void setEventCallback(EventCallback callback){
+        mEventCallback = callback;
     }
 
 }

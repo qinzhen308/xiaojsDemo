@@ -460,7 +460,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
     private void showMoreDlg() {
         ListBottomDialog dialog = new ListBottomDialog(getActivity());
-        String[] items = new String[]{getString(R.string.disband_class)};
+        String[] items = new String[]{getString(R.string.disband_classroom)};
         dialog.setItems(items);
         dialog.setOnItemClick(new ListBottomDialog.OnItemClick() {
             @Override
@@ -533,7 +533,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
     //删除
     private void showDisbandConfirmDlg(final String classId) {
         final CommonDialog dialog = new CommonDialog(getActivity());
-        dialog.setTitle(R.string.disband_class);
+        dialog.setTitle(R.string.disband_classroom);
         dialog.setDesc(R.string.disband_class_tip);
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
             @Override

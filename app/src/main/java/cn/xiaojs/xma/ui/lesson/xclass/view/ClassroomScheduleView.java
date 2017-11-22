@@ -1,6 +1,5 @@
 package cn.xiaojs.xma.ui.lesson.xclass.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -28,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.pageload.EventCallback;
+import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.data.preference.AccountPref;
@@ -47,7 +46,7 @@ import cn.xiaojs.xma.util.ArrayUtil;
  * Created by Paul Z on 2017/11/1.
  */
 
-public class ClassroomScheduleView extends RelativeLayout implements IViewModel<ScheduleLesson> ,IBindFragment{
+public class ClassroomScheduleView extends RelativeLayout implements IViewModel<ScheduleLesson> ,IBindFragment,IEventer{
 
 
     @BindView(R.id.tv_date)
@@ -269,12 +268,6 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
         return list;
     }
 
-    private EventCallback mEventCallback;
-
-    public void setCallback(EventCallback eventCallback) {
-        mEventCallback = eventCallback;
-    }
-
 
     @OnClick(R.id.iv_avatar)
     public void clickTeacher(){
@@ -297,7 +290,9 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
         ListView content= new ListView(getContext());
         content.setDivider(new ColorDrawable(getResources().getColor(R.color.main_bg)));
         content.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.px2));
-        TeacherAdapter adapter=new TeacherAdapter((Activity) getContext());
+        content.setPadding(0,0,0,getResources().getDimensionPixelSize(R.dimen.px20));
+        content.setSelector(new ColorDrawable());
+        TeacherAdapter adapter=new TeacherAdapter( mFragment.getActivity());
         adapter.setList(mData.assistants);
         content.setAdapter(adapter);
         content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -325,5 +320,11 @@ public class ClassroomScheduleView extends RelativeLayout implements IViewModel<
     @Override
     public void bindFragment(Fragment fragment) {
         mFragment=fragment;
+    }
+
+    private EventCallback mEventCallback;
+    @Override
+    public void setEventCallback(EventCallback callback) {
+        mEventCallback = callback;
     }
 }

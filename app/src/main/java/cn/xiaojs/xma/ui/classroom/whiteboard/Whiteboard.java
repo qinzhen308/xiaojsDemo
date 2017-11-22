@@ -30,6 +30,7 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -55,6 +56,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
@@ -2332,17 +2336,42 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
      * 触发推白板
      */
     public void onTouchPreview(){
-        post(new Runnable() {
-            @Override
-            public void run() {
+
+        if(previewQueueState==1){
+            handler.sendEmptyMessage(1);
+            handler.sendEmptyMessageDelayed(3,1000);
+        }else if(previewQueueState==2){
+            handler.removeMessages(2);
+            handler.sendEmptyMessageDelayed(2,1000);
+        }else {
+        }
+    }
+
+    int previewQueueState=1;
+    Handler handler=new Handler(){
+        long time;
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what!=3){
                 Bitmap preview=getPreviewBitmap();
-                Logger.d("-----qz----ontouchPreview---preview="+preview);
                 if(preview!=null){
                     pushPreviewBoardListener.onPush(preview);
                 }
+                long time2=System.currentTimeMillis();
+                Logger.d("-----qz-----push time="+(time2-time));
+                time=time2;
             }
-        });
-    }
+            if(msg.what==1){
+                previewQueueState=2;
+            }else if(msg.what==2){
+                previewQueueState=1;
+            }else if(msg.what==3){
+                previewQueueState=1;
+            }
+
+        }
+    };
+
 
     public void setPushPreviewBoardListener(PushPreviewBoardListener pushPreviewBoardListener){
         this.pushPreviewBoardListener=pushPreviewBoardListener;

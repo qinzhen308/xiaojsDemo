@@ -113,6 +113,7 @@ public class HandwritingPop extends SettingsPopupWindow {
             if (mListener != null) {
                 mListener.onPaintSize(seekBar.getProgress() + MIN_PAINT_SIZE);
             }
+            dismiss();
         }
 
     };
