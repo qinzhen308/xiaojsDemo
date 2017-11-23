@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.live.Attendee;
+import cn.xiaojs.xma.ui.classroom2.chat.MessageType;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -67,6 +68,14 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new VistorViewHolder(view);
         }
 
+        if (viewType == MemberType.VERIFY){
+            View view = LayoutInflater.from(context)
+                    .inflate(R.layout.layout_classroom2_member_ver_item, parent, false);
+            return new VistorViewHolder(view);
+        }
+
+
+
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.layout_classroom2_member_item, parent, false);
 
@@ -78,6 +87,9 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         final Attendee attendee = attendees.get(position);
         if (attendee.ctype == -1)
             return MemberType.VISTOR;
+
+        if (attendee.ctype == -2)
+            return MemberType.VERIFY;
 
         return MemberType.NORMAL;
 
@@ -98,6 +110,10 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
 
+        } else if(holder instanceof VerifyViewHolder) {
+            VerifyViewHolder verHolder = (VerifyViewHolder) holder;
+            verHolder.descView.setText("无");
+            verHolder.nameView.setText("验证消息");
         } else {
 
             MemberViewHolder memberHolder = (MemberViewHolder) holder;
@@ -129,14 +145,14 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             CTLConstant.UserIdentity identity = classroomEngine.getUserIdentity(realType);
             if (identity == CTLConstant.UserIdentity.ADMINISTRATOR) {
-                markStr = "管理员";
+                markStr = "管理者";
                 colorRes = context.getResources().getColor(R.color.session_admin);
             } else if (identity == CTLConstant.UserIdentity.LEAD) {
                 markStr = "主讲";
                 colorRes = context.getResources().getColor(R.color.session_leader);
             } else if (identity == CTLConstant.UserIdentity.ADVISER ) {
-                markStr = "班主任";
-                colorRes = context.getResources().getColor(R.color.session_leader);
+                markStr = "管理者";
+                colorRes = context.getResources().getColor(R.color.session_admin);
             } else if (identity == CTLConstant.UserIdentity.TEACHER2) {
                 markStr = "老师";
                 colorRes = context.getResources().getColor(R.color.session_teacher);

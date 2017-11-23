@@ -303,11 +303,11 @@ public class DataProvider {
     }
 
     public boolean existInClassesByTicket(String ticket) {
-        if(ArrayUtil.isEmpty(classes)){
+        if (ArrayUtil.isEmpty(classes)) {
             return false;
         }
-        for(Contact contact:classes){
-            if(ticket.equals(contact.ticket)){
+        for (Contact contact : classes) {
+            if (ticket.equals(contact.ticket)) {
                 return true;
             }
         }
@@ -318,6 +318,50 @@ public class DataProvider {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Conversation
     //
+
+    public void updateConversationWhenReceivedTalkremoved(String conversationId, long time) {
+        if (TextUtils.isEmpty(conversationId) || ArrayUtil.isEmpty(conversations) || time<=0)
+            return;
+
+        Contact tempContact = new Contact();
+        tempContact.id = conversationId;
+
+        int index = conversations.indexOf(tempContact);
+        if (index >= 0) {
+            Contact oriContact = conversations.get(index);
+
+            if(oriContact.lastTalked != time)
+                return;
+
+            oriContact.lastMessage = "";//FIXME 目前获取不到最近的一条消息，所以先放空；
+
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationUpdate(oriContact, index);
+                }
+            }
+        }
+
+    }
+
+    public void updateConversationWhenTalkRemoved(String conversationId, String lastMessage) {
+
+        Contact tempContact = new Contact();
+        tempContact.id = conversationId;
+
+        int index = conversations.indexOf(tempContact);
+        if (index >= 0) {
+            Contact oriContact = conversations.get(index);
+            oriContact.lastMessage = lastMessage;
+
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationUpdate(oriContact, index);
+                }
+            }
+
+        }
+    }
 
     public void removeConversations(String[] conversationIds) {
         if (conversationIds == null)
@@ -576,7 +620,7 @@ public class DataProvider {
 
     private boolean vibrate(Contact contact) {
         //消息免打扰的会话，不需要响铃；
-        if (contact.silent) {
+        if (contact.silent || contact.sync) {
             return false;
         }
 
@@ -611,7 +655,8 @@ public class DataProvider {
                     updateDlgRead(talk.type, talk.to);
                     break;
                 case Su.EventType.REMOVE_DIALOG:
-
+                    RemoveDlgReceived removeDlgReceived = (RemoveDlgReceived) eventReceived.t;
+                    handleRemoveDlg(removeDlgReceived);
                     break;
                 case Su.EventType.RETAIN_DIALOG:
                     Talk retainDlg = (Talk) eventReceived.t;
@@ -652,7 +697,7 @@ public class DataProvider {
 
         Contact contact = new Contact();
         if (talkItem.type == Communications.TalkType.PEER) {
-            contact.id = talkItem.from;
+            contact.id = talkItem.to;
             contact.name = talkItem.name;
             contact.title = talkItem.name;
             contact.subtype = ConversationType.TypeName.PERSON;
@@ -672,13 +717,29 @@ public class DataProvider {
 
     private void updateConveration(Talk talkItem) {
 
+
+        if (!TextUtils.isEmpty(talkItem.signature)){
+            if (talkItem.signature.equals(Su.getRemoveTalkSignature())
+                    || talkItem.signature.equals(Su.getRecallTalkSignature())) {
+
+                //FIXME 此处传的stime应该是被删除那条消息的时间， 但是目前事件并没有返回该时间；
+                updateConversationWhenReceivedTalkremoved(talkItem.to, talkItem.stime);
+                return;
+            }
+        }
+
+
         if (TextUtils.isEmpty(talkItem.name)) {
             talkItem.name = "nil";
         }
         Contact contact = new Contact();
 
         if (talkItem.type == Communications.TalkType.PEER) {
-            contact.id = talkItem.from;
+            if (talkItem.sync) {
+                contact.id = talkItem.to;
+            }else {
+                contact.id = talkItem.from;
+            }
             contact.name = talkItem.name;
             contact.title = talkItem.name;
             contact.subtype = ConversationType.TypeName.PERSON;
@@ -704,12 +765,10 @@ public class DataProvider {
                 contact.state = Live.LiveSessionState.IDLE;
                 contact.streaming = false;
 
-            }else if (talkItem.signature.equals(Su.getFollowSignature())) {
+            } else if (talkItem.signature.equals(Su.getFollowSignature())) {
                 //TODO 被关注
             } else if (talkItem.signature.equals(Su.getUnFollowSignature())) {
-
                 //TODO 被取消关注
-
             } else {//FIXME 此处要判断多种状态，目前接口支持不全；
                 contact.streaming = false;
                 contact.state = Live.LiveSessionState.IDLE;
@@ -718,10 +777,19 @@ public class DataProvider {
         }
 
         contact.lastMessage = talkItem.body.text;
-        contact.lastTalked = talkItem.time;
-        contact.unread = 1;
 
-        if (talkItem.depressed){
+        long realtime = talkItem.stime >=0? talkItem.stime : talkItem.time;
+        contact.lastTalked = realtime;
+        contact.sync = talkItem.sync;
+
+
+        if (talkItem.sync) {
+            contact.unread = 0;
+        }else {
+            contact.unread = 1;
+        }
+
+        if (talkItem.depressed) {
             //FIXME
             return;
         }

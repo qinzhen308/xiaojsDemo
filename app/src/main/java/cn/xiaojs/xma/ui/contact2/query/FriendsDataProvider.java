@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.provider.DataProvider;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
@@ -16,6 +17,7 @@ import cn.xiaojs.xma.ui.contact2.model.ContactsWhitIndex;
 import cn.xiaojs.xma.ui.contact2.model.FriendItem;
 import cn.xiaojs.xma.ui.contact2.model.ItemTypes;
 import cn.xiaojs.xma.ui.contact2.model.LabelItem;
+import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -31,9 +33,20 @@ import io.reactivex.schedulers.Schedulers;
 public class FriendsDataProvider {
 
     private Context context;
+    private boolean filter;
+    private String excludeClassId;
 
     public FriendsDataProvider(Context context) {
         this.context = context;
+    }
+
+    public void setFilter(boolean filter) {
+        this.filter = filter;
+    }
+
+    public void setExcludeClassId(String excludeClassId) {
+        this.excludeClassId = excludeClassId;
+
     }
 
     public void loadFriends(DataProvider dataProvider, Consumer<ContactsWhitIndex> dataReceiver) {
@@ -59,6 +72,11 @@ public class FriendsDataProvider {
                 if (originContacts != null && originContacts.size() > 0) {
 
                     for (Contact contact : originContacts) {
+
+                        if (filter && contact.subtype.equals(ConversationType.TypeName.ORGANIZATION)) {
+                            continue;
+                        }
+
 
                         FriendItem item = new FriendItem(contact);
                         String belong = item.belongsGroup();
@@ -113,9 +131,18 @@ public class FriendsDataProvider {
                 ArrayList<AbsContactItem> contacts = new ArrayList<>();
                 Map<String, Integer> belongCollect = new HashMap<>();
 
+                String mid = AccountDataManager.getAccountID(context);
+
                 if (originContacts != null && originContacts.size() > 0) {
 
                     for (Contact contact : originContacts) {
+
+
+                        if (filter) {
+                            if (contact.id.equals(excludeClassId) || contact.ownerId.equals(mid)) {
+                                continue;
+                            }
+                        }
 
                         ClassItem item = new ClassItem(contact);
                         String belong = item.belongsGroup();

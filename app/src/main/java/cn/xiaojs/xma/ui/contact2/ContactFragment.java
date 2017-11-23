@@ -62,9 +62,10 @@ public class ContactFragment extends DialogFragment {
     }
 
 
-    public static void invokeWithChoice(FragmentManager manager, int choiceMode, ChoiceCompletedListener listener) {
+    public static void invokeWithChoice(FragmentManager manager, String exId, int choiceMode, ChoiceCompletedListener listener) {
         ContactFragment contactFragment = new ContactFragment();
         Bundle bundle = new Bundle();
+        bundle.putString(CTLConstant.EXTRA_ID, exId);
         bundle.putInt(CTLConstant.EXTRA_CHOICE_MODE, choiceMode);
         contactFragment.setArguments(bundle);
         contactFragment.setChoiceCompletedListener(listener);

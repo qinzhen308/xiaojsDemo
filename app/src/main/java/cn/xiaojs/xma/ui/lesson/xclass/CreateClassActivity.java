@@ -460,7 +460,8 @@ public class CreateClassActivity extends BaseActivity implements ContactFragment
 
     private void enterImportPage() {
 
-        ContactFragment.invokeWithChoice(getSupportFragmentManager(), ListView.CHOICE_MODE_MULTIPLE, this);
+
+        ContactFragment.invokeWithChoice(getSupportFragmentManager(), "",ListView.CHOICE_MODE_MULTIPLE, this);
 
 //        Intent i = new Intent(CreateClassActivity.this,
 //                ImportStudentFormClassActivity.class);

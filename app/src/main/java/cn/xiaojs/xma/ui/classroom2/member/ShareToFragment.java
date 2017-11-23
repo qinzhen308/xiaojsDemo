@@ -199,7 +199,7 @@ public class ShareToFragment extends BaseRoomFragment {
                 String mid = AccountDataManager.getAccountID(getContext());
 
                 for (Attendee att : attendees) {
-                    Talk talkBean = new Talk();
+                    final Talk talkBean = new Talk();
                     talkBean.from = mid;
                     talkBean.body = new Talk.TalkContent();
                     talkBean.body.text = imgEncode;
@@ -213,6 +213,11 @@ public class ShareToFragment extends BaseRoomFragment {
                             true, talkBean, new EventCallback<TalkResponse>() {
                         @Override
                         public void onSuccess(TalkResponse talkResponse) {
+
+                            if (talkResponse != null) {
+                                talkBean.time = talkResponse.time;
+                                talkBean.stime = talkResponse.stime;
+                            }
 
                         }
 

@@ -15,7 +15,7 @@
             android:layout_weight="1.0"
             android:text="复制"
             android:textColor="@color/font_white"
-            android:textSize="@dimen/font_15px"
+            android:textSize="@dimen/font_18px"
             android:background="@android:color/transparent"
             android:padding="@dimen/px10"
             />
@@ -27,7 +27,18 @@
             android:layout_weight="1.0"
             android:text="删除"
             android:textColor="@color/font_white"
-            android:textSize="@dimen/font_15px"
+            android:textSize="@dimen/font_18px"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/px10"
+            />
+    <Button
+            android:id="@+id/recall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="撤销"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_18px"
             android:background="@android:color/transparent"
             android:padding="@dimen/px10"
             />

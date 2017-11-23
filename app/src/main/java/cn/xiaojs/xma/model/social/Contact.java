@@ -48,6 +48,8 @@ public class Contact implements Serializable {
 
     public boolean streaming;
 
+    public boolean sync;
+
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Contact) {

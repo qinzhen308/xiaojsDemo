@@ -52,7 +52,7 @@ public class FollowedViewHolder extends ChatViewHolder {
     }
 
     @Override
-    protected void bindData(final TalkItem item) {
+    protected void bindData(int position, final TalkItem item) {
 
         String cid = item.from != null ? item.from.accountId : "";
 

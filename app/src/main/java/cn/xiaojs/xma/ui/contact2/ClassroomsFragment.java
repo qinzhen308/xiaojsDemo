@@ -43,6 +43,7 @@ public class ClassroomsFragment extends Base2Fragment {
 
     private DataProvider dataProvider;
     private int choiceMode;
+    private String exId;
 
 
     @Nullable
@@ -62,6 +63,7 @@ public class ClassroomsFragment extends Base2Fragment {
         choiceMode = getArguments() == null ?
                 ListView.CHOICE_MODE_NONE
                 : getArguments().getInt(CTLConstant.EXTRA_CHOICE_MODE, ListView.CHOICE_MODE_NONE);
+        exId = getArguments() == null ? "" : getArguments().getString(CTLConstant.EXTRA_ID, "");
         listView.setChoiceMode(choiceMode);
 
         adapter = new ClassroomsAdapter(getContext(), choiceMode);
@@ -97,6 +99,11 @@ public class ClassroomsFragment extends Base2Fragment {
 
     private void loadData() {
         FriendsDataProvider provider = new FriendsDataProvider(getContext());
+        boolean filter = choiceMode == ListView.CHOICE_MODE_NONE? false : true;
+        if (filter) {
+            provider.setFilter(filter);
+            provider.setExcludeClassId(exId);
+        }
         provider.loadClasses(dataProvider, classesConsumer);
     }
 
