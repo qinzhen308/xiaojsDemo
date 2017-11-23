@@ -119,11 +119,23 @@ public class ScanQrcodeActivity extends QrCodeActivity {
      * @param data
      */
     private void checkJoinClassStateAndEnterClassroom(final String data){
+        /*if(true){
+            String url=null;
+            if(data.contains("?")){
+                url=data+"&app=android";
+            }else {
+                url=data+"?app=android";
+            }
+            CommonWebActivity.invoke(ScanQrcodeActivity.this,"",url);
+            finish();
+            return;
+        }*/
         final String id=data.substring(data.lastIndexOf("/")+1,data.lastIndexOf("."));
         ClassStateUtil.checkClassroomStateForMe(this, id, new ClassStateUtil.ClassStateCallback() {
             @Override
             public void onClassroomOpen(String ticket) {
                 Classroom2Activity.invoke(ScanQrcodeActivity.this,ticket);
+                finish();
             }
 
             @Override

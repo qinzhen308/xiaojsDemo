@@ -245,7 +245,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        classroomEngine.unObserveSessionData(dataObserver);
+        if(classroomEngine!=null){
+            classroomEngine.unObserveSessionData(dataObserver);
+        }
 
         offBootlistener();
         SocketManager.getSocketManager(this).disConnect();

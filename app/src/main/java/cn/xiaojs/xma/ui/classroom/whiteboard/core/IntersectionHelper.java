@@ -123,9 +123,11 @@ public class IntersectionHelper {
      * @param x 按下点的x
      * @param y 按下点的y
      */
-    public static int whichEdgePressed(float x, float y, float left, float top, float right, float bottom) {
+    /*public static int whichEdgePressed(float x, float y, float left, float top, float right, float bottom) {
         int scope = WhiteboardConfigs.PRESSED_SCOPE + WhiteboardConfigs.BORDER_PADDING;
         //top edge
+        float centerX=(left+right)/2;
+        float centerY=(top+bottom)/2;
         mTransRect.set(left, top - scope, right, top + scope);
         if (mTransRect.contains(x, y)) {
             return TOP_EDGE;
@@ -145,6 +147,43 @@ public class IntersectionHelper {
 
         //right edge
         mTransRect.set(right - scope, top, right + scope, bottom);
+        if (mTransRect.contains(x, y)) {
+            return RIGHT_EDGE;
+        }
+
+        return RECT_NO_SELECTED;
+    }*/
+
+    /**
+     * 判断是按下矩形的哪一条边上的触控点
+     *
+     * @param x 按下点的x
+     * @param y 按下点的y
+     */
+    public static int whichEdgePressed(float x, float y, float left, float top, float right, float bottom) {
+        int scope = WhiteboardConfigs.PRESSED_SCOPE + WhiteboardConfigs.BORDER_PADDING;
+        //top edge
+        float centerX=(left+right)/2;
+        float centerY=(top+bottom)/2;
+        mTransRect.set(centerX-scope, top - scope, centerX+scope, top + scope);
+        if (mTransRect.contains(x, y)) {
+            return TOP_EDGE;
+        }
+
+        //bottom edge
+        mTransRect.set(centerX-scope, bottom - scope, centerX+scope, bottom + scope);
+        if (mTransRect.contains(x, y)) {
+            return BOTTOM_EDGE;
+        }
+
+        //left edge
+        mTransRect.set(left - scope, centerY-scope, left + scope, centerY+scope);
+        if (mTransRect.contains(x, y)) {
+            return LEFT_EDGE;
+        }
+
+        //right edge
+        mTransRect.set(right - scope, centerY-scope, right + scope, centerY+scope);
         if (mTransRect.contains(x, y)) {
             return RIGHT_EDGE;
         }
@@ -186,7 +225,8 @@ public class IntersectionHelper {
      */
     private static int whichCornerPressed(float x, float y, RectF rect) {
         float scope = WhiteboardConfigs.CORNER_EDGE_SIZE;
-        float offset = scope * 0.6f;
+//        float offset = scope * 0.6f;
+        float offset = 0f;
         //left top corner
         Utils.buildRect(mTransRect, rect.left, rect.top, scope, -offset, -offset);
         if (mTransRect.contains(x, y)) {

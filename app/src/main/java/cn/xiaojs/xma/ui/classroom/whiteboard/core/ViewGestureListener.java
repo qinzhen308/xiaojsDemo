@@ -15,6 +15,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.core;
  *
  * ======================================================================================== */
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -25,13 +26,13 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-public class ViewGestureListener {
+public abstract class ViewGestureListener implements Animator.AnimatorListener{
 
     public static final float MAX_SCALE = WhiteboardConfigs.WHITE_BOARD_MAX_SCALE;
     public static final float MIN_SCALE = WhiteboardConfigs.WHITE_BOARD_MIN_SCALE;
 
-    private final static int OVERFLOW_X = 200; //200px
-    private final static int OVERFLOW_Y = 200; //200px
+    private final static int OVERFLOW_X = 0; //200px
+    private final static int OVERFLOW_Y = 0; //200px
 
     private int mVisibleWidth;
     private int mVisibleHeight;
@@ -125,6 +126,8 @@ public class ViewGestureListener {
         mValueHolder = new ValueHolder();
         mAnimator = ObjectAnimator.ofFloat(mValueHolder, "factor", 0.0f, 1.0f);
         mAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        mAnimator.addListener(this);
 
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         mGestureDetector = new GestureDetector(context, new GestureListener());
@@ -271,6 +274,9 @@ public class ViewGestureListener {
 
     public boolean scaling(float focusX, float focusY, float scale) {
         mScale = mBeginScale * scale;
+        if(Float.compare(mScale,1.0f)<0){
+            mScale=1.0f;
+        }
         mInverseScale = 1.0f / mScale;
 
         onScaleRectChanged(scale, focusX, focusY);
@@ -336,6 +342,10 @@ public class ViewGestureListener {
         mOldFocusY = focusY;
     }
 
+
+    /**
+     * 缩放抬手后进行判定，是否需要复原
+     */
     private void onScaleEndRectChanged() {
         float offsetX = 0;
         float offsetY = 0;

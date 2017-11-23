@@ -212,32 +212,20 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
         isOrganization = home.profile != null ? Account.TypeName.ORGANIZATION.equals(home.profile.typeName) : false;
         if (home.isTeacher ) {//用户是老师
-            //一期暂时没有评价系统，暂时隐藏
-            PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
             PersonHomeMomentFragment f2 = new PersonHomeMomentFragment();
-            //PersonHomeMomentFragment f3 = new PersonHomeMomentFragment();
 
-            Bundle b1 = new Bundle();
             Bundle b2 = new Bundle();
-            b1.putSerializable(PersonalBusiness.KEY_PERSONAL_ACCOUNT_ID, mAccount);
             b2.putSerializable(PersonalBusiness.KEY_PERSONAL_ACTIVITY_LIST, mBean.activities);
-            f1.setArguments(b1);
-            f1.setPagePosition(0);
-            f2.setPagePosition(3);
+            f2.setPagePosition(2);
             f2.setArguments(b2);
-            //f3.setPagePosition(2);
 
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
-            fragments.add(f1);
-            fragments.add(PersonHomeRecordedLessonFragment.newInstance(1,mAccount));
-            fragments.add(PersonHomeClassFragment.newInstance(2,mAccount));
+            fragments.add(PersonHomeRecordedLessonFragment.newInstance(0,mAccount));
+            fragments.add(PersonHomeClassFragment.newInstance(1,mAccount));
             fragments.add(f2);
-            //fragments.add(f3);
             String[] tabs = new String[]{
-                    "公开课",
                     getString(R.string.record_lesson),
-                    getString(R.string.gradle),
-                    //getString(R.string.person_comment),
+                    "教室",
                     getString(R.string.person_moment)};
 //            if (mIsMyself) {
 //                tabs[0] = getString(R.string.my_lesson);
@@ -265,23 +253,16 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                 mProfileTv.setVisibility(View.GONE);
             }
 
-            PersonHomeLessonFragment f1 = new PersonHomeLessonFragment();
 
-            Bundle b1 = new Bundle();
-            b1.putSerializable(PersonalBusiness.KEY_PERSONAL_ACCOUNT_ID, mAccount);
-            f1.setArguments(b1);
-            f1.setPagePosition(0);
             PersonHomeTeacherFragment f2 = PersonHomeTeacherFragment.createInstance(mAccount);
-            f2.setPagePosition(3);
+            f2.setPagePosition(2);
             List<BaseScrollTabFragment> fragments = new ArrayList<>();
-            fragments.add(f1);
-            fragments.add(PersonHomeRecordedLessonFragment.newInstance(1,mAccount));
-            fragments.add(PersonHomeClassFragment.newInstance(2,mAccount));
+            fragments.add(PersonHomeRecordedLessonFragment.newInstance(0,mAccount));
+            fragments.add(PersonHomeClassFragment.newInstance(1,mAccount));
             fragments.add(f2);
             String[] tabs = new String[]{
-                    "公开课",
                     getString(R.string.record_lesson),
-                    getString(R.string.gradle),
+                    "教室",
                     "老师"};
             addContent(fragments, tabs);
         }else {//用户不是老师
