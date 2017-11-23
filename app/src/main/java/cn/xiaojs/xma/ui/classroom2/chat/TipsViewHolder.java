@@ -28,7 +28,7 @@ public class TipsViewHolder extends ChatViewHolder {
     }
 
     @Override
-    protected void bindData(TalkItem item) {
+    protected void bindData(int position, TalkItem item) {
 
 
         if (item.showTime) {

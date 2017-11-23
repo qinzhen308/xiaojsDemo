@@ -41,7 +41,7 @@ public abstract class ChatViewHolder extends RecyclerView.ViewHolder{
     }
 
 
-    protected abstract void bindData(TalkItem item);
+    protected abstract void bindData(int position, TalkItem item);
 
 //    protected void loadImg(String txt, String imgKey, ImageView imageView) {
 //        if (!TextUtils.isEmpty(txt)) {

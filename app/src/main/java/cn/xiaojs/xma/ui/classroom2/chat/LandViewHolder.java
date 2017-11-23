@@ -43,7 +43,7 @@ public class LandViewHolder extends ChatViewHolder {
     }
 
     @Override
-    protected void bindData(TalkItem item) {
+    protected void bindData(int position, TalkItem item) {
 
 
         if (!TextUtils.isEmpty(item.tips)) {

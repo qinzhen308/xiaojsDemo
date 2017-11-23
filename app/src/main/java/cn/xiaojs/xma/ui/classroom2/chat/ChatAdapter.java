@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import cn.xiaojs.xma.R;
-import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -26,6 +25,7 @@ import cn.xiaojs.xma.model.social.Relation;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.RemoveTalk;
 import cn.xiaojs.xma.ui.view.ChatPopupMenu;
+import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
  * Created by maxiaobao on 2017/9/28.
@@ -33,6 +33,13 @@ import cn.xiaojs.xma.ui.view.ChatPopupMenu;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
+    public interface OnChatOperationListener {
+        void onChatRemove(int position, TalkItem talkItem);
+
+        void onChatRecall(int position, TalkItem talkItem);
+
+        void onChatCopy(int position, TalkItem talkItem);
+    }
 
     private Context context;
     private ArrayList<TalkItem> messages;
@@ -41,6 +48,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     private int autoFetchMoreSize = 3;
     private int perpageMaxCount = 0;
     private boolean firstLoad = true;
+
+    public void setOperationListener(OnChatOperationListener operationListener) {
+        this.operationListener = operationListener;
+    }
+
+    private OnChatOperationListener operationListener;
 
 
     public interface FetchMoreListener {
@@ -69,6 +82,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
     public void setPerpageMaxCount(int count) {
         this.perpageMaxCount = count;
+    }
+
+    public void removeItem(int position) {
+
+        if (ArrayUtil.isEmpty(messages) || position < 0)
+            return;
+
+        messages.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public TalkItem getItem(int position) {
+        if (ArrayUtil.isEmpty(messages) || position < 0)
+            return null;
+
+        return messages.get(position);
     }
 
     @Override
@@ -139,13 +168,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
         TalkItem item = messages.get(position);
-        holder.bindData(item);
+        holder.bindData(position, item);
     }
 
     @Override
     public int getItemCount() {
         return messages == null ? 0 : messages.size();
     }
+
 
 
     private void autoRequestFetchMoreData(int position) {
@@ -193,37 +223,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
                 });
     }
 
-    public void showMenu(View view, final TalkItem item) {
-        ChatPopupMenu chatPopupMenu = new ChatPopupMenu(context);
+    public void showMenu(View view, final int position, final TalkItem item) {
+        final ChatPopupMenu chatPopupMenu = new ChatPopupMenu(context);
         chatPopupMenu.setMenuClickListener(new ChatPopupMenu.MenuClickListener() {
             @Override
             public void onMenuClick(View view) {
                 switch (view.getId()) {
                     case R.id.delete:
 
-                        //TODO
-
-//                        RemoveTalk removeTalk = new RemoveTalk();
-//                        removeTalk.
-//
-//                        XMSManager.sendRemoveTalk(context, , new EventCallback<EventResponse>() {
-//                            @Override
-//                            public void onSuccess(EventResponse response) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onFailed(String errorCode, String errorMessage) {
-//
-//                            }
-//                        });
+                        if (operationListener != null) {
+                            operationListener.onChatRemove(position, item);
+                        }
                         break;
                     case R.id.copy:
-                        String text = item.body.text;
-                        ClipboardManager cm = (ClipboardManager)
-                                context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        cm.setPrimaryClip(ClipData.newPlainText(null, text));
-                        Toast.makeText(context, "复制成功", Toast.LENGTH_LONG).show();
+
+                        if (operationListener != null) {
+                            operationListener.onChatCopy(position, item);
+                        }
                         break;
                 }
             }

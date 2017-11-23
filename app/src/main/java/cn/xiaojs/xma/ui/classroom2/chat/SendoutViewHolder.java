@@ -60,7 +60,7 @@ public class SendoutViewHolder extends ChatViewHolder {
     }
 
     @Override
-    protected void bindData(final TalkItem item) {
+    protected void bindData(final int position, final TalkItem item) {
 
         String portraitUrl = Account.getAvatar(item.from != null ? item.from.accountId : null,
                 avatorView.getMeasuredWidth());
@@ -123,7 +123,7 @@ public class SendoutViewHolder extends ChatViewHolder {
         contentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatAdapter.showMenu(v, item);
+                chatAdapter.showMenu(v, position, item);
             }
         });
 

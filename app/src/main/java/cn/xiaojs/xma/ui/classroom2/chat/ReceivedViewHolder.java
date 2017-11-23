@@ -48,7 +48,7 @@ public class ReceivedViewHolder extends ChatViewHolder {
     }
 
     @Override
-    protected void bindData(final TalkItem item) {
+    protected void bindData(int position, final TalkItem item) {
 
         String portraitUrl = Account.getAvatar(item.from != null ? item.from.accountId : null,
                 avatorView.getMeasuredWidth());

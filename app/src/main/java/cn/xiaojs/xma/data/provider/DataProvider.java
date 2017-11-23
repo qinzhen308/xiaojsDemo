@@ -303,11 +303,11 @@ public class DataProvider {
     }
 
     public boolean existInClassesByTicket(String ticket) {
-        if(ArrayUtil.isEmpty(classes)){
+        if (ArrayUtil.isEmpty(classes)) {
             return false;
         }
-        for(Contact contact:classes){
-            if(ticket.equals(contact.ticket)){
+        for (Contact contact : classes) {
+            if (ticket.equals(contact.ticket)) {
                 return true;
             }
         }
@@ -318,6 +318,25 @@ public class DataProvider {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Conversation
     //
+
+    public void updateConversationWhenTalkRemoved(String conversationId, String lastMessage) {
+
+        Contact tempContact = new Contact();
+        tempContact.id = conversationId;
+
+        int index = conversations.indexOf(tempContact);
+        if (index >= 0) {
+            Contact oriContact = conversations.get(index);
+            oriContact.lastMessage = lastMessage;
+
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationUpdate(oriContact, index);
+                }
+            }
+
+        }
+    }
 
     public void removeConversations(String[] conversationIds) {
         if (conversationIds == null)
@@ -704,7 +723,7 @@ public class DataProvider {
                 contact.state = Live.LiveSessionState.IDLE;
                 contact.streaming = false;
 
-            }else if (talkItem.signature.equals(Su.getFollowSignature())) {
+            } else if (talkItem.signature.equals(Su.getFollowSignature())) {
                 //TODO 被关注
             } else if (talkItem.signature.equals(Su.getUnFollowSignature())) {
 
@@ -721,7 +740,7 @@ public class DataProvider {
         contact.lastTalked = talkItem.time;
         contact.unread = 1;
 
-        if (talkItem.depressed){
+        if (talkItem.depressed) {
             //FIXME
             return;
         }

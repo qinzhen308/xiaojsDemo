@@ -1,5 +1,8 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -41,6 +44,8 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.social.Contact;
+import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.RemoveTalk;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.Talk;
@@ -63,7 +68,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by maxiaobao on 2017/9/25.
  */
 
-public abstract class ChatSessionFragment extends BaseDialogFragment implements ChatAdapter.FetchMoreListener {
+public abstract class ChatSessionFragment extends BaseDialogFragment
+        implements ChatAdapter.FetchMoreListener, ChatAdapter.OnChatOperationListener {
 
     @BindView(R.id.title)
     TextView titleView;
@@ -210,6 +216,64 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
         if (loading) return;
 
         loadData();
+    }
+
+    @Override
+    public void onChatRemove(final int position, TalkItem talkItem) {
+        RemoveTalk removeTalk = new RemoveTalk();
+        removeTalk.to = liveCriteria.to;
+        removeTalk.stime = talkItem.stime;
+        removeTalk.type = liveCriteria.type;
+        removeTalk.from = talkItem.from.accountId;
+
+        XMSManager.sendRemoveTalk(getContext(), removeTalk, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                if (adapter != null) {
+                    adapter.removeItem(position);
+
+                    if (position == adapter.getItemCount() - 1) {
+                        //更新会话列表
+                        String lastmessage = "";
+                        if (position > 0) {
+                            TalkItem item = adapter.getItem(position - 1);
+                            if (item != null) {
+                                if (item.body.contentType == Communications.ContentType.TEXT) {
+
+                                    lastmessage = item.body.text;
+
+                                } else if (item.body.contentType == Communications.ContentType.STYLUS) {
+                                    lastmessage = "图片";
+                                }
+                            }
+                        }
+
+                        dataProvider.updateConversationWhenTalkRemoved(liveCriteria.to, lastmessage);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onChatRecall(int position, TalkItem talkItem) {
+
+    }
+
+    @Override
+    public void onChatCopy(int position, TalkItem talkItem) {
+        String text = talkItem.body.text;
+        ClipboardManager cm = (ClipboardManager)
+                getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        cm.setPrimaryClip(ClipData.newPlainText(null, text));
+        Toast.makeText(getContext(), "复制成功", Toast.LENGTH_LONG).show();
     }
 
     private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
@@ -414,9 +478,9 @@ public abstract class ChatSessionFragment extends BaseDialogFragment implements 
             if (talk.signature.equals(Su.getFollowSignature())) {
                 talkItem.extra = new TalkItem.TalkExtra();
                 //FIXME 事件并没有返回关注人的ID等信息，会导致界面显示的关注操作失效
-                talkItem.extra.followedBy ="";
+                talkItem.extra.followedBy = "";
                 talkItem.extra.name = "";
-                talkItem.extra.followType =talk.followType;
+                talkItem.extra.followType = talk.followType;
             }
         }
 
