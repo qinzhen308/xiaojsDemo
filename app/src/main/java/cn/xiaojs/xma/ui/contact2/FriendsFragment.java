@@ -61,6 +61,7 @@ public class FriendsFragment extends Base2Fragment {
         choiceMode = getArguments() == null?
                 ListView.CHOICE_MODE_NONE
                 : getArguments().getInt(CTLConstant.EXTRA_CHOICE_MODE, ListView.CHOICE_MODE_NONE);
+
         listView.setChoiceMode(choiceMode);
 
         dataProvider = DataProvider.getProvider(getContext());
@@ -100,6 +101,11 @@ public class FriendsFragment extends Base2Fragment {
         //showLoadingStatus();
 
         FriendsDataProvider provider = new FriendsDataProvider(getContext());
+        boolean filter = choiceMode == ListView.CHOICE_MODE_NONE? false : true;
+        if (filter) {
+            provider.setFilter(filter);
+        }
+
         provider.loadFriends(dataProvider, friendDataReciver);
 
     }

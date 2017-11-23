@@ -328,7 +328,8 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
                         addByPhoneFragment.show(getFragmentManager(), "addphone");
                         break;
                     case 1://从通讯录中添加
-                        ContactFragment.invokeWithChoice(getFragmentManager(),
+                        String clsid = classroomEngine.getCtlSession().cls.id;
+                        ContactFragment.invokeWithChoice(getFragmentManager(),clsid,
                                 ListView.CHOICE_MODE_MULTIPLE, MemberListFragment.this);
                         break;
                 }

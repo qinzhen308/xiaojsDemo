@@ -7,4 +7,5 @@ package cn.xiaojs.xma.ui.classroom2.member;
 public class MemberType {
     public static final int VISTOR = 0;
     public static final int NORMAL = 1;
+    public static final int VERIFY = 2;
 }

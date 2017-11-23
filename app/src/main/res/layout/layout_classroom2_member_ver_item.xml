@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@id/root_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:clickable="true"
+        >
+
+
+    <ImageView
+            android:id="@+id/avator"
+            android:layout_width="@dimen/px86"
+            android:layout_height="@dimen/px86"
+            android:layout_marginTop="@dimen/px17"
+            android:layout_marginBottom="@dimen/px17"
+            android:layout_marginLeft="@dimen/px30"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_class_validationmessage"
+            />
+
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_32px"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_marginTop="@dimen/px17"
+            android:layout_toRightOf="@id/avator"
+            android:drawablePadding="@dimen/px8"
+            android:text="验证消息"
+            />
+
+    <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/hint_color"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="@dimen/font_24px"
+            android:layout_marginTop="@dimen/px2"
+            android:layout_alignLeft="@id/name"
+            android:layout_below="@id/name"
+            android:text="无"
+            />
+    <TextView
+            android:id="@+id/veri_count"
+            android:layout_width="@dimen/px34"
+            android:layout_height="@dimen/px34"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/px20"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px30"
+            android:background="@drawable/bg_red_circle_point"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_16px"
+            android:visibility="gone" />
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px20"
+            android:background="@color/gray_line"
+            android:layout_alignParentBottom="true"
+            />
+</RelativeLayout>
