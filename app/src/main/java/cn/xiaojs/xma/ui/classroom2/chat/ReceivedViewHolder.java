@@ -8,15 +8,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.common.ImageViewActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -48,7 +51,7 @@ public class ReceivedViewHolder extends ChatViewHolder {
     }
 
     @Override
-    protected void bindData(int position, final TalkItem item) {
+    protected void bindData(final int position, final TalkItem item) {
 
         String portraitUrl = Account.getAvatar(item.from != null ? item.from.accountId : null,
                 avatorView.getMeasuredWidth());
@@ -102,6 +105,14 @@ public class ReceivedViewHolder extends ChatViewHolder {
             contentTextView.setVisibility(View.GONE);
             contentImgView.setVisibility(View.GONE);
         }
+
+
+        contentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chatAdapter.showMenu(v, position, item, false);
+            }
+        });
 
 
         contentImgView.setOnClickListener(new View.OnClickListener() {

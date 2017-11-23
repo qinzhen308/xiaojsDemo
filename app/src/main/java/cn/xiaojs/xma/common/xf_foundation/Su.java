@@ -140,13 +140,20 @@ public class Su {
         return EventCategory.LIVE + ":" + EventType.STREAMING_STOPPED;
     }
 
-
     public static String getFollowSignature() {
         return EventCategory.XMS_MESSAGING + ":" + EventType.FOLLOW;
     }
 
     public static String getUnFollowSignature() {
         return EventCategory.XMS_MESSAGING + ":" + EventType.UNFOLLOW;
+    }
+
+    public static String getRemoveTalkSignature() {
+        return EventCategory.XMS_MESSAGING + ":" + EventType.REMOVE_TALK;
+    }
+
+    public static String getRecallTalkSignature() {
+        return EventCategory.XMS_MESSAGING + ":" + EventType.RECALL_TALK;
     }
 
 }

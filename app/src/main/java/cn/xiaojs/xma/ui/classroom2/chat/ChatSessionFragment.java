@@ -45,6 +45,7 @@ import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.RecallTalk;
 import cn.xiaojs.xma.model.socket.RemoveTalk;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ReadTalk;
@@ -172,6 +173,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         adapter.setAutoFetchMoreSize(8);
         adapter.setPerpageMaxCount(maxNumOfObjectPerPage);
         adapter.setFetchMoreListener(this);
+        adapter.setOperationListener(this);
         recyclerView.setAdapter(adapter);
 
 
@@ -230,7 +232,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
             @Override
             public void onSuccess(EventResponse response) {
                 if (adapter != null) {
-                    adapter.removeItem(position);
 
                     if (position == adapter.getItemCount() - 1) {
                         //更新会话列表
@@ -251,7 +252,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
                         dataProvider.updateConversationWhenTalkRemoved(liveCriteria.to, lastmessage);
                     }
 
-
+                    adapter.removeItem(position);
                 }
             }
 
@@ -263,7 +264,45 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onChatRecall(int position, TalkItem talkItem) {
+    public void onChatRecall(final int position, TalkItem talkItem) {
+
+        RecallTalk recallTalk = new RecallTalk();
+        recallTalk.stime = talkItem.stime;
+        recallTalk.to = liveCriteria.to;
+        recallTalk.type = liveCriteria.type;
+        XMSManager.sendRecallTalk(getContext(), recallTalk, new EventCallback<EventResponse>() {
+            @Override
+            public void onSuccess(EventResponse response) {
+                if (adapter != null) {
+
+                    if (position == adapter.getItemCount() - 1) {
+                        //更新会话列表
+                        String lastmessage = "";
+                        if (position > 0) {
+                            TalkItem item = adapter.getItem(position - 1);
+                            if (item != null) {
+                                if (item.body.contentType == Communications.ContentType.TEXT) {
+
+                                    lastmessage = item.body.text;
+
+                                } else if (item.body.contentType == Communications.ContentType.STYLUS) {
+                                    lastmessage = "图片";
+                                }
+                            }
+                        }
+
+                        dataProvider.updateConversationWhenTalkRemoved(liveCriteria.to, lastmessage);
+                    }
+
+                    adapter.removeItem(position);
+                }
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -292,8 +331,23 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
                         return;
                     }
 
+                    if (!TextUtils.isEmpty(talk.signature) && liveCriteria.to.equals(talk.to)){
+
+                        if (talk.signature.equals(Su.getRemoveTalkSignature())) {
+                            handleRemovetalk(talk);
+                            return;
+                        }
+
+                        if (talk.signature.equals(Su.getRecallTalkSignature())) {
+                            handleRemovetalk(talk);
+                            return;
+                        }
+
+                    }
+
                     if (liveCriteria.type == Communications.TalkType.PEER
-                            && talk.from.equals(liveCriteria.to)) {
+                            && (talk.from.equals(liveCriteria.to)
+                            || (talk.sync && talk.to.equals(liveCriteria.to)))) {
                         handleReceivedMsg(false, talk);
                     }
 
@@ -306,6 +360,13 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
             }
         }
     };
+
+    private void handleRemovetalk(Talk talk) {
+        if (adapter != null) {
+            //FIXME 此处传的stime应该是被删除那条消息的时间， 但是目前事件并没有返回该时间；
+            adapter.removeItemByCreateTime(talk.stime);
+        }
+    }
 
     protected void sendTalk(String bodyStr) {
 
@@ -335,6 +396,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
             public void onSuccess(TalkResponse talkResponse) {
                 if (talkResponse != null) {
                     talkBean.time = talkResponse.time;
+                    talkBean.stime = talkResponse.stime;
                 }
 
                 handleReceivedMsg(true, talkBean);
@@ -465,6 +527,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
 
         TalkItem talkItem = new TalkItem();
         talkItem.time = talk.time;
+        talkItem.stime = talk.stime;
         talkItem.body = new TalkItem.TalkContent();
         talkItem.from = new TalkItem.TalkPerson();
         talkItem.body.text = talk.body.text;
@@ -496,7 +559,10 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         if (send) {
             updateConveration(talkItem);
         } else {
-            sendReadTalk(talk);
+            if (!talk.sync) {
+                sendReadTalk(talk);
+            }
+
         }
 
 

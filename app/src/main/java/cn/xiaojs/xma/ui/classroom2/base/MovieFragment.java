@@ -1023,6 +1023,7 @@ public abstract class MovieFragment extends BaseRoomFragment
             public void onSuccess(TalkResponse talkResponse) {
                 if (talkResponse != null) {
                     talkBean.time = talkResponse.time;
+                    talkBean.stime = talkResponse.stime;
                 }
 
                 handleReceivedMsg(true, talkBean);

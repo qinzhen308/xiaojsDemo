@@ -10,11 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -22,6 +24,7 @@ import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
+import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.common.ImageViewActivity;
 import cn.xiaojs.xma.ui.view.ChatPopupMenu;
@@ -123,7 +126,24 @@ public class SendoutViewHolder extends ChatViewHolder {
         contentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatAdapter.showMenu(v, position, item);
+
+                long realtime = item.stime <= 0 ? item.time : item.stime;
+
+                long sep = System.currentTimeMillis() - realtime;
+
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the current time:" + System.currentTimeMillis()
+                            + ", talk time:"
+                            + realtime
+                            + ", sep time:" + sep);
+                }
+
+                boolean recall =  sep >= CTLConstant.ALLOW_RECALL_MAX_TIME_MS ?
+                        false : true;
+
+
+
+                chatAdapter.showMenu(v, position, item, recall);
             }
         });
 
@@ -141,13 +161,13 @@ public class SendoutViewHolder extends ChatViewHolder {
                 if (!TextUtils.isEmpty(item.body.text)) {
                     //base64
                     Bitmap bitmap = BitmapUtils.base64ToBitmapWithPrefix(item.body.text);
-                    String previewFile=BitmapUtils.saveSharePreviewToFile(bitmap);
+                    String previewFile = BitmapUtils.saveSharePreviewToFile(bitmap);
                     imgs.add(previewFile);
-                    ImageViewActivity.invoke(context, "",imgs, true);
-                }else {
+                    ImageViewActivity.invoke(context, "", imgs, true);
+                } else {
 
                     imgs.add(item.body.drawing.name);
-                    ImageViewActivity.invoke(context, "",imgs, false);
+                    ImageViewActivity.invoke(context, "", imgs, false);
                 }
 
 
@@ -155,7 +175,6 @@ public class SendoutViewHolder extends ChatViewHolder {
         });
 
     }
-
 
 
 }

@@ -26,6 +26,8 @@ public class ChatPopupMenu {
 
     private MenuClickListener menuClickListener;
 
+    private Button recallBtn;
+
     public void setMenuClickListener(MenuClickListener menuClickListener) {
         this.menuClickListener = menuClickListener;
     }
@@ -45,6 +47,7 @@ public class ChatPopupMenu {
 
         Button copyBtn = (Button) linearLayout.findViewById(R.id.copy);
         Button delBtn = (Button) linearLayout.findViewById(R.id.delete);
+        recallBtn = (Button) linearLayout.findViewById(R.id.recall);
 
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,12 +71,27 @@ public class ChatPopupMenu {
             }
         });
 
-        int width = mContext.getResources().getDimensionPixelSize(R.dimen.px150);
+        recallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (menuClickListener != null) {
+                    menuClickListener.onMenuClick(v);
+                }
+
+                dismiss();
+            }
+        });
+
+        int width = mContext.getResources().getDimensionPixelSize(R.dimen.px200);
 
         mPopupWindow = new PopupWindow(linearLayout, width, ViewGroup.LayoutParams.WRAP_CONTENT);
         //mPopupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.bg_popup_menu));
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+    }
+
+    public void setRecallVis(int visibility) {
+        recallBtn.setVisibility(visibility);
     }
 
 

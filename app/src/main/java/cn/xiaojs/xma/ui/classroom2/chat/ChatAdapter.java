@@ -17,13 +17,9 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
-import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.model.social.Relation;
-import cn.xiaojs.xma.model.socket.EventResponse;
-import cn.xiaojs.xma.model.socket.RemoveTalk;
 import cn.xiaojs.xma.ui.view.ChatPopupMenu;
 import cn.xiaojs.xma.util.ArrayUtil;
 
@@ -92,6 +88,28 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         messages.remove(position);
         notifyDataSetChanged();
     }
+
+    public void removeItemByCreateTime(long time) {
+
+        if (ArrayUtil.isEmpty(messages) || time < 0)
+            return;
+        int pos = -1;
+        for (int i = 0; i < messages.size(); i++) {
+            TalkItem item = messages.get(i);
+            long tempTime = item.stime <= 0 ? item.time : item.stime;
+            if (tempTime == time) {
+                pos = i;
+                break;
+            }
+        }
+
+        if (pos >= 0) {
+            messages.remove(pos);
+            notifyDataSetChanged();
+        }
+
+    }
+
 
     public TalkItem getItem(int position) {
         if (ArrayUtil.isEmpty(messages) || position < 0)
@@ -177,7 +195,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     }
 
 
-
     private void autoRequestFetchMoreData(int position) {
 
         if (firstLoad)
@@ -223,7 +240,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
                 });
     }
 
-    public void showMenu(View view, final int position, final TalkItem item) {
+    public void showMenu(View view, final int position, final TalkItem item, boolean recall) {
         final ChatPopupMenu chatPopupMenu = new ChatPopupMenu(context);
         chatPopupMenu.setMenuClickListener(new ChatPopupMenu.MenuClickListener() {
             @Override
@@ -241,9 +258,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
                             operationListener.onChatCopy(position, item);
                         }
                         break;
+                    case R.id.recall:
+                        if (operationListener != null) {
+                            operationListener.onChatRecall(position, item);
+                        }
+                        break;
                 }
             }
         });
+
+        int visRecall = recall ? View.VISIBLE : View.GONE;
+        chatPopupMenu.setRecallVis(visRecall);
         chatPopupMenu.show(view);
     }
 
