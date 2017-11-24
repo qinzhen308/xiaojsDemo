@@ -42,6 +42,25 @@
     <View
             style="@style/DividerHorizontal"/>
 
+    <CheckedTextView
+        android:id="@+id/check_4g"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="允许3G/4G直播、观看直播或回放"
+        android:checkMark="@drawable/toggle_btn_selector"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/px30"
+        android:paddingRight="@dimen/px30"
+        style="@style/MinePageItem"
+        android:textStyle="normal"
+        android:drawableRight="@null"
+        android:background="@color/white"
+    />
+
+    <View
+        style="@style/DividerHorizontal"/>
+
+
     <!--清除缓存-->
     <RelativeLayout
             android:id="@+id/clear_cache_layout"
@@ -101,6 +120,20 @@
             android:textStyle="normal"
             android:layout_marginTop="10dp"
             style="@style/MinePageItem"/>
+
+    <View
+        style="@style/DividerHorizontal"/>
+
+    <!--帮助-->
+    <TextView
+        android:id="@+id/btn_help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/help"
+        android:textStyle="normal"
+        style="@style/MinePageItem"/>
+
+
 
 
     <TextView

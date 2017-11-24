@@ -12,7 +12,7 @@
     <style name="trans_status_bar" parent="AppTheme"/>
 
     <style name="SplashTheme" parent="android:Theme.Light.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@drawable/splash_bg</item>
+        <item name="android:windowBackground">@drawable/splash_bg_230</item>
     </style>
 
     <style name="ActAnimationStyle" mce_bogus="1" parent="@android:style/Animation.Activity">

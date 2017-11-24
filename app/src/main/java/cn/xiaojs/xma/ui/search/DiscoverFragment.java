@@ -286,7 +286,8 @@ public class DiscoverFragment extends BaseFragment {
         mAdapter.setList(data);
         mAdapter.notifyDataSetChanged();
         if(TextUtils.isEmpty(keywords)){
-            appLoadState.setEmptyImageAndTip(R.drawable.img_discover_default,"涨知识，来这里！好多大牛和课程");
+//            appLoadState.setEmptyImageAndTip(R.drawable.img_discover_default,"涨知识，来这里！好多大牛和课程");
+            appLoadState.setEmptyImageAndTip(R.drawable.transparent,"");
             stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
         }
     }
@@ -295,7 +296,8 @@ public class DiscoverFragment extends BaseFragment {
     protected View getContentView() {
         View v=LayoutInflater.from(getActivity()).inflate(R.layout.fragment_discover,null);
         appLoadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
-        appLoadState.setEmptyImageAndTip(R.drawable.img_discover_default,"涨知识，来这里！好多大牛和课程");
+//        appLoadState.setEmptyImageAndTip(R.drawable.img_discover_default,"涨知识，来这里！好多大牛和课程");
+        appLoadState.setEmptyImageAndTip(R.drawable.transparent,"");
         stateView=new LoadStatusViewDecoratee(appLoadState);
         stateView.change(LoadStateListener.STATE_ALL_EMPTY,"");
         return v;

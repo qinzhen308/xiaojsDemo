@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataManager;
 import cn.xiaojs.xma.data.preference.AccountPref;
+import cn.xiaojs.xma.data.preference.ClassroomPref;
+import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.account.ForgetPasswordStepOneActivity;
 import cn.xiaojs.xma.ui.account.LoginActivity;
 import cn.xiaojs.xma.ui.account.ModifyPasswordActivity;
@@ -47,6 +50,10 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.account_safe)
     TextView accountSafe;
 
+
+    @BindView(R.id.check_4g)
+    CheckedTextView checked4GView;
+
     private Context mContext;
 
     @Override
@@ -68,10 +75,13 @@ public class SettingsActivity extends BaseActivity {
 //        if(AccountPref.getThirdPartFlag(this)){//三方登录进来，隐藏掉
 //            accountSafe.setVisibility(View.GONE);
 //        }
+
+        checked4GView.setChecked(ClassroomPref.allowLive4G(this));
+
     }
 
     @OnClick({R.id.left_view, R.id.exit_login, R.id.message_notify_set,
-            R.id.account_safe, R.id.clear_cache_layout, R.id.feedback_help, R.id.about_us})
+            R.id.account_safe, R.id.clear_cache_layout, R.id.feedback_help, R.id.about_us,R.id.btn_help,R.id.check_4g})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_view:
@@ -95,6 +105,14 @@ public class SettingsActivity extends BaseActivity {
                 break;
             case R.id.about_us:
                 startActivity(new Intent(this, AboutActivity.class));
+                break;
+            case R.id.check_4g:
+                boolean allow = ClassroomPref.allowLive4G(this);
+                checked4GView.setChecked(!allow);
+                ClassroomPref.setAllowLive4g(this, !allow);
+                break;
+            case R.id.btn_help:
+                CommonWebActivity.invoke(this,"","http://www.baidu.com");
                 break;
             default:
                 break;

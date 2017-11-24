@@ -36,6 +36,7 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
 import cn.xiaojs.xma.ui.widget.RoundedImageView;
 import cn.xiaojs.xma.util.DataPicker;
 import cn.xiaojs.xma.util.JpushUtil;
+import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.TimeUtil;
 
 /*  =======================================================================================
@@ -71,11 +72,18 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.input_tips)
     TextView mInputTipsTv;
 
+    @BindView(R.id.qq)
+    EditTextDel mQQEdt;
+
+    @BindView(R.id.email)
+    EditTextDel mEmailEdt;
+
     private Date mBirthDayDate;
 //    private String mAvatarFileName;
     private String mAvatarUrl;
     private long mOldTime;
     private Account.Basic mBasic;
+    private Account mAccount;
     private boolean mImgUploading = false;
 
     @Override
@@ -149,6 +157,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onSuccess(Account account) {
                 cancelProgress();
+                mAccount=account;
                 Account.Basic basic ;
                 if (account != null && (basic = account.getBasic()) != null) {
                     //avatar
@@ -162,6 +171,7 @@ public class ProfileActivity extends BaseActivity {
                     mNameEdt.setText(basic.getName());
 
                     mNameEdt.setEnabled(!account.isVerified);
+
 
                     //set sex
                     if ("true".equals(basic.getSex())) {
@@ -177,6 +187,10 @@ public class ProfileActivity extends BaseActivity {
                     }
 
                     mUserTitleEdt.setText(basic.getTitle());
+                }
+                if (account != null && account.ex != null) {
+                    mQQEdt.setText(account.ex.qq);
+                    mEmailEdt.setText(account.ex.mail);
                 }
             }
 
@@ -197,6 +211,14 @@ public class ProfileActivity extends BaseActivity {
     private boolean checkSubmitInfoChanged() {
         Account.Basic basic = mBasic;
         if (!mNameEdt.getText().toString().equals(basic.getName())) {
+            return true;
+        }
+
+
+        if (!mQQEdt.getText().toString().equals(mAccount.ex==null?"":mAccount.ex.qq)) {
+            return true;
+        }
+        if (!mEmailEdt.getText().toString().equals(mAccount.ex==null?"":mAccount.ex.mail)) {
             return true;
         }
 
@@ -298,9 +320,20 @@ public class ProfileActivity extends BaseActivity {
 //            basic.setAvatar(mAvatarFileName);
 //        }
 
-        AccountDataManager.requestEditProfile(this, basic, new APIServiceCallback() {
+        final Account account=new Account();
+        account.setBasic(basic);
+
+        Account.Extend ex=new Account.Extend();
+        ex.mail=mEmailEdt.getText().toString();
+        ex.qq =mQQEdt.getText().toString();
+        if(!(TextUtils.isEmpty(ex.mail)&&TextUtils.isEmpty(ex.qq))){
+            account.ex=ex;
+        }
+
+        AccountDataManager.requestEditProfile(this, account, new APIServiceCallback() {
             @Override
             public void onSuccess(Object object) {
+                mAccount=account;
                 Toast.makeText(ProfileActivity.this, R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent();
@@ -312,7 +345,7 @@ public class ProfileActivity extends BaseActivity {
                 }
 
 
-                updateUser(basic);
+                updateUser(account);
 
                 i.putExtra(KEY_BASE_BEAN, mBasic);
                 setResult(RESULT_OK, i);
@@ -326,16 +359,26 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
-    private void updateUser(Account.Basic basic) {
-        if (basic == null) return;
-
+    private void updateUser(Account account) {
+        Account.Basic basic=account.getBasic();
         User user = XiaojsConfig.mLoginUser;
-        if ( user!= null &&  user.getAccount() != null){
-            user.getAccount().setBasic(basic);
+        if (basic != null){
+            if ( user!= null &&  user.getAccount() != null){
+                user.getAccount().setBasic(basic);
 
-            AccountDataManager.setUserInfo(this, user);
-
+                AccountDataManager.setUserInfo(this, user);
+            }
         }
+
+        if(account.ex!=null){
+            if(user.getAccount().ex==null){
+                user.getAccount().ex=account.ex;
+            }else {
+                user.getAccount().ex.qq=account.ex.qq;
+                user.getAccount().ex.mail=account.ex.mail;
+            }
+        }
+
 
         //FIXME 更新IM 用户信息
 

@@ -74,6 +74,12 @@
             <!--<data android:scheme="luanchapp" android:host="cn.xiaojs.xma" android:pathPrefix="/android"/>-->
             <!--</intent-filter>-->
         </activity>
+
+        <activity
+            android:name=".ui.GuideActivity"
+            android:theme="@style/android:Theme.Light.NoTitleBar.Fullscreen"
+            />
+
         <activity android:name=".ui.TestAPIActivity">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN"/>-->

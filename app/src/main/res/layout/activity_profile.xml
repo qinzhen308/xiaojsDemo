@@ -117,6 +117,8 @@
                 android:background="@null"/>
     </LinearLayout>
 
+
+
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -157,6 +159,88 @@
     </LinearLayout>
 
     <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <View
+            style="@style/DividerHorizontal"
+            android:layout_marginRight="@dimen/px38"
+            android:layout_marginLeft="@dimen/px38"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="@dimen/px28"
+        android:paddingBottom="@dimen/px28">
+
+        <TextView
+            android:layout_width="@dimen/px190"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_26px"
+            android:paddingLeft="@dimen/px28"
+            android:text="@string/QQ"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/qq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_enable_style2"
+            android:textSize="@dimen/font_28px"
+            android:background="@null"
+            android:hint="@string/not_setting"
+            android:inputType="number"
+            android:textColorHint="@color/font_light_gray"
+            android:paddingRight="@dimen/px26"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <View
+            style="@style/DividerHorizontal"
+            android:layout_marginRight="@dimen/px38"
+            android:layout_marginLeft="@dimen/px38"/>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="@dimen/px28"
+        android:paddingBottom="@dimen/px28">
+
+        <TextView
+            android:layout_width="@dimen/px190"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_dark_gray"
+            android:textSize="@dimen/font_26px"
+            android:paddingLeft="@dimen/px28"
+            android:text="@string/email"/>
+
+        <cn.xiaojs.xma.ui.widget.EditTextDel
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_enable_style2"
+            android:textSize="@dimen/font_28px"
+            android:background="@null"
+            android:inputType="textEmailAddress"
+            android:hint="@string/not_setting"
+            android:textColorHint="@color/font_light_gray"
+            android:paddingRight="@dimen/px26"/>
+    </LinearLayout>
+
+
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
@@ -166,6 +250,8 @@
                 android:layout_marginRight="@dimen/px38"
                 android:layout_marginLeft="@dimen/px38"/>
     </FrameLayout>
+
+
 
 
     <LinearLayout

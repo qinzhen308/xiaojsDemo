@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingTop="@dimen/px10"
-                android:paddingBottom="@dimen/px20"
+                android:paddingBottom="@dimen/px40"
                 >
 
                 <TextView
