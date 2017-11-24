@@ -151,6 +151,13 @@ public class VerifyListFragment extends BottomSheetFragment implements
     }
 
     @Override
+    public void dismiss() {
+        super.dismiss();
+
+        notifyDestory();
+    }
+
+    @Override
     public void onLoadMore() {
         load();
     }
@@ -231,6 +238,15 @@ public class VerifyListFragment extends BottomSheetFragment implements
         if (targetFragment != null) {
             Intent i = new Intent();
             targetFragment.onActivityResult(CTLConstant.REQUEST_VERIFY_MEMBER,
+                    Activity.RESULT_OK, i);
+        }
+    }
+
+    private void notifyDestory() {
+        Fragment  targetFragment = getTargetFragment();
+        if (targetFragment != null) {
+            Intent i = new Intent();
+            targetFragment.onActivityResult(CTLConstant.REQUEST_VERIFY_DESTORY,
                     Activity.RESULT_OK, i);
         }
     }

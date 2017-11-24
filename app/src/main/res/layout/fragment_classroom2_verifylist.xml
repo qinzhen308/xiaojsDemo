@@ -20,7 +20,7 @@
                 android:layout_height="@dimen/px88"
                 android:layout_marginTop="@dimen/px21"
                 android:layout_marginBottom="@dimen/px21"
-                android:text="访客"
+                android:text="验证消息"
                 android:textSize="@dimen/px32"
                 android:gravity="center"
                 android:textColor="@color/classroom_dark_gray"

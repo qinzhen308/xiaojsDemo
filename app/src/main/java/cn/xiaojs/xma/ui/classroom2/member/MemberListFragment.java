@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -51,6 +52,7 @@ import cn.xiaojs.xma.ui.classroom2.chat.SingleSessionFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.core.SessionDataObserver;
+import cn.xiaojs.xma.ui.classroom2.material.AddNewFragment;
 import cn.xiaojs.xma.ui.contact2.ContactFragment;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
@@ -90,6 +92,9 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     public static final int FROM_CLASSROOM_HOME_BOTTOM=0;
     public static final int FROM_CLASSROOM_DETAIL=1;
     public static final String EXTRA_FROM="extra_from";
+
+    private FrameLayout thirdLayout;
+    private BottomSheetFragment thirdFragment;
 
 
 
@@ -326,8 +331,57 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     }
 
     public void enterVerifyList() {
-        VerifyListFragment.invokeShow(classId,this,CTLConstant.REQUEST_VERIFY_MEMBER);
+
+        if (getDialog() == null) {
+
+            VerifyListFragment verifyListFragment = new VerifyListFragment();
+            verifyListFragment.setClassid(classId);
+            verifyListFragment.setTargetFragment(this, CTLConstant.REQUEST_VERIFY_MEMBER);
+
+            if (thirdLayout == null) {
+                initThirdLayout();
+            }
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_database_framelayout, verifyListFragment)
+                    .addToBackStack("")
+                    .commitAllowingStateLoss();
+
+            thirdFragment = verifyListFragment;
+
+        } else {
+            VerifyListFragment.invokeShow(classId,this,CTLConstant.REQUEST_VERIFY_MEMBER);
+        }
+
+
+
     }
+
+    private void initThirdLayout() {
+        thirdLayout = new FrameLayout(getContext());
+        thirdLayout.setId(R.id.fragment_database_framelayout);
+        thirdLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        ((RelativeLayout) rootLayout).addView(thirdLayout);
+    }
+
+    private void destoryThird() {
+
+        if (thirdFragment != null) {
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .remove(thirdFragment)
+                    .commitAllowingStateLoss();
+            thirdFragment = null;
+        }
+
+        if (thirdLayout != null) {
+            ((RelativeLayout) rootLayout).removeView(thirdLayout);
+            thirdLayout = null;
+        }
+
+    }
+
 
     public void enterChatSession(Attendee attendee) {
 
@@ -403,6 +457,9 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
                     break;
                 case CTLConstant.REQUEST_VERIFY_MEMBER:
                     refreshMembers();
+                    break;
+                case CTLConstant.REQUEST_VERIFY_DESTORY:
+                    destoryThird();
                     break;
             }
         }
