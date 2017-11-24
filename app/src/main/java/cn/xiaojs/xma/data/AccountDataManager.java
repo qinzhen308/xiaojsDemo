@@ -441,6 +441,23 @@ public class AccountDataManager {
 
     }
 
+    public static void requestEditProfile(Context context,
+                                          @NonNull Account account,
+                                          @NonNull APIServiceCallback callback) {
+
+        if (callback == null) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the api service callback is null,so cancel the  request");
+            }
+            return;
+        }
+
+        AccountRequest accountRequest = new AccountRequest(context,callback);
+        accountRequest.editProfile(account);
+
+    }
+
+
     public static void requestProfile(Context context,
                                       @NonNull APIServiceCallback<Account> callback) {
 

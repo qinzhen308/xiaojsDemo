@@ -22,6 +22,8 @@
     <string name="name">姓名</string>
     <string name="sex">性别</string>
     <string name="birthday">生日</string>
+    <string name="QQ">QQ</string>
+    <string name="email">邮箱</string>
     <string name="male">男</string>
     <string name="female">女</string>
     <string name="edit">编辑</string>
@@ -181,6 +183,7 @@
     <string name="clear_cache">清除缓存</string>
     <string name="feedback_help">意见反馈</string>
     <string name="about_us">关于我们</string>
+    <string name="help">帮助</string>
     <string name="clear_cache_completed">清除完成</string>
 
     <string name="current_pwd">当前密码</string>

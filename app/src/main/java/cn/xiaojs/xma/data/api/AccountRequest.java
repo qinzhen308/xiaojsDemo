@@ -96,6 +96,13 @@ public class AccountRequest extends ServiceRequest {
 
     }
 
+    public void editProfile(@NonNull Account account) {
+
+        Call<ResponseBody> call = getService().editProfile(account);
+        enqueueRequest(APIType.EDIT_PROFILE,call);
+
+    }
+
     public void getProfile() {
 
         Call<Account> call = getService().getProfile();

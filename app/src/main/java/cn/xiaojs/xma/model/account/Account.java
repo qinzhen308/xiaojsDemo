@@ -21,6 +21,7 @@ public class Account implements Serializable{
     public boolean isVerified = false;
 
     public Stats stats;
+    public Extend ex;
 
     //public boolean isPerson;
 
@@ -125,5 +126,14 @@ public class Account implements Serializable{
     public static class SimpleAccount implements Serializable {
         public String id;
         public String name;
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Extend implements Serializable {
+        public String qq;
+        public String weChat;
+        public String mail;
+        public String contactName;
     }
 }

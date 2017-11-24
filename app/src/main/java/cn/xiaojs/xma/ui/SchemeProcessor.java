@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
@@ -45,6 +47,8 @@ public class SchemeProcessor {
             return;
         }
         String path=schemeUri.getPath();
+//        Logger.d("-----qz-----path="+schemeUri.getPath()+"----");
+        Logger.d("-----qz-----scheme="+schemeUri.toString());
         switch (path){
             case PATH_CLASSROOM:
                 String ticket=schemeUri.getQueryParameter(PARAMS_TICKET);
@@ -58,7 +62,7 @@ public class SchemeProcessor {
                     return;
                 }
                 checkJoinClassStateAndEnterClassroom(ticket);
-                Classroom2Activity.invoke(mContext,ticket);
+//                Classroom2Activity.invoke(mContext,ticket);
                 break;
             case PATH_RECORDED_LESSON:
                 String id=schemeUri.getQueryParameter(PARAMS_ID);

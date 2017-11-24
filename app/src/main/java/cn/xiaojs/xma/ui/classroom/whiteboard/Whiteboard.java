@@ -1536,6 +1536,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     public void onClearWhiteboard() {
         clearWhiteboard();
         onSend(Packer.getClearCmd());
+        if(pushPreviewBoardListener!=null){
+            onTouchPreview();
+        }
     }
 
     public void saveWhiteboard() {
