@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.LiveManager;
 import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.LiveRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.SocketManager;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.live.CtlSession;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -76,6 +78,7 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         protected Observer<? super BootSession> observer;
         protected Disposable disposableTimeout;
         protected CtlSession ctlSession;
+        protected ClassInfo classInfo;
         private SocketManager socketManager;
         private LiveRequest liveRequest;
         private int connectCount;
@@ -118,6 +121,11 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                 ctlSession = LiveManager.bootSession2(context, initTicket);
                 if (ctlSession != null) {
                     sendStatus(Status.BOOT_SUCCESS);
+
+
+                    classInfo = LessonDataManager.getClassInfoSync(context, ctlSession.cls.id);
+                    sendStatus(Status.GET_CLASSINFO_OVER);
+
 
                     if (TextUtils.isEmpty(ctlSession.ticket)) {
                         ctlSession.ticket = initTicket;
@@ -227,9 +235,12 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
             if (observer != null) {
                 BootSession bootSession = new BootSession(status);
                 if (status == Status.BOOT_SUCCESS
-                        || status == Status.SOCKET_CONNECT_SUCCESS) {
+                        || status == Status.SOCKET_CONNECT_SUCCESS
+                        || status == Status.GET_CLASSINFO_OVER) {
                     bootSession.ctlSession = ctlSession;
+                    bootSession.classInfo = classInfo;
                 }
+
                 observer.onNext(bootSession);
             }
         }
@@ -370,6 +381,7 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
     public static class BootSession {
         public Status status;
         public CtlSession ctlSession;
+        public ClassInfo classInfo;
         public Object extraData;
 
         public BootSession(Status status) {
@@ -383,6 +395,7 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         BOOT_SUCCESS,                             //boot session成功
         BOOT_FAILED,                              //boot session失败
         BOOT_QUERY_KICKOUT,                       //boot session成功后，发现已经在其他端进入了教室
+        GET_CLASSINFO_OVER,                       //获取班级信息完成
         SOCKET_CONNECT_BEGIN,                     //开始连接socket
         SOCKET_CONNECT_SUCCESS,                   //socket连接成功
         SOCKET_CONNECT_FAILED,                    //socket连接失败

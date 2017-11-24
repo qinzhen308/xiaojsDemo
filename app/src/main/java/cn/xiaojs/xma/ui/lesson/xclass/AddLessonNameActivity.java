@@ -23,7 +23,7 @@ import cn.xiaojs.xma.ui.widget.EditTextDel;
  * Created by maxiaobao on 2017/5/18.
  */
 
-public class AddLessonNameActivity extends BaseActivity {
+public class  AddLessonNameActivity extends BaseActivity {
 
     public static final String EXTRA_NAME = "name";
     public static final String EXTRA_ROLE = "role";

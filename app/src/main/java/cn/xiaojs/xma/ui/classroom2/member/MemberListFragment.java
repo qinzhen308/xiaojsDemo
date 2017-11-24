@@ -29,13 +29,18 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.provider.DataProvider;
+import cn.xiaojs.xma.model.CollectionPage;
+import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.ctl.ClassEnroll;
 import cn.xiaojs.xma.model.ctl.ClassEnrollParams;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.ctl.EnrollImport;
+import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCollection;
@@ -79,11 +84,14 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     private EventListener.ELMember eventListener;
 
     private ArrayList<Attendee> vistors;
+    private String classId;
 
     private int from=FROM_CLASSROOM_HOME_BOTTOM;
     public static final int FROM_CLASSROOM_HOME_BOTTOM=0;
     public static final int FROM_CLASSROOM_DETAIL=1;
     public static final String EXTRA_FROM="extra_from";
+
+
 
 
     @Override
@@ -106,6 +114,8 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        classId = classroomEngine.getCtlSession().cls.id;
 
         if (getDialog() == null||from==FROM_CLASSROOM_DETAIL) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootLay.getLayoutParams();
@@ -181,8 +191,40 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
             @Override
             public void subscribe(@NonNull ObservableEmitter<Map<Integer, ArrayList<Attendee>>> e) throws Exception {
-
                 ArrayList<Attendee> attendees = new ArrayList<>();
+
+                boolean verify = false;
+                ClassInfo classInfo = classroomEngine.getClassInfo();
+                if (classInfo != null && classInfo.join !=null) {
+                    if (classInfo.join.mode == Ctl.JoinMode.VERIFICATION) {
+                        verify = true;
+                    }
+                }
+
+                if (verify && classroomEngine.classManageable()) {
+
+                    JoinCriteria criteria=new JoinCriteria();
+                    criteria.joined=true;
+                    Pagination pagination = new Pagination();
+                    pagination.setPage(1);
+                    pagination.setMaxNumOfObjectsPerPage(1);
+
+                    CollectionPage<StudentEnroll> students = LessonDataManager.getClassStudentsSync(
+                            getContext(), classId, criteria, pagination);
+
+                    int applyCount = 0;
+                    if (students!=null) {
+                        applyCount = students.countOfApplying;
+                    }
+
+                    Attendee verfyItem = new Attendee();
+                    verfyItem.ctype = -2;
+                    verfyItem.unReadMsgCount = applyCount;
+                    attendees.add(verfyItem);
+                }
+
+
+
                 ArrayList<Attendee> vistors = new ArrayList<>();
 
                 if (tempAtts == null) {
@@ -283,6 +325,10 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
         VistorListFragment.invokeShow(getFragmentManager(), vistors);
     }
 
+    public void enterVerifyList() {
+        VerifyListFragment.invokeShow(classId,this,CTLConstant.REQUEST_VERIFY_MEMBER);
+    }
+
     public void enterChatSession(Attendee attendee) {
 
         if (classroomEngine.isVistor()) {
@@ -354,6 +400,9 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
                     ArrayList<StudentEnroll> enrolls = new ArrayList<>();
                     enrolls.add(studentEnroll);
                     addByPerson(enrolls);
+                    break;
+                case CTLConstant.REQUEST_VERIFY_MEMBER:
+                    refreshMembers();
                     break;
             }
         }

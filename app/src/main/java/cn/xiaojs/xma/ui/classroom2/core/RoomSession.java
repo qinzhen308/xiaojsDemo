@@ -3,6 +3,7 @@ package cn.xiaojs.xma.ui.classroom2.core;
 import java.util.Map;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 
@@ -26,25 +27,27 @@ public class RoomSession {
     protected Map<String, Attendee> classMembers;                     //教室中的成员
     protected Attendee adviser;                                       //班主任信息，可能为空
     protected boolean preview;                                        //是否为预览模式
+    protected ClassInfo classInfo;                                    //当前的班级信息
 
 
-    public RoomSession(CtlSession session) {
-        ctlSession = session;
+    public RoomSession(BootObservable.BootSession bootSession) {
+        this.ctlSession = bootSession.ctlSession;
+        this.classInfo = bootSession.classInfo;
 
-        if (ctlSession.cls != null) {
-            classroomType = ClassroomType.ClassLesson;
+        if (this.ctlSession.cls != null) {
+            this.classroomType = ClassroomType.ClassLesson;
         } else {
-            classroomType = ClassroomType.StandaloneLesson;
+            this.classroomType = ClassroomType.StandaloneLesson;
         }
 
-        if (session.mode == Live.ClassroomMode.PREVIEW) {
-            preview = true;
+        if (this.ctlSession.mode == Live.ClassroomMode.PREVIEW) {
+            this.preview = true;
         }
 
 
         //FIXME 有问题么？
-        if (Live.StreamType.INDIVIDUAL == session.streamType) {
-            playLiveShow = true;
+        if (Live.StreamType.INDIVIDUAL == this.ctlSession.streamType) {
+            this.playLiveShow = true;
         }
 
     }
