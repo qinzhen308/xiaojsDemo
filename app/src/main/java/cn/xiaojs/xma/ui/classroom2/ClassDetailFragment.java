@@ -40,6 +40,7 @@ import cn.xiaojs.xma.model.Publish;
 import cn.xiaojs.xma.model.VisitorParams;
 import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
+import cn.xiaojs.xma.model.ctl.ClassJoin;
 import cn.xiaojs.xma.model.ctl.JoinCriteria;
 import cn.xiaojs.xma.model.ctl.ModifyModeParam;
 import cn.xiaojs.xma.model.ctl.StudentEnroll;
@@ -128,7 +129,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        classId=ClassroomEngine.getEngine().getCtlSession().cls.id;
+        classId = ClassroomEngine.getEngine().getCtlSession().cls.id;
     }
 
 
@@ -164,18 +165,18 @@ public class ClassDetailFragment extends BaseDialogFragment {
         super.onDestroy();
     }
 
-    private void initView(){
-        mAdapter=new MemberAdapter(getActivity());
+    private void initView() {
+        mAdapter = new MemberAdapter(getActivity());
         memberList.setAdapter(mAdapter);
     }
 
 
     //@OnCheckedChanged
 
-    @OnClick({R.id.back_btn, R.id.more_btn, R.id.class_top_check,R.id.class_material_title,R.id.class_member_title,
+    @OnClick({R.id.back_btn, R.id.more_btn, R.id.class_top_check, R.id.class_material_title, R.id.class_member_title,
             R.id.class_disturb_check, R.id.class_verify_check, R.id.class_public_check,
-            R.id.class_anonymous_check,R.id.class_name_title,R.id.class_qrcode_title,
-            R.id.cb_allow_guest_chart,R.id.cb_allow_guest_read,R.id.class_canlender_title})
+            R.id.class_anonymous_check, R.id.class_name_title, R.id.class_qrcode_title,
+            R.id.cb_allow_guest_chart, R.id.cb_allow_guest_read, R.id.class_canlender_title})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
@@ -187,10 +188,10 @@ public class ClassDetailFragment extends BaseDialogFragment {
                 }
                 break;
             case R.id.more_btn:
-                if(Ctl.ClassState.IDLE.equals(classInfo.state) &&
-                        AccountDataManager.getAccountID(getActivity()).equals(classInfo.owner!=null?classInfo.owner.getId():"")){
+                if (Ctl.ClassState.IDLE.equals(classInfo.state) &&
+                        AccountDataManager.getAccountID(getActivity()).equals(classInfo.owner != null ? classInfo.owner.getId() : "")) {
                     showMoreDlg();
-                }else if(!AccountDataManager.getAccountID(getActivity()).equals(classInfo.owner!=null?classInfo.owner.getId():"")){//不是创建者
+                } else if (!AccountDataManager.getAccountID(getActivity()).equals(classInfo.owner != null ? classInfo.owner.getId() : "")) {//不是创建者
                     showMoreDlgByStudent();
                 }
                 break;
@@ -218,9 +219,9 @@ public class ClassDetailFragment extends BaseDialogFragment {
                 /*if(classInfo!=null&& !ArrayUtil.isEmpty(classInfo.advisers)){
                     ShareBeautifulQrcodeActivity.invoke(getActivity(),ShareBeautifulQrcodeActivity.TYPE_CLASS,classId,className.getText().toString(),classInfo.advisers[0]);
                 }*/
-                if(classInfo!=null){
+                if (classInfo != null) {
 
-                    ShareQrcodeClassroomActivity.invoke(getActivity(),classInfo.id,classInfo.title);
+                    ShareQrcodeClassroomActivity.invoke(getActivity(), classInfo.id, classInfo.title);
                 }
 
                 break;
@@ -245,7 +246,14 @@ public class ClassDetailFragment extends BaseDialogFragment {
                     if (data != null) {
                         String newName = data.getStringExtra(AddLessonNameActivity.EXTRA_NAME);
                         if (!TextUtils.isEmpty(newName)) {
+                            classInfo.title = newName;
                             className.setText(newName);
+
+                            ClassInfo info = classroomEngine.getClassInfo();
+                            if (info !=null) {
+                               info.title = newName;
+                            }
+
                         }
                     }
 
@@ -297,7 +305,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
                 });
     }*/
 
-    private void loadStudents(){
+    private void loadStudents() {
         Observable.create(new ObservableOnSubscribe<ArrayList<Attendee>>() {
 
             @Override
@@ -309,7 +317,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
                 if (attendeeMap != null && attendeeMap.size() > 0) {
                     for (Attendee att : attendeeMap.values()) {
 
-                        String pst = TextUtils.isEmpty(att.psTypeInLesson)?
+                        String pst = TextUtils.isEmpty(att.psTypeInLesson) ?
                                 att.psType : att.psTypeInLesson;
 
                         if (classroomEngine.getUserIdentity(pst) == CTLConstant.UserIdentity.VISITOR) {
@@ -328,14 +336,14 @@ public class ClassDetailFragment extends BaseDialogFragment {
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Attendee>>() {
             @Override
             public void accept(ArrayList<Attendee> attendees) throws Exception {
-                ArrayList<Attendee> justNeedAttendees=new ArrayList<Attendee>();
-                int maxSize=teaching?4:5;
-                for(int i=0,size=attendees.size()>maxSize?maxSize:attendees.size();i<size;i++){
+                ArrayList<Attendee> justNeedAttendees = new ArrayList<Attendee>();
+                int maxSize = teaching ? 4 : 5;
+                for (int i = 0, size = attendees.size() > maxSize ? maxSize : attendees.size(); i < size; i++) {
                     justNeedAttendees.add(attendees.get(i));
                 }
                 mAdapter.setList(justNeedAttendees);
                 mAdapter.notifyDataSetChanged();
-                classMemberTitle.setText("成员（"+attendees.size()+"）");
+                classMemberTitle.setText("成员（" + attendees.size() + "）");
 
             }
         });
@@ -349,8 +357,9 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
                 cancelProgress();
 
-                if (object != null ) {
-                    classInfo=object;
+                if (object != null) {
+                    classroomEngine.setClassInfo(object);
+                    classInfo = object;
                     bingView();
                     loadStudents();
                 } else {
@@ -381,12 +390,12 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         String mid = AccountDataManager.getAccountID(getActivity());
         //创建者
-        if (Ctl.ClassState.IDLE.equals(classInfo.state) && mid.equals(classInfo.owner!=null?classInfo.owner.getId():"")) {
+        if (Ctl.ClassState.IDLE.equals(classInfo.state) && mid.equals(classInfo.owner != null ? classInfo.owner.getId() : "")) {
             moreBtn.setVisibility(View.VISIBLE);
 
-        }else if (!mid.equals(classInfo.owner!=null?classInfo.owner.getId():"")){//学生
+        } else if (!mid.equals(classInfo.owner != null ? classInfo.owner.getId() : "")) {//学生
             moreBtn.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             moreBtn.setVisibility(View.INVISIBLE);
         }
 
@@ -412,9 +421,9 @@ public class ClassDetailFragment extends BaseDialogFragment {
         }
         teacherNameView.setText(teacher);*/
 
-        if(classInfo.lessons==0){
+        if (classInfo.lessons == 0) {
             classCanlender.setText("无课");
-        }else {
+        } else {
             classCanlender.setText(getString(R.string.number_lesson, classInfo.lessons));
         }
 
@@ -431,19 +440,19 @@ public class ClassDetailFragment extends BaseDialogFragment {
             classVerifyCheck.setChecked(verify);
 
             classPublicCheck.setVisibility(View.VISIBLE);
-            classPublicCheck.setChecked(classInfo.publish!=null&&classInfo.publish.accessible);
+            classPublicCheck.setChecked(classInfo.publish != null && classInfo.publish.accessible);
             classAnonymousCheck.setVisibility(View.VISIBLE);
 //            classAnonymousCheck.setChecked(classInfo.);
             classAnonymousCheck.setChecked(classInfo.visitor);
-            if(classInfo.visitor){
+            if (classInfo.visitor) {
                 layoutGuestAuthority.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 layoutGuestAuthority.setVisibility(View.GONE);
             }
             cbAllowGuestRead.setChecked(classInfo.library);
             cbAllowGuestChart.setChecked(classInfo.talk);
 
-        }else {
+        } else {
             classVerifyCheck.setVisibility(View.GONE);
             classPublicCheck.setVisibility(View.GONE);
             classAnonymousCheck.setVisibility(View.GONE);
@@ -456,6 +465,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
         boolean silent = DataProvider.getProvider(getContext()).getClassSilent(classId);
         classDisturbCheck.setChecked(silent);
     }
+
     private boolean initTeaching() {
         if (classInfo == null)
             return false;
@@ -479,7 +489,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
         return false;
     }
 
-    private void databank(){
+    private void databank() {
         if (classroomEngine.isVistor()) {
             Toast.makeText(getContext(), R.string.no_permision_tips, Toast.LENGTH_SHORT).show();
             return;
@@ -489,7 +499,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
     }
 
-    private void memberList(){
+    private void memberList() {
 
         MemberListFragment memberListfragment = MemberListFragment.createInstance(MemberListFragment.FROM_CLASSROOM_DETAIL);
         memberListfragment.show(getFragmentManager(), "member");
@@ -506,22 +516,22 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         XMSManager.sendChangeNotify(getContext(), changeNotify,
                 new cn.xiaojs.xma.data.api.socket.EventCallback<EventResponse>() {
-            @Override
-            public void onSuccess(EventResponse response) {
-                DataProvider  dataProvider = DataProvider.getProvider(getContext());
-                dataProvider.updateSilent(changeNotify.to, changeNotify.silent);
+                    @Override
+                    public void onSuccess(EventResponse response) {
+                        DataProvider dataProvider = DataProvider.getProvider(getContext());
+                        dataProvider.updateSilent(changeNotify.to, changeNotify.silent);
 
-                classDisturbCheck.setChecked(changeNotify.silent);
-            }
+                        classDisturbCheck.setChecked(changeNotify.silent);
+                    }
 
-            @Override
-            public void onFailed(String errorCode, String errorMessage) {
+                    @Override
+                    public void onFailed(String errorCode, String errorMessage) {
 
-            }
-        });
+                    }
+                });
     }
 
-    private void openSchedule(){
+    private void openSchedule() {
        /* ScheduleFragment fragment=ScheduleFragment.createInstance(classId);
         fragment.setTargetFragment(this,REQUEST_ADD_LESSON);
         fragment.show(getChildFragmentManager(),"schedule");*/
@@ -556,7 +566,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
     }
 
     //退出班级--学生
-    private void abortClass(){
+    private void abortClass() {
         final CommonDialog dialog = new CommonDialog(getActivity());
         dialog.setDesc(R.string.abort_class_tip);
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
@@ -655,7 +665,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         ModifyModeParam modeParam = new ModifyModeParam();
 
-        int mode = verify ? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
+        final int mode = verify ? Ctl.JoinMode.VERIFICATION : Ctl.JoinMode.OPEN;
         modeParam.join = mode;
 
         showProgress(true);
@@ -664,6 +674,16 @@ public class ClassDetailFragment extends BaseDialogFragment {
             public void onSuccess(CLResponse object) {
                 cancelProgress();
                 classVerifyCheck.setChecked(verify);
+
+                ClassInfo info = classroomEngine.getClassInfo();
+                if (info != null) {
+                    if (info.join == null) {
+                        info.join = new ClassJoin();
+                    }
+
+                    info.join.mode = mode;
+                }
+
                 Toast.makeText(getActivity(),
                         R.string.lesson_edit_success,
                         Toast.LENGTH_SHORT)
@@ -682,7 +702,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
     private void modifyPublish(final boolean isPublish) {
 
-        Publish publishParam=new Publish();
+        Publish publishParam = new Publish();
         publishParam.accessible = isPublish;
 
         showProgress(true);
@@ -691,6 +711,17 @@ public class ClassDetailFragment extends BaseDialogFragment {
             public void onSuccess(CLResponse object) {
                 cancelProgress();
                 classPublicCheck.setChecked(isPublish);
+
+                ClassInfo info = classroomEngine.getClassInfo();
+                if (info != null) {
+                    if (info.publish == null) {
+                        info.publish = new Publish();
+                    }
+
+                    info.publish.accessible = isPublish;
+                }
+
+
                 Toast.makeText(getActivity(),
                         R.string.lesson_edit_success,
                         Toast.LENGTH_SHORT)
@@ -711,7 +742,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
     private void modifyVistor(final boolean allowGuest) {
 
-        VisitorParams visitorParams=new VisitorParams();
+        VisitorParams visitorParams = new VisitorParams();
         visitorParams.visitor = allowGuest;
 
         showProgress(true);
@@ -720,14 +751,22 @@ public class ClassDetailFragment extends BaseDialogFragment {
             public void onSuccess(CLResponse object) {
                 cancelProgress();
                 classAnonymousCheck.setChecked(allowGuest);
-                if(allowGuest){
+                if (allowGuest) {
                     layoutGuestAuthority.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     //允许访客关闭后，访客相关设置全部清空为false
                     layoutGuestAuthority.setVisibility(View.GONE);
                     cbAllowGuestRead.setChecked(false);
                     cbAllowGuestChart.setChecked(false);
                 }
+
+                ClassInfo info = classroomEngine.getClassInfo();
+                if (info !=null) {
+                    info.visitor = allowGuest;
+                }
+
+
+
                 Toast.makeText(getActivity(),
                         R.string.lesson_edit_success,
                         Toast.LENGTH_SHORT)
@@ -748,7 +787,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
     private void modifyVistorTalk(final boolean allowChart) {
 
-        VisitorParams visitorParams=new VisitorParams();
+        VisitorParams visitorParams = new VisitorParams();
         visitorParams.talk = allowChart;
 
         showProgress(true);
@@ -757,6 +796,11 @@ public class ClassDetailFragment extends BaseDialogFragment {
             public void onSuccess(CLResponse object) {
                 cancelProgress();
                 cbAllowGuestChart.setChecked(allowChart);
+
+                ClassInfo info = classroomEngine.getClassInfo();
+                if (info !=null) {
+                    info.talk = allowChart;
+                }
 
                 Toast.makeText(getActivity(),
                         R.string.lesson_edit_success,
@@ -775,9 +819,10 @@ public class ClassDetailFragment extends BaseDialogFragment {
             }
         });
     }
+
     private void modifyVistorLibrary(final boolean allowLib) {
 
-        VisitorParams visitorParams=new VisitorParams();
+        VisitorParams visitorParams = new VisitorParams();
         visitorParams.library = allowLib;
 
         showProgress(true);
@@ -786,6 +831,11 @@ public class ClassDetailFragment extends BaseDialogFragment {
             public void onSuccess(CLResponse object) {
                 cancelProgress();
                 cbAllowGuestRead.setChecked(allowLib);
+
+                ClassInfo info = classroomEngine.getClassInfo();
+                if (info !=null) {
+                    info.library = allowLib;
+                }
 
                 Toast.makeText(getActivity(),
                         R.string.lesson_edit_success,
@@ -813,7 +863,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
         }
     };
 
-    public class MemberAdapter extends AbsListAdapter<Attendee,MemberHolder> {
+    public class MemberAdapter extends AbsListAdapter<Attendee, MemberHolder> {
 
 
         public MemberAdapter(Activity activity) {
@@ -822,16 +872,16 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         @Override
         public void onBindViewHolder(int position, MemberHolder holder) {
-            if(holder.root instanceof IViewModel){
-                ((IViewModel)holder.root).bindData(position,getItem(position));
+            if (holder.root instanceof IViewModel) {
+                ((IViewModel) holder.root).bindData(position, getItem(position));
             }
-            if(holder.root instanceof IEventer){
-                ((IEventer)holder.root).setEventCallback(new EventCallback() {
+            if (holder.root instanceof IEventer) {
+                ((IEventer) holder.root).setEventCallback(new EventCallback() {
                     @Override
                     public void onEvent(int what, Object... object) {
-                        if(what==EVENT_1){
+                        if (what == EVENT_1) {
 
-                        }else if(what==EVENT_2){//添加学生
+                        } else if (what == EVENT_2) {//添加学生
                             /*Intent i = new Intent(getActivity(), StudentsListActivity.class);
                             i.putExtra(StudentsListActivity.EXTRA_CLASS, ClassroomEngine.getEngine().getCtlSession().cls.id);
                             i.putExtra(EXTRA_TEACHING, teaching);
@@ -850,9 +900,9 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         @Override
         public Object getItem(int position) {
-            if(!teaching){
+            if (!teaching) {
                 return super.getItem(position);
-            }else if(getCount()-1==position){
+            } else if (getCount() - 1 == position) {
                 return null;
             }
             return super.getItem(position);
@@ -860,39 +910,39 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
         @Override
         public int getCount() {
-            if(teaching){
-                return super.getCount()+1;
-            }else {
+            if (teaching) {
+                return super.getCount() + 1;
+            } else {
                 return super.getCount();
             }
         }
 
         @Override
         public MemberHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            MemberHolder holder=null;
-            if(viewType==0){
-                holder=new MemberHolder(new MemberItemView(mContext));
-            }else {
-                holder=new MemberHolder(new AddMemberItemView(mContext));
+            MemberHolder holder = null;
+            if (viewType == 0) {
+                holder = new MemberHolder(new MemberItemView(mContext));
+            } else {
+                holder = new MemberHolder(new AddMemberItemView(mContext));
             }
             return holder;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if(!teaching){
+            if (!teaching) {
                 return 0;
             }
-            return position==getCount()-1?1:0;
+            return position == getCount() - 1 ? 1 : 0;
         }
 
         @Override
         public int getViewTypeCount() {
-            return teaching?2:1;
+            return teaching ? 2 : 1;
         }
     }
 
-    public static class MemberHolder extends AbsListAdapter.ViewHolder{
+    public static class MemberHolder extends AbsListAdapter.ViewHolder {
 
         public MemberHolder(View v) {
             super(v);

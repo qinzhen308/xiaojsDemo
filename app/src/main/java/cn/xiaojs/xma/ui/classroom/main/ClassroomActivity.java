@@ -356,7 +356,7 @@ public class ClassroomActivity extends FragmentActivity {
         }
 
         classroomEngine = ClassroomEngine.getEngine();
-        classroomEngine.init(this, ticket, new RoomSession(tempSession));
+        //classroomEngine.init(this, ticket, new RoomSession());
 
         eventListener = classroomEngine.observerRoom(receivedConsumer);
 

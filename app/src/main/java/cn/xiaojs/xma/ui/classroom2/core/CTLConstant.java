@@ -43,6 +43,8 @@ public class CTLConstant {
     public static final int REQUEST_OPEN_CANLENDER = 9;
     public static final int REQUEST_OPEN_DOWNLOAD = 10;
     public static final int REQUEST_ADD_MEMBERS = 11;
+    public static final int REQUEST_VERIFY_MEMBER = 12;
+    public static final int REQUEST_VERIFY_DESTORY = 13;
 
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课

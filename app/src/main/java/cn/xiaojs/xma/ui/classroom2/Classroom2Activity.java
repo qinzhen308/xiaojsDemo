@@ -138,6 +138,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                         case BOOT_SUCCESS:
                             handleBootSuccess(bootSession);
                             break;
+                        case GET_CLASSINFO_OVER:
+                            break;
                         case SOCKET_CONNECT_BEGIN:
                             showProgress(false);
                             break;
@@ -353,8 +355,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
 
         classroomEngine = ClassroomEngine.getEngine();
-        classroomEngine.init(this, bootSession.ctlSession.ticket,
-                new RoomSession(bootSession.ctlSession));
+
+        RoomSession roomSession = new RoomSession(bootSession);
+        classroomEngine.init(this, bootSession.ctlSession.ticket,roomSession);
 
 
         String state = classroomEngine.getLiveState();

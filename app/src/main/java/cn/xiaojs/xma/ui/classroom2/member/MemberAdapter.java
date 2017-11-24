@@ -71,7 +71,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (viewType == MemberType.VERIFY){
             View view = LayoutInflater.from(context)
                     .inflate(R.layout.layout_classroom2_member_ver_item, parent, false);
-            return new VistorViewHolder(view);
+            return new VerifyViewHolder(view);
         }
 
 
@@ -112,8 +112,23 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         } else if(holder instanceof VerifyViewHolder) {
             VerifyViewHolder verHolder = (VerifyViewHolder) holder;
+            if (attendee.unReadMsgCount > 0) {
+                verHolder.countView.setText(attendee.unReadMsgCount);
+                verHolder.countView.setVisibility(View.VISIBLE);
+            }else {
+                verHolder.countView.setVisibility(View.GONE);
+            }
             verHolder.descView.setText("无");
             verHolder.nameView.setText("验证消息");
+
+            verHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.enterVerifyList();
+                }
+            });
+
+
         } else {
 
             MemberViewHolder memberHolder = (MemberViewHolder) holder;

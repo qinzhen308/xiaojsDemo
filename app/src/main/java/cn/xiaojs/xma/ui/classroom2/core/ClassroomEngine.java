@@ -20,6 +20,8 @@ import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
+import cn.xiaojs.xma.model.account.Account;
+import cn.xiaojs.xma.model.ctl.ClassInfo;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
@@ -134,6 +136,38 @@ public final class ClassroomEngine {
     public ClassroomType getClassroomType() {
         RoomSession roomSession = stateMachine.getSession();
         return roomSession == null ? ClassroomType.Unknown : roomSession.classroomType;
+    }
+
+    public ClassInfo getClassInfo() {
+        return stateMachine.getSession().classInfo;
+    }
+
+    public void setClassInfo(ClassInfo info) {
+        stateMachine.getSession().classInfo = info;
+    }
+
+    public boolean classManageable() {
+        ClassInfo classInfo = getClassInfo();
+        if (classInfo == null)
+            return false;
+
+        String mid = AccountDataManager.getAccountID(context);
+
+        //创建者
+        if (mid.equals(classInfo.owner.getId())) {
+            return true;
+        }
+
+        //班主任
+        if (classInfo.advisers != null && classInfo.advisers.length > 0) {
+            for (Account account : classInfo.advisers) {
+                if (mid.equals(account.getId())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public void observeSessionData(SessionDataObserver observer) {

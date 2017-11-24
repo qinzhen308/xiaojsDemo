@@ -31,6 +31,7 @@ import cn.xiaojs.xma.model.Pagination;
 
 import com.orhanobut.logger.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -384,6 +385,14 @@ public class LessonRequest extends ServiceRequest {
         enqueueRequest(APIType.GET_CLASS, call);
     }
 
+    public ClassInfo getClassSync(String classid) throws IOException {
+        Call<ClassInfo> call = getService().getClass(classid);
+        Response<ClassInfo> response = call.execute();
+        if (response !=null)
+            return response.body();
+        return null;
+    }
+
     public void modifyClass(String classid, ModifyClassParams params) {
         Call<CLResponse> call = getService().modifyClass(classid, params);
         enqueueRequest(APIType.MODIFY_CLASS, call);
@@ -416,6 +425,31 @@ public class LessonRequest extends ServiceRequest {
                 criteriaJsonstr, paginationJsonstr);
         enqueueRequest(APIType.GET_CLASS_STUDENTS, call);
     }
+
+
+    public CollectionPage<StudentEnroll> getClassStudentsSync(String classes,
+                                                              JoinCriteria criteria,
+                                                              Pagination pagination) throws IOException {
+
+        String criteriaJsonstr = objectToJsonString(criteria);
+        String paginationJsonstr = objectToJsonString(pagination);
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.json(criteriaJsonstr);
+            Logger.json(paginationJsonstr);
+        }
+
+
+        Call<CollectionPage<StudentEnroll>> call = getService().getClassStudents(classes,
+                criteriaJsonstr, paginationJsonstr);
+        Response<CollectionPage<StudentEnroll>> response = call.execute();
+        if (response !=null) {
+            return response.body();
+        }
+
+        return null;
+    }
+
 
     public void getClasses(CriteriaStudents criteria) {
 

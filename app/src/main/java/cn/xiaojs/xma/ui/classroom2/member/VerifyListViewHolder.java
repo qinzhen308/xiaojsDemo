@@ -5,40 +5,45 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.ui.classroom2.widget.LoadmoreRecyclerView;
 import cn.xiaojs.xma.ui.widget.MessageImageView;
 
 /**
  * Created by maxiaobao on 2017/11/13.
  */
 
-public class VerifyViewHolder extends RecyclerView.ViewHolder {
+public class VerifyListViewHolder extends LoadmoreRecyclerView.LMViewHolder{
 
-    @BindView(R.id.root_lay)
-    RelativeLayout rootLayout;
-    @BindView(R.id.avator)
-    ImageView avatorView;
-    @BindView(R.id.name)
+    @BindView(R.id.time)
+    TextView timeView;
+    @BindView(R.id.name_num)
     TextView nameView;
-    @BindView(R.id.veri_count)
-    TextView countView;
-    @BindView(R.id.desc)
-    TextView descView;
+    @BindView(R.id.refuse_btn)
+    Button refuseBtn;
+    @BindView(R.id.agree_btn)
+    Button agreeBtn;
+    @BindView(R.id.status_view)
+    TextView statusView;
+    @BindView(R.id.opera_name)
+    TextView operaNameView;
+    @BindView(R.id.tv_verify_msg)
+    TextView tvVerifyMsg;
 
-    public VerifyViewHolder(View itemView) {
+    public VerifyListViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
     public static View createView(Context context, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        return inflater.inflate(R.layout.layout_classroom2_member_ver_item, parent, false);
+        return inflater.inflate(R.layout.layout_classroom2_verification_msg_item, parent, false);
 
     }
 }

@@ -77,6 +77,7 @@ import okhttp3.ResponseBody;
 
 import com.orhanobut.logger.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -597,6 +598,14 @@ public class LessonDataManager {
         return lessonRequest;
     }
 
+    public static ClassInfo getClassInfoSync(Context context,
+                                              String classid) throws IOException {
+
+        LessonRequest lessonRequest = new LessonRequest(context, null);
+        return lessonRequest.getClassSync(classid);
+    }
+
+
     /**
      * modify the specific private class.
      * 编辑班课内容（班名称、班主任）;
@@ -664,6 +673,14 @@ public class LessonDataManager {
         LessonRequest lessonRequest = new LessonRequest(context, callback);
         lessonRequest.getClassStudents(classes, criteria, pagination);
         return lessonRequest;
+    }
+
+    public static CollectionPage<StudentEnroll> getClassStudentsSync(Context context,
+                                                  String classes,
+                                                  JoinCriteria criteria,
+                                                  Pagination pagination) throws IOException {
+        LessonRequest lessonRequest = new LessonRequest(context, null);
+        return lessonRequest.getClassStudentsSync(classes, criteria, pagination);
     }
 
     /**

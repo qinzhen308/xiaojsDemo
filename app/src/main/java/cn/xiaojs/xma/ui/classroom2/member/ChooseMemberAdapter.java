@@ -79,8 +79,8 @@ public class ChooseMemberAdapter extends RecyclerView.Adapter<ChooseMemberViewHo
             markStr = "主讲";
             colorRes = context.getResources().getColor(R.color.session_leader);
         } else if (identity == CTLConstant.UserIdentity.ADVISER ) {
-            markStr = "班主任";
-            colorRes = context.getResources().getColor(R.color.session_leader);
+            markStr = "管理者";
+            colorRes = context.getResources().getColor(R.color.session_admin);
         } else if (identity == CTLConstant.UserIdentity.TEACHER2) {
             markStr = "老师";
             colorRes = context.getResources().getColor(R.color.session_teacher);
