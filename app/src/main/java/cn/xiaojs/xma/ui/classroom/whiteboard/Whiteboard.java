@@ -14,6 +14,7 @@ package cn.xiaojs.xma.ui.classroom.whiteboard;
  *
  * ======================================================================================== */
 
+import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -575,7 +576,27 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         mScreenWidth = dm.widthPixels;
         mScreenHeight = dm.heightPixels;
 
-        mViewGestureListener = new ViewGestureListener(context, this, new TouchEventListener(), true);
+        mViewGestureListener = new ViewGestureListener(context, this, new TouchEventListener(), true){
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                onTouchPreview();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        };
         mInputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         mPreviousPoint = new PointF();
@@ -677,6 +698,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 canvas.restore();
             }
         }
+
     }
 
     @Override
@@ -2320,7 +2342,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         this.readOnly=readOnly;
     }
 
-    public Bitmap getPreviewBitmap(){
+    public synchronized Bitmap getPreviewBitmap(){
         setDrawingCacheEnabled(true);
         Bitmap bm=getDrawingCache();
         if(bm!=null){
@@ -2339,12 +2361,13 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         if(previewQueueState==1){
             handler.sendEmptyMessage(1);
-            handler.sendEmptyMessageDelayed(3,1000);
         }else if(previewQueueState==2){
             handler.removeMessages(2);
+            handler.removeMessages(3);
             handler.sendEmptyMessageDelayed(2,1000);
         }else {
         }
+        handler.sendEmptyMessageDelayed(3,1000);
     }
 
     int previewQueueState=1;
@@ -2354,6 +2377,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         public void handleMessage(Message msg) {
             if(msg.what!=3){
                 Bitmap preview=getPreviewBitmap();
+                Logger.d("-----qz-----push preivew="+preview);
                 if(preview!=null){
                     pushPreviewBoardListener.onPush(preview);
                 }
@@ -2361,6 +2385,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 Logger.d("-----qz-----push time="+(time2-time));
                 time=time2;
             }
+            Logger.d("-----qz-----push what="+msg.what);
             if(msg.what==1){
                 previewQueueState=2;
             }else if(msg.what==2){

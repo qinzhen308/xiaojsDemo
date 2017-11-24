@@ -193,7 +193,7 @@ public class Selector extends Doodle implements SyncCollector{
                 paddingX = paddingX * params.scale + exPaddingX;
                 paddingY = paddingY * params.scale + exPaddingY;
 
-                mBorderRect.set(mDoodleRect.left - paddingX, mDoodleRect.top - paddingY, mDoodleRect.right + paddingX, mDoodleRect.bottom + paddingY);
+                mBorderRect.set(mDoodleRect.left - Math.abs(paddingX), mDoodleRect.top - Math.abs(paddingY), mDoodleRect.right + Math.abs(paddingX), mDoodleRect.bottom + Math.abs(paddingY));
                 RectF realBorderRect=new RectF(mBorderRect);
 
                 mBorderDrawingPath.reset();
@@ -428,33 +428,49 @@ public class Selector extends Doodle implements SyncCollector{
 
                 switch (edge) {
                     case IntersectionHelper.TOP_EDGE:
-                        if(_p[1]>=_c[1]){
+                        /*if(_p[1]>=_c[1]){
                             scaleY = 1f;
                         }else {
-                            scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+                        }*/
+                        scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+
+                        if(Float.isNaN(scaleY)){
+                            scaleY=1;
                         }
                         break;
                     case IntersectionHelper.RIGHT_EDGE:
 
-                        if(_p[0]<=_c[0]){
+                        /*if(_p[0]<=_c[0]){
                             scaleX = 1f;
                         }else {
                             scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        }*/
+                        scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        if(Float.isNaN(scaleX)){
+                            scaleX=1;
                         }
                         break;
                     case IntersectionHelper.BOTTOM_EDGE:
-                        if(_p[1]<=_c[1]){
+                       /* if(_p[1]<=_c[1]){
                             scaleY = 1f;
                         }else {
                             scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+                        }*/
+                        scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+                        if(Float.isNaN(scaleY)){
+                            scaleY=1;
                         }
                         break;
                     case IntersectionHelper.LEFT_EDGE:
 
-                        if(_p[0]>=_c[0]){
+                       /* if(_p[0]>=_c[0]){
                             scaleX = 1f;
                         }else {
                             scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        }*/
+                        scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        if(Float.isNaN(scaleX)){
+                            scaleX=1;
                         }
                         break;
                 }

@@ -13,6 +13,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -82,8 +83,8 @@ public class BoardCollaborateFragment extends BaseFragment {
     View mWhiteBoardPanel;
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mBoardScrollerView;
-    //    @BindView(R.id.test_preview)
-//    ImageView testPreview;
+        @BindView(R.id.test_preview)
+        ImageView testPreview;
     @BindView(R.id.text_pager_points)
     TextView textPagerPoints;
 
@@ -163,7 +164,7 @@ public class BoardCollaborateFragment extends BaseFragment {
         mBoardController.setPushPreviewBoardListener(new PushPreviewBoardListener() {
             @Override
             public void onPush(Bitmap bitmap) {
-//                testPreview.setImageBitmap(bitmap);
+                testPreview.setImageBitmap(bitmap);
                 if (onPushPreviewListener != null) {
                     onPushPreviewListener.onPushPreview(bitmap);
                 }
