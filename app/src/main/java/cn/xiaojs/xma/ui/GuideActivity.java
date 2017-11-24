@@ -27,7 +27,7 @@ import cn.xiaojs.xma.ui.account.LoginActivity;
 public class GuideActivity extends Activity {
 
     int[] imgsRes = {R.drawable.img_guide1, R.drawable.img_guide2, R.drawable.img_guide3};
-    int[] indicatorIds = {R.id.tab1, R.id.tab1, R.id.tab1};
+    int[] indicatorIds = {R.id.tab1, R.id.tab2, R.id.tab3};
     View[] pages = new View[imgsRes.length];
 
     @BindView(R.id.view_pager)
@@ -67,12 +67,14 @@ public class GuideActivity extends Activity {
 
             @Override
             public void onPageSelected(int position) {
+                indicatorView.check(indicatorIds[position]);
                 if(position==imgsRes.length-1){
                     btnEnter.setVisibility(View.VISIBLE);
+                    indicatorView.setVisibility(View.GONE);
                 }else {
                     btnEnter.setVisibility(View.GONE);
+                    indicatorView.setVisibility(View.VISIBLE);
                 }
-                indicatorView.check(indicatorIds[position]);
             }
 
             @Override
