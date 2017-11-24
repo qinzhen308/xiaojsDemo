@@ -53,6 +53,8 @@ import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.input.InputPanel;
+import cn.xiaojs.xma.ui.classroom2.chat.input.InputPoxy;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.util.NetworkUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
@@ -70,7 +72,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public abstract class ChatSessionFragment extends BaseDialogFragment
-        implements ChatAdapter.FetchMoreListener, ChatAdapter.OnChatOperationListener {
+        implements ChatAdapter.FetchMoreListener,
+        ChatAdapter.OnChatOperationListener,
+        InputPoxy{
 
     @BindView(R.id.title)
     TextView titleView;
@@ -81,12 +85,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
 
     @BindView(R.id.chat_list)
     RecyclerView recyclerView;
-    @BindView(R.id.msg_input)
-    SpecialEditText inputView;
-    @BindView(R.id.bottom_line)
-    View bottomlineView;
-    @BindView(R.id.send_btn)
-    Button sendBtnView;
     @BindView(R.id.pop_tips)
     protected TextView popTipsView;
 
@@ -111,6 +109,8 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
 
     private XMSManager xmsManager;
 
+    private InputPanel inputPanel;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,10 +127,13 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
 
         View view = inflater.inflate(R.layout.fragment_classroom2_chat_session, container, false);
         ButterKnife.bind(this, view);
+
+        inputPanel = new InputPanel(getContext(), view, this);
+
         return view;
     }
 
-    @OnClick({R.id.back_btn, R.id.more_btn, R.id.send_btn})
+    @OnClick({R.id.back_btn, R.id.more_btn})
     void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
@@ -138,10 +141,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
                 break;
             case R.id.more_btn:
                 showMoreMenu();
-                break;
-            case R.id.send_btn:
-                String bodyStr = inputView.getText().toString();
-                sendTalk(bodyStr);
                 break;
         }
     }
@@ -218,6 +217,11 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         if (loading) return;
 
         loadData();
+    }
+
+    @Override
+    public void onSendText(String text) {
+        sendTalk(text);
     }
 
     @Override
@@ -369,8 +373,6 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
     }
 
     protected void sendTalk(String bodyStr) {
-
-        inputView.setText("");
 
         if (TextUtils.isEmpty(bodyStr))
             return;
@@ -660,9 +662,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
     }
 
     public void hiddenSendBar() {
-        bottomlineView.setVisibility(View.GONE);
-        inputView.setVisibility(View.GONE);
-        sendBtnView.setVisibility(View.GONE);
+        inputPanel.hideRootBar();
     }
 
     public void hiddenTitleBar() {

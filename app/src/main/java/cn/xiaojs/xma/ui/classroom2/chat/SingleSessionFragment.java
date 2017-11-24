@@ -12,6 +12,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.SocialManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.LiveCriteria;
@@ -90,7 +91,10 @@ public class SingleSessionFragment extends ChatSessionFragment {
         final ListBottomDialog dialog = new ListBottomDialog(getContext());
 
         String[] items = getResources().getStringArray(R.array.classroom2_chat_more_unfollow);
-        if (isFollowed()) {
+
+        if (AccountDataManager.isXiaojsAccount(accountId)) {
+            items = getResources().getStringArray(R.array.classroom2_chat_xxx);
+        }else if (isFollowed()) {
             items = getResources().getStringArray(R.array.classroom2_chat_more_followed);
         }
         dialog.setItems(items);

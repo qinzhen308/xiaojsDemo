@@ -55,6 +55,10 @@
     <dimen name="o2o_margin_left">@dimen/px30</dimen>
     <dimen name="o2o_margin_top">@dimen/px100</dimen>
 
+
+    <dimen name="bottom_component_margin_horizontal">6dip</dimen>
+    <dimen name="bottom_component_margin_vertical">8dip</dimen>
+
     <!--负的-->
     <dimen name="px_10">-5.0dp</dimen>
     <dimen name="px_9">-4.5dp</dimen>

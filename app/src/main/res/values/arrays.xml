@@ -231,6 +231,9 @@
         <item>个人主页</item>
         <item>关注</item>
     </string-array>
+    <string-array name="classroom2_chat_xxx">
+        <item>个人主页</item>
+    </string-array>
     <string-array name="letter_list">
         <item>A</item>
         <item>B</item>

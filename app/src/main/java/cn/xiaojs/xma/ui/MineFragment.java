@@ -204,32 +204,32 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.name_auth_layout:
                 AnalyticEvents.onEvent(getActivity(),13);
-                if (AccountDataManager.isTeacher(mContext)) {
+                //if (AccountDataManager.isTeacher(mContext)) {
                     startActivity(new Intent(mContext, CertificationActivity.class));
-                }else{
-//                    Toast.makeText(mContext,"你不是老师，不能进行实名认证",Toast.LENGTH_SHORT).show();
-                    //提示申明教学能力
-                    final CommonDialog dialog = new CommonDialog(mContext);
-                    dialog.setRightBtnText(R.string.goto_apply);
-                    dialog.setLefBtnText(R.string.cancel);
-                    dialog.setTitle(R.string.declare_teaching_ability);
-                    dialog.setDesc(R.string.declare_teaching_ability_tip);
-                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                        @Override
-                        public void onClick() {
-                            dialog.dismiss();
-                            Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                        @Override
-                        public void onClick() {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-                }
+//                }else{
+////                    Toast.makeText(mContext,"你不是老师，不能进行实名认证",Toast.LENGTH_SHORT).show();
+//                    //提示申明教学能力
+//                    final CommonDialog dialog = new CommonDialog(mContext);
+//                    dialog.setRightBtnText(R.string.goto_apply);
+//                    dialog.setLefBtnText(R.string.cancel);
+//                    dialog.setTitle(R.string.declare_teaching_ability);
+//                    dialog.setDesc(R.string.declare_teaching_ability_tip);
+//                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                            Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog.show();
+//                }
 
                 break;
             case R.id.settings_layout:
