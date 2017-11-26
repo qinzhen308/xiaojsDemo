@@ -71,8 +71,6 @@ public class DataManager {
         Context context = application.getApplicationContext();
         getCache(context).setApplication(application);
 
-        saveVersionCode(context, APPUtils.getAPPVersionCode(context));
-
         dealDownloadAsync(context);
 
         if (AccountDataManager.isLogin(context)) {

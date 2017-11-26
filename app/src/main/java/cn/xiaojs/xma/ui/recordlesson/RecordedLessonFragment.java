@@ -93,6 +93,7 @@ public class RecordedLessonFragment extends Fragment implements IUpdateMethod{
         mRecyclerView=mPullRecyclerView.getRefreshableView();
         loadState=new AppLoadState2(getActivity(),(ViewGroup) v.findViewById(R.id.load_state_container));
         loadState.setTips(getString(R.string.my_class_list_no_rlesson_tip),null,null,null,null,null);
+        loadState.setEmptyImageRes(R.drawable.img_load_empty_course);
         stateView=new LoadStatusViewDecoratee(loadState);
 //        stateView=new LoadStatusViewDecoratee(null);
         if(AccountDataManager.isTeacher(getActivity())){

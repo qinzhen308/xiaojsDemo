@@ -7,29 +7,12 @@
     android:layout_marginBottom="@dimen/px2"
     >
 
-    <TextView
-        android:id="@+id/tv_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tv_title"
-        android:layout_alignBottom="@+id/tv_title"
-        android:layout_marginTop="@dimen/px3"
-        android:layout_marginBottom="@dimen/px3"
-        android:paddingLeft="@dimen/px6"
-        android:paddingRight="@dimen/px8"
-        android:gravity="center"
-        android:background="@drawable/bg_search_label_blue"
-        android:text="班"
-        android:ems="2"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_24px" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/px30"
-        android:layout_marginLeft="@dimen/px20"
         android:text="我的标题"
         android:layout_toRightOf="@+id/tv_label"
         android:maxLines="1"
@@ -41,10 +24,11 @@
         android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_label"
+        android:layout_below="@id/tv_title"
         android:layout_marginTop="@dimen/px22"
         android:text="创建时间：2014-12-12"
         android:textColor="@color/common_text"
+        android:visibility="gone"
         android:textSize="@dimen/font_26px" />
 
 
@@ -55,21 +39,20 @@
         android:layout_width="@dimen/px40"
         android:layout_height="@dimen/px40"
         android:scaleType="fitXY"
-        android:layout_toLeftOf="@+id/tv_name"
-        android:layout_alignBottom="@+id/tv_name"
-        android:layout_marginRight="@dimen/px14"
-        android:layout_marginBottom="@dimen/px_5"
+        android:layout_marginTop="@dimen/px22"
+        android:layout_below="@id/tv_title"
         android:src="@drawable/default_avatar" />
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_label"
-        android:layout_marginTop="@dimen/px22"
         android:text="撒度1"
-        android:layout_marginRight="@dimen/px39"
-        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/px15"
+        android:layout_alignBottom="@+id/iv_avatar"
+        android:layout_toRightOf="@+id/iv_avatar"
+        android:layout_alignTop="@+id/iv_avatar"
+        android:gravity="center_vertical"
         android:textColor="@color/common_text"
         android:textSize="@dimen/font_24px" />
 

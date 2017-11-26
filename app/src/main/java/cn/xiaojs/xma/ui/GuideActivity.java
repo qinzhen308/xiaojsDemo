@@ -18,7 +18,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.AccountDataManager;
+import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.ui.account.LoginActivity;
+import cn.xiaojs.xma.util.APPUtils;
 
 /**
  * Created by Paul Z on 2017/11/24.
@@ -40,6 +42,8 @@ public class GuideActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataPref.setVersionCode(this, APPUtils.getAPPVersionCode(this));
+
         setContentView(R.layout.activity_guide);
         ButterKnife.bind(this);
         initView();
@@ -74,6 +78,7 @@ public class GuideActivity extends Activity {
                 }else {
                     btnEnter.setVisibility(View.GONE);
                     indicatorView.setVisibility(View.VISIBLE);
+                    indicatorView.requestLayout();
                 }
             }
 

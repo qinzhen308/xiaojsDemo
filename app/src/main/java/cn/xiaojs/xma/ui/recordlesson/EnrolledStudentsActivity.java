@@ -154,6 +154,7 @@ public class EnrolledStudentsActivity extends BaseActivity {
 
         adapter = new StudentsAdapter(this, listView);
         adapter.setDesc("暂无报名学生");
+        adapter.setIcon(R.drawable.img_load_empty_enroll);
         if (teaching) {
             listView.enableLeftSwipe(true);
             setRightText(R.string.lesson_op_signup);

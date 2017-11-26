@@ -45,6 +45,7 @@ import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.base.BaseActivity;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.base.CommonRVAdapter;
+import cn.xiaojs.xma.ui.widget.LoadingView;
 import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.JsInvokeNativeInterface;
 
@@ -90,6 +91,9 @@ public class DiscoverFragment extends BaseFragment {
     TextView tabRecommend3;
     @BindView(R.id.tab_recommend_4)
     TextView tabRecommend4;
+
+    @BindView(R.id.web_loading_view)
+    LoadingView webLoadingView;
 
     CommonRVAdapter mAdapter;
     private final static int BEGIN_SEARCH=0xff;
@@ -240,11 +244,13 @@ public class DiscoverFragment extends BaseFragment {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                webLoadingView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                webLoadingView.setVisibility(View.GONE);
             }
         });
     }

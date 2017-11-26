@@ -1,8 +1,6 @@
 package cn.xiaojs.xma.ui.search.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -22,9 +19,6 @@ import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.model.search.SearchResultV2;
-import cn.xiaojs.xma.ui.lesson.CourseConstant;
-import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
-import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
 import cn.xiaojs.xma.ui.recordlesson.RecordedLessonEnrollActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -38,8 +32,6 @@ import cn.xiaojs.xma.util.StringUtil;
 public class SRRecordedLessonView extends RelativeLayout implements IViewModel<SearchResultV2> {
 
     SearchResultV2 mData;
-    @BindView(R.id.tv_label)
-    TextView tvLabel;
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_date)

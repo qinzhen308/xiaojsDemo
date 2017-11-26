@@ -112,7 +112,7 @@ public class SettingsActivity extends BaseActivity {
                 ClassroomPref.setAllowLive4g(this, !allow);
                 break;
             case R.id.btn_help:
-                CommonWebActivity.invoke(this,"","http://www.baidu.com");
+                CommonWebActivity.invoke(this,null,"http://192.168.100.168/xjsweixin/web/help/help.html");
                 break;
             default:
                 break;

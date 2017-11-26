@@ -92,8 +92,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
     TextView label1;
     @BindView(R.id.live_lesson_name)
     EditTextDel liveLessonName;
-    @BindView(R.id.label2)
-    TextView label2;
     @BindView(R.id.label3)
     TextView label3;
     @BindView(R.id.btn_teacher)
@@ -218,7 +216,6 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
 
     private void mustInputSymbol() {
         label1.setText(StringUtil.getSpecialString(label1.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
-        label2.setText(StringUtil.getSpecialString(label2.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
         label3.setText(StringUtil.getSpecialString(label3.getText().toString() + " *", " *", getResources().getColor(R.color.main_orange)));
 
     }
@@ -236,7 +233,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
         });
     }
 
-    @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief, R.id.lesson_subject,
+    @OnClick({R.id.left_image, R.id.add_cover, R.id.live_lesson_brief,
             R.id.live_lesson_label, R.id.cover_view, R.id.sub_btn})
     public void onClick(View v) {
         Intent i = null;
@@ -268,8 +265,7 @@ public class CreateRecordedLessonActivity extends BaseActivity implements Course
                 i.putExtra(KEY_LESSON_OPTIONAL_INFO, mLesson);
                 startActivityForResult(i, LESSON_LABEL);
                 break;
-            case R.id.lesson_subject:
-                break;
+
             case R.id.sub_btn:
                 submit();
                 break;

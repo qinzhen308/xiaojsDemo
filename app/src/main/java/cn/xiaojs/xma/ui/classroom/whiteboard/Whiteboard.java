@@ -632,6 +632,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         RectF destF = mViewGestureListener.getDestRect();
         mDoodleBounds.set(destF.left, destF.top, destF.right, destF.bottom);
+        Logger.d("-------qz------whiteboard----ondraw----doodleBounds="+mDoodleBounds.toString());
+        Logger.d("-------qz------whiteboard----ondraw----mBlackboardRect="+mBlackboardRect.toString());
 
         canvas.save();
         //clip
@@ -1324,11 +1326,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
     }
 
     private void createDoodleCanvas() {
-        if (mDoodleCanvas == null && mLayer != null) {
+        if (mDoodleCanvas == null) {
             int w = mBlackboardWidth;
             int h = mBlackboardHeight;
-            mLayer.setWidth(mBlackboardWidth);
-            mLayer.setHeight(mBlackboardHeight);
+
 
             mDoodleBitmap = mDoodleBitmapPool != null ? mDoodleBitmapPool.getBitmap(w, h) : null;
             if (mDoodleBitmap == null) {
@@ -1339,6 +1340,25 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mBlackboardRect.set(0, 0, w, h);
             mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
             mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
+        }else if(mDoodleBitmap.getWidth()!=mBlackboardWidth||mDoodleBitmap.getHeight()!=mBlackboardHeight){
+            int w = mBlackboardWidth;
+            int h = mBlackboardHeight;
+
+
+            mDoodleBitmap = mDoodleBitmapPool != null ? mDoodleBitmapPool.getBitmap(w, h) : null;
+            if (mDoodleBitmap == null) {
+                mDoodleBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
+            }
+            mDoodleCanvas = new Canvas(mDoodleBitmap);
+
+            mBlackboardRect.set(0, 0, w, h);
+            mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
+            mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
+        }
+
+        if(mLayer != null){
+            mLayer.setWidth(mBlackboardWidth);
+            mLayer.setHeight(mBlackboardHeight);
         }
     }
 
@@ -2381,7 +2401,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             if(msg.what!=3){
                 Bitmap preview=getPreviewBitmap();
                 Logger.d("-----qz-----push preivew="+preview);
-                if(preview!=null){
+                if(preview!=null&&pushPreviewBoardListener!=null){
                     pushPreviewBoardListener.onPush(preview);
                 }
                 long time2=System.currentTimeMillis();

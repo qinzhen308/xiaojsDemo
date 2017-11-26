@@ -224,7 +224,7 @@
     <string name="sale_promotion">促销</string>
     <string name="input_tips"><![CDATA[<font color="#cc0000">%1$d</font>]]>/%2$d字</string>
 
-    <string name="home_search_hint">课/班/个人/机构</string>
+    <string name="home_search_hint">课/教室/个人/机构</string>
     <string name="course_of_learn">我报的班</string>
     <string name="course_of_teach">我授的课</string>
     <string name="my_course">我的课</string>
@@ -1040,7 +1040,7 @@
     <string name="share_class">分享班</string>
     <string name="share_mode_url">链接分享</string>
     <string name="share_mode_qrcode">二维码分享</string>
-    <string name="filter_tip_lesson">没有符合筛选条件的课~</string>
+    <string name="filter_tip_lesson">没有符合筛选条件的课程~</string>
     <string name="filter_tip_class">没有符合筛选条件的班~</string>
     <string name="material_info_summary">%1$s&#160;&#160;&#160;&#160;<![CDATA[<font color="#b49e89">%2$s</font>]]></string>
 
@@ -1051,7 +1051,7 @@
 
     <string name="my_class_list_no_class_tip">你暂时还没有班哦~</string>
     <string name="my_class_list_no_lesson_tip">你暂时还没有公开课哦~</string>
-    <string name="my_class_list_no_rlesson_tip">你暂时还没有录播课哦~</string>
+    <string name="my_class_list_no_rlesson_tip">暂无课程</string>
     <string name="readying_live_tips">正在连接...</string>
     <string name="streaming_occur_exception">直播连接失败，请重试!</string>
 

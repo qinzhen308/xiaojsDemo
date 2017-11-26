@@ -31,23 +31,6 @@
         android:textSize="@dimen/font_34px" />
 
 
-    <TextView
-        android:id="@+id/tv_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/px10"
-        android:layout_alignTop="@+id/tv_title"
-        android:layout_alignBottom="@+id/tv_title"
-        android:layout_marginTop="@dimen/px3"
-        android:layout_marginBottom="@dimen/px3"
-        android:paddingLeft="@dimen/px6"
-        android:paddingRight="@dimen/px8"
-        android:gravity="center"
-        android:background="@drawable/bg_search_label_yellow"
-        android:text="机构"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_24px" />
-
 
 
     <TextView
@@ -69,13 +52,14 @@
         android:layout_below="@id/tv_title"
         android:layout_marginTop="@dimen/px10"
         android:layout_marginLeft="@dimen/px30"
+        android:layout_marginRight="@dimen/px20"
+        android:layout_alignParentRight="true"
         android:text="粉丝 55"
-        android:layout_toRightOf="@+id/tv_tel"
         android:textColor="@color/common_text"
         android:textSize="@dimen/font_26px" />
 
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/btn_follow"
         android:layout_width="@dimen/px110"
         android:layout_height="@dimen/px50"
@@ -86,7 +70,7 @@
         android:paddingRight="@dimen/px10"
         android:textSize="@dimen/font_24px"
         android:layout_marginRight="@dimen/px29"
-        />
+        />-->
 
 
 

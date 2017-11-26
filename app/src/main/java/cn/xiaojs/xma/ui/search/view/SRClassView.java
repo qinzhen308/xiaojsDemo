@@ -10,19 +10,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.Date;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
-import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.ApiManager;
-import cn.xiaojs.xma.data.api.service.APIServiceCallback;
-import cn.xiaojs.xma.model.ctl.CriteriaStudents;
-import cn.xiaojs.xma.model.ctl.CriteriaStudentsDoc;
-import cn.xiaojs.xma.model.ctl.Students;
 import cn.xiaojs.xma.model.search.SearchResultV2;
 import cn.xiaojs.xma.ui.CommonWebActivity;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
@@ -42,8 +36,6 @@ import cn.xiaojs.xma.util.ToastUtil;
 public class SRClassView extends RelativeLayout implements IViewModel<SearchResultV2> {
 
     SearchResultV2 mData;
-    @BindView(R.id.tv_label)
-    TextView tvLabel;
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_date)
@@ -97,12 +89,12 @@ public class SRClassView extends RelativeLayout implements IViewModel<SearchResu
         }
 
         tvTitle.setText(StringUtil.setHighlightText2(mData.title,mData._title,heightlightColor));
-        if(mData.createdOn==null){
+        /*if(mData.createdOn==null){
             tvDate.setVisibility(INVISIBLE);
         }else {
             tvDate.setVisibility(VISIBLE);
             tvDate.setText("创建时间 "+ScheduleUtil.getDateYMD(mData.createdOn));
-        }
+        }*/
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

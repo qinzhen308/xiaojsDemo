@@ -43,14 +43,13 @@ public class SROrganizationView extends RelativeLayout implements IViewModel<Sea
     ImageView ivAvatar;
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.tv_label)
-    TextView tvLabel;
+
     @BindView(R.id.tv_tel)
     TextView tvTel;
     @BindView(R.id.tv_fans)
     TextView tvFans;
-    @BindView(R.id.btn_follow)
-    TextView btnFollow;
+   /* @BindView(R.id.btn_follow)
+    TextView btnFollow;*/
 
     private CircleTransform circleTransform;
 
@@ -82,7 +81,7 @@ public class SROrganizationView extends RelativeLayout implements IViewModel<Sea
     @Override
     public void bindData(int position, SearchResultV2 data) {
         mData = data;
-        setFollowState(btnFollow,mData.isFollowed);
+//        setFollowState(btnFollow,mData.isFollowed);
         String tag=((Activity)getContext()).getIntent().getStringExtra("extra_search_keywords");
 
         Glide.with(getContext())
@@ -130,10 +129,10 @@ public class SROrganizationView extends RelativeLayout implements IViewModel<Sea
         }
     }
 
-    @OnClick(R.id.btn_follow)
+   /* @OnClick(R.id.btn_follow)
     public void onViewClicked() {
         chooseGroup();
-    }
+    }*/
 
     private void chooseGroup() {
 
@@ -158,7 +157,7 @@ public class SROrganizationView extends RelativeLayout implements IViewModel<Sea
             @Override
             public void onSuccess(Relation object) {
                 Toast.makeText(getContext(), R.string.followed, Toast.LENGTH_SHORT).show();
-                setFollowState(btnFollow,true);
+//                setFollowState(btnFollow,true);
             }
 
             @Override
