@@ -1,8 +1,11 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,12 +15,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -29,12 +34,16 @@ import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.XiaojsConfig;
+import cn.xiaojs.xma.common.crop.CropImageActivity;
+import cn.xiaojs.xma.common.crop.CropImageMainActivity;
+import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CommunicationManager;
 import cn.xiaojs.xma.data.XMSManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.QiniuService;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.data.api.socket.xms.XMSEventObservable;
 import cn.xiaojs.xma.data.provider.DataProvider;
@@ -43,6 +52,7 @@ import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.LiveCriteria;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.material.UploadReponse;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.RecallTalk;
@@ -51,6 +61,8 @@ import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.ReadTalk;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.model.socket.room.TalkResponse;
+import cn.xiaojs.xma.ui.certification.CertificationActivity;
+import cn.xiaojs.xma.ui.certification.CertificationConstant;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.base.BaseDialogFragment;
 import cn.xiaojs.xma.ui.classroom2.chat.input.InputPanel;
@@ -61,6 +73,7 @@ import cn.xiaojs.xma.ui.conversation2.ConversationType;
 import cn.xiaojs.xma.ui.lesson.xclass.util.RecyclerViewScrollHelper;
 import cn.xiaojs.xma.ui.widget.ListBottomDialog;
 import cn.xiaojs.xma.ui.widget.SpecialEditText;
+import cn.xiaojs.xma.ui.widget.progress.ProgressHUD;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -111,9 +124,16 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
 
     private InputPanel inputPanel;
 
+    private ProgressHUD progressHUD;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getDialog() != null) {
+            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
+
+
         dataProvider = DataProvider.getProvider(getContext());
     }
 
@@ -201,16 +221,19 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
 
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (resultCode == Activity.RESULT_OK && data != null) {
-//            switch (requestCode) {
-//                case ClassroomController.REQUEST_INPUT:
-//                    break;
-//            }
-//        }
-//
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            switch (requestCode) {
+                case CTLConstant.REQUEST_TAKE_CAMERA:
+                case CTLConstant.REQUEST_PICK_PHOTOS:
+                    String cropImgPath = data.getStringExtra(CropImagePath.CROP_IMAGE_PATH_TAG);
+                    uploadImgToCloud(cropImgPath);
+                    break;
+            }
+        }
+
+    }
 
     @Override
     public void onFetchMoreRequested() {
@@ -222,6 +245,24 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
     @Override
     public void onSendText(String text) {
         sendTalk(text);
+    }
+
+    @Override
+    public void onTakeCamera() {
+        Intent intent = new Intent(getContext(), CropImageMainActivity.class);
+        intent.putExtra(CropImagePath.CROP_NEVER, true);
+        intent.putExtra(CropImageMainActivity.IMMEDIATE_TAKE_CMAERA, true);
+        intent.putExtra(CropImageActivity.ACTION_DONE_TXT, "发送");
+        startActivityForResult(intent, CTLConstant.REQUEST_TAKE_CAMERA);
+    }
+
+    @Override
+    public void onPickPhotos() {
+        Intent intent = new Intent(getContext(), CropImageMainActivity.class);
+        intent.putExtra(CropImagePath.CROP_NEVER, true);
+        intent.putExtra(CropImageMainActivity.IMMEDIATE_PICK_PHOTOS, true);
+        intent.putExtra(CropImageActivity.ACTION_DONE_TXT, "发送");
+        startActivityForResult(intent, CTLConstant.REQUEST_PICK_PHOTOS);
     }
 
     @Override
@@ -319,6 +360,43 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         Toast.makeText(getContext(), "复制成功", Toast.LENGTH_LONG).show();
     }
 
+
+
+    private void uploadImgToCloud(final String filePath) {
+
+        showSendProgress(false);
+
+        AccountDataManager.uploadIMPicture(getContext(), filePath, new QiniuService() {
+            @Override
+            public void uploadSuccess(String key, UploadReponse reponse) {
+
+                if (TextUtils.isEmpty(key)) {
+                    cancelSendProgress();
+                    Toast.makeText(getContext(),"图片发送失败",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                sendPictureTalk(key);
+            }
+
+            @Override
+            public void uploadProgress(String key, double percent) {
+
+            }
+
+            @Override
+            public void uploadFailure(boolean cancel) {
+                cancelSendProgress();
+                Toast.makeText(getContext(),"图片发送失败",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
     private Consumer<EventReceived> receivedConsumer = new Consumer<EventReceived>() {
         @Override
         public void accept(EventReceived eventReceived) throws Exception {
@@ -372,6 +450,21 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         }
     }
 
+    protected void sendPictureTalk(String pictureKey) {
+        final Talk talkBean = new Talk();
+        talkBean.from = AccountDataManager.getAccountID(getContext());;
+        talkBean.body = new Talk.TalkContent();
+        talkBean.body.drawing = new TalkItem.QiNiuImg();
+        talkBean.body.drawing.name = pictureKey;
+        talkBean.body.contentType = Communications.ContentType.STYLUS;
+        talkBean.time = System.currentTimeMillis();
+        talkBean.to = liveCriteria.to;
+        talkBean.type = liveCriteria.type;
+
+        requestSendTalk(talkBean);
+
+    }
+
     protected void sendTalk(String bodyStr) {
 
         if (TextUtils.isEmpty(bodyStr))
@@ -387,15 +480,24 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         talkBean.to = liveCriteria.to;
         talkBean.name = titleView.getText().toString();
 
+        requestSendTalk(talkBean);
+
+    }
+
+    private void requestSendTalk(final Talk talkBean) {
+
         if (NetworkUtil.getCurrentNetwork(getContext()) == CTLConstant.NetworkType.TYPE_NONE) {
             handleSendError(talkBean);
             return;
         }
 
-
+        showSendProgress(false);
         XMSManager.sendTalk(getContext(), true, talkBean, new EventCallback<TalkResponse>() {
             @Override
             public void onSuccess(TalkResponse talkResponse) {
+
+                cancelSendProgress();
+
                 if (talkResponse != null) {
                     talkBean.time = talkResponse.time;
                     talkBean.stime = talkResponse.stime;
@@ -406,7 +508,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
 
             @Override
             public void onFailed(String errorCode, String errorMessage) {
-
+                cancelSendProgress();
                 handleSendError(talkBean);
             }
         });
@@ -533,10 +635,12 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         talkItem.body = new TalkItem.TalkContent();
         talkItem.from = new TalkItem.TalkPerson();
         talkItem.body.text = talk.body.text;
+        talkItem.body.drawing = talk.body.drawing;
         talkItem.body.contentType = talk.body.contentType;
         talkItem.from.accountId = talk.from;
         talkItem.from.name = talk.name;
         talkItem.depressed = talk.depressed;
+
 
         if (!TextUtils.isEmpty(talk.signature)) {
             talkItem.signature = talk.signature;
@@ -603,8 +707,13 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         contact.id = liveCriteria.to;
         contact.name = talkItem.from.name;
         contact.title = talkItem.from.name;
-        contact.lastMessage = talkItem.body.text;
         contact.lastTalked = talkItem.time;
+
+        if (talkItem.body.contentType == Communications.ContentType.TEXT) {
+            contact.lastMessage = talkItem.body.text;
+        } else if (talkItem.body.contentType == Communications.ContentType.STYLUS) {
+            contact.lastMessage = "【图片】";
+        }
 
         if (liveCriteria.type == Communications.TalkType.OPEN) {
             contact.subtype = ConversationType.TypeName.PRIVATE_CLASS;
@@ -669,6 +778,22 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         titleView.setVisibility(View.GONE);
         backView.setVisibility(View.GONE);
         moreView.setVisibility(View.GONE);
+    }
+
+
+    public void showSendProgress(boolean cancellable) {
+
+        if (progressHUD == null) {
+            progressHUD = ProgressHUD.create(getContext());
+        }
+        progressHUD.setCancellable(cancellable);
+        progressHUD.show();
+    }
+
+    public void cancelSendProgress() {
+        if (progressHUD != null && progressHUD.isShowing()) {
+            progressHUD.dismiss();
+        }
     }
 
 

@@ -293,7 +293,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                                         showSlidePanel(shareToFragment, "share_to");
                                     }
                                 });
-                        getChildFragmentManager()
+                        getFragmentManager()
                                 .beginTransaction()
                                 .add(R.id.screenshot_container, fragment)
                                 .addToBackStack("screenshot")

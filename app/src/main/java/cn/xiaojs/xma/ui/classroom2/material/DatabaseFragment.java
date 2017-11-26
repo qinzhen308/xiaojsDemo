@@ -260,7 +260,7 @@ public class DatabaseFragment extends BottomSheetFragment
             if (thirdLayout == null) {
                 initThirdLayout();
             }
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_database_framelayout, listFragment)
                     .addToBackStack("ddd")
@@ -284,7 +284,7 @@ public class DatabaseFragment extends BottomSheetFragment
             if (thirdLayout == null) {
                 initThirdLayout();
             }
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_database_framelayout, addNewFragment)
                     .addToBackStack("ddd")
@@ -308,7 +308,7 @@ public class DatabaseFragment extends BottomSheetFragment
     private void destoryThird() {
 
         if (thirdFragment != null) {
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .remove(thirdFragment)
                     .commitAllowingStateLoss();

@@ -316,4 +316,15 @@
     </style>
 
 
+    <style name="EmojiconGridView">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:columnWidth">40dp</item>
+        <item name="android:horizontalSpacing">0dp</item>
+        <item name="android:numColumns">auto_fit</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:verticalSpacing">0dp</item>
+    </style>
+
+
 </resources>

@@ -410,7 +410,8 @@ public class BoardCollaborateFragment extends BaseFragment {
 
         WhiteboardManagerFragment fragment = WhiteboardManagerFragment.createInstance("");
         fragment.setTargetFragment(this, CODE_OPEN_BOARD);
-        fragment.show(getChildFragmentManager(), "dialog_fragment");
+        //fragment.show(getChildFragmentManager(), "dialog_fragment");
+        fragment.show(getFragmentManager(), "dialog_fragment");
     }
 
     public void registBoard(String title) {

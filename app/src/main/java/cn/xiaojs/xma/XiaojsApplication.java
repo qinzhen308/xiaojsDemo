@@ -3,7 +3,10 @@ package cn.xiaojs.xma;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
+import android.support.text.emoji.EmojiCompat;
+import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -48,6 +51,10 @@ public class XiaojsApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        EmojiCompat.Config emojiconfig = new BundledEmojiCompatConfig(this);
+        EmojiCompat.init(emojiconfig);
+
         ThirdLoginUtil.init();
         //日志，注意：所有日志都需要使用Logger，不得使用Log。
         Settings logSetting = Logger.init(XiaojsConfig.LOG_TAG)

@@ -18,6 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,9 @@ import cn.xiaojs.xma.ui.classroom.main.ClassroomController;
 import cn.xiaojs.xma.ui.classroom.main.Constants;
 import cn.xiaojs.xma.ui.classroom.main.PlayFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.OnImeBackListener;
+import cn.xiaojs.xma.ui.classroom2.chat.ChatSessionFragment;
+import cn.xiaojs.xma.ui.classroom2.chat.input.InputPanel;
+import cn.xiaojs.xma.ui.classroom2.chat.input.InputPoxy;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
 import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.widget.ClosableEditDialog;
@@ -52,7 +58,7 @@ import cn.xiaojs.xma.util.XjsUtils;
  *
  * ======================================================================================== */
 
-public class MsgInputFragment extends DialogFragment implements View.OnClickListener {
+public class MsgInputFragment extends DialogFragment implements View.OnClickListener, InputPoxy {
     private View mMsgInputLayout;
     private SpecialEditText mMsgInputEdt;
     private TextView mMsgSendBtn;
@@ -60,6 +66,11 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
     private Context mContext;
     private Handler mHandler;
     private int mFrom;
+
+    private LinearLayout msgInputLayout;
+    private LinearLayout lotLayout;
+
+    private InputPanel inputPanel;
 
     @Override
     public void onAttach(Context context) {
@@ -81,6 +92,15 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (mFrom == PlayFragment.FULL_SCREEN_MODE_INPUT) {
+            lotLayout.setVisibility(View.GONE);
+            msgInputLayout.setVisibility(View.VISIBLE);
+
+        }else {
+            lotLayout.setVisibility(View.VISIBLE);
+            msgInputLayout.setVisibility(View.GONE);
+        }
     }
 
     @NonNull
@@ -90,7 +110,7 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
         Dialog dialog = new ClosableEditDialog(mContext, R.style.CommonDialog, mMsgInputEdt);
         dialog.setCanceledOnTouchOutside(true);
         Window dialogWindow = dialog.getWindow();
-        dialogWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        //dialogWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         //set attributes
         dialogWindow.setWindowAnimations(R.style.BottomSheetAnim);
@@ -136,6 +156,12 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
         mMsgInputEdt = (SpecialEditText) view.findViewById(R.id.msg_input);
         mMsgSendBtn = (TextView) view.findViewById(R.id.msg_send);
         mMsgSendBtn.setOnClickListener(this);
+
+        msgInputLayout = view.findViewById(R.id.msg_input_layout);
+        lotLayout = view.findViewById(R.id.bottom_bar);
+
+        inputPanel = new InputPanel(getContext(), view, this);
+
         return view;
     }
 
@@ -147,8 +173,15 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
     }
 
     private void onHandleMessage(Message msg) {
-        mMsgInputEdt.requestFocus();
-        XjsUtils.showIMM(mContext, mMsgInputEdt);
+
+        if (mFrom == PlayFragment.FULL_SCREEN_MODE_INPUT) {
+            mMsgInputEdt.requestFocus();
+            XjsUtils.showIMM(mContext, mMsgInputEdt);
+        }else {
+            inputPanel.showInputMethod();
+        }
+
+
     }
 
     @Override
@@ -165,6 +198,41 @@ public class MsgInputFragment extends DialogFragment implements View.OnClickList
         XjsUtils.hideIMM(mContext, mMsgInputEdt.getWindowToken());
         MsgInputFragment.this.dismiss();
 
+
+    }
+
+    @Override
+    public void onSendText(String text) {
+        Fragment target = getTargetFragment();
+        if (target != null && target instanceof ChatSessionFragment) {
+            ChatSessionFragment sessionFragment = (ChatSessionFragment) target;
+            sessionFragment.onSendText(text);
+        }
+        inputPanel.hideInputMethod();
+        MsgInputFragment.this.dismiss();
+    }
+
+    @Override
+    public void onTakeCamera() {
+        Fragment target = getTargetFragment();
+        if (target != null && target instanceof ChatSessionFragment) {
+            ChatSessionFragment sessionFragment = (ChatSessionFragment) target;
+            sessionFragment.onTakeCamera();
+        }
+        inputPanel.hideInputMethod();
+        MsgInputFragment.this.dismiss();
+    }
+
+    @Override
+    public void onPickPhotos() {
+
+        Fragment target = getTargetFragment();
+        if (target != null && target instanceof ChatSessionFragment) {
+            ChatSessionFragment sessionFragment = (ChatSessionFragment) target;
+            sessionFragment.onPickPhotos();
+        }
+        inputPanel.hideInputMethod();
+        MsgInputFragment.this.dismiss();
 
     }
 }

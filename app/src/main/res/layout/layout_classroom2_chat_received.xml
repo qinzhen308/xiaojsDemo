@@ -60,7 +60,7 @@
 
 
 
-    <TextView
+    <android.support.text.emoji.widget.EmojiAppCompatTextView
             android:id="@+id/content_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

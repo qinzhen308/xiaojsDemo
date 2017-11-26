@@ -331,7 +331,7 @@ public class ScheduleFragment extends BottomSheetFragment
             case R.id.add_btn:
                 AddLessonScheduleFragment fragment=AddLessonScheduleFragment.createInstance();
                 fragment.setTargetFragment(this,CTLConstant.REQUEST_MATERIAL_ADD_NEW);
-                fragment.show(getChildFragmentManager(),"add_lesson_schedule");
+                fragment.show(getFragmentManager(),"add_lesson_schedule");
                 break;
         }
     }

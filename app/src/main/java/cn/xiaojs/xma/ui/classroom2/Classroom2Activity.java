@@ -221,8 +221,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
         if (movieFragment != null
                 && movieFragment.isAdded()
-                && movieFragment.getChildFragmentManager().getBackStackEntryCount() > 0) {
-            movieFragment.getChildFragmentManager().popBackStack();
+                && movieFragment.getFragmentManager().getBackStackEntryCount() > 0) {
+            movieFragment.getFragmentManager().popBackStack();
             return;
         }
 
