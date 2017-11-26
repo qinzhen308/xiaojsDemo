@@ -433,6 +433,7 @@ public class Selector extends Doodle implements SyncCollector{
                         }else {
                         }*/
                         scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+//                        scaleY = (_p[1] - _pOld[1]) /(mDoodleRect.width()/2);
 
                         if(Float.isNaN(scaleY)){
                             scaleY=1;
