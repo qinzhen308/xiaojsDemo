@@ -28,7 +28,9 @@ import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.whiteboard.setting.TextPop;
 import cn.xiaojs.xma.ui.classroom2.util.VibratorUtil;
 import cn.xiaojs.xma.ui.conversation2.ConversationType;
+import cn.xiaojs.xma.util.APPUtils;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.MessageUitl;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -793,8 +795,58 @@ public class DataProvider {
             //FIXME
             return;
         }
-
+        pushNotify(contact, talkItem.from, talkItem.to);
         moveOrInsertConversation(contact);
+    }
+
+
+    private void pushNotify(Contact contact, String from, String to) {
+
+        if (contact.unread == 0)
+            return;
+
+        if (!TextUtils.isEmpty(contact.signature)
+                && contact.signature.equals(Su.getUnFollowSignature())) {
+            return;
+        }
+
+        if (APPUtils.isAppOnForeground(context)) {
+            if (XiaojsConfig.DEBUG) {
+                Logger.d("the app is foreground, so cancel notify push...");
+            }
+            return;
+        }
+
+        String title = contact.name;
+        String summary = contact.lastMessage;
+        if (contact.subtype == ConversationType.TypeName.PRIVATE_CLASS) {
+
+            String cname = getClassName(to);
+            if (TextUtils.isEmpty(cname)) {
+                //说明此班不再我的通讯录里面；不显示
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the class is not exist in your contacts, so cancel notify push...");
+                }
+                return;
+            }
+
+            if (getClassSilent(to)) {
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the class is setted silent by you , so cancel notify push...");
+                }
+                return;
+            }
+
+
+
+            title = cname;
+
+            String fromName = getPersonName(from);
+            summary = TextUtils.isEmpty(fromName)? summary: fromName + ":" + summary;
+        }
+
+        MessageUitl.createLocalNotify(context, title, summary);
+
     }
 
     private void handleChangeNotify(ChangeNotifyReceived changeNotify) {

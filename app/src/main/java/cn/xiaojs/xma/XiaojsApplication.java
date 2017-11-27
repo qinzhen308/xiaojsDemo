@@ -150,49 +150,35 @@ public class XiaojsApplication extends Application {
     };
 
 
-    public boolean isMainAppPro() {
-        String info = getCurProcessName();
-        return (!TextUtils.isEmpty(info) && info.equals(getPackageName()));
-    }
-
-    boolean isLoadRunningAppProcessInfo;
-
-    public String getCurProcessName() {
-        try {
-            int pid = android.os.Process.myPid();
-            Object oo = getSystemService(Context.ACTIVITY_SERVICE);
-            if (oo == null) return null;
-            ActivityManager mActivityManager = (ActivityManager) oo;
-            if (oo == null) return null;
-            if (isLoadRunningAppProcessInfo) return null;
-            isLoadRunningAppProcessInfo = true;
-            java.util.List<android.app.ActivityManager.RunningAppProcessInfo> list = mActivityManager.getRunningAppProcesses();
-            isLoadRunningAppProcessInfo = false;
-            if (list == null) return null;
-            for (ActivityManager.RunningAppProcessInfo appProcess : list) {
-                if (appProcess.pid == pid) {
-                    return appProcess.processName;
-                }
-            }
-        } catch (Exception e) {
-//            LogUtil.w(e);
-        }
-        return null;
-    }
-
-    public boolean isAppOnForeground() {
-        ActivityManager mActivityManager = ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE));
-        String mPackageName = getPackageName();
-        List<ActivityManager.RunningTaskInfo> tasksInfo = mActivityManager.getRunningTasks(1);
-        if (tasksInfo.size() > 0) {
-            // 应用程序位于堆栈的顶层
-            if (mPackageName.equals(tasksInfo.get(0).topActivity
-                    .getPackageName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean isMainAppPro() {
+//        String info = getCurProcessName();
+//        return (!TextUtils.isEmpty(info) && info.equals(getPackageName()));
+//    }
+//
+//    boolean isLoadRunningAppProcessInfo;
+//
+//    public String getCurProcessName() {
+//        try {
+//            int pid = android.os.Process.myPid();
+//            Object oo = getSystemService(Context.ACTIVITY_SERVICE);
+//            if (oo == null) return null;
+//            ActivityManager mActivityManager = (ActivityManager) oo;
+//            if (oo == null) return null;
+//            if (isLoadRunningAppProcessInfo) return null;
+//            isLoadRunningAppProcessInfo = true;
+//            java.util.List<android.app.ActivityManager.RunningAppProcessInfo> list = mActivityManager.getRunningAppProcesses();
+//            isLoadRunningAppProcessInfo = false;
+//            if (list == null) return null;
+//            for (ActivityManager.RunningAppProcessInfo appProcess : list) {
+//                if (appProcess.pid == pid) {
+//                    return appProcess.processName;
+//                }
+//            }
+//        } catch (Exception e) {
+////            LogUtil.w(e);
+//        }
+//        return null;
+//    }
 
 
 }
