@@ -62,6 +62,7 @@ public class XMSManager {
         this.context = appContext.getApplicationContext();
 
     }
+
     public void connectXMS(Consumer<Integer> consumer) {
         String sfm = SecurityPref.getSFM(context);
         xmsManager.xmsObservable = XMSObservable.obseverXMS(context, sfm, consumer);
@@ -69,7 +70,7 @@ public class XMSManager {
 
 
     public boolean sessionOpened(String session) {
-        if (sessionIds == null || sessionIds.size() ==0)
+        if (sessionIds == null || sessionIds.size() == 0)
             return false;
 
         if (sessionIds.contains(session)) {
@@ -80,7 +81,7 @@ public class XMSManager {
     }
 
     public void closeSession(String session) {
-        if (sessionIds !=null) {
+        if (sessionIds != null) {
             sessionIds.remove(session);
         }
     }
@@ -93,8 +94,6 @@ public class XMSManager {
         sessionIds.add(sessionId);
 
     }
-
-
 
 
     public static void sendTalk(final Context context, final boolean retain, final Talk talk,
@@ -173,7 +172,7 @@ public class XMSManager {
     }
 
     public static void sendRemoveTalk(Context context, RemoveTalk removeTalk,
-                                        EventCallback<EventResponse> callback) {
+                                      EventCallback<EventResponse> callback) {
         XMSSocketManager socketManager = XMSSocketManager.getSocketManager(context);
         XMSSocketRequest<EventResponse> socketRequest = new XMSSocketRequest<>(socketManager,
                 callback);

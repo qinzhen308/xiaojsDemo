@@ -56,7 +56,7 @@
         </FrameLayout>
 
 
-        <android.support.text.emoji.widget.EmojiAppCompatEditText
+        <EditText
                 android:id="@+id/bar_input_text"
                 android:textCursorDrawable="@null"
                 android:textColor="@color/black"

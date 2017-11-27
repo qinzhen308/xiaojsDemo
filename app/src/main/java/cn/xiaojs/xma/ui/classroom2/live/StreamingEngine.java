@@ -136,12 +136,10 @@ public class StreamingEngine implements CameraPreviewFrameView.Listener,
                 800 * 1024);
 
         profile.setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2);
-
         profile.setDnsManager(StreamingUtil.getMyDnsManager())
                 .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
                 .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f,
                         0.8f, 3.0f, 20 * 1000));
-
 
     }
 

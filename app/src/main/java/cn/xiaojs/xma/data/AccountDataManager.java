@@ -325,30 +325,8 @@ public class AccountDataManager {
     public static void submitAliaTags(final Context context) {
         AliasTags aliasTags = AccountDataManager.getAliasTags(context);
         if (aliasTags != null) {
-            JpushUtil.setAliasAndTags(context, aliasTags, new TagAliasCallback() {
-                @Override
-                public void gotResult(int responseCode, String s, Set<String> set) {
-
-                    if (XiaojsConfig.DEBUG) {
-                        Logger.d("setAliasAndTags code:" + responseCode);
-                    }
-
-                    if (responseCode == 0) {
-
-                        AccountDataManager.setATagsSuccess(context.getApplicationContext(),true);
-                        /*if (XiaojsConfig.DEBUG) {
-                            Toast.makeText(context, "注册别名成功", Toast.LENGTH_SHORT).show();
-                        }*/
-
-                    } else {
-                        AccountDataManager.setATagsSuccess(context.getApplicationContext(),false);
-                        /*if (XiaojsConfig.DEBUG) {
-                            Toast.makeText(context, "注册别名失败", Toast.LENGTH_SHORT).show();
-                        }*/
-                    }
-
-                }
-            });
+            JpushUtil.setAliasAndTags(context, aliasTags);
+            AccountDataManager.setATagsSuccess(context.getApplicationContext(),true);
         }
     }
 

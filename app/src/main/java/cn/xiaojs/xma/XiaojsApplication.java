@@ -102,18 +102,17 @@ public class XiaojsApplication extends Application {
         XjsUtils.init(this);
 
         //初始化直播
-        StreamingEnv.init(getApplicationContext());
+        StreamingEnv.init(this);
 
 
+        //jpush
         JPushInterface.setDebugMode(XiaojsConfig.DEBUG);
-        JPushInterface.init(getApplicationContext());
+        JPushInterface.init(this);
 
         //init data cache and XMS
         DataManager.init(this);
 
         PinYin.init(this);
-
-
     }
 
     public Consumer<Integer> getXmsConsumer() {
