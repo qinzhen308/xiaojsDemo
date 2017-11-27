@@ -400,6 +400,7 @@ public class Selector extends Doodle implements SyncCollector{
                 float cx=mDoodleRect.centerX();
                 float cy=mDoodleRect.centerY();
                 float[] _c=new float[]{cx,cy};
+
                 float[] _p=new float[]{x,y};
                 float[] _pOld=new float[]{oldX,oldY};
 
@@ -426,14 +427,17 @@ public class Selector extends Doodle implements SyncCollector{
                 rotateM.mapPoints(_p);
                 rotateM.mapPoints(_pOld);
 
+                float[] _cEage=null;
                 switch (edge) {
                     case IntersectionHelper.TOP_EDGE:
                         /*if(_p[1]>=_c[1]){
                             scaleY = 1f;
                         }else {
                         }*/
-                        scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
-//                        scaleY = (_p[1] - _pOld[1]) /(mDoodleRect.width()/2);
+                        _cEage=new float[]{cx,mDoodleRect.top};
+                        matrix.mapPoints(_cEage);
+                        scaleY = (_p[1] - _pOld[1]) / (_cEage[1] - _c[1]);
+//                        scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
 
                         if(Float.isNaN(scaleY)){
                             scaleY=1;
@@ -446,7 +450,10 @@ public class Selector extends Doodle implements SyncCollector{
                         }else {
                             scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
                         }*/
-                        scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        _cEage=new float[]{mDoodleRect.right,cy};
+                        matrix.mapPoints(_cEage);
+                        scaleX = (_p[0] - _pOld[0]) / (_cEage[0] - _c[0]);
+//                        scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
                         if(Float.isNaN(scaleX)){
                             scaleX=1;
                         }
@@ -457,7 +464,9 @@ public class Selector extends Doodle implements SyncCollector{
                         }else {
                             scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
                         }*/
-                        scaleY = (_p[1] - _c[1]) / (_pOld[1] - _c[1]);
+                        _cEage=new float[]{cx,mDoodleRect.bottom};
+                        matrix.mapPoints(_cEage);
+                        scaleY = (_p[1] - _pOld[1]) / (_cEage[1] - _c[1]);
                         if(Float.isNaN(scaleY)){
                             scaleY=1;
                         }
@@ -469,7 +478,9 @@ public class Selector extends Doodle implements SyncCollector{
                         }else {
                             scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
                         }*/
-                        scaleX = (_p[0] - _c[0]) / (_pOld[0] - _c[0]);
+                        _cEage=new float[]{mDoodleRect.left,cy};
+                        matrix.mapPoints(_cEage);
+                        scaleX = (_p[0] - _pOld[0]) / (_cEage[0] - _c[0]);
                         if(Float.isNaN(scaleX)){
                             scaleX=1;
                         }

@@ -1,9 +1,11 @@
 package cn.xiaojs.xma;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -139,5 +141,36 @@ public class XiaojsApplication extends Application {
             }
         }
     };
+
+
+    public boolean isMainAppPro() {
+        String info = getCurProcessName();
+        return (!TextUtils.isEmpty(info) && info.equals(getPackageName()));
+    }
+
+    boolean isLoadRunningAppProcessInfo;
+
+    public String getCurProcessName() {
+        try {
+            int pid = android.os.Process.myPid();
+            Object oo = getSystemService(Context.ACTIVITY_SERVICE);
+            if (oo == null) return null;
+            ActivityManager mActivityManager = (ActivityManager) oo;
+            if (oo == null) return null;
+            if (isLoadRunningAppProcessInfo) return null;
+            isLoadRunningAppProcessInfo = true;
+            java.util.List<android.app.ActivityManager.RunningAppProcessInfo> list = mActivityManager.getRunningAppProcesses();
+            isLoadRunningAppProcessInfo = false;
+            if (list == null) return null;
+            for (ActivityManager.RunningAppProcessInfo appProcess : list) {
+                if (appProcess.pid == pid) {
+                    return appProcess.processName;
+                }
+            }
+        } catch (Exception e) {
+//            LogUtil.w(e);
+        }
+        return null;
+    }
 
 }
