@@ -20,6 +20,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.preference.DataPref;
 import cn.xiaojs.xma.ui.account.LoginActivity;
+import cn.xiaojs.xma.ui.view.IndicatorView;
 import cn.xiaojs.xma.util.APPUtils;
 
 /**
@@ -37,7 +38,8 @@ public class GuideActivity extends Activity {
     @BindView(R.id.btn_enter)
     TextView btnEnter;
     @BindView(R.id.indicator)
-    RadioGroup indicatorView;
+    IndicatorView indicatorView;
+//    RadioGroup indicatorView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,8 +63,9 @@ public class GuideActivity extends Activity {
             page.setImageResource(imgsRes[i]);
             pages[i] = page;
         }
-        indicatorView.check(indicatorIds[0]);
+//        indicatorView.check(indicatorIds[0]);
         viewPager.setAdapter(new Adapter());
+        indicatorView.bindViewPager(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -71,14 +74,13 @@ public class GuideActivity extends Activity {
 
             @Override
             public void onPageSelected(int position) {
-                indicatorView.check(indicatorIds[position]);
+//                indicatorView.check(indicatorIds[position]);
                 if(position==imgsRes.length-1){
                     btnEnter.setVisibility(View.VISIBLE);
                     indicatorView.setVisibility(View.GONE);
                 }else {
                     btnEnter.setVisibility(View.GONE);
                     indicatorView.setVisibility(View.VISIBLE);
-                    indicatorView.requestLayout();
                 }
             }
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
@@ -28,7 +30,21 @@
         />
 
 
-    <RadioGroup
+    <cn.xiaojs.xma.ui.view.IndicatorView
+        android:id="@+id/indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/px100"
+        app:point_color="@color/gray"
+        app:selected_point_color="@color/main_orange"
+        app:point_magin="@dimen/px20"
+        app:selected_point_length="@dimen/px50"
+        app:point_radius="@dimen/px20"
+        />
+
+    <!--<RadioGroup
         android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,7 +80,7 @@
             />
 
 
-    </RadioGroup>
+    </RadioGroup>-->
 
 
 

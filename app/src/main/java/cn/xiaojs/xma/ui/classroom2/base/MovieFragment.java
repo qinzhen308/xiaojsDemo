@@ -1420,15 +1420,18 @@ public abstract class MovieFragment extends BaseRoomFragment
         if (whiteboardFragment == null) return;
         Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation=" + orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            /*if(whiteboardFragment.isAdded()){
+                getFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
+            }*/
             whiteboardFragment.setTargetFragment(this, 1);
-            getFragmentManager()
+            getChildFragmentManager()
                     .beginTransaction()
                     .add(R.id.layout_idle_container, whiteboardFragment)
                     .commitAllowingStateLoss();
             showBoardContainer(isDefaultShowBoard());
         } else {
             if (whiteboardFragment.isAdded()) {
-                getFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
+                getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
             }
         }
     }

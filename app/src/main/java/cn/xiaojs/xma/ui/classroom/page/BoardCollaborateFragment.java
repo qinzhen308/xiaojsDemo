@@ -83,8 +83,8 @@ public class BoardCollaborateFragment extends BaseFragment {
     View mWhiteBoardPanel;
     @BindView(R.id.white_board_scrollview)
     WhiteboardScrollerView mBoardScrollerView;
-        @BindView(R.id.test_preview)
-        ImageView testPreview;
+/*        @BindView(R.id.test_preview)
+        ImageView testPreview;*/
     @BindView(R.id.text_pager_points)
     TextView textPagerPoints;
 
@@ -164,12 +164,12 @@ public class BoardCollaborateFragment extends BaseFragment {
         mBoardController.setPushPreviewBoardListener(new PushPreviewBoardListener() {
             @Override
             public void onPush(Bitmap bitmap) {
-                testPreview.setImageBitmap(bitmap);
+//                testPreview.setImageBitmap(bitmap);
                 if (onPushPreviewListener != null) {
                     onPushPreviewListener.onPushPreview(bitmap);
                 }
 
-                Fragment fragment = getTargetFragment();
+                Fragment fragment = getTargetFragment2();
                 if (fragment instanceof IBoardManager && ((IBoardManager) fragment).pushPreviewEnable()) {
                     ((IBoardManager) fragment).onPushPreview(bitmap);
                 }
@@ -204,7 +204,7 @@ public class BoardCollaborateFragment extends BaseFragment {
                 mBoardController.handlePanelItemClick(v);
                 break;
             case R.id.text_pager_points:
-                Fragment fragment = getTargetFragment();
+                Fragment fragment = getTargetFragment2();
                 if (fragment instanceof IBoardManager) {
                     ((IBoardManager) fragment).openSlideMenu(doc, slides, curPage);
                 }
@@ -664,5 +664,24 @@ public class BoardCollaborateFragment extends BaseFragment {
         BoardCollaborateFragment fragment = new BoardCollaborateFragment();
         return fragment;
     }
+
+
+    //--------------------------兼容setTagFragment方法-------------------------
+    Fragment mTarget;
+    int mTargetRequestCode;
+    @Override
+    public void setTargetFragment(@Nullable Fragment fragment, int requestCode) {
+
+        mTarget = fragment;
+        mTargetRequestCode = requestCode;
+    }
+
+    public Fragment getTargetFragment2() {
+        return mTarget;
+    }
+    public int getTargetRequestCode2() {
+        return mTargetRequestCode;
+    }
+
 
 }

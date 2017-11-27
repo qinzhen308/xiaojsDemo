@@ -336,4 +336,12 @@
     <declare-styleable name="bottom_line">
         <attr name="showLine" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="IndicatorView">
+        <attr name="point_radius" format="dimension"/>
+        <attr name="point_magin" format="dimension"/>
+        <attr name="selected_point_length" format="dimension"/>
+        <attr name="selected_point_color" format="reference|color"/>
+        <attr name="point_color" format="reference|color"/>
+    </declare-styleable>
 </resources>

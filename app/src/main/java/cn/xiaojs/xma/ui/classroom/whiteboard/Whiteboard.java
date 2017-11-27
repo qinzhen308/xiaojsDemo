@@ -1354,6 +1354,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mBlackboardRect.set(0, 0, w, h);
             mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
             mDisplayMatrix.setRectToRect(mBlackboardRect, mDoodleBounds, Matrix.ScaleToFit.FILL);
+            mInitLayer=false;
         }
 
         if(mLayer != null){
