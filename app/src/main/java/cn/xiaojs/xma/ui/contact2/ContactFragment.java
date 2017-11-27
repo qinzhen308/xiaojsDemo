@@ -123,7 +123,7 @@ public class ContactFragment extends DialogFragment {
         classroomsFragment.setArguments(getArguments());
         fragmentList.add(classroomsFragment);
 
-        FrgStatePageAdapter pageAdapter = new FrgStatePageAdapter(getChildFragmentManager());
+        FrgStatePageAdapter pageAdapter = new FrgStatePageAdapter(getFragmentManager());
         pageAdapter.setList(fragmentList);
         viewPager.setAdapter(pageAdapter);
 

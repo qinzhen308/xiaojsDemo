@@ -7,4 +7,6 @@ package cn.xiaojs.xma.ui.classroom2.chat.input;
 public interface InputPoxy {
 
     void onSendText(String text);
+    void onTakeCamera();
+    void onPickPhotos();
 }

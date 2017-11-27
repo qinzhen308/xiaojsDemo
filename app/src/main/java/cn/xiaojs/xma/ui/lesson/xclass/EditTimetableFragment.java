@@ -106,7 +106,7 @@ public class EditTimetableFragment extends BottomSheetFragment
             case R.id.lay_class_name://填写班级名称
                 AddLessonNameFragment fragment=AddLessonNameFragment.createInstance(classId,nameView.getText().toString(),AddLessonNameFragment.ROLE_LESSON);
                 fragment.setTargetFragment(this,REQUEST_NAME_CODE);
-                fragment.show(getChildFragmentManager(),"modify_name");
+                fragment.show(getFragmentManager(),"modify_name");
                 break;
             case R.id.lay_begin_time://选择上课时间
                 selectStartTime();

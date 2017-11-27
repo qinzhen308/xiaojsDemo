@@ -654,6 +654,20 @@ public class AccountDataManager {
         qiniuRequest.getToken(Collaboration.UploadTokenType.HAND_HOLD,1);
     }
 
+    /**
+     * 上传IM图片
+     * @param context
+     * @param filePath
+     * @param qiniuService
+     */
+    public static void uploadIMPicture(Context context,
+                                      @NonNull final String filePath,
+                                      @NonNull QiniuService qiniuService){
+
+        QiniuRequest qiniuRequest = new QiniuRequest(context,filePath,qiniuService);
+        qiniuRequest.getToken(Collaboration.UploadTokenType.DRAWING_IN_TALK,1);
+    }
+
 
     /**
      * Returns verification status for the session user.

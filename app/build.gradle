@@ -68,6 +68,10 @@ android {
 dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile "com.android.support:support-emoji-bundled:$rootProject.ext.supportLibVersion"
+    compile "com.android.support:support-emoji-appcompat:$rootProject.ext.supportLibVersion"
+
     compile 'io.reactivex.rxjava2:rxjava:2.1.3'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile ('io.socket:socket.io-client:0.8.3') {
@@ -98,9 +102,9 @@ dependencies {
     compile 'com.pingxx:pingpp-core:2.1.7'
     compile 'com.pingxx:pingpp-alipay:2.1.7'
     compile 'com.meituan.android.walle:library:1.0.5'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibVersion"
+    compile "com.android.support:support-v4:$rootProject.ext.supportLibVersion"
     //区域读图
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     testCompile 'junit:junit:4.12'

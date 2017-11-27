@@ -45,6 +45,8 @@ public class CTLConstant {
     public static final int REQUEST_ADD_MEMBERS = 11;
     public static final int REQUEST_VERIFY_MEMBER = 12;
     public static final int REQUEST_VERIFY_DESTORY = 13;
+    public static final int REQUEST_TAKE_CAMERA = 14;
+    public static final int REQUEST_PICK_PHOTOS = 15;
 
     public static class StateChannel {
         public static final int NEW_LESSON= 0x001;                   //有课

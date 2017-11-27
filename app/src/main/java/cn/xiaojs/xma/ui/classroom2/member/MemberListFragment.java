@@ -32,6 +32,7 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Ctl;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.provider.DataProvider;
@@ -341,7 +342,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
             if (thirdLayout == null) {
                 initThirdLayout();
             }
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_database_framelayout, verifyListFragment)
                     .addToBackStack("")
@@ -368,7 +369,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
     private void destoryThird() {
 
         if (thirdFragment != null) {
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .remove(thirdFragment)
                     .commitAllowingStateLoss();
@@ -384,6 +385,10 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
 
     public void enterChatSession(Attendee attendee) {
+
+        if (attendee.accountId.equals(AccountDataManager.getAccountID(getContext()))) {
+            return;
+        }
 
         if (classroomEngine.isVistor()) {
             Toast.makeText(getContext(), R.string.no_permision_tips, Toast.LENGTH_SHORT).show();

@@ -722,7 +722,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         MsgInputFragment inputFragment = new MsgInputFragment();
         Bundle data = new Bundle();
-        data.putInt(CTLConstant.EXTRA_INPUT_FROM, 1);
+        data.putInt(CTLConstant.EXTRA_INPUT_FROM, 2);
         inputFragment.setArguments(data);
         inputFragment.setTargetFragment(this, CTLConstant.REQUEST_INPUT_MESSAGE);
         inputFragment.show(getFragmentManager(), "input");
@@ -774,7 +774,7 @@ public abstract class MovieFragment extends BaseRoomFragment
                     showSlidePanel(shareToFragment, "share_to");
                 }
             });
-            getChildFragmentManager().beginTransaction().add(R.id.screenshot_container, fragment).addToBackStack("screenshot").commitAllowingStateLoss();
+            getFragmentManager().beginTransaction().add(R.id.screenshot_container, fragment).addToBackStack("screenshot").commitAllowingStateLoss();
         } else {
             ToastUtil.showToast(getActivity(), "截图失败");
         }
@@ -812,7 +812,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
         slideFragment = fragment;
 
-        getChildFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .add(R.id.slide_layout, slideFragment)
                 .addToBackStack(tag)
@@ -823,7 +823,7 @@ public abstract class MovieFragment extends BaseRoomFragment
         rightSlideLayout.setVisibility(View.GONE);
 
         if (slideFragment != null) {
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .remove(slideFragment)
                     .commitAllowingStateLoss();
@@ -1368,7 +1368,7 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     //====================================全局白板====================================
     protected void addWhiteboardFragment() {
-        getChildFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .add(R.id.layout_idle_container, whiteboardFragment)
                 .commitAllowingStateLoss();
@@ -1376,9 +1376,9 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     protected void showWhiteboardFragment() {
         if (whiteboardFragment.isAdded()) {
-            getChildFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
+            getFragmentManager().beginTransaction().attach(whiteboardFragment).commitAllowingStateLoss();
         } else {
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(R.id.layout_idle_container, whiteboardFragment)
                     .commitAllowingStateLoss();
@@ -1387,12 +1387,12 @@ public abstract class MovieFragment extends BaseRoomFragment
 
     protected void hideWhiteboardFragment() {
         if (whiteboardFragment.isAdded() && whiteboardFragment.isInLayout()) {
-            getChildFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
+            getFragmentManager().beginTransaction().detach(whiteboardFragment).commitAllowingStateLoss();
         }
     }
 
     protected void removeWhiteboardFragment() {
-        getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
+        getFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
     }
 
     /*protected void onRotateToInitBoard(int orientation) {
@@ -1421,14 +1421,14 @@ public abstract class MovieFragment extends BaseRoomFragment
         Logger.d("-------qz-------idleFragment----onRotateToInitBoard-----orientation=" + orientation);
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             whiteboardFragment.setTargetFragment(this, 1);
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .add(R.id.layout_idle_container, whiteboardFragment)
                     .commitAllowingStateLoss();
             showBoardContainer(isDefaultShowBoard());
         } else {
             if (whiteboardFragment.isAdded()) {
-                getChildFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
+                getFragmentManager().beginTransaction().remove(whiteboardFragment).commitAllowingStateLoss();
             }
         }
     }

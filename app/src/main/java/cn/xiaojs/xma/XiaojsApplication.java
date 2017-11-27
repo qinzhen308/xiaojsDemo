@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
+import android.support.text.emoji.EmojiCompat;
+import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -13,6 +15,8 @@ import com.orhanobut.logger.Settings;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.xiaojs.xma.data.AccountDataManager;
@@ -50,6 +54,10 @@ public class XiaojsApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        EmojiCompat.Config emojiconfig = new BundledEmojiCompatConfig(this);
+        EmojiCompat.init(emojiconfig);
+
         ThirdLoginUtil.init();
         //日志，注意：所有日志都需要使用Logger，不得使用Log。
         Settings logSetting = Logger.init(XiaojsConfig.LOG_TAG)
@@ -172,5 +180,20 @@ public class XiaojsApplication extends Application {
         }
         return null;
     }
+
+    public boolean isAppOnForeground() {
+        ActivityManager mActivityManager = ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE));
+        String mPackageName = getPackageName();
+        List<ActivityManager.RunningTaskInfo> tasksInfo = mActivityManager.getRunningTasks(1);
+        if (tasksInfo.size() > 0) {
+            // 应用程序位于堆栈的顶层
+            if (mPackageName.equals(tasksInfo.get(0).topActivity
+                    .getPackageName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.classroom2.chat.input;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,8 +16,14 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 import butterknife.OnTextChanged;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.crop.CropImageMainActivity;
+import cn.xiaojs.xma.common.crop.CropImagePath;
+import cn.xiaojs.xma.common.emoji.Emojicon;
+import cn.xiaojs.xma.common.emoji.EmojiconGridView;
+import cn.xiaojs.xma.ui.certification.CertificationConstant;
 
 /**
  * Created by maxiaobao on 2017/11/24.
@@ -43,6 +50,12 @@ public class InputPanel {
     @BindView(R.id.bar_bottom_panel)
     FrameLayout bottomPanelLayout;
 
+    @BindView(R.id.emoji_grid)
+    EmojiconGridView emojiGridView;
+
+    @BindView(R.id.action_layout)
+    LinearLayout actionLayout;
+
     private Context context;
     private boolean isKeyboardShowed = true; // 是否显示键盘
 
@@ -57,6 +70,7 @@ public class InputPanel {
                 handleSendTextClick();
                 break;
             case R.id.bar_emoji_btn:
+                handleEmojiClick();
                 break;
             case R.id.bar_more_btn:
                 handleMoreClick();
@@ -65,8 +79,14 @@ public class InputPanel {
                 showInputMethod();
                 break;
             case R.id.action_photo:
+                if (inputPoxy !=null) {
+                    inputPoxy.onPickPhotos();
+                }
                 break;
             case R.id.action_camera:
+                if (inputPoxy !=null) {
+                    inputPoxy.onTakeCamera();
+                }
                 break;
             case R.id.action_material:
                 break;
@@ -82,6 +102,14 @@ public class InputPanel {
         }else {
             showSend();
         }
+    }
+
+    @OnItemClick(R.id.emoji_grid)
+    void onItemClick(int position) {
+        Emojicon emojicon = emojiGridView.getEmoji(position);
+        StringBuilder sb = new StringBuilder(inputTextView.getText());
+        sb.append(emojicon.getEmoji());
+        inputTextView.setText(sb.toString());
     }
 
     public InputPanel(Context context, View parentView, InputPoxy poxy) {
@@ -114,8 +142,16 @@ public class InputPanel {
         moreBtnView.setVisibility(View.VISIBLE);
     }
 
+    private void handleEmojiClick() {
+        if (emojiGridView.getVisibility() == View.VISIBLE) {
+            hideEmojiPanel();
+        }else {
+            showEmojiPanel();
+        }
+    }
+
     private void handleMoreClick() {
-        if (bottomPanelLayout.getVisibility() == View.VISIBLE) {
+        if (actionLayout.getVisibility() == View.VISIBLE) {
             hideActionPanel();
         }else {
             showActionPanel();
@@ -123,10 +159,30 @@ public class InputPanel {
     }
 
 
+    private void hideEmojiPanel() {
+        emojiGridView.setVisibility(View.GONE);
+        bottomPanelLayout.setVisibility(View.GONE);
+    }
+
+    private void showEmojiPanel() {
+
+        hideInputMethod();
+
+        actionLayout.setVisibility(View.GONE);
+        emojiGridView.setVisibility(View.VISIBLE);
+        bottomPanelLayout.setVisibility(View.VISIBLE);
+
+        moreBtnView.setImageResource(R.drawable.ic_chatmore);
+    }
+
+
     private void showActionPanel() {
 
         hideInputMethod();
 
+        emojiGridView.setVisibility(View.GONE);
+
+        actionLayout.setVisibility(View.VISIBLE);
         bottomPanelLayout.setVisibility(View.VISIBLE);
         moreBtnView.setImageResource(R.drawable.ic_chatmoreclose);
 
@@ -135,11 +191,12 @@ public class InputPanel {
 
     private void hideActionPanel() {
         bottomPanelLayout.setVisibility(View.GONE);
+        actionLayout.setVisibility(View.GONE);
         moreBtnView.setImageResource(R.drawable.ic_chatmore);
     }
 
     // 隐藏键盘布局
-    private void hideInputMethod() {
+    public void hideInputMethod() {
         isKeyboardShowed = false;
         InputMethodManager imm = (InputMethodManager)
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -148,9 +205,10 @@ public class InputPanel {
     }
 
     // 显示键盘布局
-    private void showInputMethod() {
+    public void showInputMethod() {
 
         hideActionPanel();
+        hideEmojiPanel();
 
         inputTextView.requestFocus();
         //如果已经显示,则继续操作时不需要把光标定位到最后
@@ -164,6 +222,11 @@ public class InputPanel {
         imm.showSoftInput(inputTextView, 0);
 
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 

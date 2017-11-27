@@ -324,7 +324,7 @@ public class PlayFragment extends ClassroomLiveFragment implements OnGetTalkList
         mEmbedTalkFragment = new EmbedTalkFragment();
         mEmbedTalkFragment.setArguments(getArguments());
         mEmbedTalkFragment.setExitPeerTalkListener(this);
-        getChildFragmentManager().beginTransaction().add(R.id.talk_layout, mEmbedTalkFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.talk_layout, mEmbedTalkFragment).commit();
 
 
         //判断教室类型，如果为PrivateClass,需要显示教学日历

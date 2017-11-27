@@ -25,6 +25,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.stetho.common.android.ResourcesUtil;
+
 import java.io.File;
 import java.net.URI;
 
@@ -59,9 +61,13 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
     public static final String NEED_DELETE = "need_delete";// 需要删除按钮
     public static final String NEED_LOOK = "need_look";// 需要预览
     public static final String NEED_COVER = "need_cover"; //需要设置封面
+    public static final String IMMEDIATE_TAKE_CMAERA = "imm_camera";//直接进入相机拍摄
+    public static final String IMMEDIATE_PICK_PHOTOS = "imm_photos";//直接进入照片选择
 
     private int mWidth = 300;
     private int mHeight = 300;
+    private boolean isImmCamera = false;
+    private boolean isImmPhotos = false;
     private boolean isNotCrop = false;
     private boolean isNeedDelete = false;
     private boolean isNeedLook = false;
@@ -89,10 +95,26 @@ public class CropImageMainActivity extends BaseActivity implements BottomSheet.O
             isUploadCompress = getIntent().getBooleanExtra(CropImagePath.UPLOAD_COMPRESS, false);
             isNeedCover = getIntent().getBooleanExtra(NEED_COVER, false);
             mActionDoneTxt = getIntent().getStringExtra(CropImageActivity.ACTION_DONE_TXT);
+
+            isImmCamera = getIntent().getBooleanExtra(IMMEDIATE_TAKE_CMAERA,false);
+            isImmPhotos = getIntent().getBooleanExtra(IMMEDIATE_PICK_PHOTOS,false);
+
         }
 
         needHeader(false);
         //setBaseBg(ResourcesUtil.getColor(R.color.transparent));
+        if (isImmCamera) {
+            takePhoto();
+            return;
+        }
+
+        if(isImmPhotos) {
+            pickerPhoto();
+            return;
+        }
+
+
+
 
         // 默认有相机拍摄、图片选择
         if (isNeedCover && isNeedDelete && isNeedLook) { // 有设置封面、删除、预览
