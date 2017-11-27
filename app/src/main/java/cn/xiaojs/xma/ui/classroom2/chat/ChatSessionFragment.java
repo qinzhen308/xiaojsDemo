@@ -119,6 +119,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
     protected String titleStr = "聊天";
 
     protected DataProvider dataProvider;
+    protected boolean chatWithGroup;
 
     private XMSManager xmsManager;
 
@@ -188,7 +189,7 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatAdapter(getContext(), messageData);
+        adapter = new ChatAdapter(getContext(), messageData, chatWithGroup);
         adapter.setAutoFetchMoreSize(8);
         adapter.setPerpageMaxCount(maxNumOfObjectPerPage);
         adapter.setFetchMoreListener(this);

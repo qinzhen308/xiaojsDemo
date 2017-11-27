@@ -54,6 +54,7 @@ public class SingleSessionFragment extends ChatSessionFragment {
 
         accountId = getArguments().getString(CTLConstant.EXTRA_ACCOUNTID);
         name = getArguments().getString(CTLConstant.EXTRA_SESSION_NAME);
+        chatWithGroup = false;
 
         followType = getArguments().getInt(CTLConstant.EXTRA_FOLLOWTYPE);
 

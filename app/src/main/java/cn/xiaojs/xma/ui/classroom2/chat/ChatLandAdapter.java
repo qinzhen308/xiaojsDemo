@@ -13,7 +13,7 @@ import cn.xiaojs.xma.model.live.TalkItem;
 public class ChatLandAdapter extends ChatAdapter {
 
     public ChatLandAdapter(Context context, ArrayList<TalkItem> messages) {
-        super(context, messages);
+        super(context, messages, true);
     }
 
     @Override

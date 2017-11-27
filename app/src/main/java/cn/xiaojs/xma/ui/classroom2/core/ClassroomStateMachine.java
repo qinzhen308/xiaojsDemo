@@ -46,6 +46,7 @@ import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncClassStateReceive;
 import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
+import cn.xiaojs.xma.ui.classroom2.util.ClassroomUtil;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -70,9 +71,6 @@ public abstract class ClassroomStateMachine extends StateMachine {
         this.liveTimerObserver = new LiveTimerObserver(this);
 
         setDbg(XiaojsConfig.DEBUG);
-
-        //加载教室成员
-        loadMemberList();
 
     }
 
@@ -125,29 +123,7 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     protected CTLConstant.UserIdentity getUserIdentity(String psType) {
 
-        if ("LeadSession".equals(psType)) {
-            return CTLConstant.UserIdentity.LEAD;
-        } else if ("TeacherSession".equals(psType)) {
-            return CTLConstant.UserIdentity.TEACHER2;
-        } else if ("AssistantSession".equals(psType)) {
-            return CTLConstant.UserIdentity.ASSISTANT;
-        } else if ("RemoteAssistantSession".equals(psType)) {
-            return CTLConstant.UserIdentity.REMOTE_ASSISTANT;
-        } else if ("StudentSession".equals(psType)) {
-            return CTLConstant.UserIdentity.STUDENT;
-        } else if ("ManagerSession".equals(psType)) {
-            return CTLConstant.UserIdentity.MANAGER;
-        } else if ("AuditorSession".equals(psType)) {
-            return CTLConstant.UserIdentity.AUDITOR;
-        } else if ("AuditorSession".equals(psType)) {
-            return CTLConstant.UserIdentity.ADMINISTRATOR;
-        } else if ("AdviserSession".equals(psType)) {
-            return CTLConstant.UserIdentity.ADVISER;
-        } else if ("VisitorSession".equals(psType)) {
-            return CTLConstant.UserIdentity.VISITOR;
-        }
-
-        return CTLConstant.UserIdentity.NONE;
+        return ClassroomUtil.getUserIdentity(psType);
     }
 
     protected void sendTransitionMessage(State state) {

@@ -20,6 +20,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
 import cn.xiaojs.xma.model.live.TalkItem;
 import cn.xiaojs.xma.ui.classroom.main.ClassroomBusiness;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.classroom2.core.ClassroomEngine;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.common.ImageViewActivity;
 import cn.xiaojs.xma.ui.widget.CircleTransform;
@@ -45,8 +46,8 @@ public class ReceivedViewHolder extends ChatViewHolder {
     ImageView contentImgView;
 
 
-    public ReceivedViewHolder(Context context, View itemView, ChatAdapter adapter) {
-        super(context, itemView, adapter);
+    public ReceivedViewHolder(Context context, View itemView, ChatAdapter adapter, boolean flag) {
+        super(context, itemView, adapter, flag);
         this.context = context;
     }
 
@@ -71,8 +72,46 @@ public class ReceivedViewHolder extends ChatViewHolder {
             timeLineView.setVisibility(View.GONE);
         }
 
-
         nameView.setText(item.from.name);
+
+        if (group) {
+
+            nameView.setVisibility(View.VISIBLE);
+
+            int colorRes;
+            String markStr;
+
+            CTLConstant.UserIdentity identity = ClassroomEngine.getEngine().getChatIdentity(item.from.accountId);
+            if (identity == CTLConstant.UserIdentity.ADMINISTRATOR) {
+                markStr = "管理者";
+                colorRes = context.getResources().getColor(R.color.session_admin);
+            } else if (identity == CTLConstant.UserIdentity.LEAD) {
+                markStr = "主讲";
+                colorRes = context.getResources().getColor(R.color.session_leader);
+            } else if (identity == CTLConstant.UserIdentity.ADVISER) {
+                markStr = "管理者";
+                colorRes = context.getResources().getColor(R.color.session_admin);
+            } else if (identity == CTLConstant.UserIdentity.TEACHER2) {
+                markStr = "老师";
+                colorRes = context.getResources().getColor(R.color.session_teacher);
+            } else if (identity == CTLConstant.UserIdentity.ASSISTANT) {
+                markStr = "助教";
+                colorRes = context.getResources().getColor(R.color.session_assi);
+            } else {
+                markStr = "";
+                colorRes = context.getResources().getColor(android.R.color.transparent);
+            }
+
+            tagsView.setText(markStr);
+            tagsView.setBackgroundColor(colorRes);
+            tagsView.setVisibility(View.VISIBLE);
+        }else {
+            nameView.setVisibility(View.INVISIBLE);
+            tagsView.setVisibility(View.GONE);
+        }
+
+
+
 
         if (item.body.contentType == Communications.ContentType.TEXT) {
 
@@ -90,7 +129,7 @@ public class ReceivedViewHolder extends ChatViewHolder {
                         .load(imgData)
                         .into(getImgViewTarget(0, contentImgView));
 
-            }else {
+            } else {
 
                 String imgUrl = ClassroomBusiness.getSnapshot(item.body.drawing.name, MAX_SIZE);
                 Glide.with(context)
@@ -122,13 +161,13 @@ public class ReceivedViewHolder extends ChatViewHolder {
                 if (!TextUtils.isEmpty(item.body.text)) {
                     //base64
                     Bitmap bitmap = BitmapUtils.base64ToBitmapWithPrefix(item.body.text);
-                    String previewFile=BitmapUtils.saveSharePreviewToFile(bitmap);
+                    String previewFile = BitmapUtils.saveSharePreviewToFile(bitmap);
                     imgs.add(previewFile);
-                    ImageViewActivity.invoke(context, "",imgs, true);
-                }else {
+                    ImageViewActivity.invoke(context, "", imgs, true);
+                } else {
 
                     imgs.add(item.body.drawing.name);
-                    ImageViewActivity.invoke(context, "",imgs, false);
+                    ImageViewActivity.invoke(context, "", imgs, false);
                 }
 
 

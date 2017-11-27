@@ -9,7 +9,7 @@
     <RelativeLayout
             android:id="@+id/bar_panel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/px100"
             android:background="@drawable/chat_message_view_bottom"
             android:paddingBottom="@dimen/bottom_component_margin_vertical"
             android:paddingTop="@dimen/bottom_component_margin_vertical">

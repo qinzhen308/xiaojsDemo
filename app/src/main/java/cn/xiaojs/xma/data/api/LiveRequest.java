@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.orhanobut.logger.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -85,6 +86,15 @@ public class LiveRequest extends ServiceRequest{
     public void getAttendees(String ticket, boolean peekOnly) {
         Call<LiveCollection<Attendee>> call = getLiveService().getAttendees(ticket, peekOnly);
         enqueueRequest(APIType.GET_ATTENDEES,call);
+    }
+
+    public LiveCollection<Attendee> getAttendeesSync(String ticket, boolean peekOnly) throws IOException {
+        Call<LiveCollection<Attendee>> call = getLiveService().getAttendees(ticket, peekOnly);
+        Response<LiveCollection<Attendee>> response = call.execute();
+        if (response !=null)
+            return response.body();
+
+        return null;
     }
 
     public void beginClass(String ticket, ClassMode mode) {

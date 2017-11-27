@@ -243,6 +243,21 @@ public final class ClassroomEngine {
         return stateMachine.getUserIdentity(psType);
     }
 
+    public CTLConstant.UserIdentity getChatIdentity(String accountId) {
+
+        Attendee attendee = getMember(accountId);
+        if (attendee == null) {
+            return CTLConstant.UserIdentity.NONE;
+        }
+
+        String realType = TextUtils.isEmpty(attendee.psTypeInLesson) ?
+                attendee.psType : attendee.psTypeInLesson;
+
+        return getUserIdentity(realType);
+
+    }
+
+
     //获取班主任的信息，可能为空
     public Attendee getClassAdviser() {
         return stateMachine.getSession().adviser;
@@ -308,6 +323,8 @@ public final class ClassroomEngine {
         }
         return count;
     }
+
+
 
     /**
      * 请求开始直播秀

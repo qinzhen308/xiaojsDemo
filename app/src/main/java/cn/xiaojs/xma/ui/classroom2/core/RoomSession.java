@@ -33,6 +33,8 @@ public class RoomSession {
     public RoomSession(BootObservable.BootSession bootSession) {
         this.ctlSession = bootSession.ctlSession;
         this.classInfo = bootSession.classInfo;
+        this.classMembers = bootSession.classMembers;
+        this.adviser = bootSession.adviser;
 
         if (this.ctlSession.cls != null) {
             this.classroomType = ClassroomType.ClassLesson;
