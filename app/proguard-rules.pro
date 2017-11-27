@@ -124,19 +124,16 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 
-# jmessage
+# jpush
 -dontoptimize
 -dontpreverify
--keepattributes  EnclosingMethod,Signature
+
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }
+-keep class * extends cn.jpush.android.helpers.JPushMessageReceiver { *; }
 
 -dontwarn cn.jiguang.**
 -keep class cn.jiguang.** { *; }
-
- -keepclassmembers class ** {
-     public void onEvent*(**);
- }
 
 #========================okhttp==============================
 -dontwarn okio.**

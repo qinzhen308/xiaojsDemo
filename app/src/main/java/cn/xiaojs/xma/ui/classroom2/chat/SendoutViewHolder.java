@@ -57,8 +57,8 @@ public class SendoutViewHolder extends ChatViewHolder {
     Button resendView;
 
 
-    public SendoutViewHolder(Context context, View itemView, ChatAdapter adapter) {
-        super(context, itemView, adapter);
+    public SendoutViewHolder(Context context, View itemView, ChatAdapter adapter, boolean group) {
+        super(context, itemView, adapter, group);
         this.context = context;
     }
 
@@ -83,7 +83,11 @@ public class SendoutViewHolder extends ChatViewHolder {
             timeLineView.setVisibility(View.GONE);
         }
 
-        //nameView.setText(item.from.name);
+        if (group) {
+            nameView.setVisibility(View.VISIBLE);
+        } else {
+            nameView.setVisibility(View.INVISIBLE);
+        }
 
         if (item.body.contentType == Communications.ContentType.TEXT) {
 
@@ -138,9 +142,8 @@ public class SendoutViewHolder extends ChatViewHolder {
                             + ", sep time:" + sep);
                 }
 
-                boolean recall =  sep >= CTLConstant.ALLOW_RECALL_MAX_TIME_MS ?
+                boolean recall = sep >= CTLConstant.ALLOW_RECALL_MAX_TIME_MS ?
                         false : true;
-
 
 
                 chatAdapter.showMenu(v, position, item, recall);

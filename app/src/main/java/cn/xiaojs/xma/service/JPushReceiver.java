@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.data.JPushLocalNotification;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.util.MessageUitl;
 

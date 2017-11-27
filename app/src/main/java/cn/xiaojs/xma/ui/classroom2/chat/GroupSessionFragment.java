@@ -22,6 +22,7 @@ public class GroupSessionFragment extends ChatSessionFragment {
 
         group = getArguments().getString(CTLConstant.EXTRA_GROUP_ID);
         titleStr = getArguments().getString(CTLConstant.EXTRA_SESSION_NAME);
+        chatWithGroup = true;
 
     }
 

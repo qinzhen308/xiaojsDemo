@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -17,11 +19,17 @@ import cn.xiaojs.xma.data.api.LiveRequest;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.SocketManager;
 import cn.xiaojs.xma.model.ctl.ClassInfo;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
+import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.ui.classroom2.util.ClassroomUtil;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.MainThreadDisposable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -52,7 +60,7 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
     }
 
     public void dispose() {
-        if (bootListener !=null && !bootListener.isDisposed()) {
+        if (bootListener != null && !bootListener.isDisposed()) {
             bootListener.dispose();
         }
     }
@@ -79,6 +87,8 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         protected Disposable disposableTimeout;
         protected CtlSession ctlSession;
         protected ClassInfo classInfo;
+        protected Map<String, Attendee> classMembers;
+        protected Attendee adviserAtt;
         private SocketManager socketManager;
         private LiveRequest liveRequest;
         private int connectCount;
@@ -126,11 +136,9 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                     classInfo = LessonDataManager.getClassInfoSync(context, ctlSession.cls.id);
                     sendStatus(Status.GET_CLASSINFO_OVER);
 
-
                     if (TextUtils.isEmpty(ctlSession.ticket)) {
                         ctlSession.ticket = initTicket;
                     }
-
                     if (ctlSession.accessible) {
                         //连接socket
                         try {
@@ -193,7 +201,39 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
             public void call(Object... args) {
                 //连接成功
                 offTimout();
-                sendStatus(Status.SOCKET_CONNECT_SUCCESS);
+
+                Observable.create(new ObservableOnSubscribe<Object>() {
+
+                    @Override
+                    public void subscribe(@NonNull ObservableEmitter<Object> e) throws Exception {
+                        LiveCollection<Attendee> collection = LiveManager.getAttendeesSync(context,
+                                initTicket, false);
+                        if (collection != null && collection.attendees != null) {
+                            classMembers = new HashMap<>();
+
+                            for (Attendee attendee : collection.attendees) {
+                                classMembers.put(attendee.accountId, attendee);
+
+                                if (CTLConstant.UserIdentity.ADVISER
+                                        == ClassroomUtil.getUserIdentity(attendee.psType)) {
+                                    adviserAtt = attendee;
+                                }
+                            }
+                        }
+
+                        e.onNext(classMembers);
+                        e.onComplete();
+                    }
+                }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Object>() {
+                            @Override
+                            public void accept(Object o) throws Exception {
+                                sendStatus(Status.SOCKET_CONNECT_SUCCESS);
+                            }
+                        });
+
+
             }
         };
 
@@ -239,6 +279,8 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                         || status == Status.GET_CLASSINFO_OVER) {
                     bootSession.ctlSession = ctlSession;
                     bootSession.classInfo = classInfo;
+                    bootSession.classMembers = classMembers;
+                    bootSession.adviser = adviserAtt;
                 }
 
                 observer.onNext(bootSession);
@@ -382,6 +424,8 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
         public Status status;
         public CtlSession ctlSession;
         public ClassInfo classInfo;
+        public Map<String, Attendee> classMembers;
+        public Attendee adviser;
         public Object extraData;
 
         public BootSession(Status status) {

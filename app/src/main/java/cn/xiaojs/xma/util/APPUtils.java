@@ -23,6 +23,7 @@
 
 package cn.xiaojs.xma.util;
 
+import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -41,6 +42,7 @@ import android.widget.Toast;
 import com.meituan.android.walle.WalleChannelReader;
 
 import java.io.File;
+import java.util.List;
 
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
@@ -303,6 +305,21 @@ public class APPUtils {
         ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         // 将文本内容放到系统剪贴板里。
         cm.setText(content);
+    }
+
+
+    public static boolean isAppOnForeground(Context context) {
+        ActivityManager mActivityManager = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
+        String mPackageName = context.getPackageName();
+        List<ActivityManager.RunningTaskInfo> tasksInfo = mActivityManager.getRunningTasks(1);
+        if (tasksInfo.size() > 0) {
+            // 应用程序位于堆栈的顶层
+            if (mPackageName.equals(tasksInfo.get(0).topActivity
+                    .getPackageName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

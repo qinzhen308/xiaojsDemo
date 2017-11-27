@@ -22,8 +22,8 @@ public class TipsViewHolder extends ChatViewHolder {
     TextView tipsView;
 
 
-    public TipsViewHolder(Context context, View itemView, ChatAdapter adapter) {
-        super(context, itemView, adapter);
+    public TipsViewHolder(Context context, View itemView, ChatAdapter adapter, boolean group) {
+        super(context, itemView, adapter,group);
         this.context = context;
     }
 

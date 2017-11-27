@@ -49,12 +49,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:textSize="@dimen/font_20px"
-            android:textColor="@color/font_orange"
-            android:layout_marginLeft="@dimen/px12"
+            android:textSize="@dimen/font_13px"
+            android:textColor="@color/font_white"
+            android:layout_marginLeft="@dimen/px3"
             android:layout_toRightOf="@id/name"
-            android:layout_alignBottom="@id/name"
-            android:text="我"
+            android:layout_alignBaseline="@id/name"
+            android:gravity="center"
             android:visibility="gone"
             />
 

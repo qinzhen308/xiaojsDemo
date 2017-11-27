@@ -2,6 +2,7 @@ package cn.xiaojs.xma.data;
 
 import android.content.Context;
 
+import java.io.IOException;
 import java.util.List;
 
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
@@ -88,6 +89,13 @@ public class LiveManager {
                                     APIServiceCallback<LiveCollection<Attendee>> callback) {
         LiveRequest request = new LiveRequest(context, callback);
         request.getAttendees(ticket,peekOnly);
+    }
+
+    public static LiveCollection<Attendee> getAttendeesSync(Context context,
+                                    String ticket,
+                                    boolean peekOnly) throws IOException {
+        LiveRequest request = new LiveRequest(context, null);
+        return request.getAttendeesSync(ticket,peekOnly);
     }
 
     /**

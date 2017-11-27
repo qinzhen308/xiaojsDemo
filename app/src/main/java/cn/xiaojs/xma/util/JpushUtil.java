@@ -2,6 +2,8 @@ package cn.xiaojs.xma.util;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +36,7 @@ public class JpushUtil {
      * 设置别名和标签
      * @param context
      */
-    public static void setAliasAndTags(final Context context, AliasTags aliasTags, TagAliasCallback callback) {
+    public static void setAliasAndTags(final Context context, AliasTags aliasTags) {
 
         if (aliasTags == null) return;
 
@@ -44,7 +46,13 @@ public class JpushUtil {
             tags.addAll(ptags);
         }
 
-        JPushInterface.setAliasAndTags(context, aliasTags.getAlias(), tags, callback);
+        String alias = "xxiao123";
+
+
+        JPushInterface.setAlias(context,(int)System.currentTimeMillis(), alias);
+        Logger.d("--------xxiao123 over---------------");
+
+        JPushInterface.setTags(context,(int)System.currentTimeMillis(), tags);
     }
 
 

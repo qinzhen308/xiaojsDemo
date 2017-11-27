@@ -20,7 +20,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [bugly_appid: rootProject.ext.bugly_appid,
-                                bugly_appkey: rootProject.ext.bugly_appkey]
+                                bugly_appkey: rootProject.ext.bugly_appkey,
+                                JPUSH_PKGNAME : applicationId,
+                                JPUSH_APPKEY : rootProject.ext.jpush_appkey,
+                                JPUSH_CHANNEL : rootProject.ext.jpush_channel,
+        ]
     }
     signingConfigs {
         release_config {
@@ -68,6 +72,11 @@ android {
 dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile 'cn.jiguang.sdk:jpush:3.1.0'
+    compile 'cn.jiguang.sdk:jcore:1.1.8'
+    compile 'cn.jiguang.sdk:jmessage:2.3.0'
+
 
     compile "com.android.support:support-emoji-bundled:$rootProject.ext.supportLibVersion"
     compile "com.android.support:support-emoji-appcompat:$rootProject.ext.supportLibVersion"

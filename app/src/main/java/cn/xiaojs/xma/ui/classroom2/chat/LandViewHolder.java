@@ -37,8 +37,8 @@ public class LandViewHolder extends ChatViewHolder {
 
 
 
-    public LandViewHolder(Context context, View itemView, ChatAdapter adapter) {
-        super(context, itemView, adapter);
+    public LandViewHolder(Context context, View itemView, ChatAdapter adapter, boolean group) {
+        super(context, itemView, adapter, group);
         this.context = context;
     }
 

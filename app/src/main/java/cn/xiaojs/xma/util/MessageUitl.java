@@ -3,6 +3,8 @@ package cn.xiaojs.xma.util;
 import android.content.Context;
 import android.content.Intent;
 
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.data.JPushLocalNotification;
 import cn.xiaojs.xma.XiaojsApplication;
 import cn.xiaojs.xma.data.DataManager;
 
@@ -49,6 +51,15 @@ public class MessageUitl {
         ifarIntent.setPackage(context.getPackageName());
         ifarIntent.addCategory(Intent.CATEGORY_DEFAULT);
         context.startActivity(ifarIntent);
+    }
+
+
+    public static void createLocalNotify(Context context, String title, String summary) {
+        JPushLocalNotification notification = new JPushLocalNotification();
+        notification.setTitle(title);
+        notification.setContent(summary);
+        notification.setNotificationId(System.currentTimeMillis());
+        JPushInterface.addLocalNotification(context,notification);
     }
 
 }

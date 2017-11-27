@@ -44,6 +44,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     private int autoFetchMoreSize = 3;
     private int perpageMaxCount = 0;
     private boolean firstLoad = true;
+    private boolean group;
 
     public void setOperationListener(OnChatOperationListener operationListener) {
         this.operationListener = operationListener;
@@ -57,10 +58,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     }
 
 
-    public ChatAdapter(Context context, ArrayList<TalkItem> messages) {
+    public ChatAdapter(Context context, ArrayList<TalkItem> messages, boolean group) {
         this.context = context;
         this.messages = messages;
         this.myAccountId = AccountDataManager.getAccountID(context);
+        this.group = group;
     }
 
 
@@ -155,27 +157,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         switch (viewType) {
             case MessageType.SEND_OUT:
                 holder = new SendoutViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_sendout, parent, false), this);
+                        inflater.inflate(R.layout.layout_classroom2_chat_sendout, parent, false), this, group);
                 break;
             case MessageType.RECEIVED:
                 holder = new ReceivedViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_received, parent, false), this);
+                        inflater.inflate(R.layout.layout_classroom2_chat_received, parent, false), this, group);
                 break;
             case MessageType.FOLLOWED:
                 holder = new FollowedViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_followed, parent, false), this);
+                        inflater.inflate(R.layout.layout_classroom2_chat_followed, parent, false), this, group);
                 break;
             case MessageType.SYSTEM:
                 holder = new SystemViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_tips, parent, false), this);
+                        inflater.inflate(R.layout.layout_classroom2_chat_tips, parent, false), this, group);
                 break;
             case MessageType.TIPS:
                 holder = new TipsViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_tips, parent, false), this);
+                        inflater.inflate(R.layout.layout_classroom2_chat_tips, parent, false), this, group);
                 break;
             case MessageType.LAND:
                 holder = new LandViewHolder(context,
-                        inflater.inflate(R.layout.layout_classroom2_chat_land, parent, false), this);
+                        inflater.inflate(R.layout.layout_classroom2_chat_land, parent, false), this, group);
                 break;
 
         }
