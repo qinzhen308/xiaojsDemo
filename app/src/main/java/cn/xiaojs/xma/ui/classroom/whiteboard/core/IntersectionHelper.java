@@ -524,7 +524,6 @@ public class IntersectionHelper {
                     if (originalPath == null) {
                         continue;
                     }
-
                     intersect = mRegion.setPath(originalPath, mSelectorRegion);
                     if (intersect) {
                         intersectCount++;

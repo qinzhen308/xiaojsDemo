@@ -43,6 +43,7 @@
         android:layout_marginLeft="@dimen/px40"
         android:layout_marginTop="@dimen/px16"
         android:layout_toRightOf="@+id/flag_view"
+        android:drawableLeft="@drawable/ic_class_member"
         android:text="0人"
         android:drawablePadding="@dimen/px16"
         android:textColor="@color/class_grey"
@@ -59,6 +60,7 @@
         android:layout_toRightOf="@id/member_view"
         android:text="班主任：我我我我"
         android:textColor="@color/class_grey"
+        android:visibility="gone"
         android:textSize="@dimen/font_24px" />
 
 
@@ -71,6 +73,7 @@
         android:layout_marginBottom="@dimen/px_5"
         android:gravity="center"
         android:textSize="@dimen/font_24px"
+        android:visibility="gone"
         />
 
 </RelativeLayout>

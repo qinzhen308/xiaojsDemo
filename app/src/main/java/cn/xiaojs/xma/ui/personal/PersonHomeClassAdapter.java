@@ -29,10 +29,14 @@ import cn.xiaojs.xma.model.recordedlesson.RLCollectionPageData;
 import cn.xiaojs.xma.model.recordedlesson.RLesson;
 import cn.xiaojs.xma.model.social.Dimension;
 import cn.xiaojs.xma.ui.CommonWebActivity;
+import cn.xiaojs.xma.ui.base.BaseActivity;
+import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.lesson.CourseConstant;
 import cn.xiaojs.xma.ui.lesson.LessonHomeActivity;
 import cn.xiaojs.xma.util.ArrayUtil;
+import cn.xiaojs.xma.util.ClassStateUtil;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 
 /**
  * Created by Paul Z on 2017/7/23.
@@ -55,9 +59,10 @@ public class PersonHomeClassAdapter extends AbsSwipeAdapter<ClassByUser, PersonH
     protected void setViewContent(Holder holder, ClassByUser bean, int position) {
         holder.titleView.setText(bean.title);
         holder.flagView.setText(bean.title.charAt(0)+"");
-        setJoinState(holder.btnJoin,false);
-        holder.memberView.setText("学生 "+(bean.join!=null?bean.join.current:0)+"人");
-        String teachersLabel="班主任：";
+//        setJoinState(holder.btnJoin,false);
+//        holder.memberView.setText("学生 "+(bean.join!=null?bean.join.current:0)+"人");
+        holder.memberView.setText((bean.join!=null?bean.join.current:0)+"人");
+        /*String teachersLabel="班主任：";
         if(ArrayUtil.isEmpty(bean.teachers)){
             holder.teachersView.setText(teachersLabel);
         }else {
@@ -75,7 +80,7 @@ public class PersonHomeClassAdapter extends AbsSwipeAdapter<ClassByUser, PersonH
             }
             holder.teachersView.setText(StringUtil.getSpecialString(teachersLabel+teachersText,teachersText,mContext.getResources().getColor(R.color.chocolate_light)));
         }
-
+*/
     }
 
     @Override
@@ -86,13 +91,44 @@ public class PersonHomeClassAdapter extends AbsSwipeAdapter<ClassByUser, PersonH
 
     @Override
     protected void onDataItemClick(int position, ClassByUser bean) {
-        String url= ApiManager.getShareLessonUrl(bean.id, Account.TypeName.CLASS_LESSON);
+        /*String url= ApiManager.getShareLessonUrl(bean.id, Account.TypeName.CLASS_LESSON);
         if(url.contains("?")){
             url+="&app=android";
         }else {
             url+="?app=android";
         }
-        CommonWebActivity.invoke(mContext,"",url);
+        CommonWebActivity.invoke(mContext,"",url);*/
+        checkJoinClassStateAndEnterClassroom(bean.id);
+    }
+
+    private void checkJoinClassStateAndEnterClassroom(String id){
+        final BaseActivity baseActivity=(BaseActivity) mContext;
+        baseActivity.showProgress(true);
+        ClassStateUtil.checkClassroomStateForMe(mContext, id, new ClassStateUtil.ClassStateCallback() {
+            @Override
+            public void onClassroomOpen(String ticket) {
+                baseActivity.cancelProgress();
+                Classroom2Activity.invoke(mContext,ticket);
+            }
+
+            @Override
+            public void onClassroomClose(String id) {
+                baseActivity.cancelProgress();
+                String url= ApiManager.getShareLessonUrl(id, Account.TypeName.CLASS_LESSON);
+                if(url.contains("?")){
+                    url+="&app=android";
+                }else {
+                    url+="?app=android";
+                }
+                CommonWebActivity.invoke(mContext,"",url);
+            }
+
+            @Override
+            public void onError(String msg) {
+                baseActivity.cancelProgress();
+                ToastUtil.showToast(mContext,msg);
+            }
+        });
     }
 
     @Override

@@ -19,6 +19,7 @@ public class SplashActivity extends Activity {
         if(DataPref.getVersionCode(this)<APPUtils.getAPPVersionCode(this)){
 //        if(true){
             startActivity(new Intent(this, GuideActivity.class));
+            finish();
         }else {
             if (AccountDataManager.isLogin(this)) {
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);

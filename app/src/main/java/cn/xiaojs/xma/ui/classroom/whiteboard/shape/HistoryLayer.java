@@ -103,6 +103,11 @@ public class HistoryLayer extends Doodle {
         mDrawingPath.reset();
         mTransRect.set(mDoodleRect);
 
+        if(points.size()==2){
+            PointF pc=new PointF((points.get(0).x+points.get(1).x)/2,(points.get(0).y+points.get(1).y)/2);
+            points.add(1,pc);
+        }
+
         boolean curContinue=false;
         for(int i=0;i<points.size();i++){
             PointF p1=points.get(i);

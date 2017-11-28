@@ -65,6 +65,7 @@ import cn.xiaojs.xma.util.ExpandGlide;
 import cn.xiaojs.xma.util.FastBlur;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
+import okhttp3.ResponseBody;
 
 public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBusiness.OnFollowListener{
     private Unbinder mBinder;
@@ -441,6 +442,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                     }else {
                         BaseBusiness.showFollowDialog(this, this);
                     }
+                }else {
+                    unFollow();
                 }
                 break;
             case R.id.person_home_summary_wrapper://查看签名
@@ -459,9 +462,11 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
 
     @Override
     public void onFollow(long group) {
-        if (group > 0) {
-            follow(group);
-        }
+
+        follow(Social.ContactGroup.FRIENDS);
+//        if (group > 0) {
+//            follow(group);
+//        }
     }
 
     private void follow(long group) {
@@ -486,6 +491,30 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
                     ToastUtil.showToast(getApplicationContext(), errorMessage);
                 }
             });
+        }
+    }
+
+    private void unFollow() {
+        if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
+
+            Contact.MetIn metIn = new Contact.MetIn();
+            metIn.subtype = isOrganization ? Collaboration.SubType.ORGANIZATION : Collaboration.SubType.PERSON;
+
+            SocialManager.unfollowContact(this,
+                    mAccount, new APIServiceCallback<ResponseBody>() {
+                        @Override
+                        public void onSuccess(ResponseBody object) {
+                            ToastUtil.showToast(getApplicationContext(), "已取消关注");
+                            mBean.isFollowed = false;
+                            headerNormal(mBean.isFollowed);
+                            DataChangeHelper.getInstance().notifyDataChanged(SimpleDataChangeListener.FOLLOW_USER);
+                        }
+
+                        @Override
+                        public void onFailure(String errorCode, String errorMessage) {
+                            ToastUtil.showToast(getApplicationContext(), errorMessage);
+                        }
+                    });
         }
     }
 
@@ -516,22 +545,27 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
         if (!followed) {
             mScrollRightText.setText("关注");
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
+            mScrollRightText.setBackgroundResource(R.drawable.blue_solid_bg_corner);
         } else {
-            mScrollRightText.setText("已关注");
+            mScrollRightText.setText("取消关注");
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
         }
-        mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
         mScrollMiddleText.setText("");
     }
 
     private void headerScrolled(boolean followed) {
         mScrollTitleBar.setBackgroundColor(getResources().getColor(R.color.white));
-        mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
         if (!followed) {
             mScrollRightText.setText("关注");
-            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_plus, 0, 0, 0);
+            mScrollRightText.setTextColor(getResources().getColor(R.color.white));
+            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_follow_white, 0, 0, 0);
+            mScrollRightText.setBackgroundResource(R.drawable.blue_solid_bg_corner);
         } else {
-            mScrollRightText.setText("已关注");
+            mScrollRightText.setText("取消关注");
+            mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
+            mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
         }
         mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
         mScrollMiddleText.setText(mPersonName);
