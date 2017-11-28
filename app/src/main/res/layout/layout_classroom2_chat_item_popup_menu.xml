@@ -4,7 +4,7 @@
         android:id="@+id/menu_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/font_dark_gray"
+        android:background="@drawable/bg_chat_item_pop_rect"
         android:orientation="horizontal"
         android:gravity="center">
 

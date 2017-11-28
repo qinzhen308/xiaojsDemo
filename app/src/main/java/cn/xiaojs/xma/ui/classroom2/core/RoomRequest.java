@@ -178,7 +178,7 @@ public final class RoomRequest {
 
     protected void beginClass(String ticket, final APIServiceCallback<ClassResponse> callback) {
         LiveManager.beginClass(context, ticket,
-                Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+                Live.StreamMode.AV, new APIServiceCallback<ClassResponse>() {
             @Override
             public void onSuccess(ClassResponse object) {
                 if (XiaojsConfig.DEBUG) {
@@ -221,7 +221,7 @@ public final class RoomRequest {
 
     protected void resumeClass(String ticket, final APIServiceCallback<ClassResponse> callback){
         LiveManager.resumeClass(context, ticket,
-                Live.StreamMode.MUTE, new APIServiceCallback<ClassResponse>() {
+                Live.StreamMode.AV, new APIServiceCallback<ClassResponse>() {
             @Override
             public void onSuccess(ClassResponse object) {
                 stateMachine.resumeLesson(object);

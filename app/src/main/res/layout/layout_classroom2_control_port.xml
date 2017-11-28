@@ -68,7 +68,7 @@
             android:gravity="center"
             android:padding="@dimen/px20"
             android:layout_marginRight="@dimen/px24"
-            android:background="@drawable/bg_start_live_rect"
+            android:background="@drawable/class_dismiss"
             app:layout_constraintRight_toLeftOf="@id/p_top_more"
             app:layout_constraintTop_toTopOf="@id/top_guideline"
             app:layout_constraintBottom_toBottomOf="@id/p_top_more"/>

@@ -6,7 +6,8 @@
     <cn.xiaojs.xma.ui.widget.LazyViewPager
             android:id="@+id/tab_fragment_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/px100"/>
 
     <RelativeLayout
             android:id="@+id/tab_cover"
@@ -30,14 +31,14 @@
             android:orientation="vertical"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/px100">
 
         <View style="@style/DividerHorizontal"/>
 
         <LinearLayout
                 android:id="@+id/tab_menu"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/white"
                 android:orientation="horizontal"/>
     </LinearLayout>

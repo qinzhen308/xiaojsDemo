@@ -139,6 +139,20 @@
                 android:listSelector="@android:color/transparent"
                 android:visibility="gone"/>
 
+        <ImageButton
+                android:id="@+id/del_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/bg_del_emoji_rect"
+                android:src="@drawable/ic_delkey_2"
+                android:layout_marginTop="@dimen/px4"
+                android:paddingLeft="@dimen/px20"
+                android:paddingRight="@dimen/px20"
+                android:paddingTop="@dimen/px8"
+                android:paddingBottom="@dimen/px8"
+                />
+
 
     </FrameLayout>
 </LinearLayout>

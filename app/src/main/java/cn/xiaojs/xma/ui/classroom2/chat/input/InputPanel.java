@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -52,6 +54,8 @@ public class InputPanel {
 
     @BindView(R.id.emoji_grid)
     EmojiconGridView emojiGridView;
+    @BindView(R.id.del_emoji)
+    ImageButton delEmojiView;
 
     @BindView(R.id.action_layout)
     LinearLayout actionLayout;
@@ -63,9 +67,9 @@ public class InputPanel {
 
 
     @OnClick({R.id.bar_send_btn, R.id.bar_emoji_btn, R.id.bar_more_btn, R.id.bar_input_text,
-            R.id.action_photo, R.id.action_camera, R.id.action_material})
+            R.id.action_photo, R.id.action_camera, R.id.action_material, R.id.del_emoji})
     void onViewClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.bar_send_btn:
                 handleSendTextClick();
                 break;
@@ -78,18 +82,24 @@ public class InputPanel {
             case R.id.bar_input_text:
                 showInputMethod();
                 break;
+            case R.id.del_emoji:
+                KeyEvent event = new KeyEvent(0, 0, 0, KeyEvent.KEYCODE_DEL,
+                        0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+                inputTextView.dispatchKeyEvent(event);
+                break;
             case R.id.action_photo:
-                if (inputPoxy !=null) {
+                if (inputPoxy != null) {
                     inputPoxy.onPickPhotos();
                 }
                 break;
             case R.id.action_camera:
-                if (inputPoxy !=null) {
+                if (inputPoxy != null) {
                     inputPoxy.onTakeCamera();
                 }
                 break;
             case R.id.action_material:
                 break;
+
         }
     }
 
@@ -99,7 +109,7 @@ public class InputPanel {
         String text = editable.toString().trim();
         if (TextUtils.isEmpty(text)) {
             hideSend();
-        }else {
+        } else {
             showSend();
         }
     }
@@ -107,9 +117,7 @@ public class InputPanel {
     @OnItemClick(R.id.emoji_grid)
     void onItemClick(int position) {
         Emojicon emojicon = emojiGridView.getEmoji(position);
-        StringBuilder sb = new StringBuilder(inputTextView.getText());
-        sb.append(emojicon.getEmoji());
-        inputTextView.setText(sb.toString());
+        inputTextView.getText().append(emojicon.getEmoji());
     }
 
     public InputPanel(Context context, View parentView, InputPoxy poxy) {
@@ -145,7 +153,7 @@ public class InputPanel {
     private void handleEmojiClick() {
         if (emojiGridView.getVisibility() == View.VISIBLE) {
             hideEmojiPanel();
-        }else {
+        } else {
             showEmojiPanel();
         }
     }
@@ -153,13 +161,14 @@ public class InputPanel {
     private void handleMoreClick() {
         if (actionLayout.getVisibility() == View.VISIBLE) {
             hideActionPanel();
-        }else {
+        } else {
             showActionPanel();
         }
     }
 
 
     private void hideEmojiPanel() {
+        delEmojiView.setVisibility(View.GONE);
         emojiGridView.setVisibility(View.GONE);
         bottomPanelLayout.setVisibility(View.GONE);
     }
@@ -169,6 +178,7 @@ public class InputPanel {
         hideInputMethod();
 
         actionLayout.setVisibility(View.GONE);
+        delEmojiView.setVisibility(View.VISIBLE);
         emojiGridView.setVisibility(View.VISIBLE);
         bottomPanelLayout.setVisibility(View.VISIBLE);
 
@@ -181,6 +191,7 @@ public class InputPanel {
         hideInputMethod();
 
         emojiGridView.setVisibility(View.GONE);
+        delEmojiView.setVisibility(View.GONE);
 
         actionLayout.setVisibility(View.VISIBLE);
         bottomPanelLayout.setVisibility(View.VISIBLE);
@@ -225,9 +236,6 @@ public class InputPanel {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 }

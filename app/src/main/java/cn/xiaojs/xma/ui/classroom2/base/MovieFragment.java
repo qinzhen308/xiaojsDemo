@@ -486,6 +486,14 @@ public abstract class MovieFragment extends BaseRoomFragment
      */
     public abstract void onRotate(int orientation);
 
+    public boolean needLiveLesson() {
+       return ((Classroom2Activity) getActivity()).needLiveLesson();
+    }
+
+    public void showNeedLiveLessonToast() {
+        ((Classroom2Activity) getActivity()).showNeedLiveLessonToast();
+    }
+
 
     public void enterIdle() {
         ((Classroom2Activity) getActivity()).enterIdle();
@@ -1272,6 +1280,7 @@ public abstract class MovieFragment extends BaseRoomFragment
             //个人推流
             personPublishStream();
         } else {
+
             if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING) {
                 //开始上课
                 requestBeginClass();
@@ -1327,7 +1336,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
-    private void goonLive() {
+    protected void goonLive() {
         changeOrientationToLand();
         enterLiving();
     }
@@ -1620,5 +1629,7 @@ public abstract class MovieFragment extends BaseRoomFragment
     protected boolean isDefaultShowBoard() {
         return false;
     }
+
+
 
 }

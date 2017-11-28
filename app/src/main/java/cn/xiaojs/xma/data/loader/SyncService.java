@@ -30,6 +30,7 @@ import cn.xiaojs.xma.model.Privilege;
 import cn.xiaojs.xma.model.Upgrade;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.model.social.ContactGroup;
+import cn.xiaojs.xma.util.ArrayUtil;
 import cn.xiaojs.xma.util.NetUtil;
 
 /**
@@ -69,6 +70,17 @@ public class SyncService extends IntentService {
                                 dataProvider.setClasses(cg.collection);
                             }
                         }
+                    }
+
+                    ArrayList<Contact> conversations = dataProvider.getConversations();
+                    if (!ArrayUtil.isEmpty(conversations)) {
+                        int total = 0;
+                        for (Contact contact : conversations) {
+                            total = total + contact.unread;
+                        }
+
+                        dataProvider.setUnreadTotal(total);
+
                     }
 
                     ArrayList<Contact> persons = dataProvider.getPersons();

@@ -41,5 +41,22 @@
             android:paddingBottom="@dimen/px8"
             />
 
+    <TextView
+            android:id="@+id/lessontip_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_24px"
+            android:layout_marginTop="@dimen/px22"
+            android:background="@drawable/bg_start_live_rect"
+            android:paddingLeft="@dimen/px27"
+            android:paddingRight="@dimen/px27"
+            android:paddingTop="@dimen/px8"
+            android:paddingBottom="@dimen/px8"
+            android:gravity="center"
+            android:text="继续上课"
+            android:visibility="gone"
+            />
+
 
 </LinearLayout>

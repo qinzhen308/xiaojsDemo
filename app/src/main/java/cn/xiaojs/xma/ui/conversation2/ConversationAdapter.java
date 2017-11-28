@@ -394,10 +394,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<AbsConversationVie
         }
 
         XMSManager.sendRemoveDialog(context, removeDlg, null);
-
-        contacts.remove(position);
-        notifyDataSetChanged();
-        //notifyItemRemoved(position);
+        DataProvider.getProvider(context).removeConversation(contact.id);
     }
 
     private void changeSlient(final Contact contact) {
