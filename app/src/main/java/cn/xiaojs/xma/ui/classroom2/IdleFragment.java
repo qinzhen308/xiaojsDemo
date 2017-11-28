@@ -21,10 +21,12 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
@@ -37,13 +39,16 @@ import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.live.filter.IFilter;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.StringUtil;
+import cn.xiaojs.xma.util.ToastUtil;
 import cn.xiaojs.xma.util.UIUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 
 /**
  * Created by maxiaobao on 2017/9/25.
@@ -65,6 +70,8 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     TextView lessonTipsDescView;
     @BindView(R.id.lessontip_desc_time)
     TextView lessonTipsDesctimeView;
+    @BindView(R.id.lessontip_start)
+    TextView lessonTipsStartView;
 
     private EventListener.ELIdle idleObserver;
 
@@ -84,8 +91,6 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     }
 
 
-
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -98,12 +103,29 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
             e.printStackTrace();
         }
 
+        checkLiveLesson();
+
+
         initTalkData(this);
 
         initDefaultBoard();
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
 
         config4Preview();
+
+
+    }
+
+    @OnClick({R.id.lessontip_start, R.id.lessontip_lay})
+    void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.lessontip_start:
+                goonLesson();
+                break;
+            case R.id.lessontip_lay:
+                hiddeOrshowControl();
+                break;
+        }
     }
 
 //    @Override
@@ -143,6 +165,17 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     @Override
     public void closeMovie() {
         //do nothing
+    }
+
+    @Override
+    public void changeOrientation() {
+
+        if (needLiveLesson()) {
+            showLivingClassDlg();
+            return;
+        }
+
+        super.changeOrientation();
     }
 
     @Override
@@ -202,12 +235,12 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     @Override
     public int showOrHiddenCenterPanel() {
-        int  vis = super.showOrHiddenCenterPanel();
-        if(vis == View.VISIBLE) {
+        int vis = super.showOrHiddenCenterPanel();
+        if (vis == View.VISIBLE) {
             if (controlClickView.getVisibility() == View.GONE) {
                 controlClickView.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             controlClickView.setVisibility(View.GONE);
         }
 
@@ -226,7 +259,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     @Override
     protected Bitmap doScreenshot() {
-        if(isBoardShown()){
+        if (isBoardShown()) {
             return whiteboardFragment.preview();
         }
         return null;
@@ -239,11 +272,17 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     @Override
     public void onStartLiveClick(View view) {
-
         if (checkVistorPermission())
             return;
 
-        requestLive();
+        if (needLiveLesson()) {
+
+            toFinishClass();
+
+        } else {
+            requestLive();
+        }
+
     }
 
 
@@ -266,10 +305,10 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                 .add(R.id.layout_idle_container, BoardCollaborateFragment.createInstance(""))
                 .addToBackStack("board_default")
                 .commit();*/
-        Bitmap preview=whiteboardFragment.preview();
-        if(preview==null){
+        Bitmap preview = whiteboardFragment.preview();
+        if (preview == null) {
             ivWhiteboardPreview.setImageDrawable(new ColorDrawable());
-        }else {
+        } else {
             ivWhiteboardPreview.setImageBitmap(preview);
         }
         whiteboardFragment.setLastBoardLoadListener(new BoardCollaborateFragment.OnLastBoardLoadListener() {
@@ -283,6 +322,75 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 课提示
     //
+
+    private void goonLesson() {
+        if (checkVistorPermission())
+            return;
+        goonLive();
+    }
+
+    private void toFinishClass() {
+        showProgress(true);
+        classroomEngine.finishClass(classroomEngine.getTicket(),
+                new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        cancelProgress();
+                        configStartOrPausedLiveButton();
+                        lessonTipsLayout.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        cancelProgress();
+                        ToastUtil.showToast(getContext(), errorMessage);
+                    }
+                });
+    }
+
+
+
+    private void checkLiveLesson() {
+        if (needLiveLesson()) {
+
+            pTopLiveView.setText("下课");
+            pTopLiveView.setVisibility(View.VISIBLE);
+
+            lessonTipsTitleView.setText("该课还未结束");
+            lessonTipsDescView.setVisibility(View.GONE);
+            lessonTipsDesctimeView.setVisibility(View.GONE);
+            lessonTipsStartView.setVisibility(View.VISIBLE);
+
+            lessonTipsLayout.setVisibility(View.VISIBLE);
+            showLivingClassDlg();
+        }
+    }
+
+    protected void showLivingClassDlg() {
+
+        final CommonDialog dialog = new CommonDialog(getContext());
+        dialog.setDesc("您有一节直播课还未结束，是否继续上课？");
+        dialog.setRightBtnText(R.string.continue_live);
+        dialog.setLefBtnText(R.string.cancel);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                goonLesson();
+            }
+        });
+
+        dialog.show();
+    }
 
     private void cancelDurationObserver() {
         if (timerDisposable != null) {
@@ -317,9 +425,12 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
             lessonTipsTitleView.setText(ctl.title);
 
-            String leadName = ctl.lead==null? "" : "   主讲：" + ctl.lead.name;
+            String leadName = ctl.lead == null ? "" : "   主讲：" + ctl.lead.name;
 
             lessonTipsDescView.setText(TimeUtil.getFormatDate(startDate, "yyyy.MM.dd HH:mm") + leadName);
+            lessonTipsDescView.setVisibility(View.VISIBLE);
+            lessonTipsDesctimeView.setVisibility(View.VISIBLE);
+            lessonTipsStartView.setVisibility(View.GONE);
             lessonTipsLayout.setVisibility(View.VISIBLE);
 
 
@@ -379,6 +490,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                     }
                 });
     }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 操作面板

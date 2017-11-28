@@ -17,16 +17,17 @@
             android:scaleType="fitXY"
             />
 
-    <include
-            layout="@layout/layout_classroom2_lesson_tips"
-            android:visibility="gone"
-            />
-
     <View
             android:id="@+id/control_click"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
+
+    <include
+            layout="@layout/layout_classroom2_lesson_tips"
+            android:visibility="gone"
+            />
+
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_list"

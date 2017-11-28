@@ -435,15 +435,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             }
         }
 
-
-        String roomState = classroomEngine.getCtlSession().state;
-        if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
-                (Live.LiveSessionState.DELAY.equals(roomState) ||
-                        Live.LiveSessionState.LIVE.equals(roomState))) {
-
-            showLivingClassDlg();
-
-        } else if (!TextUtils.isEmpty(classroomEngine.getPlayUrl())) {
+        if (!TextUtils.isEmpty(classroomEngine.getPlayUrl())) {
             enterPlay();
         } else {
             enterIdle();
@@ -462,47 +454,6 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, 0)
                 .add(R.id.bottom_lay, chatFragment)
                 .commitAllowingStateLoss();
-    }
-
-
-    protected void showLivingClassDlg() {
-
-        final CommonDialog dialog = new CommonDialog(this);
-        dialog.setDesc("您的课还没有结束，是否继续上课？");
-        dialog.setRightBtnText(R.string.continue_live);
-        dialog.setLefBtnText(R.string.finish_class);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-            @Override
-            public void onClick() {
-                dialog.dismiss();
-                classroomEngine.finishClass(
-                        classroomEngine.getTicket(), new APIServiceCallback<ResponseBody>() {
-                            @Override
-                            public void onSuccess(ResponseBody object) {
-                                enterIdle();
-                            }
-
-                            @Override
-                            public void onFailure(String errorCode, String errorMessage) {
-                                enterIdle();
-                            }
-                        });
-
-            }
-        });
-
-        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-            @Override
-            public void onClick() {
-                dialog.dismiss();
-                changeOrientation();
-                enterLiving();
-            }
-        });
-
-        dialog.show();
     }
 
 
@@ -604,6 +555,20 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             mKickOutDialog.show();
         }
 
+    }
+
+    public boolean needLiveLesson() {
+        String roomState = classroomEngine.getCtlSession().state;
+        if (classroomEngine.getLiveMode() == Live.ClassroomMode.TEACHING &&
+                (Live.LiveSessionState.DELAY.equals(roomState) ||
+                        Live.LiveSessionState.LIVE.equals(roomState))) {
+            return true;
+        }
+        return false;
+    }
+
+    public void showNeedLiveLessonToast() {
+        Toast.makeText(this,"您有一节课还未下课",Toast.LENGTH_SHORT).show();
     }
 
     private void showConnectClassroom(String errorTips) {
@@ -808,6 +773,12 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
 
     private void popMembers() {
+
+        if (needLiveLesson()) {
+            showNeedLiveLessonToast();
+            return;
+        }
+
         MemberListFragment memberListfragment = new MemberListFragment();
         memberListfragment.show(getSupportFragmentManager(), "member");
     }
@@ -819,6 +790,11 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             return;
         }
 
+        if (needLiveLesson()) {
+            showNeedLiveLessonToast();
+            return;
+        }
+
 
         databaseFragment = new DatabaseFragment();
         databaseFragment.show(getSupportFragmentManager(), "database");
@@ -826,6 +802,12 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     }
 
     private void popClassSchedule() {
+
+        if (needLiveLesson()) {
+            showNeedLiveLessonToast();
+            return;
+        }
+
         /*ProfileFragment profileFragment = new ProfileFragment();
         profileFragment.show(getFragmentManager(), "profile");*/
         ScheduleFragment.createInstance("").show(getSupportFragmentManager(), "schedule");
