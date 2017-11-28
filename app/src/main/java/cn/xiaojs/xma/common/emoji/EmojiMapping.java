@@ -15,6 +15,7 @@ public class EmojiMapping {
             Emojicon.fromChar((char) 0x263a),
             Emojicon.fromCodePoint(0x1f609),
             Emojicon.fromCodePoint(0x1f60d),
+            Emojicon.empty(),
             Emojicon.fromCodePoint(0x1f618),
             Emojicon.fromCodePoint(0x1f61a),
             Emojicon.fromCodePoint(0x1f617),

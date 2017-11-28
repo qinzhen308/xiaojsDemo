@@ -58,6 +58,11 @@ public class Emojicon implements Parcelable {
         emoji.emoji = newString(codePoint);
         return emoji;
     }
+    public static Emojicon empty() {
+        Emojicon emoji = new Emojicon();
+        emoji.emoji = "";
+        return emoji;
+    }
 
     public static Emojicon fromChar(char ch) {
         Emojicon emoji = new Emojicon();
