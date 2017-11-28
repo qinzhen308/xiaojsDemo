@@ -1087,31 +1087,31 @@ public class TeachLessonAdapter extends AbsSwipeAdapter<TeachLesson, TeachLesson
     @Override
     protected void onEmptyButtonClick() {
 
-        if (AccountDataManager.isTeacher(mContext)) {
+        //if (AccountDataManager.isTeacher(mContext)) {
             //老师可以开课
             Intent intent = new Intent(mContext, LessonCreationActivity.class);
             ((BaseActivity) mContext).startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
-        } else {
-            //提示申明教学能力
-            final CommonDialog dialog = new CommonDialog(mContext);
-            dialog.setTitle(R.string.declare_teaching_ability);
-            dialog.setDesc(R.string.declare_teaching_ability_tip);
-            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    dialog.dismiss();
-                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
-            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                @Override
-                public void onClick() {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-        }
+//        } else {
+//            //提示申明教学能力
+//            final CommonDialog dialog = new CommonDialog(mContext);
+//            dialog.setTitle(R.string.declare_teaching_ability);
+//            dialog.setDesc(R.string.declare_teaching_ability_tip);
+//            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                @Override
+//                public void onClick() {
+//                    dialog.dismiss();
+//                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+//                    mContext.startActivity(intent);
+//                }
+//            });
+//            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                @Override
+//                public void onClick() {
+//                    dialog.dismiss();
+//                }
+//            });
+//            dialog.show();
+//        }
     }
 
     private void notifyData(TeachLesson bean) {

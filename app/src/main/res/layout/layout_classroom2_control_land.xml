@@ -120,7 +120,7 @@
             android:textSize="@dimen/font_24px"
             android:gravity="center"
             android:padding="@dimen/px20"
-            android:background="@drawable/bg_start_live_rect"
+            android:background="@drawable/class_dismiss"
             app:layout_constraintRight_toLeftOf="@id/right_guideline"
             app:layout_constraintTop_toTopOf="@id/top_guideline"
             app:layout_constraintBottom_toBottomOf="@id/l_top_back"/>

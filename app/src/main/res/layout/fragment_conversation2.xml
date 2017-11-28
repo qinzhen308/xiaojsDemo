@@ -66,8 +66,7 @@
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/title_bar_line"
-            android:layout_marginBottom="@dimen/px120">
+            android:layout_below="@id/title_bar_line">
 
         <cn.xiaojs.xma.ui.classroom2.widget.SwapRecylcerView
                 android:id="@+id/recyclerview"

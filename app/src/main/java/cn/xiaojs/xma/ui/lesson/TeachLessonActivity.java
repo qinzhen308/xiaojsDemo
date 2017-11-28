@@ -100,31 +100,31 @@ public class TeachLessonActivity extends BaseActivity {
         switch (position){
             case 0://我要开课
 
-                if (AccountDataManager.isTeacher(this)){
+                //if (AccountDataManager.isTeacher(this)){
                     //老师可以开课
                     Intent intent = new Intent(this,LessonCreationActivity.class);
                     startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
-                }else {
-                    //提示申明教学能力
-                    final CommonDialog dialog = new CommonDialog(this);
-                    dialog.setTitle(R.string.declare_teaching_ability);
-                    dialog.setDesc(R.string.declare_teaching_ability_tip);
-                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                        @Override
-                        public void onClick() {
-                            dialog.dismiss();
-                            Intent intent = new Intent(TeachLessonActivity.this, TeachingSubjectActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                        @Override
-                        public void onClick() {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-                }
+//                }else {
+//                    //提示申明教学能力
+//                    final CommonDialog dialog = new CommonDialog(this);
+//                    dialog.setTitle(R.string.declare_teaching_ability);
+//                    dialog.setDesc(R.string.declare_teaching_ability_tip);
+//                    dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                            Intent intent = new Intent(TeachLessonActivity.this, TeachingSubjectActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                    dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog.show();
+//                }
                 break;
             case 1://加入私密课
                 break;

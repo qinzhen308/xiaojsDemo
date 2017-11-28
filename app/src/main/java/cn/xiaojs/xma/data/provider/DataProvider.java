@@ -63,6 +63,7 @@ public class DataProvider {
     private ArrayList<DataObserver> dataObservers;
 
     private boolean completed;
+    private int unreadTotal;
 
     private Disposable eventDisposable;
 
@@ -98,6 +99,33 @@ public class DataProvider {
 
     public boolean isCompleted() {
         return completed;
+    }
+
+    public int getUnreadTotal() {
+        return unreadTotal < 0 ? 0 : unreadTotal;
+    }
+
+    public void setUnreadTotal(int unreadTotal) {
+
+        if (unreadTotal < 0) {
+            this.unreadTotal = 0;
+            return;
+        }
+
+        this.unreadTotal = unreadTotal;
+    }
+
+    private void offsetUnreadTotal(boolean add, int offset) {
+        if (add) {
+            unreadTotal = unreadTotal + offset;
+        } else {
+            unreadTotal = unreadTotal - offset;
+        }
+
+        if (unreadTotal < 0) {
+            unreadTotal = 0;
+        }
+
     }
 
     public void registesObserver(DataObserver dataObserver) {
@@ -322,7 +350,7 @@ public class DataProvider {
     //
 
     public void updateConversationWhenReceivedTalkremoved(String conversationId, long time) {
-        if (TextUtils.isEmpty(conversationId) || ArrayUtil.isEmpty(conversations) || time<=0)
+        if (TextUtils.isEmpty(conversationId) || ArrayUtil.isEmpty(conversations) || time <= 0)
             return;
 
         Contact tempContact = new Contact();
@@ -332,8 +360,10 @@ public class DataProvider {
         if (index >= 0) {
             Contact oriContact = conversations.get(index);
 
-            if(oriContact.lastTalked != time)
+            if (oriContact.lastTalked != time)
                 return;
+
+            //FIXME 并不知道删除或者撤销的那条消息是不是未读的，所以不知道怎么更新unreadToal
 
             oriContact.lastMessage = "";//FIXME 目前获取不到最近的一条消息，所以先放空；
 
@@ -372,7 +402,13 @@ public class DataProvider {
         for (String conversationId : conversationIds) {
             Contact tempContact = new Contact();
             tempContact.id = conversationId;
-            conversations.remove(tempContact);
+
+            int index = conversations.indexOf(tempContact);
+            if (index >= 0) {
+                Contact oriContact = conversations.get(index);
+                offsetUnreadTotal(false, oriContact.unread);
+                conversations.remove(index);
+            }
         }
 
         if (dataObservers != null) {
@@ -389,13 +425,20 @@ public class DataProvider {
         Contact tempContact = new Contact();
         tempContact.id = conversationId;
 
-        boolean removed = conversations.remove(tempContact);
+        int index = conversations.indexOf(tempContact);
+        if (index >= 0) {
+            Contact oriContact = conversations.get(index);
+            offsetUnreadTotal(false, oriContact.unread);
+            conversations.remove(index);
 
-        if (removed && dataObservers != null) {
-            for (DataObserver observer : dataObservers) {
-                observer.onConversationRemoved(conversationId);
+            if (dataObservers != null) {
+                for (DataObserver observer : dataObservers) {
+                    observer.onConversationRemoved(conversationId);
+                }
             }
         }
+
+
     }
 
     public void updateConversationSilent(String conversationId, boolean silent) {
@@ -432,6 +475,10 @@ public class DataProvider {
         if (index >= 0) {
 
             Contact oriContact = conversations.get(index);
+
+            int offset = unreadCount - oriContact.unread;
+            offsetUnreadTotal(true, offset);
+
             oriContact.unread = unreadCount;
 
             if (dataObservers != null) {
@@ -464,6 +511,9 @@ public class DataProvider {
             }
             oriContact.unread = oriContact.unread + contact.unread;
 
+            offsetUnreadTotal(true, contact.unread);
+
+
             if (!TextUtils.isEmpty(contact.signature)) {
                 oriContact.state = contact.state;
                 oriContact.streaming = contact.streaming;
@@ -490,6 +540,8 @@ public class DataProvider {
             }
 
             conversations.add(1, contact);
+
+            offsetUnreadTotal(true, contact.unread);
 
             if (dataObservers != null) {
                 for (DataObserver observer : dataObservers) {
@@ -545,10 +597,10 @@ public class DataProvider {
         int index = conversations.indexOf(contact);
         if (index >= 0) {
             Contact oriContact = conversations.get(index);
+
             if (index != 1) {
                 conversations.remove(index);
                 conversations.add(1, oriContact);
-
                 if (dataObservers != null) {
                     for (DataObserver observer : dataObservers) {
                         observer.onConversationMove(oriContact, index, 1);
@@ -720,7 +772,7 @@ public class DataProvider {
     private void updateConveration(Talk talkItem) {
 
 
-        if (!TextUtils.isEmpty(talkItem.signature)){
+        if (!TextUtils.isEmpty(talkItem.signature)) {
             if (talkItem.signature.equals(Su.getRemoveTalkSignature())
                     || talkItem.signature.equals(Su.getRecallTalkSignature())) {
 
@@ -739,7 +791,7 @@ public class DataProvider {
         if (talkItem.type == Communications.TalkType.PEER) {
             if (talkItem.sync) {
                 contact.id = talkItem.to;
-            }else {
+            } else {
                 contact.id = talkItem.from;
             }
             contact.name = talkItem.name;
@@ -780,14 +832,14 @@ public class DataProvider {
 
         contact.lastMessage = talkItem.body.text;
 
-        long realtime = talkItem.stime >=0? talkItem.stime : talkItem.time;
+        long realtime = talkItem.stime >= 0 ? talkItem.stime : talkItem.time;
         contact.lastTalked = realtime;
         contact.sync = talkItem.sync;
 
 
         if (talkItem.sync) {
             contact.unread = 0;
-        }else {
+        } else {
             contact.unread = 1;
         }
 
@@ -838,11 +890,10 @@ public class DataProvider {
             }
 
 
-
             title = cname;
 
             String fromName = getPersonName(from);
-            summary = TextUtils.isEmpty(fromName)? summary: fromName + ":" + summary;
+            summary = TextUtils.isEmpty(fromName) ? summary : fromName + ":" + summary;
         }
 
         MessageUitl.createLocalNotify(context, title, summary);

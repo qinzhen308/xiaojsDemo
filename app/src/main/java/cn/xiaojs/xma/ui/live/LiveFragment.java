@@ -438,31 +438,31 @@ public class LiveFragment extends BaseFragment {
                         }
                         break;
                     case 1:
-                        if (AccountDataManager.isTeacher(mContext)) {
+//                        if (AccountDataManager.isTeacher(mContext)) {
                             //老师可以开课
                             Intent intent = new Intent(mContext, LessonCreationActivity.class);
                             startActivityForResult(intent, CourseConstant.CODE_CREATE_LESSON);
-                        } else {
-                            //提示申明教学能力
-                            final CommonDialog dialog = new CommonDialog(mContext);
-                            dialog.setTitle(R.string.declare_teaching_ability);
-                            dialog.setDesc(R.string.declare_teaching_ability_tip);
-                            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-                                @Override
-                                public void onClick() {
-                                    dialog.dismiss();
-                                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
-                            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-                                @Override
-                                public void onClick() {
-                                    dialog.dismiss();
-                                }
-                            });
-                            dialog.show();
-                        }
+//                        } else {
+//                            //提示申明教学能力
+//                            final CommonDialog dialog = new CommonDialog(mContext);
+//                            dialog.setTitle(R.string.declare_teaching_ability);
+//                            dialog.setDesc(R.string.declare_teaching_ability_tip);
+//                            dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+//                                @Override
+//                                public void onClick() {
+//                                    dialog.dismiss();
+//                                    Intent intent = new Intent(mContext, TeachingSubjectActivity.class);
+//                                    startActivity(intent);
+//                                }
+//                            });
+//                            dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+//                                @Override
+//                                public void onClick() {
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//                            dialog.show();
+//                        }
                         break;
                     case 2:
                         startActivity(new Intent(mContext, CreateClassActivity.class));

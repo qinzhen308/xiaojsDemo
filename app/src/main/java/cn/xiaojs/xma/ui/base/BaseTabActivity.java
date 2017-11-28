@@ -17,6 +17,7 @@ package cn.xiaojs.xma.ui.base;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -109,7 +110,8 @@ public abstract class BaseTabActivity extends BaseActivity {
             FrameLayout fl = (FrameLayout) inflater.inflate(R.layout.layout_base_tab_item, null);
             RedTipTextView text = (RedTipTextView) fl.findViewById(R.id.base_tab_text);
             text.setText(mTitles[i]);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+            lp.gravity = Gravity.CENTER_VERTICAL;
             if (mDrawables != null && mDrawables.length > i) {
                 text.setCompoundDrawablesWithIntrinsicBounds(0,
                         mDrawables[i], 0, 0);
@@ -131,8 +133,8 @@ public abstract class BaseTabActivity extends BaseActivity {
         mMenu.addView(fl, mTitles.length / 2);
         mGooeyMenu.setVisibility(View.VISIBLE);
         mCenter.setVisibility(View.VISIBLE);
-        mRotateRight = AnimationUtils.loadAnimation(BaseTabActivity.this,R.anim.center_rotate_right);
-        mRotateLeft = AnimationUtils.loadAnimation(BaseTabActivity.this,R.anim.center_rotate_left);
+        mRotateRight = AnimationUtils.loadAnimation(BaseTabActivity.this, R.anim.center_rotate_right);
+        mRotateLeft = AnimationUtils.loadAnimation(BaseTabActivity.this, R.anim.center_rotate_left);
         mRotateRight.setFillAfter(true);
         mRotateLeft.setFillAfter(true);
         mGooeyMenu.setOnMenuListener(new GooeyMenu.GooeyMenuInterface() {
@@ -165,7 +167,7 @@ public abstract class BaseTabActivity extends BaseActivity {
         });
     }
 
-    protected void onGooeyMenuClick(int position){
+    protected void onGooeyMenuClick(int position) {
 
     }
 
@@ -192,8 +194,8 @@ public abstract class BaseTabActivity extends BaseActivity {
         autoClose();
     }
 
-    protected void autoClose(){
-        if (mGooeyMenu.opened()){
+    protected void autoClose() {
+        if (mGooeyMenu.opened()) {
             mGooeyMenu.close();
         }
     }
@@ -233,11 +235,11 @@ public abstract class BaseTabActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (mRotateRight != null){
+        if (mRotateRight != null) {
             mRotateRight.cancel();
             mRotateRight = null;
         }
-        if (mRotateLeft != null){
+        if (mRotateLeft != null) {
             mRotateLeft.cancel();
             mRotateLeft = null;
         }
@@ -265,5 +267,11 @@ public abstract class BaseTabActivity extends BaseActivity {
         if (redTipTextView.mTipEnable) {
             redTipTextView.setTipEnable(false);
         }
+    }
+
+    public void conversationTips(boolean show) {
+        if (mTabs == null) return;
+        RedTipTextView redTipTextView = mTabs.get(0);
+        redTipTextView.setTipEnable(show);
     }
 }

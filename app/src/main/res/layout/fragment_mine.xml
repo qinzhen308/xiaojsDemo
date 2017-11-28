@@ -358,7 +358,6 @@
                 android:layout_height="wrap_content"
                 style="@style/MinePageItem"
                 android:visibility="visible"
-                android:layout_marginBottom="@dimen/px120"
                 >
 
             <TextView

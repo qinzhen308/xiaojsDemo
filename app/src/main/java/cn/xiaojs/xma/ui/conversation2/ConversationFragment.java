@@ -87,6 +87,7 @@ public class ConversationFragment extends Base2Fragment {
             }
 
             showApapter();
+            dealConversationRedTips();
         }
 
         @Override
@@ -94,31 +95,35 @@ public class ConversationFragment extends Base2Fragment {
             adapter.notifyDataSetChanged();
 
             updateTips();
-
+            dealConversationRedTips();
         }
 
         @Override
         public void onConversationInsert(Contact contact, int insertIndex) {
             adapter.notifyDataSetChanged();
             updateTips();
+            dealConversationRedTips();
         }
 
         @Override
         public void onConversationMove(Contact contact, int fromIndex, int toIndex) {
             adapter.notifyDataSetChanged();
             updateTips();
+            dealConversationRedTips();
         }
 
         @Override
         public void onConversationRemoved(String conversationId) {
             adapter.notifyDataSetChanged();
             updateTips();
+            dealConversationRedTips();
         }
 
         @Override
         public void onConversationsRemoved(String[] conversationIds) {
             adapter.notifyDataSetChanged();
             updateTips();
+            dealConversationRedTips();
         }
     };
 
@@ -190,6 +195,7 @@ public class ConversationFragment extends Base2Fragment {
         dataProvider.registesObserver(dataObserver);
         if (dataProvider.isCompleted()) {
             showApapter();
+            dealConversationRedTips();
         }else {
             showLoadingStatus();
         }
@@ -253,6 +259,14 @@ public class ConversationFragment extends Base2Fragment {
                 break;
         }
 
+    }
+
+    private void dealConversationRedTips() {
+        int utotal = dataProvider.getUnreadTotal();
+        boolean show = utotal>0? true : false;
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity)getActivity()).conversationTips(show);
+        }
     }
 
     private void showMenu(View targetView) {

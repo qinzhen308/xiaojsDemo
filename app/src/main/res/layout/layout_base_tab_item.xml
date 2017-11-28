@@ -2,14 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="0dp"
              android:layout_weight="1"
-             android:layout_height="wrap_content">
+             android:layout_height="match_parent"
+        >
 
     <cn.xiaojs.xma.ui.widget.RedTipTextView
             android:id="@+id/base_tab_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/px10"
-            android:paddingBottom="@dimen/px10"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:drawablePadding="@dimen/px10"
