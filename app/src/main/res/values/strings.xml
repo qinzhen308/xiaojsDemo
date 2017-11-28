@@ -1079,5 +1079,7 @@
     <string name="no_permision_tips">您没有访问权限，请先加入教室</string>
     <string name="disband_classroom">解散教室</string>
 
+    <string name="whiteboard_cant_remove">当前正在使用，暂不能删除</string>
+
 
 </resources>

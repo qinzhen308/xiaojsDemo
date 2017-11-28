@@ -68,9 +68,19 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
     DataPageLoader<WhiteboardModel, CollectionPage<BoardItem>> dataPageLoader;
     Pagination mPagination;
 
+    String selectedId;
+
+
     public static final String EXTRA_SELECTED_BOARD_ID = "extra_selected_board_id";
     public static final String EXTRA_SELECTED_BOARD = "extra_selected_board";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+            selectedId=getArguments().getString(EXTRA_SELECTED_BOARD_ID);
+        }
+    }
 
     @Nullable
     @Override
@@ -176,6 +186,10 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
     }
 
     private void showDeleteBoardDialog(final int position, final WhiteboardModel data){
+        if(data.isSelected){
+            ToastUtil.showToast(getActivity(),R.string.whiteboard_cant_remove);
+            return;
+        }
         final CommonDialog dialog = new CommonDialog(getActivity());
         dialog.setDesc("是否删除白板“" + data.boardItem.title + "”？");
         dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
@@ -325,8 +339,13 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
             public List<WhiteboardModel> adaptData(CollectionPage<BoardItem> object) {
                 List<WhiteboardModel> dest = new ArrayList<>();
                 if (object != null && !ArrayUtil.isEmpty(object.objectsOfPage)) {
+                    WhiteboardModel model=null;
                     for (int i = 0; i < object.objectsOfPage.size(); i++) {
-                        dest.add(new WhiteboardModel(object.objectsOfPage.get(i)));
+                        model=new WhiteboardModel(object.objectsOfPage.get(i));
+                        if(model.boardItem.id.equals(selectedId)){
+                            model.isSelected=true;
+                        }
+                        dest.add(model);
                     }
                 }
                 return dest;

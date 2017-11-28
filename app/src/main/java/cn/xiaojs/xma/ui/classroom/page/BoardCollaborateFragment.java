@@ -408,7 +408,7 @@ public class BoardCollaborateFragment extends BaseFragment {
                 addToBackStack("dialog_fragment").
                 commitAllowingStateLoss();*/
 
-        WhiteboardManagerFragment fragment = WhiteboardManagerFragment.createInstance("");
+        WhiteboardManagerFragment fragment = WhiteboardManagerFragment.createInstance(boardId);
         fragment.setTargetFragment(this, CODE_OPEN_BOARD);
         //fragment.show(getChildFragmentManager(), "dialog_fragment");
         fragment.show(getFragmentManager(), "dialog_fragment");

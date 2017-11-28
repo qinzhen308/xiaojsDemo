@@ -495,7 +495,7 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
     }
 
     private void unFollow() {
-        if (mBean != null && !mBean.isFollowed) {//这里需要弹框选择分组
+        if (mBean != null && mBean.isFollowed) {
 
             Contact.MetIn metIn = new Contact.MetIn();
             metIn.subtype = isOrganization ? Collaboration.SubType.ORGANIZATION : Collaboration.SubType.PERSON;
@@ -566,8 +566,8 @@ public class PersonHomeActivity extends BaseScrollTabActivity implements BaseBus
             mScrollRightText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             mScrollRightText.setBackgroundResource(R.drawable.white_stoke_bg);
             mScrollRightText.setTextColor(getResources().getColor(R.color.font_orange));
+            mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg_corner);
         }
-        mScrollRightText.setBackgroundResource(R.drawable.orange_stoke_bg);
         mScrollMiddleText.setText(mPersonName);
     }
 
