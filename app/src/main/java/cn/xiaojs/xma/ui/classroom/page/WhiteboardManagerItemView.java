@@ -13,10 +13,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.data.ByteArrayFetcher;
+import com.bumptech.glide.load.data.DataFetcher;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GenericLoaderFactory;
+import com.bumptech.glide.load.model.ModelLoader;
+import com.bumptech.glide.load.model.ModelLoaderFactory;
+import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader;
+import com.bumptech.glide.load.model.stream.StreamByteArrayLoader;
+import com.bumptech.glide.load.model.stream.StreamModelLoader;
+
+import java.io.InputStream;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
+import cn.xiaojs.xma.common.glideextend.StreamBase64StringLoader;
 import cn.xiaojs.xma.common.pageload.EventCallback;
 import cn.xiaojs.xma.common.pageload.IEventer;
 import cn.xiaojs.xma.ui.lesson.xclass.view.IViewModel;
@@ -75,12 +89,17 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
             selector.setVisibility(GONE);
         }
         if(!TextUtils.isEmpty(mData.boardItem.snapshot)){
-            ivWhiteBoard.setImageBitmap(BitmapUtils.base64ToBitmapWithPrefix(mData.boardItem.snapshot));
+//            ivWhiteBoard.setImageBitmap(BitmapUtils.base64ToBitmapWithPrefix(mData.boardItem.snapshot));
+            Glide.with(getContext()).using(new StreamBase64StringLoader()).load(mData.boardItem.snapshot).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivWhiteBoard);
         }else {
             ivWhiteBoard.setImageDrawable(new ColorDrawable(Color.WHITE));
         }
         tvTitle.setText(mData.boardItem.title);
+
     }
+
+
+
 
 
     @OnClick({R.id.iv_white_board, R.id.btn_more})

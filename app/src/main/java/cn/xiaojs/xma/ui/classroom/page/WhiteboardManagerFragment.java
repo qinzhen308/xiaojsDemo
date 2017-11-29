@@ -167,6 +167,7 @@ public class WhiteboardManagerFragment extends BaseDialogFragment {
                     @Override
                     public void onSuccess(ResponseBody object) {
                         ToastUtil.showToast(getActivity(), "删除成功");
+                        rvWhiteboard.scrollToPosition(0);
                         dataPageLoader.refresh();
                     }
 

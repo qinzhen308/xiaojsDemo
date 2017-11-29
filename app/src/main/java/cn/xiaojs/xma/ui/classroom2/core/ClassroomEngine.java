@@ -684,6 +684,7 @@ public final class ClassroomEngine {
         if (roomRequest != null) {
             BoardSaveParams saving = new BoardSaveParams();
             saving.title = title;
+            saving.draft="null";
             roomRequest.saveBoard(getTicket(), board, saving, callback);
         }
     }

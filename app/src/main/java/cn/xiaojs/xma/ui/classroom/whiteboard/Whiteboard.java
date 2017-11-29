@@ -690,7 +690,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         }*/
 
         //6. draw border(selected doodle or selector)
-        if (!onViewChanged) {
+       /* if (!onViewChanged) {
             if (mCurrentMode == MODE_SELECTION) {
                 drawDoodleBorder(canvas, mSelector);
             } else {
@@ -699,7 +699,16 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 drawDoodleBorder(canvas, mDoodle);
                 canvas.restore();
             }
+        }*/
+        if (mCurrentMode == MODE_SELECTION) {
+            drawDoodleBorder(canvas, mSelector);
+        } else {
+            canvas.save();
+            canvas.concat(mDisplayMatrix);
+            drawDoodleBorder(canvas, mDoodle);
+            canvas.restore();
         }
+
 
     }
 
@@ -1499,6 +1508,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 break;
         }
 
+        if(pushPreviewBoardListener!=null){
+            onTouchPreview();
+        }
+
         String cmd = null;
         if (sb.length() > 0) {
             sb.append("#");
@@ -1711,6 +1724,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
                 if (mUndoRedoListener != null) {
                     mUndoRedoListener.onUndoRedoStackChanged();
                 }
+                if(pushPreviewBoardListener!=null){
+                    onTouchPreview();
+                }
             }
 
         }
@@ -1777,6 +1793,9 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
                 if (mUndoRedoListener != null) {
                     mUndoRedoListener.onUndoRedoStackChanged();
+                }
+                if(pushPreviewBoardListener!=null){
+                    onTouchPreview();
                 }
             }
 
@@ -2371,6 +2390,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
         Bitmap bm=getDrawingCache();
         if(bm!=null){
             bm=Bitmap.createBitmap(bm);
+            setDrawingCacheEnabled(false);
             return bm;
         }
         setDrawingCacheEnabled(false);
