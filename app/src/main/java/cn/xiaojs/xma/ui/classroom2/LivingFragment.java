@@ -41,6 +41,7 @@ import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.MediaFeedbackReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
 import cn.xiaojs.xma.model.socket.room.StreamStopReceive;
+import cn.xiaojs.xma.model.socket.room.SyncStateReceive;
 import cn.xiaojs.xma.model.socket.room.Talk;
 import cn.xiaojs.xma.ui.classroom.page.BoardScreenshotFragment;
 import cn.xiaojs.xma.ui.classroom.page.OnPhotoDoodleShareListener;
@@ -106,6 +107,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     private int frontViewIndex = 5; //如果动了XML中的布局，需要更新此index
     private int backViewIndex = 0;
 
+    private boolean finishByTeacher;
+
 
     @Nullable
     @Override
@@ -140,7 +143,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         videoStreamView.setCloseViewVisibility(View.GONE);
 
         livingObserver = classroomEngine.observerLiving(receivedConsumer);
-        classroomEngine.setLiveTimerObserver(livingObserver);
+        classroomEngine.addLiveTimerObserver(livingObserver);
 
         config4Preview();
     }
@@ -210,13 +213,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        destoryAutotimer();
-        destoryO2otimer();
-
-        if (livingObserver != null) {
-            livingObserver.dispose();
-        }
+        handleDestory();
     }
 
     @Override
@@ -313,7 +310,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void onTopbackClick(View view, boolean land) {
-        back();
+        dealBack(false);
     }
 
 
@@ -325,7 +322,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void onStartOrStopLiveClick(View view) {
-        back();
+
+        dealBack(true);
     }
 
     @Override
@@ -396,7 +394,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     protected void controlHandleOnRotate(int orientation) {
         switch (orientation) {
             case Configuration.ORIENTATION_PORTRAIT:
-                handleBack();
+                dealBack(false);
                 break;
         }
     }
@@ -416,6 +414,11 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 //        String totalStr = TimeUtil.formatSecondTime(liveDur);
 //        String livetimeStr = TimeUtil.formatSecondTime(liveTime);
 //        lTopRoominfoView.setText(livetimeStr + "/" + totalStr + "  " + memCount + "人观看");
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the received live time:%d", liveTime);
+        }
+
 
         String livetimeStr = TimeUtil.formatSecondTime(liveTime);
         String otherStr = livetimeStr + "  (" + memCount + "人)";
@@ -438,33 +441,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     @Override
     public void back() {
-
-        if (Live.LiveSessionState.LIVE.equals(classroomEngine.getLiveState())
-                && classroomEngine.getIdentityInLesson() == CTLConstant.UserIdentity.LEAD) {
-            showFinishClassDlg();
-            return;
-        }
-
-        Toast.makeText(getContext(), "您的直播已结束", Toast.LENGTH_SHORT).show();
-
-        handleBack();
-
-
-    }
-
-    private void handleBack() {
-
-        classroomEngine.cannelLiveTimerObserver();
-
-        if (one2oneAttendee != null) {
-            stopPlay(true);
-        }
-
-        stopStreaming();
-
-        changeOrientation();
-        enterIdle();
-        sendStopStreaming();
+        dealBack(false);
     }
 
     @Override
@@ -472,6 +449,149 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         loadTalk();
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // back
+    //
+
+    private void handleDestory(){
+        destoryAutotimer();
+        destoryO2otimer();
+
+        classroomEngine.removeLiveTimerObserver(livingObserver);
+
+        if (livingObserver != null) {
+            livingObserver.dispose();
+        }
+
+    }
+
+    private void dealBack(boolean finishOrStop) {
+        if (finishOrStop) {
+            if (Live.LiveSessionState.LIVE.equals(classroomEngine.getLiveState())
+                    && classroomEngine.getIdentityInLesson() == CTLConstant.UserIdentity.LEAD) {
+                showFinishClassDlg();
+                return;
+            }
+            classroomEngine.stopLiveTimerObserver();
+            handleBack(Live.StreamType.INDIVIDUAL);
+        } else {
+            if (Live.LiveSessionState.LIVE.equals(classroomEngine.getLiveState())) {
+                showExitLessoningClassDlg();
+                return;
+            }
+            showExitLivingDlg();
+        }
+    }
+
+
+    private void handleBack(int streamType) {
+
+        Toast.makeText(getContext(), "您的直播已结束", Toast.LENGTH_SHORT).show();
+
+        if (one2oneAttendee != null) {
+            stopPlay(true);
+        }
+
+        handleDestory();
+
+        stopStreaming();
+
+        changeOrientation();
+        enterIdle();
+        sendStopStreaming(streamType);
+    }
+
+    protected void showFinishClassDlg() {
+
+        final CommonDialog finishDialog = new CommonDialog(getContext());
+        finishDialog.setTitle(R.string.finish_classroom);
+        finishDialog.setDesc(R.string.finish_classroom_tips);
+        finishDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                finishDialog.dismiss();
+            }
+        });
+
+        finishDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                finishDialog.dismiss();
+                requestFinishClass();
+            }
+        });
+
+        finishDialog.show();
+    }
+
+    protected void showExitLessoningClassDlg() {
+
+        final CommonDialog dialog = new CommonDialog(getContext());
+        if (one2oneAttendee != null) {
+            dialog.setDesc("若退出，本节课将暂停且课堂互动自动结束？");
+        } else {
+            dialog.setDesc("若退出，本节课将暂停且课堂互动自动结束？");
+        }
+
+        dialog.setRightBtnText("取消");
+        dialog.setLefBtnText("确定");
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                handleBack(Live.StreamType.LIVE);
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+
+    protected void showExitLivingDlg() {
+
+        final CommonDialog dialog = new CommonDialog(getContext());
+        if (one2oneAttendee != null) {
+            dialog.setDesc("若退出，本次直播及互动将自动结束？");
+        } else {
+            dialog.setDesc("若退出，本次直播将自动结束？");
+        }
+
+        dialog.setRightBtnText("取消");
+        dialog.setLefBtnText("确定");
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+
+                classroomEngine.stopLiveTimerObserver();
+                handleBack(Live.StreamType.INDIVIDUAL);
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void bringToBack(BaseLiveView target) {
         target.setControlEnabled(false);
@@ -543,6 +663,8 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
     private void configStopButton() {
 
+        startOrStopLiveView.setBackgroundResource(R.drawable.class_dismiss_over);
+
         if (classroomEngine.getLiveState().equals(Live.LiveSessionState.LIVE)) {
             startOrStopLiveView.setText("下课");
         } else {
@@ -578,44 +700,25 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
     // 下课
     //
 
-    protected void showFinishClassDlg() {
-
-        final CommonDialog finishDialog = new CommonDialog(getContext());
-        finishDialog.setTitle(R.string.finish_classroom);
-        finishDialog.setDesc(R.string.finish_classroom_tips);
-        finishDialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
-            @Override
-            public void onClick() {
-                finishDialog.dismiss();
-            }
-        });
-
-        finishDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
-            @Override
-            public void onClick() {
-                finishDialog.dismiss();
-                requestFinishClass();
-            }
-        });
-
-        finishDialog.show();
-    }
-
     protected void requestFinishClass() {
-
+        finishByTeacher = true;
         showProgress(true);
         classroomEngine.finishClass(classroomEngine.getTicket(),
                 new APIServiceCallback<ResponseBody>() {
                     @Override
                     public void onSuccess(ResponseBody object) {
+
+
+
                         cancelProgress();
-                        handleBack();
+                        handleBack(Live.StreamType.LIVE);
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
                         cancelProgress();
                         ToastUtil.showToast(getContext(), errorMessage);
+                        finishByTeacher = false;
                     }
                 });
     }
@@ -657,7 +760,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
 
                 startO2oTimer();
 
-                Toast.makeText(getContext(), "正在等待对方接受邀请…",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "正在等待对方接受邀请…", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -756,7 +859,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                 && !TextUtils.isEmpty(streamStopReceive.deprivedBy)) {
             streamDeprivedBy = streamStopReceive.deprivedBy;
 
-            classroomEngine.cannelLiveTimerObserver();
+            classroomEngine.stopLiveTimerObserver();
 
             Attendee attendee = classroomEngine.getMember(streamDeprivedBy);
             if (attendee == null) {
@@ -773,7 +876,7 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         if (!TextUtils.isEmpty(streamDeprivedBy)
                 && streamDeprivedBy.equals(streamStartReceive.claimedBy)) {
 
-            classroomEngine.cannelLiveTimerObserver();
+            classroomEngine.stopLiveTimerObserver();
             enterPlay();
         }
     }
@@ -809,6 +912,21 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
         tipsDialog.show();
     }
 
+    private void handleSyncState(SyncStateReceive syncStateReceive) {
+
+        if (syncStateReceive == null || finishByTeacher)
+            return;
+
+        if (Live.LiveSessionState.LIVE.equals(syncStateReceive.from)
+                && Live.LiveSessionState.FINISHED.equals(syncStateReceive.to)) {
+            Toast.makeText(getContext(), "此课已到下课的时间了，系统已为您自动下课～", Toast.LENGTH_LONG).show();
+
+            handleDestory();
+            enterIdle();
+        }
+
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 事件监听
@@ -839,6 +957,10 @@ public class LivingFragment extends AVFragment implements ChatAdapter.FetchMoreL
                     break;
                 case Su.EventType.STREAMING_STARTED:
                     handleStreamStart((StreamStartReceive) eventReceived.t);
+                    break;
+                case Su.EventType.SYNC_STATE:
+                    SyncStateReceive syncStateReceive = (SyncStateReceive) eventReceived.t;
+                    handleSyncState(syncStateReceive);
                     break;
                 case Su.EventType.JOIN:
                 case Su.EventType.LEAVE:

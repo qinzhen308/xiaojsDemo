@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +27,9 @@ import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.XiaojsConfig;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
 import cn.xiaojs.xma.model.socket.room.StreamStartReceive;
@@ -39,6 +42,7 @@ import cn.xiaojs.xma.ui.classroom2.core.EventListener;
 import cn.xiaojs.xma.ui.classroom2.live.filter.IFilter;
 import cn.xiaojs.xma.ui.classroom2.util.TimeUtil;
 import cn.xiaojs.xma.ui.lesson.xclass.util.ScheduleUtil;
+import cn.xiaojs.xma.ui.widget.CircleTransform;
 import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.StringUtil;
 import cn.xiaojs.xma.util.ToastUtil;
@@ -78,6 +82,11 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     private Observable<Long> durationObservable;
     private Disposable timerDisposable;
 
+    private int memCount;
+    private long reserveliveTime;
+
+    private boolean fromLivingFragment;
+
 
     @Nullable
     @Override
@@ -103,17 +112,14 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
             e.printStackTrace();
         }
 
-        checkLiveLesson();
-
-
         initTalkData(this);
 
         initDefaultBoard();
+
         idleObserver = classroomEngine.observerIdle(receivedConsumer);
+        checkLiveLesson();
 
         config4Preview();
-
-
     }
 
     @OnClick({R.id.lessontip_start, R.id.lessontip_lay})
@@ -149,6 +155,9 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        classroomEngine.removeLiveTimerObserver(idleObserver);
+
         if (idleObserver != null) {
             idleObserver.dispose();
         }
@@ -285,6 +294,14 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
 
     }
 
+    @Override
+    public void onUpdateMembersCount(int count) {
+        super.onUpdateMembersCount(count);
+        memCount = count;
+        updateRoomInfo();
+
+    }
+
 
     public void onStartOrStopLiveClick(View view) {
 
@@ -349,7 +366,6 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
     }
 
 
-
     private void checkLiveLesson() {
         if (needLiveLesson()) {
 
@@ -360,13 +376,51 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
             lessonTipsDescView.setVisibility(View.GONE);
             lessonTipsDesctimeView.setVisibility(View.GONE);
             lessonTipsStartView.setVisibility(View.VISIBLE);
-
             lessonTipsLayout.setVisibility(View.VISIBLE);
+
+
+            pBottomAnimationView.setVisibility(View.VISIBLE);
+            Glide.with(getContext())
+                    .load(AccountDataManager.getAccountID(getContext()))
+                    .transform(new CircleTransform(getContext()))
+                    .placeholder(R.drawable.ic_defaultavatar)
+                    .error(R.drawable.ic_defaultavatar)
+                    .into(pBottomAvatorView);
+            pBottomAvatorView.setVisibility(View.VISIBLE);
+
+            pBottomClassnameView.setText(classroomEngine.getRoomTitle());
+
+            pBottomClassOtherView.setVisibility(View.VISIBLE);
+
+            requestUpdateMemberCount();
+
+
             showLivingClassDlg();
+
+            classroomEngine.addLiveTimerObserver(idleObserver);
         }
     }
 
+    private void updateRoomInfo() {
+
+        if (XiaojsConfig.DEBUG) {
+            Logger.d("the received reserveliveTime:%d", reserveliveTime);
+        }
+
+        String livetimeStr = TimeUtil.formatSecondTime(reserveliveTime);
+        String otherStr = livetimeStr + "  (" + memCount + "人)";
+        pBottomClassOtherView.setText(otherStr);
+
+    }
+
+    public void setFromLivingFragment(boolean fromLivingFragment) {
+        this.fromLivingFragment = fromLivingFragment;
+    }
+
     protected void showLivingClassDlg() {
+
+        if (fromLivingFragment)
+            return;
 
         final CommonDialog dialog = new CommonDialog(getContext());
         dialog.setDesc("您有一节直播课还未结束，是否继续上课？");
@@ -433,9 +487,17 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
             lessonTipsStartView.setVisibility(View.GONE);
             lessonTipsLayout.setVisibility(View.VISIBLE);
 
+            pBottomAnimationView.setVisibility(View.GONE);
+            pBottomAvatorView.setVisibility(View.GONE);
+            pBottomClassOtherView.setVisibility(View.GONE);
+
 
         } else {
             lessonTipsLayout.setVisibility(View.GONE);
+
+            pBottomAnimationView.setVisibility(View.GONE);
+            pBottomAvatorView.setVisibility(View.GONE);
+            pBottomClassOtherView.setVisibility(View.GONE);
         }
 
     }
@@ -570,6 +632,12 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                     try {
                         updateLessonTips();
                         configStartOrPausedLiveButton();
+
+                        if (!needLiveLesson()) {
+                            classroomEngine.removeLiveTimerObserver(idleObserver);
+                        }
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -582,6 +650,14 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                     Talk talk = (Talk) eventReceived.t;
                     //TODO fix同一条消息多次回调?
                     handleReceivedMsg(talk);
+                    break;
+                case Su.EventType.JOIN:
+                case Su.EventType.LEAVE:
+                    requestUpdateMemberCount();
+                    break;
+                case Su.EventType.TIME_UPDATE:
+                    reserveliveTime = eventReceived.value2;
+                    updateRoomInfo();
                     break;
             }
         }

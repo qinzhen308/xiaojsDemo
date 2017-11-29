@@ -91,6 +91,7 @@ public class CTLConstant {
         public static final int TYPE_MOBILE= 2;                      //gprs/2/3/4/5G
     }
 
+    @Deprecated
     public static class StreamingType {
         public static final int PLAY_LIVE= 1;                        //播放流
         public static final int PUBLISH_LIVE= 2;                     //直播推流

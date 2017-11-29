@@ -1359,9 +1359,9 @@ public abstract class MovieFragment extends BaseRoomFragment
     }
 
 
-    public void sendStopStreaming() {
+    public void sendStopStreaming(int streamType) {
 
-        classroomEngine.stopStreaming(Live.StreamType.INDIVIDUAL,
+        classroomEngine.stopStreaming(streamType,
                 classroomEngine.getCsOfCurrent(), new EventCallback<StreamStoppedResponse>() {
                     @Override
                     public void onSuccess(StreamStoppedResponse streamStoppedResponse) {

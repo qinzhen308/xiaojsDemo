@@ -82,10 +82,10 @@ public final class RoomRequest {
                               String csOfCurrent,
                               final EventCallback<StreamStoppedResponse> callback) {
 
-        if (streamType == CTLConstant.StreamingType.PUBLISH_INDIVIDUAL) {
+        if (streamType == Live.StreamType.INDIVIDUAL) {
             stateMachine.getSession().individualStreamDuration = 0;
             stateMachine.getSession().ctlSession.finishOn = 0;
-            stateMachine.getLiveTimerObserver().stopObserver();
+            stateMachine.getLiveTimerObserver().stopObserverNow();
             stateMachine.stopLiveShow();
         }
 

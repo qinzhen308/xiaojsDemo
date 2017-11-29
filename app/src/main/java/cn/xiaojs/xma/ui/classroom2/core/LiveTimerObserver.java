@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2.core;
 
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import cn.xiaojs.xma.XiaojsConfig;
@@ -26,10 +27,20 @@ public class LiveTimerObserver {
     private Observable<Long> observable;
     private Disposable disposable;
 
-    private OnTimeChangedListener timeChangedListener;
+    private ArrayList<OnTimeChangedListener> timeChangedListeners;
 
-    public void setOnTimeChangedListener(OnTimeChangedListener timeChangedListener) {
-        this.timeChangedListener = timeChangedListener;
+    public void addOnTimeChangedListener(OnTimeChangedListener timeChangedListener) {
+        if (timeChangedListeners == null) {
+            timeChangedListeners = new ArrayList<>();
+        }
+        timeChangedListeners.add(timeChangedListener);
+    }
+
+    public void removeOnTimeChangedListener(OnTimeChangedListener timeChangedListener) {
+        if (timeChangedListeners == null) {
+            return;
+        }
+        timeChangedListeners.remove(timeChangedListener);
     }
 
 
@@ -40,13 +51,13 @@ public class LiveTimerObserver {
 
     public void startCounter() {
 
-        stopObserver();
+        stopObserverNow();
 
         long taketime = stateMachine.getSession().ctlSession.finishOn;
 
         if (stateMachine.getLiveState().equals(Live.LiveSessionState.LIVE)
                 && stateMachine.getIdentityInLesson() == CTLConstant.UserIdentity.LEAD
-                && stateMachine.getSession().ctlSession.ctl !=null) {
+                && stateMachine.getSession().ctlSession.ctl != null) {
             long dur = stateMachine.getSession().ctlSession.ctl.duration;
             if (dur > 0) {
                 taketime = dur * 60;
@@ -73,9 +84,11 @@ public class LiveTimerObserver {
                         }
 
                         stateMachine.getSession().ctlSession.finishOn = finishOn;
+                        if (timeChangedListeners != null) {
+                            for (OnTimeChangedListener timeChanged : timeChangedListeners) {
+                                timeChanged.onTimeChanged(aLong, finishOn);
+                            }
 
-                        if (timeChangedListener != null) {
-                            timeChangedListener.onTimeChanged(aLong,finishOn);
                         }
 
 
@@ -84,7 +97,7 @@ public class LiveTimerObserver {
 
     }
 
-    public void stopObserver() {
+    public void stopObserverNow() {
         if (disposable != null) {
             disposable.dispose();
             disposable = null;
@@ -92,7 +105,11 @@ public class LiveTimerObserver {
     }
 
     public void destoryObserver() {
-        stopObserver();
+        stopObserverNow();
+        if (timeChangedListeners !=null) {
+            timeChangedListeners.clear();
+            timeChangedListeners = null;
+        }
         stateMachine = null;
     }
 }

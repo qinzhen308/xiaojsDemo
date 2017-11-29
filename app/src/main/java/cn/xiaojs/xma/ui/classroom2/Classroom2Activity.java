@@ -247,7 +247,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(classroomEngine!=null){
+        if (classroomEngine != null) {
             classroomEngine.unObserveSessionData(dataObserver);
         }
 
@@ -357,7 +357,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         classroomEngine = ClassroomEngine.getEngine();
 
         RoomSession roomSession = new RoomSession(bootSession);
-        classroomEngine.init(this, bootSession.ctlSession.ticket,roomSession);
+        classroomEngine.init(this, bootSession.ctlSession.ticket, roomSession);
 
 
         String state = classroomEngine.getLiveState();
@@ -568,7 +568,7 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     }
 
     public void showNeedLiveLessonToast() {
-        Toast.makeText(this,"您有一节课还未下课",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "您有一节课还未下课", Toast.LENGTH_SHORT).show();
     }
 
     private void showConnectClassroom(String errorTips) {
@@ -669,11 +669,17 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         removeOldFragment(fragmentTransaction);
 
-        movieFragment = new IdleFragment();
+        IdleFragment idleFragment = new IdleFragment();
+
+        if (movieFragment != null && movieFragment instanceof LivingFragment) {
+            idleFragment.setFromLivingFragment(true);
+        }
+
+        movieFragment = idleFragment;
+
         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, 0)
                 .add(R.id.replace_lay, movieFragment)
                 .commitAllowingStateLoss();
-
 
     }
 
@@ -838,7 +844,6 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                 break;
         }
     }
-
 
 
     public void showO2oPanel(Attendee attendee) {
