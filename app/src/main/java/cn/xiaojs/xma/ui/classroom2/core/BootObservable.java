@@ -111,7 +111,6 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                 socketManager.disConnect();
             }
 
-
             cancelBoot();
             offTimout();
             offSocket();
