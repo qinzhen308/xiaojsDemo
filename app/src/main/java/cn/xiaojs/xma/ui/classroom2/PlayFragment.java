@@ -135,7 +135,7 @@ public class PlayFragment extends MovieFragment
         videoView.startPlay(classroomEngine.getPlayUrl());
 
         playLiveObserver = classroomEngine.observerPlaylive(receivedConsumer);
-        classroomEngine.setLiveTimerObserver(playLiveObserver);
+        classroomEngine.addLiveTimerObserver(playLiveObserver);
 
         config4Preview();
     }
@@ -173,6 +173,8 @@ public class PlayFragment extends MovieFragment
         }
 
         destoryAutotimer();
+
+        classroomEngine.removeLiveTimerObserver(playLiveObserver);
 
         if (playLiveObserver != null) {
             playLiveObserver.dispose();
@@ -277,11 +279,12 @@ public class PlayFragment extends MovieFragment
     @Override
     public void back() {
 
-        if (o2oAttendee != null) {
-            onLiveViewClosed(streamView);
+        if (o2oAttendee != null && UIUtils.isLandspace(getContext())) {
+            showContineDlg();
+            return;
         }
 
-        super.back();
+        handleBack();
     }
 
     @Override
@@ -323,7 +326,7 @@ public class PlayFragment extends MovieFragment
 
             closeStreaming();
             sendCloseMedia(o2oAttendee.accountId);
-            sendStopStreaming();
+            sendStopStreaming(Live.StreamType.INDIVIDUAL);
         }
 
     }
@@ -354,6 +357,14 @@ public class PlayFragment extends MovieFragment
         memCount = count;
         updateRoomInfo();
 
+    }
+
+    private void handleBack() {
+        if (o2oAttendee != null) {
+            onLiveViewClosed(streamView);
+        }
+
+        super.back();
     }
 
     private void bringToBack(BaseLiveView target) {
@@ -476,6 +487,36 @@ public class PlayFragment extends MovieFragment
             controlAutotimer = null;
         }
     }
+
+
+    protected void showContineDlg() {
+
+        final CommonDialog dialog = new CommonDialog(getContext());
+        dialog.setDesc("若退出，您参与的互动将结束？");
+
+        dialog.setRightBtnText("取消");
+        dialog.setLefBtnText("确定");
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnLeftClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+                handleBack();
+
+            }
+        });
+
+        dialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 响应1队1
@@ -662,7 +703,7 @@ public class PlayFragment extends MovieFragment
             return;//老师自己抢占别人的直播，会收到流停止事件，此时不需处理；
         }
 
-        classroomEngine.cannelLiveTimerObserver();
+        classroomEngine.stopLiveTimerObserver();
 
         enterIdle();
     }
@@ -702,11 +743,11 @@ public class PlayFragment extends MovieFragment
                     handleSyncState(syncStateReceive);
                     break;
                 case Su.EventType.STREAM_RECLAIMED:
-                    classroomEngine.cannelLiveTimerObserver();
+                    classroomEngine.stopLiveTimerObserver();
                     enterIdle();
                     break;
                 case Su.EventType.STOP_STREAM_BY_EXPIRATION:
-                    classroomEngine.cannelLiveTimerObserver();
+                    classroomEngine.stopLiveTimerObserver();
                     enterIdle();
                     break;
                 case Su.EventType.STREAMING_STOPPED:

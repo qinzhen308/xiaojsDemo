@@ -501,9 +501,16 @@ public abstract class ClassroomStateMachine extends StateMachine {
         switchStateWhenReceiveSyncState(message.to);
 
         if (Live.LiveSessionState.LIVE.equals(message.to)) {
+            CtlSession ctlSession = roomSession.ctlSession;
+            if (message.timeline != null) {
+                ctlSession.finishOn = message.timeline.finishOn;
+            }
             liveTimerObserver.startCounter();
         } else if (Live.LiveSessionState.FINISHED.equals(message.to)) {
-            liveTimerObserver.stopObserver();
+            liveTimerObserver.stopObserverNow();
+        } else if (Live.LiveSessionState.SCHEDULED.equals(message.to)) {
+
+
         }
 
     }

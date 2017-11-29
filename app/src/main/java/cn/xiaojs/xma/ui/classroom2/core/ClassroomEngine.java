@@ -650,12 +650,16 @@ public final class ClassroomEngine {
         return elRoom;
     }
 
-    public void setLiveTimerObserver(LiveTimerObserver.OnTimeChangedListener listener) {
-        stateMachine.getLiveTimerObserver().setOnTimeChangedListener(listener);
+    public void addLiveTimerObserver(LiveTimerObserver.OnTimeChangedListener listener) {
+        stateMachine.getLiveTimerObserver().addOnTimeChangedListener(listener);
     }
 
-    public void cannelLiveTimerObserver() {
-        stateMachine.getLiveTimerObserver().stopObserver();
+    public void removeLiveTimerObserver(LiveTimerObserver.OnTimeChangedListener listener) {
+        stateMachine.getLiveTimerObserver().removeOnTimeChangedListener(listener);
+    }
+
+    public void stopLiveTimerObserver() {
+        stateMachine.getLiveTimerObserver().stopObserverNow();
     }
 
 

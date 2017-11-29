@@ -211,6 +211,10 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
                     Su.EventType.STREAMING_STARTED, StreamStartReceive.class, this));
             socketListeners.add(EventManager.onEvent(context,
                     Su.EventCategory.LIVE, Su.EventType.TALK, Talk.class, this));
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.LEAVE, Talk.class, this));
+            socketListeners.add(EventManager.onEvent(context,
+                    Su.EventCategory.LIVE, Su.EventType.JOIN, Talk.class, this));
         }
 
     }

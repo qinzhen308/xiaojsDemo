@@ -107,7 +107,9 @@ public class BootObservable extends Observable<BootObservable.BootSession> {
                 Logger.d("BootListener dispose now!");
             }
 
-            socketManager.disConnect();
+            if (socketManager !=null) {
+                socketManager.disConnect();
+            }
 
             cancelBoot();
             offTimout();

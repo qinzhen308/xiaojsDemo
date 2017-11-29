@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
+import cn.xiaojs.xma.common.emoji.Emojicon;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Error;
 import cn.xiaojs.xma.model.ctl.Price;
@@ -309,11 +310,14 @@ public class ExampleUnitTest {
 //        observable.subscribe(observer1);
 //        observable.subscribe(observer2);
 
-        String name = TextComparator.getLeadingUp("我的");
-        System.out.println("fuck---:" + name);
-        String name1 = TextComparator.getLeadingUp("hello");
-        System.out.println("fuck1---:" + name1);
+//        String name = TextComparator.getLeadingUp("我的");
+//        System.out.println("fuck---:" + name);
+//        String name1 = TextComparator.getLeadingUp("hello");
+//        System.out.println("fuck1---:" + name1);
 
+        Emojicon emojicon = Emojicon.fromCodePoint(0x1f340);
+
+        System.out.println("dddd code:" + emojicon.getEmoji());
     }
 
     private Observer<String> observer1 = new Observer<String>() {
