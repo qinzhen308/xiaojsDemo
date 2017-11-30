@@ -119,7 +119,7 @@ public class ScanQrcodeActivity extends QrCodeActivity {
      * @param data
      */
     private void checkJoinClassStateAndEnterClassroom(final String data){
-        /*if(true){
+       /* if(true){
             String url=null;
             if(data.contains("?")){
                 url=data+"&app=android";
