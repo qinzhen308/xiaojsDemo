@@ -47,7 +47,7 @@
             android:id="@+id/btn_join"
             android:layout_width="@dimen/px90"
             android:layout_height="@dimen/px90"
-            android:background="@drawable/orange_round_bg"
+            android:background="@drawable/orange_oval_bg"
             android:text="加入"
             android:textColor="@color/font_white"
             android:textSize="@dimen/font_26px"

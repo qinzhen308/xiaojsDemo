@@ -1347,6 +1347,9 @@ public abstract class MovieFragment extends BaseRoomFragment
             @Override
             public void onSuccess(EventResponse response) {
 
+                if (getContext() == null)
+                    return;
+
                 Toast.makeText(getContext(), "直播已开始", Toast.LENGTH_SHORT).show();
 
             }
