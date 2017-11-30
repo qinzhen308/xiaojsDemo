@@ -434,6 +434,8 @@ public class ApiManager {
         if (channel.equals(XiaojsConfig.CHANNEL_ENV_DEVTEST)) {
             String port = XiaojsConfig.XMS_PORT;
             baseUrl = createUrl(context,port);
+        }else if(channel.equals(XiaojsConfig.CHANNEL_ENV_PRE)){
+            baseUrl = XiaojsConfig.XMS_PRE_BASE_URL;
         }else {
             baseUrl = XiaojsConfig.XMS_BASE_URL;
         }

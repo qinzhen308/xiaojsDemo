@@ -68,6 +68,8 @@ public class XiaojsConfig {
     public static String XAS_PRE_BASE_URL = "http://xastest.xiaojs.cn";
     //XLS
     public static String XLS_PRE_BASE_URL = "http://xlstest.xiaojs.cn";
+    //XMS
+    public static String XMS_PRE_BASE_URL = "http://xmstest.xiaojs.cn";
 
     //七牛存储空间
     //华东:存储空间列表(图片和文档存储)Bucket (xiaojs-test) 测试域名:
