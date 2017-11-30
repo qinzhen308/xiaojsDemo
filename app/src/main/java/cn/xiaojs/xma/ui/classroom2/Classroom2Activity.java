@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -45,10 +46,16 @@ import cn.xiaojs.xma.common.permissiongen.PermissionHelper;
 import cn.xiaojs.xma.common.permissiongen.PermissionRationale;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Account;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.data.DataChangeHelper;
+import cn.xiaojs.xma.data.LessonDataManager;
+import cn.xiaojs.xma.data.SimpleDataChangeListener;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
 import cn.xiaojs.xma.data.api.socket.SocketManager;
+import cn.xiaojs.xma.model.ctl.JoinClassParams;
+import cn.xiaojs.xma.model.ctl.JoinResponse;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.material.LibDoc;
+import cn.xiaojs.xma.ui.MainActivity;
 import cn.xiaojs.xma.ui.classroom.page.BoardCollaborateFragment;
 import cn.xiaojs.xma.ui.classroom.page.IBoardDocManager;
 import cn.xiaojs.xma.ui.classroom.page.IBoardManager;
@@ -99,6 +106,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @BindView(R.id.o2o_outtime)
     TextView o2oOuttimeView;
 
+    @BindView(R.id.btn_join)
+    TextView joinbtnView;
+
     private ChatFragment chatFragment;
     private DatabaseFragment databaseFragment;
 
@@ -111,13 +121,40 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     private CommonDialog mKickOutDialog;
     private CommonDialog mContinueConnectDialog;
 
-
     private ClassroomEngine classroomEngine;
+
+    private boolean willToFinish;
+
 
     private SessionDataObserver dataObserver = new SessionDataObserver() {
         @Override
         public void onYouRemovedFromCurrentClass() {
             handleRemovedOut();
+        }
+
+        @Override
+        public void onYouJoinedCurrentClass() {
+            handleYouJoined();
+        }
+
+        @Override
+        public void onKickoutByLeft() {
+            handleRemovedOut();
+        }
+
+        @Override
+        public void onKickoutByLogout() {
+            handleKickedOutByLogout();
+        }
+
+        @Override
+        public void onKickoutByConsttraint() {
+            handleKickedOut();
+        }
+
+        @Override
+        public void onClosePreviewByClassOver() {
+            handleClosePreview();
         }
     };
 
@@ -186,7 +223,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         onBootlistener(initTicket);
     }
 
-    @OnClick({R.id.bottom_input, R.id.bottom_members, R.id.bottom_database, R.id.bottom_schedule})
+    @OnClick({R.id.bottom_input,
+            R.id.bottom_members, R.id.bottom_database, R.id.bottom_schedule, R.id.btn_join})
     void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.bottom_input:
@@ -200,6 +238,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                 break;
             case R.id.bottom_schedule:              //课表
                 popClassSchedule();
+                break;
+            case R.id.btn_join:
+                toJoin();
                 break;
         }
     }
@@ -245,8 +286,15 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     }
 
     @Override
+    public void finish() {
+        willToFinish = true;
+        super.finish();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+
         if (classroomEngine != null) {
             classroomEngine.unObserveSessionData(dataObserver);
         }
@@ -384,6 +432,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             showPreviewTips();
         }
 
+        //如果游客进入教室，允许游客加入此班级
+        checkVistor();
     }
 
     private void handleConnectError() {
@@ -391,9 +441,21 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         showConnectClassroom("");
     }
 
+    private void handleYouJoined() {
+        Toast.makeText(Classroom2Activity.this,
+                "您已经成功加入教室，为您重新刷新教室", Toast.LENGTH_LONG).show();
+        onBootlistener(initTicket);
+    }
+
     private void handleKickedOut() {
         Toast.makeText(Classroom2Activity.this,
-                R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
+                "您账号已经在其它端进入了教室", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private void handleKickedOutByLogout() {
+        Toast.makeText(Classroom2Activity.this,
+                "您已登出了教室", Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -402,6 +464,14 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         Toast.makeText(Classroom2Activity.this,
                 "您已被教室管理者移除，不再是该教室成员", Toast.LENGTH_LONG).show();
         finish();
+    }
+
+    private void handleClosePreview() {
+        if (classroomEngine.isPreview()) {
+            Toast.makeText(Classroom2Activity.this,
+                    "课已结束，您已退出预览模式了", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -577,6 +647,10 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             if (isDestroyed()) {
                 return;
             }
+        }
+
+        if (willToFinish) {
+            return;
         }
 
         if (mContinueConnectDialog == null) {
@@ -826,6 +900,61 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
             databaseFragment.dismiss();
         }
 
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 游客
+    //
+
+    private void checkVistor() {
+        if (classroomEngine.isVistor()) {
+            joinbtnView.setVisibility(View.VISIBLE);
+        }else {
+            joinbtnView.setVisibility(View.GONE);
+        }
+    }
+
+    private void toJoin() {
+
+        JoinClassParams params=new JoinClassParams();
+        //params.remarks=msg;
+        String clsId = classroomEngine.getCtlSession().cls.id;
+        showProgress(true);
+        LessonDataManager.joinClass(this, clsId,params, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+                cancelProgress();
+                JoinResponse joinResponse = getJoinResponse(object);
+                if (joinResponse !=null && !TextUtils.isEmpty(joinResponse.id)) {
+                    //此班是需要申请验证才能加入的班
+                    Toast.makeText(Classroom2Activity.this, "您已提交申请，请等待班主任确认", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Toast.makeText(Classroom2Activity.this, "加入成功", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                cancelProgress();
+                Toast.makeText(Classroom2Activity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private JoinResponse getJoinResponse(ResponseBody body) {
+        JoinResponse response = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = body.string();
+            response = mapper.readValue(json, JoinResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

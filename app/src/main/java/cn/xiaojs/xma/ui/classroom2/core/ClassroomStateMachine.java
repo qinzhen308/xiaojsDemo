@@ -2,6 +2,7 @@ package cn.xiaojs.xma.ui.classroom2.core;
 
 import android.content.Context;
 import android.os.Message;
+import android.text.TextUtils;
 
 
 import com.orhanobut.logger.Logger;
@@ -22,6 +23,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
+import cn.xiaojs.xma.model.socket.KickoutByLeftReceived;
 import cn.xiaojs.xma.model.socket.SyncClassesReceived;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
@@ -214,9 +216,14 @@ public abstract class ClassroomStateMachine extends StateMachine {
 
     public void offlineMember(Attendee attendee) {
         if (roomSession.classMembers != null) {
+
             Attendee a = roomSession.classMembers.get(attendee.accountId);
             if (a != null) {
                 a.xa = 0;
+                if (!TextUtils.isEmpty(attendee.psType)
+                        && ClassroomUtil.getUserIdentity(attendee.psType) == CTLConstant.UserIdentity.VISITOR) {
+                    removeMember(a.accountId);
+                }
             }
         }
     }
@@ -295,10 +302,20 @@ public abstract class ClassroomStateMachine extends StateMachine {
                             observer.onYouRemovedFromCurrentClass();
                         }
                     }
-
                     exit = true;
+                    break;
                 }
-                break;
+
+                if ("joined".equals(target.change)) {
+                    if (dataObservers != null) {
+                        for (SessionDataObserver observer : dataObservers) {
+                            observer.onYouJoinedCurrentClass();
+                        }
+                    }
+
+                    exit = false;
+                    break;
+                }
             }
         }
 
@@ -399,7 +416,11 @@ public abstract class ClassroomStateMachine extends StateMachine {
         if (message == null) {
             return;
         }
-        //TODO
+        if (dataObservers != null) {
+            for (SessionDataObserver dataObserver : dataObservers) {
+                dataObserver.onClosePreviewByClassOver();
+            }
+        }
     }
 
     protected void remindFinal(EmptyReceive message) {
@@ -428,14 +449,34 @@ public abstract class ClassroomStateMachine extends StateMachine {
             return;
         }
 
-        //TODO
+        if (dataObservers != null) {
+            for (SessionDataObserver dataObserver : dataObservers) {
+                dataObserver.onKickoutByConsttraint();
+            }
+        }
     }
 
     protected void logoutKickout(LogoutKickoutReceive message) {
         if (message == null) {
             return;
         }
-        //TODO
+        if (dataObservers != null) {
+            for (SessionDataObserver dataObserver : dataObservers) {
+                dataObserver.onKickoutByLogout();
+            }
+        }
+
+    }
+
+    protected void kickoutByLeft(KickoutByLeftReceived message) {
+        if (message == null) {
+            return;
+        }
+        if (dataObservers != null) {
+            for (SessionDataObserver dataObserver : dataObservers) {
+                dataObserver.onKickoutByLeft();
+            }
+        }
 
     }
 

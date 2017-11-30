@@ -14,6 +14,7 @@ import cn.xiaojs.xma.data.api.socket.MessageCallback;
 import cn.xiaojs.xma.data.api.socket.SocketListen;
 import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.TalkItem;
+import cn.xiaojs.xma.model.socket.KickoutByLeftReceived;
 import cn.xiaojs.xma.model.socket.room.CloseMediaReceive;
 import cn.xiaojs.xma.model.socket.room.ClosePreviewReceive;
 import cn.xiaojs.xma.model.socket.room.ConstraintKickoutReceive;
@@ -154,6 +155,12 @@ public class EventListener extends MainThreadDisposable implements MessageCallba
 
         socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
                 Su.EventType.SHARE_BOARD, ShareboardReceive.class, this));
+
+        socketListeners.add(EventManager.onEvent(context, Su.EventCategory.LIVE,
+                Su.EventType.KICKOUT_BY_LEFT, KickoutByLeftReceived.class, this));
+
+
+
 
     }
 

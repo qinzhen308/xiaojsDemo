@@ -50,6 +50,9 @@ public class Contact implements Serializable {
 
     public boolean sync;
 
+    public long lastEntry;
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Contact) {

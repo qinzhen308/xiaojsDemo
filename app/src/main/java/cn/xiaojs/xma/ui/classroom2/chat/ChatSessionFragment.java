@@ -1,12 +1,14 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -130,12 +132,24 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getDialog() != null) {
-            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        }
 
+//        if (getDialog() != null) {
+//            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+//                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//        }
 
         dataProvider = DataProvider.getProvider(getContext());
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+//        if (dialog != null) {
+//            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        }
+
+        return dialog;
     }
 
     @Nullable
@@ -150,6 +164,10 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         ButterKnife.bind(this, view);
 
         inputPanel = new InputPanel(getContext(), view, this);
+
+//        if (getDialog() != null) {
+//            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        }
 
         return view;
     }

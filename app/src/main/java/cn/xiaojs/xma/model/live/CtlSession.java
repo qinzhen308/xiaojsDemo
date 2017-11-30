@@ -59,6 +59,7 @@ public class CtlSession implements Serializable {
         public String subtype;
         public String title;
         public String state;
+        public int join;
     }
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)

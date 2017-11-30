@@ -20,7 +20,7 @@ public class Attendee implements Serializable, Comparable<Attendee>{
     public String xav;
     public String accountId;
     public String name;
-    public int sort;
+    public long sort;
     public MediaSetting avc;
     public int unReadMsgCount;
     public String title;
@@ -73,7 +73,7 @@ public class Attendee implements Serializable, Comparable<Attendee>{
     @Override
     public int compareTo(@NonNull Attendee o) {
 
-        return sort - o.sort;
+        return (int)(sort - o.sort);
 
 //        if (o==null)
 //            return -1;

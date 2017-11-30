@@ -27,6 +27,7 @@ public class ChatPopupMenu {
     private MenuClickListener menuClickListener;
 
     private Button recallBtn;
+    private Button copyBtn;
 
     public void setMenuClickListener(MenuClickListener menuClickListener) {
         this.menuClickListener = menuClickListener;
@@ -45,7 +46,7 @@ public class ChatPopupMenu {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(ctx).inflate(
                 R.layout.layout_classroom2_chat_item_popup_menu, null);
 
-        Button copyBtn = (Button) linearLayout.findViewById(R.id.copy);
+        copyBtn = (Button) linearLayout.findViewById(R.id.copy);
         Button delBtn = (Button) linearLayout.findViewById(R.id.delete);
         recallBtn = (Button) linearLayout.findViewById(R.id.recall);
 
@@ -88,6 +89,10 @@ public class ChatPopupMenu {
         //mPopupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.bg_popup_menu));
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+    }
+
+    public void setCopyBtnVis(int visibility) {
+        copyBtn.setVisibility(visibility);
     }
 
     public void setRecallVis(int visibility) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/px17"
                 android:paddingTop="@dimen/px17"
@@ -24,8 +24,9 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:gravity="center_vertical"
-            android:layout_toRightOf="@id/name"
-            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/px8"
+            android:layout_below="@id/name"
+            android:layout_alignParentLeft="true"
             />
 
     <android.support.text.emoji.widget.EmojiAppCompatTextView

@@ -675,6 +675,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
                 cancelProgress();
                 classVerifyCheck.setChecked(verify);
 
+                classroomEngine.setClassJoinMode(mode);
                 ClassInfo info = classroomEngine.getClassInfo();
                 if (info != null) {
                     if (info.join == null) {
@@ -683,6 +684,7 @@ public class ClassDetailFragment extends BaseDialogFragment {
 
                     info.join.mode = mode;
                 }
+
 
                 Toast.makeText(getActivity(),
                         R.string.lesson_edit_success,
