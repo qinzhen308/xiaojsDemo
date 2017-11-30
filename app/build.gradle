@@ -125,10 +125,10 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
 }
 
-bugly {
-    appId = rootProject.ext.bugly_appid
-    appKey = rootProject.ext.bugly_appkey
-}
+//bugly {
+//    appId = rootProject.ext.bugly_appid
+//    appKey = rootProject.ext.bugly_appkey
+//}
 
 walle {
     apkOutputFolder = new File("${project.buildDir}/outputs/channels");
