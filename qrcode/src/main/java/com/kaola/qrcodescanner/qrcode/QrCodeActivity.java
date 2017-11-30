@@ -115,6 +115,16 @@ public class QrCodeActivity extends Activity implements Callback, OnClickListene
 //        return mQrCodeFinderView.mFrameRect;
     }
 
+    public int getContentHeight() {
+        if(mSurfaceView==null)return 0;
+        return mSurfaceView.getHeight();
+    }
+
+    public int getContentWidth() {
+        if(mSurfaceView==null)return 0;
+        return mSurfaceView.getWidth();
+    }
+
     private void checkPermission() {
         boolean hasHardware = checkCameraHardWare(this);
         if (hasHardware) {

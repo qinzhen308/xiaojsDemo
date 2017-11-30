@@ -17,6 +17,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -33,6 +34,7 @@ import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.logging.Logger;
 
 final class DecodeHandler extends Handler {
 
@@ -144,8 +146,10 @@ final class DecodeHandler extends Handler {
 
         Result rawResult = null;
         try {
+            /*PlanarYUVLuminanceSource source =
+                    new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);*/
             PlanarYUVLuminanceSource source =
-                    new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
+                    new PlanarYUVLuminanceSource(data, width, height, scanRect.left, scanRect.top, scanRect.width(), scanRect.height(), false);
             BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
             rawResult = mQrCodeReader.decode(bitmap1, mHints);
         } catch (ReaderException e) {
@@ -175,11 +179,11 @@ final class DecodeHandler extends Handler {
         float scaleW=0;
         float scaleH=0;
         if(width>height) {//width 实际上是height
-            scaleH = height / (float) ScreenUtils.getScreenWidth(mActivity);
-            scaleW = width / (float) ScreenUtils.getScreenHeight(mActivity);
+            scaleH = height / (float) mActivity.getContentWidth();
+            scaleW = width / (float) mActivity.getContentHeight();
         }else {
-            scaleW = width / (float) ScreenUtils.getScreenWidth(mActivity);
-            scaleH = height / (float) ScreenUtils.getScreenHeight(mActivity);
+            scaleW = width / (float) mActivity.getContentWidth();
+            scaleH = height / (float) mActivity.getContentHeight();;
         }
         if(width>height){
             scanRect.bottom=mActivity.getPreviewRect().left;
@@ -203,5 +207,8 @@ final class DecodeHandler extends Handler {
             scanRect.top=height-scanRect.top;
             scanRect.bottom=height-scanRect.bottom;
         }
+        Log.d("qz","----preview---"+mActivity.getPreviewRect().toString()+"---"+mActivity.getPreviewRect().width()+","+mActivity.getPreviewRect().height());
+        Log.d("qz","----scan---"+scanRect.toString()+"---"+scanRect.width()+","+scanRect.height());
+        Log.d("qz","----width, height---"+width+","+height);
     }
 }

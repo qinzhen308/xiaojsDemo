@@ -98,6 +98,10 @@ public class CommonWebActivity extends BaseActivity {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if(progressBar==null){
+                    return;
+                }
                 if (newProgress == 100) {
                     progressBar.setVisibility(View.INVISIBLE);
                 } else {
@@ -106,7 +110,6 @@ public class CommonWebActivity extends BaseActivity {
                     }
                     progressBar.setProgress(newProgress);
                 }
-                super.onProgressChanged(view, newProgress);
             }
         });
         contentView.setWebViewClient(new WebViewClient(){
