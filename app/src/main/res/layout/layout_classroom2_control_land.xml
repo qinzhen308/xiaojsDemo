@@ -95,7 +95,7 @@
                 android:gravity="center"
                 android:maxLength="10"
                 android:singleLine="true"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 />
 
 

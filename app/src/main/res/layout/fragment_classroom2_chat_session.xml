@@ -88,5 +88,88 @@
             android:visibility="gone"/>
 
 
-
 </android.support.constraint.ConstraintLayout>
+
+        <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/white"-->
+        <!--&gt;-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/px88"-->
+        <!--android:text="聊天"-->
+        <!--android:gravity="center"-->
+        <!--android:textColor="@color/font_black"-->
+        <!--android:textSize="@dimen/font_32px"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--/>-->
+
+
+        <!--<TextView-->
+        <!--android:id="@+id/back_btn"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="@dimen/px88"-->
+        <!--android:drawableLeft="@drawable/ic_back"-->
+        <!--android:padding="@dimen/px28"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--/>-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/more_btn"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="@dimen/px88"-->
+        <!--android:src="@drawable/ic_more"-->
+        <!--android:padding="@dimen/px28"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--/>-->
+
+        <!--<View-->
+        <!--android:id="@+id/title_line"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/px1"-->
+        <!--android:background="@color/hor_divide_line"-->
+        <!--android:layout_below="@id/title"-->
+        <!--/>-->
+
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/chat_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scrollbars="none"-->
+        <!--android:background="@color/classroom_gray_1"-->
+        <!--android:layout_below="@id/title_line"-->
+        <!--android:layout_above="@+id/bottom_bar"-->
+        <!--/>-->
+
+
+        <!--<include-->
+        <!--android:id="@+id/bottom_bar"-->
+        <!--layout="@layout/layout_classroom2_chat_session_bottom_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--/>-->
+
+
+        <!--<TextView-->
+        <!--android:id="@+id/pop_tips"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/class_enterclassroombg"-->
+        <!--android:textColor="@color/font_white"-->
+        <!--android:textSize="@dimen/font_28px"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_marginBottom="@dimen/px21"-->
+        <!--android:layout_marginLeft="@dimen/px22"-->
+        <!--android:layout_above="@id/bottom_bar"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:visibility="gone"/>-->
+
+
+        <!--</RelativeLayout>-->

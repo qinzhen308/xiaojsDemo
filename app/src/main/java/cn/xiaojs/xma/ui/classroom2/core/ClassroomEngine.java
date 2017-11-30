@@ -31,6 +31,7 @@ import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.socket.EventResponse;
+import cn.xiaojs.xma.model.socket.KickoutByLeftReceived;
 import cn.xiaojs.xma.model.socket.SyncClassesReceived;
 import cn.xiaojs.xma.model.socket.room.ChangeNotifyReceived;
 import cn.xiaojs.xma.model.socket.room.ClaimReponse;
@@ -137,6 +138,16 @@ public final class ClassroomEngine {
         RoomSession roomSession = stateMachine.getSession();
         return roomSession == null ? ClassroomType.Unknown : roomSession.classroomType;
     }
+
+
+    public int getClassJoin() {
+        return stateMachine.getSession().ctlSession.cls.join;
+    }
+
+    public void setClassJoinMode(int join) {
+        stateMachine.getSession().ctlSession.cls.join = join;
+    }
+
 
     public ClassInfo getClassInfo() {
         return stateMachine.getSession().classInfo;
@@ -833,6 +844,9 @@ public final class ClassroomEngine {
                 break;
             case Su.EventType.KICK_OUT_BY_LOGOUT:
                 stateMachine.logoutKickout((LogoutKickoutReceive) eventReceived.t);
+                break;
+            case Su.EventType.KICKOUT_BY_LEFT:
+                stateMachine.kickoutByLeft((KickoutByLeftReceived) eventReceived.t);
                 break;
             case Su.EventType.MEDIA_ABORTED:
                 stateMachine.mediaAborted((MediaAbortedReceive) eventReceived.t);

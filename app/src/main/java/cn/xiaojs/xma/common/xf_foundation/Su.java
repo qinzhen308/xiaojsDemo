@@ -119,6 +119,9 @@ public class Su {
 
 
         public static final int REMIND_FINALIZATION = 600114;
+
+        public static final int KICKOUT_BY_LEFT = 600119;                          // Live events
+
         public static final int MEDIA_DEVICES_REFRESHED = 670020;
         public static final int REFRESH_STREAMING_QUALITY = 670025;
 

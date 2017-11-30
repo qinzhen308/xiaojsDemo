@@ -42,6 +42,21 @@
             layout="@layout/layout_classroom2_one2one_confirm"
             android:visibility="gone"
             />
+    
+    <TextView
+            android:id="@+id/btn_join"
+            android:layout_width="@dimen/px90"
+            android:layout_height="@dimen/px90"
+            android:background="@drawable/orange_round_bg"
+            android:text="加入"
+            android:textColor="@color/font_white"
+            android:textSize="@dimen/font_26px"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/px20"
+            android:layout_marginBottom="@dimen/px20"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_lay"
+            android:visibility="gone"/>
 
 
 

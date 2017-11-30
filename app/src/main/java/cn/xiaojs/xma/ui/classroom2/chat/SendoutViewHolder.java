@@ -127,10 +127,9 @@ public class SendoutViewHolder extends ChatViewHolder {
             errorLayout.setVisibility(View.VISIBLE);
         }
 
-        contentTextView.setOnClickListener(new View.OnClickListener() {
+        contentTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public boolean onLongClick(View view) {
                 long realtime = item.stime <= 0 ? item.time : item.stime;
 
                 long sep = System.currentTimeMillis() - realtime;
@@ -145,8 +144,8 @@ public class SendoutViewHolder extends ChatViewHolder {
                 boolean recall = sep >= CTLConstant.ALLOW_RECALL_MAX_TIME_MS ?
                         false : true;
 
-
-                chatAdapter.showMenu(v, position, item, recall);
+                chatAdapter.showMenu(view, position, item, recall,true);
+                return true;
             }
         });
 
@@ -159,7 +158,7 @@ public class SendoutViewHolder extends ChatViewHolder {
 
         contentImgView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 ArrayList<String> imgs = new ArrayList<String>(1);
                 if (!TextUtils.isEmpty(item.body.text)) {
                     //base64
@@ -172,8 +171,26 @@ public class SendoutViewHolder extends ChatViewHolder {
                     imgs.add(item.body.drawing.name);
                     ImageViewActivity.invoke(context, "", imgs, false);
                 }
+            }
+        });
 
+        contentImgView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                long realtime = item.stime <= 0 ? item.time : item.stime;
+                long sep = System.currentTimeMillis() - realtime;
 
+                if (XiaojsConfig.DEBUG) {
+                    Logger.d("the current time:" + System.currentTimeMillis()
+                            + ", talk time:"
+                            + realtime
+                            + ", sep time:" + sep);
+                }
+
+                boolean recall = sep >= CTLConstant.ALLOW_RECALL_MAX_TIME_MS ?
+                        false : true;
+                chatAdapter.showMenu(view, position, item, recall,false);
+                return true;
             }
         });
 

@@ -199,15 +199,8 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
             public void subscribe(@NonNull ObservableEmitter<Map<Integer, ArrayList<Attendee>>> e) throws Exception {
                 ArrayList<Attendee> attendees = new ArrayList<>();
 
-                boolean verify = false;
-                ClassInfo classInfo = classroomEngine.getClassInfo();
-                if (classInfo != null && classInfo.join !=null) {
-                    if (classInfo.join.mode == Ctl.JoinMode.VERIFICATION) {
-                        verify = true;
-                    }
-                }
-
-                if (verify && classroomEngine.classManageable()) {
+                if (classroomEngine.getClassJoin() == Ctl.JoinMode.VERIFICATION
+                        && classroomEngine.classManageable()) {
 
                     JoinCriteria criteria=new JoinCriteria();
                     criteria.joined=true;

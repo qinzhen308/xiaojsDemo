@@ -99,6 +99,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     @BindView(R.id.o2o_outtime)
     TextView o2oOuttimeView;
 
+    @BindView(R.id.btn_join)
+    TextView joinbtnView;
+
     private ChatFragment chatFragment;
     private DatabaseFragment databaseFragment;
 
@@ -111,13 +114,32 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
     private CommonDialog mKickOutDialog;
     private CommonDialog mContinueConnectDialog;
 
-
     private ClassroomEngine classroomEngine;
 
     private SessionDataObserver dataObserver = new SessionDataObserver() {
         @Override
         public void onYouRemovedFromCurrentClass() {
             handleRemovedOut();
+        }
+
+        @Override
+        public void onKickoutByLeft() {
+            handleRemovedOut();
+        }
+
+        @Override
+        public void onKickoutByLogout() {
+            handleKickedOutByLogout();
+        }
+
+        @Override
+        public void onKickoutByConsttraint() {
+            handleKickedOut();
+        }
+
+        @Override
+        public void onClosePreviewByClassOver() {
+            handleClosePreview();
         }
     };
 
@@ -186,7 +208,8 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         onBootlistener(initTicket);
     }
 
-    @OnClick({R.id.bottom_input, R.id.bottom_members, R.id.bottom_database, R.id.bottom_schedule})
+    @OnClick({R.id.bottom_input,
+            R.id.bottom_members, R.id.bottom_database, R.id.bottom_schedule, R.id.btn_join})
     void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.bottom_input:
@@ -200,6 +223,9 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
                 break;
             case R.id.bottom_schedule:              //课表
                 popClassSchedule();
+                break;
+            case R.id.btn_join:
+                //TODO
                 break;
         }
     }
@@ -393,7 +419,13 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
 
     private void handleKickedOut() {
         Toast.makeText(Classroom2Activity.this,
-                R.string.mobile_kick_out_tips, Toast.LENGTH_LONG).show();
+                "您账号已经在其它端进入了教室", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private void handleKickedOutByLogout() {
+        Toast.makeText(Classroom2Activity.this,
+                "您已登出了教室", Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -402,6 +434,14 @@ public class Classroom2Activity extends FragmentActivity implements IBoardManage
         Toast.makeText(Classroom2Activity.this,
                 "您已被教室管理者移除，不再是该教室成员", Toast.LENGTH_LONG).show();
         finish();
+    }
+
+    private void handleClosePreview() {
+        if (classroomEngine.isPreview()) {
+            Toast.makeText(Classroom2Activity.this,
+                    "课已结束，您已退出预览模式了", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

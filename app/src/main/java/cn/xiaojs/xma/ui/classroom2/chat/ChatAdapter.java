@@ -242,7 +242,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
                 });
     }
 
-    public void showMenu(View view, final int position, final TalkItem item, boolean recall) {
+    public void showMenu(View view, final int position, final TalkItem item, boolean recall, boolean copy) {
         final ChatPopupMenu chatPopupMenu = new ChatPopupMenu(context);
         chatPopupMenu.setMenuClickListener(new ChatPopupMenu.MenuClickListener() {
             @Override
@@ -271,6 +271,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
         int visRecall = recall ? View.VISIBLE : View.GONE;
         chatPopupMenu.setRecallVis(visRecall);
+        int visCopy = copy ? View.VISIBLE : View.GONE;
+        chatPopupMenu.setCopyBtnVis(visCopy);
         chatPopupMenu.show(view);
     }
 

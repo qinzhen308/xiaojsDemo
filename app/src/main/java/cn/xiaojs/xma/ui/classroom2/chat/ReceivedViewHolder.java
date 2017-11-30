@@ -146,10 +146,19 @@ public class ReceivedViewHolder extends ChatViewHolder {
         }
 
 
-        contentTextView.setOnClickListener(new View.OnClickListener() {
+        contentTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                chatAdapter.showMenu(v, position, item, false);
+            public boolean onLongClick(View view) {
+                chatAdapter.showMenu(view, position, item, false, true);
+                return true;
+            }
+        });
+
+        contentImgView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                chatAdapter.showMenu(view, position, item, false, false);
+                return true;
             }
         });
 
