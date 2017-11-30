@@ -237,7 +237,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
                             if (classroomEngine.getUserIdentity(pst) == CTLConstant.UserIdentity.VISITOR) {
                                 vistors.add(att);
-                                break;
+                                continue;
                             }
 
                             attendees.add(att);
@@ -253,7 +253,7 @@ public class MemberListFragment extends BottomSheetFragment implements DialogInt
 
                             if (classroomEngine.getUserIdentity(pst) == CTLConstant.UserIdentity.VISITOR) {
                                 vistors.add(att);
-                                break;
+                                continue;
                             }
 
                             attendees.add(att);

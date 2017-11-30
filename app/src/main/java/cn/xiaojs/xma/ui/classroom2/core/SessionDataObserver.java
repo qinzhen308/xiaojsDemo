@@ -10,6 +10,7 @@ public abstract class SessionDataObserver {
     //
     //
     public void onYouRemovedFromCurrentClass(){}
+    public void onYouJoinedCurrentClass(){}
 
     public void onKickoutByLeft(){}
     public void onKickoutByLogout(){}
