@@ -469,6 +469,21 @@ public class BitmapUtils {
         return bitmap;
     }
 
+    public static String bitmapToBase64(Bitmap bmp) {
+        if(bmp==null)return null;
+        byte[] bytes=bmpToByteArray(bmp,true);
+        String base64=Base64.encodeToString(bytes,Base64.DEFAULT);
+        return base64;
+    }
+
+    public static String bitmapToBase64WithPrefix(Bitmap bmp) {
+        if(bmp==null)return null;
+        StringBuilder base64=new StringBuilder("data:image/jpg;base64,");
+        base64.append(bitmapToBase64(bmp));
+        return base64.toString();
+    }
+
+
     /**
      * 根据传入参数压缩图片
      *

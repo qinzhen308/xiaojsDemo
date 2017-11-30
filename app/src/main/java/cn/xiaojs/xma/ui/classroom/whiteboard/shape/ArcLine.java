@@ -336,6 +336,7 @@ public class ArcLine extends TwoDimensionalShape {
         layer.shape.top=layerRect.top;
         layer.shape.data=getRealPoints(layerRect.centerX(),layerRect.centerY(),drawingMatrix);
         layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        layer.complement();
         return layer;
     }
 }

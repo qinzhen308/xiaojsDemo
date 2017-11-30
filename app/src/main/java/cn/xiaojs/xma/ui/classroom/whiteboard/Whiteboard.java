@@ -632,8 +632,8 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
         RectF destF = mViewGestureListener.getDestRect();
         mDoodleBounds.set(destF.left, destF.top, destF.right, destF.bottom);
-        Logger.d("-------qz------whiteboard----ondraw----doodleBounds="+mDoodleBounds.toString());
-        Logger.d("-------qz------whiteboard----ondraw----mBlackboardRect="+mBlackboardRect.toString());
+//        Logger.d("-------qz------whiteboard----ondraw----doodleBounds="+mDoodleBounds.toString());
+//        Logger.d("-------qz------whiteboard----ondraw----mBlackboardRect="+mBlackboardRect.toString());
 
         canvas.save();
         //clip

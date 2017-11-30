@@ -206,8 +206,8 @@ public class HandWriting extends Doodle implements SyncCollector,SyncLayerBuilde
         float[] p0=new float[2];
         Matrix matrix=new Matrix();
         matrix.postTranslate(-transX,-transY);
-        matrix.postConcat(mTransformMatrix);
         matrix.postConcat(mDrawingMatrix);
+        matrix.postConcat(mTransformMatrix);
         for(PointF p:mPoints){
             p0[0]=p.x;
             p0[1]=p.y;
@@ -285,6 +285,8 @@ public class HandWriting extends Doodle implements SyncCollector,SyncLayerBuilde
         layer.shape.top=layerRect.top;
         layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),drawingMatrix);
         layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        layer.complement();
         return layer;
     }
+
 }

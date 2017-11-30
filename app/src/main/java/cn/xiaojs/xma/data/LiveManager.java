@@ -16,6 +16,7 @@ import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.BoardSaveParams;
+import cn.xiaojs.xma.model.live.BoardSaveTitleParams;
 import cn.xiaojs.xma.model.live.ClassMode;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -207,6 +208,15 @@ public class LiveManager {
                                      APIServiceCallback<ResponseBody> callback) {
         LiveRequest request = new LiveRequest(context, callback);
         request.saveBoard(ticket, board,saving);
+    }
+
+    public static void renameBoard(Context context,
+                                     String ticket,
+                                     String board,
+                                   BoardSaveTitleParams saving,
+                                     APIServiceCallback<ResponseBody> callback) {
+        LiveRequest request = new LiveRequest(context, callback);
+        request.renameBoard(ticket, board,saving);
     }
 
     /**

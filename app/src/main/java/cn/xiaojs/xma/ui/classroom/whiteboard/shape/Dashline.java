@@ -262,6 +262,7 @@ public class Dashline extends TwoDimensionalShape {
         layer.shape.top=layerRect.top;
         layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),getDrawingMatrixFromWhiteboard());
         layer.shape.type=Live.ShapeType.DRAW_INTERVAL;
+        layer.complement();
         return layer;
     }
 }

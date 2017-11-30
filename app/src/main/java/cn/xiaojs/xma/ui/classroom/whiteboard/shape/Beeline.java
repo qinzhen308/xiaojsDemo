@@ -248,6 +248,7 @@ public class Beeline extends TwoDimensionalShape {
         layer.shape.top=layerRect.top;
         layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY());
         layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        layer.complement();
         return layer;
     }
 }

@@ -8,6 +8,7 @@ import cn.xiaojs.xma.model.live.Attendee;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.BoardSaveParams;
+import cn.xiaojs.xma.model.live.BoardSaveTitleParams;
 import cn.xiaojs.xma.model.live.ClassMode;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -93,6 +94,9 @@ public interface LiveService {
     //save Board
     @PUT("/v1/live/{ticket}/boards/{board}")
     Call<ResponseBody> saveBoard(@Path("ticket") String ticket, @Path("board") String board,@Body BoardSaveParams saving);
+    //rename Board
+    @PUT("/v1/live/{ticket}/boards/{board}")
+    Call<ResponseBody> saveBoard(@Path("ticket") String ticket, @Path("board") String board,@Body BoardSaveTitleParams saving);
 
     //Finish Class
     @PATCH("/v1/live/{ticket}/end")

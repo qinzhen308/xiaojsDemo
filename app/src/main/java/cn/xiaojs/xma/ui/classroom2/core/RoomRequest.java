@@ -20,6 +20,7 @@ import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.BoardSaveParams;
+import cn.xiaojs.xma.model.live.BoardSaveTitleParams;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.LiveCollection;
 import cn.xiaojs.xma.model.socket.EventResponse;
@@ -325,6 +326,20 @@ public final class RoomRequest {
 
     protected void saveBoard(String ticket, String board, BoardSaveParams saving, final APIServiceCallback<ResponseBody> callback){
         LiveManager.saveBoard(context, ticket,
+                board,saving, new APIServiceCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody object) {
+                        callback.onSuccess(object);
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        callback.onFailure(errorCode, errorMessage);
+                    }
+                });
+    }
+    protected void renameBoard(String ticket, String board, BoardSaveTitleParams saving, final APIServiceCallback<ResponseBody> callback){
+        LiveManager.renameBoard(context, ticket,
                 board,saving, new APIServiceCallback<ResponseBody>() {
                     @Override
                     public void onSuccess(ResponseBody object) {

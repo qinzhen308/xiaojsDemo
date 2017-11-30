@@ -301,6 +301,7 @@ public class Coordinate extends TwoDimensionalShape {
         layer.shape.top=layerRect.top;
         layer.shape.data=getRealPoints(layerRect);
         layer.shape.type=Live.ShapeType.DRAW_INTERVAL;
+        layer.complement();
         return layer;
     }
 }

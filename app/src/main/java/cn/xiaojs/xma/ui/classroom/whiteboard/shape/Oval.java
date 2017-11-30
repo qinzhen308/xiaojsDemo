@@ -210,6 +210,7 @@ public class Oval extends TwoDimensionalShape {
         layer.shape.top=layerRect.top;
         layer.shape.data=getRealPoints(layerRect);
         layer.shape.type=Live.ShapeType.DRAW_CONTINUOUS;
+        layer.complement();
         return layer;
     }
 }

@@ -19,6 +19,7 @@ import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
 import cn.xiaojs.xma.model.live.BoardSaveParams;
+import cn.xiaojs.xma.model.live.BoardSaveTitleParams;
 import cn.xiaojs.xma.model.live.ClassMode;
 import cn.xiaojs.xma.model.live.ClassResponse;
 import cn.xiaojs.xma.model.live.CtlSession;
@@ -146,6 +147,11 @@ public class LiveRequest extends ServiceRequest{
     }
 
     public void saveBoard(String ticket, String board, BoardSaveParams saving) {
+        Call<ResponseBody> call = getLiveService().saveBoard(ticket, board,saving);
+        enqueueRequest(APIType.SAVE_BOARD, call);
+    }
+
+    public void renameBoard(String ticket, String board, BoardSaveTitleParams saving) {
         Call<ResponseBody> call = getLiveService().saveBoard(ticket, board,saving);
         enqueueRequest(APIType.SAVE_BOARD, call);
     }

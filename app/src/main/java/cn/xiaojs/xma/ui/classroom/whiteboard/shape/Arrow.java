@@ -308,6 +308,7 @@ public class Arrow extends TwoDimensionalShape {
         layer.shape.top=layerRect.top;
         layer.shape.data=getRealPoints(layerRect.centerX(),layerRect.centerY(),drawingMatrix);
         layer.shape.type=Live.ShapeType.DRAW_INTERVAL;
+        layer.complement();
         return layer;
     }
 }

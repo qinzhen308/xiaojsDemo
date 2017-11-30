@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.xiaojs.xma.R;
@@ -36,6 +37,7 @@ import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
 import cn.xiaojs.xma.ui.classroom.socketio.SocketManager;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.GeometryShape;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.OnColorChangeListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.UndoRedoListener;
@@ -774,5 +776,9 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     public void setBoardLayerSet(Drawing drawing) {
         mCurrWhiteboard.setLayers(drawing);
+    }
+
+    public ArrayList<Doodle> getDoodles(){
+        return mCurrWhiteboard.getAllDoodles();
     }
 }

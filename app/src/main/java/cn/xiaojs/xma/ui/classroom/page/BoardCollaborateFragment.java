@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.kaola.qrcodescanner.qrcode.utils.ScreenUtils;
@@ -35,13 +36,16 @@ import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Collaboration;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
+import cn.xiaojs.xma.data.LessonDataManager;
 import cn.xiaojs.xma.data.api.service.APIServiceCallback;
+import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.data.api.socket.EventCallback;
 import cn.xiaojs.xma.model.CollectionPage;
 import cn.xiaojs.xma.model.Pagination;
 import cn.xiaojs.xma.model.live.Board;
 import cn.xiaojs.xma.model.live.BoardCriteria;
 import cn.xiaojs.xma.model.live.BoardItem;
+import cn.xiaojs.xma.model.live.BoardSaveParams;
 import cn.xiaojs.xma.model.material.LibDoc;
 import cn.xiaojs.xma.model.socket.EventResponse;
 import cn.xiaojs.xma.model.socket.room.EventReceived;
@@ -54,8 +58,10 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardScrollerView;
+import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.PushPreviewBoardListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncLayerBuilder;
 import cn.xiaojs.xma.ui.classroom2.Classroom2Activity;
 import cn.xiaojs.xma.ui.classroom2.base.MovieFragment;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
@@ -66,6 +72,7 @@ import cn.xiaojs.xma.util.BitmapUtils;
 import cn.xiaojs.xma.util.MaterialUtil;
 import cn.xiaojs.xma.util.ToastUtil;
 import io.reactivex.functions.Consumer;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -119,6 +126,7 @@ public class BoardCollaborateFragment extends BaseFragment {
 
     private boolean isReadOnly = false;
     private boolean needRegistNewBoard = false;
+    private boolean needBoardSaving = false;
 
     public BoardCollaborateFragment() {
         getLastBoard();
@@ -168,6 +176,7 @@ public class BoardCollaborateFragment extends BaseFragment {
                 if (onPushPreviewListener != null) {
                     onPushPreviewListener.onPushPreview(bitmap);
                 }
+                needBoardSaving=true;
 
                 Fragment fragment = getTargetFragment2();
                 if (fragment instanceof IBoardManager && ((IBoardManager) fragment).pushPreviewEnable()) {
@@ -628,6 +637,17 @@ public class BoardCollaborateFragment extends BaseFragment {
         void onSuccess(Bitmap preview);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        startSaveTimer();
+    }
+
+    @Override
+    public void onStop() {
+        startSaveTimer();
+        super.onStop();
+    }
 
     //定时保存
     private void startSaveTimer() {
@@ -636,7 +656,9 @@ public class BoardCollaborateFragment extends BaseFragment {
             executor.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
-
+                    if(needBoardSaving){
+                        saveBoard();
+                    }
                 }
             }, 5, 5, TimeUnit.SECONDS);
         }
@@ -649,6 +671,41 @@ public class BoardCollaborateFragment extends BaseFragment {
             executor = null;
         }
     }
+
+    private void saveBoard(){
+        if(TextUtils.isEmpty(boardId))return;
+        long time=System.currentTimeMillis();
+        BoardSaveParams params=new BoardSaveParams();
+        BoardSaveParams.Draft draft=new BoardSaveParams.Draft();
+        params.snapshot=BitmapUtils.bitmapToBase64WithPrefix(mBoardController.getWhiteboardBitmap());
+        ArrayList<Doodle> doodles=mBoardController.getDoodles();
+        if(doodles!=null){
+            draft.layers=new ArrayList<>();
+            for(Doodle doodle:doodles){
+                if(doodle instanceof SyncLayerBuilder){
+                    draft.layers.add(((SyncLayerBuilder)doodle).onBuildLayer());
+                }
+            }
+        }
+        params.draft= ServiceRequest.objectToJsonString(draft);
+        Logger.d(params.draft);
+
+        ClassroomEngine.getEngine().saveBoard(boardId, params, new APIServiceCallback<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody object) {
+//                ToastUtil.showToast(getActivity(),"保存成功");
+                needBoardSaving=false;
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+//                ToastUtil.showToast(getActivity(),errorMessage);
+                needBoardSaving=false;
+            }
+        });
+
+    }
+
 
     ScheduledThreadPoolExecutor executor;
 
