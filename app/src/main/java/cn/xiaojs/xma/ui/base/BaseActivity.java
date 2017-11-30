@@ -203,6 +203,11 @@ public abstract class BaseActivity extends FragmentActivity implements IDialogMe
         }
     }
 
+    protected final String getMiddleTitle() {
+
+        return mMiddleText.getText().toString();
+    }
+
     protected final void setRightText(int resId) {
         if (resId > 0 && !TextUtils.isEmpty(getResources().getText(resId))) {
             mRightText.setVisibility(View.VISIBLE);

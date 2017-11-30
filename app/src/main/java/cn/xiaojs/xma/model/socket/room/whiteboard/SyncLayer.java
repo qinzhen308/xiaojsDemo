@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.data.api.serialize.InfoDeserializer;
 
 /**
@@ -39,6 +40,7 @@ public class SyncLayer {
 
     public boolean visible=true;
     public boolean grouped=false;
+    public int xa= Platform.AppType.MOBILE_ANDROID;
 
 
     @JsonDeserialize(using = InfoDeserializer.class)

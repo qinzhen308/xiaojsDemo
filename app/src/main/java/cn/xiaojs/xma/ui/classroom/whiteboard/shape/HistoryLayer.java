@@ -2,15 +2,22 @@ package cn.xiaojs.xma.ui.classroom.whiteboard.shape;
 
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.xiaojs.xma.common.xf_foundation.schemas.Live;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Shape;
 import cn.xiaojs.xma.model.socket.room.whiteboard.SyncLayer;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.Doodle;
 import cn.xiaojs.xma.ui.classroom.whiteboard.core.IntersectionHelper;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.ColorUtil;
+import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncLayerBuilder;
 import cn.xiaojs.xma.util.ArrayUtil;
 
 /**
@@ -33,7 +40,7 @@ import cn.xiaojs.xma.util.ArrayUtil;
  *                             |
  *                       HistoryLayer
  */
-public class HistoryLayer extends Doodle {
+public class HistoryLayer extends Doodle implements SyncLayerBuilder{
 
     private SyncLayer mSrcLayer;
 
@@ -67,7 +74,7 @@ public class HistoryLayer extends Doodle {
     }
 
     public void setLayerSrc(SyncLayer srcLayer){
-        SyncLayer mSrcLayer=srcLayer;
+        mSrcLayer=srcLayer;
         setControlPoints(mSrcLayer.shape.data);
         mBorderRect.set(mDoodleRect);
     }
@@ -130,5 +137,42 @@ public class HistoryLayer extends Doodle {
     }
 
 
+    @Override
+    public SyncLayer onBuildLayer() {
+        SyncLayer layer=new SyncLayer();
+        layer.id=getDoodleId();
+        layer.lineColor= ColorUtil.getColorName(getPaint().getColor());
+        layer.lineWidth=(int)getPaint().getStrokeWidth();
+        layer.shape=new Shape();
+        RectF layerRect=new RectF();
+        Matrix drawingMatrix=new Matrix();
+        RectF vpRect=getWhiteboard().getViewport().buildRect();
+        drawingMatrix.setRectToRect(new RectF(0,0,1,1),vpRect, Matrix.ScaleToFit.FILL);
+        drawingMatrix.mapRect(layerRect,mDoodleRect);
+        layer.shape.height=layerRect.height();
+        layer.shape.width=layerRect.width();
+        layer.shape.left=layerRect.left;
+        layer.shape.top=layerRect.top;
+        layer.shape.data=getRealPoints(mDoodleRect.centerX(),mDoodleRect.centerY(),drawingMatrix);
+        layer.shape.type= mSrcLayer.shape.type;
+        layer.complement();
+        return layer;
+    }
 
+    private ArrayList<PointF> getRealPoints(float transX, float transY, Matrix drawingMatrix){
+        ArrayList<PointF> dest=new ArrayList<>(mPoints.size());
+        float[] _p=new float[2];
+        float[] p0=new float[2];
+        Matrix matrix=new Matrix();
+        matrix.postTranslate(-transX,-transY);
+        matrix.postConcat(drawingMatrix);
+        matrix.postConcat(mTransformMatrix);
+        for(PointF p:mPoints){
+            p0[0]=p.x;
+            p0[1]=p.y;
+            matrix.mapPoints(_p,p0);
+            dest.add(new PointF(_p[0],_p[1]));
+        }
+        return dest;
+    }
 }

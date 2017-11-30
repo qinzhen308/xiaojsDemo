@@ -39,6 +39,7 @@ public class CommonWebActivity extends BaseActivity {
     public final static String EXTRA_TITLE="extra_title";
     public final static String EXTRA_URL="extra_url";
     public final static String EXTRA_SHARE_URL="extra_share_url";
+    public final static String EXTRA_AUTO_TITLE="extra_auto_title";
 
     @BindView(R.id.content_webview)
     WebView contentView;
@@ -55,32 +56,38 @@ public class CommonWebActivity extends BaseActivity {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
+    private boolean canShare;
     private String share_url;
+
+    boolean isAutoTitle;
     @Override
     protected void addViewContent() {
         addView(R.layout.activity_common_web);
         String title=getIntent().getStringExtra(EXTRA_TITLE);
-        if(title==null){
+        isAutoTitle=getIntent().getBooleanExtra(EXTRA_AUTO_TITLE,false);
+        if(isAutoTitle){
+            setMiddleTitle(title==null?"":title);
+        }else if(title==null){
             needHeader(false);
         }else {
             setMiddleTitle(title);
         }
-        share_url=getIntent().getStringExtra(EXTRA_SHARE_URL);
-        if(!TextUtils.isEmpty(share_url)){
-            setRightImage2(R.drawable.share_selector);
+        canShare=getIntent().getBooleanExtra(EXTRA_SHARE_URL,false);
+        if(canShare){
+            setRightImage(R.drawable.share_selector);
         }
         initWebView();
         loadContent();
     }
 
-    @OnClick({R.id.left_view,R.id.right_image2})
+    @OnClick({R.id.left_view,R.id.right_image})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.left_view:
                 finish();
                 break;
-            case R.id.right_image2:
-//                ShareUtil.shareUrlByUmeng();
+            case R.id.right_image:
+                ShareUtil.shareUrlByUmeng(this,getMiddleTitle(),"",share_url);
                 break;
         }
     }
@@ -111,17 +118,27 @@ public class CommonWebActivity extends BaseActivity {
                     progressBar.setProgress(newProgress);
                 }
             }
+
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                if(isAutoTitle&&!TextUtils.isEmpty(title)){
+                    setMiddleTitle(title);
+                }
+            }
         });
         contentView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                share_url=url;
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
             }
+
         });
     }
 
@@ -162,11 +179,12 @@ public class CommonWebActivity extends BaseActivity {
 
 
     //包含右上角分享按钮的分享功能
-    public static void invoke(Context contex,String title,String url,String shareUrl){
+    public static void invoke(Context contex,String title,String url,boolean canShare,boolean autoTitle){
         Intent intent =new Intent(contex,CommonWebActivity.class);
         intent.putExtra(EXTRA_TITLE,title);
         intent.putExtra(EXTRA_URL,url);
-        intent.putExtra(EXTRA_SHARE_URL,shareUrl);
+        intent.putExtra(EXTRA_SHARE_URL,canShare);
+        intent.putExtra(EXTRA_AUTO_TITLE,autoTitle);
         contex.startActivity(intent);
     }
 

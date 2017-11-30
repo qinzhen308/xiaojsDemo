@@ -23,7 +23,6 @@ public class StreamBase64StringLoader implements StreamModelLoader<String> {
         this("");
     }
 
-    @Deprecated
     public StreamBase64StringLoader(String id) {
         this.id = id;
     }

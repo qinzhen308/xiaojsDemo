@@ -90,7 +90,7 @@ public class WhiteboardManagerItemView extends RelativeLayout implements IViewMo
         }
         if(!TextUtils.isEmpty(mData.boardItem.snapshot)){
 //            ivWhiteBoard.setImageBitmap(BitmapUtils.base64ToBitmapWithPrefix(mData.boardItem.snapshot));
-            Glide.with(getContext()).using(new StreamBase64StringLoader()).load(mData.boardItem.snapshot).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivWhiteBoard);
+            Glide.with(getContext()).using(new StreamBase64StringLoader(mData.boardItem.id)).load(mData.boardItem.snapshot).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(ivWhiteBoard);
         }else {
             ivWhiteBoard.setImageDrawable(new ColorDrawable(Color.WHITE));
         }

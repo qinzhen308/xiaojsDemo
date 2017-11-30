@@ -39,6 +39,7 @@ import cn.xiaojs.xma.common.pageload.trigger.PageChangeInRecyclerView;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.SearchManager;
 import cn.xiaojs.xma.data.SimpleDataChangeListener;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.api.service.ServiceRequest;
 import cn.xiaojs.xma.model.CollectionResult;
 import cn.xiaojs.xma.model.search.SearchResultV2;
@@ -358,7 +359,7 @@ public class DiscoverFragment extends BaseFragment {
         });
         initPageLoad();
         initWebView();
-        webView.loadUrl("http://wxtest.xiaojs.cn/web/app/homepage.html");
+        webView.loadUrl(ApiManager.getDiscoverHomeUrl());
     }
 
     @Override

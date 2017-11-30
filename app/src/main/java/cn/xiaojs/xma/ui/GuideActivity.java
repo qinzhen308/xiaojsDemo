@@ -29,7 +29,8 @@ import cn.xiaojs.xma.util.APPUtils;
 
 public class GuideActivity extends Activity {
 
-    int[] imgsRes = {R.drawable.img_guide1, R.drawable.img_guide2, R.drawable.img_guide3};
+//    int[] imgsRes = {R.drawable.img_guide1, R.drawable.img_guide2, R.drawable.img_guide3,R.drawable.img_guide4};
+    int[] imgsRes = {R.drawable.img_guide1, R.drawable.img_guide2, R.drawable.img_guide4};
     int[] indicatorIds = {R.id.tab1, R.id.tab2, R.id.tab3};
     View[] pages = new View[imgsRes.length];
 

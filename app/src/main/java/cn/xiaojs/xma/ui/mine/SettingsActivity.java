@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.xiaojs.xma.R;
 import cn.xiaojs.xma.data.DataManager;
+import cn.xiaojs.xma.data.api.ApiManager;
 import cn.xiaojs.xma.data.preference.AccountPref;
 import cn.xiaojs.xma.data.preference.ClassroomPref;
 import cn.xiaojs.xma.ui.CommonWebActivity;
@@ -112,7 +113,7 @@ public class SettingsActivity extends BaseActivity {
                 ClassroomPref.setAllowLive4g(this, !allow);
                 break;
             case R.id.btn_help:
-                CommonWebActivity.invoke(this,null,"http://192.168.100.168/xjsweixin/web/help/help.html");
+                CommonWebActivity.invoke(this,"帮助", ApiManager.getHelpUrl(),true,true);
                 break;
             default:
                 break;

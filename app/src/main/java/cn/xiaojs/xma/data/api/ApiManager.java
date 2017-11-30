@@ -342,6 +342,41 @@ public class ApiManager {
                 .toString();
     }
 
+    /**
+     * 获取“帮助”页面url
+     */
+    public static String getHelpUrl() {
+
+        String baseUrl = null;
+        if(APPUtils.isProEvn()){
+            baseUrl = XiaojsConfig.SHARE_LESSON_BASE_URL;
+        }else {
+            baseUrl=XiaojsConfig.SHARE_LESSON_TEST_BASE_URL;
+        }
+
+        return new StringBuilder(baseUrl)
+                .append("/web/help/help.html")
+                .append("?app=android")
+                .toString();
+    }
+    /**
+     * 获取“发现推荐页”页面url
+     */
+    public static String getDiscoverHomeUrl() {
+
+        String baseUrl = null;
+        if(APPUtils.isProEvn()){
+            baseUrl = XiaojsConfig.SHARE_LESSON_BASE_URL;
+        }else {
+            baseUrl=XiaojsConfig.SHARE_LESSON_TEST_BASE_URL;
+        }
+
+        return new StringBuilder(baseUrl)
+                .append("/web/app/homepage.html")
+                .append("?app=android")
+                .toString();
+    }
+
     private static String createUrl(Context context,String port) {
         String baseUrl = XiaojsConfig.SHOW_DEMO ? DataPref.getServerIP(context) : XiaojsConfig.TEST_BASE_URL;
         StringBuilder urlBulder = new StringBuilder(baseUrl);
