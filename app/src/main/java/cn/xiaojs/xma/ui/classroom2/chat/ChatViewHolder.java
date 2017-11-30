@@ -39,7 +39,7 @@ public abstract class ChatViewHolder extends RecyclerView.ViewHolder{
         this.context = context;
         this.chatAdapter = adapter;
         this.group = group;
-        MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px350);
+        MAX_SIZE = context.getResources().getDimensionPixelSize(R.dimen.px256);
     }
 
 
