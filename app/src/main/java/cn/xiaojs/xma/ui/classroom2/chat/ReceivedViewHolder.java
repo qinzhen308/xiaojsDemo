@@ -64,6 +64,8 @@ public class ReceivedViewHolder extends ChatViewHolder {
                 .into(avatorView);
 
 
+
+
         if (item.showTime) {
             String timeStr = TimeUtil.getTimeShowString(item.time, false);
             timeLineView.setText(timeStr);
@@ -180,6 +182,16 @@ public class ReceivedViewHolder extends ChatViewHolder {
                 }
 
 
+            }
+        });
+
+        avatorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (group){
+
+                    chatAdapter.chatO2o(position, item);
+                }
             }
         });
 

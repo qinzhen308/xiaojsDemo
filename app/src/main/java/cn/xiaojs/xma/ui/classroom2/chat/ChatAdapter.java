@@ -1,7 +1,5 @@
 package cn.xiaojs.xma.ui.classroom2.chat;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -35,6 +33,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         void onChatRecall(int position, TalkItem talkItem);
 
         void onChatCopy(int position, TalkItem talkItem);
+
+        void onChatO2o(int position, TalkItem item);
     }
 
     private Context context;
@@ -274,6 +274,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         int visCopy = copy ? View.VISIBLE : View.GONE;
         chatPopupMenu.setCopyBtnVis(visCopy);
         chatPopupMenu.show(view);
+    }
+
+    public void chatO2o(final int position, final TalkItem item) {
+        if (operationListener != null) {
+            operationListener.onChatO2o(position, item);
+        }
     }
 
 }
