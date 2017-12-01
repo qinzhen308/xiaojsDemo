@@ -53,6 +53,7 @@ import cn.xiaojs.xma.model.socket.room.RequestShareboard;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Drawing;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Viewport;
 import cn.xiaojs.xma.ui.base.BaseFragment;
 import cn.xiaojs.xma.ui.classroom.whiteboard.Whiteboard;
 import cn.xiaojs.xma.ui.classroom.whiteboard.WhiteboardController;
@@ -259,6 +260,7 @@ public class BoardCollaborateFragment extends BaseFragment {
                 //优先初始化最后一次打开的白板数据，如果没有再根据白板类型初始化
                 if(mLastBoardItem != null){
                     mBoardController.replaceNewWhiteboardLayout(null, mDoodleRatio);
+                    mBoardController.setViewport(mLastBoardItem.drawing.width,mLastBoardItem.drawing.height);
                     mBoardController.setBoardLayerSet(mLastBoardItem.drawing);
                     mLastBoardItem=null;
                 }else if (boardType == Live.BoardType.WHITE) {
@@ -436,7 +438,7 @@ public class BoardCollaborateFragment extends BaseFragment {
         ClassroomEngine.getEngine().registerBoard(ClassroomEngine.getEngine().getTicket(), board, new APIServiceCallback<BoardItem>() {
             @Override
             public void onSuccess(BoardItem object) {
-                openBoard(object.id);
+                openBoard(object.id,board);
             }
 
             @Override
@@ -446,13 +448,14 @@ public class BoardCollaborateFragment extends BaseFragment {
         });
     }
 
-    public void openBoard(final String boardId) {
+    public void openBoard(final String boardId, final Board board) {
         if (!TextUtils.isEmpty(boardId)) {
             ClassroomEngine.getEngine().openBoard(ClassroomEngine.getEngine().getTicket(), boardId, new APIServiceCallback<BoardItem>() {
                 @Override
                 public void onSuccess(BoardItem object) {
                     BoardCollaborateFragment.this.boardId = object.id;
                     mBoardController.setWhiteBoardId(boardId);
+                    mBoardController.setViewport(board.drawing.width,board.drawing.height);
                 }
 
                 @Override

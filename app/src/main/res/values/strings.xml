@@ -1080,6 +1080,7 @@
     <string name="disband_classroom">解散教室</string>
 
     <string name="whiteboard_cant_remove">当前正在使用，暂不能删除</string>
+    <string name="board_clear_all_tip">确定要清除全部？清除后数据将不能再恢复！</string>
 
 
 </resources>

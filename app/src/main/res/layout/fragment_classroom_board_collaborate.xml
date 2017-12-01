@@ -89,15 +89,6 @@
             android:paddingRight="@dimen/px25"
             android:scaleType="center" />
 
-        <ImageView
-            android:id="@+id/eraser_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/wb_selection_middle"
-            android:paddingLeft="@dimen/px25"
-            android:paddingRight="@dimen/px25"
-            android:scaleType="center"
-            android:src="@drawable/ic_wb_tool_rubber" />
 
         <!--<ImageView
             android:id="@+id/text_btn"
@@ -131,6 +122,15 @@
             android:paddingRight="@dimen/px25"
             android:scaleType="center"
             android:src="@drawable/wb_redo_selector" />
+
+        <ImageView
+            android:id="@+id/eraser_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/px25"
+            android:paddingRight="@dimen/px25"
+            android:scaleType="center"
+            android:src="@drawable/ic_wb_tool_rubber" />
 
     </LinearLayout>
 

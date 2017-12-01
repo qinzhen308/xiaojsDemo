@@ -147,6 +147,9 @@
                 android:name=".ui.mine.SettingsActivity"
                 android:screenOrientation="portrait"/>
         <activity
+                android:name=".ui.mine.HelpActivity"
+                android:screenOrientation="portrait"/>
+        <activity
                 android:name=".ui.account.ModifyPasswordActivity"
                 android:screenOrientation="portrait"/>
         <activity

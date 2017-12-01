@@ -237,7 +237,7 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     SyncGenerator syncGenerator=new SyncGenerator();
 
-    Viewport viewport=new Viewport();
+    Viewport viewport=null;
 
     private String whiteBoardId;
 
@@ -298,8 +298,11 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
             mBlackboardWidth = temp;
         }
         //设置同步的viewport
-        viewport.height=mBlackboardHeight;
-        viewport.width=mBlackboardWidth;
+        if(viewport==null){
+            viewport=new Viewport();
+            viewport.height=mBlackboardHeight;
+            viewport.width=mBlackboardWidth;
+        }
 
         mBlackboardRect.set(0, 0, mBlackboardWidth, mBlackboardHeight);
         mDrawingMatrix.setRectToRect(new RectF(0, 0, 1, 1), mBlackboardRect, Matrix.ScaleToFit.FILL);
@@ -2358,6 +2361,10 @@ public class Whiteboard extends View implements ViewGestureListener.ViewRectChan
 
     public Viewport getViewport(){
         return viewport;
+    }
+
+    public void setViewport(Viewport viewport){
+        this.viewport=viewport;
     }
 
     public String getWhiteBoardId(){

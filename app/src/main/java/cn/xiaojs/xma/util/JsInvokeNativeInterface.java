@@ -365,7 +365,8 @@ public class JsInvokeNativeInterface {
                 cancelDialogOnUiThread();
                 if(object!=null){
                     if(!ArrayUtil.isEmpty(object.classes)){
-                        showToastOnUiThread("您已是该班成员");
+//                        showToastOnUiThread("您已是该班成员");
+                        MainActivity.invokeWithAction(context,MainActivity.ACTION_TO_CLASSROOM);
                     }else if(!ArrayUtil.isEmpty(object.enrollments)){
                         showToastOnUiThread("您已提交申请，请等待班主任确认");
                     }else {

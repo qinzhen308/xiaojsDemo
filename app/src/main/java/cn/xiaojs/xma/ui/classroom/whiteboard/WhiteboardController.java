@@ -33,6 +33,7 @@ import cn.xiaojs.xma.common.xf_foundation.schemas.Platform;
 import cn.xiaojs.xma.model.socket.room.ShareboardReceive;
 import cn.xiaojs.xma.model.socket.room.SyncBoardReceive;
 import cn.xiaojs.xma.model.socket.room.whiteboard.Drawing;
+import cn.xiaojs.xma.model.socket.room.whiteboard.Viewport;
 import cn.xiaojs.xma.ui.classroom.bean.CommendLine;
 import cn.xiaojs.xma.ui.classroom.socketio.Parser;
 import cn.xiaojs.xma.ui.classroom.socketio.Receiver;
@@ -52,6 +53,7 @@ import cn.xiaojs.xma.ui.classroom.whiteboard.sync.PushPreviewBoardListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.sync.SyncDrawingListener;
 import cn.xiaojs.xma.ui.classroom.whiteboard.widget.CircleView;
 import cn.xiaojs.xma.ui.classroom2.core.CTLConstant;
+import cn.xiaojs.xma.ui.widget.CommonDialog;
 import cn.xiaojs.xma.util.CacheUtil;
 
 public class WhiteboardController implements EraserPop.EraserChangeListener,
@@ -228,7 +230,7 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
         }
 
         int id=v.getId();
-        if(!(id==R.id.undo||id==R.id.redo)){
+        if(!(id==R.id.undo||id==R.id.redo||id==R.id.eraser_btn)){
             mSelection.setSelected(false);
             mHandWriting.setSelected(false);
             mGeoShape.setSelected(false);
@@ -314,13 +316,30 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
             return;
         }
 
+        final CommonDialog clearDialog=new CommonDialog(mContext);
+        clearDialog.setDesc(R.string.board_clear_all_tip);
+        clearDialog.setOnRightClickListener(new CommonDialog.OnClickListener() {
+            @Override
+            public void onClick() {
+                onClearDoodles();
+                clearDialog.dismiss();
+            }
+        });
+        clearDialog.show();
+    }
+   /* private void enterEraser() {
+        if (mCurrWhiteboard == null) {
+            return;
+        }
+
         if (mEraserSetting == null) {
             mEraserSetting = new EraserPop(mContext);
             mEraserSetting.setOnEraserParamsListener(this);
         }
         mEraserSetting.show(mEraser, mPanelWidth);
         enterMode(Whiteboard.MODE_ERASER);
-    }
+    }*/
+
 
     /**
      * 进入图形编辑模式
@@ -780,5 +799,15 @@ public class WhiteboardController implements EraserPop.EraserChangeListener,
 
     public ArrayList<Doodle> getDoodles(){
         return mCurrWhiteboard.getAllDoodles();
+    }
+
+    public void setViewport(Viewport viewport){
+        mCurrWhiteboard.setViewport(viewport);
+    }
+    public void setViewport(int width,int height){
+        Viewport viewport=new Viewport();
+        viewport.height=height;
+        viewport.width=width;
+        mCurrWhiteboard.setViewport(viewport);
     }
 }

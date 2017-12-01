@@ -353,7 +353,8 @@ public class ImageViewActivity extends BaseActivity {
                                     hugeImageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                           showTitleBar();
+//                                           showTitleBar();
+                                            pageBack();
                                         }
                                     });
                                     loadState.setVisibility(View.GONE);
@@ -398,7 +399,8 @@ public class ImageViewActivity extends BaseActivity {
             imageView.setClickListener(new PhotoViewAttacher.onClickListener() {
                 @Override
                 public void onClick() {
-                    showTitleBar();
+//                    showTitleBar();
+                    pageBack();
                 }
             });
             ((ViewPager) container).addView(view, 0);

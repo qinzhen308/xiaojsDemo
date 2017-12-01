@@ -113,7 +113,7 @@ public class SettingsActivity extends BaseActivity {
                 ClassroomPref.setAllowLive4g(this, !allow);
                 break;
             case R.id.btn_help:
-                CommonWebActivity.invoke(this,"帮助", ApiManager.getHelpUrl(),true,true);
+                HelpActivity.invoke(this,"帮助", ApiManager.getHelpUrl(),true,true);
                 break;
             default:
                 break;
