@@ -209,7 +209,8 @@ public class PlayFragment extends MovieFragment
             case Configuration.ORIENTATION_LANDSCAPE:
                 controlClickView.setVisibility(View.VISIBLE);
                 controlPort.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
                 controlLand.setVisibility(View.VISIBLE);
                 startHiddenTimer(controlLand);
                 break;
@@ -217,6 +218,7 @@ public class PlayFragment extends MovieFragment
                 controlLand.setVisibility(View.GONE);
                 controlClickView.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
+                lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
                 controlPort.setVisibility(View.VISIBLE);
                 startHiddenTimer(controlPort);
                 break;
