@@ -81,6 +81,7 @@ public class APPUtils {
             channel = XiaojsConfig.CHANNEL_ENV_DEVTEST;
         }
 
+
         return channel;
         //return "pro";
     }

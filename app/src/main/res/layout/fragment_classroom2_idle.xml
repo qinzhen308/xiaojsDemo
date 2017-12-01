@@ -37,6 +37,7 @@
             android:layout_marginTop="@dimen/px281"
             android:layout_marginBottom="@dimen/px124"
             android:layout_marginLeft="@dimen/px30"
+            android:visibility="gone"
             />
 
 

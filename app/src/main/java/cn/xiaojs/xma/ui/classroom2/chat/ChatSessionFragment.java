@@ -41,6 +41,7 @@ import cn.xiaojs.xma.common.crop.CropImageMainActivity;
 import cn.xiaojs.xma.common.crop.CropImagePath;
 import cn.xiaojs.xma.common.xf_foundation.Su;
 import cn.xiaojs.xma.common.xf_foundation.schemas.Communications;
+import cn.xiaojs.xma.common.xf_foundation.schemas.Social;
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.CommunicationManager;
 import cn.xiaojs.xma.data.XMSManager;
@@ -379,7 +380,12 @@ public abstract class ChatSessionFragment extends BaseDialogFragment
         Toast.makeText(getContext(), "复制成功", Toast.LENGTH_LONG).show();
     }
 
-
+    @Override
+    public void onChatO2o(int position, TalkItem item) {
+        //FIXME 这地方能拿到followType么？
+        SingleSessionFragment.invoke(getFragmentManager(),
+                item.from.accountId, item.from.name, Social.FllowType.NA);
+    }
 
     private void uploadImgToCloud(final String filePath) {
 

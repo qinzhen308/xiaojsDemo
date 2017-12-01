@@ -1,6 +1,7 @@
 package cn.xiaojs.xma.ui.contact2.query;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import cn.xiaojs.xma.data.AccountDataManager;
 import cn.xiaojs.xma.data.provider.DataProvider;
+import cn.xiaojs.xma.model.account.Account;
 import cn.xiaojs.xma.model.social.Contact;
 import cn.xiaojs.xma.ui.contact2.model.AbsContactItem;
 import cn.xiaojs.xma.ui.contact2.model.ClassItem;
@@ -78,6 +80,13 @@ public class FriendsDataProvider {
                         }
 
 
+                        if (AccountDataManager.isXiaojsAccount(contact.account)) {
+                            FriendItem item = new FriendItem(contact);
+                            item.setTop(true);
+                            contacts.add(item);
+                            continue;
+                        }
+
                         FriendItem item = new FriendItem(contact);
                         String belong = item.belongsGroup();
 
@@ -132,6 +141,13 @@ public class FriendsDataProvider {
                 Map<String, Integer> belongCollect = new HashMap<>();
 
                 String mid = AccountDataManager.getAccountID(context);
+                Account myAccount = AccountDataManager.getAccont(context);
+                String myClassName = null;
+                if (myAccount != null && myAccount.getBasic() != null) {
+                    String myname = myAccount.getBasic().getName();
+                    myClassName = TextUtils.isEmpty(myname) ? null : myname + "的教室";
+                }
+
 
                 if (originContacts != null && originContacts.size() > 0) {
 
@@ -142,6 +158,16 @@ public class FriendsDataProvider {
                             if (contact.id.equals(excludeClassId) || contact.ownerId.equals(mid)) {
                                 continue;
                             }
+                        }
+
+
+                        if (!TextUtils.isEmpty(myClassName)
+                                && myClassName.equals(contact.title)
+                                && contact.ownerId.equals(mid)) {
+                            ClassItem item = new ClassItem(contact);
+                            item.setTop(true);
+                            contacts.add(item);
+                            continue;
                         }
 
                         ClassItem item = new ClassItem(contact);

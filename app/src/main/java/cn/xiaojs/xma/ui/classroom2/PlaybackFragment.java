@@ -172,7 +172,8 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
         switch (orientation) {
             case Configuration.ORIENTATION_LANDSCAPE:
                 controlPort.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
                 controlLand.setVisibility(View.VISIBLE);
 
                 exoPlayLayout.setPadding(landPaddingSize, 0, landPaddingSize, 0);
@@ -184,6 +185,7 @@ public class PlaybackFragment extends PlayerFragment implements ChatAdapter.Fetc
             case Configuration.ORIENTATION_PORTRAIT:
                 controlLand.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
+                lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
                 controlPort.setVisibility(View.VISIBLE);
 
                 pBottomAvatorView.setVisibility(View.GONE);

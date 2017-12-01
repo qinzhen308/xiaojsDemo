@@ -208,7 +208,8 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                 controlLand.setVisibility(View.VISIBLE);
                 controlPort.setVisibility(View.GONE);
                 if (recyclerView != null) {
-                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                    lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
                 }
                 lessonTipsLayout.setVisibility(View.GONE);
                 break;
@@ -218,6 +219,7 @@ public class IdleFragment extends MovieFragment implements ChatAdapter.FetchMore
                 controlPort.setVisibility(View.VISIBLE);
                 if (recyclerView != null) {
                     recyclerView.setVisibility(View.GONE);
+                    lBottomSessionView.setImageResource(R.drawable.ic_class_chatlist_hide);
                 }
                 if (canShowLessonTips()) {
                     lessonTipsLayout.setVisibility(View.VISIBLE);
